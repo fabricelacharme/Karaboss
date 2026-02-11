@@ -45,6 +45,7 @@ using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
+using TagLib.Riff;
 
 
 namespace Karaboss
@@ -2044,9 +2045,201 @@ namespace Karaboss
 
 
         #region import export lyrics
-           
+
 
         #region kok import export
+
+
+        /*
+            * KOK format example:
+            * You;26.294; can;26.892; dance;27.191;
+            * You;28.685; can;29.282; jive;29.581;
+            * Ha;31.075;ving;31.523; the;31.972; time;32.27; of;32.719; your;33.167; life;33.466;
+            * Ooh,;34.661; see;35.856; that;36.304; girl,;36.752; watch;38.246; that;38.695; scene.;39.143;
+            * Dig;40.039; in;40.189; the;40.487; dan;40.637;cing;41.085; queen;41.533;
+            * Fri;50.198;day;50.497; night;50.647; and;50.945; the;51.244; lights;51.394; are;51.692; low;51.991;
+            * Loo;54.979;king;55.278; out;55.427; for;55.726; a;56.025; place;56.174; to;56.473; go;56.772;
+            * Oh,;59.013; where;59.76; they;60.059; play;60.208; the;60.507; right;60.656; mu;60.955;sic;61.254;
+            * Get;62.15;ting;62.449; in;62.599; the;62.897; swing;63.047;
+        */
+
+
+        #region import kok
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void mnuEditImportLyricsKok_Click(object sender, EventArgs e)
+        {
+            ImportLyricsToKokFormat();            
+        }
+
+        private void ImportLyricsToKokFormat()
+        {
+            string fileName;
+
+            #region select filename
+
+            OpenFileDialog.Title = "Open a .kok file";
+            OpenFileDialog.DefaultExt = "kok";
+            OpenFileDialog.Filter = "Kok files|*.kok|All files|*.*";
+            OpenFileDialog.InitialDirectory = Path.GetDirectoryName(MIDIfileName);
+
+            if (OpenFileDialog.ShowDialog() != DialogResult.OK)
+                return;
+
+
+            fileName = OpenFileDialog.FileName;
+
+            #endregion select filename
+
+            // Load KOK file and populate datagridview
+            LoadKokFile(fileName);
+
+
+            //Load modification into local list of lyrics
+            localplLyrics = LoadModifiedLyrics();
+
+            if (localplLyrics != null)
+                PopulateTextBox(localplLyrics);
+
+            // Color separators
+            ColorSepRows();
+
+            // File was modified
+            FileModified();
+
+            Cursor.Current = Cursors.Default;
+           
+        }
+
+        /// <summary>
+        /// Loads a KOK file and populates the data grid view with its contents.
+        /// </summary>
+        /// <remarks>If an error occurs during the loading process, an error message is displayed to the
+        /// user.</remarks>
+        /// <param name="fileName">The name of the KOK file to load. This parameter must not be null or empty.</param>
+        private void LoadKokFile(string fileName)
+        {
+            try
+            {
+                List<(string, string)> lstDgRows = KokReadFile(fileName);
+                KokPopulateDgView(lstDgRows);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error loading KOK file: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        /// <summary>
+        /// Reads a file containing pairs of words and timestamps, and returns a list of tuples representing each word
+        /// and its associated timestamp.
+        /// </summary>
+        /// <remarks>Each line in the file should be formatted as 'word;timestamp; word;timestamp; ...'.
+        /// The method processes each line, pairing words with their timestamps in the order they appear. The first word
+        /// of each line is prefixed with a line separator ('/').</remarks>
+        /// <param name="fileName">The path to the file to read. The file must exist and be accessible.</param>
+        /// <returns>A list of tuples, where each tuple contains a word and its corresponding timestamp extracted from the file.</returns>
+        private List<(string, string)> KokReadFile(string fileName)
+        {
+            string word;
+            string timestamp = string.Empty;
+            bool paragraphSepFound = false;
+
+
+            List<(string, string)> lstDgRows = new List<(string, string)>();
+            using (StreamReader reader = new StreamReader(fileName))
+            {
+                string line;
+                while ((line = reader.ReadLine()) != null)
+                {
+                    // Each line is expected to be in the format: "word;timestamp; word;timestamp; ..."
+
+                    // Case empty line; this is a paragraph
+                    // The next line will be the first line of the new paragraph, and must be prefixed with a line separator ('/'), except if it is the first line of the file
+                    if (string.IsNullOrWhiteSpace(line))
+                    {                                                
+                        paragraphSepFound = true;
+                        continue;
+                    }
+
+                    string[] parts = line.Split(new char[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
+                    for (int i = 0; i < parts.Length - 1; i += 2)
+                    {                       
+                        timestamp = parts[i + 1].Trim();
+                        
+                        // Adaptation to frmLyricsEdit
+                        // Separate lines separators from the text, to be able to display them in a specific color in the datagridview
+                        if (i == 0 && lstDgRows.Count > 0)
+                        {
+
+                            // First word of the line, must be prefixed with a line separator ('/'), except if it is the first line of the file
+                            if (paragraphSepFound)
+                            {
+                                word = m_SepParagraph;
+                                paragraphSepFound = false;
+                            }
+                            else
+                                word = m_SepLine;
+                            
+                            lstDgRows.Add((word, timestamp));
+
+                            // The word without the line separator is added as a new row, to be able to display it in the datagridview
+                            word = parts[i];
+                            lstDgRows.Add((word, timestamp));
+                        }
+                        else 
+                        {
+                            // Syllabe in the middle of the line
+                            word = parts[i];
+                            timestamp = parts[i + 1].Trim();
+                            lstDgRows.Add((word, timestamp));
+                        }
+                    }
+                }
+            }
+            return lstDgRows;
+        }
+
+        /// <summary>
+        /// Populates the data grid view with rows containing words and their corresponding timestamps.
+        /// </summary>
+        /// <remarks>The method clears the existing rows in the data grid view before adding new rows.
+        /// Each timestamp is converted to a formatted string in the mm:ss:ms format and also to milliseconds for
+        /// display.</remarks>
+        /// <param name="lstDgRows">A list of tuples, where each tuple contains a word and its associated timestamp in seconds.</param>
+        private void KokPopulateDgView(List<(string, string)> lstDgRows)
+        {
+            string sTimeStamp;
+            dgView.Rows.Clear();
+            foreach (var (word, timestamp) in lstDgRows)
+            {
+
+                // In the second column, the time is in format mm:ss:ms
+                // Convert timestamp to mm:ss:ms
+                sTimeStamp = TimeSpan.FromSeconds(Convert.ToDouble(timestamp)).ToString(@"mm\:ss\.fff");
+
+                // Convert timestamp to milliseconds if necessary
+                double ms = Convert.ToDouble(timestamp) * 1000; // Assuming timestamp is in seconds
+                // Convert ms to ticks
+                ms = Utilities.LyricsUtilities.TimeToTicks(sTimeStamp, _division, _tempo);
+
+                // 5 Columns: ticks, time, type, note, text
+                if (word == m_SepLine)
+                    dgView.Rows.Add(ms, sTimeStamp, "cr", "", word);
+                else if (word == m_SepParagraph)
+                    dgView.Rows.Add(ms, sTimeStamp, "par", "", word);
+                else
+                    dgView.Rows.Add(ms, sTimeStamp, "text", "", word);
+            }
+        }
+
+
+        #endregion import kok
+
 
         #region export kok
 
@@ -2057,19 +2250,7 @@ namespace Karaboss
         /// <param name="e"></param>
         private void MnuFileExportLyricsKok_Click(object sender, EventArgs e)
         {
-            /*
-             * KOK format example:
-             * You;26.294; can;26.892; dance;27.191;
-             * You;28.685; can;29.282; jive;29.581;
-             * Ha;31.075;ving;31.523; the;31.972; time;32.27; of;32.719; your;33.167; life;33.466;
-             * Ooh,;34.661; see;35.856; that;36.304; girl,;36.752; watch;38.246; that;38.695; scene.;39.143;
-             * Dig;40.039; in;40.189; the;40.487; dan;40.637;cing;41.085; queen;41.533;
-             * Fri;50.198;day;50.497; night;50.647; and;50.945; the;51.244; lights;51.394; are;51.692; low;51.991;
-             * Loo;54.979;king;55.278; out;55.427; for;55.726; a;56.025; place;56.174; to;56.473; go;56.772;
-             * Oh,;59.013; where;59.76; they;60.059; play;60.208; the;60.507; right;60.656; mu;60.955;sic;61.254;
-             * Get;62.15;ting;62.449; in;62.599; the;62.897; swing;63.047;
-            */
-
+           
             ExportLyricsToKokFormat();
         }
 
@@ -2107,16 +2288,16 @@ namespace Karaboss
 
             string defFilter = "KOK files (*.kok)|*.kok|All files (*.*)|*.*";
 
-            saveMidiFileDialog.Title = "Save to KOK format";
-            saveMidiFileDialog.Filter = defFilter;
-            saveMidiFileDialog.DefaultExt = defExt;
-            saveMidiFileDialog.InitialDirectory = @fPath;
-            saveMidiFileDialog.FileName = defName;
+            SaveFileDialog.Title = "Save to KOK format";
+            SaveFileDialog.Filter = defFilter;
+            SaveFileDialog.DefaultExt = defExt;
+            SaveFileDialog.InitialDirectory = @fPath;
+            SaveFileDialog.FileName = defName;
 
-            if (saveMidiFileDialog.ShowDialog() != DialogResult.OK)
+            if (SaveFileDialog.ShowDialog() != DialogResult.OK)
                 return;
 
-            fullPath = saveMidiFileDialog.FileName;
+            fullPath = SaveFileDialog.FileName;
 
             #endregion select filename
 
@@ -2174,105 +2355,345 @@ namespace Karaboss
         #endregion export kok
 
 
-        #region import kok
+        #endregion kok import export
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void mnuEditImportLyricsKok_Click(object sender, EventArgs e)
-        {
-            string[] lines;
-            string line;
-            openFileDialog.Title = "Open a .kok file";
-            openFileDialog.DefaultExt = "kok";
-            openFileDialog.Filter = "kok files|*.kok|All files|*.*";
-
-            // Get initial directory from midi file
-            if (MIDIfileName != null || MIDIfileName != "")
-                openFileDialog.InitialDirectory = Path.GetDirectoryName(MIDIfileName);
-
-            if (openFileDialog.ShowDialog() != DialogResult.OK)
-                return;
-
-            string fullPath = openFileDialog.FileName;
-
-            
-
-            try
-            {
-                lines = File.ReadAllLines(fullPath);
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("The file could not be read:" + ex.Message, "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return;
-            }
-            
-            
-            if (lines.Count() == 0)
-            {
-                MessageBox.Show("The file is empty", "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return;
-            }
-
-            // Here is a sample of a kok file
-            /*
-             * Mar;18,175;go;18,435;ton,;18,705; la;18,890; jeu;19,035;ne;19,155; ber;19,310;ge;19,435;re,;19,625;
-             * Trou;19,950;vant;20,240; dans;20,390; l'her;20,600;be;20,825; un;21,060; pe;21,215;tit;21,360; chat;21,535;
-            * Qui;22,265; ve;22,390;nait;22,540; de;22,720; per;22,875;dre;23,040; sa;23,220; me;23,340;re,;23,505;
-            */
-
-            // Extract pairs lyric, time in each lines in a list
-            List<List<(string, string)>> lstAll = new List<List<(string, string)>>();
-            List<(string, string)> lstLine = new List<(string, string)>();
-            
-            for (int i = 0; i < lines.Count(); i++)
-            {
-                line = lines[i];
-                string[] linesItems = line.Split(';');
-
-                string lyric = string.Empty;
-                string time = string.Empty;
-
-                lstLine = new List<(string, string)>();
-
-                for (int j = 0; j < linesItems.Count(); j++)
-                {                    
-
-                    if (j % 2 == 0)
-                        lyric = linesItems[j];
-                    else
-                    {
-                        time = linesItems[j];                                                
-                        lstLine.Add( (lyric, time));
-                        lyric = string.Empty;
-                        time = string.Empty;
-
-                    }
-                }
-                lstAll.Add(lstLine);
-            }
-
-            if (lstAll.Count() == 0)
-            {
-                MessageBox.Show("Invalid file", "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return;
-            }
-
-            // Populate grid
-
-
-
-        }
-
-       #endregion import kok
-
-       #endregion kok import export
 
 
         #region Lrc import export
+
+        #region import lrc
+
+        /// <summary>
+        /// Load a text file LRC format (times stamps + lyrics)
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void mnuEditImportLyricsLrc_Click(object sender, EventArgs e)
+        {
+            OpenFileDialog.Title = "Open a .lrc file";
+            OpenFileDialog.DefaultExt = "lrc";
+            OpenFileDialog.Filter = "lrc files|*.lrc|All files|*.*";
+
+            // Get initial directory from midi file
+            if (MIDIfileName != null || MIDIfileName != "")
+                OpenFileDialog.InitialDirectory = Path.GetDirectoryName(MIDIfileName);
+
+
+            if (OpenFileDialog.ShowDialog() == DialogResult.OK)
+            {
+                string fileName = OpenFileDialog.FileName;
+
+                try
+                {
+                    using (StreamReader sr = new StreamReader(fileName))
+                    {
+                        String lines = sr.ReadToEnd();
+                        LoadLRCFile(lines);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("The file could not be read:" + ex.Message, "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
+        }
+
+
+
+        /// <summary>
+        /// Load a LRC file (times + lyrics)
+        /// </summary>
+        /// <param name="Source"></param>
+        private void LoadLRCFile(string Source)
+        {
+            //bool bUpdateMode = false;
+            bool bSeparatorsInGrid = false;
+            bool bSeparatorsInLrc = false;
+            int plTicksOn = 0;
+            string plRealTime;
+            string plType;
+            string plNote = string.Empty;
+            string plElement;
+            string chordName = "";
+            string s;
+            bool bSpaceBeforeSyllabes = false;
+
+            /* Lyrics edition form
+            * 
+            * 0    - Ticks    Number of ticks
+            * 1    - Time     Time in sec
+            * 2    - Type     text, paragraph, linefeed
+            * <3   - Chord    Chord name (optional if option bShowChord is true)>     
+            * 3(4) - Note     Note value
+            * 4(5) - Text     text        
+            * 
+            * Line break is '/' - cr
+            * Paragraph is '\'  - par
+            * Syllabe separator is '*'
+            */
+            Cursor.Current = Cursors.WaitCursor;
+
+            List<(int, string, string, string, string, string)> grdRowsChords = new List<(int, string, string, string, string, string)>();
+            List<(int, string, string, string, string)> grdRowsNoChords = new List<(int, string, string, string, string)>();
+
+
+            // Two use cases
+            // 1. Newly created file through menu "add lyrics" => no linefeed: bUpdateMode = false
+            // 2. Existing file with linefeeds: bUpdateMode = true
+
+            // Check existence of separators in the gridview
+            for (int i = 0; i < dgView.Rows.Count - 1; i++)
+            {
+                s = dgView.Rows[i].Cells[COL_TYPE].Value.ToString();
+                if (s == "cr" || s == "par")
+                {
+                    bSeparatorsInGrid = true;
+                    break;
+                }
+            }
+
+            Karaboss.Lrc.SharedFramework.Lyrics lyrics = new Karaboss.Lrc.SharedFramework.Lyrics();
+            lyrics.ArrangeLyrics(Source);
+
+
+            // Check existence of separators in the lrc file
+            for (int i = 0; i < lyrics.Count; i++)
+            {
+                s = lyrics[i].OriLyrics;
+                if (s.Trim() == m_SepLine || s.Trim() == m_SepParagraph)
+                {
+                    bSeparatorsInLrc = true; break;
+                }
+            }
+
+
+            int lines = lyrics.Count;
+            // If separators in the lrc file, the number of lines to import is equal to the number of lyrics
+            if (!bSeparatorsInLrc && !bSeparatorsInGrid)
+            {
+                // If no separators in the lrc file, each lyric will be followed by a separator,
+                // so the number of line is twice
+                lines = 2 * lyrics.Count;
+            }
+
+            // Adjust dgview rows to lyrics count
+            if (dgView.Rows.Count < lines)
+            {
+                dgView.Rows.Add(lines - dgView.Rows.Count);
+            }
+
+            // Is there a space beween times and lyrics ?
+            // like [00:02.000] hello instead of [00:02.000]hello            
+
+            for (int i = 0; i < lyrics.Count; i++)
+            {
+                s = lyrics[i].OriLyrics;
+
+                if (bSeparatorsInLrc && (s.Trim() == m_SepLine || s.Trim() == m_SepParagraph))
+                {
+                    // Lyrics have separators
+                    // Search for ' /' or ' \'
+                    if (s.StartsWith(" " + m_SepLine) || s.StartsWith(" " + m_SepParagraph))
+                        bSpaceBeforeSyllabes = true;
+                    break;
+                }
+                else
+                {
+                    //Lyrics do not have separators
+                    // Search for '] ' on all lyrics ?
+                    if (!s.StartsWith("] "))
+                        bSpaceBeforeSyllabes = true;
+                    else
+                    {
+                        bSpaceBeforeSyllabes = false;
+                        break;
+                    }
+                }
+            }
+
+            int row = 0;
+
+            // Loop in lines
+            for (int i = 0; i < lyrics.Count; i++)
+            {
+                plNote = "";
+                LyricsLine lyline = lyrics[i];
+                plRealTime = lyline.Timeline;
+                plTicksOn = Utilities.LyricsUtilities.TimeToTicks(plRealTime, _division, _totalTicks);
+                s = lyline.OriLyrics;
+
+                if (s.Length > 0 && s.StartsWith(" "))
+                    s = bSpaceBeforeSyllabes ? s.Substring(1) : s;
+
+
+                // ====================================
+                // syllabes or lines
+                // ====================================
+                if (s != m_SepLine && s != m_SepParagraph)
+                {
+                    // insert TEXT
+                    plType = "text";
+
+                    // Ticks & RealTime
+                    // If ticks exist, do not change them with the ticks coming from the file
+                    // If not, take the value from the lrc file
+                    if (dgView.Rows[row].Cells[COL_TICKS].Value != null)
+                    {
+                        if (IsNumeric(dgView.Rows[row].Cells[COL_TICKS].Value.ToString()))
+                        {
+                            int localplTicksOn = Convert.ToInt32(dgView.Rows[row].Cells[COL_TICKS].Value);
+                            if (localplTicksOn != plTicksOn)
+                            {
+                                if (Math.Abs(localplTicksOn - plTicksOn) == 1)
+                                    plTicksOn = localplTicksOn;
+                                else
+                                {
+                                    // If time value of existing row is different than the time value of lrc line
+                                    // What to do ?
+                                    MessageBox.Show(string.Format("Load Lrc failed. Ticks value are different, tick {0}, line {1}, lyric {2}", localplTicksOn, i, s), "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                                    return;
+                                }
+                            }
+                        }
+                    }
+
+                    // Note
+                    if (dgView.Rows[row].Cells[COL_NOTE].Value == null)
+                        plNote = "";
+                    else
+                    {
+                        if (IsNumeric(dgView.Rows[row].Cells[COL_NOTE].Value.ToString()))
+                            plNote = dgView.Rows[row].Cells[COL_NOTE].Value.ToString();
+                    }
+
+                    // Element
+                    if (s.EndsWith("#"))
+                        s = s.Substring(0, s.Length - 1);
+
+                    // replace leading or trailing space by '_'
+                    /*
+                    StringBuilder sb = new StringBuilder(s);                    
+                    if (s.StartsWith(@" "))
+                        sb[0] = '_';
+                    if (s.EndsWith(@" "))                    
+                        sb[s.Length - 1] = '_';
+                    s = sb.ToString();
+                    */
+                    // Replace all spaces including spaces inside the lyric
+                    s = s.Replace(" ", "_");
+
+                    plElement = s;
+
+                    // If not linefeed or paragraph in the lrc file, add a separator before the line or the syllabe
+                    if (!bSeparatorsInLrc && !bSeparatorsInGrid)
+                    {
+                        if (!bEditChords)
+                        {
+                            grdRowsNoChords.Add((plTicksOn, plRealTime, "cr", "", m_SepLine));
+                            grdRowsNoChords.Add((plTicksOn, plRealTime, plType, plNote, plElement));
+                        }
+                        else
+                        {
+                            grdRowsChords.Add((plTicksOn, plRealTime, "cr", "", "", m_SepLine));
+                            grdRowsChords.Add((plTicksOn, plRealTime, plType, chordName, plNote, plElement));
+                        }
+                    }
+                    else
+                    {
+                        if (!bEditChords)
+                            grdRowsNoChords.Add((plTicksOn, plRealTime, plType, plNote, plElement));
+                        else
+                            grdRowsChords.Add((plTicksOn, plRealTime, plType, chordName, plNote, plElement));
+                    }
+
+                    row++;
+
+                }
+                // ====================================
+                // Linefeeds & Paragraphs
+                // means that bSeparatorsInLrc is true
+                // ====================================
+                else if (s == m_SepLine || s == m_SepParagraph)
+                {
+                    if (s == m_SepLine)
+                    {
+                        plType = "cr";
+                        plElement = m_SepLine;
+                    }
+                    else
+                    {
+                        plType = "par";
+                        plElement = m_SepParagraph;
+                    }
+
+                    if (dgView.Rows[row].Cells[COL_TICKS].Value != null && IsNumeric(dgView.Rows[row].Cells[COL_TICKS].Value.ToString()))
+                    {
+                        plTicksOn = Convert.ToInt32(dgView.Rows[row].Cells[COL_TICKS].Value);
+                        plRealTime = Utilities.LyricsUtilities.TicksToTime(plTicksOn, _division);
+                    }
+
+                    chordName = "";
+
+                    // Note
+                    plNote = "";
+
+                    // When we start from scratch, ie select a track with notes and add lyrics from text, there is no linefeed
+                    // So we have to unsert new rows with linefeeds                        
+                    if (bSeparatorsInGrid)
+                        row++;
+
+                    if (!bEditChords)
+                        grdRowsNoChords.Add((plTicksOn, plRealTime, plType, plNote, plElement));
+                    else
+                        grdRowsChords.Add((plTicksOn, plRealTime, plType, chordName, plNote, plElement));
+
+                }
+            }
+
+
+            // Write grdRowsChords in the grid
+            if (!bEditChords)
+            {
+                for (int i = 0; i < grdRowsNoChords.Count; i++)
+                {
+                    dgView.Rows[i].Cells[COL_TICKS].Value = grdRowsNoChords[i].Item1;
+                    dgView.Rows[i].Cells[COL_TIME].Value = grdRowsNoChords[i].Item2;
+                    dgView.Rows[i].Cells[COL_TYPE].Value = grdRowsNoChords[i].Item3;
+                    dgView.Rows[i].Cells[COL_NOTE].Value = grdRowsNoChords[i].Item4;
+                    dgView.Rows[i].Cells[COL_TEXT].Value = grdRowsNoChords[i].Item5;
+                }
+            }
+            else
+            {
+                for (int i = 0; i < grdRowsChords.Count; i++)
+                {
+                    dgView.Rows[i].Cells[COL_TICKS].Value = grdRowsChords[i].Item1;
+                    dgView.Rows[i].Cells[COL_TIME].Value = grdRowsChords[i].Item2;
+                    dgView.Rows[i].Cells[COL_TYPE].Value = grdRowsChords[i].Item3;
+                    dgView.Rows[i].Cells[COL_CHORD].Value = grdRowsChords[i].Item4;
+                    dgView.Rows[i].Cells[COL_NOTE].Value = grdRowsChords[i].Item5;
+                    dgView.Rows[i].Cells[COL_TEXT].Value = grdRowsChords[i].Item6;
+                }
+            }
+
+
+            //Load modification into local list of lyrics
+            localplLyrics = LoadModifiedLyrics();
+
+            if (localplLyrics != null)
+                PopulateTextBox(localplLyrics);
+
+            // Color separators
+            ColorSepRows();
+
+            // File was modified
+            FileModified();
+
+            Cursor.Current = Cursors.Default;
+        }
+
+        #endregion import lrc
+
 
         #region export lrc
 
@@ -2285,7 +2706,6 @@ namespace Karaboss
         {
             GetLrcSaveOptions();
         }
-
 
 
         /// <summary>
@@ -2367,16 +2787,16 @@ namespace Karaboss
 
            string defFilter = "LRC files (*.lrc)|*.lrc|All files (*.*)|*.*";
 
-           saveMidiFileDialog.Title = "Save to LRC format";
-           saveMidiFileDialog.Filter = defFilter;
-           saveMidiFileDialog.DefaultExt = defExt;
-           saveMidiFileDialog.InitialDirectory = @fPath;
-           saveMidiFileDialog.FileName = defName;
+           SaveFileDialog.Title = "Save to LRC format";
+           SaveFileDialog.Filter = defFilter;
+           SaveFileDialog.DefaultExt = defExt;
+           SaveFileDialog.InitialDirectory = @fPath;
+           SaveFileDialog.FileName = defName;
 
-           if (saveMidiFileDialog.ShowDialog() != DialogResult.OK)
+           if (SaveFileDialog.ShowDialog() != DialogResult.OK)
                return;
 
-            fullPath = saveMidiFileDialog.FileName;
+            fullPath = SaveFileDialog.FileName;
 
             #endregion select filename
 
@@ -2809,343 +3229,11 @@ namespace Karaboss
         #endregion export lrc
 
 
-        #region import lrc
-
-        /// <summary>
-        /// Load a text file LRC format (times stamps + lyrics)
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void mnuEditImportLyricsLrc_Click(object sender, EventArgs e)
-        {
-            openFileDialog.Title = "Open a .lrc file";
-            openFileDialog.DefaultExt = "lrc";
-            openFileDialog.Filter = "lrc files|*.lrc|All files|*.*";
-
-            // Get initial directory from midi file
-            if (MIDIfileName != null || MIDIfileName != "")
-                openFileDialog.InitialDirectory = Path.GetDirectoryName(MIDIfileName);
-
-
-            if (openFileDialog.ShowDialog() == DialogResult.OK)
-            {
-                string fileName = openFileDialog.FileName;
-
-                try
-                {
-                    using (StreamReader sr = new StreamReader(fileName))
-                    {
-                        String lines = sr.ReadToEnd();
-                        LoadLRCFile(lines);
-                    }
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show("The file could not be read:" + ex.Message, "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                }
-            }
-        }
-
-
-       
-        /// <summary>
-        /// Load a LRC file (times + lyrics)
-        /// </summary>
-        /// <param name="Source"></param>
-        private void LoadLRCFile(string Source)
-        {
-            //bool bUpdateMode = false;
-            bool bSeparatorsInGrid = false;
-            bool bSeparatorsInLrc = false;
-            int plTicksOn = 0;
-            string plRealTime;
-            string plType;
-            string plNote =string.Empty; 
-            string plElement;
-            string chordName = "";
-            string s;
-            bool bSpaceBeforeSyllabes = false;
-
-            /* Lyrics edition form
-            * 
-            * 0    - Ticks    Number of ticks
-            * 1    - Time     Time in sec
-            * 2    - Type     text, paragraph, linefeed
-            * <3   - Chord    Chord name (optional if option bShowChord is true)>     
-            * 3(4) - Note     Note value
-            * 4(5) - Text     text        
-            * 
-            * Line break is '/' - cr
-            * Paragraph is '\'  - par
-            * Syllabe separator is '*'
-            */
-            Cursor.Current = Cursors.WaitCursor;
-
-            List<(int,string, string, string,string, string)> grdRowsChords = new List<(int, string, string, string, string, string)> ();                        
-            List<(int, string, string, string, string)> grdRowsNoChords = new List<(int, string, string, string, string)>();
-            
-            
-            // Two use cases
-            // 1. Newly created file through menu "add lyrics" => no linefeed: bUpdateMode = false
-            // 2. Existing file with linefeeds: bUpdateMode = true
-
-            // Check existence of separators in the gridview
-            for (int i = 0; i < dgView.Rows.Count - 1; i++)
-            {
-                s = dgView.Rows[i].Cells[COL_TYPE].Value.ToString();
-                if (s == "cr" || s == "par")
-                {
-                    bSeparatorsInGrid = true;
-                    break;
-                }
-            }
-
-            Karaboss.Lrc.SharedFramework.Lyrics lyrics = new Karaboss.Lrc.SharedFramework.Lyrics();
-            lyrics.ArrangeLyrics(Source);
-
-
-            // Check existence of separators in the lrc file
-            for (int i = 0; i < lyrics.Count; i++)
-            {
-                s = lyrics[i].OriLyrics;
-                if (s.Trim() == m_SepLine || s.Trim() == m_SepParagraph)
-                {
-                    bSeparatorsInLrc = true; break;
-                }
-            }
-
-            
-            int lines = lyrics.Count;
-            // If separators in the lrc file, the number of lines to import is equal to the number of lyrics
-            if (!bSeparatorsInLrc && !bSeparatorsInGrid)
-            {
-                // If no separators in the lrc file, each lyric will be followed by a separator,
-                // so the number of line is twice
-                lines = 2 * lyrics.Count;
-            }
-
-            // Adjust dgview rows to lyrics count
-            if (dgView.Rows.Count < lines)
-            {
-               dgView.Rows.Add(lines - dgView.Rows.Count);
-            }
-
-            // Is there a space beween times and lyrics ?
-            // like [00:02.000] hello instead of [00:02.000]hello            
-           
-            for (int i = 0; i < lyrics.Count; i++)
-            {
-                s = lyrics[i].OriLyrics;
-                    
-                if (bSeparatorsInLrc && (s.Trim() == m_SepLine || s.Trim() == m_SepParagraph))
-                {
-                    // Lyrics have separators
-                    // Search for ' /' or ' \'
-                    if (s.StartsWith(" " + m_SepLine) || s.StartsWith(" " + m_SepParagraph))
-                        bSpaceBeforeSyllabes = true;
-                    break;
-                }
-                else
-                {
-                    //Lyrics do not have separators
-                    // Search for '] ' on all lyrics ?
-                    if (!s.StartsWith("] "))
-                        bSpaceBeforeSyllabes = true;
-                    else
-                    {
-                        bSpaceBeforeSyllabes = false;
-                        break;
-                    }
-                }
-            }
-
-            int row = 0;
-
-            // Loop in lines
-            for (int i = 0; i < lyrics.Count; i++)
-            {
-                plNote = "";
-                LyricsLine lyline = lyrics[i];
-                plRealTime = lyline.Timeline;
-                plTicksOn = Utilities.LyricsUtilities.TimeToTicks(plRealTime, _division, _totalTicks);
-                s = lyline.OriLyrics;
-                    
-                if (s.Length > 0 && s.StartsWith(" "))                    
-                    s = bSpaceBeforeSyllabes ? s.Substring(1) : s;
-                
-                    
-                // ====================================
-                // syllabes or lines
-                // ====================================
-                if (s != m_SepLine && s != m_SepParagraph)
-                {
-                    // insert TEXT
-                    plType = "text";
-
-                    // Ticks & RealTime
-                    // If ticks exist, do not change them with the ticks coming from the file
-                    // If not, take the value from the lrc file
-                    if (dgView.Rows[row].Cells[COL_TICKS].Value != null)
-                    {
-                        if (IsNumeric(dgView.Rows[row].Cells[COL_TICKS].Value.ToString()))
-                        {
-                            int localplTicksOn = Convert.ToInt32(dgView.Rows[row].Cells[COL_TICKS].Value);
-                            if (localplTicksOn != plTicksOn)
-                            {
-                                if (Math.Abs(localplTicksOn - plTicksOn) == 1)
-                                    plTicksOn = localplTicksOn;
-                                else 
-                                { 
-                                    // If time value of existing row is different than the time value of lrc line
-                                    // What to do ?
-                                    MessageBox.Show( string.Format("Load Lrc failed. Ticks value are different, tick {0}, line {1}, lyric {2}",localplTicksOn, i, s), "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                                    return;
-                                }
-                            }
-                        }
-                    }
-                        
-                    // Note
-                    if (dgView.Rows[row].Cells[COL_NOTE].Value == null)
-                        plNote = "";
-                    else
-                    {
-                        if (IsNumeric(dgView.Rows[row].Cells[COL_NOTE].Value.ToString()))
-                            plNote = dgView.Rows[row].Cells[COL_NOTE].Value.ToString();
-                    }
-
-                    // Element
-                    if (s.EndsWith("#"))
-                        s = s.Substring(0, s.Length - 1);
-
-                    // replace leading or trailing space by '_'
-                    /*
-                    StringBuilder sb = new StringBuilder(s);                    
-                    if (s.StartsWith(@" "))
-                        sb[0] = '_';
-                    if (s.EndsWith(@" "))                    
-                        sb[s.Length - 1] = '_';
-                    s = sb.ToString();
-                    */
-                    // Replace all spaces including spaces inside the lyric
-                    s = s.Replace(" ", "_");
-
-                    plElement = s;
-
-                    // If not linefeed or paragraph in the lrc file, add a separator before the line or the syllabe
-                    if (!bSeparatorsInLrc && !bSeparatorsInGrid)
-                    {
-                        if (!bEditChords)
-                        {
-                            grdRowsNoChords.Add( (plTicksOn, plRealTime, "cr", "", m_SepLine) );
-                            grdRowsNoChords.Add((plTicksOn, plRealTime, plType, plNote, plElement));                                
-                        }
-                        else
-                        {
-                            grdRowsChords.Add( (plTicksOn, plRealTime, "cr", "", "", m_SepLine) );
-                            grdRowsChords.Add((plTicksOn, plRealTime, plType, chordName, plNote, plElement));
-                        }
-                    }
-                    else
-                    {
-                        if (!bEditChords)
-                            grdRowsNoChords.Add((plTicksOn, plRealTime, plType, plNote, plElement));
-                        else
-                            grdRowsChords.Add((plTicksOn, plRealTime, plType, chordName, plNote, plElement));
-                    }
-
-                    row++;
-
-                }
-                // ====================================
-                // Linefeeds & Paragraphs
-                // means that bSeparatorsInLrc is true
-                // ====================================
-                else if (s == m_SepLine || s == m_SepParagraph)
-                {                        
-                    if (s == m_SepLine)
-                    {
-                        plType = "cr";
-                        plElement = m_SepLine;
-                    }
-                    else
-                    {
-                        plType = "par";
-                        plElement = m_SepParagraph;
-                    }
-
-                    if (dgView.Rows[row].Cells[COL_TICKS].Value != null && IsNumeric(dgView.Rows[row].Cells[COL_TICKS].Value.ToString()))
-                    {
-                        plTicksOn = Convert.ToInt32(dgView.Rows[row].Cells[COL_TICKS].Value);
-                        plRealTime = Utilities.LyricsUtilities.TicksToTime(plTicksOn, _division);
-                    }
-
-                    chordName = "";
-
-                    // Note
-                    plNote = "";
-
-                    // When we start from scratch, ie select a track with notes and add lyrics from text, there is no linefeed
-                    // So we have to unsert new rows with linefeeds                        
-                    if (bSeparatorsInGrid)
-                        row++;
-
-                    if (!bEditChords)
-                        grdRowsNoChords.Add((plTicksOn, plRealTime, plType, plNote, plElement));
-                    else
-                        grdRowsChords.Add((plTicksOn, plRealTime, plType, chordName, plNote, plElement));
-
-                }
-            
-            
-            }
-            
-
-            // Write grdRowsChords in the grid
-            if (!bEditChords)
-            {
-                for (int i = 0; i < grdRowsNoChords.Count; i++)
-                {
-                    dgView.Rows[i].Cells[COL_TICKS].Value = grdRowsNoChords[i].Item1;
-                    dgView.Rows[i].Cells[COL_TIME].Value = grdRowsNoChords[i].Item2;
-                    dgView.Rows[i].Cells[COL_TYPE].Value = grdRowsNoChords[i].Item3;
-                    dgView.Rows[i].Cells[COL_NOTE].Value = grdRowsNoChords[i].Item4;
-                    dgView.Rows[i].Cells[COL_TEXT].Value = grdRowsNoChords[i].Item5;
-                }
-            }
-            else
-            {
-                for (int i = 0; i < grdRowsChords.Count; i++ )
-                {
-                    dgView.Rows[i].Cells[COL_TICKS].Value = grdRowsChords[i].Item1;
-                    dgView.Rows[i].Cells[COL_TIME].Value = grdRowsChords[i].Item2;
-                    dgView.Rows[i].Cells[COL_TYPE].Value = grdRowsChords[i].Item3;
-                    dgView.Rows[i].Cells[COL_CHORD].Value = grdRowsChords[i].Item4;
-                    dgView.Rows[i].Cells[COL_NOTE].Value = grdRowsChords[i].Item5;
-                    dgView.Rows[i].Cells[COL_TEXT].Value = grdRowsChords[i].Item6;
-                }
-            }
-
-
-            //Load modification into local list of lyrics
-            localplLyrics = LoadModifiedLyrics();
-            
-            if (localplLyrics != null) 
-                PopulateTextBox(localplLyrics);
-
-            // Color separators
-            ColorSepRows();
-
-            // File was modified
-            FileModified();
-
-            Cursor.Current = Cursors.Default;
-        }
-
-        #endregion import lrc
+        
 
 
         #endregion
+
 
 
         #region Text import export
@@ -3189,18 +3277,18 @@ namespace Karaboss
 
             string defFilter = "TEXT files (*.txt)|*.txt|All files (*.*)|*.*";
 
-            saveMidiFileDialog.Title = "Save to TEXT format";
-            saveMidiFileDialog.Filter = defFilter;
-            saveMidiFileDialog.DefaultExt = defExt;
-            saveMidiFileDialog.InitialDirectory = @fPath;
-            saveMidiFileDialog.FileName = defName;
+            SaveFileDialog.Title = "Save to TEXT format";
+            SaveFileDialog.Filter = defFilter;
+            SaveFileDialog.DefaultExt = defExt;
+            SaveFileDialog.InitialDirectory = @fPath;
+            SaveFileDialog.FileName = defName;
 
-            if (saveMidiFileDialog.ShowDialog() != DialogResult.OK)
+            if (SaveFileDialog.ShowDialog() != DialogResult.OK)
                 return;
 
             #endregion
 
-            string FileName = saveMidiFileDialog.FileName;
+            string FileName = SaveFileDialog.FileName;
 
             SaveTextWithSep(FileName);
         }
@@ -3311,15 +3399,15 @@ namespace Karaboss
         /// <param name="e"></param>
         private void mnuEditImportLyricsTxt_Click(object sender, EventArgs e)
         {
-            openFileDialog.Title = "Open a text file";
-            openFileDialog.DefaultExt = "txt";
-            openFileDialog.Filter = "Txt files|*.txt|All files|*.*";
+            OpenFileDialog.Title = "Open a text file";
+            OpenFileDialog.DefaultExt = "txt";
+            OpenFileDialog.Filter = "Txt files|*.txt|All files|*.*";
             if (MIDIfileName != null || MIDIfileName != "")
-                openFileDialog.InitialDirectory = Path.GetDirectoryName(MIDIfileName);
+                OpenFileDialog.InitialDirectory = Path.GetDirectoryName(MIDIfileName);
 
-            if (openFileDialog.ShowDialog() == DialogResult.OK)
+            if (OpenFileDialog.ShowDialog() == DialogResult.OK)
             {
-                string fileName = openFileDialog.FileName;
+                string fileName = OpenFileDialog.FileName;
                 try
                 {
                     using (StreamReader sr = new StreamReader(fileName))
@@ -3641,7 +3729,7 @@ namespace Karaboss
             }
 
             string fullName = fPath + "\\" + fName;
-            if (File.Exists(fullName) == false)
+            if (System.IO.File.Exists(fullName) == false)
             {
                 SaveAsFileProc();
                 return;
@@ -3696,15 +3784,15 @@ namespace Karaboss
             if (defExt == ".kar")
                 defFilter = "Kar files (*.kar)|*.kar|MIDI files (*.mid)|*.mid|All files (*.*)|*.*";
 
-            saveMidiFileDialog.Title = "Save MIDI file";
-            saveMidiFileDialog.Filter = defFilter;
-            saveMidiFileDialog.DefaultExt = defExt;
-            saveMidiFileDialog.InitialDirectory = @fPath;
-            saveMidiFileDialog.FileName = defName;
+            SaveFileDialog.Title = "Save MIDI file";
+            SaveFileDialog.Filter = defFilter;
+            SaveFileDialog.DefaultExt = defExt;
+            SaveFileDialog.InitialDirectory = @fPath;
+            SaveFileDialog.FileName = defName;
 
-            if (saveMidiFileDialog.ShowDialog() == DialogResult.OK)
+            if (SaveFileDialog.ShowDialog() == DialogResult.OK)
             {
-                string fileName = saveMidiFileDialog.FileName;
+                string fileName = SaveFileDialog.FileName;
 
                 MIDIfileName = fileName;
 
@@ -4050,9 +4138,6 @@ namespace Karaboss
         }
 
         #endregion
-
-
-       
 
 
         #region Tracks

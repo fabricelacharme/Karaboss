@@ -337,9 +337,8 @@ namespace Karaboss.Utilities
             MessageBox.Show("Unable to calculate TimeToTick", "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
             return tic;
         }
+       
 
-
-        
         public class LyricsItem
         {
             public string Time { get; set; }         

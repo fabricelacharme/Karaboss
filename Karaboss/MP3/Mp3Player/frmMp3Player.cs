@@ -1236,11 +1236,11 @@ namespace Karaboss.Mp3
         /// </summary>
         private void OpenBrowseMp3()
         {
-            OpenFileDialog1.Title = "Open mp3 file";
-            OpenFileDialog1.Filter = "mp3 Files (*.mp3)|*.mp3";
-            if (OpenFileDialog1.ShowDialog() == DialogResult.OK)
+            OpenFileDialog.Title = "Open mp3 file";
+            OpenFileDialog.Filter = "mp3 Files (*.mp3)|*.mp3";
+            if (OpenFileDialog.ShowDialog() == DialogResult.OK)
             {
-                Mp3FullPath = OpenFileDialog1.FileName;
+                Mp3FullPath = OpenFileDialog.FileName;
 
                 SetTitle(Mp3FullPath);
             }
@@ -2045,25 +2045,23 @@ namespace Karaboss.Mp3
 
         #region import kok
 
+        /*
+            * KOK format example:
+            * You;26.294; can;26.892; dance;27.191;
+            * You;28.685; can;29.282; jive;29.581;
+            * Ha;31.075;ving;31.523; the;31.972; time;32.27; of;32.719; your;33.167; life;33.466;
+            * Ooh,;34.661; see;35.856; that;36.304; girl,;36.752; watch;38.246; that;38.695; scene.;39.143;
+            * Dig;40.039; in;40.189; the;40.487; dan;40.637;cing;41.085; queen;41.533;
+            * Fri;50.198;day;50.497; night;50.647; and;50.945; the;51.244; lights;51.394; are;51.692; low;51.991;
+            * Loo;54.979;king;55.278; out;55.427; for;55.726; a;56.025; place;56.174; to;56.473; go;56.772;
+            * Oh,;59.013; where;59.76; they;60.059; play;60.208; the;60.507; right;60.656; mu;60.955;sic;61.254;
+            * Get;62.15;ting;62.449; in;62.599; the;62.897; swing;63.047;
+        */
+
         private void mnuEditImportLyricsKok_Click(object sender, EventArgs e)
-        {
-            /*
-             * KOK format example:
-             * You;26.294; can;26.892; dance;27.191;
-             * You;28.685; can;29.282; jive;29.581;
-             * Ha;31.075;ving;31.523; the;31.972; time;32.27; of;32.719; your;33.167; life;33.466;
-             * Ooh,;34.661; see;35.856; that;36.304; girl,;36.752; watch;38.246; that;38.695; scene.;39.143;
-             * Dig;40.039; in;40.189; the;40.487; dan;40.637;cing;41.085; queen;41.533;
-             * Fri;50.198;day;50.497; night;50.647; and;50.945; the;51.244; lights;51.394; are;51.692; low;51.991;
-             * Loo;54.979;king;55.278; out;55.427; for;55.726; a;56.025; place;56.174; to;56.473; go;56.772;
-             * Oh,;59.013; where;59.76; they;60.059; play;60.208; the;60.507; right;60.656; mu;60.955;sic;61.254;
-             * Get;62.15;ting;62.449; in;62.599; the;62.897; swing;63.047;
-            */
-
+        {            
             ImportLyricsToKokFormat();
-        }
-
-      
+        }      
 
         private void mnuImportLyricsKok_Click(object sender, EventArgs e)
         {
@@ -2077,35 +2075,39 @@ namespace Karaboss.Mp3
 
             #region select filename
 
-            OpenFileDialog1.Title = "Open a .kok file";
-            OpenFileDialog1.DefaultExt = "kok";
-            OpenFileDialog1.Filter = "Kok files|*.kok|All files|*.*";
-            OpenFileDialog1.InitialDirectory = Path.GetDirectoryName(Mp3FullPath);
+            OpenFileDialog.Title = "Open a .kok file";
+            OpenFileDialog.DefaultExt = "kok";
+            OpenFileDialog.Filter = "Kok files|*.kok|All files|*.*";
+            OpenFileDialog.InitialDirectory = Path.GetDirectoryName(Mp3FullPath);
 
-            if (OpenFileDialog1.ShowDialog() != DialogResult.OK)
+            if (OpenFileDialog.ShowDialog() != DialogResult.OK)
                 return;
 
             
-            fileName = OpenFileDialog1.FileName;
+            fileName = OpenFileDialog.FileName;
 
             #endregion select filename
 
-
-
+            // Load KOK file and populate datagridview
             LoadKokFile(fileName);
 
-            // Update counters
-            //lblLyrics.Text = lvLyrics.Items.Count.ToString();
+            // Update counters            
             lblTimes.Text = "0";
 
             // Select first row
             dgView.Rows[0].Selected = true;
 
+            // Load lyrics in the text box
             localSyncLyrics = GetCurrentDgViewContent();
             PopulateTextBox(localSyncLyrics);                                   
         }
 
-
+        /// <summary>
+        /// Loads a KOK file and populates the data grid view with its contents.
+        /// </summary>
+        /// <remarks>If an error occurs during the loading process, an error message is displayed to the
+        /// user.</remarks>
+        /// <param name="fileName">The name of the KOK file to load. This parameter must not be null or empty.</param>
         private void LoadKokFile(string fileName)
         {
             try
@@ -2119,29 +2121,64 @@ namespace Karaboss.Mp3
             }
         }
 
+        /// <summary>
+        /// Reads a file containing pairs of words and timestamps, and returns a list of tuples representing each word
+        /// and its associated timestamp.
+        /// </summary>
+        /// <remarks>Each line in the file should be formatted as 'word;timestamp; word;timestamp; ...'.
+        /// The method processes each line, pairing words with their timestamps in the order they appear. The first word
+        /// of each line is prefixed with a line separator ('/').</remarks>
+        /// <param name="fileName">The path to the file to read. The file must exist and be accessible.</param>
+        /// <returns>A list of tuples, where each tuple contains a word and its corresponding timestamp extracted from the file.</returns>
         private List<(string, string)> KokReadFile(string fileName)
         {
             string word;
             string timestamp;
-            
+            bool paragraphSepFound = false;
+
             List<(string, string)> lstDgRows = new List<(string, string)>();
             using (StreamReader reader = new StreamReader(fileName))
             {
                 string line;
                 while ((line = reader.ReadLine()) != null)
                 {
+
+                    // Case empty line; this is a paragraph
+                    // The next line will be the first line of the new paragraph, and must be prefixed with a line separator ('/'), except if it is the first line of the file
+                    if (string.IsNullOrWhiteSpace(line))
+                    {
+                        paragraphSepFound = true;
+                        continue;
+                    }
+
                     // Each line is expected to be in the format: "word;timestamp; word;timestamp; ..."
                     string[] parts = line.Split(new char[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
                     for (int i = 0; i < parts.Length - 1; i += 2)
                     {
-                        // First word of a line starts with a line separator
-                        // No trim, because the space is used to separate words
-                        if (i == 0)
-                            word = "/" + parts[i];
-                        else
-                            word = parts[i];
-                        
+
                         timestamp = parts[i + 1].Trim();
+
+                        // Each first word of a line must starts with a line separator, except the first one of the file 
+                        // No trim, because the space is used to separate words
+                        if (i == 0 && lstDgRows.Count > 0)
+                        {
+                            
+                            if (paragraphSepFound)
+                            {
+                                word = m_SepParagraph + parts[i];
+                                paragraphSepFound = false;
+                            }
+                            else
+                            {
+                                word = m_SepLine + parts[i];
+                            }
+                                                        
+                        }
+                        else
+                        {
+                            word = parts[i];
+                        }
+                        
                         lstDgRows.Add((word, timestamp));
                     }
                 }
@@ -2149,6 +2186,13 @@ namespace Karaboss.Mp3
             return lstDgRows;
         }
 
+        /// <summary>
+        /// Populates the data grid view with rows containing words and their corresponding timestamps.
+        /// </summary>
+        /// <remarks>The method clears the existing rows in the data grid view before adding new rows.
+        /// Each timestamp is converted to a formatted string in the mm:ss:ms format and also to milliseconds for
+        /// display.</remarks>
+        /// <param name="lstDgRows">A list of tuples, where each tuple contains a word and its associated timestamp in seconds.</param>
         private void KokPopulateDgView(List<(string, string)> lstDgRows)
         {
             string sTimeStamp;
@@ -2251,16 +2295,16 @@ namespace Karaboss.Mp3
 
             string defFilter = "KOK files (*.kok)|*.kok|All files (*.*)|*.*";
 
-            SaveFileDialog1.Title = "Save to KOK format";
-            SaveFileDialog1.Filter = defFilter;
-            SaveFileDialog1.DefaultExt = defExt;
-            SaveFileDialog1.InitialDirectory = @fPath;
-            SaveFileDialog1.FileName = defName;
+            SaveFileDialog.Title = "Save to KOK format";
+            SaveFileDialog.Filter = defFilter;
+            SaveFileDialog.DefaultExt = defExt;
+            SaveFileDialog.InitialDirectory = @fPath;
+            SaveFileDialog.FileName = defName;
 
-            if (SaveFileDialog1.ShowDialog() != DialogResult.OK)
+            if (SaveFileDialog.ShowDialog() != DialogResult.OK)
                 return;
 
-            fullPath = SaveFileDialog1.FileName;
+            fullPath = SaveFileDialog.FileName;
 
             #endregion select filename
 
@@ -2330,14 +2374,14 @@ namespace Karaboss.Mp3
         /// <param name="e"></param>
         private void mnuImportLrcFile_Click(object sender, EventArgs e)
         {
-            OpenFileDialog1.Title = "Open a .lrc file";
-            OpenFileDialog1.DefaultExt = "lrc";
-            OpenFileDialog1.Filter = "Lrc files|*.lrc|All files|*.*";
-            OpenFileDialog1.InitialDirectory = Path.GetDirectoryName(Mp3FullPath);
+            OpenFileDialog.Title = "Open a .lrc file";
+            OpenFileDialog.DefaultExt = "lrc";
+            OpenFileDialog.Filter = "Lrc files|*.lrc|All files|*.*";
+            OpenFileDialog.InitialDirectory = Path.GetDirectoryName(Mp3FullPath);
 
-            if (OpenFileDialog1.ShowDialog() == DialogResult.OK)
+            if (OpenFileDialog.ShowDialog() == DialogResult.OK)
             {
-                _lrcFileName = OpenFileDialog1.FileName;
+                _lrcFileName = OpenFileDialog.FileName;
 
                 LoadLRCFile(_lrcFileName);
 
@@ -2402,14 +2446,14 @@ namespace Karaboss.Mp3
         /// <param name="e"></param>
         private void mnuImportRawLyrics_Click(object sender, EventArgs e)
         {
-            OpenFileDialog1.Title = "Open a .txt file";
-            OpenFileDialog1.DefaultExt = "txt";
-            OpenFileDialog1.Filter = "Text files|*.txt|All files|*.*";
-            OpenFileDialog1.InitialDirectory = Path.GetDirectoryName(Mp3FullPath);
+            OpenFileDialog.Title = "Open a .txt file";
+            OpenFileDialog.DefaultExt = "txt";
+            OpenFileDialog.Filter = "Text files|*.txt|All files|*.*";
+            OpenFileDialog.InitialDirectory = Path.GetDirectoryName(Mp3FullPath);
 
-            if (OpenFileDialog1.ShowDialog() == DialogResult.OK)
+            if (OpenFileDialog.ShowDialog() == DialogResult.OK)
             {
-                _lrcFileName = OpenFileDialog1.FileName;
+                _lrcFileName = OpenFileDialog.FileName;
 
                 // Reset
                 InitGridView();
@@ -2675,18 +2719,18 @@ namespace Karaboss.Mp3
 
             string defFilter = "LRC files (*.lrc)|*.lrc|All files (*.*)|*.*";
 
-            SaveFileDialog1.Title = "Save to LRC format";
-            SaveFileDialog1.Filter = defFilter;
-            SaveFileDialog1.DefaultExt = defExt;
-            SaveFileDialog1.InitialDirectory = @fPath;
-            SaveFileDialog1.FileName = defName;
+            SaveFileDialog.Title = "Save to LRC format";
+            SaveFileDialog.Filter = defFilter;
+            SaveFileDialog.DefaultExt = defExt;
+            SaveFileDialog.InitialDirectory = @fPath;
+            SaveFileDialog.FileName = defName;
 
-            if (SaveFileDialog1.ShowDialog() != DialogResult.OK)
+            if (SaveFileDialog.ShowDialog() != DialogResult.OK)
                 return;
 
             #endregion
 
-            fullPath = SaveFileDialog1.FileName;
+            fullPath = SaveFileDialog.FileName;
 
             #region metadata
             string Tag_Tool = string.Empty;
@@ -3785,17 +3829,17 @@ namespace Karaboss.Mp3
             // it is not possible to save the file on the same file (file locked)
             string mp3file = Files.FindUniqueFileName(FileName);
 
-            SaveFileDialog1 = new SaveFileDialog();
-            SaveFileDialog1.Filter = "Mp3 files (*.mp3)|*.mp3|All files (*.*)|*.*";
-            SaveFileDialog1.FilterIndex = 1;
-            SaveFileDialog1.RestoreDirectory = true;
-            SaveFileDialog1.InitialDirectory = Path.GetDirectoryName(mp3file);
-            SaveFileDialog1.FileName = Path.GetFileName(mp3file);
+            SaveFileDialog = new SaveFileDialog();
+            SaveFileDialog.Filter = "Mp3 files (*.mp3)|*.mp3|All files (*.*)|*.*";
+            SaveFileDialog.FilterIndex = 1;
+            SaveFileDialog.RestoreDirectory = true;
+            SaveFileDialog.InitialDirectory = Path.GetDirectoryName(mp3file);
+            SaveFileDialog.FileName = Path.GetFileName(mp3file);
 
-            if (SaveFileDialog1.ShowDialog() == DialogResult.OK)
+            if (SaveFileDialog.ShowDialog() == DialogResult.OK)
             {
 
-                string filename = SaveFileDialog1.FileName;
+                string filename = SaveFileDialog.FileName;
 
                 try
                 {

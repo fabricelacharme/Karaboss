@@ -77,7 +77,7 @@
             this.btnPlay = new Karaboss.NoSelectButton();
             this.sldMainVolume = new ColorSlider.ColorSlider();
             this.lnlVol = new System.Windows.Forms.Label();
-            this.OpenFileDialog1 = new System.Windows.Forms.OpenFileDialog();
+            this.OpenFileDialog = new System.Windows.Forms.OpenFileDialog();
             this.Timer1 = new System.Windows.Forms.Timer(this.components);
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.txtTitle = new System.Windows.Forms.TextBox();
@@ -124,7 +124,7 @@
             this.btnOffsetPlus = new System.Windows.Forms.Button();
             this.pnlSync = new System.Windows.Forms.Panel();
             this.lblHotkeysOthers = new System.Windows.Forms.Label();
-            this.SaveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
+            this.SaveFileDialog = new System.Windows.Forms.SaveFileDialog();
             this.Timer3 = new System.Windows.Forms.Timer(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
@@ -1112,7 +1112,7 @@
         private NoSelectButton btnPlay;
         private ColorSlider.ColorSlider sldMainVolume;
         private System.Windows.Forms.Label lnlVol;
-        internal System.Windows.Forms.OpenFileDialog OpenFileDialog1;
+        internal System.Windows.Forms.OpenFileDialog OpenFileDialog;
         internal System.Windows.Forms.Timer Timer1;
         private System.Windows.Forms.ToolTip toolTip1;
         private System.Windows.Forms.Label lblPlaylist;
@@ -1127,7 +1127,7 @@
         private System.Windows.Forms.ToolStripDropDownButton mnuExportLyrics;
         private System.Windows.Forms.ToolStripMenuItem mnuExportLyricsLrc;
         private System.Windows.Forms.Label lblMode;
-        private System.Windows.Forms.SaveFileDialog SaveFileDialog1;
+        private System.Windows.Forms.SaveFileDialog SaveFileDialog;
         private System.Windows.Forms.Label lblLyrics;
         private System.Windows.Forms.Label lblTimes;
         private System.Windows.Forms.Label lblHotkeys;
