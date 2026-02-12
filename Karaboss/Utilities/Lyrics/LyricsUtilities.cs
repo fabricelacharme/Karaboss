@@ -445,7 +445,7 @@ namespace Karaboss.Utilities
         {            
             string sTime;
             double time;
-            TimeSpan ts;
+            //TimeSpan ts;
 
             string sLyric;
 
@@ -683,7 +683,7 @@ namespace Karaboss.Utilities
             List<string> lstLines = new List<string>();
             string line;
             string sTime;
-            string tx;
+            //string tx;
             string removepattern3 = @"\[\d{2}[:]\d{2}[.]\d{3}\]";
             string removepattern2 = @"\[\d{2}[:]\d{2}[.]\d{2}\]";
             string removePattern;
@@ -810,8 +810,8 @@ namespace Karaboss.Utilities
             // Split by "[" to have lines
             string[] lines = tx.Split('/');
             string line;
-            string[] items;
-            string item;
+            //string[] items;
+            //string item;
             tx = string.Empty;
 
             // Regex to capture timestamps and words => for milliseconds having 3 digits or 2
@@ -970,8 +970,8 @@ namespace Karaboss.Utilities
             List<string> lstTimeLines = new List<string>();
             string line;
             string sTime;
-            string[] items;
-            string item;
+            //string[] items;
+            //string item;
             string tx;
 
             string pattern3digits = @"(?:\[(\d{2}:\d{2}\.\d{3})\]|<(\d{2}:\d{2}\.\d{3})>)(\S+)";
@@ -982,7 +982,7 @@ namespace Karaboss.Utilities
             string removepattern2 = @"\[\d{2}[:]\d{2}[.]\d{2}\]";
             string removePattern;
             int removeChars;
-            string replace = @"";
+            //string replace = @"";
 
             string timestamp;
             string word;

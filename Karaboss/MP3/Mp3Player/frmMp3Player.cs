@@ -85,7 +85,7 @@ namespace Karaboss.Mp3
             Forward,
             Backward
         }
-        private Directions _direction;
+        //private Directions _direction;
 
         #region lrc generator
 
@@ -114,7 +114,7 @@ namespace Karaboss.Mp3
 
         private int m_MillisecondsOffset = 100; // Default offset in milliseconds to display lyrics
 
-        private Mp3LyricsTypes Mp3LyricsType;
+        //private Mp3LyricsTypes Mp3LyricsType;
         public bool bfilemodified = false;
 
         // SlideShow directory
@@ -169,8 +169,8 @@ namespace Karaboss.Mp3
 
         #region forms
         private bool scrolling = false;
-        private bool closing = false;
-        private bool loading = false;
+        //private bool closing = false;
+        //private bool loading = false;
 
         private string Mp3FullPath;
         private string Mp3FileName;
@@ -264,6 +264,7 @@ namespace Karaboss.Mp3
 
         private void frmMp3Player_Load(object sender, EventArgs e)
         {
+            
             // Set window location and size
             #region window size & location
             // If window is maximized
@@ -297,7 +298,7 @@ namespace Karaboss.Mp3
 
         protected override void OnClosing(CancelEventArgs e)
         {
-            closing = true;
+            //closing = true;
             base.OnClosing(e);
         }
 
@@ -1769,7 +1770,7 @@ namespace Karaboss.Mp3
                 if (Application.OpenForms.OfType<frmMp3Lyrics>().Count() > 0)
                 {
                     // During the waiting time, display informations about the next singer
-                    int nbLines;
+                    //int nbLines;
                     string toptxt;
                     string centertxt;
 
@@ -1777,7 +1778,7 @@ namespace Karaboss.Mp3
                     {
                         toptxt = "Next song: " + Path.GetFileNameWithoutExtension(currentPlaylistItem.Song);
                         centertxt = Path.GetFileNameWithoutExtension(currentPlaylistItem.Song);
-                        nbLines = 1;
+                        //nbLines = 1;
                     }
                     else
                     {
@@ -1786,7 +1787,7 @@ namespace Karaboss.Mp3
                         centertxt = Path.GetFileNameWithoutExtension(currentPlaylistItem.Song)
                             + _InternalSepLines + Karaboss.Resources.Localization.Strings.SungBy
                             + _InternalSepLines + currentPlaylistItem.KaraokeSinger;
-                        nbLines = 4;
+                        //nbLines = 4;
                     }
 
                 }
@@ -2869,8 +2870,8 @@ namespace Karaboss.Mp3
         {
             string sTime;
             long time;
-            TimeSpan ts;
-            string tsp;
+            //TimeSpan ts;
+            //string tsp;
 
             string sType;
             string sLyric;

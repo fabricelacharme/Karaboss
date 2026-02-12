@@ -65,7 +65,7 @@ namespace Karaboss
             Forward,
             Backward
         }
-        private Directions _direction;
+        //private Directions _direction;
 
         private long cdgpos = 0;
 
@@ -102,7 +102,7 @@ namespace Karaboss
         // Playlists
         private readonly Playlist currentPlaylist;
         private PlaylistItem currentPlaylistItem;
-        private readonly string _InternalSepLines = "¼";
+        //private readonly string _InternalSepLines = "¼";
 
 
         /// <summary>

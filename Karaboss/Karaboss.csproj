@@ -68,7 +68,7 @@
     </Reference>
     <Reference Include="Bass.Net, Version=2.4.17.6, Culture=neutral, PublicKeyToken=b7566c273e6ef480, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>Mp3 Video\Bass\Bass.Net.dll</HintPath>
+      <HintPath>Mp3\Bass\Bass.Net.dll</HintPath>
     </Reference>
     <Reference Include="CDGNet">
       <HintPath>..\CDGNet\bin\Debug\CDGNet.dll</HintPath>
@@ -1171,6 +1171,7 @@
     <Folder Include="Mp3 Video\Lame\" />
     <Folder Include="Mp3 Video\Unzip\" />
     <Folder Include="Mp3 Video\Video\" />
+    <Folder Include="Mp3\Bass\" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -64,7 +64,7 @@ namespace Karaboss
             Forward,
             Backward
         }
-        private Directions _direction;
+        //private Directions _direction;
 
         #region Lyrics declaration
 
