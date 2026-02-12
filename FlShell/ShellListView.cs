@@ -85,7 +85,8 @@ namespace FlShell
         [DllImport("uxtheme.dll", ExactSpelling = true, CharSet = CharSet.Unicode)]
         public static extern int SetWindowTheme(IntPtr hWnd, String pszSubAppName, String pszSubIdList);
 
-        private WindowsContextMenu m_WindowsContextMenu = new WindowsContextMenu();
+        private WindowsContextMenu m_WindowsContextMenu = new WindowsContextMenu();       
+
 
         /// <summary>
         /// Represents the method that will handle FilterItem events.
@@ -299,7 +300,7 @@ namespace FlShell
             // Allow drag & drop
             m_ListView.AllowDrop = true;
             m_ListView.AllowDrop = false;
-            this.AllowDrop = true;
+            this.AllowDrop = true;          
 
             selectedOrder = new ArrayList();
 
@@ -1014,8 +1015,7 @@ namespace FlShell
             SHCONTF filter = SHCONTF.FOLDERS;
             if (ShouldShowHidden()) filter |= SHCONTF.INCLUDEHIDDEN;
             return folder.GetEnumerator(filter);
-        }
-
+        }    
 
 
         #region properties
