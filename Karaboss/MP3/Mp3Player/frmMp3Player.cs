@@ -2368,11 +2368,30 @@ namespace Karaboss.Mp3
         #region import lrc
 
         /// <summary>
-        /// Import an LRC file
+        /// Handles the Click event to import lyrics from an LRC file.
+        /// </summary>
+        /// <remarks>This method invokes the ImportLyricsFromLrc method to perform the import operation
+        /// when the user selects the corresponding menu item.</remarks>
+        /// <param name="sender">The source of the event, typically the menu item that was clicked.</param>
+        /// <param name="e">An EventArgs object that contains the event data.</param>
+        private void mnuEditImportLyricsLrc_Click(object sender, EventArgs e)
+        {
+            ImportLyricsFromLrc();
+        }
+
+
+        /// <summary>
+        /// Import lyrics form an LRC file
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void mnuImportLrcFile_Click(object sender, EventArgs e)
+        {
+            ImportLyricsFromLrc();
+        }
+
+
+        private void ImportLyricsFromLrc()
         {
             OpenFileDialog.Title = "Open a .lrc file";
             OpenFileDialog.DefaultExt = "lrc";
@@ -2396,7 +2415,6 @@ namespace Karaboss.Mp3
                 PopulateTextBox(localSyncLyrics);
             }
         }
-
 
         /// <summary>
         /// Load a LRC file (timestamps + lyrics)
@@ -2439,56 +2457,7 @@ namespace Karaboss.Mp3
         }
 
 
-        /// <summary>
-        /// Import a text file (no timestamps)
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void mnuImportRawLyrics_Click(object sender, EventArgs e)
-        {
-            OpenFileDialog.Title = "Open a .txt file";
-            OpenFileDialog.DefaultExt = "txt";
-            OpenFileDialog.Filter = "Text files|*.txt|All files|*.*";
-            OpenFileDialog.InitialDirectory = Path.GetDirectoryName(Mp3FullPath);
-
-            if (OpenFileDialog.ShowDialog() == DialogResult.OK)
-            {
-                _lrcFileName = OpenFileDialog.FileName;
-
-                // Reset
-                InitGridView();
-
-                string[] lines = System.IO.File.ReadAllLines(_lrcFileName);
-                string line;
-
-                for (int i = 0; i < lines.Count(); i++)
-                {
-                    line = lines[i].Trim();
-                    if (line != "")
-                    {
-                        line = line.Replace(" ", "_");
-                        line = m_SepLine + line;
-                        dgView.Rows.Add("", "", line);
-                    }
-                }
-
-                // Update counters
-                //lblLyrics.Text = lvLyrics.Items.Count.ToString();
-                lblTimes.Text = "0";
-
-                // Select first row
-                dgView.Rows[0].Selected = true;
-
-                localSyncLyrics = GetCurrentDgViewContent();
-                PopulateTextBox(localSyncLyrics);
-
-
-                if (MessageBox.Show(Strings.SwitchToSyncMode + "?", "Karaboss", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
-                {
-                    SetSyncEditMode();
-                }
-            }
-        }
+       
 
         /// <summary>
         /// Store dgView content
@@ -2568,7 +2537,6 @@ namespace Karaboss.Mp3
 
 
         #region export lrc
-
 
         #region save lrc
 
@@ -3195,10 +3163,7 @@ namespace Karaboss.Mp3
 
         }
 
-        private void mnuEditImportLyricsLrc_Click(object sender, EventArgs e)
-        {
-
-        }
+       
 
         #endregion export lrc
 
@@ -3209,10 +3174,65 @@ namespace Karaboss.Mp3
         #region txt import export
 
         #region import txt
+
+        /// <summary>
+        /// Import a text file (no timestamps)
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void mnuEditImportLyricsTxt_Click(object sender, EventArgs e)
         {
+            ImportLyricsFromTxt();
 
         }
+
+        private void ImportLyricsFromTxt()
+        {
+
+            OpenFileDialog.Title = "Open a .txt file";
+            OpenFileDialog.DefaultExt = "txt";
+            OpenFileDialog.Filter = "Text files|*.txt|All files|*.*";
+            OpenFileDialog.InitialDirectory = Path.GetDirectoryName(Mp3FullPath);
+
+            if (OpenFileDialog.ShowDialog() == DialogResult.OK)
+            {
+                _lrcFileName = OpenFileDialog.FileName;
+
+                // Reset
+                InitGridView();
+
+                string[] lines = System.IO.File.ReadAllLines(_lrcFileName);
+                string line;
+
+                for (int i = 0; i < lines.Count(); i++)
+                {
+                    line = lines[i].Trim();
+                    if (line != "")
+                    {
+                        line = line.Replace(" ", "_");
+                        line = m_SepLine + line;
+                        dgView.Rows.Add("", "", line);
+                    }
+                }
+
+                // Update counters
+                //lblLyrics.Text = lvLyrics.Items.Count.ToString();
+                lblTimes.Text = "0";
+
+                // Select first row
+                dgView.Rows[0].Selected = true;
+
+                localSyncLyrics = GetCurrentDgViewContent();
+                PopulateTextBox(localSyncLyrics);
+
+
+                if (MessageBox.Show(Strings.SwitchToSyncMode + "?", "Karaboss", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+                {
+                    SetSyncEditMode();
+                }
+            }
+        }
+     
 
         #endregion import txt
 
@@ -4878,9 +4898,8 @@ namespace Karaboss.Mp3
 
 
 
-        #endregion aniballs
 
-        
- 
+
+        #endregion aniballs
     }
 }

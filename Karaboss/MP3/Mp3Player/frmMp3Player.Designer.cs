@@ -914,7 +914,7 @@
             // 
             this.mnuImportLyricsTxt.Name = "mnuImportLyricsTxt";
             resources.ApplyResources(this.mnuImportLyricsTxt, "mnuImportLyricsTxt");
-            this.mnuImportLyricsTxt.Click += new System.EventHandler(this.mnuImportRawLyrics_Click);
+            this.mnuImportLyricsTxt.Click += new System.EventHandler(this.mnuEditImportLyricsTxt_Click);
             // 
             // mnuImportLyricsKok
             // 
