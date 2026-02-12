@@ -93,7 +93,7 @@ namespace Karaboss
         // Size mode of the picture background
         private PictureBoxSizeMode SizeMode;
 
-        private frmLyric frmLyric;
+        private frmMidiLyric frmLyric;
         
         #endregion private properties
 
@@ -665,11 +665,11 @@ namespace Karaboss
         {
             SaveOptions();
 
-            if (Application.OpenForms.OfType<frmLyric>().Count() > 0)
+            if (Application.OpenForms.OfType<frmMidiLyric>().Count() > 0)
             {
                 Cursor.Current = Cursors.WaitCursor;
 
-                frmLyric = Utilities.FormUtilities.GetForm<frmLyric>();
+                frmLyric = Utilities.FormUtilities.GetForm<frmMidiLyric>();
 
                 frmLyric.bShowBalls = Karaclass.m_DisplayBalls;
 
@@ -780,7 +780,7 @@ namespace Karaboss
             }
 
             // Active le formulaire frmLyric
-            if (Application.OpenForms.OfType<frmLyric>().Count() > 0)
+            if (Application.OpenForms.OfType<frmMidiLyric>().Count() > 0)
             {
                 // Restore form
                 Application.OpenForms["frmLyric"].Restore();

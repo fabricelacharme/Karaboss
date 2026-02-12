@@ -50,7 +50,7 @@ using TagLib.Riff;
 
 namespace Karaboss
 {
-    public partial class frmLyricsEdit : Form
+    public partial class frmMidiLyricsEdit : Form
     {
 
         /* Lyrics edition form
@@ -157,7 +157,7 @@ namespace Karaboss
         /// <param name="myLyricsMgmt"></param>
         /// <param name="fileName"></param>
         /// <param name="EditChords"></param>
-        public frmLyricsEdit(Sequence sequence, List<plLyric> plLyrics, MidiLyricsMgmt myLyricsMgmt, string fileName, bool EditChords = false)
+        public frmMidiLyricsEdit(Sequence sequence, List<plLyric> plLyrics, MidiLyricsMgmt myLyricsMgmt, string fileName, bool EditChords = false)
         {
             InitializeComponent();
 
@@ -2392,23 +2392,24 @@ namespace Karaboss
                 OpenFileDialog.InitialDirectory = Path.GetDirectoryName(MIDIfileName);
 
 
-            if (OpenFileDialog.ShowDialog() == DialogResult.OK)
-            {
-                string fileName = OpenFileDialog.FileName;
+            if (OpenFileDialog.ShowDialog() != DialogResult.OK)
+                return;
+            
+            string fileName = OpenFileDialog.FileName;
 
-                try
+            try
+            {
+                using (StreamReader sr = new StreamReader(fileName))
                 {
-                    using (StreamReader sr = new StreamReader(fileName))
-                    {
-                        String lines = sr.ReadToEnd();
-                        LoadLRCFile(lines);
-                    }
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show("The file could not be read:" + ex.Message, "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    String lines = sr.ReadToEnd();
+                    LoadLRCFile(lines);
                 }
             }
+            catch (Exception ex)
+            {
+                MessageBox.Show("The file could not be read:" + ex.Message, "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            
         }
 
 

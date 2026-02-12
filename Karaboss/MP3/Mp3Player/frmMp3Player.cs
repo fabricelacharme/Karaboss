@@ -2399,22 +2399,23 @@ namespace Karaboss.Mp3
             OpenFileDialog.Filter = "Lrc files|*.lrc|All files|*.*";
             OpenFileDialog.InitialDirectory = Path.GetDirectoryName(Mp3FullPath);
 
-            if (OpenFileDialog.ShowDialog() == DialogResult.OK)
-            {
-                _lrcFileName = OpenFileDialog.FileName;
+            if (OpenFileDialog.ShowDialog() != DialogResult.OK)
+                return;
+            
+            _lrcFileName = OpenFileDialog.FileName;
 
-                LoadLRCFile(_lrcFileName);
+            LoadLRCFile(_lrcFileName);
 
-                // Update counters
-                //lblLyrics.Text = lvLyrics.Items.Count.ToString();
-                lblTimes.Text = "0";
+            // Update counters
+            //lblLyrics.Text = lvLyrics.Items.Count.ToString();
+            lblTimes.Text = "0";
 
-                // Select first row
-                dgView.Rows[0].Selected = true;
+            // Select first row
+            dgView.Rows[0].Selected = true;
 
-                localSyncLyrics = GetCurrentDgViewContent();
-                PopulateTextBox(localSyncLyrics);
-            }
+            localSyncLyrics = GetCurrentDgViewContent();
+            PopulateTextBox(localSyncLyrics);
+            
         }
 
         /// <summary>
@@ -2456,8 +2457,6 @@ namespace Karaboss.Mp3
 
             Cursor.Current = Cursors.Default;
         }
-
-
        
 
         /// <summary>

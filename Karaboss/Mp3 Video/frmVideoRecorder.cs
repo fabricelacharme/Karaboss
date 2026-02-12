@@ -121,7 +121,7 @@ namespace Karaboss
         #endregion audio declarations
 
 
-        private frmLyric frmLyrics;
+        private frmMidiLyric frmLyrics;
         private IntPtr HwndLyrics = IntPtr.Zero;
 
         private frmPianoTraining FrmPianoTraining;
@@ -563,9 +563,9 @@ namespace Karaboss
         {
             IntPtr pt = IntPtr.Zero;
 
-            if (Application.OpenForms.OfType<frmLyric>().Count() > 0)
+            if (Application.OpenForms.OfType<frmMidiLyric>().Count() > 0)
             {
-                frmLyrics = Utilities.FormUtilities.GetForm<frmLyric>();
+                frmLyrics = Utilities.FormUtilities.GetForm<frmMidiLyric>();
                 pt = frmLyrics.Handle;
             }
             return pt;

@@ -47,7 +47,7 @@ using static System.Windows.Forms.VisualStyles.VisualStyleElement.Rebar;
 
 namespace Karaboss
 {
-    public partial class frmLyric : Form, IMessageFilter
+    public partial class frmMidiLyric : Form, IMessageFilter
     {
         #region Move form without title bar
         public const int WM_NCLBUTTONDOWN = 0xA1;
@@ -440,7 +440,7 @@ namespace Karaboss
         /// Constructor
         /// </summary>
         /// <param name="_myLyricsMgmt"></param>
-        public frmLyric(MidiLyricsMgmt _myLyricsMgmt)
+        public frmMidiLyric(MidiLyricsMgmt _myLyricsMgmt)
         {
             InitializeComponent();
 

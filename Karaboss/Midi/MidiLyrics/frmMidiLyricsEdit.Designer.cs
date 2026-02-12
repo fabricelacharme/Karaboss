@@ -1,6 +1,6 @@
 ﻿namespace Karaboss
 {
-    partial class frmLyricsEdit
+    partial class frmMidiLyricsEdit
     {
         /// <summary>
         /// Required designer variable.
@@ -29,7 +29,7 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmLyricsEdit));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmMidiLyricsEdit));
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.dgView = new System.Windows.Forms.DataGridView();
             this.dTime = new System.Windows.Forms.DataGridViewTextBoxColumn();

@@ -1,6 +1,6 @@
 ﻿namespace Karaboss
 {
-    partial class frmLyric
+    partial class frmMidiLyric
     {
         /// <summary>
         /// Required designer variable.
@@ -29,7 +29,7 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmLyric));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmMidiLyric));
             this.pnlBalls = new System.Windows.Forms.Panel();
             this.pnlTittle = new System.Windows.Forms.Panel();
             this.lblTittle = new System.Windows.Forms.Label();
