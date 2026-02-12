@@ -130,6 +130,7 @@ namespace Karaboss
 
         // Midifile characteristics
         //private double _duration = 0;  // en secondes
+        private double _duration;
         private int _totalTicks = 0;        
         private double _ppqn;
         private double _division;
@@ -2145,10 +2146,12 @@ namespace Karaboss
         /// <returns>A list of tuples, where each tuple contains a word and its corresponding timestamp extracted from the file.</returns>
         private List<(string, string)> KokReadFile(string fileName)
         {
-            string word;
-            string timestamp = string.Empty;
+            string word;                                // Syllabe or line separator (first word of the line is prefixed with a line separator ('/'), except if it is the first line of the file)
+            string sTimestamp = string.Empty;            // The timestamp is in seconds, with decimals (ex: 26.294)
+            double timestamp;
             bool paragraphSepFound = false;
 
+            _duration = TempoUtilities.GetMidiDuration(_totalTicks, _division);
 
             List<(string, string)> lstDgRows = new List<(string, string)>();
             using (StreamReader reader = new StreamReader(fileName))
@@ -2169,8 +2172,19 @@ namespace Karaboss
                     string[] parts = line.Split(new char[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
                     for (int i = 0; i < parts.Length - 1; i += 2)
                     {                       
-                        timestamp = parts[i + 1].Trim();
-                        
+                        sTimestamp = parts[i + 1].Trim();
+
+
+                        // Check if timespam is less than the song duration
+                        #region guard
+                        timestamp = Convert.ToDouble(sTimestamp);
+                        if (timestamp > _duration) 
+                        { 
+                            MessageBox.Show("Timestamp " + sTimestamp + " on line " + (lstDgRows.Count / 2 + 1) + " is higher than song duration (" + _duration + " seconds). Please correct it.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error); sTimestamp = _duration.ToString(); 
+                            return new List<(string, string)>();
+                        }
+                        #endregion guard
+
                         // Adaptation to frmLyricsEdit
                         // Separate lines separators from the text, to be able to display them in a specific color in the datagridview
                         if (i == 0 && lstDgRows.Count > 0)
@@ -2185,18 +2199,18 @@ namespace Karaboss
                             else
                                 word = m_SepLine;
                             
-                            lstDgRows.Add((word, timestamp));
+                            lstDgRows.Add((word, sTimestamp));
 
                             // The word without the line separator is added as a new row, to be able to display it in the datagridview
                             word = parts[i];
-                            lstDgRows.Add((word, timestamp));
+                            lstDgRows.Add((word, sTimestamp));
                         }
                         else 
                         {
                             // Syllabe in the middle of the line
                             word = parts[i];
-                            timestamp = parts[i + 1].Trim();
-                            lstDgRows.Add((word, timestamp));
+                            sTimestamp = parts[i + 1].Trim();
+                            lstDgRows.Add((word, sTimestamp));
                         }
                     }
                 }
@@ -2216,8 +2230,7 @@ namespace Karaboss
             string sTimeStamp;
             dgView.Rows.Clear();
             foreach (var (word, timestamp) in lstDgRows)
-            {
-
+            {               
                 // In the second column, the time is in format mm:ss:ms
                 // Convert timestamp to mm:ss:ms
                 sTimeStamp = TimeSpan.FromSeconds(Convert.ToDouble(timestamp)).ToString(@"mm\:ss\.fff");
