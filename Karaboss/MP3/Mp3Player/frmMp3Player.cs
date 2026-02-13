@@ -2404,7 +2404,7 @@ namespace Karaboss.Mp3
             
             _lrcFileName = OpenFileDialog.FileName;
 
-            LoadLRCFile(_lrcFileName);
+            LoadLrcFile(_lrcFileName);
 
             // Update counters
             //lblLyrics.Text = lvLyrics.Items.Count.ToString();
@@ -2422,7 +2422,7 @@ namespace Karaboss.Mp3
         /// Load a LRC file (timestamps + lyrics)
         /// </summary>
         /// <param name="Source"></param>
-        private void LoadLRCFile(string FileName)
+        private void LoadLrcFile(string FileName)
         {
             long time;
             string sTime;

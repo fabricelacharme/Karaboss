@@ -41,6 +41,7 @@ using Sanford.Multimedia.Midi;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Drawing.Text;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -2383,6 +2384,10 @@ namespace Karaboss
         /// <param name="e"></param>
         private void mnuEditImportLyricsLrc_Click(object sender, EventArgs e)
         {
+            ImportLyricsFormLrc();
+           
+            /*
+
             OpenFileDialog.Title = "Open a .lrc file";
             OpenFileDialog.DefaultExt = "lrc";
             OpenFileDialog.Filter = "lrc files|*.lrc|All files|*.*";
@@ -2402,23 +2407,113 @@ namespace Karaboss
                 using (StreamReader sr = new StreamReader(fileName))
                 {
                     String lines = sr.ReadToEnd();
-                    LoadLRCFile(lines);
+                    LoadLrcFile(lines);
                 }
             }
             catch (Exception ex)
             {
                 MessageBox.Show("The file could not be read:" + ex.Message, "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
-            
+            */
         }
 
 
+        private void ImportLyricsFormLrc()
+        {
+            OpenFileDialog.Title = "Open a .lrc file";
+            OpenFileDialog.DefaultExt = "lrc";
+            OpenFileDialog.Filter = "lrc files|*.lrc|All files|*.*";
+
+            // Get initial directory from midi file
+            if (MIDIfileName != null || MIDIfileName != "")
+                OpenFileDialog.InitialDirectory = Path.GetDirectoryName(MIDIfileName);
+
+
+            if (OpenFileDialog.ShowDialog() != DialogResult.OK)
+                return;
+
+            string fileName = OpenFileDialog.FileName;
+
+            LoadLrcFile(fileName);
+
+            //Load modification into local list of lyrics
+            localplLyrics = LoadModifiedLyrics();
+
+            if (localplLyrics != null)
+                PopulateTextBox(localplLyrics);
+
+            // Color separators
+            ColorSepRows();
+
+            // File was modified
+            FileModified();
+
+            Cursor.Current = Cursors.Default;
+        }
+
+
+        private void LoadLrcFile(string FileName)
+        {
+           
+            Cursor.Current = Cursors.WaitCursor;
+
+            // Read the LRc file and store the result in a list of list of syllabes (each line is a list of syllabes)
+            MidiLyricsMgmtHelper.SyncLyrics = MidiLyricsMgmtHelper.GetKEffectLrcLyrics(FileName);
+            
+            List<List<keffect.KaraokeEffect.kSyncText>> SyncLyrics = MidiLyricsMgmtHelper.SyncLyrics;
+
+
+            // Need to formate the list of syllabes in order to separate the line separators from the syllabes, to be able to display them in a specific color in the datagridview
+            SyncLyrics = MidiLyricsMgmtHelper.AddLinesForSeparators(SyncLyrics);
+
+            InitGridView();
+
+            // populate the gridView with the list of syllabes
+            LrcPopulateDgView(SyncLyrics);
+
+            
+            Cursor.Current = Cursors.Default;
+
+        }
+
+
+        private void LrcPopulateDgView(List<List<keffect.KaraokeEffect.kSyncText>> SyncLyrics)
+        {
+            string sTimeStamp;
+            
+            foreach (List < keffect.KaraokeEffect.kSyncText > SyncLine in SyncLyrics)
+            {
+                
+                for (int i = 0; i < SyncLine.Count; i++)
+                {
+                    long time = SyncLine[i].Time;
+                    string text = SyncLine[i].Text;
+
+                    // In the second column, the time is in format mm:ss:ms
+                    // Convert timestamp to mm:ss:ms
+                    sTimeStamp = TimeSpan.FromMilliseconds(time).ToString(@"mm\:ss\.fff");
+                    // Convert timestamp to milliseconds if necessary
+                    double ms = time; // Assuming timestamp is already in milliseconds
+                    // Convert ms to ticks
+                    ms = Utilities.LyricsUtilities.TimeToTicks(sTimeStamp, _division, _tempo);
+                    // 5 Columns: ticks, time, type, note, text
+                    if (text == m_SepLine)
+                        dgView.Rows.Add(ms, sTimeStamp, "cr", "", text);
+                    else if (text == m_SepParagraph)
+                        dgView.Rows.Add(ms, sTimeStamp, "par", "", text);
+                    else
+                        dgView.Rows.Add(ms, sTimeStamp, "text", "", text);
+                }
+                
+               
+            }
+        }
 
         /// <summary>
         /// Load a LRC file (times + lyrics)
         /// </summary>
         /// <param name="Source"></param>
-        private void LoadLRCFile(string Source)
+        private void LoadLRCFile2(string Source)
         {
             //bool bUpdateMode = false;
             bool bSeparatorsInGrid = false;
