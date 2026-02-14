@@ -424,15 +424,25 @@ namespace Karaboss.Mp3.Mp3Lyrics
 
             string timestamp;
             string word;
+            bool bParagraph = false;
 
             for (int i = 0; i < lines.Length; i++)
             {
                 // study line by line
                 line = lines[i];
 
-                // Warning lines with only a time stamp, without lyric [00:08.05] is rejected
+
+                // Warning lines with only a time stamp, without lyric [00:08.05] is rejected by the pattern because it doesn't contain any word.
+                // Lines with only a timestamp are paragraphs.
                 if (line.StartsWith("[") && line.EndsWith("]"))
-                    line = line + "/";
+                {
+                    // Is it a timestamp?
+                    string lin = line + "@";
+                    MatchCollection matchs = Regex.Matches(lin, pattern);
+                    if (matchs.Count == 0) continue;
+                    //line = line + m_SepParagraph;
+                    bParagraph = true;
+                }
 
                 MatchCollection matches = Regex.Matches(line, pattern);
                 if (matches.Count == 0) continue;
@@ -452,13 +462,25 @@ namespace Karaboss.Mp3.Mp3Lyrics
                     // => separate different words of a line
                     if (matches.Count > 1)
                         word = word + " ";
-                    
-                    // Add a linefeed if timestamp was "[]"
+
+                    // Add a paragraph separator if timestamp was "[]"
                     if (match.Groups[1].Value != "")
                     {
                         // Why add a \r\n? => Keep information of start new line
                         // This will be replaced by a "/" in frmMp3EditLyrics
-                        word = Environment.NewLine + word;    
+                        //word = Environment.NewLine + word;    
+
+                        // If the line is only a timestamp, it is a paragraph, otherwise it is a line
+                        if (bParagraph)
+                        {
+                            word = m_SepParagraph + word;
+                            bParagraph = false;
+                        }
+                        else
+                        {
+                            word = m_SepLine + word;
+                        }
+
                     }
 
                     time = (long)TimeToMs(timestamp);

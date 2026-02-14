@@ -265,9 +265,7 @@ namespace Karaboss
             // Color separators
             ColorSepRows();
 
-            DisplayTags();
-
-            ResizeMe();
+            DisplayTags();            
 
             Cursor.Current = Cursors.Default;
         }
@@ -1428,6 +1426,10 @@ namespace Karaboss
                 c.DefaultCellStyle.Font = dgViewCellsFont;
                 c.ReadOnly = false;
             }
+
+            // Resize columns
+            ResizeMe();
+
         }
 
         private void dgView_RowsRemoved(object sender, DataGridViewRowsRemovedEventArgs e)
@@ -2110,6 +2112,9 @@ namespace Karaboss
             // Color separators
             ColorSepRows();
 
+            // Adapt height of cells to duration between syllabes
+            HeightsToDurations();
+
             // File was modified
             FileModified();
 
@@ -2229,7 +2234,9 @@ namespace Karaboss
         private void KokPopulateDgView(List<(string, string)> lstDgRows)
         {
             string sTimeStamp;
+            string lyric;
             dgView.Rows.Clear();
+
             foreach (var (word, timestamp) in lstDgRows)
             {               
                 // In the second column, the time is in format mm:ss:ms
@@ -2247,7 +2254,10 @@ namespace Karaboss
                 else if (word == m_SepParagraph)
                     dgView.Rows.Add(ms, sTimeStamp, "par", "", word);
                 else
-                    dgView.Rows.Add(ms, sTimeStamp, "text", "", word);
+                {
+                    lyric = word.Replace(" ", "_");
+                    dgView.Rows.Add(ms, sTimeStamp, "text", "", lyric);
+                }
             }
         }
 
@@ -2415,6 +2425,9 @@ namespace Karaboss
             // Color separators
             ColorSepRows();
 
+            // Adapt height of cells to duration between syllabes
+            HeightsToDurations();
+
             // File was modified
             FileModified();
 
@@ -2472,7 +2485,10 @@ namespace Karaboss
                     else if (text == m_SepParagraph)
                         dgView.Rows.Add(ms, sTimeStamp, "par", "", text);
                     else
+                    {
+                        text = text.Replace(" ", "_"); // replace spaces with _ to be able to display them in the datagridview
                         dgView.Rows.Add(ms, sTimeStamp, "text", "", text);
+                    }
                 }
                 
                
