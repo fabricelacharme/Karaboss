@@ -950,10 +950,10 @@ namespace Karaboss
         /// <param name="e"></param>
         private void btnEditLyrics_Click(object sender, EventArgs e)
         {
-            if (Application.OpenForms.OfType<frmPlayer>().Count() > 0)
-            {
-                frmPlayer frmPlayer = Utilities.FormUtilities.GetForm<frmPlayer>();
-                frmPlayer.DisplayEditLyricsForm();
+            if (Application.OpenForms.OfType<frmMidiPlayer>().Count() > 0)
+            {                
+                frmMidiPlayer frmPlayer = Utilities.FormUtilities.GetForm<frmMidiPlayer>();
+                frmPlayer.DisplayEditLyricsForm();                
             }
         }
 
@@ -1026,7 +1026,7 @@ namespace Karaboss
                 LoadSong(myLyricsMgmt.plLyrics);
 
                 // Refresh score with or without chords
-                frmPlayer frmPlayer = Utilities.FormUtilities.GetForm<frmPlayer>();
+                frmMidiPlayer frmPlayer = Utilities.FormUtilities.GetForm<frmMidiPlayer>();
                 frmPlayer.RefreshChordsSheetMusic();
 
                 // Set cursor as default
@@ -1081,7 +1081,7 @@ namespace Karaboss
         /// <param name="e"></param>
         private void btnEditLyricsChords_Click(object sender, EventArgs e)
         {
-            frmPlayer frmPlayer = Utilities.FormUtilities.GetForm<frmPlayer>();
+            frmMidiPlayer frmPlayer = Utilities.FormUtilities.GetForm<frmMidiPlayer>();
             frmPlayer.DisplayEditLyricsChordsForm();
         }
 

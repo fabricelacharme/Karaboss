@@ -200,9 +200,9 @@ namespace Karaboss
             {
                 AddTags();
 
-                if (Application.OpenForms.OfType<frmPlayer>().Count() > 0)
+                if (Application.OpenForms.OfType<frmMidiPlayer>().Count() > 0)
                 {
-                    frmPlayer frmPlayer = Utilities.FormUtilities.GetForm<frmPlayer>();                    
+                    frmMidiPlayer frmPlayer = Utilities.FormUtilities.GetForm<frmMidiPlayer>();                    
                     frmPlayer.FileModified();
                 }
                 MessageBox.Show("Tags saved successfully", "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Information);

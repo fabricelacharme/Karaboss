@@ -2,7 +2,7 @@ using Sanford.Multimedia.Midi;
 
 namespace Karaboss
 {
-    partial class frmPlayer
+    partial class frmMidiPlayer
     {
         /// <summary>
         /// Required designer variable.
@@ -31,7 +31,7 @@ namespace Karaboss
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmPlayer));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmMidiPlayer));
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.mnuFile = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuFileNew = new System.Windows.Forms.ToolStripMenuItem();

@@ -274,9 +274,9 @@ namespace Karaboss
 
             sheetmusic.SelectTempoSymbol(_tempoSymbol);
 
-            if (Application.OpenForms.OfType<frmPlayer>().Count() > 0)
+            if (Application.OpenForms.OfType<frmMidiPlayer>().Count() > 0)
             {
-                frmPlayer frmPlayer = Utilities.FormUtilities.GetForm<frmPlayer>();
+                frmMidiPlayer frmPlayer = Utilities.FormUtilities.GetForm<frmMidiPlayer>();
                 frmPlayer.ScrollTo(_tempoSymbol.StartTime);
             }
         }
@@ -425,9 +425,9 @@ namespace Karaboss
         /// </summary>
         private void UpdatefrmPlayer()
         {
-            if (Application.OpenForms.OfType<frmPlayer>().Count() > 0)
+            if (Application.OpenForms.OfType<frmMidiPlayer>().Count() > 0)
             {
-                frmPlayer frmPlayer = Utilities.FormUtilities.GetForm<frmPlayer>();
+                frmMidiPlayer frmPlayer = Utilities.FormUtilities.GetForm<frmMidiPlayer>();
                 frmPlayer.UpdateTimes();
             }
         }

@@ -50,7 +50,7 @@ using Karaboss.Utilities;
 namespace Karaboss
 {
 
-    public partial class frmPlayer : Form
+    public partial class frmMidiPlayer : Form
     {
         
         MusicXmlReader MXmlReader; 
@@ -303,7 +303,7 @@ namespace Karaboss
         /// Constructor
         /// </summary>
         /// <param name="FileName"></param>        
-        public frmPlayer(int numinstance, string FileName, Playlist myPlayList, bool bplay, OutputDevice outputDevice)
+        public frmMidiPlayer(int numinstance, string FileName, Playlist myPlayList, bool bplay, OutputDevice outputDevice)
         {
             InitializeComponent();
 
@@ -4412,9 +4412,12 @@ namespace Karaboss
 
 
                     // Caution: Load the original lyrics, not the lyrics internally transformed by FullExtractLyrics
+                    Cursor = Cursors.WaitCursor;
                     frmMidiLyricsEdit frmLyricsEdit;
                     frmLyricsEdit = new frmMidiLyricsEdit(sequence1, myLyricsMgmt.OrgplLyrics, myLyricsMgmt, MIDIfileFullPath);
                     frmLyricsEdit.Show();
+                    Cursor = Cursors.Default;
+                    
                 }
                 catch (Exception fl)
                 {
@@ -4422,11 +4425,11 @@ namespace Karaboss
                 }
             }
             else
-            {
+            {                                
                 if (Application.OpenForms["frmLyricsEdit"].WindowState == FormWindowState.Minimized)
                     Application.OpenForms["frmLyricsEdit"].WindowState = FormWindowState.Normal;
                 Application.OpenForms["frmLyricsEdit"].Show();
-                Application.OpenForms["frmLyricsEdit"].Activate();
+                Application.OpenForms["frmLyricsEdit"].Activate();                
             }
 
         }

@@ -266,7 +266,7 @@
             // 
             this.timer1.Tick += new System.EventHandler(this.Timer1_Tick);
             // 
-            // frmLyric
+            // frmMidiLyric
             // 
             resources.ApplyResources(this, "$this");
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -276,7 +276,7 @@
             this.DoubleBuffered = true;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
-            this.Name = "frmLyric";
+            this.Name = "frmMidiLyric";
             this.TopMost = true;
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FrmLyric_FormClosing);
             this.Load += new System.EventHandler(this.FrmLyric_Load);

@@ -769,7 +769,7 @@ namespace Karaboss
             pBox.Terminate();
 
             // Active le formulaire frmPlayer
-            if (Application.OpenForms.OfType<frmPlayer>().Count() > 0)
+            if (Application.OpenForms.OfType<frmMidiPlayer>().Count() > 0)
             {
                 // Restore form
                 if (Application.OpenForms["frmPlayer"].WindowState != FormWindowState.Minimized)

@@ -510,7 +510,7 @@ namespace Karaboss
             string tx = Karaboss.Resources.Localization.Strings.DeleteAllLyrics;            
             if (MessageBox.Show(tx, "Karaboss", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning) == DialogResult.OK)
             {
-                frmPlayer frmPlayer = Utilities.FormUtilities.GetForm<frmPlayer>();
+                frmMidiPlayer frmPlayer = Utilities.FormUtilities.GetForm<frmMidiPlayer>();
                 frmPlayer.DeleteAllLyrics();
 
                 localplLyrics = new List<plLyric>();
@@ -552,9 +552,9 @@ namespace Karaboss
                 if (dgView.Rows[Row].Cells[COL_TICKS].Value != null && IsNumeric(dgView.Rows[Row].Cells[COL_TICKS].Value.ToString()))
                 {
                     int pTime = Convert.ToInt32(dgView.Rows[Row].Cells[COL_TICKS].Value);
-                    if (Application.OpenForms.OfType<frmPlayer>().Count() > 0)
+                    if (Application.OpenForms.OfType<frmMidiPlayer>().Count() > 0)
                     {
-                        frmPlayer frmPlayer = Utilities.FormUtilities.GetForm<frmPlayer>();
+                        frmMidiPlayer frmPlayer = Utilities.FormUtilities.GetForm<frmMidiPlayer>();
                         frmPlayer.FirstPlaySong(pTime);
                     }
                 }
@@ -1829,9 +1829,9 @@ namespace Karaboss
                 }
                 else
                 {
-                    if (Application.OpenForms.OfType<frmPlayer>().Count() > 0)
+                    if (Application.OpenForms.OfType<frmMidiPlayer>().Count() > 0)
                     {
-                        frmPlayer frmPlayer = Utilities.FormUtilities.GetForm<frmPlayer>();
+                        frmMidiPlayer frmPlayer = Utilities.FormUtilities.GetForm<frmMidiPlayer>();
                         frmPlayer.bfilemodified = false;
                     }
                 }
@@ -2036,9 +2036,9 @@ namespace Karaboss
                 ltype = LyricTypes.Lyric;
 
 
-            if (Application.OpenForms.OfType<frmPlayer>().Count() > 0)
+            if (Application.OpenForms.OfType<frmMidiPlayer>().Count() > 0)
             {
-                frmPlayer frmPlayer = Utilities.FormUtilities.GetForm<frmPlayer>();
+                frmMidiPlayer frmPlayer = Utilities.FormUtilities.GetForm<frmMidiPlayer>();
                 frmPlayer.ReplaceLyrics(l, ltype, melodytracknum);
             }
         }
@@ -2384,37 +2384,7 @@ namespace Karaboss
         /// <param name="e"></param>
         private void mnuEditImportLyricsLrc_Click(object sender, EventArgs e)
         {
-            ImportLyricsFormLrc();
-           
-            /*
-
-            OpenFileDialog.Title = "Open a .lrc file";
-            OpenFileDialog.DefaultExt = "lrc";
-            OpenFileDialog.Filter = "lrc files|*.lrc|All files|*.*";
-
-            // Get initial directory from midi file
-            if (MIDIfileName != null || MIDIfileName != "")
-                OpenFileDialog.InitialDirectory = Path.GetDirectoryName(MIDIfileName);
-
-
-            if (OpenFileDialog.ShowDialog() != DialogResult.OK)
-                return;
-            
-            string fileName = OpenFileDialog.FileName;
-
-            try
-            {
-                using (StreamReader sr = new StreamReader(fileName))
-                {
-                    String lines = sr.ReadToEnd();
-                    LoadLrcFile(lines);
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("The file could not be read:" + ex.Message, "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-            */
+            ImportLyricsFormLrc();                       
         }
 
 
@@ -3139,6 +3109,8 @@ namespace Karaboss
             }
 
             bool bLineFeed = true;
+            bool bParagraph = true;
+            bool bFirstLine = true;
 
             // new format of lrc
             // [01:54.60]La <01:55.32>petite <01:56.15>maison
@@ -3192,23 +3164,45 @@ namespace Karaboss
                         }
 
 
-                        if (bLineFeed)
+                        if (bParagraph)
                         {
-                            // Format of timestamp is []                                                        
+                            if (!bFirstLine)
+                            {
+                                // Add an empty line before the line with timestamp to create a paragraph                                        
+                                results.Add(("[" + sTime + "]", string.Empty));
+                            }
+                            else bFirstLine = false;
+
+                            // Start a new line with timestamp           
+                            results.Add(("[" + sTime + "]", sLyric));
+                        }
+                        else if (bLineFeed)
+                        {
+                            // Start a new line with timestamp                                                  
                             results.Add(("[" + sTime + "]", sLyric));
                         }
                         else
                         {
-                            // Format of timestamp is <> + space before
+                            // Continue a line with a syllabe, add time in <> and not in [] to differenciate with the start of line
                             results.Add(("<" + sTime + ">", sLyric));
                         }
                         
                         bLineFeed = false;
-
+                        bParagraph = false;
                     } 
                     else
                     {
-                        bLineFeed = true;
+                        
+                        if (sLyric.Trim() == m_SepLine)
+                        {
+                            // Line feed
+                            bLineFeed = true;
+                        }
+                        else if (sLyric.Trim() == m_SepParagraph)
+                        {
+                            // Paragraph
+                            bParagraph = true;
+                        }                        
                         
                     }
                 }
@@ -3337,10 +3331,7 @@ namespace Karaboss
 
         #endregion export lrc
 
-
-        
-
-
+       
         #endregion
 
 
@@ -3844,9 +3835,9 @@ namespace Karaboss
                 return;
             }
 
-            if (Application.OpenForms.OfType<frmPlayer>().Count() > 0)
+            if (Application.OpenForms.OfType<frmMidiPlayer>().Count() > 0)
             {
-                frmPlayer frmPlayer = Utilities.FormUtilities.GetForm<frmPlayer>();
+                frmMidiPlayer frmPlayer = Utilities.FormUtilities.GetForm<frmMidiPlayer>();
                 frmPlayer.InitSaveFile(fullName);
 
                 // Reset title
@@ -3905,9 +3896,9 @@ namespace Karaboss
 
                 MIDIfileName = fileName;
 
-                if (Application.OpenForms.OfType<frmPlayer>().Count() > 0)
+                if (Application.OpenForms.OfType<frmMidiPlayer>().Count() > 0)
                 {
-                    frmPlayer frmPlayer = Utilities.FormUtilities.GetForm<frmPlayer>();
+                    frmMidiPlayer frmPlayer = Utilities.FormUtilities.GetForm<frmMidiPlayer>();
                     frmPlayer.InitSaveFile(fileName);
 
                     bfilemodified = false;
@@ -4123,9 +4114,9 @@ namespace Karaboss
             {
                 AddTags();
 
-                if (Application.OpenForms.OfType<frmPlayer>().Count() > 0)
+                if (Application.OpenForms.OfType<frmMidiPlayer>().Count() > 0)
                 {
-                    frmPlayer frmPlayer = Utilities.FormUtilities.GetForm<frmPlayer>();                    
+                    frmMidiPlayer frmPlayer = Utilities.FormUtilities.GetForm<frmMidiPlayer>();                    
                     frmPlayer.FileModified();
                 }
                 MessageBox.Show("Tags saved successfully", "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Information);               

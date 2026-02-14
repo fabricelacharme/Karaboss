@@ -157,18 +157,36 @@ namespace Karaboss.MidiLyrics
             string timestamp;
             string word;
 
+            bool bParagraph = false;
+
+
             for (int i = 0; i < lines.Length; i++)
             {
                 // study line by line
                 line = lines[i];
 
                 // Warning lines with only a time stamp, without lyric [00:08.05] is rejected
-                if (line.StartsWith("[") && line.EndsWith("]"))
-                    line = line + "/";
+                //if (line.StartsWith("[") && line.EndsWith("]"))
+                //    line = line + "/";
 
+
+                // Warning lines with only a time stamp, without lyric [00:08.05] is rejected by the pattern because it doesn't contain any word.
+                // Lines with only a timestamp are paragraphs.
+                if (line.StartsWith("[") && line.EndsWith("]"))
+                {
+                    // Is it a timestamp?
+                    string lin = line + "@";
+                    MatchCollection matchs = Regex.Matches(lin, pattern);
+                    if (matchs.Count == 0) continue;
+                    //line = line + m_SepParagraph;
+                    bParagraph = true;
+                }
+
+                // Search for timestamps and words in the line
                 MatchCollection matches = Regex.Matches(line, pattern);
                 if (matches.Count == 0) continue;
-
+              
+                
                 SyncLine = new List<keffect.KaraokeEffect.kSyncText>();
 
                 foreach (Match match in matches)
@@ -193,7 +211,18 @@ namespace Karaboss.MidiLyrics
                         //word = Environment.NewLine + word;
 
                         // Change: instead of adding a \r\n, I add a "/" in order to keep the information of the start of a new line. 
-                        word = m_SepLine + word;
+
+                        if (bParagraph)
+                        {
+                            word = m_SepParagraph + word;
+                            bParagraph = false;
+                        }
+                        else 
+                        { 
+                            word = m_SepLine + word;
+                        }
+                        
+                        
                     }
 
                     time = (long)TimeToMs(timestamp);
@@ -218,20 +247,53 @@ namespace Karaboss.MidiLyrics
             List<keffect.KaraokeEffect.kSyncText> tmplst;
             keffect.KaraokeEffect.kSyncText tmp;
 
-            foreach (List<keffect.KaraokeEffect.kSyncText> SyncLine in SyncLyrics)
+            bool bFirstLine = true;
+
+            //foreach (List<keffect.KaraokeEffect.kSyncText> SyncLine in SyncLyrics)
+            for (int i = 0; i < SyncLyrics.Count; i ++)                                        
             {
+                SyncLine = SyncLyrics[i];
 
                 if (SyncLine.Count > 0) 
-                {
-                    // Add a line containing a line separator
-                    tmp = new keffect.KaraokeEffect.kSyncText(SyncLine[0].Time, m_SepLine);
-                    tmplst = new List<keffect.KaraokeEffect.kSyncText>();
-                    tmplst.Add(tmp);
-                    result.Add(tmplst);
+                {                   
+                    // Treatment for a line starting with a Line separator:
+                    if (SyncLine[0].Text.StartsWith(m_SepLine))
+                    {
+                        // Add a line containing a line separator, except for the first line
+                        if (!bFirstLine)
+                        {
+                            tmp = new keffect.KaraokeEffect.kSyncText(SyncLine[0].Time, m_SepLine);
+                            tmplst = new List<keffect.KaraokeEffect.kSyncText>();
+                            tmplst.Add(tmp);
+                            result.Add(tmplst);
+                        }
+                        else
+                            bFirstLine = false;
 
-                    // Then add the line, bur remove the separator from the first words of the line
-                    SyncLine[0] = new keffect.KaraokeEffect.kSyncText(SyncLine[0].Time, SyncLine[0].Text.Replace(m_SepLine, ""));
+                        // Then add the line, but remove the separator from the first words of the line
+                        SyncLine[0] = new keffect.KaraokeEffect.kSyncText(SyncLine[0].Time, SyncLine[0].Text.Replace(m_SepLine, ""));
+
+                    }
+                    else if (SyncLine[0].Text.StartsWith(m_SepParagraph))
+                    {
+                        // Add a line containing a line separator, except for the first line
+                        if (!bFirstLine)
+                        {
+                            tmp = new keffect.KaraokeEffect.kSyncText(SyncLine[0].Time, m_SepParagraph);
+                            tmplst = new List<keffect.KaraokeEffect.kSyncText>();
+                            tmplst.Add(tmp);
+                            result.Add(tmplst);
+                        }
+                        else
+                            bFirstLine = false;
+
+                        // Then add the line, but remove the separator from the first words of the line
+                        SyncLine[0] = new keffect.KaraokeEffect.kSyncText(SyncLine[0].Time, SyncLine[0].Text.Replace(m_SepParagraph, ""));
+
+                    }
+                                
                     result.Add(SyncLine);
+                    
                 }
             }
             

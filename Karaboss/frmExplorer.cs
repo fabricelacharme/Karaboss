@@ -502,7 +502,7 @@ namespace Karaboss
             }
             
             // ferme le formulaire frmPlayer
-            if (Application.OpenForms.OfType<frmPlayer>().Count() > 0)
+            if (Application.OpenForms.OfType<frmMidiPlayer>().Count() > 0)
             {
                 Application.OpenForms["frmPlayer"].Close();
             }
@@ -565,7 +565,7 @@ namespace Karaboss
 
 
             // ferme le formulaire frmPlayer
-            if (Application.OpenForms.OfType<frmPlayer>().Count() > 0)
+            if (Application.OpenForms.OfType<frmMidiPlayer>().Count() > 0)
             {
                 Application.OpenForms["frmPlayer"].Close();
             }
@@ -613,7 +613,7 @@ namespace Karaboss
 
             
             // ferme le formulaire frmPlayer
-            if (Application.OpenForms.OfType<frmPlayer>().Count() > 0)
+            if (Application.OpenForms.OfType<frmMidiPlayer>().Count() > 0)
             {
                 Application.OpenForms["frmPlayer"].Close();
             }
@@ -1638,7 +1638,7 @@ namespace Karaboss
             }
 
             // Close form frmPlayer
-            if (Application.OpenForms.OfType<frmPlayer>().Count() > 0)
+            if (Application.OpenForms.OfType<frmMidiPlayer>().Count() > 0)
             {
                 Application.OpenForms["frmPlayer"].Close();
             }
@@ -1656,7 +1656,7 @@ namespace Karaboss
             Cursor.Current = Cursors.WaitCursor;
 
             // Close form frmMp3Player
-            if (Application.OpenForms.OfType<frmPlayer>().Count() > 0)
+            if (Application.OpenForms.OfType<frmMidiPlayer>().Count() > 0)
             {
                 Application.OpenForms["frmPlayer"].Close();
             }
@@ -1720,7 +1720,7 @@ namespace Karaboss
             }
 
             // Close form frmPlayer
-            if (Application.OpenForms.OfType<frmPlayer>().Count() > 0)
+            if (Application.OpenForms.OfType<frmMidiPlayer>().Count() > 0)
             {
                 Application.OpenForms["frmPlayer"].Close();
             }
@@ -1795,7 +1795,7 @@ namespace Karaboss
             }
 
             // ferme le formulaire frmPlayer
-            if (Application.OpenForms.OfType<frmPlayer>().Count() > 0)
+            if (Application.OpenForms.OfType<frmMidiPlayer>().Count() > 0)
             {
                 Application.OpenForms["frmPlayer"].Close();
             }
@@ -1914,7 +1914,7 @@ namespace Karaboss
             // Add the file to the MRU list.
             MyMruList.AddFile(fpath);
 
-            Form frmPlayer = new frmPlayer(NumInstance, fpath, pl, bPlayNow, outDevice);
+            Form frmPlayer = new frmMidiPlayer(NumInstance, fpath, pl, bPlayNow, outDevice);
             frmPlayer.Show();
             frmPlayer.Activate();
 
@@ -2002,7 +2002,7 @@ namespace Karaboss
             // Add the file to the MRU list.
             MyMruList.AddFile(fpath);
 
-            Form frmPlayer = new frmPlayer(NumInstance, fpath, pl, bPlayNow, outDevice);
+            Form frmPlayer = new frmMidiPlayer(NumInstance, fpath, pl, bPlayNow, outDevice);
             frmPlayer.Show();
             frmPlayer.Activate();
 
@@ -2112,7 +2112,7 @@ namespace Karaboss
             // Add the file to the MRU list.
             MyMruList.AddFile(fpath);
 
-            Form frmPlayer = new frmPlayer(NumInstance, fpath, pl, bPlayNow, outDevice);
+            Form frmPlayer = new frmMidiPlayer(NumInstance, fpath, pl, bPlayNow, outDevice);
             frmPlayer.Show();
             frmPlayer.Activate();
 
@@ -2438,9 +2438,9 @@ namespace Karaboss
                     frmLoading.Close();
                 }
 
-                if (Application.OpenForms.OfType<frmPlayer>().Count() > 0)
+                if (Application.OpenForms.OfType<frmMidiPlayer>().Count() > 0)
                 {
-                    frmPlayer frmPlayer = Utilities.FormUtilities.GetForm<frmPlayer>();
+                    frmMidiPlayer frmPlayer = Utilities.FormUtilities.GetForm<frmMidiPlayer>();
                     frmPlayer.Close();
                 }
 

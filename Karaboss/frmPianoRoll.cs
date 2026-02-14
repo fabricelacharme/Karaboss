@@ -112,7 +112,7 @@ namespace Karaboss
         #endregion
 
         #region controls
-        private frmPlayer frmPlayer;
+        private frmMidiPlayer frmPlayer;
         private OutputDevice outDevice;
         private Sequencer sequencer1 = new Sequencer();
         private Sequence sequence1 = new Sequence();
@@ -1141,9 +1141,9 @@ namespace Karaboss
         /// </summary>
         private void UpdateFrmPlayer()
         {
-            if (Application.OpenForms.OfType<frmPlayer>().Count() > 0)
+            if (Application.OpenForms.OfType<frmMidiPlayer>().Count() > 0)
             {                
-                frmPlayer = Utilities.FormUtilities.GetForm<frmPlayer>();
+                frmPlayer = Utilities.FormUtilities.GetForm<frmMidiPlayer>();
                 frmPlayer.RefreshDisplay();
                 frmPlayer.FileModified();
                 this.Focus();

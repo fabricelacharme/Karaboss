@@ -446,11 +446,11 @@
     <Compile Include="Pages\PlaylistsControl\FrmNewPlaylist.Designer.cs">
       <DependentUpon>FrmNewPlaylist.cs</DependentUpon>
     </Compile>
-    <Compile Include="Midi\MidiPlayer\frmPlayer.cs">
+    <Compile Include="Midi\MidiPlayer\frmMidiPlayer.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Midi\MidiPlayer\frmPlayer.Designer.cs">
-      <DependentUpon>frmPlayer.cs</DependentUpon>
+    <Compile Include="Midi\MidiPlayer\frmMidiPlayer.Designer.cs">
+      <DependentUpon>frmMidiPlayer.cs</DependentUpon>
     </Compile>
     <Compile Include="Karaclass.cs" />
     <Compile Include="Pages\PlaylistsControl\Playlist.cs" />
@@ -731,12 +731,12 @@
     <EmbeddedResource Include="frmPianoRoll.resx">
       <DependentUpon>frmPianoRoll.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Midi\MidiPlayer\frmPlayer.en.resx">
-      <DependentUpon>frmPlayer.cs</DependentUpon>
+    <EmbeddedResource Include="Midi\MidiPlayer\frmMidiPlayer.en.resx">
+      <DependentUpon>frmMidiPlayer.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Midi\MidiPlayer\frmPlayer.fr.resx">
-      <DependentUpon>frmPlayer.cs</DependentUpon>
+    <EmbeddedResource Include="Midi\MidiPlayer\frmMidiPlayer.fr.resx">
+      <DependentUpon>frmMidiPlayer.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="frmPrint.fr.resx">
@@ -791,8 +791,8 @@
     <EmbeddedResource Include="Pages\PlaylistsControl\FrmNewPlaylist.resx">
       <DependentUpon>FrmNewPlaylist.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Midi\MidiPlayer\frmPlayer.resx">
-      <DependentUpon>frmPlayer.cs</DependentUpon>
+    <EmbeddedResource Include="Midi\MidiPlayer\frmMidiPlayer.resx">
+      <DependentUpon>frmMidiPlayer.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Pages\PlaylistsControl\PlaylistsControl.en.resx">
