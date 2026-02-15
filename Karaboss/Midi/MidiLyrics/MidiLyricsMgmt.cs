@@ -75,17 +75,8 @@ namespace Karaboss.MidiLyrics
         /// <param name="FileName"></param>
         /// <returns></returns>
         public static List<List<keffect.KaraokeEffect.kSyncText>> GetKEffectLrcLyrics(string FileName)
-        {
-            // Search for existing LRC file
-            string lrcFile = Path.ChangeExtension(FileName, ".lrc");
-            if (!System.IO.File.Exists(lrcFile)) return null;
-
-            string line;
-            string lyric = string.Empty;
-            long time;
-            string stime = string.Empty;
-           
-
+        {            
+                       
             // Format 1
             // [00:04.598]IT'S <00:04.830>BEEN <00:05.057>A <00:05.271>HARD <00:06.151>DAY'S <00:06.811>NIGHT               // New line                                                                              
             // [00:08.148]AND                                                                                               // New line
@@ -104,9 +95,50 @@ namespace Karaboss.MidiLyrics
             // [00:25.10]JE SAIS PAS POURQUOI
 
             // Load Lrc file into list of lines                
-            //string[] lines = System.IO.File.ReadAllLines(lrcFile);
-            string[] lines;
+            
+            string[] lines = GetLinesFromLrc(FileName);
+            if (lines == null) 
+            {
+                MessageBox.Show("Invalid lrc file: " + Path.GetFileName(FileName), "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return null;
+            }
 
+            // Extract sync lyrics from lines
+            List<List<keffect.KaraokeEffect.kSyncText>> SyncLyrics = GetSyncLyricsFromLines(lines);
+
+            if (SyncLyrics == null) 
+            {
+                MessageBox.Show("No valid LRC format in file: " + Path.GetFileName(FileName), "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return null;
+            }
+
+            // Add lines for separators
+            SyncLyrics = AddLinesForSeparators(SyncLyrics);
+
+            return SyncLyrics;
+
+        }
+
+        /// <summary>
+        /// Retrieves the lines of lyrics and timing information from an LRC file associated with the specified file
+        /// name.
+        /// </summary>
+        /// <remarks>The method searches for an LRC file by replacing the extension of the provided file
+        /// name with ".lrc". If the LRC file is found, its contents are split and formatted according to specific rules
+        /// to extract lyric lines. If the file is not found or an error occurs, an error message is displayed and null
+        /// is returned.</remarks>
+        /// <param name="FileName">The name of the file for which to locate and read the corresponding LRC file. This value should include the
+        /// file's extension.</param>
+        /// <returns>An array of strings containing the processed lines from the LRC file, or null if the LRC file does not exist
+        /// or an error occurs during reading.</returns>
+        private static string[] GetLinesFromLrc(string FileName)
+        {
+            // Search for existing LRC file
+            string lrcFile = Path.ChangeExtension(FileName, ".lrc");
+            if (!System.IO.File.Exists(lrcFile)) return null;
+
+            string line;
+            string[] lines = null;
             try
             {
                 // Load lrc into a single string
@@ -139,31 +171,48 @@ namespace Karaboss.MidiLyrics
             }
             catch (Exception e) { MessageBox.Show(e.Message, "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error); return null; }
 
+            return lines;
+
+        }
+
+
+        /// <summary>
+        /// Processes an array of lyric lines and extracts synchronized lyrics with associated timestamps for karaoke
+        /// display.
+        /// </summary>
+        /// <remarks>Lines that consist solely of timestamps are treated as paragraph markers. The method
+        /// uses regular expressions to identify timestamps and lyric words, and it cleans up the extracted words by
+        /// removing unnecessary characters. The output format is suitable for use with karaoke synchronization
+        /// features.</remarks>
+        /// <param name="lines">An array of strings representing the lines of lyrics, where each line may contain one or more timestamps and
+        /// corresponding lyric words.</param>
+        /// <returns>A list of lists, where each inner list contains synchronized text objects representing the timestamp and
+        /// associated lyric word for each segment. Returns null if the input format is not recognized.</returns>
+        private static List<List<keffect.KaraokeEffect.kSyncText>> GetSyncLyricsFromLines(string[] lines)
+        {
+
             // Regex to capture timestamps and words => for milliseconds having 3 digits or 2
             // Find out what type of digits the file is made out
             string pattern = GetPatternLRC(lines);
-            if (pattern == null)
-            {
-                MessageBox.Show("Invalid lrc file, no timestamps found: " + Path.GetFileName(FileName), "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return null;
-            }
+            if (pattern == null) return null;
 
             // Create a list of all lines
             // Load lyrics in KaraokeEffect format
             List<keffect.KaraokeEffect.kSyncText> SyncLine;
             List<List<keffect.KaraokeEffect.kSyncText>> SyncLyrics = new List<List<keffect.KaraokeEffect.kSyncText>>();
 
-
             string timestamp;
             string word;
 
-            bool bParagraph = false;
+            string line;            
+            long time;
 
+            bool bParagraph = false;
 
             for (int i = 0; i < lines.Length; i++)
             {
                 // study line by line
-                line = lines[i];               
+                line = lines[i];
 
                 // Warning lines with only a time stamp, without lyric [00:08.05] is rejected by the pattern because it doesn't contain any word.
                 // Lines with only a timestamp are paragraphs.
@@ -172,16 +221,14 @@ namespace Karaboss.MidiLyrics
                     // Is it a timestamp?
                     string lin = line + "@";
                     MatchCollection matchs = Regex.Matches(lin, pattern);
-                    if (matchs.Count == 0) continue;
-                    //line = line + m_SepParagraph;
+                    if (matchs.Count == 0) continue;                    
                     bParagraph = true;
                 }
 
                 // Search for timestamps and words in the line
                 MatchCollection matches = Regex.Matches(line, pattern);
                 if (matches.Count == 0) continue;
-              
-                
+
                 SyncLine = new List<keffect.KaraokeEffect.kSyncText>();
 
                 foreach (Match match in matches)
@@ -207,24 +254,32 @@ namespace Karaboss.MidiLyrics
                             word = m_SepParagraph + word;
                             bParagraph = false;
                         }
-                        else 
-                        { 
+                        else
+                        {
                             word = m_SepLine + word;
-                        }                                                
+                        }
                     }
-
                     time = (long)TimeToMs(timestamp);
-
                     SyncLine.Add(new keffect.KaraokeEffect.kSyncText(time, word));
                 }
                 SyncLyrics.Add(SyncLine);
             }
 
             return SyncLyrics;
-
         }
 
 
+        /// <summary>
+        /// Processes a collection of synchronized lyric lines and inserts additional lines to represent detected
+        /// separator indicators, returning a new collection with these separator lines included.
+        /// </summary>
+        /// <remarks>Separator lines are added only when a line begins with a recognized separator
+        /// indicator and is not the first line in the collection. The method modifies the original lyric lines to
+        /// remove the separator indicator from the start of the line before adding them to the result.</remarks>
+        /// <param name="SyncLyrics">A list of lyric lines, where each line is a list of synchronized text elements. Lines may begin with special
+        /// separator indicators that denote line or paragraph breaks.</param>
+        /// <returns>A new list of lyric lines, including the original lyrics with additional lines inserted for each detected
+        /// separator indicator. The original lines are modified to remove the separator text from the beginning.</returns>
         public static List<List<keffect.KaraokeEffect.kSyncText>> AddLinesForSeparators(List<List<keffect.KaraokeEffect.kSyncText>> SyncLyrics)
         {
             // Add a line containing a separator 
