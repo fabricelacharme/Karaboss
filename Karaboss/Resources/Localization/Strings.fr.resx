@@ -547,7 +547,7 @@
     <value>Passer en mode synchro</value>
   </data>
   <data name="DescrEditMode" xml:space="preserve">
-    <value>Mode édition: chargez un fichier LRC à modifier ou des paroles à synchroniser.</value>
+    <value>Mode édition: chargez un fichier LRC ou KOK à modifier ou des paroles à synchroniser.</value>
   </data>
   <data name="SwitchToEditMode" xml:space="preserve">
     <value>Passer en mode édition</value>

@@ -522,7 +522,7 @@ namespace Karaboss.Mp3
                     #endregion
 
 
-                    InitLrcGenerator();
+                    InitEditor();
                     
                     // Populate gridview and textbox
                     PopulateDataGridView();
@@ -2207,6 +2207,7 @@ namespace Karaboss.Mp3
         private void KokPopulateDgView(List<(string, string)> lstDgRows)
         {
             string sTimeStamp;
+            string lyric;
             dgView.Rows.Clear();
             foreach (var (word, timestamp) in lstDgRows)
             {
@@ -2217,7 +2218,10 @@ namespace Karaboss.Mp3
 
                 // Convert timestamp to milliseconds if necessary
                 double ms = Convert.ToDouble(timestamp) * 1000; // Assuming timestamp is in seconds
-                dgView.Rows.Add(ms, sTimeStamp, word);
+
+                lyric = word.Replace(" ", "_");
+
+                dgView.Rows.Add(ms, sTimeStamp, lyric);
             }
         }
 
@@ -2402,6 +2406,14 @@ namespace Karaboss.Mp3
         }
 
 
+        /// <summary>
+        /// Imports synchronized lyrics from a selected .lrc file and updates the user interface to display the loaded
+        /// lyrics.
+        /// </summary>
+        /// <remarks>This method prompts the user to choose a .lrc file, loads the lyrics, and refreshes
+        /// the data grid view and related UI elements to reflect the imported lyrics. The file dialog's initial
+        /// directory is set to the location of the currently loaded MP3 file. The method also resets the lyrics frame
+        /// and updates display counters to ensure the UI is synchronized with the newly imported lyrics.</remarks>
         private void ImportLyricsFromLrc()
         {
             OpenFileDialog.Title = "Open a .lrc file";
@@ -2414,10 +2426,15 @@ namespace Karaboss.Mp3
             
             _lrcFileName = OpenFileDialog.FileName;
 
-            LoadLrcFile(_lrcFileName);
 
-            // Update counters
-            //lblLyrics.Text = lvLyrics.Items.Count.ToString();
+            //LoadLrcFile(_lrcFileName);
+            Mp3LyricsMgmtHelper.MySyncLyricsFrame = null;
+            Mp3LyricsMgmtHelper.SyncLyrics = Mp3LyricsMgmtHelper.GetKEffectLrcLyrics(_lrcFileName);
+
+            PopulateDataGridView();
+
+
+            // Update counters            
             lblTimes.Text = "0";
 
             // Select first row
@@ -2427,48 +2444,7 @@ namespace Karaboss.Mp3
             PopulateTextBox(localSyncLyrics);
             
         }
-
-        /// <summary>
-        /// Load a LRC file (timestamps + lyrics)
-        /// </summary>
-        /// <param name="Source"></param>
-        private void LoadLrcFile(string FileName)
-        {
-            long time;
-            string sTime;
-            string text;
-
-            Cursor.Current = Cursors.WaitCursor;
-
-            Mp3LyricsMgmtHelper.SyncLyrics = Mp3LyricsMgmtHelper.GetKEffectLrcLyrics(FileName);
-            List<List<keffect.KaraokeEffect.kSyncText>> SyncLyrics = Mp3LyricsMgmtHelper.SyncLyrics;
-            
-
-            InitGridView();
-
-            // For each line
-            for (int j = 0; j < SyncLyrics.Count; j++)
-            {
-                // For each syllabes
-                for (int i = 0; i < SyncLyrics[j].Count; i++)
-                {
-                    time = SyncLyrics[j][i].Time;
-                    sTime = Mp3LyricsMgmtHelper.MsToTime(time, _LrcMillisecondsDigits);
-                    text = SyncLyrics[j][i].Text;
-
-                    // Put "/" everywhere
-                    text = text.Replace("\r\n", m_SepLine);
-                    text = text.Replace("\r", m_SepLine);
-                    text = text.Replace("\n", m_SepLine);
-                    text = text.Replace(" ", "_");
-
-                    dgView.Rows.Add(time, sTime, text);
-                }
-            }
-
-            Cursor.Current = Cursors.Default;
-        }
-       
+              
 
         /// <summary>
         /// Store dgView content
@@ -2598,7 +2574,10 @@ namespace Karaboss.Mp3
             GetLrcSaveOptions();
         }
 
-
+        private void mnuFileExportLyricsLrc_Click(object sender, EventArgs e)
+        {
+            GetLrcSaveOptions();
+        }
 
         /// <summary>
         /// Get save lrc options
@@ -2917,9 +2896,6 @@ namespace Karaboss.Mp3
         {
             string sTime;
             long time;
-            //TimeSpan ts;
-            //string tsp;
-
             string sType;
             string sLyric;
 
@@ -3206,10 +3182,7 @@ namespace Karaboss.Mp3
 
         #endregion save lrc
 
-        private void mnuFileExportLyricsLrc_Click(object sender, EventArgs e)
-        {
-
-        }
+       
 
        
 
@@ -3304,9 +3277,9 @@ namespace Karaboss.Mp3
         #endregion import export lyrics
 
 
-        #region LRC generator
+        #region Editor
 
-        private void InitLrcGenerator()
+        private void InitEditor()
         {
             if (PlayerAppearance != PlayerAppearances.LyricsEditor) return;
 
@@ -3598,10 +3571,10 @@ namespace Karaboss.Mp3
             }
         }
 
-       
 
-        #endregion LRC generator
-        
+
+        #endregion Editor
+
 
         #region Rich Textbox
 
@@ -4525,31 +4498,7 @@ namespace Karaboss.Mp3
                         text = text.Replace(" ", "_");
                         dgView.Rows.Add(time, sTime, text);
                     }
-                }
-                /*
-                // For each line
-                for (int j = 0; j < SyncLyrics.Count; j++)
-                {
-                    // For each syllabes
-                    for (int i = 0; i < SyncLyrics[j].Count; i++)
-                    {
-                        time = SyncLyrics[j][i].Time;
-                        sTime = Mp3LyricsMgmtHelper.MsToTime(time, _LrcMillisecondsDigits);
-
-                        text = SyncLyrics[j][i].Text;
-
-                        // Put "/" everywhere
-                        text = text.Replace("\n\n", m_SepParagraph);
-                        text = text.Replace("\r\n", m_SepLine);
-                        text = text.Replace("\r", m_SepLine);
-                        text = text.Replace("\n", m_SepLine);
-                        text = text.Replace(" ", "_");
-
-                        dgView.Rows.Add(time, sTime, text);
-                    }
-                }
-                */
-
+                }               
 
             }
             // Non synchronized lyrics coming from the mp3 file

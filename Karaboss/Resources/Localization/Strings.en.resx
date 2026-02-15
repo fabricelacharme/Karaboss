@@ -547,7 +547,7 @@
     <value>Switch to sync mode</value>
   </data>
   <data name="DescrEditMode" xml:space="preserve">
-    <value>Edit mode: load an LRC file to be modified or lyrics to be synchronised.</value>
+    <value>Edit mode: load an LRC or KOK file to be modified or lyrics to be synchronised.</value>
   </data>
   <data name="SwitchToEditMode" xml:space="preserve">
     <value>Switch to edit mode</value>

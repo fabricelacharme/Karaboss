@@ -66,7 +66,11 @@ namespace Karaboss.MidiLyrics
         public static List<List<keffect.KaraokeEffect.kSyncText>> SyncLyrics = new List<List<keffect.KaraokeEffect.kSyncText>>();
 
         public static string m_SepLine = "/";
-        public static string m_SepParagraph = "\\"; 
+        public static string m_SepParagraph = "\\";
+
+        #region import export LRC
+
+        #region import lrc
 
         /// <summary>
         ///  Get LRC Lyrics
@@ -375,6 +379,19 @@ namespace Karaboss.MidiLyrics
 
             return digits3 > digits2 ? pattern3digits : pattern2digits;
         }
+
+        #endregion import lrc
+
+
+
+        #region export lrc
+
+
+        #endregion export lrc
+
+
+        #endregion import export LRC
+
 
         /// <summary>
         /// Convert a time stamp 01:15.510 (min 2digits, sec 2 digits, ms 2 or 3 digits) to milliseconds
