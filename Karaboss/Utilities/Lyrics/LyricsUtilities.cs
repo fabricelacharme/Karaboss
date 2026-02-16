@@ -317,7 +317,7 @@ namespace Karaboss.Utilities
                                 // Continue with step 1
                                 tm = TicksToTime(tic, Division);
                                 
-                                // Option: take the highest tic giving the good result.
+                                // Option: take the highest tic giving the right result.
                                 // If next value of tic give also the same time, continue
                                 if (tm == time && TicksToTime(tic + 1, Division) != time)                               
                                     return tic;
@@ -334,8 +334,11 @@ namespace Karaboss.Utilities
             } while (tic <= max);
 
 
-            MessageBox.Show("Unable to calculate TimeToTick", "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            return tic;
+            MessageBox.Show("Unable to calculate TimeToTick for this timestamp: " + time, "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+            // Return -1 if not found, but it should never happen because we are sure to find a tic with the same time as the one we are looking for (we are sure to find it with step 1)
+            return -1;
+            
         }
        
 

@@ -2479,6 +2479,13 @@ namespace Karaboss
                     double ms = time; // Assuming timestamp is already in milliseconds
                     // Convert ms to ticks
                     ms = Utilities.LyricsUtilities.TimeToTicks(sTimeStamp, _division, _tempo);
+
+                    if (ms == -1)
+                    {
+                        MessageBox.Show("Time " + sTimeStamp + " on line " + (SyncLyrics.IndexOf(SyncLine) + 1) + " is incorrect. Please correct it.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        return;
+                    }
+
                     // 5 Columns: ticks, time, type, note, text
                     if (text == m_SepLine)
                         dgView.Rows.Add(ms, sTimeStamp, "cr", "", text);
