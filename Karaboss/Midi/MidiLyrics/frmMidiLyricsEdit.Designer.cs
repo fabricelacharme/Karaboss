@@ -97,6 +97,7 @@
             this.pnlMenus = new System.Windows.Forms.Panel();
             this.lblSelectTrack = new System.Windows.Forms.Label();
             this.cbSelectTrack = new System.Windows.Forms.ComboBox();
+            this.mnuFileExportLyricsSrt = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -373,7 +374,8 @@
             this.mnuFileExportLyrics.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.mnuFileExportLyricsLrc,
             this.mnuFileExportLyricsTxt,
-            this.MnuFileExportLyricsKok});
+            this.MnuFileExportLyricsKok,
+            this.mnuFileExportLyricsSrt});
             this.mnuFileExportLyrics.Name = "mnuFileExportLyrics";
             resources.ApplyResources(this.mnuFileExportLyrics, "mnuFileExportLyrics");
             // 
@@ -589,7 +591,13 @@
             this.cbSelectTrack.TabStop = false;
             this.cbSelectTrack.SelectedIndexChanged += new System.EventHandler(this.cbSelectTrack_SelectedIndexChanged);
             // 
-            // frmLyricsEdit
+            // mnuFileExportLyricsSrt
+            // 
+            this.mnuFileExportLyricsSrt.Name = "mnuFileExportLyricsSrt";
+            resources.ApplyResources(this.mnuFileExportLyricsSrt, "mnuFileExportLyricsSrt");
+            this.mnuFileExportLyricsSrt.Click += new System.EventHandler(this.mnuFileExportLyricsSrt_Click);
+            // 
+            // frmMidiLyricsEdit
             // 
             resources.ApplyResources(this, "$this");
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -597,7 +605,7 @@
             this.Controls.Add(this.tabControl1);
             this.Controls.Add(this.menuStrip1);
             this.MainMenuStrip = this.menuStrip1;
-            this.Name = "frmLyricsEdit";
+            this.Name = "frmMidiLyricsEdit";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FrmLyricsEdit_FormClosing);
             this.Load += new System.EventHandler(this.FrmLyricsEdit_Load);
             this.Resize += new System.EventHandler(this.frmLyricsEdit_Resize);
@@ -691,5 +699,6 @@
         private System.Windows.Forms.ToolStripMenuItem mnuEditImportLyricsLrc;
         private System.Windows.Forms.ToolStripMenuItem mnuEditImportLyricsTxt;
         private System.Windows.Forms.ToolStripMenuItem mnuEditImportLyricsKok;
+        private System.Windows.Forms.ToolStripMenuItem mnuFileExportLyricsSrt;
     }
 }

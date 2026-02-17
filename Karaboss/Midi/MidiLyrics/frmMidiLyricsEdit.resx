@@ -802,49 +802,55 @@
     <value>17, 17</value>
   </metadata>
   <data name="mnuFileSave.Size" type="System.Drawing.Size, System.Drawing">
-    <value>137, 22</value>
+    <value>180, 22</value>
   </data>
   <data name="mnuFileSave.Text" xml:space="preserve">
     <value>&amp;Save</value>
   </data>
   <data name="mnuFileSaveAs.Size" type="System.Drawing.Size, System.Drawing">
-    <value>137, 22</value>
+    <value>180, 22</value>
   </data>
   <data name="mnuFileSaveAs.Text" xml:space="preserve">
     <value>Save &amp;as</value>
   </data>
   <data name="mnuFileSep2.Size" type="System.Drawing.Size, System.Drawing">
-    <value>134, 6</value>
+    <value>177, 6</value>
   </data>
   <data name="mnuFileExportLyricsLrc.Size" type="System.Drawing.Size, System.Drawing">
-    <value>134, 22</value>
+    <value>180, 22</value>
   </data>
   <data name="mnuFileExportLyricsLrc.Text" xml:space="preserve">
     <value>LRC format</value>
   </data>
   <data name="mnuFileExportLyricsTxt.Size" type="System.Drawing.Size, System.Drawing">
-    <value>134, 22</value>
+    <value>180, 22</value>
   </data>
   <data name="mnuFileExportLyricsTxt.Text" xml:space="preserve">
     <value>Text format</value>
   </data>
   <data name="MnuFileExportLyricsKok.Size" type="System.Drawing.Size, System.Drawing">
-    <value>134, 22</value>
+    <value>180, 22</value>
   </data>
   <data name="MnuFileExportLyricsKok.Text" xml:space="preserve">
     <value>Kok format</value>
   </data>
+  <data name="mnuFileExportLyricsSrt.Size" type="System.Drawing.Size, System.Drawing">
+    <value>180, 22</value>
+  </data>
+  <data name="mnuFileExportLyricsSrt.Text" xml:space="preserve">
+    <value>SRT format</value>
+  </data>
   <data name="mnuFileExportLyrics.Size" type="System.Drawing.Size, System.Drawing">
-    <value>137, 22</value>
+    <value>180, 22</value>
   </data>
   <data name="mnuFileExportLyrics.Text" xml:space="preserve">
     <value>Export lyrics</value>
   </data>
   <data name="mnuFileSep1.Size" type="System.Drawing.Size, System.Drawing">
-    <value>134, 6</value>
+    <value>177, 6</value>
   </data>
   <data name="mnuFileQuit.Size" type="System.Drawing.Size, System.Drawing">
-    <value>137, 22</value>
+    <value>180, 22</value>
   </data>
   <data name="mnuFileQuit.Text" xml:space="preserve">
     <value>&amp;Quit</value>
@@ -1656,8 +1662,14 @@
   <data name="&gt;&gt;toolTip1.Type" xml:space="preserve">
     <value>System.Windows.Forms.ToolTip, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
+  <data name="&gt;&gt;mnuFileExportLyricsSrt.Name" xml:space="preserve">
+    <value>mnuFileExportLyricsSrt</value>
+  </data>
+  <data name="&gt;&gt;mnuFileExportLyricsSrt.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
   <data name="&gt;&gt;$this.Name" xml:space="preserve">
-    <value>frmLyricsEdit</value>
+    <value>frmMidiLyricsEdit</value>
   </data>
   <data name="&gt;&gt;$this.Type" xml:space="preserve">
     <value>System.Windows.Forms.Form, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>

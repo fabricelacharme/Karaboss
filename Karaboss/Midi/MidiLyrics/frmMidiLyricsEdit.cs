@@ -32,26 +32,19 @@
 
 #endregion
 
-using FlShell.Interop;
-using Karaboss.Lrc;
-using Karaboss.Lrc.SharedFramework;
 using Karaboss.MidiLyrics;
 using Karaboss.Mp3.Mp3Lyrics;
 using Karaboss.Resources.Localization;
+using Karaboss.SRT;
 using Karaboss.Utilities;
 using Sanford.Multimedia.Midi;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Drawing.Text;
 using System.IO;
 using System.Linq;
-using System.Runtime.Remoting.Metadata.W3cXsd2001;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
-using TagLib.Riff;
-using static System.Windows.Forms.LinkLabel;
-
 
 namespace Karaboss
 {
@@ -1202,8 +1195,7 @@ namespace Karaboss
                         }
                     }
 
-                    // Time to ticks
-                    //dgView.Rows[dgView.CurrentCell.RowIndex].Cells[COL_TICKS].Value = TimeToTicks(dgView.CurrentCell.Value.ToString());
+                    // Time to ticks                    
                     dgView.Rows[dgView.CurrentCell.RowIndex].Cells[COL_TICKS].Value = Utilities.LyricsUtilities.TimeToTicks(dgView.CurrentCell.Value.ToString(), _division, _totalTicks);
                     // Type = text
                     dgView.Rows[dgView.CurrentCell.RowIndex].Cells[COL_TYPE].Value = "text";
@@ -2252,6 +2244,12 @@ namespace Karaboss
                 // Convert ms to ticks
                 ms = Utilities.LyricsUtilities.TimeToTicks(sTimeStamp, _division, _tempo);
 
+                if (ms == -1)
+                {
+                    MessageBox.Show("Error converting timestamp " + timestamp + " to milliseconds. Please check the format of the timestamp in the KOK file.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+
                 // 5 Columns: ticks, time, type, note, text
                 if (word == m_SepLine)
                     dgView.Rows.Add(ms, sTimeStamp, "cr", "", word);
@@ -2398,11 +2396,11 @@ namespace Karaboss
         /// <param name="e"></param>
         private void mnuEditImportLyricsLrc_Click(object sender, EventArgs e)
         {
-            ImportLyricsFormLrc();                       
+            ImportLyricsFromLrc();                       
         }
 
 
-        private void ImportLyricsFormLrc()
+        private void ImportLyricsFromLrc()
         {
             OpenFileDialog.Title = "Open a .lrc file";
             OpenFileDialog.DefaultExt = "lrc";
@@ -2753,7 +2751,7 @@ namespace Karaboss
             string lrcs = string.Empty;
             string cr = "\r\n";
             List<string> TagsList = new List<string> { Tag_Tool, Tag_Title, Tag_Artist, Tag_Album, Tag_Lang, Tag_Album, Tag_DPlus };
-            List<string> TagsNames = new List<string> { "Tool:", "Ti:", "Ar:", "Al:", "La:", "By:", "D+:" };
+            List<string> TagsNames = new List<string> { "tool:", "ti:", "ar:", "al:", "la:", "by:", "D+:" };
             string Tag;
             string TagName;
             
@@ -3422,6 +3420,98 @@ namespace Karaboss
 
         #endregion Text import export
 
+
+
+        #region srt import export
+
+        #region import srt
+
+
+        #endregion srt import
+
+
+        #region export srt
+
+        private void mnuFileExportLyricsSrt_Click(object sender, EventArgs e)
+        {
+            ExportLyricsToSrtFormat();
+        }
+
+
+        private void ExportLyricsToSrtFormat()
+        {
+
+            #region select filename
+
+            string defExt = ".srt";
+            string fName = "New" + defExt;
+            string fPath = Path.GetDirectoryName(MIDIfileName);
+
+            string fullName;
+            string defName;
+
+            #region search name
+
+            if (fPath == null || fPath == "")
+            {
+                if (Directory.Exists(CreateNewMidiFile._DefaultDirectory))
+                    fPath = CreateNewMidiFile._DefaultDirectory;
+                else
+                    fPath = Environment.GetFolderPath(Environment.SpecialFolder.MyMusic);
+            }
+            else
+            {
+                fName = Path.GetFileName(MIDIfileName);
+            }
+
+            // Extension forced to lrc            
+            string fullPath = fPath + "\\" + Path.GetFileNameWithoutExtension(fName) + defExt;
+            fullName = Utilities.Files.FindUniqueFileName(fullPath);                            // Add (2), (3) etc.. if necessary    
+            defName = Path.GetFileNameWithoutExtension(fullName);                               // Default name to propose to dialog
+
+            #endregion search name      
+
+            string defFilter = "SRT files (*.srt)|*.srt|All files (*.*)|*.*";
+
+            SaveFileDialog.Title = "Save to SRT format";
+            SaveFileDialog.Filter = defFilter;
+            SaveFileDialog.DefaultExt = defExt;
+            SaveFileDialog.InitialDirectory = @fPath;
+            SaveFileDialog.FileName = defName;
+
+            if (SaveFileDialog.ShowDialog() != DialogResult.OK)
+                return;
+
+            fullPath = SaveFileDialog.FileName;
+
+
+            var srt = new SRTFile();
+
+            Subtitle subtitle = new Subtitle(1);
+            subtitle.StartTime = new SRTTime("00:00:01,848"); 
+            subtitle.EndTime = new SRTTime("00:00:02,555");   
+            subtitle.Lines.Add("First line of text!");
+            srt.Subtitles.Add(subtitle);
+
+            subtitle = new Subtitle(2);
+            subtitle.StartTime = new SRTTime("00:00:03,123"); 
+            subtitle.EndTime = new SRTTime("00:00:03,999");   
+            subtitle.Lines.Add("Second line of text!");
+            srt.Subtitles.Add(subtitle);
+
+            string a = srt.Render();
+
+            srt.WriteToFile(fullPath);
+
+        }
+
+
+            #endregion export srt
+
+        #endregion srt import export
+
+
+        #endregion srt import export
 
         #endregion import export lyrics
 
@@ -4103,6 +4193,7 @@ namespace Karaboss
                 return false;
             }
         }
+
 
 
         #endregion Text

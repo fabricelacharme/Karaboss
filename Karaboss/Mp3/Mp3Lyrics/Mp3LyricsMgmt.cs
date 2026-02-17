@@ -67,14 +67,22 @@ namespace Karaboss.Mp3.Mp3Lyrics
 
     public static class Mp3LyricsMgmtHelper
     {
-               
-        //public static SyncText[] SyncTexts;
+                       
         public static SynchronisedLyricsFrame MySyncLyricsFrame;
         public static string m_SepLine = "/";
         public static string m_SepParagraph = "\\";
         public static Mp3LyricsTypes m_mp3lyricstype = Mp3LyricsTypes.None;
 
-        
+
+        // Tags
+        public static string Tool;
+        public static string Artist;
+        public static string Title;
+        public static string Description;
+        public static string Album;
+        public static uint Year;
+
+
         #region kEffect
 
         // Line of struct SyncText
@@ -409,6 +417,33 @@ namespace Karaboss.Mp3.Mp3Lyrics
                 return null;
             }
 
+
+            // Extract Artist, Title, Album, Year from LRC file
+            
+            Artist = string.Empty;
+            Title = string.Empty;
+            Album = string.Empty;
+            Year = 0;
+            Description = string.Empty;
+            Tool = string.Empty;
+
+            Artist = GetArtistFromLrc(lines);
+            Title = GetTitleFromLrc(lines);
+            Album = GetAlbumFromLrc(lines);
+            Year = GetYearFromLrc(lines);
+            Tool = GetToolFromLrc(lines);
+
+            /*
+                MySyncLyricsFrame = new SynchronisedLyricsFrame("Karaboss", "en", SynchedTextType.Lyrics);
+                MySyncLyricsFrame.TextEncoding = StringType.Latin1;
+                MySyncLyricsFrame.Format = TimestampFormat.AbsoluteMilliseconds;
+                MySyncLyricsFrame.Text = new SynchedText[0];
+                MySyncLyricsFrame.Description = "Karaboss";
+    
+                // Set tags in mp3 file
+                SetTags(FileName, Artist, Title, Album, Year, MySyncLyricsFrame);
+            */
+
             // Extract sync lyrics from lines
             List<List<keffect.KaraokeEffect.kSyncText>> SyncLyrics = GetSyncLyricsFromLines(lines);
 
@@ -423,6 +458,51 @@ namespace Karaboss.Mp3.Mp3Lyrics
 
             return SyncLyrics;
         }
+
+        private static string GetArtistFromLrc(string[] lines)
+        {
+            return GetTagFromLrc(lines, "ar");
+        }
+
+        private static string GetTitleFromLrc(string[] lines)
+        {
+            return GetTagFromLrc(lines, "ti");
+        }
+
+        private static string GetAlbumFromLrc(string[] lines)
+        {
+            return GetTagFromLrc(lines, "al");
+        }
+
+        private static string GetToolFromLrc(string[] lines)
+        {
+            return GetTagFromLrc(lines, "tool");
+        }
+
+        private static uint GetYearFromLrc(string[] lines)
+        {
+            string yearStr = GetTagFromLrc(lines, "by");
+            uint year;
+            if (uint.TryParse(yearStr, out year))
+                return year;
+            else
+                return 0;
+        }
+
+        private static string GetTagFromLrc(string[] lines, string tag)
+        {
+            string pattern = @"\[" + tag + @":(.*?)\]";
+            foreach (string line in lines)
+            {
+                Match match = Regex.Match(line, pattern);
+                if (match.Success)
+                {
+                    return match.Groups[1].Value.Trim();
+                }
+            }
+            return null;
+        }
+
 
         /// <summary>
         /// Retrieves the lines of lyrics and timing information from an LRC file associated with the specified file

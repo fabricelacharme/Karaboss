@@ -2426,11 +2426,12 @@ namespace Karaboss.Mp3
             
             _lrcFileName = OpenFileDialog.FileName;
 
-
-            //LoadLrcFile(_lrcFileName);
+            
             Mp3LyricsMgmtHelper.MySyncLyricsFrame = null;
             Mp3LyricsMgmtHelper.SyncLyrics = Mp3LyricsMgmtHelper.GetKEffectLrcLyrics(_lrcFileName);
 
+            PopulateMetadataTags();
+            
             PopulateDataGridView();
 
 
@@ -2444,7 +2445,27 @@ namespace Karaboss.Mp3
             PopulateTextBox(localSyncLyrics);
             
         }
-              
+             
+        
+        private void PopulateMetadataTags()
+        {
+            if (Mp3LyricsMgmtHelper.SyncLyrics == null || Mp3LyricsMgmtHelper.SyncLyrics.Count == 0)
+                return;
+            string title = Mp3LyricsMgmtHelper.Title;
+            string artist = Mp3LyricsMgmtHelper.Artist;
+            string album = Mp3LyricsMgmtHelper.Album;
+            string tool = Mp3LyricsMgmtHelper.Tool;
+            uint year = Mp3LyricsMgmtHelper.Year;
+
+            if (title != "")
+                txtTitle.Text = title;
+            if (artist != "")
+                txtArtist.Text = artist;
+            if (album != "")
+                txtAlbum.Text = album;
+            if ( year != 0)
+                txtYear.Text = year.ToString();                                        
+        }
 
         /// <summary>
         /// Store dgView content
@@ -2791,7 +2812,7 @@ namespace Karaboss.Mp3
 
             // Store meta datas
             List<string> TagsList = new List<string> { Tag_Tool, Tag_Title, Tag_Artist, Tag_Album, Tag_Lang, Tag_Album, Tag_DPlus };
-            List<string> TagsNames = new List<string> { "Tool:", "Ti:", "Ar:", "Al:", "La:", "By:", "D+:" };
+            List<string> TagsNames = new List<string> { "tool:", "ti:", "ar:", "al:", "la:", "by:", "D+:" };
             string Tag;
             string TagName;
             for (int i = 0; i < TagsList.Count; i++)
@@ -2916,7 +2937,7 @@ namespace Karaboss.Mp3
                 strSpaceBetween = string.Empty;
 
             List<string> TagsList = new List<string> { Tag_Tool, Tag_Title, Tag_Artist, Tag_Album, Tag_Lang, Tag_Year, Tag_DPlus };
-            List<string> TagsNames = new List<string> { "Tool:", "Ti:", "Ar:", "Al:", "La:", "By:", "D+:" };
+            List<string> TagsNames = new List<string> { "tool:", "ti:", "ar:", "al:", "la:", "by:", "D+:" };
             string Tag;
             string TagName;
             for (int i = 0; i < TagsList.Count; i++)
