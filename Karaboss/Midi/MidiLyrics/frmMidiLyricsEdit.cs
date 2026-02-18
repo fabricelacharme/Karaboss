@@ -2613,8 +2613,8 @@ namespace Karaboss
 
             string Tag_Tool = "Karaboss https://karaboss.lacharme.net";
 
-           string Tag_Title = string.Empty;
-           string Tag_Artist = string.Empty;
+           string Tag_Title;
+           string Tag_Artist;
            string Tag_Album = string.Empty;
            string Tag_Lang = string.Empty;
            string Tag_By = string.Empty;
@@ -2642,61 +2642,101 @@ namespace Karaboss
                 Tag_Title = lstTags[1];
             }
 
+            // Read Datagrid content
+            List<(double Time, string lyric)> lstDgRows = ReadDataGridContent();
+            if (lstDgRows == null || lstDgRows.Count == 0)
+            {
+                MessageBox.Show("No lyric to export", "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return;
+            }
+
+
+            // Create LRC file
             switch (LrcLinesSyllabesFormat)
             {
-                case LrcLinesSyllabesFormats.Lines:
-                    List<(double, string)> lstDgRows = LRCReadDgViewData();
+                case LrcLinesSyllabesFormats.Lines:                                        
                     Utilities.LyricsUtilities.SaveLRCLines(fullPath, lstDgRows, bRemoveAccents, bUpperCase, bLowerCase, bRemoveNonAlphaNumeric, Tag_Tool, Tag_Title, Tag_Artist, Tag_Album, Tag_Lang, Tag_By, Tag_DPlus, bCutLines, LrcCutLinesChars, _LrcMillisecondsDigits, _myLyricsMgmt);
                     break;
                 case LrcLinesSyllabesFormats.Syllabes:
-                    SaveLRCSyllabes(fullPath, bRemoveAccents, bUpperCase, bLowerCase, bRemoveNonAlphaNumeric, Tag_Tool, Tag_Title, Tag_Artist, Tag_Album, Tag_Lang, Tag_By, Tag_DPlus);
+                    //SaveLRCSyllabes(fullPath, bRemoveAccents, bUpperCase, bLowerCase, bRemoveNonAlphaNumeric, Tag_Tool, Tag_Title, Tag_Artist, Tag_Album, Tag_Lang, Tag_By, Tag_DPlus);
+                    Utilities.LyricsUtilities.SaveLRCSyllabes(fullPath,lstDgRows, bRemoveAccents, bUpperCase, bLowerCase, bRemoveNonAlphaNumeric, Tag_Tool, Tag_Title, Tag_Artist, Tag_Album, Tag_Lang, Tag_By, Tag_DPlus, _LrcMillisecondsDigits, _myLyricsMgmt);
                     break;
             }                                
         }
-      
-            
+
         /// <summary>
-        /// Read dgView data
+        /// Reads the contents of the data grid and extracts a list of time and lyric pairs, filtering out invalid or
+        /// improperly formatted entries.
         /// </summary>
-        /// <returns></returns>
-        private List<(double, string)> LRCReadDgViewData()
+        /// <remarks>The method ensures that only rows with valid time formats and non-empty lyrics are
+        /// included. It also normalizes certain characters in the lyrics to maintain consistency with expected
+        /// formats.</remarks>
+        /// <returns>A list of tuples, each containing the time in milliseconds and the corresponding lyric string. The list
+        /// excludes rows with missing or invalid data.</returns>
+        private List<(double Time, string lyric)> ReadDataGridContent()
         {
-
-            // KEEP THIS FUNCTION AS ONLY ONE FOR DGVIEW READING !!!
-
-            // used for SaveLrcFileName, but for lines format, not for syllabes format 
-
+            List<(double Time, string lyric)> Result = new List<(double Time, string lyric)>();
 
             string sTime;
             double time;
-            string sLyric;                    
-            
+            string sLyric;
+
             object vLyric;
             object vTime;
-            
+
+            // Verify format of time "00:00.000"
+            string pattern = @"\d{2}:\d{2}.\d{3}";
+
             // Store rows of dgView in a list
             // the aim is to have the same procedure between midi Lyrics edition and mp3 Lyrics edition            
 
-            List<(double, string)> lstDgRows = new List<(double, string)>();           
             for (int i = 0; i < dgView.Rows.Count; i++)
             {
                 vTime = dgView.Rows[i].Cells[COL_TIME].Value;
-                vLyric = dgView.Rows[i].Cells[COL_TEXT].Value;                
-                if (vTime != null && vLyric != null && vTime.ToString().Trim() != "")
-                {
-                    sTime = vTime.ToString();
-                    // Convert times to milliseconds (to have the same entry format with mp3 Lyrics edition)
-                    time = Mp3LyricsMgmtHelper.TimeToMs(sTime);
-                    sLyric = vLyric.ToString();
+                vLyric = dgView.Rows[i].Cells[COL_TEXT].Value;
 
-                    lstDgRows.Add((time, sLyric));
-                }
-            }            
+                if (vLyric == null) continue;
+                if (vTime == null) continue;
 
-            return lstDgRows;      
+                // Don not keep empty cells ?
+                if (vTime.ToString().Trim() == "") continue;
+                if (vLyric.ToString().Trim() == "") continue;
+
+                sTime = vTime.ToString().Trim();
+
+                // Verify format of time "00:00.000"
+                var match = Regex.Match(sTime, pattern);
+                if (!match.Success) continue;
+
+                // Convert times to milliseconds (to have the same entry format with mp3 Lyrics edition)
+                time = Mp3LyricsMgmtHelper.TimeToMs(sTime);
+
+                sLyric = vLyric.ToString();
+
+                // Do not keep if first cell is a separator
+                if (i == 0 && sLyric.Trim() == m_SepLine) continue;
+                if (i == 0 && sLyric.Trim() == m_SepParagraph) continue;
+
+                // Eliminate some characters
+                sLyric = sLyric.Replace("_", " ");
+
+                // Replace characters used in LRC format
+                sLyric = sLyric.Replace("[", "@");
+                sLyric = sLyric.Replace("]", "@");
+                sLyric = sLyric.Replace("<", "@");
+                sLyric = sLyric.Replace(">", "@");
+
+
+                Result.Add((time, sLyric));
+
+            }
+
+            return Result;
         }
 
-       
+        #region deleteme
+        /*
+
         /// <summary>
         /// Saves processed lyrics and associated metadata to an LRC file, applying specified text treatments and tags.
         /// </summary>
@@ -2719,8 +2759,9 @@ namespace Karaboss
         /// <param name="Tag_DPlus">Additional metadata to include in the LRC file.</param>
         private void SaveLRCSyllabes(string File, bool bRemoveAccents, bool bUpperCase, bool bLowerCase, bool bRemoveNonAlphaNumeric, string Tag_Tool, string Tag_Title, string Tag_Artist, string Tag_Album, string Tag_Lang, string Tag_By, string Tag_DPlus)
         {
-            string lines = string.Empty;
+            string lines;
 
+            // Header of the LRC files containing the tags
             lines = CreateTagString(bRemoveAccents, bRemoveNonAlphaNumeric, Tag_Tool, Tag_Title, Tag_Artist, Tag_Album, Tag_Lang, Tag_By, Tag_DPlus);
 
 
@@ -2751,8 +2792,21 @@ namespace Karaboss
                 MessageBox.Show(ex.Message, "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
+       
 
-
+        /// <summary>
+        /// Create the header of the LRC file composed of tags tool, title, artist, album, lang
+        /// </summary>
+        /// <param name="bRemoveAccents"></param>
+        /// <param name="bRemoveNonAlphaNumeric"></param>
+        /// <param name="Tag_Tool"></param>
+        /// <param name="Tag_Title"></param>
+        /// <param name="Tag_Artist"></param>
+        /// <param name="Tag_Album"></param>
+        /// <param name="Tag_Lang"></param>
+        /// <param name="Tag_By"></param>
+        /// <param name="Tag_DPlus"></param>
+        /// <returns>Returns a string</returns>
         private string CreateTagString(bool bRemoveAccents, bool bRemoveNonAlphaNumeric, string Tag_Tool, string Tag_Title, string Tag_Artist, string Tag_Album, string Tag_Lang, string Tag_By, string Tag_DPlus)
         {
             string lrcs = string.Empty;
@@ -3067,6 +3121,10 @@ namespace Karaboss
             return lines;
         }
 
+
+        */
+
+        #endregion deleteme
 
         #endregion export lrc
 
@@ -3498,53 +3556,15 @@ namespace Karaboss
             fullPath = SaveFileDialog.FileName;
 
 
-            // Extract DgView data
-            List<(double, string)> lstDgViewData = LRCReadDgViewData();
-            double vStartTime;
-            double vEndTime;
-
-            string StartTime = null;
-            string EndTime = null;
-
-            string vLyric = null;
-            var srtFile = new SRTFile();
-            Subtitle subtitle;
-
-            for (int i = 0; i < lstDgViewData.Count; i++) 
+            // Read Datagrid content
+            List<(double Time, string lyric)> lstDgRows = ReadDataGridContent();
+            if (lstDgRows == null || lstDgRows.Count == 0)
             {
-
-                // Format of times must be like "00:00:01,848"
-
-                vStartTime = lstDgViewData[i].Item1;
-                vEndTime = vStartTime + 100;
-                vLyric = lstDgViewData[i].Item2;
-
-                StartTime = Mp3LyricsMgmtHelper.MsToSrtTime(vStartTime);
-                EndTime = Mp3LyricsMgmtHelper.MsToSrtTime(vEndTime);
-
-                subtitle = new Subtitle(i + 1);
-                subtitle.StartTime =  new SRTTime(StartTime);
-                subtitle.EndTime = new SRTTime(EndTime);
-                subtitle.Lines.Add(vLyric);
-                srtFile.Subtitles.Add(subtitle);
-
+                MessageBox.Show("No lyric to export", "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return;
             }
 
-
-            // Open file
-            try
-            {
-                srtFile.WriteToFile(fullPath);
-                System.Diagnostics.Process.Start(@fullPath);
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message, "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-
-            
-
-
+            Utilities.LyricsUtilities.SaveLyricsToSRTFormat(fullPath, lstDgRows, _LrcMillisecondsDigits, _myLyricsMgmt);        
 
         }
 
