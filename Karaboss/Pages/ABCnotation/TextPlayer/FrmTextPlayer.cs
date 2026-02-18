@@ -793,7 +793,7 @@ N: <And any more lines of note.>
                 if (Location.Y > rect.Height)
                     Location = new Point(Location.X, 0);
 
-                Size = Properties.Settings.Default.frmPlayerSize;
+                Size = Properties.Settings.Default.frmMidiPlayerSize;
             }
             #endregion
 

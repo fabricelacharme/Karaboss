@@ -38,7 +38,7 @@ using Sanford.Multimedia.Midi;
 
 namespace Karaboss
 {
-    public partial class frmLyricsSelectTrack : Form
+    public partial class frmMidiLyricsSelectTrack : Form
     {
 
         private List<string> lsInstruments = Sanford.Multimedia.Midi.MidiFile.LoadInstruments();
@@ -62,7 +62,7 @@ namespace Karaboss
             }
         }
         
-        public frmLyricsSelectTrack(Sequence sequence1)
+        public frmMidiLyricsSelectTrack(Sequence sequence1)
         {
             InitializeComponent();
             LoadTracks(sequence1);

@@ -1795,7 +1795,7 @@ namespace MusicXml
             string c = chord.GetChordName();
 
 
-            // frmPlayer HandleLoadXmlCompleted > LoadXmlChordsInLyrics()
+            // frmMidiPlayer HandleLoadXmlCompleted > LoadXmlChordsInLyrics()
             ChordItem ci = new ChordItem()
             {
                 TicksOn = t,

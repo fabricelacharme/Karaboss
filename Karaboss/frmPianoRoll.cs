@@ -112,7 +112,7 @@ namespace Karaboss
         #endregion
 
         #region controls
-        private frmMidiPlayer frmPlayer;
+        private frmMidiPlayer frmMidiPlayer;
         private OutputDevice outDevice;
         private Sequencer sequencer1 = new Sequencer();
         private Sequence sequence1 = new Sequence();
@@ -882,13 +882,13 @@ namespace Karaboss
         }
     
         /// <summary>
-        /// Send modified notes to score on frmPlayer
+        /// Send modified notes to score on frmMidiPlayer
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void pianoRollControl2_SequenceModified(Object sender, EventArgs e)
         {
-            UpdateFrmPlayer();
+            UpdatefrmMidiPlayer();
         }
 
         private void pianoRollControl2_InfoNote(string NoteInfo)
@@ -1137,15 +1137,15 @@ namespace Karaboss
         }
                
         /// <summary>
-        /// Update modified notes on frmPlayer
+        /// Update modified notes on frmMidiPlayer
         /// </summary>
-        private void UpdateFrmPlayer()
+        private void UpdatefrmMidiPlayer()
         {
             if (Application.OpenForms.OfType<frmMidiPlayer>().Count() > 0)
             {                
-                frmPlayer = Utilities.FormUtilities.GetForm<frmMidiPlayer>();
-                frmPlayer.RefreshDisplay();
-                frmPlayer.FileModified();
+                frmMidiPlayer = Utilities.FormUtilities.GetForm<frmMidiPlayer>();
+                frmMidiPlayer.RefreshDisplay();
+                frmMidiPlayer.FileModified();
                 this.Focus();
             }
         }

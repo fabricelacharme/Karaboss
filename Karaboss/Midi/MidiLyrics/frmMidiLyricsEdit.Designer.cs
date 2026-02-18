@@ -606,9 +606,9 @@
             this.Controls.Add(this.menuStrip1);
             this.MainMenuStrip = this.menuStrip1;
             this.Name = "frmMidiLyricsEdit";
-            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FrmLyricsEdit_FormClosing);
-            this.Load += new System.EventHandler(this.FrmLyricsEdit_Load);
-            this.Resize += new System.EventHandler(this.frmLyricsEdit_Resize);
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.frmMidiLyricsEdit_FormClosing);
+            this.Load += new System.EventHandler(this.frmMidiLyricsEdit_Load);
+            this.Resize += new System.EventHandler(this.frmMidiLyricsEdit_Resize);
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();

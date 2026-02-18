@@ -1,6 +1,6 @@
 ﻿namespace Karaboss
 {
-    partial class frmLyricsSelectTrack
+    partial class frmMidiLyricsSelectTrack
     {
         /// <summary>
         /// Required designer variable.
@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmLyricsSelectTrack));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmMidiLyricsSelectTrack));
             this.cbSelectTrack = new System.Windows.Forms.ComboBox();
             this.btnOk = new System.Windows.Forms.Button();
             this.btnCancel = new System.Windows.Forms.Button();
@@ -90,7 +90,7 @@
             this.optLyricFormat.TabStop = true;
             this.optLyricFormat.UseVisualStyleBackColor = true;
             // 
-            // frmLyricsSelectTrack
+            // frmMidiLyricsSelectTrack
             // 
             resources.ApplyResources(this, "$this");
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -105,7 +105,7 @@
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
-            this.Name = "frmLyricsSelectTrack";
+            this.Name = "frmMidiLyricsSelectTrack";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FrmSelectTrack_FormClosing);
             this.ResumeLayout(false);
             this.PerformLayout();

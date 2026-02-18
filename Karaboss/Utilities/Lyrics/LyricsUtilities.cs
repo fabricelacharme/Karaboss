@@ -890,80 +890,7 @@ namespace Karaboss.Utilities
                 
                 lstTimeLines.Add(tx);
             }
-
-            /*
-            try
-            {
-                // sTime, sType, sLyric
-                for (int i = 0; i < lstLyricsItems.Count; i++)
-                {
-                    sTime = lstLyricsItems[i].Item1;
-                    //sType = lstLyricsItems[i].Item2;
-                    sLyric = lstLyricsItems[i].Item3;
-
-
-                    if (sLyric.Trim() == m_SepParagraph)
-                    {
-                        if (sTimeLine != "")
-                        {
-                            // Add new line
-                            lstTimeLines.Add(sTimeLine);
-                        }
-                        sTimeLine = sTime;
-                    }
-                    else if (sLyric.Trim() == m_SepLine)
-                    {
-                        if (sTimeLine != "")
-                        {
-                            // Add new line
-                            lstTimeLines.Add(sTimeLine);
-                        }
-                        sTimeLine = sTime;
-                    }
-                    else if (sLyric.Trim().StartsWith(m_SepParagraph))
-                    {
-                        if (sTimeLine != "")
-                        {
-                            // Add new line
-                            lstTimeLines.Add(sTimeLine);
-                        }
-                        sLyric = sLyric.Replace(m_SepParagraph, "");
-                        sTimeLine = sTime + strSpaceBetween + sLyric;
-                    }
-                    else if (sLyric.Trim().StartsWith(m_SepLine))
-                    {
-                        if (sTimeLine != "")
-                        {
-                            // Add new line
-                            lstTimeLines.Add(sTimeLine);
-                        }
-                        sLyric = sLyric.Replace(m_SepLine, "");
-                        sTimeLine = sTime + strSpaceBetween + sLyric;
-                    }
-                    else
-                    {
-                        // Line continuation
-                        // Case of spaces at the left of the lyrics
-                        // Add a space to the left to allow split by space
-                        if (sLyric.Length > 0 && sLyric.StartsWith(" "))
-                            sTimeLine += " " + sTime + strSpaceBetween + sLyric.Remove(0, 1);
-                        else
-                            sTimeLine += sTime + strSpaceBetween + sLyric;
-                    }
-                }
-
-                // Save last line
-                if (sTimeLine != "")
-                {
-                    // Remove last space
-                    if (sTimeLine.Length > 0 && sTimeLine.EndsWith(" "))
-                        sTimeLine = sTimeLine.Remove(sTimeLine.Length - 1, 1);
-                    lstTimeLines.Add(sTimeLine);
-                }
-
-            }
-            catch (Exception e) { MessageBox.Show(e.Message, "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error); }
-            */
+           
 
             return lstTimeLines;
         }
@@ -1337,7 +1264,7 @@ namespace Karaboss.Utilities
 
             // Store meta datas
             List<string> TagsList = new List<string> { Tag_Tool, Tag_Title, Tag_Artist, Tag_Album, Tag_Lang, Tag_Album, Tag_DPlus };
-            List<string> TagsNames = new List<string> { "Tool:", "Ti:", "Ar:", "Al:", "La:", "By:", "D+:" };
+            List<string> TagsNames = new List<string> { "tool:", "ti:", "ar:", "al:", "la:", "by:", "D+:" };
             string Tag;
             string TagName;
             for (int i = 0; i < TagsList.Count; i++)

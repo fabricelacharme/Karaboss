@@ -93,7 +93,7 @@ namespace Karaboss
         // Size mode of the picture background
         private PictureBoxSizeMode SizeMode;
 
-        private frmMidiLyric frmLyric;
+        private frmMidiLyrics frmMidiLyrics;
         
         #endregion private properties
 
@@ -152,7 +152,7 @@ namespace Karaboss
                 chkContour.Checked = bColorContour;
 
                 // Window lyris topmost
-                _bTopMost = Properties.Settings.Default.frmLyricsTopMost;
+                _bTopMost = Properties.Settings.Default.frmMidiLyricsTopMost;
                 chkTopMost.Checked = _bTopMost;
 
                 // Backgroud color beside lyrics to help to read when an image is displayed
@@ -306,7 +306,7 @@ namespace Karaboss
                 Properties.Settings.Default.TxtContourColor = TxtContourColor;
 
                 // window lyrics topmost
-                Properties.Settings.Default.frmLyricsTopMost = _bTopMost;
+                Properties.Settings.Default.frmMidiLyricsTopMost = _bTopMost;
 
 
                 // Force Uppercase
@@ -660,65 +660,65 @@ namespace Karaboss
             Dispose();
         }
 
-        // Apply changes to frmLyric
+        // Apply changes to frmMidiLyrics
         private void ApplyChanges()
         {
             SaveOptions();
 
-            if (Application.OpenForms.OfType<frmMidiLyric>().Count() > 0)
+            if (Application.OpenForms.OfType<frmMidiLyrics>().Count() > 0)
             {
                 Cursor.Current = Cursors.WaitCursor;
 
-                frmLyric = Utilities.FormUtilities.GetForm<frmMidiLyric>();
+                frmMidiLyrics = Utilities.FormUtilities.GetForm<frmMidiLyrics>();
 
-                frmLyric.bShowBalls = Karaclass.m_DisplayBalls;
+                frmMidiLyrics.bShowBalls = Karaclass.m_DisplayBalls;
 
-                frmLyric.KaraokeFont = _karaokeFont;
+                frmMidiLyrics.KaraokeFont = _karaokeFont;
 
                 // Text colors                
-                frmLyric.TxtBackColor = TxtBackColor;
-                frmLyric.TxtGrad0Color = TxtGrad0Color;
-                frmLyric.TxtGrad1Color = TxtGrad1Color;
-                frmLyric.TxtRhythm0Color = TxtRhythm0Color;
-                frmLyric.TxtRhythm1Color = TxtRhythm1Color;
+                frmMidiLyrics.TxtBackColor = TxtBackColor;
+                frmMidiLyrics.TxtGrad0Color = TxtGrad0Color;
+                frmMidiLyrics.TxtGrad1Color = TxtGrad1Color;
+                frmMidiLyrics.TxtRhythm0Color = TxtRhythm0Color;
+                frmMidiLyrics.TxtRhythm1Color = TxtRhythm1Color;
 
 
-                frmLyric.TxtNextColor = TxtNextColor;
-                frmLyric.TxtHighlightColor = TxtHighlightColor;
-                frmLyric.TxtBeforeColor = TxtBeforeColor;
+                frmMidiLyrics.TxtNextColor = TxtNextColor;
+                frmMidiLyrics.TxtHighlightColor = TxtHighlightColor;
+                frmMidiLyrics.TxtBeforeColor = TxtBeforeColor;
 
-                frmLyric.bColorContour = bColorContour;
-                frmLyric.TxtContourColor = TxtContourColor;
+                frmMidiLyrics.bColorContour = bColorContour;
+                frmMidiLyrics.TxtContourColor = TxtContourColor;
 
                 // Chords
-                frmLyric.ChordNextColor = _chordNextColor;
-                frmLyric.ChordHighlightColor = _chordHighlightColor;
-                frmLyric.bShowChords = _bShowChords;                
+                frmMidiLyrics.ChordNextColor = _chordNextColor;
+                frmMidiLyrics.ChordHighlightColor = _chordHighlightColor;
+                frmMidiLyrics.bShowChords = _bShowChords;                
 
                 // force uppercase
-                frmLyric.bForceUppercase = bForceUppercase;
+                frmMidiLyrics.bForceUppercase = bForceUppercase;
 
                 //Window lyrics TopMost
-                frmLyric.bTopMost = _bTopMost;
+                frmMidiLyrics.bTopMost = _bTopMost;
 
                 NbLines = Convert.ToInt32(UpDownNbLines.Value);
-                frmLyric.TxtNbLines = NbLines;
+                frmMidiLyrics.TxtNbLines = NbLines;
 
-                frmLyric.SizeMode = SizeMode;
+                frmMidiLyrics.SizeMode = SizeMode;
 
                 // Diaporam, Backcolor ou transparent
-                frmLyric.OptionBackground = bgOption;
+                frmMidiLyrics.OptionBackground = bgOption;
 
                 // Text display: Center, Top, Bottom
-                frmLyric.OptionDisplay = OptionDisplay;
+                frmMidiLyrics.OptionDisplay = OptionDisplay;
 
-                frmLyric.bTextBackGround = chkTextBackground.Checked;
-                                               
+                frmMidiLyrics.bTextBackGround = chkTextBackground.Checked;
+
                 // SlideShow frequency
-                frmLyric.FreqSlideShow = freqSlideShow;               
-                
+                frmMidiLyrics.FreqSlideShow = freqSlideShow;
+
                 // directory for slide show
-                frmLyric.DirSlideShow = dirSlideShow;                
+                frmMidiLyrics.DirSlideShow = dirSlideShow;                
             }
          }
 
@@ -768,23 +768,23 @@ namespace Karaboss
         {
             pBox.Terminate();
 
-            // Active le formulaire frmPlayer
+            // Active le formulaire frmMidiPlayer
             if (Application.OpenForms.OfType<frmMidiPlayer>().Count() > 0)
             {
                 // Restore form
-                if (Application.OpenForms["frmPlayer"].WindowState != FormWindowState.Minimized)
+                if (Application.OpenForms["frmMidiPlayer"].WindowState != FormWindowState.Minimized)
                 {                    
-                    Application.OpenForms["frmPlayer"].Restore();
-                    Application.OpenForms["frmPlayer"].Activate();
+                    Application.OpenForms["frmMidiPlayer"].Restore();
+                    Application.OpenForms["frmMidiPlayer"].Activate();
                 }
             }
 
-            // Active le formulaire frmLyric
-            if (Application.OpenForms.OfType<frmMidiLyric>().Count() > 0)
+            // Active le formulaire frmMidiLyrics
+            if (Application.OpenForms.OfType<frmMidiLyrics>().Count() > 0)
             {
                 // Restore form
-                Application.OpenForms["frmLyric"].Restore();
-                Application.OpenForms["frmLyric"].Activate();
+                Application.OpenForms["frmMidiLyrics"].Restore();
+                Application.OpenForms["frmMidiLyrics"].Activate();
             }
 
             Dispose();

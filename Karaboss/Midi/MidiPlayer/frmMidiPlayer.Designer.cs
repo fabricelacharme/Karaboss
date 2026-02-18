@@ -1259,7 +1259,7 @@ namespace Karaboss
             this.sequencer1.Chased += new System.EventHandler<Sanford.Multimedia.Midi.ChasedEventArgs>(this.HandleChased);
             this.sequencer1.Stopped += new System.EventHandler<Sanford.Multimedia.Midi.StoppedEventArgs>(this.HandleStopped);
             // 
-            // frmPlayer
+            // frmMidiPlayer
             // 
             resources.ApplyResources(this, "$this");
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -1271,11 +1271,11 @@ namespace Karaboss
             this.DoubleBuffered = true;
             this.KeyPreview = true;
             this.MainMenuStrip = this.menuStrip1;
-            this.Name = "frmPlayer";
-            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FrmPlayer_FormClosing);
-            this.Load += new System.EventHandler(this.FrmPlayer_Load);
-            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.FrmPlayer_KeyDown);
-            this.KeyUp += new System.Windows.Forms.KeyEventHandler(this.FrmPlayer_KeyUp);
+            this.Name = "frmMidiPlayer";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.frmMidiPlayer_FormClosing);
+            this.Load += new System.EventHandler(this.frmMidiPlayer_Load);
+            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.frmMidiPlayer_KeyDown);
+            this.KeyUp += new System.Windows.Forms.KeyEventHandler(this.frmMidiPlayer_KeyUp);
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
             this.pnlBottom.ResumeLayout(false);

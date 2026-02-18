@@ -45,6 +45,7 @@ using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
+using static System.Windows.Forms.LinkLabel;
 
 namespace Karaboss
 {
@@ -280,7 +281,7 @@ namespace Karaboss
             //Load modification into local list of lyrics
             localplLyrics = LoadModifiedLyrics(true);
 
-            // Display new lyrics in frmPlayer
+            // Display new lyrics in frmMidiPlayer
             _myLyricsMgmt.ChordsOriginatedFrom = MidiLyricsMgmt.ChordsOrigins.Lyrics;
             ReplaceLyrics(localplLyrics);
         }
@@ -481,7 +482,7 @@ namespace Karaboss
             //Load modification into local list of lyrics            
             localplLyrics = LoadModifiedLyrics(true);
 
-            // Display new lyrics in frmPlayer
+            // Display new lyrics in frmMidiPlayer
             _myLyricsMgmt.ChordsOriginatedFrom = MidiLyricsMgmt.ChordsOrigins.Lyrics;
             ReplaceLyrics(localplLyrics);
 
@@ -505,8 +506,8 @@ namespace Karaboss
             string tx = Karaboss.Resources.Localization.Strings.DeleteAllLyrics;            
             if (MessageBox.Show(tx, "Karaboss", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning) == DialogResult.OK)
             {
-                frmMidiPlayer frmPlayer = Utilities.FormUtilities.GetForm<frmMidiPlayer>();
-                frmPlayer.DeleteAllLyrics();
+                frmMidiPlayer frmMidiPlayer = Utilities.FormUtilities.GetForm<frmMidiPlayer>();
+                frmMidiPlayer.DeleteAllLyrics();
 
                 localplLyrics = new List<plLyric>();
 
@@ -534,7 +535,7 @@ namespace Karaboss
             //Load modification into local list of lyrics
             localplLyrics = LoadModifiedLyrics();
 
-            // Display new lyrics in frmPlayer
+            // Display new lyrics in frmMidiPlayer
             _myLyricsMgmt.ChordsOriginatedFrom = MidiLyricsMgmt.ChordsOrigins.Lyrics;
             ReplaceLyrics(localplLyrics);
 
@@ -549,8 +550,8 @@ namespace Karaboss
                     int pTime = Convert.ToInt32(dgView.Rows[Row].Cells[COL_TICKS].Value);
                     if (Application.OpenForms.OfType<frmMidiPlayer>().Count() > 0)
                     {
-                        frmMidiPlayer frmPlayer = Utilities.FormUtilities.GetForm<frmMidiPlayer>();
-                        frmPlayer.FirstPlaySong(pTime);
+                        frmMidiPlayer frmMidiPlayer = Utilities.FormUtilities.GetForm<frmMidiPlayer>();
+                        frmMidiPlayer.FirstPlaySong(pTime);
                     }
                 }
             }
@@ -1764,21 +1765,21 @@ namespace Karaboss
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void FrmLyricsEdit_Load(object sender, EventArgs e)
+        private void frmMidiLyricsEdit_Load(object sender, EventArgs e)
         {
             // Récupère la taille et position de la forme
 
             // If window is maximized
-            if (Properties.Settings.Default.frmLyricsEditMaximized)
+            if (Properties.Settings.Default.frmMidiLyricsEditMaximized)
             {
 
-                Location = Properties.Settings.Default.frmLyricsEditLocation;
-                //Size = Properties.Settings.Default.frmLyricsEditSize;
+                Location = Properties.Settings.Default.frmMidiLyricsEditLocation;
+                //Size = Properties.Settings.Default.frmMidiLyricsEditSize;
                 WindowState = FormWindowState.Maximized;
             }
             else
             {
-                Location = Properties.Settings.Default.frmLyricsEditLocation;
+                Location = Properties.Settings.Default.frmMidiLyricsEditLocation;
                 // Verify if this windows is visible in extended screens
                 Rectangle rect = new Rectangle(int.MaxValue, int.MaxValue, int.MinValue, int.MinValue);
                 foreach (Screen screen in Screen.AllScreens)
@@ -1789,7 +1790,7 @@ namespace Karaboss
                 if (Location.Y > rect.Height)
                     Location = new Point(Location.X, 0);
 
-                Size = Properties.Settings.Default.frmLyricsEditSize;
+                Size = Properties.Settings.Default.frmMidiLyricsEditSize;
             }
         }
 
@@ -1798,7 +1799,7 @@ namespace Karaboss
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void FrmLyricsEdit_FormClosing(object sender, FormClosingEventArgs e)
+        private void frmMidiLyricsEdit_FormClosing(object sender, FormClosingEventArgs e)
         {
             if (bfilemodified == true)
             {
@@ -1818,7 +1819,7 @@ namespace Karaboss
                     //Load modification into local list of lyrics
                     localplLyrics = LoadModifiedLyrics();
 
-                    // Display new lyrics in frmPlayer
+                    // Display new lyrics in frmMidiPlayer
                     ReplaceLyrics(localplLyrics);
 
                     // Save file
@@ -1829,8 +1830,8 @@ namespace Karaboss
                 {
                     if (Application.OpenForms.OfType<frmMidiPlayer>().Count() > 0)
                     {
-                        frmMidiPlayer frmPlayer = Utilities.FormUtilities.GetForm<frmMidiPlayer>();
-                        frmPlayer.bfilemodified = false;
+                        frmMidiPlayer frmMidiPlayer = Utilities.FormUtilities.GetForm<frmMidiPlayer>();
+                        frmMidiPlayer.bfilemodified = false;
                     }
                 }
             }
@@ -1841,15 +1842,15 @@ namespace Karaboss
             {
                 if (WindowState == FormWindowState.Maximized)
                 {
-                    Properties.Settings.Default.frmLyricsEditLocation = RestoreBounds.Location;
-                    Properties.Settings.Default.frmLyricsEditMaximized = true;
+                    Properties.Settings.Default.frmMidiLyricsEditLocation = RestoreBounds.Location;
+                    Properties.Settings.Default.frmMidiLyricsEditMaximized = true;
 
                 }
                 else if (WindowState == FormWindowState.Normal)
                 {
-                    Properties.Settings.Default.frmLyricsEditLocation = Location;
-                    Properties.Settings.Default.frmLyricsEditSize = Size;
-                    Properties.Settings.Default.frmLyricsEditMaximized = false;
+                    Properties.Settings.Default.frmMidiLyricsEditLocation = Location;
+                    Properties.Settings.Default.frmMidiLyricsEditSize = Size;
+                    Properties.Settings.Default.frmMidiLyricsEditMaximized = false;
                 }
 
                 SaveOptions();
@@ -1866,7 +1867,7 @@ namespace Karaboss
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void frmLyricsEdit_Resize(object sender, EventArgs e)
+        private void frmMidiLyricsEdit_Resize(object sender, EventArgs e)
         {
             ResizeMe();
         }
@@ -2021,8 +2022,8 @@ namespace Karaboss
         }
 
         /// <summary>
-        /// Replace lyrics in frmPlayer
-        /// Appelle la méthode ReplaceLyrics de frmPlayer
+        /// Replace lyrics in frmMidiPlayer
+        /// Appelle la méthode ReplaceLyrics de frmMidiPlayer
         /// </summary>
         private void ReplaceLyrics(List<plLyric> l)
         {
@@ -2036,8 +2037,8 @@ namespace Karaboss
 
             if (Application.OpenForms.OfType<frmMidiPlayer>().Count() > 0)
             {
-                frmMidiPlayer frmPlayer = Utilities.FormUtilities.GetForm<frmMidiPlayer>();
-                frmPlayer.ReplaceLyrics(l, ltype, melodytracknum);
+                frmMidiPlayer frmMidiPlayer = Utilities.FormUtilities.GetForm<frmMidiPlayer>();
+                frmMidiPlayer.ReplaceLyrics(l, ltype, melodytracknum);
             }
         }
 
@@ -2187,7 +2188,7 @@ namespace Karaboss
                         }
                         #endregion guard
 
-                        // Adaptation to frmLyricsEdit
+                        // Adaptation to frmMidiLyricsEdit
                         // Separate lines separators from the text, to be able to display them in a specific color in the datagridview
                         if (i == 0 && lstDgRows.Count > 0)
                         {
@@ -2660,6 +2661,12 @@ namespace Karaboss
         /// <returns></returns>
         private List<(double, string)> LRCReadDgViewData()
         {
+
+            // KEEP THIS FUNCTION AS ONLY ONE FOR DGVIEW READING !!!
+
+            // used for SaveLrcFileName, but for lines format, not for syllabes format 
+
+
             string sTime;
             double time;
             string sLyric;                    
@@ -2675,7 +2682,7 @@ namespace Karaboss
             {
                 vTime = dgView.Rows[i].Cells[COL_TIME].Value;
                 vLyric = dgView.Rows[i].Cells[COL_TEXT].Value;                
-                if (vTime != null && vLyric != null)
+                if (vTime != null && vLyric != null && vTime.ToString().Trim() != "")
                 {
                     sTime = vTime.ToString();
                     // Convert times to milliseconds (to have the same entry format with mp3 Lyrics edition)
@@ -2749,7 +2756,7 @@ namespace Karaboss
         private string CreateTagString(bool bRemoveAccents, bool bRemoveNonAlphaNumeric, string Tag_Tool, string Tag_Title, string Tag_Artist, string Tag_Album, string Tag_Lang, string Tag_By, string Tag_DPlus)
         {
             string lrcs = string.Empty;
-            string cr = "\r\n";
+            //string cr = "\r\n";
             List<string> TagsList = new List<string> { Tag_Tool, Tag_Title, Tag_Artist, Tag_Album, Tag_Lang, Tag_Album, Tag_DPlus };
             List<string> TagsNames = new List<string> { "tool:", "ti:", "ar:", "al:", "la:", "by:", "D+:" };
             string Tag;
@@ -2775,6 +2782,10 @@ namespace Karaboss
         /// <returns></returns>
         private List<(string sTime, string lyric)> ReadDgView()
         {
+
+            // used in SaveLRCSyllabes
+
+
             List<(string sTime, string lyric)> Result = new List<(string sTime, string lyric)>();
             string sLyric;
             string sTime;
@@ -3482,36 +3493,68 @@ namespace Karaboss
             if (SaveFileDialog.ShowDialog() != DialogResult.OK)
                 return;
 
+            #endregion select FileName
+
             fullPath = SaveFileDialog.FileName;
 
 
-            var srt = new SRTFile();
+            // Extract DgView data
+            List<(double, string)> lstDgViewData = LRCReadDgViewData();
+            double vStartTime;
+            double vEndTime;
 
-            Subtitle subtitle = new Subtitle(1);
-            subtitle.StartTime = new SRTTime("00:00:01,848"); 
-            subtitle.EndTime = new SRTTime("00:00:02,555");   
-            subtitle.Lines.Add("First line of text!");
-            srt.Subtitles.Add(subtitle);
+            string StartTime = null;
+            string EndTime = null;
 
-            subtitle = new Subtitle(2);
-            subtitle.StartTime = new SRTTime("00:00:03,123"); 
-            subtitle.EndTime = new SRTTime("00:00:03,999");   
-            subtitle.Lines.Add("Second line of text!");
-            srt.Subtitles.Add(subtitle);
+            string vLyric = null;
+            var srtFile = new SRTFile();
+            Subtitle subtitle;
 
-            string a = srt.Render();
+            for (int i = 0; i < lstDgViewData.Count; i++) 
+            {
 
-            srt.WriteToFile(fullPath);
+                // Format of times must be like "00:00:01,848"
+
+                vStartTime = lstDgViewData[i].Item1;
+                vEndTime = vStartTime + 100;
+                vLyric = lstDgViewData[i].Item2;
+
+                StartTime = Mp3LyricsMgmtHelper.MsToSrtTime(vStartTime);
+                EndTime = Mp3LyricsMgmtHelper.MsToSrtTime(vEndTime);
+
+                subtitle = new Subtitle(i + 1);
+                subtitle.StartTime =  new SRTTime(StartTime);
+                subtitle.EndTime = new SRTTime(EndTime);
+                subtitle.Lines.Add(vLyric);
+                srtFile.Subtitles.Add(subtitle);
+
+            }
+
+
+            // Open file
+            try
+            {
+                srtFile.WriteToFile(fullPath);
+                System.Diagnostics.Process.Start(@fullPath);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+
+            
+
+
 
         }
 
 
-            #endregion export srt
-
-        #endregion srt import export
+        #endregion export srt        
 
 
         #endregion srt import export
+
+
 
         #endregion import export lyrics
 
@@ -3537,7 +3580,7 @@ namespace Karaboss
         private void MnuEditLoadTrack_Click(object sender, EventArgs e)
         {
             DialogResult dr; // = new DialogResult();
-            frmLyricsSelectTrack TrackDialog = new frmLyricsSelectTrack(sequence1);
+            frmMidiLyricsSelectTrack TrackDialog = new frmMidiLyricsSelectTrack(sequence1);
             dr = TrackDialog.ShowDialog();
 
             if (dr == System.Windows.Forms.DialogResult.Cancel)
@@ -3597,7 +3640,7 @@ namespace Karaboss
             // Format lyric by including chord
             localplLyrics = LoadModifiedLyrics();
 
-            // Display new lyrics in frmPlayer
+            // Display new lyrics in frmMidiPlayer
             _myLyricsMgmt.ChordsOriginatedFrom = MidiLyricsMgmt.ChordsOrigins.Lyrics;
             ReplaceLyrics(localplLyrics);
 
@@ -3657,8 +3700,8 @@ namespace Karaboss
 
             if (Application.OpenForms.OfType<frmMidiPlayer>().Count() > 0)
             {
-                frmMidiPlayer frmPlayer = Utilities.FormUtilities.GetForm<frmMidiPlayer>();
-                frmPlayer.InitSaveFile(fullName);
+                frmMidiPlayer frmMidiPlayer = Utilities.FormUtilities.GetForm<frmMidiPlayer>();
+                frmMidiPlayer.InitSaveFile(fullName);
 
                 // Reset title
                 bfilemodified = false;
@@ -3718,8 +3761,8 @@ namespace Karaboss
 
                 if (Application.OpenForms.OfType<frmMidiPlayer>().Count() > 0)
                 {
-                    frmMidiPlayer frmPlayer = Utilities.FormUtilities.GetForm<frmMidiPlayer>();
-                    frmPlayer.InitSaveFile(fileName);
+                    frmMidiPlayer frmMidiPlayer = Utilities.FormUtilities.GetForm<frmMidiPlayer>();
+                    frmMidiPlayer.InitSaveFile(fileName);
 
                     bfilemodified = false;
                     string displayName = Path.GetFileName(MIDIfileName);
@@ -3776,7 +3819,7 @@ namespace Karaboss
                     // Populate Grid & Textbox
                     DisplayOtherFormat();
 
-                    // Display new lyrics in frmPlayer
+                    // Display new lyrics in frmMidiPlayer
                     ReplaceLyrics(localplLyrics);
 
                     Cursor.Current = Cursors.Default;
@@ -3936,8 +3979,8 @@ namespace Karaboss
 
                 if (Application.OpenForms.OfType<frmMidiPlayer>().Count() > 0)
                 {
-                    frmMidiPlayer frmPlayer = Utilities.FormUtilities.GetForm<frmMidiPlayer>();                    
-                    frmPlayer.FileModified();
+                    frmMidiPlayer frmMidiPlayer = Utilities.FormUtilities.GetForm<frmMidiPlayer>();                    
+                    frmMidiPlayer.FileModified();
                 }
                 MessageBox.Show("Tags saved successfully", "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Information);               
             }

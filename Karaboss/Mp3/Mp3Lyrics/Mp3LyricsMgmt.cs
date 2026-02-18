@@ -880,7 +880,19 @@ namespace Karaboss.Mp3.Mp3Lyrics
                 return string.Format("{0:00}:{1:00}.{2:000}", ts.Minutes, ts.Seconds, ts.Milliseconds);            
         }
 
+        
+        public static string MsToSrtTime(double ms)
+        {
+            // Convert milliseconds to SRT time format "00:00:01,848"
+            TimeSpan ts = TimeSpan.FromMilliseconds(ms);
+
+            return string.Format("{0:00}:{1:00}:{2:00},{3:000}", ts.Hours, ts.Minutes,ts.Seconds, ts.Milliseconds);
+
+        }
+
         #endregion functions to convert time formats
+
+
 
 
 

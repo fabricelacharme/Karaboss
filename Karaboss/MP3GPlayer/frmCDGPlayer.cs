@@ -1445,30 +1445,7 @@ namespace Karaboss
         {
             PlayerState = PlayerStates.Waiting;
             BtnStatus();
-            /*
-            w_tick = 0;
-            int sec = Karaclass.m_CountdownSongs;  // wait for x seconds
-            w_wait = sec + 4;
-
-            if (Application.OpenForms.OfType<frmLyric>().Count() == 0)
-            {
-                frmLyric = new frmLyric(myLyricsMgmt);
-                frmLyric.Show();
-            }
-
-            if (Application.OpenForms.OfType<frmLyric>().Count() > 0)
-            {
-                // Display song & singer
-                string nextsong = Path.GetFileNameWithoutExtension(currentPlaylistItem.Song);
-                string txt = "Next song: " + nextsong + " - Next singer: " + currentPlaylistItem.KaraokeSinger;
-                frmLyric.DisplaySinger(txt);
-
-                frmLyric.LoadWaitSong(sec);
-            }
-
-            timer5.Interval = 1000;  // interval = 1 sec      
-            timer5.Enabled = true;
-            */
+            
         }
 
 

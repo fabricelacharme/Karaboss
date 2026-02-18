@@ -266,7 +266,7 @@ namespace Karaboss
 
         // forms        
         private frmExplorer frmExplorer;
-        private frmMidiLyric frmLyric;
+        private frmMidiLyrics frmMidiLyric;
         //private frmLoading frmLoading;
         private frmPianoRoll frmPianoRoll;
         private frmPianoTraining frmPianoTraining;     
@@ -318,7 +318,7 @@ namespace Karaboss
             MIDIfileName = Path.GetFileName(FileName);
             MIDIfilePath = Path.GetDirectoryName(FileName);
             
-            this.MouseWheel += new MouseEventHandler(FrmPlayer_MouseWheel);
+            this.MouseWheel += new MouseEventHandler(frmMidiPlayer_MouseWheel);
             
             outDevice = outputDevice;           
 
@@ -396,8 +396,8 @@ namespace Karaboss
             timer3.Interval = 1;
             timer3.Start();
 
-            if (Application.OpenForms.OfType<frmMidiLyric>().Count() > 0)
-                frmLyric.StartTimerBalls();
+            if (Application.OpenForms.OfType<frmMidiLyrics>().Count() > 0)
+                frmMidiLyric.StartTimerBalls();
         }
 
         /// <summary>
@@ -407,8 +407,8 @@ namespace Karaboss
         {
             timer3.Stop();
 
-            if (Application.OpenForms.OfType<frmMidiLyric>().Count() > 0)
-                frmLyric.StopTimerBalls();
+            if (Application.OpenForms.OfType<frmMidiLyrics>().Count() > 0)
+                frmMidiLyric.StopTimerBalls();
 
         }
 
@@ -519,11 +519,11 @@ namespace Karaboss
                 // Update display
                 SetTitle(MIDIfileFullPath);
 
-                // Unload frmLyric
-                // Ferme le formulaire frmLyric
-                if (Application.OpenForms.OfType<frmMidiLyric>().Count() > 0)
+                // Unload frmMidiLyric
+                // Ferme le formulaire frmMidiLyric
+                if (Application.OpenForms.OfType<frmMidiLyrics>().Count() > 0)
                 {
-                    frmLyric.Close();                
+                    frmMidiLyric.Close();                
                 }
 
                 // Play file
@@ -868,9 +868,9 @@ namespace Karaboss
 
                 // start Lyrics                   
                 timer2.Start();
-                if (Application.OpenForms.OfType<frmMidiLyric>().Count() > 0)
+                if (Application.OpenForms.OfType<frmMidiLyrics>().Count() > 0)
                 {
-                    frmLyric.BeatDuration = sequence1.Division;
+                    frmMidiLyric.BeatDuration = sequence1.Division;
                 }
 
                 // start animation balls
@@ -952,10 +952,10 @@ namespace Karaboss
 
                 lblBeat.Text = "1|" + sequence1.Numerator;
 
-                if (Application.OpenForms.OfType<frmMidiLyric>().Count() > 0)
+                if (Application.OpenForms.OfType<frmMidiLyrics>().Count() > 0)
                 {
-                    frmLyric.ResetTop();
-                    frmLyric.StopDiaporama();
+                    frmMidiLyric.ResetTop();
+                    frmMidiLyric.StopDiaporama();
                 }
 
                 positionHScrollBarNew.Value = 0;
@@ -2140,7 +2140,7 @@ namespace Karaboss
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void FrmPlayer_MouseWheel(object sender, MouseEventArgs e)
+        private void frmMidiPlayer_MouseWheel(object sender, MouseEventArgs e)
         {
             if (sheetmusic == null) return;
 
@@ -2325,7 +2325,7 @@ namespace Karaboss
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void FrmPlayer_FormClosing(object sender, FormClosingEventArgs e)
+        private void frmMidiPlayer_FormClosing(object sender, FormClosingEventArgs e)
         {
             if (loading)
             {
@@ -2364,19 +2364,19 @@ namespace Karaboss
                 {
                     if (WindowState == FormWindowState.Maximized)
                     {
-                        Properties.Settings.Default.frmPlayerLocation = RestoreBounds.Location;
-                        Properties.Settings.Default.frmPlayerMaximized = true;
+                        Properties.Settings.Default.frmMidiPlayerLocation = RestoreBounds.Location;
+                        Properties.Settings.Default.frmMidiPlayerMaximized = true;
 
                     }
                     else if (WindowState == FormWindowState.Normal)
                     {
-                        Properties.Settings.Default.frmPlayerLocation = Location;
+                        Properties.Settings.Default.frmMidiPlayerLocation = Location;
 
                         // SDave only if not default size
                         if (Height != SimplePlayerHeight)
-                            Properties.Settings.Default.frmPlayerSize = Size;
+                            Properties.Settings.Default.frmMidiPlayerSize = Size;
 
-                        Properties.Settings.Default.frmPlayerMaximized = false;
+                        Properties.Settings.Default.frmMidiPlayerMaximized = false;
                     }
 
                     // Show sequencer
@@ -2388,16 +2388,16 @@ namespace Karaboss
                 }
 
 
-                // Ferme le formulaire frmLyric
-                if (Application.OpenForms.OfType<frmMidiLyric>().Count() > 0)
+                // Ferme le formulaire frmMidiLyric
+                if (Application.OpenForms.OfType<frmMidiLyrics>().Count() > 0)
                 {
-                    frmLyric.Close();
-                    //frmLyric.Dispose();
+                    frmMidiLyric.Close();
+                    //frmMidiLyric.Dispose();
                 }
-                // ferme le formulaire frmLyricsEdit
+                // ferme le formulaire frmMidiLyricsEdit
                 if (Application.OpenForms.OfType<frmMidiLyricsEdit>().Count() > 0)
                 {
-                    Application.OpenForms["frmLyricsEdit"].Close();
+                    Application.OpenForms["frmMidiLyricsEdit"].Close();
                 }
                 // ferme le formulaire frmPianoRoll
                 if (Application.OpenForms.OfType<frmPianoRoll>().Count() > 0)
@@ -2421,6 +2421,8 @@ namespace Karaboss
                     Application.OpenForms["frmExplorer"].Restore();
                     Application.OpenForms["frmExplorer"].Activate();
                 }
+
+
                 Dispose();
             }
         }
@@ -2430,20 +2432,20 @@ namespace Karaboss
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void FrmPlayer_Load(object sender, EventArgs e)
+        private void frmMidiPlayer_Load(object sender, EventArgs e)
         {
             // Set window location and size
             #region window size & location
             // If window is maximized
-            if (Properties.Settings.Default.frmPlayerMaximized)
+            if (Properties.Settings.Default.frmMidiPlayerMaximized)
             {
-                Location = Properties.Settings.Default.frmPlayerLocation;
-                //Size = Properties.Settings.Default.frmPlayerSize;
+                Location = Properties.Settings.Default.frmMidiPlayerLocation;
+                //Size = Properties.Settings.Default.frmMidiPlayerSize;
                 WindowState = FormWindowState.Maximized;
             }
             else
             {
-                Location = Properties.Settings.Default.frmPlayerLocation;
+                Location = Properties.Settings.Default.frmMidiPlayerLocation;
                 // Verify if this windows is visible in extended screens
                 Rectangle rect = new Rectangle(int.MaxValue, int.MaxValue, int.MinValue, int.MinValue);
                 foreach (Screen screen in Screen.AllScreens)
@@ -2454,7 +2456,7 @@ namespace Karaboss
                 if (Location.Y > rect.Height)
                     Location = new Point(Location.X, 0);
 
-                Size = Properties.Settings.Default.frmPlayerSize;
+                Size = Properties.Settings.Default.frmMidiPlayerSize;
             }
             #endregion
 
@@ -2473,7 +2475,7 @@ namespace Karaboss
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void FrmPlayer_KeyDown(object sender, KeyEventArgs e)
+        private void frmMidiPlayer_KeyDown(object sender, KeyEventArgs e)
         {
             if (bEditScore == true)
             {
@@ -2655,7 +2657,7 @@ namespace Karaboss
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void FrmPlayer_KeyUp(object sender, KeyEventArgs e)
+        private void frmMidiPlayer_KeyUp(object sender, KeyEventArgs e)
         {
             if (e.Modifiers == Keys.Shift)
             {
@@ -2911,7 +2913,7 @@ namespace Karaboss
             // Reset tracks stuff
             InitTracksStuff();
 
-            // Recherche si des lyrics existent et affiche la forme frmLyric
+            // Recherche si des lyrics existent et affiche la forme frmMidiLyric
             mnuDisplayLyricsWindows.Checked = bKaraokeAlwaysOn;
 
             if (bKaraokeAlwaysOn && myLyricsMgmt.bHasLyrics)
@@ -3520,7 +3522,7 @@ namespace Karaboss
 
 
                 #region display lyrics
-                // Recherche si des lyrics existent et affiche la forme frmLyric
+                // Recherche si des lyrics existent et affiche la forme frmMidiLyric
                 mnuDisplayLyricsWindows.Checked = bKaraokeAlwaysOn;
 
                 DisplayLyricsInfos();
@@ -3674,7 +3676,7 @@ namespace Karaboss
                 DisplayFileInfos();
 
                 #region display lyrics
-                // Recherche si des lyrics existent et affiche la forme frmLyric
+                // Recherche si des lyrics existent et affiche la forme frmMidiLyric
                 mnuDisplayLyricsWindows.Checked = bKaraokeAlwaysOn;
 
                 DisplayLyricsInfos();
@@ -3812,7 +3814,7 @@ namespace Karaboss
 
                 #region display lyrics
 
-                // Recherche si des lyrics existent et affiche la forme frmLyric
+                // Recherche si des lyrics existent et affiche la forme frmMidiLyric
                 mnuDisplayLyricsWindows.Checked = bKaraokeAlwaysOn;
 
                 // Display log file
@@ -3936,7 +3938,7 @@ namespace Karaboss
             myLyricsMgmt = new MidiLyricsMgmt(sequence1);
 
 
-            // Refresh frmLyric
+            // Refresh frmMidiLyric
             if (myLyricsMgmt.OrgplLyrics.Count > 0)
             {
                 // Reset display
@@ -3944,7 +3946,7 @@ namespace Karaboss
 
                 // Window closed
                 DisplayLyricsForm();
-                frmLyric.LoadSong(myLyricsMgmt.plLyrics);
+                frmMidiLyric.LoadSong(myLyricsMgmt.plLyrics);
             }
 
             // Refresh display of lyrics
@@ -4226,10 +4228,10 @@ namespace Karaboss
             myLyricsMgmt.plLyrics.Clear();
             //bHasLyrics = false;
 
-            // Ferme le formulaire frmLyric
-            if (Application.OpenForms.OfType<frmMidiLyric>().Count() > 0)
+            // Ferme le formulaire frmMidiLyric
+            if (Application.OpenForms.OfType<frmMidiLyrics>().Count() > 0)
             {
-                frmLyric.Close();
+                frmMidiLyric.Close();
             }
 
             // File was modified
@@ -4268,22 +4270,22 @@ namespace Karaboss
                 + _InternalSepLines + currentPlaylistItem.KaraokeSinger;
                 }
 
-                frmLyric.DisplayText(centertxt, (int)_duration);
+                frmMidiLyric.DisplayText(centertxt, (int)_duration);
             }
             else
             {
                 // REstore number of lines of lyrics to display
                 if (Karaclass.m_PauseBetweenSongs)
                 {
-                    frmLyric.TxtNbLines = Properties.Settings.Default.TxtNbLines;
+                    frmMidiLyric.TxtNbLines = Properties.Settings.Default.TxtNbLines;
                 }
 
-                frmLyric.LoadSong(myLyricsMgmt.plLyrics);
+                frmMidiLyric.LoadSong(myLyricsMgmt.plLyrics);
             }
         }
 
         /// <summary>
-        /// Load form frmLyrics       
+        /// Load form frmMidiLyrics       
         /// </summary>
         private void DisplayLyricsForm()
         {
@@ -4307,14 +4309,14 @@ namespace Karaboss
 
 
             // if Window closed, reload it
-            if (frmLyric == null || Application.OpenForms.OfType<frmMidiLyric>().Count() == 0)
+            if (frmMidiLyric == null || Application.OpenForms.OfType<frmMidiLyrics>().Count() == 0)
             {
-                frmLyric = new frmMidiLyric(myLyricsMgmt);
-                frmLyric.Show();
+                frmMidiLyric = new frmMidiLyrics(myLyricsMgmt);
+                frmMidiLyric.Show();
             }
             else
             {
-                frmLyric.myLyricsMgmt = myLyricsMgmt;
+                frmMidiLyric.myLyricsMgmt = myLyricsMgmt;
             }
 
 
@@ -4326,16 +4328,16 @@ namespace Karaboss
             else
                 tx = sSong + " - " + Strings.Singer + ": " + sSinger;
 
-            frmLyric.DisplaySinger(tx);
+            frmMidiLyric.DisplaySinger(tx);
 
 
 
             // Show window
-            if (frmLyric.WindowState == FormWindowState.Minimized)
-                frmLyric.WindowState = FormWindowState.Normal;
+            if (frmMidiLyric.WindowState == FormWindowState.Minimized)
+                frmMidiLyric.WindowState = FormWindowState.Normal;
 
-            frmLyric.Show();
-            frmLyric.Activate();
+            frmMidiLyric.Show();
+            frmMidiLyric.Activate();
 
             // cas d'une playlist ou non : met à jour le diaporama
             SetSlideShow();
@@ -4377,7 +4379,7 @@ namespace Karaboss
                         // Lyrics does not exist
                         // => select track having melody
                         DialogResult dr = new DialogResult();
-                        frmLyricsSelectTrack TrackDialog = new frmLyricsSelectTrack(sequence1);
+                        frmMidiLyricsSelectTrack TrackDialog = new frmMidiLyricsSelectTrack(sequence1);
                         dr = TrackDialog.ShowDialog();
 
                         if (dr == System.Windows.Forms.DialogResult.Cancel)
@@ -4413,23 +4415,23 @@ namespace Karaboss
 
                     // Caution: Load the original lyrics, not the lyrics internally transformed by FullExtractLyrics
                     Cursor = Cursors.WaitCursor;
-                    frmMidiLyricsEdit frmLyricsEdit;
-                    frmLyricsEdit = new frmMidiLyricsEdit(sequence1, myLyricsMgmt.OrgplLyrics, myLyricsMgmt, MIDIfileFullPath);
-                    frmLyricsEdit.Show();
+                    frmMidiLyricsEdit frmMidiLyricsEdit;
+                    frmMidiLyricsEdit = new frmMidiLyricsEdit(sequence1, myLyricsMgmt.OrgplLyrics, myLyricsMgmt, MIDIfileFullPath);
+                    frmMidiLyricsEdit.Show();
                     Cursor = Cursors.Default;
                     
                 }
                 catch (Exception fl)
                 {
-                    MessageBox.Show("Error displaying frmLyricsEdit: " + fl.Message, "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show("Error displaying frmMidiLyricsEdit: " + fl.Message, "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
             else
             {                                
-                if (Application.OpenForms["frmLyricsEdit"].WindowState == FormWindowState.Minimized)
-                    Application.OpenForms["frmLyricsEdit"].WindowState = FormWindowState.Normal;
-                Application.OpenForms["frmLyricsEdit"].Show();
-                Application.OpenForms["frmLyricsEdit"].Activate();                
+                if (Application.OpenForms["frmMidiLyricsEdit"].WindowState == FormWindowState.Minimized)
+                    Application.OpenForms["frmMidiLyricsEdit"].WindowState = FormWindowState.Normal;
+                Application.OpenForms["frmMidiLyricsEdit"].Show();
+                Application.OpenForms["frmMidiLyricsEdit"].Activate();                
             }
 
         }
@@ -4467,7 +4469,7 @@ namespace Karaboss
                         // Lyrics does not exist
                         // => select track having melody
                         DialogResult dr = new DialogResult();
-                        frmLyricsSelectTrack TrackDialog = new frmLyricsSelectTrack(sequence1);
+                        frmMidiLyricsSelectTrack TrackDialog = new frmMidiLyricsSelectTrack(sequence1);
                         dr = TrackDialog.ShowDialog();
 
                         if (dr == System.Windows.Forms.DialogResult.Cancel)
@@ -4502,22 +4504,22 @@ namespace Karaboss
 
 
                     // Caution: Load the FULL lyrics in order to have the chords displayed
-                    frmMidiLyricsEdit frmLyricsEdit;
-                    frmLyricsEdit = new frmMidiLyricsEdit(sequence1, myLyricsMgmt.plLyrics, myLyricsMgmt, MIDIfileFullPath, true);
+                    frmMidiLyricsEdit frmMidiLyricsEdit;
+                    frmMidiLyricsEdit = new frmMidiLyricsEdit(sequence1, myLyricsMgmt.plLyrics, myLyricsMgmt, MIDIfileFullPath, true);
 
-                    frmLyricsEdit.Show();
+                    frmMidiLyricsEdit.Show();
                 }
                 catch (Exception fl)
                 {
-                    MessageBox.Show("Erreur showing frmLyricsEdit: " + fl.Message, "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show("Erreur showing frmMidiLyricsEdit: " + fl.Message, "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
             else
             {
-                if (Application.OpenForms["frmLyricsEdit"].WindowState == FormWindowState.Minimized)
-                    Application.OpenForms["frmLyricsEdit"].WindowState = FormWindowState.Normal;
-                Application.OpenForms["frmLyricsEdit"].Show();
-                Application.OpenForms["frmLyricsEdit"].Activate();
+                if (Application.OpenForms["frmMidiLyricsEdit"].WindowState == FormWindowState.Minimized)
+                    Application.OpenForms["frmMidiLyricsEdit"].WindowState = FormWindowState.Normal;
+                Application.OpenForms["frmMidiLyricsEdit"].Show();
+                Application.OpenForms["frmMidiLyricsEdit"].Activate();
             }
         }
 
@@ -4540,7 +4542,7 @@ namespace Karaboss
         // Slideshow
         private void SetSlideShow()
         {
-            if (frmLyric != null)
+            if (frmMidiLyric != null)
             {
                 // cas d'une playlist ou non : met à jour le diaporama
                 if (currentPlaylistItem != null)
@@ -4548,7 +4550,7 @@ namespace Karaboss
                 else
                     dirSlideShow = Properties.Settings.Default.dirSlideShow;
 
-                frmLyric.SetSlideShow(dirSlideShow);
+                frmMidiLyric.SetSlideShow(dirSlideShow);
 
             }
         }
@@ -4603,15 +4605,15 @@ namespace Karaboss
             if (!Utilities.CreateNewMidiFile.New(""))
                 return;
 
-            // Ferme le formulaire frmLyric
-            if (Application.OpenForms.OfType<frmMidiLyric>().Count() > 0)
+            // Ferme le formulaire frmMidiLyric
+            if (Application.OpenForms.OfType<frmMidiLyrics>().Count() > 0)
             {
-                frmLyric.Close();
+                frmMidiLyric.Close();
             }
-            // ferme le formulaire frmLyricsEdit
+            // ferme le formulaire frmMidiLyricsEdit
             if (Application.OpenForms.OfType<frmMidiLyricsEdit>().Count() > 0)
             {
-                Application.OpenForms["frmLyricsEdit"].Close();
+                Application.OpenForms["frmMidiLyricsEdit"].Close();
             }
             // Ferme le formulaire PianoRoll
             if (Application.OpenForms.OfType<frmPianoRoll>().Count() > 0)
@@ -4840,21 +4842,21 @@ namespace Karaboss
                 #region window size & location
                 
                 // If window is maximized
-                if (Properties.Settings.Default.frmPlayerMaximized)
+                if (Properties.Settings.Default.frmMidiPlayerMaximized)
                 {
-                    Location = Properties.Settings.Default.frmPlayerLocation;
+                    Location = Properties.Settings.Default.frmMidiPlayerLocation;
                     WindowState = FormWindowState.Maximized;
                 }
                 else
                 {
                     try
                     {
-                        if (Properties.Settings.Default.frmPlayerSize.Height == SimplePlayerHeight)
+                        if (Properties.Settings.Default.frmMidiPlayerSize.Height == SimplePlayerHeight)
                         {
-                            this.Size = new Size(Properties.Settings.Default.frmPlayerSize.Width, 600);
+                            this.Size = new Size(Properties.Settings.Default.frmMidiPlayerSize.Width, 600);
                         }
                         else
-                            Size = Properties.Settings.Default.frmPlayerSize;
+                            Size = Properties.Settings.Default.frmMidiPlayerSize;
                     }
                     catch (Exception ex)
                     {
@@ -4879,16 +4881,16 @@ namespace Karaboss
                 {
                     if (WindowState == FormWindowState.Maximized)
                     {
-                        Properties.Settings.Default.frmPlayerLocation = RestoreBounds.Location;
-                        Properties.Settings.Default.frmPlayerMaximized = true;
+                        Properties.Settings.Default.frmMidiPlayerLocation = RestoreBounds.Location;
+                        Properties.Settings.Default.frmMidiPlayerMaximized = true;
 
                     }
                     else if (WindowState == FormWindowState.Normal)
                     {
-                        Properties.Settings.Default.frmPlayerLocation = Location;
+                        Properties.Settings.Default.frmMidiPlayerLocation = Location;
                         if (Height != SimplePlayerHeight)
-                            Properties.Settings.Default.frmPlayerSize = Size;
-                        Properties.Settings.Default.frmPlayerMaximized = false;
+                            Properties.Settings.Default.frmMidiPlayerSize = Size;
+                        Properties.Settings.Default.frmMidiPlayerMaximized = false;
                     }
 
                     // Show sequencer
@@ -4944,16 +4946,16 @@ namespace Karaboss
             if (ShowKaraoke == true)
             {
                 DisplayLyricsForm();
-                frmLyric.StartTimerBalls();
+                frmMidiLyric.StartTimerBalls();
 
                 mnuDisplayLyricsWindows.Checked = true;
             }
             else
             {
-                // ferme le formulaire frmLyricsEdit
-                if (Application.OpenForms.OfType<frmMidiLyric>().Count() > 0)
+                // ferme le formulaire frmMidiLyricsEdit
+                if (Application.OpenForms.OfType<frmMidiLyrics>().Count() > 0)
                 {
-                    Application.OpenForms["frmLyric"].Close();
+                    Application.OpenForms["frmMidiLyric"].Close();
                 }
                 mnuDisplayLyricsWindows.Checked = false;
             }
@@ -6157,7 +6159,7 @@ namespace Karaboss
         /// </summary>
         private void Key_Left()
         {
-            //Console.Write("\nfrmPlayer Key Left"); 
+            //Console.Write("\nfrmMidiPlayer Key Left"); 
 
             // alter note
             int numstaff = sheetmusic.CurrentNote.numstaff;
@@ -6600,13 +6602,13 @@ namespace Karaboss
 
                 #region display singer in the Lyrics form
                 // Display the Lyric form even if no lyrics in order to display the singer
-                if (Application.OpenForms.OfType<frmMidiLyric>().Count() == 0)
+                if (Application.OpenForms.OfType<frmMidiLyrics>().Count() == 0)
                 {
-                    frmLyric = new frmMidiLyric(myLyricsMgmt);
-                    frmLyric.Show();
+                    frmMidiLyric = new frmMidiLyrics(myLyricsMgmt);
+                    frmMidiLyric.Show();
                 }
 
-                if (Application.OpenForms.OfType<frmMidiLyric>().Count() > 0)
+                if (Application.OpenForms.OfType<frmMidiLyrics>().Count() > 0)
                 {
                     // During the waiting time, display informations about the next singer
                     int nbLines;
@@ -6630,19 +6632,19 @@ namespace Karaboss
                     }
 
                     // arriere plan provisoire
-                    frmLyric.AlloModifyDirSlideShow = true;
-                    frmLyric.DirSlideShow = Properties.Settings.Default.dirSlideShow;
-                    frmLyric.AlloModifyDirSlideShow = false;
+                    frmMidiLyric.AlloModifyDirSlideShow = true;
+                    frmMidiLyric.DirSlideShow = Properties.Settings.Default.dirSlideShow;
+                    frmMidiLyric.AlloModifyDirSlideShow = false;
 
                     // Warning, number of lyrics lines is changed here
-                    frmLyric.TxtNbLines = nbLines;
-                    frmLyric.bTextBackGround = false;
+                    frmMidiLyric.TxtNbLines = nbLines;
+                    frmMidiLyric.bTextBackGround = false;
 
                     // Display singer in top panel
-                    frmLyric.DisplaySinger(toptxt);
+                    frmMidiLyric.DisplaySinger(toptxt);
 
                     // Display next singer in lyrics form
-                    frmLyric.DisplayText(centertxt);
+                    frmMidiLyric.DisplayText(centertxt);
                 }
                 #endregion
 
@@ -6680,20 +6682,20 @@ namespace Karaboss
             int sec = Karaclass.m_CountdownSongs;  // wait for x seconds
             w_wait = sec + 4;
 
-            if (Application.OpenForms.OfType<frmMidiLyric>().Count() == 0)
+            if (Application.OpenForms.OfType<frmMidiLyrics>().Count() == 0)
             {
-                frmLyric = new frmMidiLyric(myLyricsMgmt);
-                frmLyric.Show();
+                frmMidiLyric = new frmMidiLyrics(myLyricsMgmt);
+                frmMidiLyric.Show();
             }
 
-            if (Application.OpenForms.OfType<frmMidiLyric>().Count() > 0)
+            if (Application.OpenForms.OfType<frmMidiLyrics>().Count() > 0)
             {
                 // Display song & singer
                 string nextsong = Path.GetFileNameWithoutExtension(currentPlaylistItem.Song);
                 string txt = "Next song: " + nextsong + " - Next singer: " + currentPlaylistItem.KaraokeSinger;
-                frmLyric.DisplaySinger(txt);
+                frmMidiLyric.DisplaySinger(txt);
 
-                frmLyric.LoadWaitSong(sec);
+                frmMidiLyric.LoadWaitSong(sec);
             }
 
             timer5.Interval = 1000;  // interval = 1 sec      
@@ -6719,10 +6721,10 @@ namespace Karaboss
             MIDIfileName = currentPlaylistItem.Song;
             UpdatePlayListsForm(currentPlaylistItem.Song);
 
-            // Ferme le formulaire frmLyric
-            if (Application.OpenForms.OfType<frmMidiLyric>().Count() > 0)
+            // Ferme le formulaire frmMidiLyric
+            if (Application.OpenForms.OfType<frmMidiLyrics>().Count() > 0)
             {
-                frmLyric.Close();
+                frmMidiLyric.Close();
             }
 
             PlayerState = PlayerStates.Playing;
@@ -7665,8 +7667,8 @@ namespace Karaboss
                 DisplayTimeElapse(dpercent);              
 
                 //Eteint la boule fixe;
-                //if (Application.OpenForms.OfType<frmLyric>().Count() > 0)
-                //    frmLyric.UnlightFixedBall();
+                //if (Application.OpenForms.OfType<frmMidiLyric>().Count() > 0)
+                //    frmMidiLyric.UnlightFixedBall();
                 
                 switch (PlayerState)
                 {
@@ -7759,8 +7761,8 @@ namespace Karaboss
             // et colorier la syllabe à chanter   
             if (PlayerState == PlayerStates.Playing)
             {
-                if (Application.OpenForms.OfType<frmMidiLyric>().Count() > 0 && myLyricsMgmt.plLyrics.Count > 0)
-                    frmLyric.ColorLyric(sequencer1.Position);
+                if (Application.OpenForms.OfType<frmMidiLyrics>().Count() > 0 && myLyricsMgmt.plLyrics.Count > 0)
+                    frmMidiLyric.ColorLyric(sequencer1.Position);
             }
         }
 
@@ -7773,9 +7775,9 @@ namespace Karaboss
         private void Timer3_Tick(object sender, EventArgs e)
         {
             // 21 balls: 1 fix, 20 moving to the fix one
-            if (Application.OpenForms.OfType<frmMidiLyric>().Count() > 0)
+            if (Application.OpenForms.OfType<frmMidiLyrics>().Count() > 0)
             {
-                frmLyric?.MoveBalls(sequencer1.Position);
+                frmMidiLyric?.MoveBalls(sequencer1.Position);
 
             }
         }
@@ -7842,11 +7844,11 @@ namespace Karaboss
                 DisplayFileInfos(_tempo);
 
 
-            // display beat in frmLyric if visible
-            if (Application.OpenForms.OfType<frmMidiLyric>().Count() > 0)
+            // display beat in frmMidiLyric if visible
+            if (Application.OpenForms.OfType<frmMidiLyrics>().Count() > 0)
             {
-                // Send beat number and division to frmLyric
-                frmLyric?.DisplayBeat(beat, _bpm);
+                // Send beat number and division to frmMidiLyric
+                frmMidiLyric?.DisplayBeat(beat, _bpm);
             }
 
         }
@@ -7866,17 +7868,17 @@ namespace Karaboss
             if (w_tick < w_wait)
             {
                 // color each second
-                //if (frmLyric != null)
-                //    frmLyric.ColorLyric(w_tick * 10);
-                frmLyric?.ColorLyric(w_tick * 10);
+                //if (frmMidiLyric != null)
+                //    frmMidiLyric.ColorLyric(w_tick * 10);
+                frmMidiLyric?.ColorLyric(w_tick * 10);
 
             }
             else if (w_tick == w_wait)
             {
                 // set syllabes to null
-                //if (frmLyric!= null)
-                //    frmLyric.EndWaitSong();
-                frmLyric?.EndWaitSong();
+                //if (frmMidiLyric!= null)
+                //    frmMidiLyric.EndWaitSong();
+                frmMidiLyric?.EndWaitSong();
 
             }
             else
@@ -7886,9 +7888,9 @@ namespace Karaboss
                 PlayerState = PlayerStates.Stopped;
 
                 // Restore display options modified by the wait animation
-                if (frmLyric != null)
+                if (frmMidiLyric != null)
                 {
-                    frmLyric.LoadKarOptions();
+                    frmMidiLyric.LoadKarOptions();
                     SetSlideShow();
                 }
                 PlayPauseMusic();

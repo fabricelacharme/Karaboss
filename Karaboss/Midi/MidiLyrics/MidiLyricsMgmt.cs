@@ -3259,7 +3259,7 @@ namespace Karaboss.MidiLyrics
         /// <summary>
         /// Use case : Display Lyrics & chords. 
         /// Returns dictionnary _gridbeatchords filled with chords issued from lyrics
-        /// Used in frmChords TAB1, 2 & 3 and frmLyrics
+        /// Used in frmChords TAB1, 2 & 3 and frmMidiLyrics
         /// </summary>
         /// <returns></returns>
         public Dictionary<int, (string, int)> FillGridBeatChordsWithLyricsChords()

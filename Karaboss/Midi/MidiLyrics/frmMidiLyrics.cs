@@ -43,11 +43,10 @@ using System.Linq;
 using Karaboss.MidiLyrics;
 using System.ComponentModel;
 using System.Text.RegularExpressions;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement.Rebar;
 
 namespace Karaboss
 {
-    public partial class frmMidiLyric : Form, IMessageFilter
+    public partial class frmMidiLyrics : Form, IMessageFilter
     {
         #region Move form without title bar
         public const int WM_NCLBUTTONDOWN = 0xA1;
@@ -440,7 +439,7 @@ namespace Karaboss
         /// Constructor
         /// </summary>
         /// <param name="_myLyricsMgmt"></param>
-        public frmMidiLyric(MidiLyricsMgmt _myLyricsMgmt)
+        public frmMidiLyrics(MidiLyricsMgmt _myLyricsMgmt)
         {
             InitializeComponent();
 
@@ -635,7 +634,7 @@ namespace Karaboss
         {            
             // déclencheur : timer_2
             // IMPERATIF : calculer ici la position de la syllabe, utilisée pour l'animation des balles
-            // drivé par timer_2 de frmplayer            
+            // drivé par timer_2 de frmMidiPplayer            
             currentTextPos = pBox.CurrentTextPos;
             pBox.ColorLyric(songposition);
         }
@@ -750,7 +749,7 @@ namespace Karaboss
                 // Position image
                 SizeMode = Properties.Settings.Default.SizeMode;
 
-                bTopMost = Properties.Settings.Default.frmLyricsTopMost;
+                bTopMost = Properties.Settings.Default.frmMidiLyricsTopMost;
 
 
             }
@@ -857,20 +856,20 @@ namespace Karaboss
             base.OnClosed(e);
         }
 
-        private void FrmLyric_Load(object sender, EventArgs e)
+        private void frmMidiLyrics_Load(object sender, EventArgs e)
         {
             // Récupère la taille et position de la forme
             // Set window location
-            if (Properties.Settings.Default.frmLyricMaximized)
+            if (Properties.Settings.Default.frmMidiLyricsMaximized)
             {
                 
-                Location = Properties.Settings.Default.frmLyricLocation;
+                Location = Properties.Settings.Default.frmMidiLyricsLocation;
                 WindowState = FormWindowState.Maximized;
                 
             }
             else
             {
-                Location = Properties.Settings.Default.frmLyricLocation;
+                Location = Properties.Settings.Default.frmMidiLyricsLocation;
                 // Verify if this windows is visible in extended screens 
                 Rectangle rect = new Rectangle(int.MaxValue, int.MaxValue, int.MinValue, int.MinValue);
                 foreach (Screen screen in Screen.AllScreens)
@@ -881,11 +880,11 @@ namespace Karaboss
                 if (Location.Y > rect.Height)
                     Location = new Point(Location.X, 0);
 
-                Size = Properties.Settings.Default.frmLyricSize;
+                Size = Properties.Settings.Default.frmMidiLyricSize;
             }
         }
 
-        private void FrmLyric_FormClosing(object sender, FormClosingEventArgs e)
+        private void frmMidiLyrics_FormClosing(object sender, FormClosingEventArgs e)
         {            
             // enregistre la taille et la position de la forme
             // Copy window location to app settings                
@@ -893,15 +892,15 @@ namespace Karaboss
             {
                 if (WindowState == FormWindowState.Maximized)
                 {
-                    Properties.Settings.Default.frmLyricLocation = RestoreBounds.Location;                       
-                    Properties.Settings.Default.frmLyricMaximized = true;
+                    Properties.Settings.Default.frmMidiLyricsLocation = RestoreBounds.Location;                       
+                    Properties.Settings.Default.frmMidiLyricsMaximized = true;
 
                 }
                 else if (WindowState == FormWindowState.Normal)
                 {
-                    Properties.Settings.Default.frmLyricLocation = Location;
-                    Properties.Settings.Default.frmLyricSize = Size;
-                    Properties.Settings.Default.frmLyricMaximized = false;                   
+                    Properties.Settings.Default.frmMidiLyricsLocation = Location;
+                    Properties.Settings.Default.frmMidiLyricsSize = Size;
+                    Properties.Settings.Default.frmMidiLyricsMaximized = false;                   
 
                 }
                 // Save settings
@@ -912,7 +911,7 @@ namespace Karaboss
             
         }
 
-        private void FrmLyric_Resize(object sender, EventArgs e)
+        private void frmMidiLyrics_Resize(object sender, EventArgs e)
         {
             if (WindowState == FormWindowState.Maximized )
             {
@@ -924,7 +923,7 @@ namespace Karaboss
             }
         }
 
-        private void frmLyric_KeyDown(object sender, KeyEventArgs e)
+        private void frmMidiLyrics_KeyDown(object sender, KeyEventArgs e)
         {
             switch (e.KeyCode)
             {
@@ -952,8 +951,8 @@ namespace Karaboss
         {
             if (Application.OpenForms.OfType<frmMidiPlayer>().Count() > 0)
             {                
-                frmMidiPlayer frmPlayer = Utilities.FormUtilities.GetForm<frmMidiPlayer>();
-                frmPlayer.DisplayEditLyricsForm();                
+                frmMidiPlayer frmMidiPlayer = Utilities.FormUtilities.GetForm<frmMidiPlayer>();
+                frmMidiPlayer.DisplayEditLyricsForm();                
             }
         }
 
@@ -1026,8 +1025,8 @@ namespace Karaboss
                 LoadSong(myLyricsMgmt.plLyrics);
 
                 // Refresh score with or without chords
-                frmMidiPlayer frmPlayer = Utilities.FormUtilities.GetForm<frmMidiPlayer>();
-                frmPlayer.RefreshChordsSheetMusic();
+                frmMidiPlayer frmMidiPlayer = Utilities.FormUtilities.GetForm<frmMidiPlayer>();
+                frmMidiPlayer.RefreshChordsSheetMusic();
 
                 // Set cursor as default
                 Cursor.Current = Cursors.Default;
@@ -1081,8 +1080,8 @@ namespace Karaboss
         /// <param name="e"></param>
         private void btnEditLyricsChords_Click(object sender, EventArgs e)
         {
-            frmMidiPlayer frmPlayer = Utilities.FormUtilities.GetForm<frmMidiPlayer>();
-            frmPlayer.DisplayEditLyricsChordsForm();
+            frmMidiPlayer frmMidiPlayer = Utilities.FormUtilities.GetForm<frmMidiPlayer>();
+            frmMidiPlayer.DisplayEditLyricsChordsForm();
         }
 
         #endregion lyrivs & chords

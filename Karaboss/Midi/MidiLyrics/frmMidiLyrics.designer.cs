@@ -1,6 +1,6 @@
 ﻿namespace Karaboss
 {
-    partial class frmMidiLyric
+    partial class frmMidiLyrics
     {
         /// <summary>
         /// Required designer variable.
@@ -29,7 +29,7 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmMidiLyric));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmMidiLyrics));
             this.pnlBalls = new System.Windows.Forms.Panel();
             this.pnlTittle = new System.Windows.Forms.Panel();
             this.lblTittle = new System.Windows.Forms.Label();
@@ -276,12 +276,12 @@
             this.DoubleBuffered = true;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
-            this.Name = "frmMidiLyric";
+            this.Name = "frmMidiLyrics";
             this.TopMost = true;
-            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FrmLyric_FormClosing);
-            this.Load += new System.EventHandler(this.FrmLyric_Load);
-            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.frmLyric_KeyDown);
-            this.Resize += new System.EventHandler(this.FrmLyric_Resize);
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.frmMidiLyrics_FormClosing);
+            this.Load += new System.EventHandler(this.frmMidiLyrics_Load);
+            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.frmMidiLyrics_KeyDown);
+            this.Resize += new System.EventHandler(this.frmMidiLyrics_Resize);
             this.pnlBalls.ResumeLayout(false);
             this.pnlTittle.ResumeLayout(false);
             this.pnlTittle.PerformLayout();
