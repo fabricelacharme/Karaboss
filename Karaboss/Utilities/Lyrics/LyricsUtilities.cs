@@ -41,6 +41,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Runtime.Remoting.Contexts;
+using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using static System.Windows.Forms.AxHost;
@@ -1421,7 +1422,11 @@ namespace Karaboss.Utilities
             // Open file
             try
             {
-                System.IO.File.WriteAllText(File, lines);
+                Encoding encoding = Encoding.UTF8;
+                
+                encoding = System.Text.Encoding.GetEncoding("iso-8859-1");
+
+                System.IO.File.WriteAllText(File, lines, encoding);
                 System.Diagnostics.Process.Start(@File);
             }
             catch (Exception ex)

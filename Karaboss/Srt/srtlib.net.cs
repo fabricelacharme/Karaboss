@@ -63,9 +63,10 @@ namespace Karaboss.SRT
             return result;
         }
 
-        public SRTFile()
+        public SRTFile(Encoding enc = null)
         {
-
+            if (enc == null)
+                enc = Encoding.ASCII;
         }
 
 
@@ -170,7 +171,11 @@ namespace Karaboss.SRT
         /// </summary>
         public void WriteToFile(string path)
         {
-            File.WriteAllText(path, Render());
+            Encoding encoding = Encoding.UTF8;
+            encoding = System.Text.Encoding.GetEncoding("iso-8859-1");
+
+
+            File.WriteAllText(path, Render(), encoding);
         }
 
 
