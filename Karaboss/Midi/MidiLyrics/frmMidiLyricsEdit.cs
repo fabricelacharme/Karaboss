@@ -43,6 +43,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using static System.Windows.Forms.LinkLabel;
@@ -2341,7 +2342,8 @@ namespace Karaboss
 
             try
             {
-                System.IO.File.WriteAllText(fullPath, lines);
+                Encoding encoding = Encoding.UTF8;
+                System.IO.File.WriteAllText(fullPath, lines, encoding);
                 System.Diagnostics.Process.Start(@fullPath);
 
             }
@@ -2906,7 +2908,8 @@ namespace Karaboss
 
             try
             {
-                System.IO.File.WriteAllText(File, lrcs);
+                Encoding encoding = Encoding.UTF8;
+                System.IO.File.WriteAllText(File, lrcs, encoding);
                 System.Diagnostics.Process.Start(@File);
 
             }

@@ -1,6 +1,6 @@
 ﻿#region License
 
-/* Copyright (c) 2025 Fabrice Lacharme
+/* Copyright (c) 2026 Fabrice Lacharme
  * 
  * Permission is hereby granted, free of charge, to any person obtaining a copy 
  * of this software and associated documentation files (the "Software"), to 
@@ -40,7 +40,6 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
-using System.Runtime.Remoting.Contexts;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
@@ -615,99 +614,7 @@ namespace Karaboss.Utilities
         }
 
 
-        /// <summary>
-        /// Parses a list of timestamped lyric segments and organizes them into lines based on line and paragraph
-        /// separators.
-        /// </summary>
-        /// <remarks>Line and paragraph separators within the lyric segments determine how the input is
-        /// split into lines. Empty lyric segments are ignored. If a segment consists solely of a separator, it starts a
-        /// new line or paragraph in the output.</remarks>
-        /// <param name="lstDgRows">A list of tuples where each tuple contains a timestamp and a lyric segment. The lyric segment may include
-        /// line or paragraph separators to indicate line breaks.</param>
-        /// <returns>A list of lyric lines, where each line is represented as a list of LyricsItem objects grouped according to
-        /// detected line or paragraph separators. The returned list preserves the order of lines as determined by the
-        /// separators in the input.</returns>
-        public static List<List<LyricsItem>> OldExtractDgRows(List<(string, string)> lstDgRows)
-        {            
-            string sTime;
-            string sLyric;
-
-
-            List<List<LyricsItem>> lstLyricsItems = new List<List<LyricsItem>>();
-            List<LyricsItem> lstLyricsItemsLine = new List<LyricsItem>();
-
-            for (int i = 0; i < lstDgRows.Count; i++)
-            {
-                sTime = lstDgRows[i].Item1;
-                sLyric = lstDgRows[i].Item2;
-
-                if (sLyric == "") continue;
-
-                // Check if sLyric contains a line or paragraph separator
-                if (sLyric.Contains(m_SepLine) || sLyric.Contains(m_SepParagraph))
-                {
-                    if (sLyric == m_SepLine) 
-                    {
-                        // If the first thing of the lyrics is a separator, continue to next line, otherwise we will have an empty line at the beginning of the lyrics
-                        if (lstLyricsItems.Count == 0 && lstLyricsItemsLine.Count == 0) continue;
-
-                        // sLyric is a pure line separator                        
-                        // It means that the next syllabe will be on a new line for lstLyricsItems and not on the same line as previous syllabes
-                        // Add previous line to list of lyrics items
-                        lstLyricsItems.Add(lstLyricsItemsLine);
-                        // Start a new line
-                        lstLyricsItemsLine = new List<LyricsItem>();
-                    }
-                    else if (sLyric == m_SepParagraph)
-                    {
-                        // If the first thing of the lyrics is a separator, continue to next line, otherwise we will have an empty line at the beginning of the lyrics
-                        if (lstLyricsItems.Count == 0  && lstLyricsItemsLine.Count == 0 ) continue;
-
-
-                        // sLyric is a pure paragraph separator
-                        // Same as for line separator but with a new paragraph instead of a new line
-                        // So we have to add an empty line for the new line and then add the new paragraph line
-                        lstLyricsItems.Add(lstLyricsItemsLine);
-                        lstLyricsItemsLine = new List<LyricsItem>();
-                        
-                        lstLyricsItemsLine.Add(new LyricsItem { Time = sTime, Lyric = " " });
-                        lstLyricsItems.Add(lstLyricsItemsLine);
-                        lstLyricsItemsLine = new List<LyricsItem>();
-
-                    }
-                    else 
-                    {
-                        // sLyric contains a line or paragraph separator, split it and add each part to the list of lyrics items with its timestamp
-                        // Manage only lines starting with a separator
-                        // Ex: "/ENCORE_UN_SOIR" => this is a new line for lstLyricsItems
-                        lstLyricsItems.Add(lstLyricsItemsLine);
-                        lstLyricsItemsLine = new List<LyricsItem>();
-                        string[] parts = sLyric.Split(new char[] { m_SepLine[0], m_SepParagraph[0] }, StringSplitOptions.RemoveEmptyEntries);
-                        for (int j = 0; j < parts.Length; j++)
-                        {
-                            lstLyricsItemsLine.Add(new LyricsItem { Time = sTime, Lyric = parts[j] });
-                        }
-
-                    }
-                }
-                else
-                {
-                    // sLyric does not contain any line or paragraph separator, add it to the list of lyrics items with its timestamp
-                    lstLyricsItemsLine.Add(new LyricsItem { Time = sTime, Lyric = sLyric });
-                }
-            }
-
-            // Add last line if not empty
-            if (lstLyricsItemsLine.Count > 0)
-            {
-                lstLyricsItems.Add(lstLyricsItemsLine);
-            }
-
-            return lstLyricsItems;
-    
-        }
-
-
+       
         #region LRC
 
         public static List<string> LrcExtractDgRows(List<(double, string)> lstDgRows, int _LrcMillisecondsDigits, bool bRemoveAccents, bool bUpperCase, bool bLowerCase, bool bRemoveNonAlphaNumeric, MidiLyricsMgmt _myLyricsMgmt = null)
@@ -1608,7 +1515,8 @@ namespace Karaboss.Utilities
             #region open file
             try
             {
-                System.IO.File.WriteAllText(File, lrcs);
+                Encoding encoding = Encoding.UTF8;
+                System.IO.File.WriteAllText(File, lrcs, encoding);
                 System.Diagnostics.Process.Start(@File);
 
             }
@@ -1639,9 +1547,8 @@ namespace Karaboss.Utilities
             // Open file
             try
             {
-                Encoding encoding = Encoding.UTF8;
-                
-                encoding = System.Text.Encoding.GetEncoding("iso-8859-1");
+                Encoding encoding = Encoding.UTF8;                
+                //encoding = System.Text.Encoding.GetEncoding("iso-8859-1");
 
                 System.IO.File.WriteAllText(File, lines, encoding);
                 System.Diagnostics.Process.Start(@File);
@@ -2132,7 +2039,8 @@ namespace Karaboss.Utilities
             // Open file
             try
             {
-                srtFile.WriteToFile(fullPath);
+                Encoding encoding = Encoding.UTF8;
+                srtFile.WriteToFile(fullPath, encoding);
                 System.Diagnostics.Process.Start(@fullPath);
             }
             catch (Exception ex)

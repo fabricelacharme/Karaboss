@@ -169,11 +169,10 @@ namespace Karaboss.SRT
         /// <summary>
         /// Writes the render of this object to specified path.
         /// </summary>
-        public void WriteToFile(string path)
+        public void WriteToFile(string path, Encoding encoding)
         {
-            Encoding encoding = Encoding.UTF8;
-            encoding = System.Text.Encoding.GetEncoding("iso-8859-1");
-
+            //Encoding encoding = Encoding.UTF8;
+            //encoding = System.Text.Encoding.GetEncoding("iso-8859-1");
 
             File.WriteAllText(path, Render(), encoding);
         }

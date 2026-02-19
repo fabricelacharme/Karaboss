@@ -114,7 +114,7 @@ namespace ChordAnalyser.UI
         private int _currentmeasure = -1;
         private int _currentTimeInMeasure = -1;
 
-        private string ChordNotFound = "<Chord not found>";
+        //private string ChordNotFound = "<Chord not found>";
         private string EmptyChord = "<Empty>";
 
         public int PageWidth = 800;    /** The width of each page */

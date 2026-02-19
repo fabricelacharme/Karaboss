@@ -191,7 +191,7 @@ namespace ChordAnalyser.UI
         public Dictionary<int,string> GridLyrics { get; set; }
 
         private string EmptyChord = "<Empty>";
-        private readonly string ChordNotFound = "<Chord not found>";
+        //private readonly string ChordNotFound = "<Chord not found>";
 
         private float _cellwidth;
         private float _cellheight;
