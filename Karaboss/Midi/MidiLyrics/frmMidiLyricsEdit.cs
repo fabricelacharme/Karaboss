@@ -2525,7 +2525,11 @@ namespace Karaboss
         /// <param name="LrcExportFormat"></param>
         private void GetLrcSaveOptions()
        {
-           DialogResult dr;
+            //string a = ReadDgView();
+            //return;
+
+
+            DialogResult dr;
            frmLrcOptions LrcOptionsDialog = new frmLrcOptions();
            dr = LrcOptionsDialog.ShowDialog();
 
@@ -2674,7 +2678,8 @@ namespace Karaboss
         /// <returns>A list of tuples, each containing the time in milliseconds and the corresponding lyric string. The list
         /// excludes rows with missing or invalid data.</returns>
         private List<(double Time, string lyric)> ReadDataGridContent()
-        {
+        {                       
+
             List<(double Time, string lyric)> Result = new List<(double Time, string lyric)>();
 
             string sTime;
@@ -2686,6 +2691,9 @@ namespace Karaboss
 
             // Verify format of time "00:00.000"
             string pattern = @"\d{2}:\d{2}.\d{3}";
+
+
+            string AllLyrics = string.Empty;
 
             // Store rows of dgView in a list
             // the aim is to have the same procedure between midi Lyrics edition and mp3 Lyrics edition            
@@ -2714,11 +2722,15 @@ namespace Karaboss
                 sLyric = vLyric.ToString();
 
                 // Do not keep if first cell is a separator
-                if (i == 0 && sLyric.Trim() == m_SepLine) continue;
-                if (i == 0 && sLyric.Trim() == m_SepParagraph) continue;
+                //if (i == 0 && sLyric.Trim() == m_SepLine) continue;
+                //if (i == 0 && sLyric.Trim() == m_SepParagraph) continue;
+                if (AllLyrics.Length == 0 && sLyric.Trim() == m_SepLine) continue;
+                if (AllLyrics.Length == 0 && sLyric.Trim() == m_SepParagraph) continue;
+
 
                 // Eliminate some characters
                 sLyric = sLyric.Replace("_", " ");
+                if (sLyric.Trim().Length == 0) continue;
 
                 // Replace characters used in LRC format
                 sLyric = sLyric.Replace("[", "@");
@@ -2726,6 +2738,7 @@ namespace Karaboss
                 sLyric = sLyric.Replace("<", "@");
                 sLyric = sLyric.Replace(">", "@");
 
+                AllLyrics += sLyric;
 
                 Result.Add((time, sLyric));
 
@@ -2733,6 +2746,89 @@ namespace Karaboss
 
             return Result;
         }
+
+
+        private string ReadDgView()
+        {
+            string result = string.Empty;
+            object vTime;
+            object vLyric;
+            string sTime;
+            string sLyric = string.Empty;
+
+            // Verify format of time "00:00.000"
+            string pattern = @"\d{2}:\d{2}.\d{3}";
+
+
+            for (int i = 0; i < dgView.Rows.Count; i++)
+            {
+                vTime = dgView.Rows[i].Cells[COL_TIME].Value;
+                vLyric = dgView.Rows[i].Cells[COL_TEXT].Value;
+
+                #region time
+                // Eliminate empty cells
+                if (vTime == null || vLyric == null ) continue;
+                
+                sTime = vTime.ToString().Trim();
+                if (sTime.Length == 0 ) continue;
+
+                // Verify format of time "00:00.000"
+                var match = Regex.Match(sTime, pattern);
+                if (!match.Success) continue;
+
+                sTime = _InternalSepLines + "[" + sTime + "]";
+                #endregion time
+
+                sLyric = vLyric.ToString();
+                if (sLyric.Trim() == m_SepLine) sLyric = sLyric.Trim();
+                if (sLyric.Trim() == m_SepParagraph) sLyric = sLyric.Trim();
+
+                // Eliminate firsts separators
+                if (sLyric == m_SepLine && result.Length == 0) continue;
+                if (sLyric == m_SepParagraph && result.Length == 0) continue;
+
+                // Eliminate some characters
+                sLyric = sLyric.Replace("_", " ");
+                // Replace characters used in LRC format
+                sLyric = sLyric.Replace("[", "@");
+                sLyric = sLyric.Replace("]", "@");
+                sLyric = sLyric.Replace("<", "@");
+                sLyric = sLyric.Replace(">", "@");
+
+                result += sTime + sLyric;
+            }
+
+            // Replace [02:08.734]\ by [02:08.734]" "[02:08.734]/ 
+            //result = result.Replace(m_SepParagraph, m_SepLine + " " + m_SepLine);
+            
+            string[] lstLines1 = result.Split('¼');
+            List<string> lstLines2 = new List<string>();
+
+            for (int i = 0; i < lstLines1.Count(); i++)
+            {
+                sLyric = lstLines1[i];
+                if (sLyric.Length ==  0)  continue;
+
+                if (sLyric.EndsWith(m_SepParagraph, StringComparison.OrdinalIgnoreCase))
+                {                    
+                    // Extract time
+                    sTime = sLyric.Substring(0, sLyric.Length - m_SepParagraph.Length);
+
+                    lstLines2.Add(sTime + m_SepLine);
+                    lstLines2.Add(sTime + " ");
+                    lstLines2.Add(sTime + m_SepLine);
+                }
+                else
+                {
+                    lstLines2.Add(sLyric);
+                }
+
+            }
+
+
+            return result;
+        }
+
 
         #region deleteme
         /*

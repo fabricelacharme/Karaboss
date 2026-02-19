@@ -1594,12 +1594,20 @@ namespace Karaboss.Utilities
                 else if (sLyric.Trim() == m_SepLine)
                 {
                     // Line feed
-                    bLineFeed = true;
+                    if (!bParagraph && !bLineFeed)
+                        bLineFeed = true;
+                    else if (bLineFeed && !bParagraph)
+                    {
+                        bLineFeed = false;
+                        bParagraph = true;
+                    }
+
                 }
                 else if (sLyric.Trim() == m_SepParagraph)
                 {
                     // Paragraph
                     bParagraph = true;
+                    bLineFeed = false;
                 }                
             }
             return Result;
