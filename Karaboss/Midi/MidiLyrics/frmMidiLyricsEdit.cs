@@ -2177,7 +2177,6 @@ namespace Karaboss
                     {                       
                         sTimestamp = parts[i + 1].Trim();
 
-
                         // Check if timespam is less than the song duration
                         #region guard
                         timestamp = Convert.ToDouble(sTimestamp);
@@ -2329,10 +2328,14 @@ namespace Karaboss
             #endregion select filename
 
 
+            // New code
+            List<(double Time, string lyric)> lstDgRows = LyricsUtilities.ReadDataGridContent(dgView, COL_TIME, COL_TEXT);
+            List<List<Utilities.LyricsUtilities.LyricsItem>> lstLines = Utilities.LyricsUtilities.ExtractDgRows(lstDgRows, _LrcMillisecondsDigits);
+
             // For each line of lyric, read all the syllabes and their timestamps
             // and store the result in a list
-            List<(string, string)> lstDgRows = KokReadDgViewData();            
-            List<List<Utilities.LyricsUtilities.LyricsItem>> lstLines = Utilities.LyricsUtilities.ExtractDgRows(lstDgRows);
+            //List<(string, string)> lstDgRows = KokReadDgViewData();                        
+            //List<List<Utilities.LyricsUtilities.LyricsItem>> lstLines = Utilities.LyricsUtilities.ExtractDgRows(lstDgRows);
                        
             string lines = Utilities.LyricsUtilities.SaveLyricsToKokFormat(lstLines);
 
@@ -2349,7 +2352,7 @@ namespace Karaboss
 
         }
 
-
+        /*
         private List<(string, string)> KokReadDgViewData()
         {
             string sTime;            
@@ -2378,6 +2381,7 @@ namespace Karaboss
             }
             return lstDgRows;
         }
+        */
 
         #endregion export kok
 
@@ -2570,71 +2574,74 @@ namespace Karaboss
        /// <param name="LrcCutLinesChars"></param>
         private void SaveLrcFileName(LrcLinesSyllabesFormats LrcLinesSyllabesFormat, bool bRemoveAccents, bool bUpperCase, bool bLowerCase, bool bRemoveNonAlphaNumeric, bool bCutLines, int LrcCutLinesChars)
        {
-           #region select filename
+        
+            #region select filename
 
-           string defExt = ".lrc";
-           string fName = "New" + defExt;
-           string fPath = Path.GetDirectoryName(MIDIfileName);
+            string defExt = ".lrc";
+            string fName = "New" + defExt;
+            string fPath = Path.GetDirectoryName(MIDIfileName);
 
-           string fullName;
-           string defName;
+            string fullName;
+            string defName;
 
-           #region search name
+            #region search name
 
-           if (fPath == null || fPath == "")
-           {
-               if (Directory.Exists(CreateNewMidiFile._DefaultDirectory))
-                   fPath = CreateNewMidiFile._DefaultDirectory;
-               else
-                   fPath = Environment.GetFolderPath(Environment.SpecialFolder.MyMusic);
-           }
-           else
-           {
-               fName = Path.GetFileName(MIDIfileName);
-           }
+            if (fPath == null || fPath == "")
+            {
+                if (Directory.Exists(CreateNewMidiFile._DefaultDirectory))
+                    fPath = CreateNewMidiFile._DefaultDirectory;
+                else
+                    fPath = Environment.GetFolderPath(Environment.SpecialFolder.MyMusic);
+            }
+            else
+            {
+                fName = Path.GetFileName(MIDIfileName);
+            }
 
-           // Extension forced to lrc            
-           string fullPath = fPath + "\\" + Path.GetFileNameWithoutExtension(fName) + defExt;
-           fullName = Utilities.Files.FindUniqueFileName(fullPath);                            // Add (2), (3) etc.. if necessary    
-           defName = Path.GetFileNameWithoutExtension(fullName);                               // Default name to propose to dialog
+            // Extension forced to lrc            
+            string fullPath = fPath + "\\" + Path.GetFileNameWithoutExtension(fName) + defExt;
+            fullName = Utilities.Files.FindUniqueFileName(fullPath);                            // Add (2), (3) etc.. if necessary    
+            defName = Path.GetFileNameWithoutExtension(fullName);                               // Default name to propose to dialog
 
-           #endregion search name                   
+            #endregion search name                   
 
-           string defFilter = "LRC files (*.lrc)|*.lrc|All files (*.*)|*.*";
+            string defFilter = "LRC files (*.lrc)|*.lrc|All files (*.*)|*.*";
 
-           SaveFileDialog.Title = "Save to LRC format";
-           SaveFileDialog.Filter = defFilter;
-           SaveFileDialog.DefaultExt = defExt;
-           SaveFileDialog.InitialDirectory = @fPath;
-           SaveFileDialog.FileName = defName;
+            SaveFileDialog.Title = "Save to LRC format";
+            SaveFileDialog.Filter = defFilter;
+            SaveFileDialog.DefaultExt = defExt;
+            SaveFileDialog.InitialDirectory = @fPath;
+            SaveFileDialog.FileName = defName;
 
-           if (SaveFileDialog.ShowDialog() != DialogResult.OK)
-               return;
+            if (SaveFileDialog.ShowDialog() != DialogResult.OK)
+                return;
+
+             #endregion select filename
 
             fullPath = SaveFileDialog.FileName;
 
-            #endregion select filename
+            #region metadata
 
             string Tag_Tool = "Karaboss https://karaboss.lacharme.net";
-
-           string Tag_Title;
-           string Tag_Artist;
-           string Tag_Album = string.Empty;
-           string Tag_Lang = string.Empty;
-           string Tag_By = string.Empty;
-           string Tag_DPlus = string.Empty;
+            string Tag_Title;
+            string Tag_Artist;
+            string Tag_Album = string.Empty;
+            string Tag_Lang = string.Empty;
+            string Tag_By = string.Empty;
+            uint Tag_Year = 0;
+            string Tag_DPlus = string.Empty;
            
 
-           // Search Title & Artist
-           // Classic Karaoke Midi tags
-           /*
-           @K	(multiple) K1: FileType ex MIDI KARAOKE FILE, K2: copyright of Karaoke file
-           @L	(single) Language	FRAN, ENGL        
-           @W	(multiple) Copyright (of Karaoke file, not song)        
-           @T	(multiple) Title1 @T<title>, Title2 @T<author>, Title3 @T<copyright>		
-           @I	Information  ex Date(of Karaoke file, not song)
-           @V	(single) Version ex 0100 ?             
-           */
+            // Search Title & Artist
+            // Classic Karaoke Midi tags
+            /*
+            @K	(multiple) K1: FileType ex MIDI KARAOKE FILE, K2: copyright of Karaoke file
+            @L	(single) Language	FRAN, ENGL        
+            @W	(multiple) Copyright (of Karaoke file, not song)        
+            @T	(multiple) Title1 @T<title>, Title2 @T<author>, Title3 @T<copyright>		
+            @I	Information  ex Date(of Karaoke file, not song)
+            @V	(single) Version ex 0100 ?             
+            */
             Tag_Title = (sequence1.TTag != null && sequence1.TTag.Count > 1) ? sequence1.TTag[0] : "";
             Tag_Artist = (sequence1.TTag != null && sequence1.TTag.Count > 1) ? sequence1.TTag[1] : "";
 
@@ -2645,9 +2652,11 @@ namespace Karaboss
                 Tag_Artist = lstTags[0];
                 Tag_Title = lstTags[1];
             }
+            #endregion metadata
 
-            // Read Datagrid content
-            List<(double Time, string lyric)> lstDgRows = ReadDataGridContent();
+
+            // Read DatagridView content
+            List<(double Time, string lyric)> lstDgRows = LyricsUtilities.ReadDataGridContent(dgView, COL_TIME, COL_TEXT);
             if (lstDgRows == null || lstDgRows.Count == 0)
             {
                 MessageBox.Show("No lyric to export", "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -2659,15 +2668,17 @@ namespace Karaboss
             switch (LrcLinesSyllabesFormat)
             {
                 case LrcLinesSyllabesFormats.Lines:                                        
-                    Utilities.LyricsUtilities.SaveLRCLines(fullPath, lstDgRows, bRemoveAccents, bUpperCase, bLowerCase, bRemoveNonAlphaNumeric, Tag_Tool, Tag_Title, Tag_Artist, Tag_Album, Tag_Lang, Tag_By, Tag_DPlus, bCutLines, LrcCutLinesChars, _LrcMillisecondsDigits, _myLyricsMgmt);
+                    Utilities.LyricsUtilities.SaveLRCLines(fullPath, lstDgRows, bRemoveAccents, bUpperCase, bLowerCase, bRemoveNonAlphaNumeric, Tag_Tool, Tag_Title, Tag_Artist, Tag_Album, Tag_Lang, Tag_By, Tag_Year, Tag_DPlus, bCutLines, LrcCutLinesChars, _LrcMillisecondsDigits, _myLyricsMgmt);
                     break;
                 case LrcLinesSyllabesFormats.Syllabes:
                     //SaveLRCSyllabes(fullPath, bRemoveAccents, bUpperCase, bLowerCase, bRemoveNonAlphaNumeric, Tag_Tool, Tag_Title, Tag_Artist, Tag_Album, Tag_Lang, Tag_By, Tag_DPlus);
-                    Utilities.LyricsUtilities.SaveLRCSyllabes(fullPath,lstDgRows, bRemoveAccents, bUpperCase, bLowerCase, bRemoveNonAlphaNumeric, Tag_Tool, Tag_Title, Tag_Artist, Tag_Album, Tag_Lang, Tag_By, Tag_DPlus, _LrcMillisecondsDigits, _myLyricsMgmt);
+                    Utilities.LyricsUtilities.SaveLRCSyllabes(fullPath, lstDgRows, bRemoveAccents, bUpperCase, bLowerCase, bRemoveNonAlphaNumeric, Tag_Tool, Tag_Title, Tag_Artist, Tag_Album, Tag_Lang, Tag_By, Tag_Year, Tag_DPlus, _LrcMillisecondsDigits, _myLyricsMgmt);
                     break;
             }                                
         }
 
+
+        /*
         /// <summary>
         /// Reads the contents of the data grid and extracts a list of time and lyric pairs, filtering out invalid or
         /// improperly formatted entries.
@@ -2677,7 +2688,7 @@ namespace Karaboss
         /// formats.</remarks>
         /// <returns>A list of tuples, each containing the time in milliseconds and the corresponding lyric string. The list
         /// excludes rows with missing or invalid data.</returns>
-        private List<(double Time, string lyric)> ReadDataGridContent()
+        private List<(double Time, string lyric)> OldReadDataGridContent(DataGrid dgView, int colTime, int colText)
         {                       
 
             List<(double Time, string lyric)> Result = new List<(double Time, string lyric)>();
@@ -2697,7 +2708,6 @@ namespace Karaboss
 
             // Store rows of dgView in a list
             // the aim is to have the same procedure between midi Lyrics edition and mp3 Lyrics edition            
-
             for (int i = 0; i < dgView.Rows.Count; i++)
             {
                 vTime = dgView.Rows[i].Cells[COL_TIME].Value;
@@ -2720,12 +2730,12 @@ namespace Karaboss
                 time = Mp3LyricsMgmtHelper.TimeToMs(sTime);
 
                 sLyric = vLyric.ToString();
+                if (sLyric.Trim() == m_SepLine) sLyric = sLyric.Trim();
+                if (sLyric.Trim().Trim() == m_SepParagraph) sLyric = sLyric.Trim();
 
                 // Do not keep if first cell is a separator
-                //if (i == 0 && sLyric.Trim() == m_SepLine) continue;
-                //if (i == 0 && sLyric.Trim() == m_SepParagraph) continue;
-                if (AllLyrics.Length == 0 && sLyric.Trim() == m_SepLine) continue;
-                if (AllLyrics.Length == 0 && sLyric.Trim() == m_SepParagraph) continue;
+                if (AllLyrics.Length == 0 && sLyric == m_SepLine) continue;
+                if (AllLyrics.Length == 0 && sLyric == m_SepParagraph) continue;
 
 
                 // Eliminate some characters
@@ -2741,491 +2751,18 @@ namespace Karaboss
                 AllLyrics += sLyric;
 
                 Result.Add((time, sLyric));
-
             }
 
+            // At this level we can have several following linefeeds and or Paragraphs, they will be eliminated further
+            // in CreateLrcLines
             return Result;
         }
-
-
-        private string ReadDgView()
-        {
-            string result = string.Empty;
-            object vTime;
-            object vLyric;
-            string sTime;
-            string sLyric = string.Empty;
-
-            // Verify format of time "00:00.000"
-            string pattern = @"\d{2}:\d{2}.\d{3}";
-
-
-            for (int i = 0; i < dgView.Rows.Count; i++)
-            {
-                vTime = dgView.Rows[i].Cells[COL_TIME].Value;
-                vLyric = dgView.Rows[i].Cells[COL_TEXT].Value;
-
-                #region time
-                // Eliminate empty cells
-                if (vTime == null || vLyric == null ) continue;
-                
-                sTime = vTime.ToString().Trim();
-                if (sTime.Length == 0 ) continue;
-
-                // Verify format of time "00:00.000"
-                var match = Regex.Match(sTime, pattern);
-                if (!match.Success) continue;
-
-                sTime = _InternalSepLines + "[" + sTime + "]";
-                #endregion time
-
-                sLyric = vLyric.ToString();
-                if (sLyric.Trim() == m_SepLine) sLyric = sLyric.Trim();
-                if (sLyric.Trim() == m_SepParagraph) sLyric = sLyric.Trim();
-
-                // Eliminate firsts separators
-                if (sLyric == m_SepLine && result.Length == 0) continue;
-                if (sLyric == m_SepParagraph && result.Length == 0) continue;
-
-                // Eliminate some characters
-                sLyric = sLyric.Replace("_", " ");
-                // Replace characters used in LRC format
-                sLyric = sLyric.Replace("[", "@");
-                sLyric = sLyric.Replace("]", "@");
-                sLyric = sLyric.Replace("<", "@");
-                sLyric = sLyric.Replace(">", "@");
-
-                result += sTime + sLyric;
-            }
-
-            // Replace [02:08.734]\ by [02:08.734]" "[02:08.734]/ 
-            //result = result.Replace(m_SepParagraph, m_SepLine + " " + m_SepLine);
-            
-            string[] lstLines1 = result.Split('¼');
-            List<string> lstLines2 = new List<string>();
-
-            for (int i = 0; i < lstLines1.Count(); i++)
-            {
-                sLyric = lstLines1[i];
-                if (sLyric.Length ==  0)  continue;
-
-                if (sLyric.EndsWith(m_SepParagraph, StringComparison.OrdinalIgnoreCase))
-                {                    
-                    // Extract time
-                    sTime = sLyric.Substring(0, sLyric.Length - m_SepParagraph.Length);
-
-                    lstLines2.Add(sTime + m_SepLine);
-                    lstLines2.Add(sTime + " ");
-                    lstLines2.Add(sTime + m_SepLine);
-                }
-                else
-                {
-                    lstLines2.Add(sLyric);
-                }
-
-            }
-
-
-            return result;
-        }
-
-
-        #region deleteme
-        /*
-
-        /// <summary>
-        /// Saves processed lyrics and associated metadata to an LRC file, applying specified text treatments and tags.
-        /// </summary>
-        /// <remarks>If no lyrics are available for export, the method displays an informational message
-        /// and does not create a file. The method opens the saved LRC file upon successful completion.</remarks>
-        /// <param name="File">The path to the LRC file where the lyrics and metadata will be saved. Cannot be null or empty.</param>
-        /// <param name="bRemoveAccents">Indicates whether accents should be removed from the lyrics. Set to <see langword="true"/> to strip accents.</param>
-        /// <param name="bUpperCase">Indicates whether the lyrics should be converted to uppercase. Set to <see langword="true"/> to transform
-        /// all lyrics to uppercase.</param>
-        /// <param name="bLowerCase">Indicates whether the lyrics should be converted to lowercase. Set to <see langword="true"/> to transform
-        /// all lyrics to lowercase.</param>
-        /// <param name="bRemoveNonAlphaNumeric">Indicates whether non-alphanumeric characters should be removed from the lyrics. Set to <see
-        /// langword="true"/> to retain only letters and numbers.</param>
-        /// <param name="Tag_Tool">The tool name to include as metadata in the LRC file.</param>
-        /// <param name="Tag_Title">The song title to include as metadata in the LRC file.</param>
-        /// <param name="Tag_Artist">The artist name to include as metadata in the LRC file.</param>
-        /// <param name="Tag_Album">The album name to include as metadata in the LRC file.</param>
-        /// <param name="Tag_Lang">The language code to include as metadata in the LRC file.</param>
-        /// <param name="Tag_By">The creator or editor name to include as metadata in the LRC file.</param>
-        /// <param name="Tag_DPlus">Additional metadata to include in the LRC file.</param>
-        private void SaveLRCSyllabes(string File, bool bRemoveAccents, bool bUpperCase, bool bLowerCase, bool bRemoveNonAlphaNumeric, string Tag_Tool, string Tag_Title, string Tag_Artist, string Tag_Album, string Tag_Lang, string Tag_By, string Tag_DPlus)
-        {
-            string lines;
-
-            // Header of the LRC files containing the tags
-            lines = CreateTagString(bRemoveAccents, bRemoveNonAlphaNumeric, Tag_Tool, Tag_Title, Tag_Artist, Tag_Album, Tag_Lang, Tag_By, Tag_DPlus);
-
-
-            // Read dgView data
-            List<(string sTime, string lyric)> lstDgRows = ReadDgView();
-            if (lstDgRows == null || lstDgRows.Count == 0)
-            {
-                MessageBox.Show("No lyric to export", "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                return;
-            }
-
-            // Apply treatments choosen
-            List<(string sTime, string lyric)> lstDgRowsTreated = ApplyTextTreatments(lstDgRows, bRemoveAccents, bUpperCase, bLowerCase, bRemoveNonAlphaNumeric);
-
-            // Create lines with time and lyrics to save in lrc file
-            List<(string stime, string lyric)> lstTimeLines = CreateLrcLines(lstDgRowsTreated, _LrcMillisecondsDigits);
-
-            lines += CreateLrcString(lstTimeLines);
-
-            // Open file
-            try
-            {
-                System.IO.File.WriteAllText(File, lines);
-                System.Diagnostics.Process.Start(@File);
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message, "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-        }
-       
-
-        /// <summary>
-        /// Create the header of the LRC file composed of tags tool, title, artist, album, lang
-        /// </summary>
-        /// <param name="bRemoveAccents"></param>
-        /// <param name="bRemoveNonAlphaNumeric"></param>
-        /// <param name="Tag_Tool"></param>
-        /// <param name="Tag_Title"></param>
-        /// <param name="Tag_Artist"></param>
-        /// <param name="Tag_Album"></param>
-        /// <param name="Tag_Lang"></param>
-        /// <param name="Tag_By"></param>
-        /// <param name="Tag_DPlus"></param>
-        /// <returns>Returns a string</returns>
-        private string CreateTagString(bool bRemoveAccents, bool bRemoveNonAlphaNumeric, string Tag_Tool, string Tag_Title, string Tag_Artist, string Tag_Album, string Tag_Lang, string Tag_By, string Tag_DPlus)
-        {
-            string lrcs = string.Empty;
-            //string cr = "\r\n";
-            List<string> TagsList = new List<string> { Tag_Tool, Tag_Title, Tag_Artist, Tag_Album, Tag_Lang, Tag_Album, Tag_DPlus };
-            List<string> TagsNames = new List<string> { "tool:", "ti:", "ar:", "al:", "la:", "by:", "D+:" };
-            string Tag;
-            string TagName;
-            
-
-            for (int i = 0; i < TagsList.Count; i++)
-            {
-                Tag = TagsList[i];
-                TagName = TagsNames[i];
-                Tag = bRemoveAccents ? Utilities.LyricsUtilities.RemoveDiacritics(Tag) : Tag;
-                Tag = bRemoveNonAlphaNumeric ? Utilities.LyricsUtilities.RemoveNonAlphaNumeric(Tag) : Tag;
-                if (Tag != "")
-                    lrcs += "[" + TagName + Tag + "]" + Environment.NewLine;
-            }
-
-            return lrcs;
-        }
-
-        /// <summary>
-        /// Read dgView data and store it in a list of kSyncText (Time + Text) to be able to apply treatments on text before saving to lrc
-        /// </summary>
-        /// <returns></returns>
-        private List<(string sTime, string lyric)> ReadDgView()
-        {
-
-            // used in SaveLRCSyllabes
-
-
-            List<(string sTime, string lyric)> Result = new List<(string sTime, string lyric)>();
-            string sLyric;
-            string sTime;
-
-            for (int i = 0; i < dgView.Rows.Count; i++)
-            {
-                object vLyric = dgView.Rows[i].Cells[COL_TEXT].Value;
-                object vTime = dgView.Rows[i].Cells[COL_TIME].Value;    // [01:02:123]
-                
-                if (vLyric == null) continue;
-                if (vTime == null) continue;
-
-                
-                //TODO: Check if time is in the right format [00:01.123]
-                
-
-                sLyric = vLyric.ToString();
-
-                sLyric = sLyric.Replace("_", " ");
-                if (sLyric.Trim() == "") continue;                  
-                                        
-                sTime = vTime.ToString();
-                
-
-                // Add data to result list
-                Result.Add((sTime, sLyric));
-
-            }
-
-            return Result;
-        }
-
-        /// <summary>
-        /// Applies a series of text transformations to a list of karaoke text objects based on the specified options.
-        /// </summary>
-        /// <remarks>If both bUpperCase and bLowerCase are set to true, the text will be converted to
-        /// lowercase, as the lowercase transformation is applied after the uppercase transformation. Separator lines
-        /// and paragraphs are not modified.</remarks>
-        /// <param name="LstDgRows">A list of karaoke text objects to be processed. Each object contains the text and its associated timing
-        /// information.</param>
-        /// <param name="bRemoveAccents">true to remove diacritical marks from the text; otherwise, false.</param>
-        /// <param name="bUpperCase">true to convert the text to uppercase; otherwise, false.</param>
-        /// <param name="bLowerCase">true to convert the text to lowercase; otherwise, false.</param>
-        /// <param name="bRemoveNonAlphaNumeric">true to remove all non-alphanumeric characters from the text; otherwise, false.</param>
-        /// <returns>A new list of karaoke text objects with the specified text treatments applied. The timing information is
-        /// preserved.</returns>
-        private List<(string sTime, string lyric)> ApplyTextTreatments(List<(string sTime, string lyric)> LstDgRows, bool bRemoveAccents, bool bUpperCase, bool bLowerCase, bool bRemoveNonAlphaNumeric)
-        {
-            List<(string sTime, string lyric)> Result = new List<(string sTime, string lyric)>();
-            string sLyric;                        
-
-            for (int i = 0; i < LstDgRows.Count; i++)
-            {
-                sLyric = LstDgRows[i].lyric;                
-
-                if (sLyric.Trim() != m_SepLine && sLyric.Trim() != m_SepParagraph)
-                {
-                    // Remove chords
-                    if (_myLyricsMgmt != null && _myLyricsMgmt.RemoveChordPattern != null)
-                        sLyric = Regex.Replace(sLyric, _myLyricsMgmt.RemoveChordPattern, @"");
-
-                    // Remove accents
-                    sLyric = bRemoveAccents ? Utilities.LyricsUtilities.RemoveDiacritics(sLyric) : sLyric;
-
-                    //Uppercase letters
-                    sLyric = bUpperCase ? sLyric.ToUpper() : sLyric;
-
-                    // Lowercase letters
-                    sLyric = bLowerCase ? sLyric.ToLower() : sLyric;
-
-                    // Remove non-alphanumeric chars
-                    sLyric = bRemoveNonAlphaNumeric ? Utilities.LyricsUtilities.RemoveNonAlphaNumeric(sLyric) : sLyric;
-                                                            
-                }
-
-                Result.Add( (LstDgRows[i].sTime, sLyric));
-            }
-
-            return Result;
-        }
-
-        /// <summary>
-        /// Creates a list of lyric lines with formatted timestamps suitable for LRC file generation.
-        /// </summary>
-        /// <remarks>Handles line feed and paragraph separators to ensure correct formatting of lyric
-        /// lines. The method adds empty lines for paragraph breaks and distinguishes between line starts and syllable
-        /// continuations using different timestamp formats.</remarks>
-        /// <param name="lstDgRowsTreated">A list of tuples, each containing a timestamp and its associated lyric line. The list represents the
-        /// processed lyric rows to be converted.</param>
-        /// <param name="LrcMillisecondsDigits">The number of digits to use for milliseconds in the timestamp format. Determines the precision of the
-        /// timestamp in the output.</param>
-        /// <returns>A list of tuples, where each tuple contains a formatted timestamp and its corresponding lyric line. The list
-        /// is structured for use in LRC files.</returns>
-        private List<(string sTime, string lyric)> CreateLrcLines(List<(string sTime, string lyric)> lstDgRowsTreated, int LrcMillisecondsDigits)
-        {
-            List<(string stime, string lyric)> Result = new List<(string stime, string lyric)>();
-
-            string sLyric;
-            string sTime;
-            long time;
-            TimeSpan ts;
-
-            bool bLineFeed = true;
-            bool bParagraph = true;
-            bool bFirstLine = true;
-
-            for (int i = 0; i < lstDgRowsTreated.Count; i++)
-            {
-                sTime = lstDgRowsTreated[i].sTime;
-                sLyric = lstDgRowsTreated[i].lyric;
-
-                if (_LrcMillisecondsDigits == 2)
-                {
-                    time = (long)Mp3LyricsMgmtHelper.TimeToMs(sTime); // [00:01.123] => 1256
-                    ts = TimeSpan.FromMilliseconds(time);
-                    sTime = string.Format("{0:00}:{1:00}.{2:00}", ts.Minutes, ts.Seconds, Math.Round(ts.Milliseconds / (double)10));
-                }
-
-                if (sLyric.Trim() != m_SepLine && sLyric.Trim() != m_SepParagraph)
-                {
-                    // Normal syllabe, not a separator line or paragraph
-                    if (bParagraph)
-                    {
-                        if (!bFirstLine)
-                        {
-                            // Add an empty line before the line with timestamp to create a paragraph                                        
-                            Result.Add(("[" + sTime + "]", string.Empty));
-                        }
-                        else bFirstLine = false;
-                        // Start a new line with timestamp           
-                        Result.Add(("[" + sTime + "]", sLyric));
-                    }
-                    else if (bLineFeed)
-                    {
-                        // Start a new line with timestamp                                                  
-                        Result.Add(("[" + sTime + "]", sLyric));
-                    }
-                    else
-                    {
-                        // Continue a line with a syllabe, add time in <> and not in [] to differenciate with the start of line
-                        Result.Add(("<" + sTime + ">", sLyric));
-                    }
-                    bLineFeed = false;
-                    bParagraph = false;
-                }
-                else if (sLyric.Trim() == m_SepLine)
-                {
-                    // Line feed
-                    bLineFeed = true;
-                }
-                else if (sLyric.Trim() == m_SepParagraph)
-                {
-                    // Paragraph
-                    bParagraph = true;
-                }
-
-
-                //Result.Add((sTime, lstDgRowsTreated[i].lyric));
-            }
-            return Result;
-        }
-
-        private string CreateLrcString(List<(string stime, string lyric)> lstTimeLines)
-        {
-            string nextLyric = string.Empty;
-            string nextTime = string.Empty;
-
-            bool bKeepForNextSyllabe = false;
-            string keepLyric = string.Empty;
-            string keepTime = string.Empty;
-
-            string sTime;
-            string sLyric;
-            string lrcs = string.Empty;
-            string lines = string.Empty;
-            string cr = "\r\n";
-
-            // Add a trailing "-" to syllabes without space with the next syllabe (ie it is a word composed of several syllabes)
-            for (int i = 0; i < lstTimeLines.Count; i++)
-            {
-                sTime = lstTimeLines[i].stime;
-                sLyric = lstTimeLines[i].lyric;
-
-                if (i < lstTimeLines.Count - 1)
-                {
-                    nextLyric = lstTimeLines[i + 1].lyric;
-                    nextTime = lstTimeLines[i + 1].stime;
-                }
-                else
-                {
-                    nextLyric = "";
-                    nextTime = "";
-                }
-                // No trailing space in the current, no starting space in the next and the next is not a new line ([]) 
-                // => this syllabe must be merged with the next one
-                if (!sLyric.EndsWith(" ") && nextLyric.Length > 0 && !nextLyric.StartsWith(" ") && nextTime.IndexOf("[") == -1)
-                {
-                    lstTimeLines[i] = (lstTimeLines[i].stime, lstTimeLines[i].lyric + "-");
-                }
-            }
-
-            for (int i = 0; i < lstTimeLines.Count; i++)
-            {
-                sTime = lstTimeLines[i].stime;
-                sLyric = lstTimeLines[i].lyric;
-
-                // Keep all syllabes ending with a trailing "-" until a syllabe without a "-"
-                if (sLyric.EndsWith("-"))
-                {
-                    sLyric = sLyric.Substring(0, sLyric.Length - 1).Trim();  // remove the "-"
-                    keepLyric += sLyric;                                     // add syllabe to previous ones   
-                    if (keepTime == "")
-                        keepTime = sTime;                                    // keep only the first timestamp (beginning of the word)   
-
-                    if (sTime.IndexOf("[") > -1)                             // if new line, store previous one
-                    {
-                        // Store previous line 
-                        if (lrcs.Trim().Length > 0)
-                        {
-                            lines += lrcs + cr;
-                        }
-                        lrcs = "";
-                    }
-
-                    // Skip 
-                    continue;
-                }
-                else if (keepLyric != "")
-                {
-                    // no trailing "-" and there are syllabes into keeplyric => this is the last syllabe of a word
-                    bKeepForNextSyllabe = true;
-                }
-
-                // This is the start of a new line
-                if (sTime.IndexOf("[") > -1)
-                {
-                    // Store previous line 
-                    if (lrcs.Trim().Length > 0)
-                    {
-                        lines += lrcs + cr;
-                    }
-                    // Format of timestamp is [] 
-                    lrcs = sTime + sLyric.Trim();
-                }
-                else
-                {
-                    // This is a normal syllabe 
-                    if (!bKeepForNextSyllabe)
-                    {
-                        // Format of timestamp is <> + space before
-                        lrcs += " " + sTime + sLyric.Trim();
-                    }
-                    else
-                    {
-                        // this is The last syllabe of a word
-                        if (keepTime.IndexOf("[") > -1)
-                        {
-                            // if the word stored in keeplyric was a starting line []
-                            lrcs += keepTime + keepLyric + sLyric.Trim();
-                        }
-                        else
-                        {
-                            // if the word stored in keeplyric was a normal word, add a space before the <00:00.000>  
-                            lrcs += " " + keepTime + keepLyric + sLyric.Trim();
-                        }
-
-                        // Reset variables used to store syllabes of a word
-                        bKeepForNextSyllabe = false;
-                        keepLyric = "";
-                        keepTime = "";
-                    }
-                }
-            }
-
-            if (lrcs.Trim().Length > 0)
-                lines += lrcs + cr;
-
-
-            return lines;
-        }
-
-
-        */
-
-        #endregion deleteme
+        */     
 
         #endregion export lrc
 
 
-        #endregion
+        #endregion import export lrc
 
 
 
@@ -3653,7 +3190,7 @@ namespace Karaboss
 
 
             // Read Datagrid content
-            List<(double Time, string lyric)> lstDgRows = ReadDataGridContent();
+            List<(double Time, string lyric)> lstDgRows = LyricsUtilities.ReadDataGridContent(dgView, COL_TIME, COL_TEXT);
             if (lstDgRows == null || lstDgRows.Count == 0)
             {
                 MessageBox.Show("No lyric to export", "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -3669,7 +3206,6 @@ namespace Karaboss
 
 
         #endregion srt import export
-
 
 
         #endregion import export lyrics

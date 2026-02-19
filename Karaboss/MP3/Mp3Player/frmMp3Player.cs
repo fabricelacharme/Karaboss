@@ -41,6 +41,7 @@ using System.ComponentModel;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using TagLib;
 using TagLib.Id3v2;
@@ -528,7 +529,7 @@ namespace Karaboss.Mp3
                     PopulateDataGridView();
 
                     // Update local lyrics list from datagridview content                    
-                    localSyncLyrics = GetCurrentDgViewContent();
+                    localSyncLyrics = GetCurrentDgViewContent(dgView, COL_MS, COL_TEXT);
 
                     // Populate textbox with local lyrics
                     PopulateTextBox(localSyncLyrics);
@@ -2056,7 +2057,14 @@ namespace Karaboss.Mp3
             ImportLyricsToKokFormat();
         }
 
-
+        /// <summary>
+        /// Imports lyrics from a selected .kok file and updates the data grid view and associated text box with the
+        /// file's content.
+        /// </summary>
+        /// <remarks>This method prompts the user to choose a .kok file using an open file dialog. Upon
+        /// successful selection, it loads the file, updates display counters, selects the first row in the data grid
+        /// view, and displays the current lyrics in the text box. The method does not perform any action if the user
+        /// cancels the file selection dialog.</remarks>
         private void ImportLyricsToKokFormat()
         {
             string fileName;
@@ -2086,7 +2094,7 @@ namespace Karaboss.Mp3
             dgView.Rows[0].Selected = true;
 
             // Load lyrics in the text box
-            localSyncLyrics = GetCurrentDgViewContent();
+            localSyncLyrics = GetCurrentDgViewContent(dgView, COL_MS, COL_TEXT);
             PopulateTextBox(localSyncLyrics);                                   
         }
 
@@ -2205,6 +2213,7 @@ namespace Karaboss.Mp3
 
         #endregion import kok
 
+
         #region export kok
 
         /// <summary>
@@ -2302,10 +2311,11 @@ namespace Karaboss.Mp3
 
 
             // For each line of lyric, read all the syllabes and their timestamps
-            // and store the result in a list
-            List<(string, string)> lstDgRows = KokReadDgViewData();
-            List<List<Utilities.LyricsUtilities.LyricsItem>> lstLines = Utilities.LyricsUtilities.ExtractDgRows(lstDgRows);
+            // and store the result in a list            
+            List<(double Time, string lyric)> lstDgRows = LyricsUtilities.ReadDataGridContent(dgView, COL_TIME, COL_TEXT);
+            List<List<Utilities.LyricsUtilities.LyricsItem>> lstLines = Utilities.LyricsUtilities.ExtractDgRows(lstDgRows, _LrcMillisecondsDigits);
 
+            // Save and open kok file
             string lines = Utilities.LyricsUtilities.SaveLyricsToKokFormat(lstLines);
 
             try
@@ -2319,35 +2329,6 @@ namespace Karaboss.Mp3
                 MessageBox.Show(ex.Message);
             }
 
-        }
-
-        private List<(string, string)> KokReadDgViewData()
-        {
-            string sTime;
-            string sLyric;
-
-            object vLyric;
-            object vTime;
-
-            // Store rows of dgView in a list
-            // the aim is to have the same procedure between midi Lyrics edition and mp3 Lyrics edition            
-
-            List<(string, string)> lstDgRows = new List<(string, string)>();
-            for (int i = 0; i < dgView.Rows.Count; i++)
-            {
-                vTime = dgView.Rows[i].Cells[COL_TIME].Value;
-                vLyric = dgView.Rows[i].Cells[COL_TEXT].Value;
-                if (vTime != null && vLyric != null)
-                {
-                    sTime = vTime.ToString();
-                    // Convert times to milliseconds (to have the same entry format with mp3 Lyrics edition)
-                    //time = Mp3LyricsMgmtHelper.TimeToMs(sTime);
-                    sLyric = vLyric.ToString();
-
-                    lstDgRows.Add((sTime, sLyric));
-                }
-            }
-            return lstDgRows;
         }
 
         #endregion export kok
@@ -2418,7 +2399,7 @@ namespace Karaboss.Mp3
             // Select first row
             dgView.Rows[0].Selected = true;
 
-            localSyncLyrics = GetCurrentDgViewContent();
+            localSyncLyrics = GetCurrentDgViewContent(dgView, COL_MS, COL_TEXT);
             PopulateTextBox(localSyncLyrics);
             
         }
@@ -2448,7 +2429,7 @@ namespace Karaboss.Mp3
         /// Store dgView content
         /// </summary>
         /// <returns></returns>
-        private List<List<keffect.KaraokeEffect.kSyncText>> GetCurrentDgViewContent()
+        private List<List<keffect.KaraokeEffect.kSyncText>> GetCurrentDgViewContent(DataGridView dgView, int colMs, int colText)
         {
             object otext;
             object otime;
@@ -2461,14 +2442,18 @@ namespace Karaboss.Mp3
             bool bNewLine = false;
             bool bNewParagraph = false;
 
+            // Single line
             List<keffect.KaraokeEffect.kSyncText> SyncLine = new List<keffect.KaraokeEffect.kSyncText>();
+            // List of lines
             List<List<keffect.KaraokeEffect.kSyncText>> SyncLyrics = new List<List<keffect.KaraokeEffect.kSyncText>>();
 
-
+           
             for (int i = 0; i < dgView.Rows.Count; i++)
             {
-                otext = dgView.Rows[i].Cells[COL_TEXT].Value;
-                otime = dgView.Rows[i].Cells[COL_MS].Value;
+                
+
+                otext = dgView.Rows[i].Cells[colText].Value;
+                otime = dgView.Rows[i].Cells[colMs].Value;
 
                 if (otext == null) continue;
 
@@ -2498,15 +2483,7 @@ namespace Karaboss.Mp3
                         lyric = lyric.Substring(1);
                         bNewLine = true;
                     }
-
-                    /*
-                    if (lyric.EndsWith(m_SepLine))
-                    {
-                        lyric = lyric.Substring(0, lyric.Length - 1);
-                        bNewLine = true;
-                    }
-                    */
-
+                    
                     sct = new keffect.KaraokeEffect.kSyncText(time, lyric);
                     
                     if (bNewParagraph)
@@ -2559,9 +2536,7 @@ namespace Karaboss.Mp3
 
 
         #region export lrc
-
-        #region save lrc
-
+        
         /// <summary>
         /// Save as lrc file
         /// </summary>
@@ -2731,7 +2706,8 @@ namespace Karaboss.Mp3
             string Tag_Artist = string.Empty;
             string Tag_Album = string.Empty;
             string Tag_Lang = string.Empty;
-            string Tag_Year = string.Empty;
+            string Tag_By = string.Empty;
+            uint Tag_Year = 0;
             string Tag_DPlus = string.Empty;
 
             if (bWithMetadata)
@@ -2740,11 +2716,14 @@ namespace Karaboss.Mp3
                 Tag_Title = txtTitle.Text;
                 Tag_Artist = txtArtist.Text;
                 Tag_Album = txtAlbum.Text;
-                Tag_Year = txtYear.Text;
+                
+                if (IsNumeric(txtTitle.Text))
+                    Tag_Year = Convert.ToUInt32(txtYear.Text);
                 Tag_Lang = cbLanguage.Text;
 
                 Tag_DPlus = string.Empty;
 
+                // If no tags in the mp3 file, tries to get them with the file name
                 if (Tag_Artist == "" && Tag_Title == "")
                 {
                     List<string> lstTags = Utilities.LyricsUtilities.GetTagsFromFileName(fullPath);
@@ -2755,17 +2734,31 @@ namespace Karaboss.Mp3
             #endregion metadata
 
 
+            // Read DatagridView Content            
+            List<(double Time, string lyric)> lstDgRows = LyricsUtilities.ReadDataGridContent(dgView, COL_TIME, COL_TEXT);
+            if (lstDgRows == null || lstDgRows.Count == 0)
+            {
+                MessageBox.Show("No lyric to export", "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return;
+            }
+
             switch (LrcLinesSyllabesFormat)
             {
                 case LrcLinesSyllabesFormats.Lines:
-                    SaveLRCLines(fullPath, bRemoveAccents, bUpperCase, bLowerCase, bRemoveNonAlphaNumeric, Tag_Tool, Tag_Title, Tag_Artist, Tag_Album, Tag_Lang, Tag_Year, Tag_DPlus, bCutLines, LrcCutLinesChars);
+                    //SaveLRCLines(fullPath, bRemoveAccents, bUpperCase, bLowerCase, bRemoveNonAlphaNumeric, Tag_Tool, Tag_Title, Tag_Artist, Tag_Album, Tag_Lang, Tag_Year, Tag_DPlus, bCutLines, LrcCutLinesChars);
+                    Utilities.LyricsUtilities.SaveLRCLines(fullPath, lstDgRows, bRemoveAccents, bUpperCase, bLowerCase, bRemoveNonAlphaNumeric, Tag_Tool, Tag_Title, Tag_Artist, Tag_Album, Tag_Lang, Tag_By, Tag_Year, Tag_DPlus, bCutLines, LrcCutLinesChars, _LrcMillisecondsDigits, null);
                     break;
                 case LrcLinesSyllabesFormats.Syllabes:
-                    SaveLRCSyllabes(fullPath, bRemoveAccents, bUpperCase, bLowerCase, bRemoveNonAlphaNumeric, Tag_Tool, Tag_Title, Tag_Artist, Tag_Album, Tag_Lang, Tag_Year, Tag_DPlus);
+                    //SaveLRCSyllabes(fullPath, bRemoveAccents, bUpperCase, bLowerCase, bRemoveNonAlphaNumeric, Tag_Tool, Tag_Title, Tag_Artist, Tag_Album, Tag_Lang, Tag_Year, Tag_DPlus);
+                    Utilities.LyricsUtilities.SaveLRCSyllabes(fullPath, lstDgRows, bRemoveAccents, bUpperCase, bLowerCase, bRemoveNonAlphaNumeric, Tag_Tool, Tag_Title, Tag_Artist, Tag_Album, Tag_Lang, Tag_By, Tag_Year, Tag_DPlus, _LrcMillisecondsDigits, null);
                     break;
             }
         }
 
+
+        #region deleteme
+
+        /*
         /// <summary>
         /// Save Lyrics .lrc file format and by lines
         /// </summary>
@@ -3123,9 +3116,10 @@ namespace Karaboss.Mp3
             }
         }
 
+        
 
         /// <summary>
-        /// REad data form dgView to be saved to LRC file
+        /// Read data form dgView to be saved to LRC file
         /// </summary>
         /// <returns></returns>
         List<(double, string)> ReadDataFromDgView()
@@ -3177,14 +3171,13 @@ namespace Karaboss.Mp3
             return lstDgRows;
         }
 
+        */
 
-        #endregion save lrc
-
-       
-
-       
+        #endregion deleteme
+        
 
         #endregion export lrc
+
 
         #endregion lrc import export
 
@@ -3241,7 +3234,7 @@ namespace Karaboss.Mp3
                 // Select first row
                 dgView.Rows[0].Selected = true;
 
-                localSyncLyrics = GetCurrentDgViewContent();
+                localSyncLyrics = GetCurrentDgViewContent(dgView, COL_MS, COL_TEXT);
                 PopulateTextBox(localSyncLyrics);
 
 

@@ -44,7 +44,6 @@ using System.Runtime.Remoting.Contexts;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
-using static System.Windows.Forms.AxHost;
 
 namespace Karaboss.Utilities
 {
@@ -54,7 +53,6 @@ namespace Karaboss.Utilities
         Lines = 0,
         Syllabes = 1,
     }
-
    
     public static class LyricsUtilities
     {
@@ -395,11 +393,225 @@ namespace Karaboss.Utilities
         }
 
 
+        /// <summary>
+        /// Convert milliseconds to a LRC timespan
+        /// </summary>
+        /// <param name="ms"></param>
+        /// <param name="_LrcMillisecondsDigits"></param>
+        /// <returns></returns>
+        public static string MsToTime(double ms, int _LrcMillisecondsDigits)
+        {
+            int mls;
+            int sec;
+            int min;
+
+            TimeSpan ts = TimeSpan.FromMilliseconds(ms);
+
+            if (_LrcMillisecondsDigits == 2)
+            {
+                mls = (int)Math.Round(ts.Milliseconds / (double)10);
+                sec = ts.Seconds;
+                min = ts.Minutes;
+                if (mls == 100)
+                {
+                    mls = 0;
+                    sec += 1;
+                    if (sec == 60)
+                        min += 1;
+                }
+                return string.Format("{0:00}:{1:00}.{2:00}", min, sec, mls);
+            }
+            else
+                return string.Format("{0:00}:{1:00}.{2:000}", ts.Minutes, ts.Seconds, ts.Milliseconds);
+        }
+
+
+        /// <summary>
+        /// Reads the contents of the data grid and extracts a list of time and lyric pairs, filtering out invalid or
+        /// improperly formatted entries.
+        /// </summary>
+        /// <remarks>The method ensures that only rows with valid time formats and non-empty lyrics are
+        /// included. It also normalizes certain characters in the lyrics to maintain consistency with expected
+        /// formats.</remarks>
+        /// <returns>A list of tuples, each containing the time in milliseconds and the corresponding lyric string. The list
+        /// excludes rows with missing or invalid data.</returns>
+        public static List<(double Time, string lyric)> ReadDataGridContent(DataGridView dgView, int colTime, int colText)
+        {
+            // Col time must be the column containing times in the format "00:00.000"
+
+            List<(double Time, string lyric)> Result = new List<(double Time, string lyric)>();
+
+            string sTime;
+            double time;
+            string sLyric;
+
+            object vLyric;
+            object vTime;
+
+            // Verify format of time "00:00.000"
+            string pattern = @"\d{2}:\d{2}.\d{3}";
+
+
+            string AllLyrics = string.Empty;
+
+            // Store rows of dgView in a list
+            // the aim is to have the same procedure between midi Lyrics edition and mp3 Lyrics edition            
+            for (int i = 0; i < dgView.Rows.Count; i++)
+            {
+                vTime = dgView.Rows[i].Cells[colTime].Value;
+                vLyric = dgView.Rows[i].Cells[colText].Value;
+
+                if (vLyric == null) continue;
+                if (vTime == null) continue;
+
+                // Don not keep empty cells ?
+                if (vTime.ToString().Trim() == "") continue;
+                if (vLyric.ToString().Trim() == "") continue;
+
+                sTime = vTime.ToString().Trim();
+
+                // Verify format of time "00:00.000"
+                var match = Regex.Match(sTime, pattern);
+                if (!match.Success) continue;
+
+                // Convert times to milliseconds (to have the same entry format with mp3 Lyrics edition)
+                time = Mp3LyricsMgmtHelper.TimeToMs(sTime);
+
+                // Clean separators for the format of separator on single lines
+                sLyric = vLyric.ToString();
+                if (sLyric.Trim() == m_SepLine) sLyric = m_SepLine;
+                if (sLyric.Trim().Trim() == m_SepParagraph) sLyric = m_SepParagraph;
+
+                // Do not keep if first cell is a separator
+                if (AllLyrics.Length == 0 && sLyric == m_SepLine) continue;
+                if (AllLyrics.Length == 0 && sLyric == m_SepParagraph) continue;
+
+
+                // Eliminate some characters
+                sLyric = sLyric.Replace("_", " ");
+                if (sLyric.Trim().Length == 0) continue;
+
+                // Replace characters used in LRC format
+                sLyric = sLyric.Replace("[", "@");
+                sLyric = sLyric.Replace("]", "@");
+                sLyric = sLyric.Replace("<", "@");
+                sLyric = sLyric.Replace(">", "@");
+
+
+                // Case of sparators on the same line of the lyrics (MP3 module)
+                if (sLyric != m_SepParagraph && sLyric.IndexOf(m_SepParagraph) != -1)
+                {
+                    // add a new line with a paragraph (except first line)
+                    if (AllLyrics.Length > 0)
+                        Result.Add((time, m_SepParagraph));
+
+                    sLyric = sLyric.Replace(m_SepParagraph, "");
+                }
+                else if (sLyric != m_SepLine && sLyric.IndexOf(m_SepLine) != -1)
+                {
+                    // Add a new line with a linefeed (except first line)
+                    if (AllLyrics.Length > 0)
+                        Result.Add((time, m_SepLine));
+
+                    sLyric = sLyric.Replace(m_SepLine, "");
+                }
+
+
+                // Add to result
+                Result.Add((time, sLyric));
+                AllLyrics += sLyric;
+            }
+
+            // At this level we can have several following linefeeds and or Paragraphs, they will be eliminated further
+            // in CreateLrcLines
+            return Result;
+        }
+
 
         public class LyricsItem
         {
             public string Time { get; set; }         
             public string Lyric { get; set; }
+        }
+
+
+        public static List<List<LyricsItem>> ExtractDgRows(List<(double Time, string lyric)> lstDgRows, int _LrcMillisecondsDigits)
+        {
+            string sTime;
+            double time;
+            string sLyric;
+            List<List<LyricsItem>> lstLyricsItems = new List<List<LyricsItem>>();
+            List<LyricsItem> lstLyricsItemsLine = new List<LyricsItem>();
+
+            for (int i = 0; i < lstDgRows.Count; i++)
+            {
+                time = lstDgRows[i].Time;
+                sTime = MsToTime(time, _LrcMillisecondsDigits);
+                sLyric = lstDgRows[i].lyric;
+
+                if (sLyric == "") continue;
+
+                // Check if sLyric contains a line or paragraph separator
+                if (sLyric.Contains(m_SepLine) || sLyric.Contains(m_SepParagraph))
+                {
+                    if (sLyric == m_SepLine)
+                    {
+                        // If the first thing of the lyrics is a separator, continue to next line, otherwise we will have an empty line at the beginning of the lyrics
+                        if (lstLyricsItems.Count == 0 && lstLyricsItemsLine.Count == 0) continue;
+
+                        // sLyric is a pure line separator                        
+                        // It means that the next syllabe will be on a new line for lstLyricsItems and not on the same line as previous syllabes
+                        // Add previous line to list of lyrics items
+                        lstLyricsItems.Add(lstLyricsItemsLine);
+                        // Start a new line
+                        lstLyricsItemsLine = new List<LyricsItem>();
+                    }
+                    else if (sLyric == m_SepParagraph)
+                    {
+                        // If the first thing of the lyrics is a separator, continue to next line, otherwise we will have an empty line at the beginning of the lyrics
+                        if (lstLyricsItems.Count == 0 && lstLyricsItemsLine.Count == 0) continue;
+
+
+                        // sLyric is a pure paragraph separator
+                        // Same as for line separator but with a new paragraph instead of a new line
+                        // So we have to add an empty line for the new line and then add the new paragraph line
+                        lstLyricsItems.Add(lstLyricsItemsLine);
+                        lstLyricsItemsLine = new List<LyricsItem>();
+
+                        lstLyricsItemsLine.Add(new LyricsItem { Time = sTime, Lyric = " " });
+                        lstLyricsItems.Add(lstLyricsItemsLine);
+                        lstLyricsItemsLine = new List<LyricsItem>();
+
+                    }
+                    else
+                    {
+                        // sLyric contains a line or paragraph separator, split it and add each part to the list of lyrics items with its timestamp
+                        // Manage only lines starting with a separator
+                        // Ex: "/ENCORE_UN_SOIR" => this is a new line for lstLyricsItems
+                        lstLyricsItems.Add(lstLyricsItemsLine);
+                        lstLyricsItemsLine = new List<LyricsItem>();
+                        string[] parts = sLyric.Split(new char[] { m_SepLine[0], m_SepParagraph[0] }, StringSplitOptions.RemoveEmptyEntries);
+                        for (int j = 0; j < parts.Length; j++)
+                        {
+                            lstLyricsItemsLine.Add(new LyricsItem { Time = sTime, Lyric = parts[j] });
+                        }
+
+                    }
+                }
+                else
+                {
+                    // sLyric does not contain any line or paragraph separator, add it to the list of lyrics items with its timestamp
+                    lstLyricsItemsLine.Add(new LyricsItem { Time = sTime, Lyric = sLyric });
+                }
+            }
+
+            // Add last line if not empty
+            if (lstLyricsItemsLine.Count > 0)
+            {
+                lstLyricsItems.Add(lstLyricsItemsLine);
+            }
+
+            return lstLyricsItems;
         }
 
 
@@ -415,7 +627,7 @@ namespace Karaboss.Utilities
         /// <returns>A list of lyric lines, where each line is represented as a list of LyricsItem objects grouped according to
         /// detected line or paragraph separators. The returned list preserves the order of lines as determined by the
         /// separators in the input.</returns>
-        public static List<List<LyricsItem>> ExtractDgRows(List<(string, string)> lstDgRows)
+        public static List<List<LyricsItem>> OldExtractDgRows(List<(string, string)> lstDgRows)
         {            
             string sTime;
             string sLyric;
@@ -501,8 +713,7 @@ namespace Karaboss.Utilities
         public static List<string> LrcExtractDgRows(List<(double, string)> lstDgRows, int _LrcMillisecondsDigits, bool bRemoveAccents, bool bUpperCase, bool bLowerCase, bool bRemoveNonAlphaNumeric, MidiLyricsMgmt _myLyricsMgmt = null)
         {            
             string sTime;
-            double time;
-            //TimeSpan ts;
+            double time;            
 
             string sLyric;
 
@@ -1256,7 +1467,12 @@ namespace Karaboss.Utilities
             string Tag_Title = string.Empty;
             int pos;
             
-            string fName = Path.GetFileNameWithoutExtension(fPath);
+            string fName = Path.GetFileNameWithoutExtension(fPath);            
+            // Remove all (1) (2) etc.. in fName
+            string pattern = @"[(\d)]";
+            string replace = @"";
+            fName = Regex.Replace(fName, pattern, replace).Trim();
+
             string sep = " - ";
 
             try
@@ -1270,7 +1486,8 @@ namespace Karaboss.Utilities
                 {
                     pos = fName.IndexOf(sep);           // First index
                     Tag_Artist = fName.Substring(0, pos);
-                    Tag_Title = fName.Substring(pos + sep.Length, fName.Length - pos - sep.Length);
+                    Tag_Title = fName.Substring(pos + sep.Length, fName.Length - pos - sep.Length);                    
+
                 }
             }
             catch (Exception e) 
@@ -1304,7 +1521,7 @@ namespace Karaboss.Utilities
         /// <param name="MaxLength"></param>
         /// <param name="_LrcMillisecondsDigits"></param>
         /// <param name="_myLyricsMgmt"></param>
-        public static void SaveLRCLines(string File, List<(double, string)> lstDgRows, bool bRemoveAccents, bool bUpperCase, bool bLowerCase, bool bRemoveNonAlphaNumeric, string Tag_Tool, string Tag_Title, string Tag_Artist, string Tag_Album, string Tag_Lang, string Tag_By, string Tag_DPlus, bool bControlLength, int MaxLength, int _LrcMillisecondsDigits, MidiLyricsMgmt _myLyricsMgmt = null)
+        public static void SaveLRCLines(string File, List<(double, string)> lstDgRows, bool bRemoveAccents, bool bUpperCase, bool bLowerCase, bool bRemoveNonAlphaNumeric, string Tag_Tool, string Tag_Title, string Tag_Artist, string Tag_Album, string Tag_Lang, string Tag_By, uint Tag_Year, string Tag_DPlus, bool bControlLength, int MaxLength, int _LrcMillisecondsDigits, MidiLyricsMgmt _myLyricsMgmt = null)
         {
             string sLine;
 
@@ -1403,7 +1620,7 @@ namespace Karaboss.Utilities
         }
 
 
-        public static void SaveLRCSyllabes(string File, List<(double, string)> lstDgRows, bool bRemoveAccents, bool bUpperCase, bool bLowerCase, bool bRemoveNonAlphaNumeric, string Tag_Tool, string Tag_Title, string Tag_Artist, string Tag_Album, string Tag_Lang, string Tag_By, string Tag_DPlus,int _LrcMillisecondsDigits, MidiLyricsMgmt _myLyricsMgmt = null)
+        public static void SaveLRCSyllabes(string File, List<(double, string)> lstDgRows, bool bRemoveAccents, bool bUpperCase, bool bLowerCase, bool bRemoveNonAlphaNumeric, string Tag_Tool, string Tag_Title, string Tag_Artist, string Tag_Album, string Tag_Lang, string Tag_By, uint Tag_Year, string Tag_DPlus,int _LrcMillisecondsDigits, MidiLyricsMgmt _myLyricsMgmt = null)
         {
             string lines;
             // Header of the LRC files containing the tags
