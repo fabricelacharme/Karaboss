@@ -448,8 +448,9 @@ namespace Karaboss.Utilities
             object vTime;
 
             // Verify format of time "00:00.000"
-            string pattern = @"\d{2}:\d{2}.\d{3}";
-
+            // can be also "00:00.00" !!!
+            string pattern3digits = @"\d{2}:\d{2}.\d{3}";
+            string pattern2digits = @"\d{2}:\d{2}.\d{2}";
 
             string AllLyrics = string.Empty;
 
@@ -469,9 +470,10 @@ namespace Karaboss.Utilities
 
                 sTime = vTime.ToString().Trim();
 
-                // Verify format of time "00:00.000"
-                var match = Regex.Match(sTime, pattern);
-                if (!match.Success) continue;
+                // Verify format of time "00:00.000" or "00:00.00"
+                var match2digits = Regex.Match(sTime, pattern2digits);
+                var match3digits = Regex.Match(sTime, pattern3digits);
+                if (!match2digits.Success && !match3digits.Success) continue;
 
                 // Convert times to milliseconds (to have the same entry format with mp3 Lyrics edition)
                 time = Mp3LyricsMgmtHelper.TimeToMs(sTime);
