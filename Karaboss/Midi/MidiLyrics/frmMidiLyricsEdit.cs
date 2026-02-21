@@ -1193,7 +1193,7 @@ namespace Karaboss
                         else
                         {
                             MessageBox.Show("Please use format 00:00.000", "Time", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                            dgView.CurrentCell.Value = "00:00.000";
+                            //dgView.CurrentCell.Value = "00:00.000";
                         }
                     }
 
@@ -2409,6 +2409,7 @@ namespace Karaboss
 
         private void ImportLyricsFromLrc()
         {
+            #region open file
             OpenFileDialog.Title = "Open a .lrc file";
             OpenFileDialog.DefaultExt = "lrc";
             OpenFileDialog.Filter = "lrc files|*.lrc|All files|*.*";
@@ -2420,6 +2421,8 @@ namespace Karaboss
 
             if (OpenFileDialog.ShowDialog() != DialogResult.OK)
                 return;
+
+            #endregion open file
 
             string fileName = OpenFileDialog.FileName;
 

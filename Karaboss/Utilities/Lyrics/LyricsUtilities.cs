@@ -298,31 +298,57 @@ namespace Karaboss.Utilities
                     return tic;                
                 tic += 100;
 
+                // If the last increase of 100 is too big
                 if (TempoUtilities.GetMidiDuration(tic, Division) > dur)
                 {
+                    // Go back to previous value
                     tic -= 100;
                     do
                     {
-                        // Continue with step 10
+                        // Continue to increase with a step of 10
                         tm = TicksToTime(tic, Division);
                         if (tm == time)
                             return tic;
                         tic +=10;
 
+                        // If the last increase of 10 is too big
                         if(TempoUtilities.GetMidiDuration(tic, Division) > dur)
-                        {                                                                                    
+                        {
+                            int maxistep = tic; // Next line, we decrease tic by 10. No need to go above maxistep 
+                            int besttry = -1;   
+                            
+                            // Go back to the previous value
                             tic -= 10;
                             do
                             {
-                                // Continue with step 1
+                                // Continue with a step of 1
                                 tm = TicksToTime(tic, Division);
                                 
                                 // Option: take the highest tic giving the right result.
                                 // If next value of tic give also the same time, continue
                                 if (tm == time && TicksToTime(tic + 1, Division) != time)                               
                                     return tic;
+
+                                // If it is not possible to get a valid tick for time
+                                // keep the nearest value 
+                                // This situation occurs with LRC files having only 2 digits for milliseconds
+                                //if (TimeToMs(tm) - TimeToMs(time) >= 1 && besttry == -1)
+                                //    besttry = tic;
                                 
-                                tic++;
+                                if (Math.Abs(TimeToMs(time) - TimeToMs(tm)) == 1)                                                                    
+                                    besttry = tic;
+                                
+
+                                if (tic <= maxistep) // no need to go further maxistep 
+                                    tic++;
+                                else
+                                {
+                                    if (besttry > -1)
+                                        return besttry;
+                                    else
+                                        return tic;
+                                }
+
                             } while (tic <= max);
                             
                         }
@@ -1924,8 +1950,12 @@ namespace Karaboss.Utilities
                         sTime = lyricsItems[j].Time;
 
                         // Time is in format mm:ss:ms, convert to seconds with milliseconds in decimal
+                        //time = TimeSpan.ParseExact(sTime, @"mm\:ss\.fff", CultureInfo.InvariantCulture).TotalSeconds;
+                        time = TimeToMs(sTime);
+                        // Force to 3 digits
+                        sTime = MsToTime(time, 3);
                         time = TimeSpan.ParseExact(sTime, @"mm\:ss\.fff", CultureInfo.InvariantCulture).TotalSeconds;
-                        
+
                         // Convert to string with 3 digits for milliseconds
                         sTime = time.ToString("0.000", CultureInfo.InvariantCulture);
 
