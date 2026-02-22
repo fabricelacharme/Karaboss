@@ -4379,7 +4379,7 @@ namespace Karaboss
                         // Lyrics does not exist
                         // => select track having melody
                         DialogResult dr = new DialogResult();
-                        frmMidiLyricsSelectTrack TrackDialog = new frmMidiLyricsSelectTrack(sequence1);
+                        frmMidiLyricsSelectTrack TrackDialog = new frmMidiLyricsSelectTrack(sequence1, outDevice);
                         dr = TrackDialog.ShowDialog();
 
                         if (dr == System.Windows.Forms.DialogResult.Cancel)
@@ -4469,7 +4469,7 @@ namespace Karaboss
                         // Lyrics does not exist
                         // => select track having melody
                         DialogResult dr = new DialogResult();
-                        frmMidiLyricsSelectTrack TrackDialog = new frmMidiLyricsSelectTrack(sequence1);
+                        frmMidiLyricsSelectTrack TrackDialog = new frmMidiLyricsSelectTrack(sequence1, outDevice);
                         dr = TrackDialog.ShowDialog();
 
                         if (dr == System.Windows.Forms.DialogResult.Cancel)

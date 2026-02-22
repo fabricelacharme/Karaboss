@@ -147,6 +147,8 @@ namespace Karaboss
 
         private readonly List<string> lsInstruments = Sanford.Multimedia.Midi.MidiFile.LoadInstruments();
 
+        private OutputDevice outDevice;
+
         #endregion declarations
 
         /// <summary>
@@ -3238,7 +3240,7 @@ namespace Karaboss
         private void MnuEditLoadTrack_Click(object sender, EventArgs e)
         {
             DialogResult dr; // = new DialogResult();
-            frmMidiLyricsSelectTrack TrackDialog = new frmMidiLyricsSelectTrack(sequence1);
+            frmMidiLyricsSelectTrack TrackDialog = new frmMidiLyricsSelectTrack(sequence1, outDevice);
             dr = TrackDialog.ShowDialog();
 
             if (dr == System.Windows.Forms.DialogResult.Cancel)
@@ -3788,7 +3790,7 @@ namespace Karaboss
                 int patch = track.ProgramChange;
                 if (patch > 127)
                     patch = 0;
-                item = (i + 1).ToString("00") + " [" + track.MidiChannel.ToString("00") + "] - " + name + " - (" + MidiFile.PCtoInstrument(track.ProgramChange) + ")";
+                item = (i + 1).ToString("00") + " chan [" + track.MidiChannel.ToString("00") + "] - " + name + " - (" + MidiFile.PCtoInstrument(track.ProgramChange) + ")";
                 cbSelectTrack.Items.Add(item);
             }
 

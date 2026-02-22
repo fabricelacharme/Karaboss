@@ -205,6 +205,7 @@
     <Compile Include="Midi\MidiLyrics\frmLrcOptions.Designer.cs">
       <DependentUpon>frmLrcOptions.cs</DependentUpon>
     </Compile>
+    <Compile Include="Midi\MidiLyrics\MiniMidiPlayer.cs" />
     <Compile Include="Mp3\Mp3Lyrics\frmMp3Lyrics.cs">
       <SubType>Form</SubType>
     </Compile>

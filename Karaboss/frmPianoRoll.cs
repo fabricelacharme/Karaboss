@@ -1340,6 +1340,7 @@ namespace Karaboss
             }
             else if (e.Message.MidiChannel == SingleTrackChannel)
             {
+                // Play only messages coming from 1 channel: SingleTrackChannel
                 outDevice.Send(e.Message);
                 pianoControl2.Send(e.Message);
             }
