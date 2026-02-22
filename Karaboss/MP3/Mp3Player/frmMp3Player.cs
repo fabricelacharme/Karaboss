@@ -2376,6 +2376,7 @@ namespace Karaboss.Mp3
         /// and updates display counters to ensure the UI is synchronized with the newly imported lyrics.</remarks>
         private void ImportLyricsFromLrc()
         {
+            #region Open file
             OpenFileDialog.Title = "Open a .lrc file";
             OpenFileDialog.DefaultExt = "lrc";
             OpenFileDialog.Filter = "Lrc files|*.lrc|All files|*.*";
@@ -2383,12 +2384,16 @@ namespace Karaboss.Mp3
 
             if (OpenFileDialog.ShowDialog() != DialogResult.OK)
                 return;
+
+            #endregion Open file
             
             _lrcFileName = OpenFileDialog.FileName;
 
-            
             Mp3LyricsMgmtHelper.MySyncLyricsFrame = null;
-            Mp3LyricsMgmtHelper.SyncLyrics = Mp3LyricsMgmtHelper.GetKEffectLrcLyrics(_lrcFileName);
+
+            // TEST for new function Read lines
+            Mp3LyricsMgmtHelper.SyncLyrics = LyricsUtilities.ReadLrcFromFile(_lrcFileName);            
+            //Mp3LyricsMgmtHelper.SyncLyrics = Mp3LyricsMgmtHelper.GetKEffectLrcLyrics(_lrcFileName);
 
             PopulateMetadataTags();
             
