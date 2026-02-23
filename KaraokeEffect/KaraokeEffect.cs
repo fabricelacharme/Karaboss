@@ -45,9 +45,7 @@ using System.Windows.Forms;
 
 
 namespace keffect
-{
-   
-
+{   
     public partial class KaraokeEffect : UserControl, IMessageFilter
     {
 

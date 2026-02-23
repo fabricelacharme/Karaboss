@@ -4416,7 +4416,7 @@ namespace Karaboss
                     // Caution: Load the original lyrics, not the lyrics internally transformed by FullExtractLyrics
                     Cursor = Cursors.WaitCursor;
                     frmMidiLyricsEdit frmMidiLyricsEdit;
-                    frmMidiLyricsEdit = new frmMidiLyricsEdit(sequence1, myLyricsMgmt.OrgplLyrics, myLyricsMgmt, MIDIfileFullPath);
+                    frmMidiLyricsEdit = new frmMidiLyricsEdit(sequence1, outDevice, myLyricsMgmt.OrgplLyrics, myLyricsMgmt, MIDIfileFullPath);
                     frmMidiLyricsEdit.Show();
                     Cursor = Cursors.Default;
                     
@@ -4505,7 +4505,7 @@ namespace Karaboss
 
                     // Caution: Load the FULL lyrics in order to have the chords displayed
                     frmMidiLyricsEdit frmMidiLyricsEdit;
-                    frmMidiLyricsEdit = new frmMidiLyricsEdit(sequence1, myLyricsMgmt.plLyrics, myLyricsMgmt, MIDIfileFullPath, true);
+                    frmMidiLyricsEdit = new frmMidiLyricsEdit(sequence1, outDevice, myLyricsMgmt.plLyrics, myLyricsMgmt, MIDIfileFullPath, true);
 
                     frmMidiLyricsEdit.Show();
                 }

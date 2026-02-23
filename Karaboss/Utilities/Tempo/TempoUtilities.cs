@@ -85,7 +85,7 @@ namespace Karaboss.Utilities
        
 
         /// <summary>
-        /// Returns a duration that takes tempo changes into account
+        /// Returns a duration in ms that takes tempo changes into account
         /// </summary>
         /// <param name="untilticks"></param>
         /// <param name="division"></param>

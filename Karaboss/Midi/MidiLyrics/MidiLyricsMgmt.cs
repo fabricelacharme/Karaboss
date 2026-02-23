@@ -44,7 +44,7 @@ using static System.Windows.Forms.LinkLabel;
 
 namespace Karaboss.MidiLyrics
 {
-
+    /*
     [Serializable()]
     public struct SyncText
     {
@@ -56,8 +56,10 @@ namespace Karaboss.MidiLyrics
             Text = text;
         }
     }
+    */
 
 
+    /*
     public static class MidiLyricsMgmtHelper
     {
         // Line of struct SyncText
@@ -72,6 +74,7 @@ namespace Karaboss.MidiLyrics
 
         #region import lrc
 
+        
         /// <summary>
         ///  Get LRC Lyrics
         ///  Important : LRC files are mandatory composed of full words. Syllabes are not possible because we don't know how to distinguish them from words
@@ -123,6 +126,10 @@ namespace Karaboss.MidiLyrics
 
         }
 
+        
+
+
+        
         /// <summary>
         /// Retrieves the lines of lyrics and timing information from an LRC file associated with the specified file
         /// name.
@@ -178,8 +185,10 @@ namespace Karaboss.MidiLyrics
             return lines;
 
         }
+        
 
 
+        
         /// <summary>
         /// Processes an array of lyric lines and extracts synchronized lyrics with associated timestamps for karaoke
         /// display.
@@ -271,8 +280,10 @@ namespace Karaboss.MidiLyrics
 
             return SyncLyrics;
         }
+        
 
 
+        
         /// <summary>
         /// Processes a collection of synchronized lyric lines and inserts additional lines to represent detected
         /// separator indicators, returning a new collection with these separator lines included.
@@ -347,8 +358,10 @@ namespace Karaboss.MidiLyrics
             return result;
         }
 
+        
 
 
+        
         /// <summary>
         /// Find out what type of digits the file is made out
         /// </summary>
@@ -379,6 +392,8 @@ namespace Karaboss.MidiLyrics
 
             return digits3 > digits2 ? pattern3digits : pattern2digits;
         }
+        
+
 
         #endregion import lrc
 
@@ -392,7 +407,7 @@ namespace Karaboss.MidiLyrics
 
         #endregion import export LRC
 
-
+        
         /// <summary>
         /// Convert a time stamp 01:15.510 (min 2digits, sec 2 digits, ms 2 or 3 digits) to milliseconds
         /// </summary>
@@ -440,10 +455,10 @@ namespace Karaboss.MidiLyrics
 
             return dur;
         }
-
+        
 
     }
-    
+    */
     
     public partial class MidiLyricsMgmt
     {

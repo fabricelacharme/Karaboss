@@ -110,7 +110,7 @@ namespace Karaboss.Midi.MidiLyrics
             }
             catch (Exception ex)
             {
-                //MessageBox.Show(ex.Message, "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(ex.Message, "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 

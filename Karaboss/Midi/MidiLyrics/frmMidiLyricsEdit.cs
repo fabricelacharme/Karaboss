@@ -159,9 +159,11 @@ namespace Karaboss
         /// <param name="myLyricsMgmt"></param>
         /// <param name="fileName"></param>
         /// <param name="EditChords"></param>
-        public frmMidiLyricsEdit(Sequence sequence, List<plLyric> plLyrics, MidiLyricsMgmt myLyricsMgmt, string fileName, bool EditChords = false)
+        public frmMidiLyricsEdit(Sequence sequence, OutputDevice outDev, List<plLyric> plLyrics, MidiLyricsMgmt myLyricsMgmt, string fileName, bool EditChords = false)
         {
             InitializeComponent();
+
+            outDevice = outDev;
 
             bEditChords = EditChords;
 
@@ -1862,6 +1864,15 @@ namespace Karaboss
                 Properties.Settings.Default.Save();
             }
 
+
+            // Active le formulaire frmExplorer
+            if (Application.OpenForms.OfType<frmMidiLyrics>().Count() > 0)
+            {
+                // Restore form
+                Application.OpenForms["frmMidiLyrics"].Restore();
+                Application.OpenForms["frmMidiLyrics"].Activate();
+            }
+
             Dispose();
         }
 
@@ -2132,8 +2143,22 @@ namespace Karaboss
         {
             try
             {
-                List<(string, string)> lstDgRows = KokReadFile(fileName);
-                KokPopulateDgView(lstDgRows);
+                _duration = TempoUtilities.GetMidiDuration(_totalTicks, _division);
+
+                // OLD
+                //List<(string, string)> lstDgRows = KokReadFile(fileName, _duration);
+                //List<(string, string)> lstDgRows = LyricsUtilities.KokReadFile(fileName, _duration);
+                //KokPopulateDgView(lstDgRows);
+
+
+                // NEW
+                List<List<keffect.KaraokeEffect.kSyncText>> SyncLyrics = LyricsUtilities.ReadKokFromFile(fileName, _duration);
+                // Formate SyncLyrics to meet Midi editor needs (line separators and paragraphs on dedicated lines)
+                SyncLyrics = LyricsUtilities.FormateSyncLyricsForMidi(SyncLyrics);
+
+                // Populate DataGridView
+                PopulateDataGridView(SyncLyrics);
+
             }
             catch (Exception ex)
             {
@@ -2141,6 +2166,7 @@ namespace Karaboss
             }
         }
 
+        /*
         /// <summary>
         /// Reads a file containing pairs of words and timestamps, and returns a list of tuples representing each word
         /// and its associated timestamp.
@@ -2150,14 +2176,14 @@ namespace Karaboss
         /// of each line is prefixed with a line separator ('/').</remarks>
         /// <param name="fileName">The path to the file to read. The file must exist and be accessible.</param>
         /// <returns>A list of tuples, where each tuple contains a word and its corresponding timestamp extracted from the file.</returns>
-        private List<(string, string)> KokReadFile(string fileName)
+        private List<(string, string)> KokReadFile(string fileName, double _duration)
         {
             string word;                                // Syllabe or line separator (first word of the line is prefixed with a line separator ('/'), except if it is the first line of the file)
             string sTimestamp = string.Empty;            // The timestamp is in seconds, with decimals (ex: 26.294)
             double timestamp;
             bool paragraphSepFound = false;
 
-            _duration = TempoUtilities.GetMidiDuration(_totalTicks, _division);
+            //_duration = TempoUtilities.GetMidiDuration(_totalTicks, _division);
 
             List<(string, string)> lstDgRows = new List<(string, string)>();
             using (StreamReader reader = new StreamReader(fileName))
@@ -2222,6 +2248,9 @@ namespace Karaboss
             }
             return lstDgRows;
         }
+
+        */
+
 
         /// <summary>
         /// Populates the data grid view with rows containing words and their corresponding timestamps.
@@ -2454,11 +2483,21 @@ namespace Karaboss
            
             Cursor.Current = Cursors.WaitCursor;
 
-            // Read the LRc file and store the result in a list of list of syllabes (each line is a list of syllabes)
-            MidiLyricsMgmtHelper.SyncLyrics = MidiLyricsMgmtHelper.GetKEffectLrcLyrics(FileName);
-            
-            List<List<keffect.KaraokeEffect.kSyncText>> SyncLyrics = MidiLyricsMgmtHelper.SyncLyrics;
+            // NEW
+            // Load LRC file without any separators
+            List<List<keffect.KaraokeEffect.kSyncText>> SyncLyrics = LyricsUtilities.ReadLrcFromFile(FileName);
 
+            // Formate SyncLyrics to meet Midi editor needs (line separators and paragraphs on dedicated lines)
+            SyncLyrics = LyricsUtilities.FormateSyncLyricsForMidi(SyncLyrics);
+
+            
+
+            // OLD procedure
+            // Read the LRc file and store the result in a list of list of syllabes (each line is a list of syllabes)
+            //MidiLyricsMgmtHelper.SyncLyrics = MidiLyricsMgmtHelper.GetKEffectLrcLyrics(FileName);            
+            //List<List<keffect.KaraokeEffect.kSyncText>> SyncLyrics = MidiLyricsMgmtHelper.SyncLyrics;
+
+            
             InitGridView();
 
             // populate the gridView with the list of syllabes
@@ -2466,6 +2505,55 @@ namespace Karaboss
 
             
             Cursor.Current = Cursors.Default;
+
+        }
+
+
+        private void PopulateDataGridView(List<List<keffect.KaraokeEffect.kSyncText>> SyncLyrics)
+        {
+            string sTimeStamp;
+            long time;
+            string text;
+            double ms;
+
+            // Reset DataGridView
+            InitGridView();
+
+
+            foreach (List<keffect.KaraokeEffect.kSyncText> SyncLine in SyncLyrics)
+            {
+
+                for (int i = 0; i < SyncLine.Count; i++)
+                {
+                    time = SyncLine[i].Time;
+                    text = SyncLine[i].Text;
+
+                    // In the second column, the time is in format mm:ss:ms
+                    // Convert timestamp to mm:ss:ms
+                    sTimeStamp = TimeSpan.FromMilliseconds(time).ToString(@"mm\:ss\.fff");
+                    // Convert timestamp to milliseconds if necessary
+                    ms = time; // Assuming timestamp is already in milliseconds
+                    // Convert ms to ticks
+                    ms = Utilities.LyricsUtilities.TimeToTicks(sTimeStamp, _division, _tempo);
+
+                    if (ms == -1)
+                    {
+                        MessageBox.Show("Time " + sTimeStamp + " on line " + (SyncLyrics.IndexOf(SyncLine) + 1) + " is incorrect. Please correct it.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        return;
+                    }
+
+                    // 5 Columns: ticks, time, type, note, text
+                    if (text == m_SepLine)
+                        dgView.Rows.Add(ms, sTimeStamp, "cr", "", text);
+                    else if (text == m_SepParagraph)
+                        dgView.Rows.Add(ms, sTimeStamp, "par", "", text);
+                    else
+                    {
+                        text = text.Replace(" ", "_"); // replace spaces with _ to be able to display them in the datagridview
+                        dgView.Rows.Add(ms, sTimeStamp, "text", "", text);
+                    }
+                }
+            }
 
         }
 

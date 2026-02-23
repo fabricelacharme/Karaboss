@@ -38,6 +38,7 @@ using Karaboss.Mp3.Mp3Lyrics;
 using Karaboss.SRT;
 using System;
 using System.Collections.Generic;
+using System.Drawing.Text;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -644,8 +645,12 @@ namespace Karaboss.Utilities
         }
 
 
-       
+
         #region LRC
+
+
+        #region import LRC
+
         /// <summary>
         /// New proc for LRC files read
         /// </summary>
@@ -860,6 +865,128 @@ namespace Karaboss.Utilities
             
         }
 
+        /// <summary>
+        /// Formate SyncLyrics to meet Midi editor needs (line separators and paragraphs on dedicated lines)
+        /// </summary>
+        /// <param name="synclyrics"></param>
+        /// <returns></returns>
+        public static List<List<keffect.KaraokeEffect.kSyncText>> FormateSyncLyricsForMidi(List<List<keffect.KaraokeEffect.kSyncText>> synclyrics)
+        {
+
+            List<keffect.KaraokeEffect.kSyncText> SyncLine = new List<keffect.KaraokeEffect.kSyncText>();
+            List<keffect.KaraokeEffect.kSyncText> tmpSyncLine = new List<keffect.KaraokeEffect.kSyncText>();
+            List<List<keffect.KaraokeEffect.kSyncText>> SyncLines = new List<List<keffect.KaraokeEffect.kSyncText>>();
+
+            long time;
+            string lyric;
+            bool bParagraph = false;
+
+            for (int i = 0; i < synclyrics.Count; i++)
+            {
+
+                SyncLine = new List<keffect.KaraokeEffect.kSyncText>();
+
+                tmpSyncLine = synclyrics[i];
+                time = tmpSyncLine[0].Time;
+                lyric = tmpSyncLine[0].Text;
+
+                
+                if (lyric.Trim().Length > 0)
+                {
+                    if (i > 0 && !bParagraph)
+                    {
+                        // Add Line separator
+                        SyncLine.Add(new keffect.KaraokeEffect.kSyncText(time, m_SepLine));
+                        SyncLines.Add(SyncLine);
+                    }
+                    // Add existing line
+                    SyncLines.Add(tmpSyncLine);
+                    bParagraph = false;
+                }
+                else
+                {
+                    if (i > 0)
+                    {
+                        // Add a paragraph
+                        SyncLine.Add(new keffect.KaraokeEffect.kSyncText(time, m_SepParagraph));
+                        SyncLines.Add(SyncLine);
+
+                        bParagraph = true;
+                    }
+                }                                                
+            }
+
+            return SyncLines;
+
+        }
+
+
+        /// <summary>
+        /// Find out what type of digits the file is made out
+        /// </summary>
+        /// <param name="lines"></param>
+        /// <returns>Returns -1 if error, 2 or 3 either</returns>
+        private static int GetDigitsLRC(string[] lines)
+        {
+            string line;
+            string pattern3digits = @"(?:\[(\d{2}:\d{2}\.\d{3})\])";
+            string pattern2digits = @"(?:\[(\d{2}:\d{2}\.\d{2})\])";
+
+            // Select right pattern
+            int digits3 = 0;
+            int digits2 = 0;
+
+            // Find out what type of digits the file is made of: 2 or 3
+            for (int i = 0; i < lines.Length; i++)
+            {
+                line = lines[i];
+                MatchCollection matches3digits = Regex.Matches(line, pattern3digits);
+                MatchCollection matches2digits = Regex.Matches(line, pattern2digits);
+                if (matches3digits.Count > 0) digits3++;
+                else if (matches2digits.Count > 0) digits2++;
+            }
+
+            if (digits3 == 0 && digits2 == 0)
+                return -1;
+
+            return digits3 > digits2 ? 3 : 2;
+        }
+
+
+        /// <summary>
+        /// Find out what type of digits the file is made out
+        /// </summary>
+        /// <param name="lines"></param>
+        /// <returns></returns>
+        private static string GetPatternLRC(string[] lines)
+        {
+            string line;
+            string pattern3digits = @"(?:\[(\d{2}:\d{2}\.\d{3})\]|<(\d{2}:\d{2}\.\d{3})>)(\S+)";
+            string pattern2digits = @"(?:\[(\d{2}:\d{2}\.\d{2})\]|<(\d{2}:\d{2}\.\d{2})>)(\S+)";
+
+            // Select right pattern
+            int digits3 = 0;
+            int digits2 = 0;
+
+            // Find out what type of digits the file is made of: 2 or 3
+            for (int i = 0; i < lines.Length; i++)
+            {
+                line = lines[i];
+                MatchCollection matches3digits = Regex.Matches(line, pattern3digits);
+                MatchCollection matches2digits = Regex.Matches(line, pattern2digits);
+                if (matches3digits.Count > 0) digits3++;
+                else if (matches2digits.Count > 0) digits2++;
+            }
+
+            if (digits3 == 0 && digits2 == 0) return null;
+            if (digits3 > 0 && digits2 > 0) return null;
+
+            return digits3 > digits2 ? pattern3digits : pattern2digits;
+        }
+
+
+        #endregion import LRC
+
 
         public static List<string> LrcExtractDgRows(List<(double, string)> lstDgRows, int _LrcMillisecondsDigits, bool bRemoveAccents, bool bUpperCase, bool bLowerCase, bool bRemoveNonAlphaNumeric, MidiLyricsMgmt _myLyricsMgmt = null)
         {            
@@ -1012,7 +1139,7 @@ namespace Karaboss.Utilities
             return lstLyricsItems;
         }
 
-
+        /*
         /// <summary>
         /// LRC: Returns lyrics by lines <time, type, lyric)
         /// format: 1 timestamp + full line = 
@@ -1091,117 +1218,9 @@ namespace Karaboss.Utilities
             return lstLines;
         }
       
-
-        public static List<string> GetLrcLines(List<string> lstLyricsItems, int _LrcMillisecondsDigits)
-        {
-            // [00:04.59]
-            // [00:04.59]IT'S[00:04.83]BEEN[00:05.05]A[00:05.27]HARD[00:06.15]DAY'S[00:06.81]NIGHT[00:08.14]
-            // [00:08.14]AND[00:08.37]I'VE[00:08.60]BEEN[00:08.79]WOR[00:09.04]KING[00:09.91]LIKE[00:10.14]A[00:10.34]DOG[00:11.66]
-            // [00:11.66]IT'S[00:11.88]BEEN[00:12.09]A[00:12.32]HARD[00:13.22]DAY'S[00:13.89]NIGHT[00:15.19]
-
-            List<string> lstLines = new List<string>();
-            string line;
-            string sTime;
-            //string tx;
-            string removepattern3 = @"\[\d{2}[:]\d{2}[.]\d{3}\]";
-            string removepattern2 = @"\[\d{2}[:]\d{2}[.]\d{2}\]";
-            string removePattern;
-            int removeChars;
-            string replace = @"";
-
-            if (_LrcMillisecondsDigits == 2)
-            {
-                removePattern = removepattern2;
-                removeChars = 10;
-            }
-            else
-            {
-                removePattern = removepattern3;
-                removeChars = 11;
-            }
-
-            for (int i = 0; i < lstLyricsItems.Count; i++)
-            {
-                line = lstLyricsItems[i];
-                if (line != "" && line.Length >= removeChars)
-                {
-                    sTime = line.Substring(0, removeChars);
-
-                    // Remove all timestamps form line 
-                    line = Regex.Replace(line, removePattern, replace);
-                    line = sTime + line;
-                    // Store result
-                    lstLines.Add(line);
-                }
-            }
-            return lstLines;
-        }
-
-        /// <summary>
-        /// Find out what type of digits the file is made out
-        /// </summary>
-        /// <param name="lines"></param>
-        /// <returns>Returns -1 if error, 2 or 3 either</returns>
-        private static int GetDigitsLRC(string[] lines)
-        {
-            string line;
-            string pattern3digits = @"(?:\[(\d{2}:\d{2}\.\d{3})\])";
-            string pattern2digits = @"(?:\[(\d{2}:\d{2}\.\d{2})\])";
-
-            // Select right pattern
-            int digits3 = 0;
-            int digits2 = 0;
-
-            // Find out what type of digits the file is made of: 2 or 3
-            for (int i = 0; i < lines.Length; i++)
-            {
-                line = lines[i];
-                MatchCollection matches3digits = Regex.Matches(line, pattern3digits);
-                MatchCollection matches2digits = Regex.Matches(line, pattern2digits);
-                if (matches3digits.Count > 0) digits3++;
-                else if (matches2digits.Count > 0) digits2++;
-            }
-
-            if (digits3 == 0 && digits2 == 0)
-                return -1;
-
-            return digits3 > digits2 ? 3 : 2;
-        }
-
-
-        /// <summary>
-        /// Find out what type of digits the file is made out
-        /// </summary>
-        /// <param name="lines"></param>
-        /// <returns></returns>
-        private static string GetPatternLRC(string[] lines)
-        {
-            string line;
-            string pattern3digits = @"(?:\[(\d{2}:\d{2}\.\d{3})\]|<(\d{2}:\d{2}\.\d{3})>)(\S+)";
-            string pattern2digits = @"(?:\[(\d{2}:\d{2}\.\d{2})\]|<(\d{2}:\d{2}\.\d{2})>)(\S+)";
-
-            // Select right pattern
-            int digits3 = 0;
-            int digits2 = 0;
-
-            // Find out what type of digits the file is made of: 2 or 3
-            for (int i = 0; i < lines.Length; i++)
-            {
-                line = lines[i];
-                MatchCollection matches3digits = Regex.Matches(line, pattern3digits);
-                MatchCollection matches2digits = Regex.Matches(line, pattern2digits);
-                if (matches3digits.Count > 0) digits3++;
-                else if (matches2digits.Count > 0) digits2++;
-            }
-
-            if (digits3 == 0 && digits2 == 0) return null;
-            if (digits3 > 0 && digits2 > 0) return null;
-
-            return digits3 > digits2 ? pattern3digits : pattern2digits;
-        }
+        */       
       
-
-
+        /*
         /// <summary>
         /// Return lyrics by line with their timestamps
         /// Format [00:08.834]QUAND [00:09.107]J'AI [00:09.196]REN[00:09.469]CON[00:09.558]TRE [00:09.926]JO[00:10.107]SE[00:10.307]PHI[00:10.656]NE
@@ -1313,6 +1332,9 @@ namespace Karaboss.Utilities
             return lstTimeLines;
         }
 
+        */
+
+        /*
         public static List<string> GetLrcTimeLines(string[] lstLyricsItems, int _LrcMillisecondsDigits)
         {
             List<string> lstTimeLines = new List<string>();
@@ -1385,222 +1407,11 @@ namespace Karaboss.Utilities
             return lstTimeLines;
         }
 
-        public static List<string> GetLrcTimeLines(List<string> lstLyricsItems, int _LrcMillisecondsDigits)
-        {
-            List<string> lstTimeLines = new List<string>();
-            string line;
-            string sTime;
-            string tx;
+        */
 
-            string pattern3digits = @"(?:\[(\d{2}:\d{2}\.\d{3})\]|<(\d{2}:\d{2}\.\d{3})>)(\S+)";
-            string pattern2digits = @"(?:\[(\d{2}:\d{2}\.\d{2})\]|<(\d{2}:\d{2}\.\d{2})>)(\S+)";
-            string pattern;
-
-            string removepattern3 = @"\[\d{2}[:]\d{2}[.]\d{3}\]";
-            string removepattern2 = @"\[\d{2}[:]\d{2}[.]\d{2}\]";
-            string removePattern;
-            int removeChars;
-            string timestamp;
-            string word;
-
-            if (_LrcMillisecondsDigits == 2)
-            {
-                removeChars = 10;
-                removePattern = removepattern2;
-                pattern = pattern2digits;
-            }
-            else
-            {
-                removeChars = 11;
-                removePattern = removepattern3;
-                pattern = pattern3digits;
-            }
-            
-            for (int i = 0; i < lstLyricsItems.Count; i++)
-            {
-                // Clean
-                line = lstLyricsItems[i];
-
-                if (line.Length > removeChars)
-                {
-                    sTime = line.Substring(0, removeChars);
-                    tx = string.Empty;
-
-                    line = line.Replace("] ", "]");  // Remove space after ] : Match does not work with lyrics having a space before it ([00:12.45] Hello)
-                    line = line.Replace("[", " [");  // Add a space before [
-                    line = line.Replace("  [", " [");  // Clean if added space was useless
-                    line = line.Trim();
-                    
-                    // initial [00:04.59]It's[00:04.83]_been[00:05.05]_a[00:05.27]_hard[00:06.15]_day's[00:06.81]_night[00:08.14]
-                    // result [00:04.59]It's [00:04.83]_been [00:05.05]_a [00:05.27]_hard [00:06.15]_day's [00:06.81]_night [00:08.14]
-
-                    MatchCollection matches = Regex.Matches(line, pattern);
-                    if (matches.Count == 0) continue;
-
-                    foreach (Match match in matches)
-                    {
-                        timestamp = match.Groups[1].Value != "" ? match.Groups[1].Value : match.Groups[2].Value;
-                        word = match.Groups[3].Value;
-
-                        tx += "[" + timestamp + "]" + word + " ";
-                    }
-                    line = tx;
-                }
-                lstTimeLines.Add(line);
-            }
-            return lstTimeLines;
-        }
-
-
+      
         /// <summary>
-        /// Return lyrics by line and cut lines to MaxLength characters
-        /// [00:04.598]IT'S BEEN A HARD DAY'S NIGHT
-        /// [00:08.148]AND I'VE BEEN WORKING LIKE A
-        /// [00:10.349]DOG
-        /// </summary>
-        /// <param name="lstTimeLines"></param>
-        /// <param name="MaxLength"></param>
-        /// <returns></returns>
-        public static List<string> GetLrcLinesCut(List<string> lstTimeLines, int MaxLength, int _LrcMillisecondsDigits)
-        {
-            List<string[]> lstWords = new List<string[]>();
-            List<string[]> lstTimes = new List<string[]>();
-
-            string sTimeLine;
-            string strPartialLine;
-            string sLine;
-            bool bStartLine;
-            string sLyric;
-            string sTime;
-
-            string[] words;
-            string[] Times;
-            string removepattern3 = @"\[\d{2}[:]\d{2}[.]\d{3}\]";
-            string removepattern2 = @"\[\d{2}[:]\d{2}[.]\d{2}\]";
-            string removepattern;
-            string replace = @"";
-            int removeChars; ;
-
-            List<string> lstLinesCut = new List<string>();
-
-            if (_LrcMillisecondsDigits == 2) 
-            {
-                removepattern = removepattern2;
-                removeChars = 10;
-            }
-            else
-            {
-                removepattern = removepattern3;
-                removeChars = 11;
-            }
-
-            try
-            {
-                for (int i = 0; i < lstTimeLines.Count; i++)
-                {
-                    sTimeLine = lstTimeLines[i].Trim();
-
-                    // Remove underscores ???
-                    //sTimeLine = sTimeLine.Replace("_", "");
-
-                    MatchCollection mc = Regex.Matches(sTimeLine, removepattern);
-
-                    // pb 'bet' 'ter' is a single word, 2 syllabes should be merged in better
-                    //[00:12.16]Take_ [00:12.56]a_ [00:12.97]sad_ [00:13.78]song_ [00:15.00]and_ [00:15.40]make_ [00:15.81]it_ [00:16.21]bet [00:17.02]ter._"
-
-                    // Split by space character
-                    words = sTimeLine.Split(' ');                   
-                    Times = new string[words.Length];
-
-                    if (mc.Count > 0)
-                    {
-                        for (int j = 0; j < words.Length; j++)
-                        {
-                            if (words[j].Length >= removeChars)
-                            {
-                                Times[j] = words[j].Substring(0, removeChars);
-                                words[j] = Regex.Replace(words[j], removepattern, replace);
-                            }
-                        }
-                    }                        
-                    lstWords.Add(words);
-                    lstTimes.Add(Times);
-                }
-
-                // Manage length
-                // for each line, test if its length is greater than MaxLength
-                // If yes, create a second line
-                strPartialLine = string.Empty;   // Words of a line without timestamps in order to estimate length
-                sLine = string.Empty;
-                string[] ItemsW;
-                string[] ItemsT;
-                for (int i = 0; i < lstWords.Count; i++)
-                {
-                    ItemsT = lstTimes[i];
-                    ItemsW = lstWords[i];
-                    sLine = string.Empty;
-
-                    for (int j = 0; j < ItemsW.Count(); j++)
-                    {
-                        bStartLine = (j == 0);
-                        sLyric = ItemsW[j];
-                        sTime = ItemsT[j];
-
-                        if (!bStartLine && (strPartialLine + " " + sLyric).Length > MaxLength)
-                        {
-                            // if length of words is greater than MaxLength
-                            // Remove last space
-                            if (sLine.Length > 0 && sLine.EndsWith(" "))
-                                sLine = sLine.Remove(sLine.Length - 1, 1);
-                            lstLinesCut.Add(sLine);
-
-                            // Restart a new line
-                            sLine = sTime + sLyric; // + " ";
-                            strPartialLine = sLyric; // + " ";
-
-                        }
-                        else
-                        {
-                            if (bStartLine)
-                            {
-                                sLine = sTime + sLyric; // + " ";
-                                strPartialLine = sLyric; // + " ";
-                            }
-                            else
-                            {
-                                sLine += sLyric; // + " ";
-                                strPartialLine += sLyric; // + " ";
-                            }
-                        }
-                    }
-
-                    // Remove last space
-                    if (sLine.Length > 0 && sLine.EndsWith(" "))
-                        sLine = sLine.Remove(sLine.Length - 1, 1);
-                    lstLinesCut.Add(sLine);
-                    sLine = string.Empty;
-                }
-
-                // Save last line
-                if (sLine != string.Empty)
-                {
-                    // Remove last space
-                    if (sLine.Length > 0 && sLine.EndsWith(" "))
-                        sLine = sLine.Remove(sLine.Length - 1, 1);
-                    lstLinesCut.Add(sLine);
-                }
-            }
-            catch (Exception e)
-            {
-                MessageBox.Show(e.Message, "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                //return null;
-            }
-            return lstLinesCut;
-        }      
-
-
-        /// <summary>
-        /// Extraxt artist and song from file name
+        /// Extract artist and song from file name
         /// </summary>
         /// <param name="fPath"></param>
         /// <returns></returns>
@@ -1652,7 +1463,7 @@ namespace Karaboss.Utilities
         }
 
 
-        #region save lrc
+        #region export lrc
 
         /// <summary>
         /// Save Lyrics .lrc file format and by lines
@@ -2115,15 +1926,483 @@ namespace Karaboss.Utilities
         }
 
 
-        #endregion save lrc
+        /// <summary>
+        /// Return lyrics by line and cut lines to MaxLength characters
+        /// [00:04.598]IT'S BEEN A HARD DAY'S NIGHT
+        /// [00:08.148]AND I'VE BEEN WORKING LIKE A
+        /// [00:10.349]DOG
+        /// </summary>
+        /// <param name="lstTimeLines"></param>
+        /// <param name="MaxLength"></param>
+        /// <returns></returns>
+        public static List<string> GetLrcLinesCut(List<string> lstTimeLines, int MaxLength, int _LrcMillisecondsDigits)
+        {
+            List<string[]> lstWords = new List<string[]>();
+            List<string[]> lstTimes = new List<string[]>();
+
+            string sTimeLine;
+            string strPartialLine;
+            string sLine;
+            bool bStartLine;
+            string sLyric;
+            string sTime;
+
+            string[] words;
+            string[] Times;
+            string removepattern3 = @"\[\d{2}[:]\d{2}[.]\d{3}\]";
+            string removepattern2 = @"\[\d{2}[:]\d{2}[.]\d{2}\]";
+            string removepattern;
+            string replace = @"";
+            int removeChars; ;
+
+            List<string> lstLinesCut = new List<string>();
+
+            if (_LrcMillisecondsDigits == 2)
+            {
+                removepattern = removepattern2;
+                removeChars = 10;
+            }
+            else
+            {
+                removepattern = removepattern3;
+                removeChars = 11;
+            }
+
+            try
+            {
+                for (int i = 0; i < lstTimeLines.Count; i++)
+                {
+                    sTimeLine = lstTimeLines[i].Trim();
+
+                    // Remove underscores ???
+                    //sTimeLine = sTimeLine.Replace("_", "");
+
+                    MatchCollection mc = Regex.Matches(sTimeLine, removepattern);
+
+                    // pb 'bet' 'ter' is a single word, 2 syllabes should be merged in better
+                    //[00:12.16]Take_ [00:12.56]a_ [00:12.97]sad_ [00:13.78]song_ [00:15.00]and_ [00:15.40]make_ [00:15.81]it_ [00:16.21]bet [00:17.02]ter._"
+
+                    // Split by space character
+                    words = sTimeLine.Split(' ');
+                    Times = new string[words.Length];
+
+                    if (mc.Count > 0)
+                    {
+                        for (int j = 0; j < words.Length; j++)
+                        {
+                            if (words[j].Length >= removeChars)
+                            {
+                                Times[j] = words[j].Substring(0, removeChars);
+                                words[j] = Regex.Replace(words[j], removepattern, replace);
+                            }
+                        }
+                    }
+                    lstWords.Add(words);
+                    lstTimes.Add(Times);
+                }
+
+                // Manage length
+                // for each line, test if its length is greater than MaxLength
+                // If yes, create a second line
+                strPartialLine = string.Empty;   // Words of a line without timestamps in order to estimate length
+                sLine = string.Empty;
+                string[] ItemsW;
+                string[] ItemsT;
+                for (int i = 0; i < lstWords.Count; i++)
+                {
+                    ItemsT = lstTimes[i];
+                    ItemsW = lstWords[i];
+                    sLine = string.Empty;
+
+                    for (int j = 0; j < ItemsW.Count(); j++)
+                    {
+                        bStartLine = (j == 0);
+                        sLyric = ItemsW[j];
+                        sTime = ItemsT[j];
+
+                        if (!bStartLine && (strPartialLine + " " + sLyric).Length > MaxLength)
+                        {
+                            // if length of words is greater than MaxLength
+                            // Remove last space
+                            if (sLine.Length > 0 && sLine.EndsWith(" "))
+                                sLine = sLine.Remove(sLine.Length - 1, 1);
+                            lstLinesCut.Add(sLine);
+
+                            // Restart a new line
+                            sLine = sTime + sLyric; // + " ";
+                            strPartialLine = sLyric; // + " ";
+
+                        }
+                        else
+                        {
+                            if (bStartLine)
+                            {
+                                sLine = sTime + sLyric; // + " ";
+                                strPartialLine = sLyric; // + " ";
+                            }
+                            else
+                            {
+                                sLine += sLyric; // + " ";
+                                strPartialLine += sLyric; // + " ";
+                            }
+                        }
+                    }
+
+                    // Remove last space
+                    if (sLine.Length > 0 && sLine.EndsWith(" "))
+                        sLine = sLine.Remove(sLine.Length - 1, 1);
+                    lstLinesCut.Add(sLine);
+                    sLine = string.Empty;
+                }
+
+                // Save last line
+                if (sLine != string.Empty)
+                {
+                    // Remove last space
+                    if (sLine.Length > 0 && sLine.EndsWith(" "))
+                        sLine = sLine.Remove(sLine.Length - 1, 1);
+                    lstLinesCut.Add(sLine);
+                }
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show(e.Message, "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                //return null;
+            }
+            return lstLinesCut;
+        }
 
 
-        #endregion LRC
+        public static List<string> GetLrcTimeLines(List<string> lstLyricsItems, int _LrcMillisecondsDigits)
+        {
+            List<string> lstTimeLines = new List<string>();
+            string line;
+            string sTime;
+            string tx;
+
+            string pattern3digits = @"(?:\[(\d{2}:\d{2}\.\d{3})\]|<(\d{2}:\d{2}\.\d{3})>)(\S+)";
+            string pattern2digits = @"(?:\[(\d{2}:\d{2}\.\d{2})\]|<(\d{2}:\d{2}\.\d{2})>)(\S+)";
+            string pattern;
+
+            string removepattern3 = @"\[\d{2}[:]\d{2}[.]\d{3}\]";
+            string removepattern2 = @"\[\d{2}[:]\d{2}[.]\d{2}\]";
+            string removePattern;
+            int removeChars;
+            string timestamp;
+            string word;
+
+            if (_LrcMillisecondsDigits == 2)
+            {
+                removeChars = 10;
+                removePattern = removepattern2;
+                pattern = pattern2digits;
+            }
+            else
+            {
+                removeChars = 11;
+                removePattern = removepattern3;
+                pattern = pattern3digits;
+            }
+
+            for (int i = 0; i < lstLyricsItems.Count; i++)
+            {
+                // Clean
+                line = lstLyricsItems[i];
+
+                if (line.Length > removeChars)
+                {
+                    sTime = line.Substring(0, removeChars);
+                    tx = string.Empty;
+
+                    line = line.Replace("] ", "]");  // Remove space after ] : Match does not work with lyrics having a space before it ([00:12.45] Hello)
+                    line = line.Replace("[", " [");  // Add a space before [
+                    line = line.Replace("  [", " [");  // Clean if added space was useless
+                    line = line.Trim();
+
+                    // initial [00:04.59]It's[00:04.83]_been[00:05.05]_a[00:05.27]_hard[00:06.15]_day's[00:06.81]_night[00:08.14]
+                    // result [00:04.59]It's [00:04.83]_been [00:05.05]_a [00:05.27]_hard [00:06.15]_day's [00:06.81]_night [00:08.14]
+
+                    MatchCollection matches = Regex.Matches(line, pattern);
+                    if (matches.Count == 0) continue;
+
+                    foreach (Match match in matches)
+                    {
+                        timestamp = match.Groups[1].Value != "" ? match.Groups[1].Value : match.Groups[2].Value;
+                        word = match.Groups[3].Value;
+
+                        tx += "[" + timestamp + "]" + word + " ";
+                    }
+                    line = tx;
+                }
+                lstTimeLines.Add(line);
+            }
+            return lstTimeLines;
+        }
 
 
-        #region KOK
+        public static List<string> GetLrcLines(List<string> lstLyricsItems, int _LrcMillisecondsDigits)
+        {
+            // [00:04.59]
+            // [00:04.59]IT'S[00:04.83]BEEN[00:05.05]A[00:05.27]HARD[00:06.15]DAY'S[00:06.81]NIGHT[00:08.14]
+            // [00:08.14]AND[00:08.37]I'VE[00:08.60]BEEN[00:08.79]WOR[00:09.04]KING[00:09.91]LIKE[00:10.14]A[00:10.34]DOG[00:11.66]
+            // [00:11.66]IT'S[00:11.88]BEEN[00:12.09]A[00:12.32]HARD[00:13.22]DAY'S[00:13.89]NIGHT[00:15.19]
+
+            List<string> lstLines = new List<string>();
+            string line;
+            string sTime;
+            //string tx;
+            string removepattern3 = @"\[\d{2}[:]\d{2}[.]\d{3}\]";
+            string removepattern2 = @"\[\d{2}[:]\d{2}[.]\d{2}\]";
+            string removePattern;
+            int removeChars;
+            string replace = @"";
+
+            if (_LrcMillisecondsDigits == 2)
+            {
+                removePattern = removepattern2;
+                removeChars = 10;
+            }
+            else
+            {
+                removePattern = removepattern3;
+                removeChars = 11;
+            }
+
+            for (int i = 0; i < lstLyricsItems.Count; i++)
+            {
+                line = lstLyricsItems[i];
+                if (line != "" && line.Length >= removeChars)
+                {
+                    sTime = line.Substring(0, removeChars);
+
+                    // Remove all timestamps form line 
+                    line = Regex.Replace(line, removePattern, replace);
+                    line = sTime + line;
+                    // Store result
+                    lstLines.Add(line);
+                }
+            }
+            return lstLines;
+        }
+
+        #endregion export lrc
 
 
+        #endregion import export LRC
+
+
+
+
+
+        #region import export KOK
+
+        /*
+           * KOK format example:
+           * 
+           * Times:
+           * Exemple
+           * Dig;207,3672; in;207,5166; the;207,8154; dan;207,9648;cing;208,4130; queen;208,8612;
+           * the last item is 208,8612
+           * It means 208 seconds and 8612 milliseconds
+           * 
+           * 
+           * You;26.294; can;26.892; dance;27.191;
+           * You;28.685; can;29.282; jive;29.581;
+           * Ha;31.075;ving;31.523; the;31.972; time;32.27; of;32.719; your;33.167; life;33.466;
+           * Ooh,;34.661; see;35.856; that;36.304; girl,;36.752; watch;38.246; that;38.695; scene.;39.143;
+           * Dig;40.039; in;40.189; the;40.487; dan;40.637;cing;41.085; queen;41.533;
+           * Fri;50.198;day;50.497; night;50.647; and;50.945; the;51.244; lights;51.394; are;51.692; low;51.991;
+           * Loo;54.979;king;55.278; out;55.427; for;55.726; a;56.025; place;56.174; to;56.473; go;56.772;
+           * Oh,;59.013; where;59.76; they;60.059; play;60.208; the;60.507; right;60.656; mu;60.955;sic;61.254;
+           * Get;62.15;ting;62.449; in;62.599; the;62.897; swing;63.047;
+       */
+
+
+        #region import kok
+
+        /// <summary>
+        /// Reads karaoke lyrics and their associated timestamps from a KOK format file and returns a structured list of
+        /// synchronized lyric elements.
+        /// </summary>
+        /// <remarks>Each line in the KOK file is parsed into lyric segments with corresponding
+        /// timestamps. Paragraph separations are handled by empty lines in the file. If a timestamp in the file exceeds
+        /// the specified duration, an error message is displayed and an empty list is returned.</remarks>
+        /// <param name="FileName">The path to the KOK format file containing the karaoke lyrics and timestamps. The file must be accessible
+        /// and properly formatted.</param>
+        /// <param name="duration">The total duration of the song, in seconds. All timestamps in the file must not exceed this duration.</param>
+        /// <returns>A list of lists, where each inner list contains synchronized lyric elements for a line or paragraph. Returns
+        /// an empty list if a timestamp exceeds the specified duration.</returns>
+        public static List<List<keffect.KaraokeEffect.kSyncText>> ReadKokFromFile(string FileName, double duration)
+        {
+            string sLyric;                               // Syllabe or line separator (first word of the line is prefixed with a line separator ('/'), except if it is the first line of the file)
+            string sTimestamp = string.Empty;            // The timestamp is in seconds, with decimals (ex: 26.294)
+            long timestamp;
+            string line;
+            bool bParagraphSepFound = false;
+
+            List<keffect.KaraokeEffect.kSyncText> SyncLine = new List<keffect.KaraokeEffect.kSyncText> ();
+            List<List<keffect.KaraokeEffect.kSyncText>> SyncLyrics = new List<List<keffect.KaraokeEffect.kSyncText>> ();
+
+            int lineNr = 0;
+
+
+            using (StreamReader reader = new StreamReader(FileName))
+            {                
+                while ((line = reader.ReadLine()) != null)
+                {
+                    lineNr++;
+                    
+                    SyncLine = new List<keffect.KaraokeEffect.kSyncText>();
+
+                    // Case empty line; this is a paragraph
+                    // The next line will be the first line of the new paragraph, and must be prefixed with a line separator ('/'), except if it is the first line of the file
+                    if (string.IsNullOrWhiteSpace(line))
+                    {
+                        bParagraphSepFound = true;
+                        continue;
+                    }
+
+                    string[] parts = line.Split(new char[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
+                    for (int i = 0; i < parts.Length - 1; i += 2)
+                    {
+                        sLyric = parts[i];
+                        sTimestamp = parts[i + 1].Trim();
+
+
+                        // Convert timestamp to milliseconds if necessary
+                        // time is in the format <seconds>,<milliseconds>
+                        // for exeample 208,8612 means 208 seconds and 8612 milliseconds
+                        string[] split = sTimestamp.Split(',');
+                        timestamp = Convert.ToInt64(split[0]) * 1000 + Convert.ToInt64(split[1]);
+                        //timestamp = Convert.ToDouble(sTimestamp) * 1000; // Assuming timestamp is in seconds
+
+
+                        // Check if timespam is less than the song duration
+                        #region guard
+                        //timestamp = Convert.ToDouble(sTimestamp);
+                        if (timestamp/1000 > duration)
+                        {
+                            MessageBox.Show("Timestamp " + sTimestamp + " on line " + lineNr + " is higher than song duration (" + duration + " seconds). Please correct it.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error); sTimestamp = duration.ToString();
+                            return new List<List<keffect.KaraokeEffect.kSyncText>>();
+                        }
+                        #endregion guard
+
+
+
+                        if (bParagraphSepFound)
+                        {
+                            // Create a new line with the current timestamp and an empty string
+                            SyncLine = new List<keffect.KaraokeEffect.kSyncText>();
+                            SyncLine.Add(new keffect.KaraokeEffect.kSyncText((long)timestamp, ""));
+                            SyncLyrics.Add(SyncLine);
+
+                            // Create a new line
+                            SyncLine = new List<keffect.KaraokeEffect.kSyncText>();
+                            SyncLine.Add(new keffect.KaraokeEffect.kSyncText((long)timestamp, sLyric));
+                            bParagraphSepFound = false;
+                        }
+                        else
+                        {
+                            SyncLine.Add(new keffect.KaraokeEffect.kSyncText((long)timestamp, sLyric));
+                        }
+                    }
+                    SyncLyrics.Add(SyncLine);
+                }
+            }
+
+            return SyncLyrics;
+
+        }
+
+
+        /// <summary>
+        /// Reads a file containing pairs of words and timestamps, and returns a list of tuples representing each word
+        /// and its associated timestamp.
+        /// </summary>
+        /// <remarks>Each line in the file should be formatted as 'word;timestamp; word;timestamp; ...'.
+        /// The method processes each line, pairing words with their timestamps in the order they appear. The first word
+        /// of each line is prefixed with a line separator ('/').</remarks>
+        /// <param name="fileName">The path to the file to read. The file must exist and be accessible.</param>
+        /// <parma name="duration">Duration of the song in ms</parma>
+        /// <returns>A list of tuples, where each tuple contains a word and its corresponding timestamp extracted from the file.</returns>
+        public static List<(string, string)> KokReadFile(string fileName, double duration)
+        {
+            string word;                                // Syllabe or line separator (first word of the line is prefixed with a line separator ('/'), except if it is the first line of the file)
+            string sTimestamp = string.Empty;            // The timestamp is in seconds, with decimals (ex: 26.294)
+            double timestamp;
+            bool paragraphSepFound = false;
+            
+
+            List<(string, string)> lstDgRows = new List<(string, string)>();
+            using (StreamReader reader = new StreamReader(fileName))
+            {
+                string line;
+                while ((line = reader.ReadLine()) != null)
+                {
+                    // Each line is expected to be in the format: "word;timestamp; word;timestamp; ..."
+
+                    // Case empty line; this is a paragraph
+                    // The next line will be the first line of the new paragraph, and must be prefixed with a line separator ('/'), except if it is the first line of the file
+                    if (string.IsNullOrWhiteSpace(line))
+                    {
+                        paragraphSepFound = true;
+                        continue;
+                    }
+
+                    string[] parts = line.Split(new char[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
+                    for (int i = 0; i < parts.Length - 1; i += 2)
+                    {
+                        sTimestamp = parts[i + 1].Trim();
+
+                        // Check if timespam is less than the song duration
+                        #region guard
+                        timestamp = Convert.ToDouble(sTimestamp);
+                        if (timestamp > duration)
+                        {
+                            MessageBox.Show("Timestamp " + sTimestamp + " on line " + (lstDgRows.Count / 2 + 1) + " is higher than song duration (" + duration + " seconds). Please correct it.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error); sTimestamp = duration.ToString();
+                            return new List<(string, string)>();
+                        }
+                        #endregion guard
+
+                        // Adaptation to frmMidiLyricsEdit
+                        // Separate lines separators from the text, to be able to display them in a specific color in the datagridview
+                        if (i == 0 && lstDgRows.Count > 0)
+                        {
+
+                            // First word of the line, must be prefixed with a line separator ('/'), except if it is the first line of the file
+                            if (paragraphSepFound)
+                            {
+                                word = m_SepParagraph;
+                                paragraphSepFound = false;
+                            }
+                            else
+                                word = m_SepLine;
+
+                            lstDgRows.Add((word, sTimestamp));
+
+                            // The word without the line separator is added as a new row, to be able to display it in the datagridview
+                            word = parts[i];
+                            lstDgRows.Add((word, sTimestamp));
+                        }
+                        else
+                        {
+                            // Syllabe in the middle of the line
+                            word = parts[i];
+                            sTimestamp = parts[i + 1].Trim();
+                            lstDgRows.Add((word, sTimestamp));
+                        }
+                    }
+                }
+            }
+            return lstDgRows;
+        }
+
+
+
+        #endregion import kok
+
+
+        #region export kok
         public static string SaveLyricsToKokFormat(List<List<LyricsItem>> lstLines)
         {
             /*
@@ -2198,12 +2477,17 @@ namespace Karaboss.Utilities
 
         }
 
+        #endregion export kok
 
-        #endregion KOK
+
+        #endregion import export KOK
 
 
-        #region SRT
 
+
+        #region import export SRT
+
+        #region export SRT
         public static void SaveLyricsToSRTFormat(string fullPath, List<(double time, string lyric)> lstDgRows, int _LrcMillisecondsDigits, MidiLyricsMgmt _myLyricsMgmt)
         {
             string result = string.Empty;
@@ -2301,7 +2585,9 @@ namespace Karaboss.Utilities
 
         }
 
-        #endregion SRT
+        #endregion export SRT
+
+        #endregion import export SRT
 
 
     }
