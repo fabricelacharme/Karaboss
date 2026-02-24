@@ -256,18 +256,22 @@ namespace Karaboss
             //show splash screen
             #region splash
 
-            Thread splashThread = new Thread(new ThreadStart(
-                delegate
-                {
-                    frmSplashScreen = new frmSplashScreen();
-                    Application.Run(frmSplashScreen);
-                }
-                ));
-            splashThread.IsBackground = true;
+            // Show Splash windows only if no arguments
+            if (args.Length == 0)
+            {                
+                Thread splashThread = new Thread(new ThreadStart(
+                    delegate
+                    {
+                        frmSplashScreen = new frmSplashScreen();
+                        Application.Run(frmSplashScreen);
+                    }
+                    ));
+                splashThread.IsBackground = true;
 
-            splashThread.SetApartmentState(ApartmentState.STA);
-            splashThread.Start();
-            #endregion
+                splashThread.SetApartmentState(ApartmentState.STA);
+                splashThread.Start();
+            }
+            #endregion splash
 
             // Display main form
             frmExplorer frmExplorer = new frmExplorer(args, numinstance);
@@ -278,7 +282,7 @@ namespace Karaboss
             frmExplorer.BringToFront();
 
             Application.Run(frmExplorer);
-            #endregion
+            #endregion normal loading
         }
 
 
@@ -324,8 +328,7 @@ namespace Karaboss
         static void frmExplorer_Load(object sender, EventArgs e)
         {
             //close splash
-            if (frmSplashScreen == null)            
-                return;            
+            if (frmSplashScreen == null)   return;            
 
             frmSplashScreen.Invoke(new Action(frmSplashScreen.Close));
             frmSplashScreen.Dispose();

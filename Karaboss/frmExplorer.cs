@@ -95,7 +95,7 @@ namespace Karaboss
         private string mTempDir;
 
         public frmExplorer(string[] args, int numinstance)
-        {
+        {            
             InitializeComponent();
 
             lblItags.Font = new Font("Segoe UI", 9F); 
@@ -1610,8 +1610,8 @@ namespace Karaboss
                 }
             }
 
-            #region Close Windows            
-
+            #region Close Windows                                    
+            
             // ferme le formulaire frmPianoTraining
             if (Application.OpenForms.OfType<frmPianoTraining>().Count() > 0)
             {
@@ -1692,7 +1692,8 @@ namespace Karaboss
                 }
             }
 
-            #region Close Windows            
+            #region Close Windows                        
+
 
             // ferme le formulaire frmPianoTraining
             if (Application.OpenForms.OfType<frmPianoTraining>().Count() > 0)

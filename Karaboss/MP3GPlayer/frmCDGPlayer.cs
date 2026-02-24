@@ -256,6 +256,7 @@ namespace Karaboss
             if (Location.Y > rect.Height)
                 Location = new Point(Location.X, 0);
 
+            
             InitBass();
 
             // the user asked to play the song immediately 
