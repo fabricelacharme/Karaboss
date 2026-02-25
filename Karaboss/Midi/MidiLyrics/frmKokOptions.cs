@@ -41,24 +41,13 @@ using static Karaboss.Karaclass;
 
 namespace Karaboss
 {
-    public partial class frmLrcOptions : Form
+    public partial class frmKokOptions : Form
     {        
 
         #region properties
-        
-              
-        
+                              
         private string _defaultencoding = "UTF8";
         public string DefaultEncoding { get { return _defaultencoding; } }
-
-        public LrcLinesSyllabesFormats LrcLinesSyllabesFormat
-        {
-            get { 
-                if (OptFormatLines.Checked) 
-                    return LrcLinesSyllabesFormats.Lines;
-                else return LrcLinesSyllabesFormats.Syllabes;
-            }
-        }
 
         public bool bRemoveNonAlphaNumeric
         {
@@ -78,38 +67,7 @@ namespace Karaboss
         public bool bLowerCase
         {
             get { return chkLowerCase.Checked; }
-        }
-
-        /// <summary>
-        /// Number of characters max per lines
-        /// </summary>
-        public int LrcCutLinesChars
-        {
-            get { return (int)UpdCutLines.Value; }
-        }
-
-        /// <summary>
-        /// Cut lines over UpdCutLines.Value characters
-        /// </summary>
-        public bool bCutLines
-        {
-            get { return chkCutLines.Checked; }
-        }
-
-        private int _LrcMillisecondsDigits = 2;
-        public int LrcMillisecondsDigits
-        {
-            get { return _LrcMillisecondsDigits; }
-        }
-
-
-        public bool bSaveMetadata
-        {
-            get { return chkMetadata.Checked; }
-        }
-
-
-        
+        }       
 
         #endregion properties
 
@@ -117,13 +75,12 @@ namespace Karaboss
         /// <summary>
         /// Constructor
         /// </summary>
-        public frmLrcOptions()
+        public frmKokOptions()
         {
             InitializeComponent();
 
             // Initialize list of encoding
             initCbEncoding();
-
 
             // Load and apply options
             LoadOptions();            
@@ -142,24 +99,8 @@ namespace Karaboss
                 chkUpperCase.Checked = Properties.Settings.Default.bLrcForceUpperCase;
                 // Force Lower Case 
                 chkLowerCase.Checked = Properties.Settings.Default.bLrcForceLowerCase;
-
                 // Remove all non-alphanumeric characters
                 chkAlphaNumeric.Checked = Properties.Settings.Default.bLrcRemoveNonAlphaNumeric;
-
-                // Export to lines or syllabes
-                LrcLinesSyllabesFormats LrcLinesSyllabesFormat = Properties.Settings.Default.lrcFormatLinesSyllabes == 0 ? LrcLinesSyllabesFormats.Lines : LrcLinesSyllabesFormats.Syllabes;
-                OptFormatLines.Checked = LrcLinesSyllabesFormat == LrcLinesSyllabesFormats.Lines;
-
-                chkCutLines.Checked = Properties.Settings.Default.bLrcCutLines;
-                UpdCutLines.Value = Properties.Settings.Default.LrcCutLinesChars;
-
-                // Export Metadata
-                chkMetadata.Checked = Properties.Settings.Default.bExportMetadata;
-
-
-                _LrcMillisecondsDigits = Properties.Settings.Default.LrcMillisecondsDigits;
-                OptFormat2Digits.Checked = _LrcMillisecondsDigits == 2;
-                OptFormat3Digits.Checked = _LrcMillisecondsDigits == 3;
 
 
                 // Encoding
@@ -175,14 +116,7 @@ namespace Karaboss
                     case "ANSI":
                         cbEncoding.SelectedIndex = 1;
                         break;
-                }
-                
-
-                // Default value for OptFormatSyllabes is Checked => no event at loading form
-                // So manage this use case
-                // The event OptFormatLines.Checked is managed by OptFormatLines_CheckedChanged
-                ManageDisplayOptions();
-               
+                }                                             
             }
             catch (Exception ex)
             {
@@ -200,19 +134,14 @@ namespace Karaboss
 
         private void initCbEncoding()
         {
-
             //UTF8: Encoding encoding = Encoding.UTF8;
             //ANSI: encoding = System.Text.Encoding.GetEncoding("iso-8859-1");
 
-
             cbEncoding.Items.Add("ANSI");
             cbEncoding.Items.Add("UTF8");
-
             
             cbEncoding.SelectedIndex = 1;
-
         }
-
 
         #endregion encoding
 
@@ -220,23 +149,15 @@ namespace Karaboss
 
         #region Form Load Close
 
-        private void frmLrcOptions_FormClosing(object sender, FormClosingEventArgs e)
+        private void frmKokOptions_FormClosing(object sender, FormClosingEventArgs e)
         {
             try
             {
                 // Save options
-                Properties.Settings.Default.bLrcRemoveAccents = bRemoveAccents;
-                
+                Properties.Settings.Default.bLrcRemoveAccents = bRemoveAccents;                
                 Properties.Settings.Default.bLrcForceUpperCase = bUpperCase;
                 Properties.Settings.Default.bLrcForceLowerCase = bLowerCase;
-
-                Properties.Settings.Default.bLrcRemoveNonAlphaNumeric = bRemoveNonAlphaNumeric;
-                Properties.Settings.Default.lrcFormatLinesSyllabes = (OptFormatLines.Checked ? 0 : 1);
-
-                Properties.Settings.Default.bLrcCutLines = chkCutLines.Checked;
-                Properties.Settings.Default.LrcCutLinesChars = (int)UpdCutLines.Value;
-
-                Properties.Settings.Default.LrcMillisecondsDigits = _LrcMillisecondsDigits;
+                Properties.Settings.Default.bLrcRemoveNonAlphaNumeric = bRemoveNonAlphaNumeric;               
 
                 switch (_defaultencoding)
                 {
@@ -251,7 +172,6 @@ namespace Karaboss
                         break;
                 }
 
-
                 // Save settings
                 Properties.Settings.Default.Save();
             }
@@ -263,74 +183,7 @@ namespace Karaboss
 
 
         #endregion Form Load close
-
-
-        #region manage number of chars to cut
-
-        /// <summary>
-        /// Checkbox chkCutlines has changed
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void chkCutLines_CheckedChanged(object sender, EventArgs e)
-        {
-            ManageDisplayOptions();            
-        }
-
-        #endregion manage number of chars to cut
-
-
-        #region manage Options syllabes/lines
-        
-        /// <summary>
-        /// OptFormatSyllabes has changed
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void OptFormatSyllabes_CheckedChanged(object sender, EventArgs e)
-        {
-            ManageDisplayOptions();            
-        }
-
-        /// <summary>
-        /// OptFormatLines has changed
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void OptFormatLines_CheckedChanged(object sender, EventArgs e)
-        {
-            ManageDisplayOptions();            
-        }
-
-
-        private void ManageDisplayOptions()
-        {
-            if (OptFormatSyllabes.Checked)
-            {
-                // Cut lines options not visible if syllabes
-                chkCutLines.Visible = false;
-                UpdCutLines.Visible = false;
-                lblCutLines.Visible = false;
-            }
-            else if (OptFormatLines.Checked)
-            {
-                // Cut lines options visibility depends on checkbox chkCutLines
-                chkCutLines.Visible = true;
-
-                if (chkCutLines.Checked)
-                {
-                    UpdCutLines.Visible = true;
-                    lblCutLines.Visible = true;
-                }
-                else
-                {
-                    UpdCutLines.Visible = false;
-                    lblCutLines.Visible = false;
-                }
-            }
-        }
-
-        #endregion manage options syllabes/lines
+     
 
         private void chkLowerCase_CheckedChanged(object sender, EventArgs e)
         {
@@ -344,22 +197,6 @@ namespace Karaboss
                 chkLowerCase.Checked = false;
         }
        
-
-        private void OptFormat2Digits_CheckedChanged(object sender, EventArgs e)
-        {
-            if (OptFormat2Digits.Checked)
-                _LrcMillisecondsDigits = 2;
-            else
-                _LrcMillisecondsDigits = 3;
-        }
-
-        private void OptFormat3Digits_CheckedChanged(object sender, EventArgs e)
-        {
-            if (OptFormat3Digits.Checked)
-                _LrcMillisecondsDigits = 3;
-            else
-                _LrcMillisecondsDigits = 2;
-        }
 
         private void chkMetadata_CheckedChanged(object sender, EventArgs e)
         {

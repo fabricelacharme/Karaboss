@@ -2308,11 +2308,32 @@ namespace Karaboss
         /// <param name="e"></param>
         private void MnuFileExportLyricsKok_Click(object sender, EventArgs e)
         {
-           
-            ExportLyricsToKokFormat();
+            GetKokSaveOptions();
         }
 
-        private void ExportLyricsToKokFormat()
+
+        private void GetKokSaveOptions()
+        {
+            DialogResult dr;
+            frmKokOptions KokOptionsDialog = new frmKokOptions();
+            dr = KokOptionsDialog.ShowDialog();
+
+            if (dr == System.Windows.Forms.DialogResult.Cancel)
+                return;
+
+            // Remove accents
+            bool bRemoveAccents = KokOptionsDialog.bRemoveAccents;
+            // Force Upper Case
+            bool bUpperCase = KokOptionsDialog.bUpperCase;
+            // Force Lower Case
+            bool bLowerCase = KokOptionsDialog.bLowerCase;
+            // Remove all non-alphanumeric characters
+            bool bRemoveNonAlphaNumeric = KokOptionsDialog.bRemoveNonAlphaNumeric;                       
+            
+            ExportLyricsToKokFormat(bRemoveAccents, bUpperCase, bLowerCase, bRemoveNonAlphaNumeric);
+        }
+
+        private void ExportLyricsToKokFormat(bool bRemoveAccents, bool bUpperCase, bool bLowerCase, bool bRemoveNonAlphaNumeric)
         {
             #region select filename
 
@@ -2359,21 +2380,17 @@ namespace Karaboss
 
             #endregion select filename
 
-
-            // New code
+            // For each line of lyric, read all the syllabes and their timestamps
             List<(double Time, string lyric)> lstDgRows = LyricsUtilities.ReadDataGridContent(dgView, COL_TIME, COL_TEXT);
             List<List<Utilities.LyricsUtilities.LyricsItem>> lstLines = Utilities.LyricsUtilities.ExtractDgRows(lstDgRows, _LrcMillisecondsDigits);
-
-            // For each line of lyric, read all the syllabes and their timestamps
-            // and store the result in a list
-            //List<(string, string)> lstDgRows = KokReadDgViewData();                        
-            //List<List<Utilities.LyricsUtilities.LyricsItem>> lstLines = Utilities.LyricsUtilities.ExtractDgRows(lstDgRows);
-                       
+                                   
             string lines = Utilities.LyricsUtilities.SaveLyricsToKokFormat(lstLines);
 
+            #region save file
             try
             {
-                Encoding encoding = Encoding.UTF8;
+                Encoding encoding = Utilities.LyricsUtilities.GetDefaultEncoding();
+                                
                 System.IO.File.WriteAllText(fullPath, lines, encoding);
                 System.Diagnostics.Process.Start(@fullPath);
 
@@ -2382,39 +2399,9 @@ namespace Karaboss
             {
                 MessageBox.Show(ex.Message);
             }
-
+            #endregion save file
         }
 
-        /*
-        private List<(string, string)> KokReadDgViewData()
-        {
-            string sTime;            
-            string sLyric;
-
-            object vLyric;
-            object vTime;
-
-            // Store rows of dgView in a list
-            // the aim is to have the same procedure between midi Lyrics edition and mp3 Lyrics edition            
-
-            List<(string, string)> lstDgRows = new List<(string, string)>();
-            for (int i = 0; i < dgView.Rows.Count; i++)
-            {
-                vTime = dgView.Rows[i].Cells[COL_TIME].Value;
-                vLyric = dgView.Rows[i].Cells[COL_TEXT].Value;
-                if (vTime != null && vLyric != null)
-                {
-                    sTime = vTime.ToString();
-                    // Convert times to milliseconds (to have the same entry format with mp3 Lyrics edition)
-                    //time = Mp3LyricsMgmtHelper.TimeToMs(sTime);
-                    sLyric = vLyric.ToString();
-
-                    lstDgRows.Add((sTime, sLyric));
-                }
-            }
-            return lstDgRows;
-        }
-        */
 
         #endregion export kok
 
@@ -2623,37 +2610,34 @@ namespace Karaboss
         /// </summary>
         /// <param name="LrcExportFormat"></param>
         private void GetLrcSaveOptions()
-       {
-            //string a = ReadDgView();
-            //return;
-
-
+        {            
             DialogResult dr;
-           frmLrcOptions LrcOptionsDialog = new frmLrcOptions();
-           dr = LrcOptionsDialog.ShowDialog();
+            frmLrcOptions LrcOptionsDialog = new frmLrcOptions();
+            dr = LrcOptionsDialog.ShowDialog();
 
-           if (dr == System.Windows.Forms.DialogResult.Cancel)
+            if (dr == System.Windows.Forms.DialogResult.Cancel)
                return;
 
-           // Remove accents
-           bool bRemoveAccents = LrcOptionsDialog.bRemoveAccents;
-           // Force Upper Case
-           bool bUpperCase = LrcOptionsDialog.bUpperCase;
-           // Force Lower Case
-           bool bLowerCase = LrcOptionsDialog.bLowerCase;
-           // Remove all non-alphanumeric characters
-           bool bRemoveNonAlphaNumeric = LrcOptionsDialog.bRemoveNonAlphaNumeric;
-           // Save to line or to syllabes
-           LrcLinesSyllabesFormats LrcLinesSyllabesFormat = LrcOptionsDialog.LrcLinesSyllabesFormat;
+            // Remove accents
+            bool bRemoveAccents = LrcOptionsDialog.bRemoveAccents;
+            // Force Upper Case
+            bool bUpperCase = LrcOptionsDialog.bUpperCase;
+            // Force Lower Case
+            bool bLowerCase = LrcOptionsDialog.bLowerCase;
+            // Remove all non-alphanumeric characters
+            bool bRemoveNonAlphaNumeric = LrcOptionsDialog.bRemoveNonAlphaNumeric;
+            // Save to line or to syllabes
+            LrcLinesSyllabesFormats LrcLinesSyllabesFormat = LrcOptionsDialog.LrcLinesSyllabesFormat;
 
-           _LrcMillisecondsDigits = LrcOptionsDialog.LrcMillisecondsDigits;
+            _LrcMillisecondsDigits = LrcOptionsDialog.LrcMillisecondsDigits;
 
-           // Cut lines over x characters
-           bool bCutLines = LrcOptionsDialog.bCutLines;
-           int LrcCutLinesChars = LrcOptionsDialog.LrcCutLinesChars;
+            // Cut lines over x characters
+            bool bCutLines = LrcOptionsDialog.bCutLines;
+            int LrcCutLinesChars = LrcOptionsDialog.LrcCutLinesChars;
+           
+            string DefaultEncoding = LrcOptionsDialog.DefaultEncoding;
 
-
-           SaveLrcFileName(LrcLinesSyllabesFormat, bRemoveAccents, bUpperCase, bLowerCase, bRemoveNonAlphaNumeric, bCutLines, LrcCutLinesChars);
+            SaveLrcFileName(LrcLinesSyllabesFormat, bRemoveAccents, bUpperCase, bLowerCase, bRemoveNonAlphaNumeric, bCutLines, LrcCutLinesChars);
        }
 
         /// <summary>
@@ -2749,7 +2733,6 @@ namespace Karaboss
             }
             #endregion metadata
 
-
             // Read DatagridView content
             List<(double Time, string lyric)> lstDgRows = LyricsUtilities.ReadDataGridContent(dgView, COL_TIME, COL_TEXT);
             if (lstDgRows == null || lstDgRows.Count == 0)
@@ -2758,15 +2741,13 @@ namespace Karaboss
                 return;
             }
 
-
             // Create LRC file
             switch (LrcLinesSyllabesFormat)
             {
                 case LrcLinesSyllabesFormats.Lines:                                        
                     Utilities.LyricsUtilities.SaveLRCLines(fullPath, lstDgRows, bRemoveAccents, bUpperCase, bLowerCase, bRemoveNonAlphaNumeric, Tag_Tool, Tag_Title, Tag_Artist, Tag_Album, Tag_Lang, Tag_By, Tag_Year, Tag_DPlus, bCutLines, LrcCutLinesChars, _LrcMillisecondsDigits, _myLyricsMgmt);
                     break;
-                case LrcLinesSyllabesFormats.Syllabes:
-                    //SaveLRCSyllabes(fullPath, bRemoveAccents, bUpperCase, bLowerCase, bRemoveNonAlphaNumeric, Tag_Tool, Tag_Title, Tag_Artist, Tag_Album, Tag_Lang, Tag_By, Tag_DPlus);
+                case LrcLinesSyllabesFormats.Syllabes:                    
                     Utilities.LyricsUtilities.SaveLRCSyllabes(fullPath, lstDgRows, bRemoveAccents, bUpperCase, bLowerCase, bRemoveNonAlphaNumeric, Tag_Tool, Tag_Title, Tag_Artist, Tag_Album, Tag_Lang, Tag_By, Tag_Year, Tag_DPlus, _LrcMillisecondsDigits, _myLyricsMgmt);
                     break;
             }                                
@@ -3001,7 +2982,8 @@ namespace Karaboss
 
             try
             {
-                Encoding encoding = Encoding.UTF8;
+                Encoding encoding = LyricsUtilities.GetDefaultEncoding();
+
                 System.IO.File.WriteAllText(File, lrcs, encoding);
                 System.Diagnostics.Process.Start(@File);
 

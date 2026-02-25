@@ -455,6 +455,31 @@ namespace Karaboss.Utilities
 
 
         /// <summary>
+        /// Returns default encoding saved in Properties.settings.Default
+        /// </summary>
+        /// <returns>(UTF8 (default) or ANSI (1252)</returns>
+        public static Encoding GetDefaultEncoding()
+        {
+            string DefaultEncoding = "UTF8";
+            if (Properties.Settings.Default.DefaultEncoding != null)
+                DefaultEncoding = Properties.Settings.Default.DefaultEncoding;
+
+            switch (DefaultEncoding)
+            {
+                case "UTF8":
+                    return Encoding.UTF8;
+
+                case "ANSI":
+                    //return Encoding.GetEncoding("iso-8859-1");
+                    return Encoding.GetEncoding("1252");
+
+                default:
+                    return Encoding.UTF8;
+            }
+        }
+
+
+        /// <summary>
         /// Reads the contents of the data grid and extracts a list of time and lyric pairs, filtering out invalid or
         /// improperly formatted entries.
         /// </summary>
@@ -1139,277 +1164,7 @@ namespace Karaboss.Utilities
             return lstLyricsItems;
         }
 
-        /*
-        /// <summary>
-        /// LRC: Returns lyrics by lines <time, type, lyric)
-        /// format: 1 timestamp + full line = 
-        /// [00:03.598]
-        /// [00:04.598]IT'S BEEN A HARD DAY'S NIGHT
-        /// </summary>
-        /// <param name="lstLyricsItems"></param>
-        /// <param name="strSpaceBetween"></param>
-        /// <returns></returns>
-        public static List<string> GetLrcLines(List<(string, string, string)> lstLyricsItems, string strSpaceBetween)
-        {
-            List<string> lstLines = new List<string>();            
-            string sTime;            
-            string sLyric;
-            string sLine = string.Empty;
-
-            // Case full lines
-            // ("[00:08.05]", "cr", "/")
-            // ("[00:08.06]", "text", "/ENCORE_UN_SOIR")
-
-            // Case syllabes
-            // ("[00:04.59]", "cr", "/")
-            // ("[00:04.59]", "text", "IT'S")
-
-            string tx = string.Empty;
-            for (int i = 0; i < lstLyricsItems.Count; i++)
-            {
-                sTime = lstLyricsItems[i].Item1;
-                sLyric = lstLyricsItems[i].Item3;
-                tx += sTime + sLyric;
-            }
             
-            // Split by "[" to have lines
-            string[] lines = tx.Split('/');
-
-            // [00:05.67]HEY [00:06.48]JUDE [00:08.51]DON'T [00:08.91]MAKE [00:09.32]IT [00:09.73]BAD
-            // [00:09.73]/
-            // [00:12.16]TAKE [00:12.56]A [00:12.97]SAD [00:13.78]SONG [00:15.00]AND [00:15.40]MAKE [00:15.81]IT [00:16.21]BET[00:17.02]TER
-            // [00:17.02]/
-            // [00:17.02]/
-            // [00:19.05]RE[00:19.45]MEM[00:19.86]BER [00:20.67]TO [00:21.08]LET
-
-            string removepattern3 = @"\[\d{2}[:]\d{2}[.]\d{3}\]";
-            string removepattern2 = @"\[\d{2}[:]\d{2}[.]\d{2}\]";
-            string replace = @"";
-
-            int digits = GetDigitsLRC(lines);
-
-            string line;
-            // Treatment for each line
-            for (int i = 0; i < lines.Length; i++)
-            {
-                line = lines[i];
-                line = line.Trim();
-                if (line.Length == 0) continue;
-                
-
-                if (digits == 2)
-                {
-                    if (line.Length < 10) continue;
-                    sTime = line.Substring(0, 10);
-                    line = Regex.Replace(line, removepattern2, replace);
-                }
-                else
-                {
-                    if (line.Length < 11) continue;
-                    sTime = line.Substring(0, 11);
-                    line = Regex.Replace(line, removepattern3, replace);
-                }
-                                               
-                line = sTime + line.Trim(); 
-                lstLines.Add(line); ;
-
-            }          
-
-            return lstLines;
-        }
-      
-        */       
-      
-        /*
-        /// <summary>
-        /// Return lyrics by line with their timestamps
-        /// Format [00:08.834]QUAND [00:09.107]J'AI [00:09.196]REN[00:09.469]CON[00:09.558]TRE [00:09.926]JO[00:10.107]SE[00:10.307]PHI[00:10.656]NE
-        /// This is needed by the next function GetLrcLinesCut in order to cut a line in two lines 
-        /// </summary>
-        /// <param name="lstLyricsItems"></param>
-        /// <param name="strSpaceBetween"></param>
-        /// <returns></returns>
-        public static List<string> GetLrcTimeLines(List<(string, string, string)> lstLyricsItems, int _LrcMillisecondsDigits)
-        {
-            List<string> lstTimeLines = new List<string>();            
-            string sTime;
-            string sLyric;
-            string sTimeLine = string.Empty;
-
-
-            string tx = string.Empty;
-            for (int i = 0; i < lstLyricsItems.Count; i++)
-            {
-                sTime = lstLyricsItems[i].Item1;
-                sLyric = lstLyricsItems[i].Item3.Replace(" ", "_");
-                tx += sTime + sLyric;
-            }
-
-            tx = tx.Replace(m_SepParagraph, m_SepLine);
-
-            // Split by "[" to have lines
-            string[] lines = tx.Split('/');
-            string line;
-            //string[] items;
-            //string item;
-            tx = string.Empty;
-
-            // Regex to capture timestamps and words => for milliseconds having 3 digits or 2
-            // Find out what type of digits the file is made out
-            int digits = GetDigitsLRC(lines);
-            string pattern = GetPatternLRC(lines);
-            if (pattern == null)
-            {
-                MessageBox.Show("Invalid lrc file, no timestamps found", "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return null;
-            }
-            string timestamp;
-            string word;            
-
-            for (int i = 0; i < lines.Count(); i++)
-            {
-                line = lines[i];
-                tx = string.Empty;
-
-                
-                // Case lines with only a timestamp [00:03.12]
-                if (digits == 2)
-                {
-                    if (line.Length == 10 && line.StartsWith("[") && line.EndsWith("]"))
-                    {
-                        tx = line;
-                    }
-                    else
-                    {
-                        line = line.Replace("] ", "]");  // Match does not work with lyrics having a space before it ([00:12.45] Hello)
-                        line = line.Replace("[", " [");
-                        line = line.Replace("  [", " [");
-                        line = line.Trim();
-
-                        MatchCollection matches2 = Regex.Matches(line, pattern);
-                        if (matches2.Count == 0) continue;
-
-                        foreach (Match match in matches2)
-                        {
-                            timestamp = match.Groups[1].Value != "" ? match.Groups[1].Value : match.Groups[2].Value;
-                            word = match.Groups[3].Value;
-
-                            tx += "[" + timestamp + "]" + word + " ";
-                        }
-                    }
-                }
-                else if (digits == 3)
-                {
-                    if (line.Length == 11 && line.StartsWith("[") && line.EndsWith("]"))
-                    {
-                        tx = line;
-                    }
-                    else
-                    {
-                        line = line.Replace("] ", "]");  // Match does not work with lyrics having a space before it ([00:12.45] Hello)
-                        line = line.Replace("[", " [");
-                        line = line.Replace("  [", " [");
-                        line = line.Trim();
-
-                        MatchCollection matches3 = Regex.Matches(line, pattern);
-                        if (matches3.Count == 0) continue;
-
-                        foreach (Match match in matches3)
-                        {
-                            timestamp = match.Groups[1].Value != "" ? match.Groups[1].Value : match.Groups[2].Value;
-                            word = match.Groups[3].Value;
-
-                            tx += "[" + timestamp + "]" + word + " ";
-                        }
-                    }
-                }
-
-                
-                lstTimeLines.Add(tx);
-            }
-           
-
-            return lstTimeLines;
-        }
-
-        */
-
-        /*
-        public static List<string> GetLrcTimeLines(string[] lstLyricsItems, int _LrcMillisecondsDigits)
-        {
-            List<string> lstTimeLines = new List<string>();
-            string line;
-            string sTime;
-            //string[] items;
-            //string item;
-            string tx;
-
-            string pattern3digits = @"(?:\[(\d{2}:\d{2}\.\d{3})\]|<(\d{2}:\d{2}\.\d{3})>)(\S+)";
-            string pattern2digits = @"(?:\[(\d{2}:\d{2}\.\d{2})\]|<(\d{2}:\d{2}\.\d{2})>)(\S+)";
-            string pattern;
-
-            string removepattern3 = @"\[\d{2}[:]\d{2}[.]\d{3}\]";
-            string removepattern2 = @"\[\d{2}[:]\d{2}[.]\d{2}\]";
-            string removePattern;
-            int removeChars;
-            //string replace = @"";
-
-            string timestamp;
-            string word;
-
-            if (_LrcMillisecondsDigits == 2)
-            {
-                removeChars = 10;
-                removePattern = removepattern2;
-                pattern = pattern2digits;
-            }
-            else
-            {
-                removeChars = 11;
-                removePattern = removepattern3;
-                pattern = pattern3digits;
-            }
-
-
-            for (int i = 0; i < lstLyricsItems.Count(); i++)
-            {
-                // Clean
-                line = lstLyricsItems[i];
-                sTime = line.Substring(0, removeChars);
-
-                tx = string.Empty;
-
-                if (line.Length > removeChars)
-                {
-                    line = line.Replace("] ", "]");  // Match does not work with lyrics having a space before it ([00:12.45] Hello)
-                    line = line.Replace("[", " [");
-                    line = line.Replace("  [", " [");
-                    line = line.Trim();
-
-                    MatchCollection matches = Regex.Matches(line, pattern);
-                    if (matches.Count == 0) continue;
-
-                    foreach (Match match in matches)
-                    {
-                        timestamp = match.Groups[1].Value != "" ? match.Groups[1].Value : match.Groups[2].Value;
-                        word = match.Groups[3].Value;
-
-                        tx += "[" + timestamp + "]" + word + " ";
-                    }
-
-                    line = tx;
-                }
-                
-
-                lstTimeLines.Add(line);
-            }
-
-            return lstTimeLines;
-        }
-
-        */
-
-      
         /// <summary>
         /// Extract artist and song from file name
         /// </summary>
@@ -1466,7 +1221,7 @@ namespace Karaboss.Utilities
         #region export lrc
 
         /// <summary>
-        /// Save Lyrics .lrc file format and by lines
+        /// Save Lyrics to .lrc file format and by lines
         /// </summary>
         /// <param name="File"></param>
         /// <param name="lstDgRows"></param>
@@ -1571,8 +1326,9 @@ namespace Karaboss.Utilities
             // Open file
             #region open file
             try
-            {
-                Encoding encoding = Encoding.UTF8;
+            {                                
+                Encoding encoding = GetDefaultEncoding();
+
                 System.IO.File.WriteAllText(File, lrcs, encoding);
                 System.Diagnostics.Process.Start(@File);
 
@@ -1585,6 +1341,26 @@ namespace Karaboss.Utilities
         }
 
 
+     
+        /// <summary>
+        /// Save lyrics to .lrc file format and by syllables
+        /// </summary>
+        /// <param name="File"></param>
+        /// <param name="lstDgRows"></param>
+        /// <param name="bRemoveAccents"></param>
+        /// <param name="bUpperCase"></param>
+        /// <param name="bLowerCase"></param>
+        /// <param name="bRemoveNonAlphaNumeric"></param>
+        /// <param name="Tag_Tool"></param>
+        /// <param name="Tag_Title"></param>
+        /// <param name="Tag_Artist"></param>
+        /// <param name="Tag_Album"></param>
+        /// <param name="Tag_Lang"></param>
+        /// <param name="Tag_By"></param>
+        /// <param name="Tag_Year"></param>
+        /// <param name="Tag_DPlus"></param>
+        /// <param name="_LrcMillisecondsDigits"></param>
+        /// <param name="_myLyricsMgmt"></param>
         public static void SaveLRCSyllabes(string File, List<(double, string)> lstDgRows, bool bRemoveAccents, bool bUpperCase, bool bLowerCase, bool bRemoveNonAlphaNumeric, string Tag_Tool, string Tag_Title, string Tag_Artist, string Tag_Album, string Tag_Lang, string Tag_By, uint Tag_Year, string Tag_DPlus,int _LrcMillisecondsDigits, MidiLyricsMgmt _myLyricsMgmt = null)
         {
             string lines;
@@ -1604,7 +1380,7 @@ namespace Karaboss.Utilities
             // Open file
             try
             {
-                Encoding encoding = Encoding.UTF8;                
+                Encoding encoding = GetDefaultEncoding();                
                 //encoding = System.Text.Encoding.GetEncoding("iso-8859-1");
 
                 System.IO.File.WriteAllText(File, lines, encoding);
@@ -2191,9 +1967,6 @@ namespace Karaboss.Utilities
         #endregion import export LRC
 
 
-
-
-
         #region import export KOK
 
         /*
@@ -2403,22 +2176,9 @@ namespace Karaboss.Utilities
 
 
         #region export kok
+
         public static string SaveLyricsToKokFormat(List<List<LyricsItem>> lstLines)
         {
-            /*
-            * KOK format example:
-            * You;26.294; can;26.892; dance;27.191;
-            * You;28.685; can;29.282; jive;29.581;
-            * Ha;31.075;ving;31.523; the;31.972; time;32.27; of;32.719; your;33.167; life;33.466;
-            * Ooh,;34.661; see;35.856; that;36.304; girl,;36.752; watch;38.246; that;38.695; scene.;39.143;
-            *
-            * Dig;40.039; in;40.189; the;40.487; dan;40.637;cing;41.085; queen;41.533;
-            * Fri;50.198;day;50.497; night;50.647; and;50.945; the;51.244; lights;51.394; are;51.692; low;51.991;
-            * Loo;54.979;king;55.278; out;55.427; for;55.726; a;56.025; place;56.174; to;56.473; go;56.772;
-            * Oh,;59.013; where;59.76; they;60.059; play;60.208; the;60.507; right;60.656; mu;60.955;sic;61.254;
-            * Get;62.15;ting;62.449; in;62.599; the;62.897; swing;63.047;
-           */
-
             string sLyric;
             string sLine;
             double time;

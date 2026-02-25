@@ -440,5 +440,8 @@
     <Setting Name="TxtRhythm1Color" Type="System.Drawing.Color" Scope="User">
       <Value Profile="(Default)">DodgerBlue</Value>
     </Setting>
+    <Setting Name="DefaultEncoding" Type="System.String" Scope="User">
+      <Value Profile="(Default)">"UTF8</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

@@ -2344,7 +2344,7 @@ namespace Karaboss.Mp3
 
             try
             {
-                Encoding encoding = Encoding.UTF8;
+                Encoding encoding = LyricsUtilities.GetDefaultEncoding();
                 System.IO.File.WriteAllText(fullPath, lines, encoding);
                 System.Diagnostics.Process.Start(@fullPath);
 

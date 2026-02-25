@@ -199,6 +199,12 @@
     <Compile Include="Lrc\frmLrcGenerator.Designer.cs">
       <DependentUpon>frmLrcGenerator.cs</DependentUpon>
     </Compile>
+    <Compile Include="Midi\MidiLyrics\frmKokOptions.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Midi\MidiLyrics\frmKokOptions.Designer.cs">
+      <DependentUpon>frmKokOptions.cs</DependentUpon>
+    </Compile>
     <Compile Include="Midi\MidiLyrics\frmLrcOptions.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -613,6 +619,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Lrc\frmLrcGenerator.resx">
       <DependentUpon>frmLrcGenerator.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Midi\MidiLyrics\frmKokOptions.fr.resx">
+      <DependentUpon>frmKokOptions.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Midi\MidiLyrics\frmKokOptions.resx">
+      <DependentUpon>frmKokOptions.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Midi\MidiLyrics\frmLrcOptions.fr.resx">
       <DependentUpon>frmLrcOptions.cs</DependentUpon>
