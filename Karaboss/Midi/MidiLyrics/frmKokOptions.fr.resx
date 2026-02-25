@@ -121,27 +121,6 @@
     <value>&amp;Annuler</value>
   </data>
   <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
-  <data name="OptFormatLines.Size" type="System.Drawing.Size, System.Drawing">
-    <value>56, 17</value>
-  </data>
-  <data name="OptFormatLines.Text" xml:space="preserve">
-    <value>Lignes</value>
-  </data>
-  <data name="lblCutLines.Size" type="System.Drawing.Size, System.Drawing">
-    <value>57, 13</value>
-  </data>
-  <data name="lblCutLines.Text" xml:space="preserve">
-    <value>caractères</value>
-  </data>
-  <data name="chkCutLines.Size" type="System.Drawing.Size, System.Drawing">
-    <value>111, 17</value>
-  </data>
-  <data name="chkCutLines.Text" xml:space="preserve">
-    <value>Limiter les lignes à</value>
-  </data>
-  <data name="groupBox1.Text" xml:space="preserve">
-    <value>Exporter vers</value>
-  </data>
   <data name="chkRemoveAccents.Size" type="System.Drawing.Size, System.Drawing">
     <value>130, 17</value>
   </data>
@@ -163,19 +142,7 @@
   <data name="chkAlphaNumeric.Text" xml:space="preserve">
     <value>Supprimer les caractères non alphanumériques</value>
   </data>
-  <data name="OptFormat2Digits.Size" type="System.Drawing.Size, System.Drawing">
-    <value>184, 17</value>
-  </data>
-  <data name="OptFormat2Digits.Text" xml:space="preserve">
-    <value>Centièmes de seconde [00:05.12]</value>
-  </data>
-  <data name="OptFormat3Digits.Size" type="System.Drawing.Size, System.Drawing">
-    <value>145, 17</value>
-  </data>
-  <data name="OptFormat3Digits.Text" xml:space="preserve">
-    <value>Millisecondes [00.05.123]</value>
-  </data>
   <data name="$this.Text" xml:space="preserve">
-    <value>Karaboss - Exporter au format LRC</value>
+    <value>Karaboss - Exporter au format KOK</value>
   </data>
 </root>

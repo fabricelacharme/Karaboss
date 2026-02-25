@@ -2311,7 +2311,13 @@ namespace Karaboss
             GetKokSaveOptions();
         }
 
-
+        /// <summary>
+        /// Displays a dialog for configuring options related to saving Kok format lyrics and processes the selected
+        /// options.
+        /// </summary>
+        /// <remarks>This method presents a user interface for setting preferences such as removing
+        /// accents, forcing upper or lower case, and removing non-alphanumeric characters. The selected options are
+        /// then used to format the lyrics accordingly. If the dialog is canceled, no changes are made.</remarks>
         private void GetKokSaveOptions()
         {
             DialogResult dr;
@@ -2388,17 +2394,7 @@ namespace Karaboss
                 return;
             }
 
-            // OLD
-            //List<List<Utilities.LyricsUtilities.LyricsItem>> lstLines = Utilities.LyricsUtilities.ExtractDgRows(lstDgRows, _LrcMillisecondsDigits);                                   
-            //string lines = Utilities.LyricsUtilities.SaveLyricsToKokFormat(lstLines);
-
-            // Save file
-            //LyricsUtilities.SaveStringToFile(fullPath, lines, true);
-            
-            // OLD END
-
-
-            // NEW
+            // Save to KOK file
             LyricsUtilities.SaveKOKSyllabes(fullPath, lstDgRows, bRemoveAccents, bUpperCase, bLowerCase, bRemoveNonAlphaNumeric, _LrcMillisecondsDigits, _myLyricsMgmt);
 
         }

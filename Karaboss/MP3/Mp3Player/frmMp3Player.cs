@@ -2263,7 +2263,8 @@ namespace Karaboss.Mp3
              * Get;62.15;ting;62.449; in;62.599; the;62.897; swing;63.047;
             */
 
-            ExportLyricsToKokFormat();
+            //ExportLyricsToKokFormat();
+            GetKokSaveOptions();
         }
 
         /// <summary>
@@ -2275,7 +2276,37 @@ namespace Karaboss.Mp3
         /// <param name="e">The event data associated with the click event.</param>
         private void mnuFileExportLyricsKok_Click(object sender, EventArgs e)
         {
-            ExportLyricsToKokFormat();
+            //ExportLyricsToKokFormat();
+            GetKokSaveOptions();
+        }
+
+
+        /// <summary>
+        /// Displays a dialog for configuring options related to saving Kok format lyrics and processes the selected
+        /// options.
+        /// </summary>
+        /// <remarks>This method presents a user interface for setting preferences such as removing
+        /// accents, forcing upper or lower case, and removing non-alphanumeric characters. The selected options are
+        /// then used to format the lyrics accordingly. If the dialog is canceled, no changes are made.</remarks>
+        private void GetKokSaveOptions()
+        {
+            DialogResult dr;
+            frmKokOptions KokOptionsDialog = new frmKokOptions();
+            dr = KokOptionsDialog.ShowDialog();
+
+            if (dr == System.Windows.Forms.DialogResult.Cancel)
+                return;
+
+            // Remove accents
+            bool bRemoveAccents = KokOptionsDialog.bRemoveAccents;
+            // Force Upper Case
+            bool bUpperCase = KokOptionsDialog.bUpperCase;
+            // Force Lower Case
+            bool bLowerCase = KokOptionsDialog.bLowerCase;
+            // Remove all non-alphanumeric characters
+            bool bRemoveNonAlphaNumeric = KokOptionsDialog.bRemoveNonAlphaNumeric;
+
+            ExportLyricsToKokFormat(bRemoveAccents, bUpperCase, bLowerCase, bRemoveNonAlphaNumeric);
         }
 
         /// <summary>
@@ -2286,7 +2317,7 @@ namespace Karaboss.Mp3
         /// directory. The method handles file naming conflicts by generating a unique filename. After saving the lyrics
         /// in KOK format, the file is opened automatically. If an error occurs during saving or opening, an error
         /// message is displayed.</remarks>
-        private void ExportLyricsToKokFormat()
+        private void ExportLyricsToKokFormat(bool bRemoveAccents, bool bUpperCase, bool bLowerCase, bool bRemoveNonAlphaNumeric)
         {
             #region select filename
 
@@ -2329,14 +2360,23 @@ namespace Karaboss.Mp3
             if (SaveFileDialog.ShowDialog() != DialogResult.OK)
                 return;
 
-            fullPath = SaveFileDialog.FileName;
-
             #endregion select filename
 
+            fullPath = SaveFileDialog.FileName;
 
             // For each line of lyric, read all the syllabes and their timestamps
             // and store the result in a list            
             List<(double Time, string lyric)> lstDgRows = LyricsUtilities.ReadDataGridContent(dgView, COL_TIME, COL_TEXT);
+            if (lstDgRows == null || lstDgRows.Count == 0)
+            {
+                MessageBox.Show("No lyric to export", "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return;
+            }
+
+            // Save to KOK file
+            LyricsUtilities.SaveKOKSyllabes(fullPath, lstDgRows, bRemoveAccents, bUpperCase, bLowerCase, bRemoveNonAlphaNumeric, _LrcMillisecondsDigits, null);
+
+            /*
             List<List<Utilities.LyricsUtilities.LyricsItem>> lstLines = Utilities.LyricsUtilities.ExtractDgRows(lstDgRows, _LrcMillisecondsDigits);
 
             // Save and open kok file
@@ -2353,7 +2393,7 @@ namespace Karaboss.Mp3
             {
                 MessageBox.Show(ex.Message);
             }
-
+            */
         }
 
         #endregion export kok

@@ -114,7 +114,7 @@ namespace Karaboss
                         cbEncoding.SelectedIndex = 0;
                         break;
                     case "UTF8":
-                        cbEncoding.SelectedIndex = 0;                         
+                        cbEncoding.SelectedIndex = 1;                         
                         break;                   
                     default:
                         cbEncoding.SelectedIndex = 1;
@@ -141,7 +141,7 @@ namespace Karaboss
             //ANSI: encoding = System.Text.Encoding.GetEncoding("iso-8859-1");
             cbEncoding.Items.Add("ANSI");
             cbEncoding.Items.Add("UTF8");            
-            cbEncoding.SelectedIndex = 1;
+            //cbEncoding.SelectedIndex = 1;
         }
 
         #endregion encoding
