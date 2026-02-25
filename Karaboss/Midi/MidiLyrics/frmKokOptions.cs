@@ -110,10 +110,13 @@ namespace Karaboss
                 
                 switch (_defaultencoding)
                 {
+                    case "ANSI":
+                        cbEncoding.SelectedIndex = 0;
+                        break;
                     case "UTF8":
                         cbEncoding.SelectedIndex = 0;                         
-                        break;
-                    case "ANSI":
+                        break;                   
+                    default:
                         cbEncoding.SelectedIndex = 1;
                         break;
                 }                                             
@@ -136,10 +139,8 @@ namespace Karaboss
         {
             //UTF8: Encoding encoding = Encoding.UTF8;
             //ANSI: encoding = System.Text.Encoding.GetEncoding("iso-8859-1");
-
             cbEncoding.Items.Add("ANSI");
-            cbEncoding.Items.Add("UTF8");
-            
+            cbEncoding.Items.Add("UTF8");            
             cbEncoding.SelectedIndex = 1;
         }
 
@@ -160,12 +161,12 @@ namespace Karaboss
                 Properties.Settings.Default.bLrcRemoveNonAlphaNumeric = bRemoveNonAlphaNumeric;               
 
                 switch (_defaultencoding)
-                {
-                    case "UTF8":
-                        Properties.Settings.Default.DefaultEncoding = "UTF8";
-                        break;
+                {                    
                     case "ANSI":
                         Properties.Settings.Default.DefaultEncoding = "ANSI";
+                        break;
+                    case "UTF8":
+                        Properties.Settings.Default.DefaultEncoding = "UTF8";
                         break;
                     default:
                         Properties.Settings.Default.DefaultEncoding = "UTF8";
@@ -215,11 +216,11 @@ namespace Karaboss
             switch (cbEncoding.SelectedIndex)
             {
                 case 0:
-                    _defaultencoding = "UTF8";
-                    break;
-                case 1:
                     _defaultencoding = "ANSI";
                     break;
+                case 1:
+                    _defaultencoding = "UTF8";
+                    break;                
             }
 
         }

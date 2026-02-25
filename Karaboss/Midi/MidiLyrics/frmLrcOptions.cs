@@ -168,11 +168,14 @@ namespace Karaboss
                     _defaultencoding = Properties.Settings.Default.DefaultEncoding;
                 
                 switch (_defaultencoding)
-                {
-                    case "UTF8":
-                        cbEncoding.SelectedIndex = 0;                         
-                        break;
+                {                    
                     case "ANSI":
+                        cbEncoding.SelectedIndex = 0;
+                        break;
+                    case "UTF8":
+                        cbEncoding.SelectedIndex = 1;
+                        break;
+                    default:
                         cbEncoding.SelectedIndex = 1;
                         break;
                 }
@@ -200,17 +203,11 @@ namespace Karaboss
 
         private void initCbEncoding()
         {
-
             //UTF8: Encoding encoding = Encoding.UTF8;
             //ANSI: encoding = System.Text.Encoding.GetEncoding("iso-8859-1");
-
-
             cbEncoding.Items.Add("ANSI");
-            cbEncoding.Items.Add("UTF8");
-
-            
+            cbEncoding.Items.Add("UTF8");            
             cbEncoding.SelectedIndex = 1;
-
         }
 
 
@@ -239,12 +236,12 @@ namespace Karaboss
                 Properties.Settings.Default.LrcMillisecondsDigits = _LrcMillisecondsDigits;
 
                 switch (_defaultencoding)
-                {
-                    case "UTF8":
-                        Properties.Settings.Default.DefaultEncoding = "UTF8";
-                        break;
+                {                    
                     case "ANSI":
                         Properties.Settings.Default.DefaultEncoding = "ANSI";
+                        break;
+                    case "UTF8":
+                        Properties.Settings.Default.DefaultEncoding = "UTF8";
                         break;
                     default:
                         Properties.Settings.Default.DefaultEncoding = "UTF8";
@@ -376,12 +373,12 @@ namespace Karaboss
         private void cbEncoding_SelectedIndexChanged(object sender, EventArgs e)
         {
             switch (cbEncoding.SelectedIndex)
-            {
+            {                
                 case 0:
-                    _defaultencoding = "UTF8";
+                    _defaultencoding = "ANSI";
                     break;
                 case 1:
-                    _defaultencoding = "ANSI";
+                    _defaultencoding = "UTF8";
                     break;
             }
 

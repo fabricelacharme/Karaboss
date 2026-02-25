@@ -46,6 +46,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using static System.Windows.Forms.AxHost;
+using static System.Windows.Forms.LinkLabel;
 
 namespace Karaboss.Utilities
 {
@@ -60,6 +61,8 @@ namespace Karaboss.Utilities
     {
         public static string m_SepLine = "/";
         public static string m_SepParagraph = "\\";
+
+        #region common functions
 
         /// <summary>
         /// Conversion table accented chars to non accentued chars
@@ -471,12 +474,14 @@ namespace Karaboss.Utilities
 
                 case "ANSI":
                     //return Encoding.GetEncoding("iso-8859-1");
-                    return Encoding.GetEncoding("1252");
+                    return Encoding.GetEncoding("Windows-1252");
 
                 default:
                     return Encoding.UTF8;
             }
         }
+
+        #endregion commun functions
 
 
         /// <summary>
@@ -669,6 +674,39 @@ namespace Karaboss.Utilities
             return lstLyricsItems;
         }
 
+
+        /// <summary>
+        /// Saves the specified string content to a file at the given path and optionally opens the file after saving.
+        /// </summary>
+        /// <remarks>If the file already exists at the specified path, it is deleted before writing the
+        /// new content to ensure the correct encoding is applied. The method uses the application's default encoding
+        /// when writing the file.</remarks>
+        /// <param name="fullPath">The full file path, including the file name, where the content will be saved. Cannot be null or empty.</param>
+        /// <param name="Content">The string content to write to the file.</param>
+        /// <param name="bShow">A value indicating whether to open the file after saving. If set to <see langword="true"/>, the file is
+        /// opened after it is saved; otherwise, it is not.</param>
+        public static void SaveStringToFile(string fullPath, string Content, bool bShow = false)
+        {
+            try
+            {
+                Encoding encoding = GetDefaultEncoding();
+
+                // Strange behaviour: if the file is not deleted before saving, encoding is not applied
+                // It seems that WriteAllText append data to the existing file
+                if (System.IO.File.Exists(fullPath))
+                    System.IO.File.Delete(fullPath);
+
+                System.IO.File.WriteAllText(fullPath, Content, encoding);
+
+                if (bShow ) 
+                    System.Diagnostics.Process.Start(@fullPath);
+
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
 
 
         #region LRC
@@ -1322,22 +1360,8 @@ namespace Karaboss.Utilities
             }
             #endregion send all to string
 
-
-            // Open file
-            #region open file
-            try
-            {                                
-                Encoding encoding = GetDefaultEncoding();
-
-                System.IO.File.WriteAllText(File, lrcs, encoding);
-                System.Diagnostics.Process.Start(@File);
-
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message, "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-            #endregion open file
+            // Save file
+            SaveStringToFile(File, lrcs, true);            
         }
 
 
@@ -1377,22 +1401,12 @@ namespace Karaboss.Utilities
             // 
             lines += CreateLrcString(lstTimeLines);
 
-            // Open file
-            try
-            {
-                Encoding encoding = GetDefaultEncoding();                
-                //encoding = System.Text.Encoding.GetEncoding("iso-8859-1");
-
-                System.IO.File.WriteAllText(File, lines, encoding);
-                System.Diagnostics.Process.Start(@File);
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message, "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-
-
+            // Save file
+            SaveStringToFile(File, lines, true);            
         }
+
+        
+
 
         /// <summary>
         /// Create the header of the LRC file composed of tags tool, title, artist, album, lang
@@ -2236,6 +2250,20 @@ namespace Karaboss.Utilities
             return result;
 
         }
+
+        public static void SaveKOKSyllabes(string File, List<(double, string)> lstDgRows, bool bRemoveAccents, bool bUpperCase, bool bLowerCase, bool bRemoveNonAlphaNumeric, int _LrcMillisecondsDigits, MidiLyricsMgmt _myLyricsMgmt = null)
+        {
+
+            // Apply treatments choosen to the lyrics
+            List<(double time, string lyric)> lstDgRowsTreated = ApplyTextTreatments(lstDgRows, bRemoveAccents, bUpperCase, bLowerCase, bRemoveNonAlphaNumeric, _myLyricsMgmt);
+
+            List<List<Utilities.LyricsUtilities.LyricsItem>> lstLines = ExtractDgRows(lstDgRowsTreated, _LrcMillisecondsDigits);
+            string lines = SaveLyricsToKokFormat(lstLines);
+
+            // Save file
+            LyricsUtilities.SaveStringToFile(File, lines, true);
+        }
+
 
         #endregion export kok
 

@@ -2376,30 +2376,31 @@ namespace Karaboss
             if (SaveFileDialog.ShowDialog() != DialogResult.OK)
                 return;
 
-            fullPath = SaveFileDialog.FileName;
-
             #endregion select filename
 
-            // For each line of lyric, read all the syllabes and their timestamps
+            fullPath = SaveFileDialog.FileName;
+
+            // Read DatagridView content
             List<(double Time, string lyric)> lstDgRows = LyricsUtilities.ReadDataGridContent(dgView, COL_TIME, COL_TEXT);
-            List<List<Utilities.LyricsUtilities.LyricsItem>> lstLines = Utilities.LyricsUtilities.ExtractDgRows(lstDgRows, _LrcMillisecondsDigits);
-                                   
-            string lines = Utilities.LyricsUtilities.SaveLyricsToKokFormat(lstLines);
-
-            #region save file
-            try
+            if (lstDgRows == null || lstDgRows.Count == 0)
             {
-                Encoding encoding = Utilities.LyricsUtilities.GetDefaultEncoding();
-                                
-                System.IO.File.WriteAllText(fullPath, lines, encoding);
-                System.Diagnostics.Process.Start(@fullPath);
+                MessageBox.Show("No lyric to export", "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return;
+            }
 
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message);
-            }
-            #endregion save file
+            // OLD
+            //List<List<Utilities.LyricsUtilities.LyricsItem>> lstLines = Utilities.LyricsUtilities.ExtractDgRows(lstDgRows, _LrcMillisecondsDigits);                                   
+            //string lines = Utilities.LyricsUtilities.SaveLyricsToKokFormat(lstLines);
+
+            // Save file
+            //LyricsUtilities.SaveStringToFile(fullPath, lines, true);
+            
+            // OLD END
+
+
+            // NEW
+            LyricsUtilities.SaveKOKSyllabes(fullPath, lstDgRows, bRemoveAccents, bUpperCase, bLowerCase, bRemoveNonAlphaNumeric, _LrcMillisecondsDigits, _myLyricsMgmt);
+
         }
 
 
