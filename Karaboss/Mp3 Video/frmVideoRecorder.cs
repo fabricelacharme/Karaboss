@@ -121,7 +121,7 @@ namespace Karaboss
         #endregion audio declarations
 
 
-        private frmLyric frmLyrics;
+        private frmMidiLyrics frmMidiLyrics;
         private IntPtr HwndLyrics = IntPtr.Zero;
 
         private frmPianoTraining FrmPianoTraining;
@@ -556,23 +556,23 @@ namespace Karaboss
         #endregion audio
 
         /// <summary>
-        /// Retrieve Handle of frmLyrics
+        /// Retrieve Handle of frmMidiLyrics
         /// </summary>
         /// <returns></returns>
-        private IntPtr getHwndfrmLyric()
+        private IntPtr getHwndfrmMidiLyrics()
         {
             IntPtr pt = IntPtr.Zero;
 
-            if (Application.OpenForms.OfType<frmLyric>().Count() > 0)
+            if (Application.OpenForms.OfType<frmMidiLyrics>().Count() > 0)
             {
-                frmLyrics = Utilities.FormUtilities.GetForm<frmLyric>();
-                pt = frmLyrics.Handle;
+                frmMidiLyrics = Utilities.FormUtilities.GetForm<frmMidiLyrics>();
+                pt = frmMidiLyrics.Handle;
             }
             return pt;
         }
 
         /// <summary>
-        /// Retrieve Handle of frmLyrics
+        /// Retrieve Handle of frmPianoTraining
         /// </summary>
         /// <returns></returns>
         private IntPtr getHwndfrmPianoTraining()
@@ -694,7 +694,7 @@ namespace Karaboss
                 mp3FileName = strSaveFile;
 
                 bCaptureVideo = true;
-                HwndLyrics = getHwndfrmLyric();
+                HwndLyrics = getHwndfrmMidiLyrics();
                 if (HwndLyrics == IntPtr.Zero)
                 {
                     HwndPianoTraining = getHwndfrmPianoTraining();

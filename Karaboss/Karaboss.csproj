@@ -68,7 +68,7 @@
     </Reference>
     <Reference Include="Bass.Net, Version=2.4.17.6, Culture=neutral, PublicKeyToken=b7566c273e6ef480, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>Mp3 Video\Bass\Bass.Net.dll</HintPath>
+      <HintPath>Mp3\Bass\Bass.Net.dll</HintPath>
     </Reference>
     <Reference Include="CDGNet">
       <HintPath>..\CDGNet\bin\Debug\CDGNet.dll</HintPath>
@@ -199,12 +199,19 @@
     <Compile Include="Lrc\frmLrcGenerator.Designer.cs">
       <DependentUpon>frmLrcGenerator.cs</DependentUpon>
     </Compile>
+    <Compile Include="Midi\MidiLyrics\frmKokOptions.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Midi\MidiLyrics\frmKokOptions.Designer.cs">
+      <DependentUpon>frmKokOptions.cs</DependentUpon>
+    </Compile>
     <Compile Include="Midi\MidiLyrics\frmLrcOptions.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Midi\MidiLyrics\frmLrcOptions.Designer.cs">
       <DependentUpon>frmLrcOptions.cs</DependentUpon>
     </Compile>
+    <Compile Include="Midi\MidiPlayer\MiniMidiPlayer.cs" />
     <Compile Include="Mp3\Mp3Lyrics\frmMp3Lyrics.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -231,6 +238,7 @@
     </Compile>
     <Compile Include="Mp3\Mp3Lyrics\Mp3LyricsMgmt.cs" />
     <Compile Include="Mp3\Mp3Player\Mp3Player.cs" />
+    <Compile Include="Srt\srtlib.net.cs" />
     <Compile Include="Utilities\Forms\FormUtilities.cs" />
     <Compile Include="Utilities\IO\Files.cs" />
     <Compile Include="Utilities\Lyrics\LyricsUtilities.cs" />
@@ -344,11 +352,11 @@
     <Compile Include="frmLoading.Designer.cs">
       <DependentUpon>frmLoading.cs</DependentUpon>
     </Compile>
-    <Compile Include="Midi\MidiLyrics\frmLyricsEdit.cs">
+    <Compile Include="Midi\MidiLyrics\frmMidiLyricsEdit.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Midi\MidiLyrics\frmLyricsEdit.Designer.cs">
-      <DependentUpon>frmLyricsEdit.cs</DependentUpon>
+    <Compile Include="Midi\MidiLyrics\frmMidiLyricsEdit.Designer.cs">
+      <DependentUpon>frmMidiLyricsEdit.cs</DependentUpon>
     </Compile>
     <Compile Include="frmMessageBox.cs">
       <SubType>Form</SubType>
@@ -374,11 +382,11 @@
     <Compile Include="frmRecorder.Designer.cs">
       <DependentUpon>frmRecorder.cs</DependentUpon>
     </Compile>
-    <Compile Include="Midi\MidiLyrics\frmLyricsSelectTrack.cs">
+    <Compile Include="Midi\MidiLyrics\frmMidiLyricsSelectTrack.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Midi\MidiLyrics\frmLyricsSelectTrack.Designer.cs">
-      <DependentUpon>frmLyricsSelectTrack.cs</DependentUpon>
+    <Compile Include="Midi\MidiLyrics\frmMidiLyricsSelectTrack.Designer.cs">
+      <DependentUpon>frmMidiLyricsSelectTrack.cs</DependentUpon>
     </Compile>
     <Compile Include="frmSplashScreen.cs">
       <SubType>Form</SubType>
@@ -392,11 +400,11 @@
     <Compile Include="frmTags.Designer.cs">
       <DependentUpon>frmTags.cs</DependentUpon>
     </Compile>
-    <Compile Include="Midi\MidiLyrics\frmLyric.cs">
+    <Compile Include="Midi\MidiLyrics\frmMidiLyrics.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Midi\MidiLyrics\frmLyric.designer.cs">
-      <DependentUpon>frmLyric.cs</DependentUpon>
+    <Compile Include="Midi\MidiLyrics\frmMidiLyrics.designer.cs">
+      <DependentUpon>frmMidiLyrics.cs</DependentUpon>
     </Compile>
     <Compile Include="Midi\MidiLyrics\frmLyrOptions.cs">
       <SubType>Form</SubType>
@@ -446,11 +454,11 @@
     <Compile Include="Pages\PlaylistsControl\FrmNewPlaylist.Designer.cs">
       <DependentUpon>FrmNewPlaylist.cs</DependentUpon>
     </Compile>
-    <Compile Include="Midi\MidiPlayer\frmPlayer.cs">
+    <Compile Include="Midi\MidiPlayer\frmMidiPlayer.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Midi\MidiPlayer\frmPlayer.Designer.cs">
-      <DependentUpon>frmPlayer.cs</DependentUpon>
+    <Compile Include="Midi\MidiPlayer\frmMidiPlayer.Designer.cs">
+      <DependentUpon>frmMidiPlayer.cs</DependentUpon>
     </Compile>
     <Compile Include="Karaclass.cs" />
     <Compile Include="Pages\PlaylistsControl\Playlist.cs" />
@@ -612,14 +620,20 @@
     <EmbeddedResource Include="Lrc\frmLrcGenerator.resx">
       <DependentUpon>frmLrcGenerator.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Midi\MidiLyrics\frmKokOptions.fr.resx">
+      <DependentUpon>frmKokOptions.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Midi\MidiLyrics\frmKokOptions.resx">
+      <DependentUpon>frmKokOptions.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Midi\MidiLyrics\frmLrcOptions.fr.resx">
       <DependentUpon>frmLrcOptions.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Midi\MidiLyrics\frmLrcOptions.resx">
       <DependentUpon>frmLrcOptions.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Midi\MidiLyrics\frmLyricsSelectTrack.fr.resx">
-      <DependentUpon>frmLyricsSelectTrack.cs</DependentUpon>
+    <EmbeddedResource Include="Midi\MidiLyrics\frmMidiLyricsSelectTrack.fr.resx">
+      <DependentUpon>frmMidiLyricsSelectTrack.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="frmModifyTempo.fr.resx">
       <DependentUpon>frmModifyTempo.cs</DependentUpon>
@@ -698,23 +712,23 @@
     <EmbeddedResource Include="frmLoading.resx">
       <DependentUpon>frmLoading.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Midi\MidiLyrics\frmLyricsEdit.en.resx">
-      <DependentUpon>frmLyricsEdit.cs</DependentUpon>
+    <EmbeddedResource Include="Midi\MidiLyrics\frmMidiLyricsEdit.en.resx">
+      <DependentUpon>frmMidiLyricsEdit.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Midi\MidiLyrics\frmLyricsEdit.fr.resx">
-      <DependentUpon>frmLyricsEdit.cs</DependentUpon>
+    <EmbeddedResource Include="Midi\MidiLyrics\frmMidiLyricsEdit.fr.resx">
+      <DependentUpon>frmMidiLyricsEdit.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Midi\MidiLyrics\frmLyricsEdit.resx">
-      <DependentUpon>frmLyricsEdit.cs</DependentUpon>
+    <EmbeddedResource Include="Midi\MidiLyrics\frmMidiLyricsEdit.resx">
+      <DependentUpon>frmMidiLyricsEdit.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Midi\MidiLyrics\frmLyric.en.resx">
-      <DependentUpon>frmLyric.cs</DependentUpon>
+    <EmbeddedResource Include="Midi\MidiLyrics\frmMidiLyrics.en.resx">
+      <DependentUpon>frmMidiLyrics.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Midi\MidiLyrics\frmLyric.fr.resx">
-      <DependentUpon>frmLyric.cs</DependentUpon>
+    <EmbeddedResource Include="Midi\MidiLyrics\frmMidiLyrics.fr.resx">
+      <DependentUpon>frmMidiLyrics.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Midi\MidiLyrics\frmLyrOptions.en.resx">
@@ -731,12 +745,12 @@
     <EmbeddedResource Include="frmPianoRoll.resx">
       <DependentUpon>frmPianoRoll.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Midi\MidiPlayer\frmPlayer.en.resx">
-      <DependentUpon>frmPlayer.cs</DependentUpon>
+    <EmbeddedResource Include="Midi\MidiPlayer\frmMidiPlayer.en.resx">
+      <DependentUpon>frmMidiPlayer.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Midi\MidiPlayer\frmPlayer.fr.resx">
-      <DependentUpon>frmPlayer.cs</DependentUpon>
+    <EmbeddedResource Include="Midi\MidiPlayer\frmMidiPlayer.fr.resx">
+      <DependentUpon>frmMidiPlayer.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="frmPrint.fr.resx">
@@ -748,8 +762,9 @@
     <EmbeddedResource Include="frmRecorder.resx">
       <DependentUpon>frmRecorder.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Midi\MidiLyrics\frmLyricsSelectTrack.resx">
-      <DependentUpon>frmLyricsSelectTrack.cs</DependentUpon>
+    <EmbeddedResource Include="Midi\MidiLyrics\frmMidiLyricsSelectTrack.resx">
+      <DependentUpon>frmMidiLyricsSelectTrack.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="frmSplashScreen.resx">
       <DependentUpon>frmSplashScreen.cs</DependentUpon>
@@ -757,8 +772,8 @@
     <EmbeddedResource Include="frmTags.resx">
       <DependentUpon>frmTags.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Midi\MidiLyrics\frmLyric.resx">
-      <DependentUpon>frmLyric.cs</DependentUpon>
+    <EmbeddedResource Include="Midi\MidiLyrics\frmMidiLyrics.resx">
+      <DependentUpon>frmMidiLyrics.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Midi\MidiLyrics\frmLyrOptions.resx">
@@ -791,8 +806,8 @@
     <EmbeddedResource Include="Pages\PlaylistsControl\FrmNewPlaylist.resx">
       <DependentUpon>FrmNewPlaylist.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Midi\MidiPlayer\frmPlayer.resx">
-      <DependentUpon>frmPlayer.cs</DependentUpon>
+    <EmbeddedResource Include="Midi\MidiPlayer\frmMidiPlayer.resx">
+      <DependentUpon>frmMidiPlayer.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Pages\PlaylistsControl\PlaylistsControl.en.resx">
@@ -900,6 +915,10 @@
     <ProjectReference Include="..\LyricsWikia.Api\LyricsWikia.Api.csproj">
       <Project>{7e6a19a2-655d-400e-9f3f-ccd7b80c278f}</Project>
       <Name>LyricsWikia.Api</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\OvhLyrics.Api\OvhLyrics.Api.csproj">
+      <Project>{cb97f2f8-ea00-4e73-8cb4-a5c21e8ab174}</Project>
+      <Name>OvhLyrics.Api</Name>
     </ProjectReference>
     <ProjectReference Include="..\picControl\PicControl.csproj">
       <Project>{5A59550C-4187-4E78-B9A4-2DF31D17BD64}</Project>
@@ -1167,6 +1186,7 @@
     <Folder Include="Mp3 Video\Lame\" />
     <Folder Include="Mp3 Video\Unzip\" />
     <Folder Include="Mp3 Video\Video\" />
+    <Folder Include="Mp3\Bass\" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -274,10 +274,10 @@ namespace Karaboss
 
             sheetmusic.SelectTempoSymbol(_tempoSymbol);
 
-            if (Application.OpenForms.OfType<frmPlayer>().Count() > 0)
+            if (Application.OpenForms.OfType<frmMidiPlayer>().Count() > 0)
             {
-                frmPlayer frmPlayer = Utilities.FormUtilities.GetForm<frmPlayer>();
-                frmPlayer.ScrollTo(_tempoSymbol.StartTime);
+                frmMidiPlayer frmMidiPlayer = Utilities.FormUtilities.GetForm<frmMidiPlayer>();
+                frmMidiPlayer.ScrollTo(_tempoSymbol.StartTime);
             }
         }
 
@@ -324,7 +324,7 @@ namespace Karaboss
             sheetmusic.SelectTempoSymbol(_tempoSymbol);
 
             // File modified
-            UpdatefrmPlayer();
+            UpdatefrmMidiPlayer();
 
         }
 
@@ -359,7 +359,7 @@ namespace Karaboss
             sheetmusic.SelectTempoSymbol(_tempoSymbol);
 
             // File modified
-            UpdatefrmPlayer();
+            UpdatefrmMidiPlayer();
         }
 
         /// <summary>
@@ -406,7 +406,7 @@ namespace Karaboss
                     _tempoSymbol = l[i];
                     sheetmusic.SelectTempoSymbol(_tempoSymbol);
                     
-                    UpdatefrmPlayer();
+                    UpdatefrmMidiPlayer();
                     UpdateFields();
 
                     txtTempo.Text = _tempoSymbol.Tempo.ToString();
@@ -416,19 +416,19 @@ namespace Karaboss
             } 
 
             DisplayPreviousTempoChange();
-            UpdatefrmPlayer();
+            UpdatefrmMidiPlayer();
         }
 
 
         /// <summary>
         /// File was modified
         /// </summary>
-        private void UpdatefrmPlayer()
+        private void UpdatefrmMidiPlayer()
         {
-            if (Application.OpenForms.OfType<frmPlayer>().Count() > 0)
+            if (Application.OpenForms.OfType<frmMidiPlayer>().Count() > 0)
             {
-                frmPlayer frmPlayer = Utilities.FormUtilities.GetForm<frmPlayer>();
-                frmPlayer.UpdateTimes();
+                frmMidiPlayer frmMidiPlayer = Utilities.FormUtilities.GetForm<frmMidiPlayer>();
+                frmMidiPlayer.UpdateTimes();
             }
         }
 

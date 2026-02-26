@@ -46,6 +46,8 @@
             this.OptFormat2Digits = new System.Windows.Forms.RadioButton();
             this.OptFormat3Digits = new System.Windows.Forms.RadioButton();
             this.chkMetadata = new System.Windows.Forms.CheckBox();
+            this.cbEncoding = new System.Windows.Forms.ComboBox();
+            this.lblEncoding = new System.Windows.Forms.Label();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.UpdCutLines)).BeginInit();
             this.groupBox2.SuspendLayout();
@@ -194,11 +196,25 @@
             this.chkMetadata.UseVisualStyleBackColor = true;
             this.chkMetadata.CheckedChanged += new System.EventHandler(this.chkMetadata_CheckedChanged);
             // 
+            // cbEncoding
+            // 
+            this.cbEncoding.FormattingEnabled = true;
+            resources.ApplyResources(this.cbEncoding, "cbEncoding");
+            this.cbEncoding.Name = "cbEncoding";
+            this.cbEncoding.SelectedIndexChanged += new System.EventHandler(this.cbEncoding_SelectedIndexChanged);
+            // 
+            // lblEncoding
+            // 
+            resources.ApplyResources(this.lblEncoding, "lblEncoding");
+            this.lblEncoding.Name = "lblEncoding";
+            // 
             // frmLrcOptions
             // 
             resources.ApplyResources(this, "$this");
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.btnCancel;
+            this.Controls.Add(this.lblEncoding);
+            this.Controls.Add(this.cbEncoding);
             this.Controls.Add(this.chkMetadata);
             this.Controls.Add(this.groupBox3);
             this.Controls.Add(this.groupBox2);
@@ -241,5 +257,7 @@
         private System.Windows.Forms.RadioButton OptFormat2Digits;
         private System.Windows.Forms.RadioButton OptFormat3Digits;
         private System.Windows.Forms.CheckBox chkMetadata;
+        private System.Windows.Forms.ComboBox cbEncoding;
+        private System.Windows.Forms.Label lblEncoding;
     }
 }

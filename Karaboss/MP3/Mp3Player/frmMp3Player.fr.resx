@@ -125,16 +125,31 @@
     <value>&amp;Fichier</value>
   </data>
   <data name="mnuFileOpen.Size" type="System.Drawing.Size, System.Drawing">
-    <value>116, 22</value>
+    <value>137, 22</value>
   </data>
   <data name="mnuFileOpen.Text" xml:space="preserve">
     <value>&amp;Ouvrir...</value>
   </data>
-  <data name="MnuFileSep.Size" type="System.Drawing.Size, System.Drawing">
-    <value>113, 6</value>
+  <data name="MnuFileSep1.Size" type="System.Drawing.Size, System.Drawing">
+    <value>134, 6</value>
+  </data>
+  <data name="mnuFileExportLyrics.Size" type="System.Drawing.Size, System.Drawing">
+    <value>137, 22</value>
+  </data>
+  <data name="mnuFileExportLyricsLrc.Size" type="System.Drawing.Size, System.Drawing">
+    <value>134, 22</value>
+  </data>
+  <data name="mnuFileExportLyricsTxt.Size" type="System.Drawing.Size, System.Drawing">
+    <value>134, 22</value>
+  </data>
+  <data name="mnuFileExportLyricsKok.Size" type="System.Drawing.Size, System.Drawing">
+    <value>134, 22</value>
+  </data>
+  <data name="mnuFileSep2.Size" type="System.Drawing.Size, System.Drawing">
+    <value>134, 6</value>
   </data>
   <data name="mnuFileQuit.Size" type="System.Drawing.Size, System.Drawing">
-    <value>116, 22</value>
+    <value>137, 22</value>
   </data>
   <data name="mnuFileQuit.Text" xml:space="preserve">
     <value>&amp;Quitter</value>
@@ -146,10 +161,43 @@
     <value>&amp;Edition</value>
   </data>
   <data name="mnuEditLyrics.Size" type="System.Drawing.Size, System.Drawing">
-    <value>162, 22</value>
+    <value>246, 22</value>
   </data>
   <data name="mnuEditLyrics.Text" xml:space="preserve">
     <value>E&amp;diter les paroles</value>
+  </data>
+  <data name="mnuEditSep1.Size" type="System.Drawing.Size, System.Drawing">
+    <value>243, 6</value>
+  </data>
+  <data name="mnuEditInsertNewLine.Size" type="System.Drawing.Size, System.Drawing">
+    <value>246, 22</value>
+  </data>
+  <data name="mnuEditInsertNewLine.Text" xml:space="preserve">
+    <value>Insérer une nouvelle ligne</value>
+  </data>
+  <data name="mnuEditDeleteCurrentLine.Size" type="System.Drawing.Size, System.Drawing">
+    <value>246, 22</value>
+  </data>
+  <data name="mnuEditDeleteCurrentLine.Text" xml:space="preserve">
+    <value>Supprimer la ligne</value>
+  </data>
+  <data name="mnuEditSep2.Size" type="System.Drawing.Size, System.Drawing">
+    <value>243, 6</value>
+  </data>
+  <data name="mnuEditImportLyrics.Size" type="System.Drawing.Size, System.Drawing">
+    <value>246, 22</value>
+  </data>
+  <data name="mnuEditImportLyrics.Text" xml:space="preserve">
+    <value>Importer des paroles</value>
+  </data>
+  <data name="mnuEditImportLyricsLrc.Text" xml:space="preserve">
+    <value>Format LRC</value>
+  </data>
+  <data name="mnuEditImportLyricsTxt.Text" xml:space="preserve">
+    <value>Format Text</value>
+  </data>
+  <data name="mnuEditImportLyricsKok.Text" xml:space="preserve">
+    <value>Format KOK</value>
   </data>
   <data name="mnuHelp.Size" type="System.Drawing.Size, System.Drawing">
     <value>43, 20</value>
@@ -221,9 +269,9 @@
     <value>Titre</value>
   </data>
   <data name="toolstrip1.Size" type="System.Drawing.Size, System.Drawing">
-    <value>359, 28</value>
+    <value>520, 28</value>
   </data>
-  <data name="mnuImport.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+  <data name="mnuImportLyrics.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
         YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAIFSURBVDhPpZLtS1NhGMbPPxJmmlYSgqHiKzGU1EDxg4iK
@@ -238,25 +286,22 @@
         nOccAdABIDXXE1nzAAAAAElFTkSuQmCC
 </value>
   </data>
-  <data name="mnuImport.Size" type="System.Drawing.Size, System.Drawing">
-    <value>84, 25</value>
+  <data name="mnuImportLyrics.Size" type="System.Drawing.Size, System.Drawing">
+    <value>167, 25</value>
   </data>
-  <data name="mnuImport.Text" xml:space="preserve">
-    <value>Importer</value>
-  </data>
-  <data name="mnuImportLrcFile.Size" type="System.Drawing.Size, System.Drawing">
-    <value>245, 26</value>
-  </data>
-  <data name="mnuImportLrcFile.Text" xml:space="preserve">
-    <value>Importer un fichier .LRC</value>
-  </data>
-  <data name="mnuImportRawLyrics.Size" type="System.Drawing.Size, System.Drawing">
-    <value>245, 26</value>
-  </data>
-  <data name="mnuImportRawLyrics.Text" xml:space="preserve">
+  <data name="mnuImportLyrics.Text" xml:space="preserve">
     <value>Importer des paroles</value>
   </data>
-  <data name="mnuExport.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+  <data name="mnuImportLyricsLrc.Text" xml:space="preserve">
+    <value>Format LRC</value>
+  </data>
+  <data name="mnuImportLyricsTxt.Text" xml:space="preserve">
+    <value>Format Texte</value>
+  </data>
+  <data name="mnuImportLyricsKok.Text" xml:space="preserve">
+    <value>Format KOK</value>
+  </data>
+  <data name="mnuExportLyrics.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
         YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAIFSURBVDhPpZLtS1NhGMbPPxJmmlYSgqHiKzGU1EDxg4iK
@@ -271,11 +316,20 @@
         nOccAdABIDXXE1nzAAAAAElFTkSuQmCC
 </value>
   </data>
-  <data name="mnuExport.Size" type="System.Drawing.Size, System.Drawing">
-    <value>81, 25</value>
+  <data name="mnuExportLyrics.Size" type="System.Drawing.Size, System.Drawing">
+    <value>159, 25</value>
   </data>
-  <data name="mnuExport.Text" xml:space="preserve">
-    <value>Exporter</value>
+  <data name="mnuExportLyrics.Text" xml:space="preserve">
+    <value>Exporter les paroles</value>
+  </data>
+  <data name="mnuExportLyricsLrc.Text" xml:space="preserve">
+    <value>Format LRC</value>
+  </data>
+  <data name="mnuExportLyricsTxt.Text" xml:space="preserve">
+    <value>Format Texte</value>
+  </data>
+  <data name="mnuExportLyricsKok.Text" xml:space="preserve">
+    <value>Format KOK</value>
   </data>
   <data name="btnSwitchSyncEdit.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
@@ -321,5 +375,9 @@
         RwBMcEcA8A8AAMADAACAAQAAgAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgAEAAIAB
         AADAAwAA8A8AAA==
 </value>
+  </data>
+  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="$this.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
   </data>
 </root>

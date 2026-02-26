@@ -98,7 +98,7 @@ namespace Karaboss
             if (updDivision.Value > 0)
             {
                 //sequence1.Division = Convert.ToInt32(updDivision.Value);
-                UpdatefrmPlayer();
+                UpdatefrmMidiPlayer();
 
                 //DialogResult = DialogResult.OK;
                 Close();
@@ -114,12 +114,12 @@ namespace Karaboss
         /// <summary>
         /// File was modified
         /// </summary>
-        private void UpdatefrmPlayer()
+        private void UpdatefrmMidiPlayer()
         {
-            if (Application.OpenForms.OfType<frmPlayer>().Count() > 0)
+            if (Application.OpenForms.OfType<frmMidiPlayer>().Count() > 0)
             {
-                frmPlayer frmPlayer = Utilities.FormUtilities.GetForm<frmPlayer>();
-                frmPlayer.UpdateDivision(updDivision.Value);
+                frmMidiPlayer frmMidiPlayer = Utilities.FormUtilities.GetForm<frmMidiPlayer>();
+                frmMidiPlayer.UpdateDivision(updDivision.Value);
             }
         }
 

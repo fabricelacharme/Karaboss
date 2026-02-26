@@ -93,8 +93,8 @@ namespace MusicXml
         private int Pan = 64;
         private int Reverb = 0;
 
-        MidiNote n;
-        private int lyricLengh = 0; // Length of lyrics
+        //MidiNote n;
+        //private int lyricLengh = 0; // Length of lyrics
 
         // Constructor
         public MusicXmlReader() 
@@ -1795,7 +1795,7 @@ namespace MusicXml
             string c = chord.GetChordName();
 
 
-            // frmPlayer HandleLoadXmlCompleted > LoadXmlChordsInLyrics()
+            // frmMidiPlayer HandleLoadXmlCompleted > LoadXmlChordsInLyrics()
             ChordItem ci = new ChordItem()
             {
                 TicksOn = t,

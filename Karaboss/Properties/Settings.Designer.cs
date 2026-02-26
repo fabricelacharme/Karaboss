@@ -78,36 +78,36 @@ namespace Karaboss.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("False")]
-        public bool frmPlayerMaximized {
+        public bool frmMidiPlayerMaximized {
             get {
-                return ((bool)(this["frmPlayerMaximized"]));
+                return ((bool)(this["frmMidiPlayerMaximized"]));
             }
             set {
-                this["frmPlayerMaximized"] = value;
+                this["frmMidiPlayerMaximized"] = value;
             }
         }
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("0, 0")]
-        public global::System.Drawing.Point frmPlayerLocation {
+        public global::System.Drawing.Point frmMidiPlayerLocation {
             get {
-                return ((global::System.Drawing.Point)(this["frmPlayerLocation"]));
+                return ((global::System.Drawing.Point)(this["frmMidiPlayerLocation"]));
             }
             set {
-                this["frmPlayerLocation"] = value;
+                this["frmMidiPlayerLocation"] = value;
             }
         }
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("800, 600")]
-        public global::System.Drawing.Size frmPlayerSize {
+        public global::System.Drawing.Size frmMidiPlayerSize {
             get {
-                return ((global::System.Drawing.Size)(this["frmPlayerSize"]));
+                return ((global::System.Drawing.Size)(this["frmMidiPlayerSize"]));
             }
             set {
-                this["frmPlayerSize"] = value;
+                this["frmMidiPlayerSize"] = value;
             }
         }
         
@@ -162,72 +162,72 @@ namespace Karaboss.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("False")]
-        public bool frmLyricMaximized {
+        public bool frmMidiLyricMaximized {
             get {
-                return ((bool)(this["frmLyricMaximized"]));
+                return ((bool)(this["frmMidiLyricMaximized"]));
             }
             set {
-                this["frmLyricMaximized"] = value;
+                this["frmMidiLyricMaximized"] = value;
             }
         }
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("0, 200")]
-        public global::System.Drawing.Point frmLyricLocation {
+        public global::System.Drawing.Point frmMidiLyricLocation {
             get {
-                return ((global::System.Drawing.Point)(this["frmLyricLocation"]));
+                return ((global::System.Drawing.Point)(this["frmMidiLyricLocation"]));
             }
             set {
-                this["frmLyricLocation"] = value;
+                this["frmMidiLyricLocation"] = value;
             }
         }
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("800, 600")]
-        public global::System.Drawing.Size frmLyricSize {
+        public global::System.Drawing.Size frmMidiLyricSize {
             get {
-                return ((global::System.Drawing.Size)(this["frmLyricSize"]));
+                return ((global::System.Drawing.Size)(this["frmMidiLyricSize"]));
             }
             set {
-                this["frmLyricSize"] = value;
+                this["frmMidiLyricSize"] = value;
             }
         }
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("False")]
-        public bool frmLyricsMaximized {
+        public bool frmMidiLyricsMaximized {
             get {
-                return ((bool)(this["frmLyricsMaximized"]));
+                return ((bool)(this["frmMidiLyricsMaximized"]));
             }
             set {
-                this["frmLyricsMaximized"] = value;
+                this["frmMidiLyricsMaximized"] = value;
             }
         }
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("0, 0")]
-        public global::System.Drawing.Point frmLyricsLocation {
+        public global::System.Drawing.Point frmMidiLyricsLocation {
             get {
-                return ((global::System.Drawing.Point)(this["frmLyricsLocation"]));
+                return ((global::System.Drawing.Point)(this["frmMidiLyricsLocation"]));
             }
             set {
-                this["frmLyricsLocation"] = value;
+                this["frmMidiLyricsLocation"] = value;
             }
         }
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("400, 600")]
-        public global::System.Drawing.Size frmLyricsSize {
+        public global::System.Drawing.Size frmMidiLyricsSize {
             get {
-                return ((global::System.Drawing.Size)(this["frmLyricsSize"]));
+                return ((global::System.Drawing.Size)(this["frmMidiLyricsSize"]));
             }
             set {
-                this["frmLyricsSize"] = value;
+                this["frmMidiLyricsSize"] = value;
             }
         }
         
@@ -282,36 +282,36 @@ namespace Karaboss.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("False")]
-        public bool frmLyricsEditMaximized {
+        public bool frmMidiLyricsEditMaximized {
             get {
-                return ((bool)(this["frmLyricsEditMaximized"]));
+                return ((bool)(this["frmMidiLyricsEditMaximized"]));
             }
             set {
-                this["frmLyricsEditMaximized"] = value;
+                this["frmMidiLyricsEditMaximized"] = value;
             }
         }
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("0, 0")]
-        public global::System.Drawing.Point frmLyricsEditLocation {
+        public global::System.Drawing.Point frmMidiLyricsEditLocation {
             get {
-                return ((global::System.Drawing.Point)(this["frmLyricsEditLocation"]));
+                return ((global::System.Drawing.Point)(this["frmMidiLyricsEditLocation"]));
             }
             set {
-                this["frmLyricsEditLocation"] = value;
+                this["frmMidiLyricsEditLocation"] = value;
             }
         }
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("760, 500")]
-        public global::System.Drawing.Size frmLyricsEditSize {
+        public global::System.Drawing.Size frmMidiLyricsEditSize {
             get {
-                return ((global::System.Drawing.Size)(this["frmLyricsEditSize"]));
+                return ((global::System.Drawing.Size)(this["frmMidiLyricsEditSize"]));
             }
             set {
-                this["frmLyricsEditSize"] = value;
+                this["frmMidiLyricsEditSize"] = value;
             }
         }
         
@@ -1715,12 +1715,12 @@ namespace Karaboss.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("False")]
-        public bool frmLyricsTopMost {
+        public bool frmMidiLyricsTopMost {
             get {
-                return ((bool)(this["frmLyricsTopMost"]));
+                return ((bool)(this["frmMidiLyricsTopMost"]));
             }
             set {
-                this["frmLyricsTopMost"] = value;
+                this["frmMidiLyricsTopMost"] = value;
             }
         }
         
@@ -1769,6 +1769,18 @@ namespace Karaboss.Properties {
             }
             set {
                 this["TxtRhythm1Color"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("\"UTF8")]
+        public string DefaultEncoding {
+            get {
+                return ((string)(this["DefaultEncoding"]));
+            }
+            set {
+                this["DefaultEncoding"] = value;
             }
         }
     }

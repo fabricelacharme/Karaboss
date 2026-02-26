@@ -95,7 +95,7 @@ namespace Karaboss
         private string mTempDir;
 
         public frmExplorer(string[] args, int numinstance)
-        {
+        {            
             InitializeComponent();
 
             lblItags.Font = new Font("Segoe UI", 9F); 
@@ -501,10 +501,10 @@ namespace Karaboss
                 }
             }
             
-            // ferme le formulaire frmPlayer
-            if (Application.OpenForms.OfType<frmPlayer>().Count() > 0)
+            // ferme le formulaire frmMidiPlayer
+            if (Application.OpenForms.OfType<frmMidiPlayer>().Count() > 0)
             {
-                Application.OpenForms["frmPlayer"].Close();
+                Application.OpenForms["frmMidiPlayer"].Close();
             }
 
             // Ferme le formulaire frmPianoTraining            
@@ -564,10 +564,10 @@ namespace Karaboss
             }
 
 
-            // ferme le formulaire frmPlayer
-            if (Application.OpenForms.OfType<frmPlayer>().Count() > 0)
+            // ferme le formulaire frmMidiPlayer
+            if (Application.OpenForms.OfType<frmMidiPlayer>().Count() > 0)
             {
-                Application.OpenForms["frmPlayer"].Close();
+                Application.OpenForms["frmMidiPlayer"].Close();
             }
 
             // Ferme le formulaire frmPianoTraining            
@@ -612,10 +612,10 @@ namespace Karaboss
             }
 
             
-            // ferme le formulaire frmPlayer
-            if (Application.OpenForms.OfType<frmPlayer>().Count() > 0)
+            // ferme le formulaire frmMidiPlayer
+            if (Application.OpenForms.OfType<frmMidiPlayer>().Count() > 0)
             {
-                Application.OpenForms["frmPlayer"].Close();
+                Application.OpenForms["frmMidiPlayer"].Close();
             }
 
             // Ferme le formulaire frmPianoTraining                        
@@ -684,7 +684,7 @@ namespace Karaboss
         #region playListsControl events
 
         /// <summary>
-        /// Call by frmPlayer to display the current song played in a playlist
+        /// Call by frmMidiPlayer to display the current song played in a playlist
         /// </summary>
         /// <param name="song"></param>
         public void DisplaySong(string song)
@@ -1610,8 +1610,8 @@ namespace Karaboss
                 }
             }
 
-            #region Close Windows            
-
+            #region Close Windows                                    
+            
             // ferme le formulaire frmPianoTraining
             if (Application.OpenForms.OfType<frmPianoTraining>().Count() > 0)
             {
@@ -1637,10 +1637,10 @@ namespace Karaboss
                 Application.OpenForms["FrmTextPlayer"].Close();
             }
 
-            // Close form frmPlayer
-            if (Application.OpenForms.OfType<frmPlayer>().Count() > 0)
+            // Close form frmMidiPlayer
+            if (Application.OpenForms.OfType<frmMidiPlayer>().Count() > 0)
             {
-                Application.OpenForms["frmPlayer"].Close();
+                Application.OpenForms["frmMidiPlayer"].Close();
             }
 
             // Close form frmCDGPlayer
@@ -1655,10 +1655,10 @@ namespace Karaboss
 
             Cursor.Current = Cursors.WaitCursor;
 
-            // Close form frmMp3Player
-            if (Application.OpenForms.OfType<frmPlayer>().Count() > 0)
+            // Close form frmMidiPlayer
+            if (Application.OpenForms.OfType<frmMidiPlayer>().Count() > 0)
             {
-                Application.OpenForms["frmPlayer"].Close();
+                Application.OpenForms["frmMidiPlayer"].Close();
             }
 
             // Affiche le formulaire frmMp3Player 
@@ -1692,7 +1692,8 @@ namespace Karaboss
                 }
             }
 
-            #region Close Windows            
+            #region Close Windows                        
+
 
             // ferme le formulaire frmPianoTraining
             if (Application.OpenForms.OfType<frmPianoTraining>().Count() > 0)
@@ -1719,10 +1720,10 @@ namespace Karaboss
                 Application.OpenForms["FrmTextPlayer"].Close();
             }
 
-            // Close form frmPlayer
-            if (Application.OpenForms.OfType<frmPlayer>().Count() > 0)
+            // Close form frmMidiPlayer
+            if (Application.OpenForms.OfType<frmMidiPlayer>().Count() > 0)
             {
-                Application.OpenForms["frmPlayer"].Close();
+                Application.OpenForms["frmMidiPlayer"].Close();
             }
 
             // Close form frmMp3Player
@@ -1794,10 +1795,10 @@ namespace Karaboss
                 Application.OpenForms["frmGuitarTraining"].Close();
             }
 
-            // ferme le formulaire frmPlayer
-            if (Application.OpenForms.OfType<frmPlayer>().Count() > 0)
+            // ferme le formulaire frmMidiPlayer
+            if (Application.OpenForms.OfType<frmMidiPlayer>().Count() > 0)
             {
-                Application.OpenForms["frmPlayer"].Close();
+                Application.OpenForms["frmMidiPlayer"].Close();
             }
 
             // Close form frmMp3Player
@@ -1908,15 +1909,15 @@ namespace Karaboss
             #endregion
 
             // Affiche le formulaire frmPlay             
-            Application.OpenForms["frmPlayer"]?.Close();
+            Application.OpenForms["frmMidiPlayer"]?.Close();
             ResetOutPutDevice();
 
             // Add the file to the MRU list.
             MyMruList.AddFile(fpath);
 
-            Form frmPlayer = new frmPlayer(NumInstance, fpath, pl, bPlayNow, outDevice);
-            frmPlayer.Show();
-            frmPlayer.Activate();
+            Form frmMidiPlayer = new frmMidiPlayer(NumInstance, fpath, pl, bPlayNow, outDevice);
+            frmMidiPlayer.Show();
+            frmMidiPlayer.Activate();
 
 
         }        
@@ -1996,15 +1997,15 @@ namespace Karaboss
             #endregion
 
             // Close form frmPlay             
-            Application.OpenForms["frmPlayer"]?.Close();
+            Application.OpenForms["frmMidiPlayer"]?.Close();
             ResetOutPutDevice();
 
             // Add the file to the MRU list.
             MyMruList.AddFile(fpath);
 
-            Form frmPlayer = new frmPlayer(NumInstance, fpath, pl, bPlayNow, outDevice);
-            frmPlayer.Show();
-            frmPlayer.Activate();
+            Form frmMidiPlayer = new frmMidiPlayer(NumInstance, fpath, pl, bPlayNow, outDevice);
+            frmMidiPlayer.Show();
+            frmMidiPlayer.Activate();
 
         }
 
@@ -2103,18 +2104,16 @@ namespace Karaboss
             #endregion
 
             // Close form frmPlay 
-            //if (Application.OpenForms["frmPlayer"] != null)
-            //    Application.OpenForms["frmPlayer"].Close();
-            Application.OpenForms["frmPlayer"]?.Close();
+            Application.OpenForms["frmMidiPlayer"]?.Close();
 
             ResetOutPutDevice();
 
             // Add the file to the MRU list.
             MyMruList.AddFile(fpath);
 
-            Form frmPlayer = new frmPlayer(NumInstance, fpath, pl, bPlayNow, outDevice);
-            frmPlayer.Show();
-            frmPlayer.Activate();
+            Form frmMidiPlayer = new frmMidiPlayer(NumInstance, fpath, pl, bPlayNow, outDevice);
+            frmMidiPlayer.Show();
+            frmMidiPlayer.Activate();
 
         }
 
@@ -2438,10 +2437,10 @@ namespace Karaboss
                     frmLoading.Close();
                 }
 
-                if (Application.OpenForms.OfType<frmPlayer>().Count() > 0)
+                if (Application.OpenForms.OfType<frmMidiPlayer>().Count() > 0)
                 {
-                    frmPlayer frmPlayer = Utilities.FormUtilities.GetForm<frmPlayer>();
-                    frmPlayer.Close();
+                    frmMidiPlayer frmMidiPlayer = Utilities.FormUtilities.GetForm<frmMidiPlayer>();
+                    frmMidiPlayer.Close();
                 }
 
                 if (Application.OpenForms.OfType<frmPianoTraining>().Count() > 0)

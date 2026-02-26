@@ -34,6 +34,7 @@
 
 using Karaboss.Utilities;
 using System;
+using System.Text;
 using System.Windows.Forms;
 using static Karaboss.Karaclass;
 
@@ -44,6 +45,12 @@ namespace Karaboss
     {        
 
         #region properties
+        
+              
+        
+        private string _defaultencoding = "UTF8";
+        public string DefaultEncoding { get { return _defaultencoding; } }
+
         public LrcLinesSyllabesFormats LrcLinesSyllabesFormat
         {
             get { 
@@ -101,6 +108,9 @@ namespace Karaboss
             get { return chkMetadata.Checked; }
         }
 
+
+        
+
         #endregion properties
 
 
@@ -110,7 +120,11 @@ namespace Karaboss
         public frmLrcOptions()
         {
             InitializeComponent();
-            
+
+            // Initialize list of encoding
+            initCbEncoding();
+
+
             // Load and apply options
             LoadOptions();            
         }
@@ -147,6 +161,26 @@ namespace Karaboss
                 OptFormat2Digits.Checked = _LrcMillisecondsDigits == 2;
                 OptFormat3Digits.Checked = _LrcMillisecondsDigits == 3;
 
+
+                // Encoding
+                _defaultencoding = "UTF8";
+                if (Properties.Settings.Default.DefaultEncoding != null)
+                    _defaultencoding = Properties.Settings.Default.DefaultEncoding;
+                
+                switch (_defaultencoding)
+                {                    
+                    case "ANSI":
+                        cbEncoding.SelectedIndex = 0;
+                        break;
+                    case "UTF8":
+                        cbEncoding.SelectedIndex = 1;
+                        break;
+                    default:
+                        cbEncoding.SelectedIndex = 1;
+                        break;
+                }
+                
+
                 // Default value for OptFormatSyllabes is Checked => no event at loading form
                 // So manage this use case
                 // The event OptFormatLines.Checked is managed by OptFormatLines_CheckedChanged
@@ -165,8 +199,24 @@ namespace Karaboss
         }
 
 
+        #region encoding
+
+        private void initCbEncoding()
+        {
+            //UTF8: Encoding encoding = Encoding.UTF8;
+            //ANSI: encoding = System.Text.Encoding.GetEncoding("iso-8859-1");
+            cbEncoding.Items.Add("ANSI");
+            cbEncoding.Items.Add("UTF8");            
+            //cbEncoding.SelectedIndex = 1;
+        }
+
+
+        #endregion encoding
+
+
+
         #region Form Load Close
-      
+
         private void frmLrcOptions_FormClosing(object sender, FormClosingEventArgs e)
         {
             try
@@ -184,6 +234,20 @@ namespace Karaboss
                 Properties.Settings.Default.LrcCutLinesChars = (int)UpdCutLines.Value;
 
                 Properties.Settings.Default.LrcMillisecondsDigits = _LrcMillisecondsDigits;
+
+                switch (_defaultencoding)
+                {                    
+                    case "ANSI":
+                        Properties.Settings.Default.DefaultEncoding = "ANSI";
+                        break;
+                    case "UTF8":
+                        Properties.Settings.Default.DefaultEncoding = "UTF8";
+                        break;
+                    default:
+                        Properties.Settings.Default.DefaultEncoding = "UTF8";
+                        break;
+                }
+
 
                 // Save settings
                 Properties.Settings.Default.Save();
@@ -296,6 +360,27 @@ namespace Karaboss
 
         private void chkMetadata_CheckedChanged(object sender, EventArgs e)
         {
+
+        }
+
+        /// <summary>
+        /// Handles the event when the selected encoding option in the combo box changes.
+        /// </summary>
+        /// <remarks>Updates the internal encoding setting based on the user's selection. Selecting the
+        /// first option sets the encoding to UTF-8, while the second option sets it to ISO-8859-1.</remarks>
+        /// <param name="sender">The source of the event, typically the encoding combo box control.</param>
+        /// <param name="e">The event data associated with the selection change.</param>
+        private void cbEncoding_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            switch (cbEncoding.SelectedIndex)
+            {                
+                case 0:
+                    _defaultencoding = "ANSI";
+                    break;
+                case 1:
+                    _defaultencoding = "UTF8";
+                    break;
+            }
 
         }
     }

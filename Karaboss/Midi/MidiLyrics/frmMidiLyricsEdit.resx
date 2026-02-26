@@ -802,37 +802,55 @@
     <value>17, 17</value>
   </metadata>
   <data name="mnuFileSave.Size" type="System.Drawing.Size, System.Drawing">
-    <value>212, 22</value>
+    <value>180, 22</value>
   </data>
   <data name="mnuFileSave.Text" xml:space="preserve">
     <value>&amp;Save</value>
   </data>
   <data name="mnuFileSaveAs.Size" type="System.Drawing.Size, System.Drawing">
-    <value>212, 22</value>
+    <value>180, 22</value>
   </data>
   <data name="mnuFileSaveAs.Text" xml:space="preserve">
     <value>Save &amp;as</value>
   </data>
   <data name="mnuFileSep2.Size" type="System.Drawing.Size, System.Drawing">
-    <value>209, 6</value>
+    <value>177, 6</value>
   </data>
-  <data name="mnuFileSaveAsLrc.Size" type="System.Drawing.Size, System.Drawing">
-    <value>212, 22</value>
+  <data name="mnuFileExportLyricsLrc.Size" type="System.Drawing.Size, System.Drawing">
+    <value>180, 22</value>
   </data>
-  <data name="mnuFileSaveAsLrc.Text" xml:space="preserve">
-    <value>Export lyrics to .lrc format</value>
+  <data name="mnuFileExportLyricsLrc.Text" xml:space="preserve">
+    <value>LRC format</value>
   </data>
-  <data name="MnuSaveAsText.Size" type="System.Drawing.Size, System.Drawing">
-    <value>212, 22</value>
+  <data name="mnuFileExportLyricsTxt.Size" type="System.Drawing.Size, System.Drawing">
+    <value>180, 22</value>
   </data>
-  <data name="MnuSaveAsText.Text" xml:space="preserve">
-    <value>Export lyrics to text format</value>
+  <data name="mnuFileExportLyricsTxt.Text" xml:space="preserve">
+    <value>Text format</value>
+  </data>
+  <data name="MnuFileExportLyricsKok.Size" type="System.Drawing.Size, System.Drawing">
+    <value>180, 22</value>
+  </data>
+  <data name="MnuFileExportLyricsKok.Text" xml:space="preserve">
+    <value>Kok format</value>
+  </data>
+  <data name="mnuFileExportLyricsSrt.Size" type="System.Drawing.Size, System.Drawing">
+    <value>180, 22</value>
+  </data>
+  <data name="mnuFileExportLyricsSrt.Text" xml:space="preserve">
+    <value>SRT format</value>
+  </data>
+  <data name="mnuFileExportLyrics.Size" type="System.Drawing.Size, System.Drawing">
+    <value>180, 22</value>
+  </data>
+  <data name="mnuFileExportLyrics.Text" xml:space="preserve">
+    <value>Export lyrics</value>
   </data>
   <data name="mnuFileSep1.Size" type="System.Drawing.Size, System.Drawing">
-    <value>209, 6</value>
+    <value>177, 6</value>
   </data>
   <data name="mnuFileQuit.Size" type="System.Drawing.Size, System.Drawing">
-    <value>212, 22</value>
+    <value>180, 22</value>
   </data>
   <data name="mnuFileQuit.Text" xml:space="preserve">
     <value>&amp;Quit</value>
@@ -844,7 +862,7 @@
     <value>&amp;File</value>
   </data>
   <data name="mnuEditLoadTrack.Size" type="System.Drawing.Size, System.Drawing">
-    <value>216, 22</value>
+    <value>140, 22</value>
   </data>
   <data name="mnuEditLoadTrack.Text" xml:space="preserve">
     <value>&amp;Load a track</value>
@@ -853,25 +871,31 @@
     <value>Load a track containing notes</value>
   </data>
   <data name="mnuEditSep1.Size" type="System.Drawing.Size, System.Drawing">
-    <value>213, 6</value>
+    <value>137, 6</value>
   </data>
-  <data name="mnuEditLoadMelodyText.Size" type="System.Drawing.Size, System.Drawing">
-    <value>216, 22</value>
+  <data name="mnuEditImportLyricsLrc.Size" type="System.Drawing.Size, System.Drawing">
+    <value>134, 22</value>
   </data>
-  <data name="mnuEditLoadMelodyText.Text" xml:space="preserve">
-    <value>Load a text file</value>
+  <data name="mnuEditImportLyricsLrc.Text" xml:space="preserve">
+    <value>LRC format</value>
   </data>
-  <data name="mnuEditLoadMelodyText.ToolTipText" xml:space="preserve">
-    <value>Load a pure text  file (no times, only text)</value>
+  <data name="mnuEditImportLyricsTxt.Size" type="System.Drawing.Size, System.Drawing">
+    <value>134, 22</value>
   </data>
-  <data name="mnuEditLoadLRCFile.Size" type="System.Drawing.Size, System.Drawing">
-    <value>216, 22</value>
+  <data name="mnuEditImportLyricsTxt.Text" xml:space="preserve">
+    <value>Text format</value>
   </data>
-  <data name="mnuEditLoadLRCFile.Text" xml:space="preserve">
-    <value>Load a text file (.lrc format)</value>
+  <data name="mnuEditImportLyricsKok.Size" type="System.Drawing.Size, System.Drawing">
+    <value>134, 22</value>
   </data>
-  <data name="mnuEditLoadLRCFile.ToolTipText" xml:space="preserve">
-    <value>Load a LRC file (times stamps + Lyrics)</value>
+  <data name="mnuEditImportLyricsKok.Text" xml:space="preserve">
+    <value>Kok format</value>
+  </data>
+  <data name="mnuEditImportLyrics.Size" type="System.Drawing.Size, System.Drawing">
+    <value>140, 22</value>
+  </data>
+  <data name="mnuEditImportLyrics.Text" xml:space="preserve">
+    <value>Import lyrics</value>
   </data>
   <data name="mnuEdit.Size" type="System.Drawing.Size, System.Drawing">
     <value>39, 20</value>
@@ -915,10 +939,10 @@
   <data name="&gt;&gt;menuStrip1.ZOrder" xml:space="preserve">
     <value>2</value>
   </data>
-  <metadata name="saveMidiFileDialog.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+  <metadata name="SaveFileDialog.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>149, 18</value>
   </metadata>
-  <metadata name="openFileDialog.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+  <metadata name="OpenFileDialog.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>303, 18</value>
   </metadata>
   <data name="tabPage1.Location" type="System.Drawing.Point, System.Drawing">
@@ -1530,16 +1554,28 @@
   <data name="&gt;&gt;mnuFileSep2.Type" xml:space="preserve">
     <value>System.Windows.Forms.ToolStripSeparator, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="&gt;&gt;mnuFileSaveAsLrc.Name" xml:space="preserve">
-    <value>mnuFileSaveAsLrc</value>
+  <data name="&gt;&gt;mnuFileExportLyrics.Name" xml:space="preserve">
+    <value>mnuFileExportLyrics</value>
   </data>
-  <data name="&gt;&gt;mnuFileSaveAsLrc.Type" xml:space="preserve">
+  <data name="&gt;&gt;mnuFileExportLyrics.Type" xml:space="preserve">
     <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="&gt;&gt;MnuSaveAsText.Name" xml:space="preserve">
-    <value>MnuSaveAsText</value>
+  <data name="&gt;&gt;mnuFileExportLyricsLrc.Name" xml:space="preserve">
+    <value>mnuFileExportLyricsLrc</value>
   </data>
-  <data name="&gt;&gt;MnuSaveAsText.Type" xml:space="preserve">
+  <data name="&gt;&gt;mnuFileExportLyricsLrc.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;mnuFileExportLyricsTxt.Name" xml:space="preserve">
+    <value>mnuFileExportLyricsTxt</value>
+  </data>
+  <data name="&gt;&gt;mnuFileExportLyricsTxt.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;MnuFileExportLyricsKok.Name" xml:space="preserve">
+    <value>MnuFileExportLyricsKok</value>
+  </data>
+  <data name="&gt;&gt;MnuFileExportLyricsKok.Type" xml:space="preserve">
     <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;mnuFileSep1.Name" xml:space="preserve">
@@ -1572,16 +1608,28 @@
   <data name="&gt;&gt;mnuEditSep1.Type" xml:space="preserve">
     <value>System.Windows.Forms.ToolStripSeparator, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="&gt;&gt;mnuEditLoadMelodyText.Name" xml:space="preserve">
-    <value>mnuEditLoadMelodyText</value>
+  <data name="&gt;&gt;mnuEditImportLyrics.Name" xml:space="preserve">
+    <value>mnuEditImportLyrics</value>
   </data>
-  <data name="&gt;&gt;mnuEditLoadMelodyText.Type" xml:space="preserve">
+  <data name="&gt;&gt;mnuEditImportLyrics.Type" xml:space="preserve">
     <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="&gt;&gt;mnuEditLoadLRCFile.Name" xml:space="preserve">
-    <value>mnuEditLoadLRCFile</value>
+  <data name="&gt;&gt;mnuEditImportLyricsLrc.Name" xml:space="preserve">
+    <value>mnuEditImportLyricsLrc</value>
   </data>
-  <data name="&gt;&gt;mnuEditLoadLRCFile.Type" xml:space="preserve">
+  <data name="&gt;&gt;mnuEditImportLyricsLrc.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;mnuEditImportLyricsTxt.Name" xml:space="preserve">
+    <value>mnuEditImportLyricsTxt</value>
+  </data>
+  <data name="&gt;&gt;mnuEditImportLyricsTxt.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;mnuEditImportLyricsKok.Name" xml:space="preserve">
+    <value>mnuEditImportLyricsKok</value>
+  </data>
+  <data name="&gt;&gt;mnuEditImportLyricsKok.Type" xml:space="preserve">
     <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;mnuHelp.Name" xml:space="preserve">
@@ -1596,16 +1644,16 @@
   <data name="&gt;&gt;mnuHelpAbout.Type" xml:space="preserve">
     <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="&gt;&gt;saveMidiFileDialog.Name" xml:space="preserve">
-    <value>saveMidiFileDialog</value>
+  <data name="&gt;&gt;SaveFileDialog.Name" xml:space="preserve">
+    <value>SaveFileDialog</value>
   </data>
-  <data name="&gt;&gt;saveMidiFileDialog.Type" xml:space="preserve">
+  <data name="&gt;&gt;SaveFileDialog.Type" xml:space="preserve">
     <value>System.Windows.Forms.SaveFileDialog, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="&gt;&gt;openFileDialog.Name" xml:space="preserve">
-    <value>openFileDialog</value>
+  <data name="&gt;&gt;OpenFileDialog.Name" xml:space="preserve">
+    <value>OpenFileDialog</value>
   </data>
-  <data name="&gt;&gt;openFileDialog.Type" xml:space="preserve">
+  <data name="&gt;&gt;OpenFileDialog.Type" xml:space="preserve">
     <value>System.Windows.Forms.OpenFileDialog, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;toolTip1.Name" xml:space="preserve">
@@ -1614,8 +1662,14 @@
   <data name="&gt;&gt;toolTip1.Type" xml:space="preserve">
     <value>System.Windows.Forms.ToolTip, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
+  <data name="&gt;&gt;mnuFileExportLyricsSrt.Name" xml:space="preserve">
+    <value>mnuFileExportLyricsSrt</value>
+  </data>
+  <data name="&gt;&gt;mnuFileExportLyricsSrt.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
   <data name="&gt;&gt;$this.Name" xml:space="preserve">
-    <value>frmLyricsEdit</value>
+    <value>frmMidiLyricsEdit</value>
   </data>
   <data name="&gt;&gt;$this.Type" xml:space="preserve">
     <value>System.Windows.Forms.Form, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>

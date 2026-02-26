@@ -3392,7 +3392,7 @@ namespace Karaboss
             myLyricsMgmt = new MidiLyricsMgmt(sequence1);
 
 
-            // Refresh frmLyric
+            // Refresh frmMidiLyrics
             if (myLyricsMgmt.OrgplLyrics.Count > 0)
             {
                 // Reset display

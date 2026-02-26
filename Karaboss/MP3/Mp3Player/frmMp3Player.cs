@@ -41,6 +41,8 @@ using System.ComponentModel;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Text;
+using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using TagLib;
 using TagLib.Id3v2;
@@ -53,6 +55,9 @@ namespace Karaboss.Mp3
         #region declarations
      
         private List<(string, string)> lstSaveTimestamps = new List<(string, string)>();
+
+        private double _duration = 0;   // mp3 duration in ms
+
 
         #region dgview
 
@@ -85,7 +90,7 @@ namespace Karaboss.Mp3
             Forward,
             Backward
         }
-        private Directions _direction;
+        //private Directions _direction;
 
         #region lrc generator
 
@@ -114,7 +119,7 @@ namespace Karaboss.Mp3
 
         private int m_MillisecondsOffset = 100; // Default offset in milliseconds to display lyrics
 
-        private Mp3LyricsTypes Mp3LyricsType;
+        //private Mp3LyricsTypes Mp3LyricsType;
         public bool bfilemodified = false;
 
         // SlideShow directory
@@ -128,7 +133,7 @@ namespace Karaboss.Mp3
         private enum PlayerAppearances
         {
             Player,
-            LrcGenerator,
+            LyricsEditor,
         }
         private PlayerAppearances PlayerAppearance;
 
@@ -169,8 +174,8 @@ namespace Karaboss.Mp3
 
         #region forms
         private bool scrolling = false;
-        private bool closing = false;
-        private bool loading = false;
+        //private bool closing = false;
+        //private bool loading = false;
 
         private string Mp3FullPath;
         private string Mp3FileName;
@@ -210,12 +215,13 @@ namespace Karaboss.Mp3
 
             // Create mp3 Player instance, init bass and load file                                    
             Player = new Mp3Player(FileName);
+            _duration = Player.Seconds; // * 1000;
             
             // Create event for playing completed
             Player.PlayingCompleted += new EndingSyncHandler(HandlePlayingCompleted);
             
             DisplayMp3Characteristics();
-            DisplayOtherInfos(Mp3FullPath);            
+            ExtractMp3Lyrics(Mp3FullPath);            
 
             #region playlists
 
@@ -249,9 +255,7 @@ namespace Karaboss.Mp3
                     mnuEditLyrics.Checked = true;
                     LrcMode = LrcModes.Edit;
                     // Show LRC Generator
-                    PlayerAppearance = PlayerAppearances.LrcGenerator;
-                    SetPlayerAppearance();
-                    
+                    PlayerAppearance = PlayerAppearances.LyricsEditor;                                        
                 }
             }
             #endregion playlists
@@ -264,6 +268,7 @@ namespace Karaboss.Mp3
 
         private void frmMp3Player_Load(object sender, EventArgs e)
         {
+            
             // Set window location and size
             #region window size & location
             // If window is maximized
@@ -297,7 +302,7 @@ namespace Karaboss.Mp3
 
         protected override void OnClosing(CancelEventArgs e)
         {
-            closing = true;
+            //closing = true;
             base.OnClosing(e);
         }
 
@@ -385,7 +390,7 @@ namespace Karaboss.Mp3
 
         private void frmMp3Player_Resize(object sender, EventArgs e)
         {
-            if (PlayerAppearance == PlayerAppearances.LrcGenerator)
+            if (PlayerAppearance == PlayerAppearances.LyricsEditor)
             {
 
                 // Adapt width of last column
@@ -434,6 +439,17 @@ namespace Karaboss.Mp3
         /// </summary>
         private void SetPlayerAppearance()
         {
+
+            // Show hide edition menus according to LRC Generator visibility
+            mnuFileExportLyrics.Visible = mnuEditLyrics.Checked;
+            MnuFileSep1.Visible = mnuEditLyrics.Checked;
+
+            mnuEditSep1.Visible = mnuEditLyrics.Checked;
+            mnuEditSep2.Visible = mnuEditLyrics.Checked;
+            mnuEditInsertNewLine.Visible = mnuEditLyrics.Checked;
+            mnuEditDeleteCurrentLine.Visible = mnuEditLyrics.Checked;
+            mnuEditImportLyrics.Visible = mnuEditLyrics.Checked;
+
             switch (PlayerAppearance)
             {
                 case PlayerAppearances.Player:
@@ -474,10 +490,11 @@ namespace Karaboss.Mp3
 
                     // Redim size to simple player
                     this.Size = new Size(SimpleMp3PlayerWidth, SimpleMp3PlayerHeight);
+
                     break;
 
 
-                case PlayerAppearances.LrcGenerator:
+                case PlayerAppearances.LyricsEditor:
                     // Show LRC Generator
                     this.MaximizeBox = true;
                     this.FormBorderStyle = FormBorderStyle.Sizable;
@@ -510,11 +527,16 @@ namespace Karaboss.Mp3
                     }
                     #endregion
 
-                    InitLrcGenerator();
+
+                    InitEditor();
                     
                     // Populate gridview and textbox
                     PopulateDataGridView();
-                    localSyncLyrics = GetUniqueSource();
+
+                    // Update local lyrics list from datagridview content                    
+                    localSyncLyrics = GetCurrentDgViewContent(dgView, COL_MS, COL_TEXT);
+
+                    // Populate textbox with local lyrics
                     PopulateTextBox(localSyncLyrics);
 
                     break;                    
@@ -716,7 +738,7 @@ namespace Karaboss.Mp3
         private void btnPlay_Click(object sender, EventArgs e)
         {
             // Check if we are currently editing lyrics
-            if (PlayerAppearance == PlayerAppearances.LrcGenerator && LrcMode == LrcModes.Edit && dgView.Rows.Count > 1)
+            if (PlayerAppearance == PlayerAppearances.LyricsEditor && LrcMode == LrcModes.Edit && dgView.Rows.Count > 1)
             {
                 int Row = dgView.CurrentRow.Index;
                 double time = 0;
@@ -806,7 +828,7 @@ namespace Karaboss.Mp3
                 // Update display
                 SetTitle(Mp3FullPath);
                 DisplayMp3Characteristics();
-                DisplayOtherInfos(Mp3FullPath);
+                ExtractMp3Lyrics(Mp3FullPath);
                 
                 // Play file
                 PlayPauseMusic();
@@ -1112,49 +1134,9 @@ namespace Karaboss.Mp3
 
         #region menus
 
-        /// <summary>
-        /// Open or close LRC Generator
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>       
-        private void mnuEditLyrics_Click(object sender, EventArgs e)
-        {
-            OpenCloseLrcGenerator();           
-        }
 
-
-        private void OpenCloseLrcGenerator()
-        {
-            mnuEditLyrics.Checked = !mnuEditLyrics.Checked;
-
-            // If LRC Generator visible
-            if (mnuEditLyrics.Checked)
-            {
-                // Display Lrc Generator
-                PlayerAppearance = PlayerAppearances.LrcGenerator;
-
-            }
-            else
-            {
-                // Hide Lrc Generator
-                PlayerAppearance = PlayerAppearances.Player;
-            }
-            
-            // Redim form according to player or editor
-            SetPlayerAppearance();
-        }
-
-
-
-        /// <summary>
-        /// Valid or not some menus if playing or not
-        /// </summary>
-        /// <param name="enabled"></param>
-        private void ValideMenus(bool enabled)
-        {
-            menuStrip1.Visible = enabled;                            
-        }
-
+        #region menu File
+       
         private void mnuFileOpen_Click(object sender, EventArgs e)
         {
             OpenBrowseMp3();
@@ -1164,6 +1146,68 @@ namespace Karaboss.Mp3
         {            
             Close();
         }
+
+
+        #endregion menu File
+
+
+        #region menu Edit
+
+        /// <summary>
+        /// Open or close LRC Generator
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>       
+        private void mnuEditLyrics_Click(object sender, EventArgs e)
+        {
+            OpenCloseLrcGenerator();
+        }
+
+        private void OpenCloseLrcGenerator()
+        {
+            mnuEditLyrics.Checked = !mnuEditLyrics.Checked;
+           
+
+            // If LRC Generator visible
+            if (mnuEditLyrics.Checked)
+            {                
+                // Display Lrc Generator
+                PlayerAppearance = PlayerAppearances.LyricsEditor;
+            }
+            else
+            {
+                // Hide Lrc Generator
+                PlayerAppearance = PlayerAppearances.Player;
+            }
+
+            // Redim form according to player or editor
+            SetPlayerAppearance();
+        }
+
+
+        /// <summary>
+        /// Valid or not some menus if playing or not
+        /// </summary>
+        /// <param name="enabled"></param>
+        private void ValideMenus(bool enabled)
+        {
+            menuStrip1.Visible = enabled;
+        }
+
+
+        private void mnuEditInsertNewLine_Click(object sender, EventArgs e)
+        {
+            InsertTextLine();
+        }
+
+        private void mnuEditDeleteCurrentLine_Click(object sender, EventArgs e)
+        {            
+            DeleteSelectedLines();
+        }
+
+
+        #endregion
+
 
         private void mnuHelpAbout_Click(object sender, EventArgs e)
         {
@@ -1208,11 +1252,11 @@ namespace Karaboss.Mp3
         /// </summary>
         private void OpenBrowseMp3()
         {
-            OpenFileDialog1.Title = "Open mp3 file";
-            OpenFileDialog1.Filter = "mp3 Files (*.mp3)|*.mp3";
-            if (OpenFileDialog1.ShowDialog() == DialogResult.OK)
+            OpenFileDialog.Title = "Open mp3 file";
+            OpenFileDialog.Filter = "mp3 Files (*.mp3)|*.mp3";
+            if (OpenFileDialog.ShowDialog() == DialogResult.OK)
             {
-                Mp3FullPath = OpenFileDialog1.FileName;
+                Mp3FullPath = OpenFileDialog.FileName;
 
                 SetTitle(Mp3FullPath);
             }
@@ -1256,7 +1300,7 @@ namespace Karaboss.Mp3
         /// Display lyrics
         /// </summary>
         /// <param name="FileName"></param>
-        private void DisplayOtherInfos(string FileName)
+        private void ExtractMp3Lyrics(string FileName)
         {
             // Reset static infos
             Mp3LyricsMgmtHelper.SyncLyrics = new System.Collections.Generic.List<System.Collections.Generic.List<keffect.KaraokeEffect.kSyncText>>();
@@ -1266,8 +1310,7 @@ namespace Karaboss.Mp3
             Player.GetMp3Infos(Mp3FullPath);                        
             pBox.Image = Player.AlbumArtImage;            
             TagLib.Tag Tag = Player.Tag;            
-            
-            
+                        
             
             Mp3LyricsMgmtHelper.m_mp3lyricstype = Mp3LyricsTypes.None;
 
@@ -1288,14 +1331,16 @@ namespace Karaboss.Mp3
             switch (Mp3LyricsMgmtHelper.m_mp3lyricstype)
             {
                 // Synchronized Lyrics included in the mp3 file
-                case Mp3LyricsTypes.LyricsWithTimeStamps:                    
+                case Mp3LyricsTypes.LyricsWithTimeStamps:                                        
+                    // This one returns lyrics without separators
                     Mp3LyricsMgmtHelper.SyncLyrics = Mp3LyricsMgmtHelper.GetKEffectSyncLyrics(SyncLyricsFrame);    // KaraokeEffect
                     DisplayFrmMp3Lyrics();
                     break;
 
                 // Lyrics brought by a lrc file in the same directory & having the same name
-                case Mp3LyricsTypes.LRCFile:                    
-                    Mp3LyricsMgmtHelper.SyncLyrics = Mp3LyricsMgmtHelper.GetKEffectLrcLyrics(FileName);
+                case Mp3LyricsTypes.LRCFile:
+                    // TODO: return lyrics without separators as previous case
+                    Mp3LyricsMgmtHelper.SyncLyrics = Mp3LyricsMgmtHelper.GetKEffectLrcLyrics(FileName);                                       
                     DisplayFrmMp3Lyrics();
                     break;
                 
@@ -1715,7 +1760,7 @@ namespace Karaboss.Mp3
             Player.FileName = FileName;
             
             DisplayMp3Characteristics();
-            DisplayOtherInfos(FileName);
+            ExtractMp3Lyrics(FileName);
 
           
             // things to do betwween 2 songs
@@ -1741,7 +1786,7 @@ namespace Karaboss.Mp3
                 if (Application.OpenForms.OfType<frmMp3Lyrics>().Count() > 0)
                 {
                     // During the waiting time, display informations about the next singer
-                    int nbLines;
+                    //int nbLines;
                     string toptxt;
                     string centertxt;
 
@@ -1749,7 +1794,7 @@ namespace Karaboss.Mp3
                     {
                         toptxt = "Next song: " + Path.GetFileNameWithoutExtension(currentPlaylistItem.Song);
                         centertxt = Path.GetFileNameWithoutExtension(currentPlaylistItem.Song);
-                        nbLines = 1;
+                        //nbLines = 1;
                     }
                     else
                     {
@@ -1758,7 +1803,7 @@ namespace Karaboss.Mp3
                         centertxt = Path.GetFileNameWithoutExtension(currentPlaylistItem.Song)
                             + _InternalSepLines + Karaboss.Resources.Localization.Strings.SungBy
                             + _InternalSepLines + currentPlaylistItem.KaraokeSinger;
-                        nbLines = 4;
+                        //nbLines = 4;
                     }
 
                 }
@@ -1853,30 +1898,7 @@ namespace Karaboss.Mp3
         {
             PlayerState = PlayerStates.Waiting;
             BtnStatus();
-            /*
-            w_tick = 0;
-            int sec = Karaclass.m_CountdownSongs;  // wait for x seconds
-            w_wait = sec + 4;
-
-            if (Application.OpenForms.OfType<frmLyric>().Count() == 0)
-            {
-                frmLyric = new frmLyric(myLyricsMgmt);
-                frmLyric.Show();
-            }
-
-            if (Application.OpenForms.OfType<frmLyric>().Count() > 0)
-            {
-                // Display song & singer
-                string nextsong = Path.GetFileNameWithoutExtension(currentPlaylistItem.Song);
-                string txt = "Next song: " + nextsong + " - Next singer: " + currentPlaylistItem.KaraokeSinger;
-                frmLyric.DisplaySinger(txt);
-
-                frmLyric.LoadWaitSong(sec);
-            }
-
-            timer5.Interval = 1000;  // interval = 1 sec      
-            timer5.Enabled = true;
-            */
+            
         }
 
         #endregion Playlists
@@ -2009,255 +2031,477 @@ namespace Karaboss.Mp3
         #endregion Timer
 
 
-        #region LRC generator
-      
-        private void InitLrcGenerator()
+
+        #region import export lyrics
+
+
+        #region kok import export
+
+        #region import kok
+
+        /*
+            * KOK format example:
+            * 
+            * Times:
+            * Exemple
+            * Dig;207,3672; in;207,5166; the;207,8154; dan;207,9648;cing;208,4130; queen;208,8612;
+            * the last item is 208,8612
+            * It means 208 seconds and 8612 milliseconds
+            * 
+            * 
+            * You;26.294; can;26.892; dance;27.191;
+            * You;28.685; can;29.282; jive;29.581;
+            * Ha;31.075;ving;31.523; the;31.972; time;32.27; of;32.719; your;33.167; life;33.466;
+            * Ooh,;34.661; see;35.856; that;36.304; girl,;36.752; watch;38.246; that;38.695; scene.;39.143;
+            * Dig;40.039; in;40.189; the;40.487; dan;40.637;cing;41.085; queen;41.533;
+            * Fri;50.198;day;50.497; night;50.647; and;50.945; the;51.244; lights;51.394; are;51.692; low;51.991;
+            * Loo;54.979;king;55.278; out;55.427; for;55.726; a;56.025; place;56.174; to;56.473; go;56.772;
+            * Oh,;59.013; where;59.76; they;60.059; play;60.208; the;60.507; right;60.656; mu;60.955;sic;61.254;
+            * Get;62.15;ting;62.449; in;62.599; the;62.897; swing;63.047;
+        */
+
+        private void mnuEditImportLyricsKok_Click(object sender, EventArgs e)
+        {            
+            ImportLyricsToKokFormat();
+        }      
+
+        private void mnuImportLyricsKok_Click(object sender, EventArgs e)
         {
-            if (PlayerAppearance != PlayerAppearances.LrcGenerator) return;
+            ImportLyricsToKokFormat();
+        }
 
-            LrcMode = LrcModes.Edit;
+        /// <summary>
+        /// Imports lyrics from a selected .kok file and updates the data grid view and associated text box with the
+        /// file's content.
+        /// </summary>
+        /// <remarks>This method prompts the user to choose a .kok file using an open file dialog. Upon
+        /// successful selection, it loads the file, updates display counters, selects the first row in the data grid
+        /// view, and displays the current lyrics in the text box. The method does not perform any action if the user
+        /// cancels the file selection dialog.</remarks>
+        private void ImportLyricsToKokFormat()
+        {
+            string fileName;
 
-            _lyricseditfont = Properties.Settings.Default.LyricsEditFont;
-            if (_lyricseditfont == null)
-                _lyricseditfont = new Font("Segoe UI", 11, FontStyle.Regular, GraphicsUnit.Pixel);
+            #region select filename
+
+            OpenFileDialog.Title = "Open a .kok file";
+            OpenFileDialog.DefaultExt = "kok";
+            OpenFileDialog.Filter = "Kok files|*.kok|All files|*.*";
+            OpenFileDialog.InitialDirectory = Path.GetDirectoryName(Mp3FullPath);
+
+            if (OpenFileDialog.ShowDialog() != DialogResult.OK)
+                return;
+
             
-                
-            _fontSize = _lyricseditfont.Size;
-            txtResult.Font = _lyricseditfont;
+            fileName = OpenFileDialog.FileName;
 
-            // index for times entering
-            _index = 0;
+            #endregion select filename
 
-            // 2 or 3 digits for timestamp format 00:00.00 or 00:00.000
-            _LrcMillisecondsDigits = Properties.Settings.Default.LrcMillisecondsDigits;
+            // Load KOK file and populate datagridview
+            LoadKokFile(fileName);
 
-            pnlEdit.Visible = true;
+            // Update counters            
+            lblTimes.Text = "0";
 
-            // first hotkeys
-            lblHotkeys.Font = new Font("Courier New", 9);                        
-            string tx = Strings.Mp3TimeStampHotKey1;
-            tx = string.Format(tx, Environment.NewLine);            
-            lblHotkeys.Text = tx; // "<ENTER>" + " " + "Add a new timestamp" + "\r\n" + "<DEL>" + "   " + "Remove current timestamp" + "\r\n" + "<SPACE>" + " "+ "Pause Music" ;
+            // Select first row
+            dgView.Rows[0].Selected = true;
 
-            // 2nd hotkeys
-            lblHotkeysOthers.Font = lblHotkeys.Font;
-            tx = Strings.Mp3TimeStampHotKey2;
-            tx = string.Format(tx, Environment.NewLine);
-            lblHotkeysOthers.Text = tx; // "+" + "       " + "Accelerate" + "\r\n" + "-" + "       " + "Slow down" + "\r\n" + "<-" + "      " + "Stop Music";
+            // Load lyrics in the text box
+            localSyncLyrics = GetCurrentDgViewContent(dgView, COL_MS, COL_TEXT);
+            PopulateTextBox(localSyncLyrics);                                   
+        }
 
-
-            // Display mp3 infos
-            if (Player.Tag != null)
+        /// <summary>
+        /// Loads a KOK file and populates the data grid view with its contents.
+        /// </summary>
+        /// <remarks>If an error occurs during the loading process, an error message is displayed to the
+        /// user.</remarks>
+        /// <param name="fileName">The name of the KOK file to load. This parameter must not be null or empty.</param>
+        private void LoadKokFile(string fileName)
+        {
+            try
             {
-                txtTitle.Text = Player.Tag.Title;
-                txtAlbum.Text = Player.Tag.Album;
-                if (Player.Tag.Performers.Count() > 0)
+
+                // OLD
+                //List<(string, string)> lstDgRows = KokReadFile(fileName);
+                //KokPopulateDgView(lstDgRows);
+
+
+                // NEW                
+                List <List<keffect.KaraokeEffect.kSyncText>> SyncLyrics = LyricsUtilities.ReadKokFromFile(fileName, _duration);
+                
+                // Populate DataGridView
+                PopulateDataGridView(SyncLyrics);
+
+
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error loading KOK file: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        /// <summary>
+        /// Reads a file containing pairs of words and timestamps, and returns a list of tuples representing each word
+        /// and its associated timestamp.
+        /// </summary>
+        /// <remarks>Each line in the file should be formatted as 'word;timestamp; word;timestamp; ...'.
+        /// The method processes each line, pairing words with their timestamps in the order they appear. The first word
+        /// of each line is prefixed with a line separator ('/').</remarks>
+        /// <param name="fileName">The path to the file to read. The file must exist and be accessible.</param>
+        /// <returns>A list of tuples, where each tuple contains a word and its corresponding timestamp extracted from the file.</returns>
+        private List<(string, string)> KokReadFile(string fileName)
+        {
+            string word;
+            string timestamp;
+            bool paragraphSepFound = false;
+
+            List<(string, string)> lstDgRows = new List<(string, string)>();
+            using (StreamReader reader = new StreamReader(fileName))
+            {
+                string line;
+                while ((line = reader.ReadLine()) != null)
                 {
-                    txtArtist.Text = Player.Tag.Performers[0].ToString();
-                    
+
+                    // Case empty line; this is a paragraph
+                    // The next line will be the first line of the new paragraph, and must be prefixed with a line separator ('/'), except if it is the first line of the file
+                    if (string.IsNullOrWhiteSpace(line))
+                    {
+                        paragraphSepFound = true;
+                        continue;
+                    }
+
+                    // Each line is expected to be in the format: "word;timestamp; word;timestamp; ..."
+                    string[] parts = line.Split(new char[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
+                    for (int i = 0; i < parts.Length - 1; i += 2)
+                    {
+
+                        timestamp = parts[i + 1].Trim();
+
+                        // Each first word of a line must starts with a line separator, except the first one of the file 
+                        // No trim, because the space is used to separate words
+                        if (i == 0 && lstDgRows.Count > 0)
+                        {
+                            
+                            if (paragraphSepFound)
+                            {
+                                word = m_SepParagraph + parts[i];
+                                paragraphSepFound = false;
+                            }
+                            else
+                            {
+                                word = m_SepLine + parts[i];
+                            }
+                                                        
+                        }
+                        else
+                        {
+                            word = parts[i];
+                        }
+                        
+                        lstDgRows.Add((word, timestamp));
+                    }
                 }
-                
-                if (Player.Tag.Year > 0)
-                    txtYear.Text = Player.Tag.Year.ToString();
             }
-            
+            return lstDgRows;
         }
 
         /// <summary>
-        /// Key Enter was hit
+        /// Populates the data grid view with rows containing words and their corresponding timestamps.
         /// </summary>
-        private void AddNewLrcTimeStamp() 
+        /// <remarks>The method clears the existing rows in the data grid view before adding new rows.
+        /// Each timestamp is converted to a formatted string in the mm:ss:ms format and also to milliseconds for
+        /// display.</remarks>
+        /// <param name="lstDgRows">A list of tuples, where each tuple contains a word and its associated timestamp in seconds.</param>
+        private void KokPopulateDgView(List<(string, string)> lstDgRows)
         {
-            if (PlayerState != PlayerStates.Playing) return;
-
-            if (dgView.Rows.Count == 1)
+            string sTimeStamp;
+            string lyric;
+            dgView.Rows.Clear();
+            foreach (var (word, timestamp) in lstDgRows)
             {
-                MessageBox.Show("Please add lyrics before entering timestamps", "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+                // In the second column, the time is in format mm:ss:ms
+                // Convert timestamp to mm:ss:ms
+                sTimeStamp = TimeSpan.FromSeconds(Convert.ToDouble(timestamp)).ToString(@"mm\:ss\.fff");
+
+                // Convert timestamp to milliseconds if necessary
+                double ms = Convert.ToDouble(timestamp) * 1000; // Assuming timestamp is in seconds
+
+                lyric = word.Replace(" ", "_");
+
+                dgView.Rows.Add(ms, sTimeStamp, lyric);
+            }
+        }
+
+
+        #endregion import kok
+
+
+        #region export kok
+
+        /// <summary>
+        /// Handles the event when the Export Lyrics to KOK Format menu item is clicked, initiating the export of lyrics
+        /// in KOK format.
+        /// </summary>
+        /// <remarks>This method triggers the export process, converting the lyrics into a specific KOK
+        /// format suitable for further processing or storage.</remarks>
+        /// <param name="sender">The source of the event, typically the menu item that was clicked.</param>
+        /// <param name="e">The event data associated with the click event.</param>
+        private void mnuExportLyricsKok_Click(object sender, EventArgs e)
+        {
+            /*
+             * KOK format example:
+             * You;26.294; can;26.892; dance;27.191;
+             * You;28.685; can;29.282; jive;29.581;
+             * Ha;31.075;ving;31.523; the;31.972; time;32.27; of;32.719; your;33.167; life;33.466;
+             * Ooh,;34.661; see;35.856; that;36.304; girl,;36.752; watch;38.246; that;38.695; scene.;39.143;
+             * Dig;40.039; in;40.189; the;40.487; dan;40.637;cing;41.085; queen;41.533;
+             * Fri;50.198;day;50.497; night;50.647; and;50.945; the;51.244; lights;51.394; are;51.692; low;51.991;
+             * Loo;54.979;king;55.278; out;55.427; for;55.726; a;56.025; place;56.174; to;56.473; go;56.772;
+             * Oh,;59.013; where;59.76; they;60.059; play;60.208; the;60.507; right;60.656; mu;60.955;sic;61.254;
+             * Get;62.15;ting;62.449; in;62.599; the;62.897; swing;63.047;
+            */
+
+            //ExportLyricsToKokFormat();
+            GetKokSaveOptions();
+        }
+
+        /// <summary>
+        /// Handles the click event for exporting lyrics to the Kok format.
+        /// </summary>
+        /// <remarks>This method triggers the export process to convert and save the lyrics in the Kok
+        /// format.</remarks>
+        /// <param name="sender">The source of the event, typically the control that raised the event.</param>
+        /// <param name="e">The event data associated with the click event.</param>
+        private void mnuFileExportLyricsKok_Click(object sender, EventArgs e)
+        {
+            //ExportLyricsToKokFormat();
+            GetKokSaveOptions();
+        }
+
+
+        /// <summary>
+        /// Displays a dialog for configuring options related to saving Kok format lyrics and processes the selected
+        /// options.
+        /// </summary>
+        /// <remarks>This method presents a user interface for setting preferences such as removing
+        /// accents, forcing upper or lower case, and removing non-alphanumeric characters. The selected options are
+        /// then used to format the lyrics accordingly. If the dialog is canceled, no changes are made.</remarks>
+        private void GetKokSaveOptions()
+        {
+            DialogResult dr;
+            frmKokOptions KokOptionsDialog = new frmKokOptions();
+            dr = KokOptionsDialog.ShowDialog();
+
+            if (dr == System.Windows.Forms.DialogResult.Cancel)
                 return;
-            }                        
-            
-            string tsp;            
-            double time = Player.Position * 1000;
-            tsp = Mp3LyricsMgmtHelper.MsToTime(time, _LrcMillisecondsDigits);
-                                 
-            if (_index < dgView.Rows.Count) // lvLyrics.Items.Count)
-            {
-                dgView.Rows[_index].Cells[COL_MS].Value = (long)time;
-                dgView.Rows[_index].Cells[COL_TIME].Value = tsp;
-                //lvLyrics.Items[_index].Text = tsp;
 
-                
-                // Scroll to 2 lines before bottom to ensure visibility
-                if (_index < dgView.Rows.Count - 2)
-                    dgView.CurrentCell = dgView.Rows[_index + 2].Cells[0];
+            // Remove accents
+            bool bRemoveAccents = KokOptionsDialog.bRemoveAccents;
+            // Force Upper Case
+            bool bUpperCase = KokOptionsDialog.bUpperCase;
+            // Force Lower Case
+            bool bLowerCase = KokOptionsDialog.bLowerCase;
+            // Remove all non-alphanumeric characters
+            bool bRemoveNonAlphaNumeric = KokOptionsDialog.bRemoveNonAlphaNumeric;
+
+            ExportLyricsToKokFormat(bRemoveAccents, bUpperCase, bLowerCase, bRemoveNonAlphaNumeric);
+        }
+
+        /// <summary>
+        /// Exports the current lyrics to a file in KOK format, prompting the user to select the destination and
+        /// filename.
+        /// </summary>
+        /// <remarks>If the specified path is invalid or empty, the method defaults to the user's music
+        /// directory. The method handles file naming conflicts by generating a unique filename. After saving the lyrics
+        /// in KOK format, the file is opened automatically. If an error occurs during saving or opening, an error
+        /// message is displayed.</remarks>
+        private void ExportLyricsToKokFormat(bool bRemoveAccents, bool bUpperCase, bool bLowerCase, bool bRemoveNonAlphaNumeric)
+        {
+            #region select filename
+
+            string defExt = ".kok";
+            string fName = "New" + defExt;
+            string fPath = Path.GetDirectoryName(Mp3FullPath);
+
+            string fullName;
+            string defName;
+
+            #region search name
+
+            if (fPath == null || fPath == "")
+            {
+                if (Directory.Exists(CreateNewMidiFile._DefaultDirectory))
+                    fPath = CreateNewMidiFile._DefaultDirectory;
                 else
-                    dgView.CurrentCell = dgView.Rows[_index].Cells[0];
-               
-
-                lblTimes.Text = (_index + 1).ToString(); // count number of lines done
-
-                // Select line (paint in blue) and scroll
-                dgView.Rows[_index].Selected = true;
-                dgView.CurrentCell = dgView.Rows[_index].Cells[0];
-            
-
-                _index++;
-            }            
-        }
-
-        /// <summary>
-        /// Remove current timestamp in case we have hit ENTER too soon
-        /// </summary>
-        private void RemoveCurrentLrcTimeStamp()
-        {
-            if (PlayerState != PlayerStates.Playing || PlayerAppearance != PlayerAppearances.LrcGenerator) return;
-            if (dgView.Rows.Count == 1)
+                    fPath = Environment.GetFolderPath(Environment.SpecialFolder.MyMusic);
+            }
+            else
             {
-                MessageBox.Show("Please add lyrics before entering timestamps", "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                fName = Path.GetFileName(Mp3FullPath);
+            }
+
+            // Extension forced to kok            
+            string fullPath = fPath + "\\" + Path.GetFileNameWithoutExtension(fName) + defExt;
+            fullName = Utilities.Files.FindUniqueFileName(fullPath);                            // Add (2), (3) etc.. if necessary    
+            defName = Path.GetFileNameWithoutExtension(fullName);                               // Default name to propose to dialog
+
+            #endregion search name                   
+
+            string defFilter = "KOK files (*.kok)|*.kok|All files (*.*)|*.*";
+
+            SaveFileDialog.Title = "Save to KOK format";
+            SaveFileDialog.Filter = defFilter;
+            SaveFileDialog.DefaultExt = defExt;
+            SaveFileDialog.InitialDirectory = @fPath;
+            SaveFileDialog.FileName = defName;
+
+            if (SaveFileDialog.ShowDialog() != DialogResult.OK)
+                return;
+
+            #endregion select filename
+
+            fullPath = SaveFileDialog.FileName;
+
+            // For each line of lyric, read all the syllabes and their timestamps
+            // and store the result in a list            
+            List<(double Time, string lyric)> lstDgRows = LyricsUtilities.ReadDataGridContent(dgView, COL_TIME, COL_TEXT);
+            if (lstDgRows == null || lstDgRows.Count == 0)
+            {
+                MessageBox.Show("No lyric to export", "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 return;
             }
-            if (_index > 0)
-            {
-                _index--;
-                dgView.Rows[_index].Cells[COL_MS].Value = "";
-                dgView.Rows[_index].Cells[COL_TIME].Value = "";
 
-                // Select line (paint in blue) and scroll
-                dgView.Rows[_index].Selected = true;
-                dgView.CurrentCell = dgView.Rows[_index].Cells[0];
+            // Save to KOK file
+            LyricsUtilities.SaveKOKSyllabes(fullPath, lstDgRows, bRemoveAccents, bUpperCase, bLowerCase, bRemoveNonAlphaNumeric, _LrcMillisecondsDigits, null);
+
+            /*
+            List<List<Utilities.LyricsUtilities.LyricsItem>> lstLines = Utilities.LyricsUtilities.ExtractDgRows(lstDgRows, _LrcMillisecondsDigits);
+
+            // Save and open kok file
+            string lines = Utilities.LyricsUtilities.SaveLyricsToKokFormat(lstLines);
+
+            try
+            {
+                Encoding encoding = LyricsUtilities.GetDefaultEncoding();
+                System.IO.File.WriteAllText(fullPath, lines, encoding);
+                System.Diagnostics.Process.Start(@fullPath);
+
             }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+            */
         }
 
-        #region load lrc
+        #endregion export kok
+
+        #endregion kok import export
+
+
+        #region lrc import export
+
+        #region import lrc
 
         /// <summary>
-        /// Import an LRC file
+        /// Handles the Click event to import lyrics from an LRC file.
+        /// </summary>
+        /// <remarks>This method invokes the ImportLyricsFromLrc method to perform the import operation
+        /// when the user selects the corresponding menu item.</remarks>
+        /// <param name="sender">The source of the event, typically the menu item that was clicked.</param>
+        /// <param name="e">An EventArgs object that contains the event data.</param>
+        private void mnuEditImportLyricsLrc_Click(object sender, EventArgs e)
+        {
+            ImportLyricsFromLrc();
+        }
+
+
+        /// <summary>
+        /// Import lyrics form an LRC file
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void mnuImportLrcFile_Click(object sender, EventArgs e)
         {
-            OpenFileDialog1.Title = "Open a .lrc file";
-            OpenFileDialog1.DefaultExt = "lrc";
-            OpenFileDialog1.Filter = "Lrc files|*.lrc|All files|*.*";            
-            OpenFileDialog1.InitialDirectory = Path.GetDirectoryName(Mp3FullPath);
-
-            if (OpenFileDialog1.ShowDialog() == DialogResult.OK)
-            {
-                _lrcFileName = OpenFileDialog1.FileName;
-
-                LoadLRCFile(_lrcFileName);
-
-                // Update counters
-                //lblLyrics.Text = lvLyrics.Items.Count.ToString();
-                lblTimes.Text = "0";
-
-                // Select first row
-                dgView.Rows[0].Selected = true;
-
-                localSyncLyrics = GetCurrentDgViewContent();
-                PopulateTextBox(localSyncLyrics);               
-            }
+            ImportLyricsFromLrc();
         }
 
 
         /// <summary>
-        /// Load a LRC file (timestamps + lyrics)
+        /// Imports synchronized lyrics from a selected .lrc file and updates the user interface to display the loaded
+        /// lyrics.
         /// </summary>
-        /// <param name="Source"></param>
-        private void LoadLRCFile(string FileName)
+        /// <remarks>This method prompts the user to choose a .lrc file, loads the lyrics, and refreshes
+        /// the data grid view and related UI elements to reflect the imported lyrics. The file dialog's initial
+        /// directory is set to the location of the currently loaded MP3 file. The method also resets the lyrics frame
+        /// and updates display counters to ensure the UI is synchronized with the newly imported lyrics.</remarks>
+        private void ImportLyricsFromLrc()
         {
-            long time;
-            string sTime;
-            string text;
+            #region Open file
+            OpenFileDialog.Title = "Open a .lrc file";
+            OpenFileDialog.DefaultExt = "lrc";
+            OpenFileDialog.Filter = "Lrc files|*.lrc|All files|*.*";
+            OpenFileDialog.InitialDirectory = Path.GetDirectoryName(Mp3FullPath);
 
-            Cursor.Current = Cursors.WaitCursor;
+            if (OpenFileDialog.ShowDialog() != DialogResult.OK)
+                return;
 
-            Mp3LyricsMgmtHelper.SyncLyrics = Mp3LyricsMgmtHelper.GetKEffectLrcLyrics(FileName);
-            List<List<keffect.KaraokeEffect.kSyncText>> SyncLyrics = Mp3LyricsMgmtHelper.SyncLyrics;
+            #endregion Open file
+            
+            string FileName = OpenFileDialog.FileName;
 
-            InitGridView();
+            Mp3LyricsMgmtHelper.MySyncLyricsFrame = null;
 
-            // For each line
-            for (int j = 0; j < SyncLyrics.Count; j++)
-            {
-                // For each syllabes
-                for (int i = 0; i < SyncLyrics[j].Count; i++)
-                {
-                    time = SyncLyrics[j][i].Time;
-                    sTime = Mp3LyricsMgmtHelper.MsToTime(time, _LrcMillisecondsDigits);
-                    text = SyncLyrics[j][i].Text;
+            // TEST // Load LRC file without any separators
+            Mp3LyricsMgmtHelper.SyncLyrics = LyricsUtilities.ReadLrcFromFile(FileName);            
+            
+            // OLD procedure
+            //Mp3LyricsMgmtHelper.SyncLyrics = Mp3LyricsMgmtHelper.GetKEffectLrcLyrics(_lrcFileName);
 
-                    // Put "/" everywhere
-                    text = text.Replace("\r\n", m_SepLine);
-                    text = text.Replace("\r", m_SepLine);
-                    text = text.Replace("\n", m_SepLine);
-                    text = text.Replace(" ", "_");
+            PopulateMetadataTags();
+            
+            PopulateDataGridView();
 
-                    dgView.Rows.Add(time, sTime, text);
-                }
-            }
 
-            Cursor.Current = Cursors.Default;
+            // Update counters            
+            lblTimes.Text = "0";
+
+            // Select first row
+            dgView.Rows[0].Selected = true;
+
+            localSyncLyrics = GetCurrentDgViewContent(dgView, COL_MS, COL_TEXT);
+            PopulateTextBox(localSyncLyrics);
+            
         }
-
-
-        /// <summary>
-        /// Import a text file (no timestamps)
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void mnuImportRawLyrics_Click(object sender, EventArgs e)
+             
+        
+        private void PopulateMetadataTags()
         {
-            OpenFileDialog1.Title = "Open a .txt file";
-            OpenFileDialog1.DefaultExt = "txt";
-            OpenFileDialog1.Filter = "Text files|*.txt|All files|*.*";
-            OpenFileDialog1.InitialDirectory = Path.GetDirectoryName(Mp3FullPath);
+            if (Mp3LyricsMgmtHelper.SyncLyrics == null || Mp3LyricsMgmtHelper.SyncLyrics.Count == 0)
+                return;
+            string title = Mp3LyricsMgmtHelper.Title;
+            string artist = Mp3LyricsMgmtHelper.Artist;
+            string album = Mp3LyricsMgmtHelper.Album;
+            string tool = Mp3LyricsMgmtHelper.Tool;
+            uint year = Mp3LyricsMgmtHelper.Year;
 
-            if (OpenFileDialog1.ShowDialog() == DialogResult.OK)
-            {
-                _lrcFileName = OpenFileDialog1.FileName;
-
-                // Reset
-                InitGridView();
-
-                string[] lines = System.IO.File.ReadAllLines(_lrcFileName);
-                string line;                
-
-                for (int i = 0; i < lines.Count(); i++)
-                {
-                    line = lines[i].Trim();
-                    if (line != "")
-                    {
-                        line = line.Replace(" ", "_");
-                        line = m_SepLine + line;
-                        dgView.Rows.Add("", "", line);
-                    }
-                }
-
-                // Update counters
-                //lblLyrics.Text = lvLyrics.Items.Count.ToString();
-                lblTimes.Text = "0";
-
-                // Select first row
-                dgView.Rows[0].Selected = true;
-
-                localSyncLyrics = GetCurrentDgViewContent();
-                PopulateTextBox(localSyncLyrics);
-
-
-                if (MessageBox.Show(Strings.SwitchToSyncMode + "?", "Karaboss", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
-                {
-                    SetSyncEditMode();
-                }
-            }
+            if (title != "")
+                txtTitle.Text = title;
+            if (artist != "")
+                txtArtist.Text = artist;
+            if (album != "")
+                txtAlbum.Text = album;
+            if ( year != 0)
+                txtYear.Text = year.ToString();                                        
         }
 
         /// <summary>
         /// Store dgView content
         /// </summary>
         /// <returns></returns>
-        private List<List<keffect.KaraokeEffect.kSyncText>> GetCurrentDgViewContent()
+        private List<List<keffect.KaraokeEffect.kSyncText>> GetCurrentDgViewContent(DataGridView dgView, int colMs, int colText)
         {
             object otext;
             object otime;
@@ -2266,15 +2510,22 @@ namespace Karaboss.Mp3
             long time;
             string sTime;
             keffect.KaraokeEffect.kSyncText sct;
+            
             bool bNewLine = false;
+            bool bNewParagraph = false;
+
+            // Single line
             List<keffect.KaraokeEffect.kSyncText> SyncLine = new List<keffect.KaraokeEffect.kSyncText>();
+            // List of lines
             List<List<keffect.KaraokeEffect.kSyncText>> SyncLyrics = new List<List<keffect.KaraokeEffect.kSyncText>>();
 
-
+           
             for (int i = 0; i < dgView.Rows.Count; i++)
             {
-                otext = dgView.Rows[i].Cells[COL_TEXT].Value;
-                otime = dgView.Rows[i].Cells[COL_MS].Value;
+                
+
+                otext = dgView.Rows[i].Cells[colText].Value;
+                otime = dgView.Rows[i].Cells[colMs].Value;
 
                 if (otext == null) continue;
 
@@ -2286,35 +2537,61 @@ namespace Karaboss.Mp3
                     time = 0;
 
                 bNewLine = false;
+                bNewParagraph = false;
 
                 if (lyric.Trim() != "")
                 {
 
                     lyric = lyric.Replace("_", " ");
+                    
                     // Search for new lines
-                    if (lyric.StartsWith(m_SepLine))
+                    if (lyric.StartsWith(m_SepParagraph))
+                    {
+                        lyric = lyric.Substring(1);
+                        bNewParagraph = true;                       
+                    }
+                    else if (lyric.StartsWith(m_SepLine))
                     {
                         lyric = lyric.Substring(1);
                         bNewLine = true;
                     }
-
-                    if (lyric.EndsWith(m_SepLine))
-                    {
-                        lyric = lyric.Substring(0, lyric.Length - 1);
-                        bNewLine = true;
-                    }
-
+                    
                     sct = new keffect.KaraokeEffect.kSyncText(time, lyric);
-                    if (bNewLine)
+                    
+                    if (bNewParagraph)
                     {
+                        // Add the previous line to the list
                         if (SyncLine.Count > 0)
                             SyncLyrics.Add(SyncLine);
 
+                        // add an empty line for the paragraph separation
                         SyncLine = new List<keffect.KaraokeEffect.kSyncText>();
+                        SyncLine.Add(new keffect.KaraokeEffect.kSyncText(time, ""));                        
+                        SyncLyrics.Add(SyncLine);
+
+                        // create a new line
+                        SyncLine = new List<keffect.KaraokeEffect.kSyncText>();
+                        // Add syllabe to the line
                         SyncLine.Add(sct);
+
+                        bNewParagraph = false;
+                    }
+                    else  if (bNewLine)
+                    {
+                        // Add the previous line to the list
+                        if (SyncLine.Count > 0)
+                            SyncLyrics.Add(SyncLine);
+
+                        // create a new line
+                        SyncLine = new List<keffect.KaraokeEffect.kSyncText>();
+                        // Add syllabe to the line
+                        SyncLine.Add(sct);
+
+                        bNewLine = false;
                     }
                     else
                     {
+                        // Add syllabe to the line
                         SyncLine.Add(sct);
                     }
                 }
@@ -2327,11 +2604,11 @@ namespace Karaboss.Mp3
             return SyncLyrics;
         }
 
-        #endregion load lrc
+        #endregion import lrc
 
 
-        #region save lrc
-
+        #region export lrc
+        
         /// <summary>
         /// Save as lrc file
         /// </summary>
@@ -2342,7 +2619,10 @@ namespace Karaboss.Mp3
             GetLrcSaveOptions();
         }
 
-
+        private void mnuFileExportLyricsLrc_Click(object sender, EventArgs e)
+        {
+            GetLrcSaveOptions();
+        }
 
         /// <summary>
         /// Get save lrc options
@@ -2352,8 +2632,8 @@ namespace Karaboss.Mp3
         {
             #region guard
             object otime;
-            object otsp;            
-            
+            object otsp;
+
             if (txtResult.Text.Length == 0)
             {
                 MessageBox.Show("Nothing to save", "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -2479,18 +2759,18 @@ namespace Karaboss.Mp3
 
             string defFilter = "LRC files (*.lrc)|*.lrc|All files (*.*)|*.*";
 
-            saveFileDialog1.Title = "Save to LRC format";
-            saveFileDialog1.Filter = defFilter;
-            saveFileDialog1.DefaultExt = defExt;
-            saveFileDialog1.InitialDirectory = @fPath;
-            saveFileDialog1.FileName = defName;
+            SaveFileDialog.Title = "Save to LRC format";
+            SaveFileDialog.Filter = defFilter;
+            SaveFileDialog.DefaultExt = defExt;
+            SaveFileDialog.InitialDirectory = @fPath;
+            SaveFileDialog.FileName = defName;
 
-            if (saveFileDialog1.ShowDialog() != DialogResult.OK)
+            if (SaveFileDialog.ShowDialog() != DialogResult.OK)
                 return;
 
             #endregion
 
-            fullPath = saveFileDialog1.FileName;
+            fullPath = SaveFileDialog.FileName;
 
             #region metadata
             string Tag_Tool = string.Empty;
@@ -2498,20 +2778,24 @@ namespace Karaboss.Mp3
             string Tag_Artist = string.Empty;
             string Tag_Album = string.Empty;
             string Tag_Lang = string.Empty;
-            string Tag_Year = string.Empty;
-            string Tag_DPlus = string.Empty;            
-          
+            string Tag_By = string.Empty;
+            uint Tag_Year = 0;
+            string Tag_DPlus = string.Empty;
+
             if (bWithMetadata)
             {
                 Tag_Tool = "Karaboss https://karaboss.lacharme.net";
                 Tag_Title = txtTitle.Text;
                 Tag_Artist = txtArtist.Text;
                 Tag_Album = txtAlbum.Text;
-                Tag_Year = txtYear.Text;
-                Tag_Lang = cbLanguage.Text;
                 
-                Tag_DPlus = string.Empty;                
+                if (IsNumeric(txtTitle.Text))
+                    Tag_Year = Convert.ToUInt32(txtYear.Text);
+                Tag_Lang = cbLanguage.Text;
 
+                Tag_DPlus = string.Empty;
+
+                // If no tags in the mp3 file, tries to get them with the file name
                 if (Tag_Artist == "" && Tag_Title == "")
                 {
                     List<string> lstTags = Utilities.LyricsUtilities.GetTagsFromFileName(fullPath);
@@ -2522,435 +2806,247 @@ namespace Karaboss.Mp3
             #endregion metadata
 
 
+            // Read DatagridView Content            
+            List<(double Time, string lyric)> lstDgRows = LyricsUtilities.ReadDataGridContent(dgView, COL_TIME, COL_TEXT);
+            if (lstDgRows == null || lstDgRows.Count == 0)
+            {
+                MessageBox.Show("No lyric to export", "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return;
+            }
+
             switch (LrcLinesSyllabesFormat)
             {
                 case LrcLinesSyllabesFormats.Lines:
-                    SaveLRCLines(fullPath, bRemoveAccents, bUpperCase, bLowerCase, bRemoveNonAlphaNumeric, Tag_Tool, Tag_Title, Tag_Artist, Tag_Album, Tag_Lang, Tag_Year, Tag_DPlus, bCutLines, LrcCutLinesChars);
+                    //SaveLRCLines(fullPath, bRemoveAccents, bUpperCase, bLowerCase, bRemoveNonAlphaNumeric, Tag_Tool, Tag_Title, Tag_Artist, Tag_Album, Tag_Lang, Tag_Year, Tag_DPlus, bCutLines, LrcCutLinesChars);
+                    Utilities.LyricsUtilities.SaveLRCLines(fullPath, lstDgRows, bRemoveAccents, bUpperCase, bLowerCase, bRemoveNonAlphaNumeric, Tag_Tool, Tag_Title, Tag_Artist, Tag_Album, Tag_Lang, Tag_By, Tag_Year, Tag_DPlus, bCutLines, LrcCutLinesChars, _LrcMillisecondsDigits, null);
                     break;
                 case LrcLinesSyllabesFormats.Syllabes:
-                    SaveLRCSyllabes(fullPath, bRemoveAccents, bUpperCase, bLowerCase, bRemoveNonAlphaNumeric, Tag_Tool, Tag_Title, Tag_Artist, Tag_Album, Tag_Lang, Tag_Year, Tag_DPlus);
+                    //SaveLRCSyllabes(fullPath, bRemoveAccents, bUpperCase, bLowerCase, bRemoveNonAlphaNumeric, Tag_Tool, Tag_Title, Tag_Artist, Tag_Album, Tag_Lang, Tag_Year, Tag_DPlus);
+                    Utilities.LyricsUtilities.SaveLRCSyllabes(fullPath, lstDgRows, bRemoveAccents, bUpperCase, bLowerCase, bRemoveNonAlphaNumeric, Tag_Tool, Tag_Title, Tag_Artist, Tag_Album, Tag_Lang, Tag_By, Tag_Year, Tag_DPlus, _LrcMillisecondsDigits, null);
                     break;
             }
         }
-
-        /// <summary>
-        /// Save Lyrics .lrc file format and by lines
-        /// </summary>
-        /// <param name="File"></param>
-        /// <param name="Tag_Title"></param>
-        /// <param name="Tag_Artist"></param>
-        /// <param name="Tag_Album"></param>
-        /// <param name="Tag_Lang"></param>
-        /// <param name="Tag_By"></param>
-        /// <param name="Tag_DPlus"></param>
-        private void SaveLRCLines(string File, bool bRemoveAccents, bool bUpperCase, bool bLowerCase, bool bRemoveNonAlphaNumeric, string Tag_Tool, string Tag_Title, string Tag_Artist, string Tag_Album, string Tag_Lang, string Tag_Year, string Tag_DPlus, bool bControlLength, int MaxLength)
-        {
-            string sLine;
-            string lrcs;
-            string cr = "\r\n";
-
-            #region meta data
-
-            // List to store lines
-            List<string> lstHeaderLines = new List<string>();
-
-            // Store meta datas
-            List<string> TagsList = new List<string> { Tag_Tool, Tag_Title, Tag_Artist, Tag_Album, Tag_Lang, Tag_Album, Tag_DPlus };
-            List<string> TagsNames = new List<string> { "Tool:", "Ti:", "Ar:", "Al:", "La:", "By:", "D+:" };
-            string Tag;
-            string TagName;
-            for (int i = 0; i < TagsList.Count; i++)
-            {
-                Tag = TagsList[i];
-                TagName = TagsNames[i];
-                Tag = bRemoveAccents ? Utilities.LyricsUtilities.RemoveDiacritics(Tag) : Tag;
-                Tag = bRemoveNonAlphaNumeric ? Utilities.LyricsUtilities.RemoveNonAlphaNumeric(Tag) : Tag;
-                if (Tag != "")
-                {
-                    sLine = "[" + TagName + Tag + "]";
-                    lstHeaderLines.Add(sLine);
-                }
-            }
-            #endregion meta data
-
-            // Store rows of dgView in a list
-            // the aim is to have the same procedure between frmLyricsEdit and frmMp3LyricsEdit
-
-            #region Read dgView
-
-            // the aim is to have the same procedure between frmLyricsEdit and frmMp3LyricsEdit
-            List<(double, string)> lstDgRows =ReadDataFromDgView();
-           
-            #endregion Read dgView
-
-
-            // Make treatment of lyrics (same for frmLyricsEdit and frmMp3LyricsEdit)
-            List<string> lstLyricsItems = Utilities.LyricsUtilities.LrcExtractDgRows(lstDgRows, _LrcMillisecondsDigits, bRemoveAccents, bUpperCase, bLowerCase, bRemoveNonAlphaNumeric, null);
-
-            // Store lyrics in lines (remove timestamps from lines, except for the first word)
-            // [00:04.59]It's_been_a_hard_day's_night
-            List<string> lstLines = Utilities.LyricsUtilities.GetLrcLines(lstLyricsItems, _LrcMillisecondsDigits);
-
-            // Store timestamps + lyrics in lines (add spaces if not existing)
-            // initial [00:04.59]It's[00:04.83]_been[00:05.05]_a[00:05.27]_hard[00:06.15]_day's[00:06.81]_night[00:08.14]
-            // result [00:04.59]It's [00:04.83]_been [00:05.05]_a [00:05.27]_hard [00:06.15]_day's [00:06.81]_night [00:08.14]
-            List<string> lstTimeLines = Utilities.LyricsUtilities.GetLrcTimeLines(lstLyricsItems, _LrcMillisecondsDigits);
-
-            // Store lyrics by line and cut lines to MaxLength characters using lstTimeLines
-            List<string> lstLinesCut = new List<string>();
-            if (bControlLength)
-            {
-                lstLinesCut = Utilities.LyricsUtilities.GetLrcLinesCut(lstTimeLines, MaxLength, _LrcMillisecondsDigits);
-            }
-
-
-            #region send all to string 
-            // Header
-            lrcs = string.Empty;
-            for (int i = 0; i < lstHeaderLines.Count; i++)
-            {
-                lrcs += lstHeaderLines[i] + cr;
-            }
-
-            // Lines
-            if (bControlLength)
-            {
-                for (int i = 0; i < lstLinesCut.Count; i++)
-                {
-                    // Replace underscores located in the middle of the lyrics
-                    // ex: " the_air,_(get_to_poppin')"
-                    lrcs += lstLinesCut[i].Replace("_", " ") + cr;
-                }
-            }
-            else
-            {
-                for (int i = 0; i < lstLines.Count; i++)
-                {
-                    // Replace underscores located in the middle of the lyrics
-                    // ex: " the_air,_(get_to_poppin')"
-                    lrcs += lstLines[i].Replace("_", " ") + cr;
-                }
-            }
-            #endregion send all to string
-
-
-            #region open file
-
-            try
-            {
-                System.IO.File.WriteAllText(File, lrcs);
-                System.Diagnostics.Process.Start(@File);
-                
-                // Reset title
-                bfilemodified = false;
-                SetTitle(Mp3FullPath);
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message);
-            }
-
-            #endregion open file
-        }
-
-        /// <summary>
-        /// Save lyrics to new LRC format [01:54.60]Pa<01:55.32>ro<01:56.15>les
-        /// </summary>
-        /// <param name="FileName"></param>
-        private void SaveLRCSyllabes(string File, bool bRemoveAccents, bool bUpperCase, bool bLowerCase, bool bRemoveNonAlphaNumeric, string Tag_Tool, string Tag_Title, string Tag_Artist, string Tag_Album, string Tag_Lang, string Tag_Year, string Tag_DPlus)
-        {
-            string sTime;
-            long time;
-            TimeSpan ts;
-            string tsp;
-
-            string sType;
-            string sLyric;
-
-            object vLyric;
-            object vTime;
-            object vType;
-
-            string lrcs = string.Empty;
-            string cr = "\r\n";
-            string strSpaceBetween;
-            bool bSpaceBetwwen = false;
-            string lines = string.Empty;
-
-            // Space between time and lyrics [00:02.872]lyric
-            if (bSpaceBetwwen)
-                strSpaceBetween = " ";
-            else
-                strSpaceBetween = string.Empty;
-
-            List<string> TagsList = new List<string> { Tag_Tool, Tag_Title, Tag_Artist, Tag_Album, Tag_Lang, Tag_Year, Tag_DPlus };
-            List<string> TagsNames = new List<string> { "Tool:", "Ti:", "Ar:", "Al:", "La:", "By:", "D+:" };
-            string Tag;
-            string TagName;
-            for (int i = 0; i < TagsList.Count; i++)
-            {
-                Tag = TagsList[i];
-                TagName = TagsNames[i];
-                Tag = bRemoveAccents ? Utilities.LyricsUtilities.RemoveDiacritics(Tag) : Tag;
-                Tag = bRemoveNonAlphaNumeric ? Utilities.LyricsUtilities.RemoveNonAlphaNumeric(Tag) : Tag;
-                if (Tag != "")
-                    lrcs += "[" + TagName + strSpaceBetween + Tag + "]" + cr;
-            }
-
-            bool bLineFeed = true;
-
-            // new format of lrc
-            // [01:54.60]La <01:55.32>petite <01:56.15>maison
-            // Start line is [01:54.60]La
-            // syllabes are <01:55.32>petite <01:56.15>maison
-
-            // separate words and syllabes
-            // Store results in a list
-            List<(string stime, string lyric)> results = new List<(string, string)>();
-
-            // Apply treatments choosen
-            for (int i = 0; i < dgView.Rows.Count; i++)
-            {
-                vLyric = dgView.Rows[i].Cells[COL_TEXT].Value;
-                vTime = dgView.Rows[i].Cells[COL_MS].Value;
-                vType = dgView.Rows[i].Cells[COL_TEXT].Value;
-
-                if (vTime != null && vLyric != null && vTime.ToString() != "" && vLyric.ToString() != "")
-                {
-
-                    sLyric = vLyric.ToString();
-                    sLyric = sLyric.Replace("_", " ");
-
-                    sTime = vTime.ToString();
-                    time = long.Parse(sTime);
-
-
-                    sTime = Mp3LyricsMgmtHelper.MsToTime(time, _LrcMillisecondsDigits);
-
-                    // /hey
-                    // jude
-                    sType = vType.ToString().Trim();
-                    if (sType.IndexOf(m_SepParagraph) != -1 || sType.IndexOf(m_SepLine) != -1)
-                        bLineFeed = true;
-
-
-                    sLyric = sLyric.Replace(m_SepParagraph, "");
-                    sLyric = sLyric.Replace(m_SepLine, "");
-
-
-                    // Remove accents
-                    sLyric = bRemoveAccents ? Utilities.LyricsUtilities.RemoveDiacritics(sLyric) : sLyric;
-
-                    //Uppercase letters
-                    sLyric = bUpperCase ? sLyric.ToUpper() : sLyric;
-
-                    // Lowercase letters
-                    sLyric = bLowerCase ? sLyric.ToLower() : sLyric;
-
-                    // Remove non-alphanumeric chars
-                    sLyric = bRemoveNonAlphaNumeric ? Utilities.LyricsUtilities.RemoveNonAlphaNumeric(sLyric) : sLyric;
-
-                    // Save also empty lyrics
-                    //sTime = vTime.ToString();
-
-                    if (bLineFeed)
-                    {
-                        // Format of timestamp is []                                                        
-                        results.Add(("[" + sTime + "]", sLyric));
-
-                    }
-                    else
-                    {
-                        // Format of timestamp is <> + space before
-                        results.Add(("<" + sTime + ">", sLyric));
-                    }
-
-                    bLineFeed = false;
-
-                }
-            }
-
-            string nextLyric = string.Empty;
-            string nextTime = string.Empty;
-
-            bool bKeepForNextSyllabe = false;
-            string keepLyric = string.Empty;
-            string keepTime = string.Empty;
-
-
-            // Add a trailing "-" to syllabes without space with the next syllabe (ie it is a word composed of several syllabes)
-            for (int i = 0; i < results.Count; i++)
-            {
-                sTime = results[i].stime;
-                sLyric = results[i].lyric;
-
-                if (i < results.Count - 1)
-                {
-                    nextLyric = results[i + 1].lyric;
-                    nextTime = results[i + 1].stime;
-                }
-                else
-                {
-                    nextLyric = "";
-                    nextTime = "";
-                }
-                // No trailing space in the current, no starting space in the next and the next is not a new line ([]) 
-                // => this syllabe must be merged with the next one
-                if (!sLyric.EndsWith(" ") && nextLyric.Length > 0 && !nextLyric.StartsWith(" ") && nextTime.IndexOf("[") == -1)
-                {
-                    results[i] = (results[i].stime, results[i].lyric + "-");
-                }
-            }
-
-            for (int i = 0; i < results.Count; i++)
-            {
-                sTime = results[i].stime;
-                sLyric = results[i].lyric;
-
-                // Keep all syllabes ending with a trailing "-" until a syllabe without a "-"
-                if (sLyric.EndsWith("-"))
-                {
-                    sLyric = sLyric.Substring(0, sLyric.Length - 1).Trim();  // remove the "-"
-                    keepLyric += sLyric;                                     // add syllabe to previous ones   
-                    if (keepTime == "")
-                        keepTime = sTime;                                    // keep only the first timestamp (beginning of the word)   
-
-                    if (sTime.IndexOf("[") > -1)                             // if new line, store previous one
-                    {
-                        // Store previous line 
-                        if (lrcs.Trim().Length > 0)
-                        {
-                            lines += lrcs + cr;
-                        }
-                        lrcs = "";
-                    }
-
-                    // Skip 
-                    continue;
-                }
-                else if (keepLyric != "")
-                {
-                    // no trailing "-" and there are syllabes into keeplyric => this is the last syllabe of a word
-                    bKeepForNextSyllabe = true;
-                }
-
-                // This is the start of a new line
-                if (sTime.IndexOf("[") > -1)
-                {
-                    // Store previous line 
-                    if (lrcs.Trim().Length > 0)
-                    {
-                        lines += lrcs + cr;
-                    }
-                    // Format of timestamp is [] 
-                    lrcs = sTime + sLyric.Trim();
-                }
-                else
-                {
-                    // This is a normal syllabe 
-                    if (!bKeepForNextSyllabe)
-                    {
-                        // Format of timestamp is <> + space before
-                        lrcs += " " + sTime + sLyric.Trim();
-                    }
-                    else
-                    {
-                        // this is The last syllabe of a word
-                        if (keepTime.IndexOf("[") > -1)
-                        {
-                            // if the word stored in keeplyric was a starting line []
-                            lrcs += keepTime + keepLyric + sLyric.Trim();
-                        }
-                        else
-                        {
-                            // if the word stored in keeplyric was a normal word, add a space before the <00:00.000>  
-                            lrcs += " " + keepTime + keepLyric + sLyric.Trim();
-                        }
-
-                        // Reset variables used to store syllabes of a word
-                        bKeepForNextSyllabe = false;
-                        keepLyric = "";
-                        keepTime = "";
-                    }
-                }
-            }
-
-            if (lrcs.Trim().Length > 0)
-                lines += lrcs + cr;
-
-            try
-            {
-                System.IO.File.WriteAllText(File, lines);
-                System.Diagnostics.Process.Start(@File);
-                
-                // Reset title
-                bfilemodified = false;
-                SetTitle(Mp3FullPath);
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message);
-            }
-        }
-
-
-        /// <summary>
-        /// REad data form dgView to be saved to LRC file
-        /// </summary>
-        /// <returns></returns>
-        List<(double, string)> ReadDataFromDgView()
-        {
-            object otext;
-            object otime;            
-
-            List<(double, string)> lstDgRows = new List<(double, string)>();
-
-            string sLyric;
-            double time;
-            string m_SepLine = "/";
-            string m_SepParagraph = "\\";
-                       
-
-            for (int i = 0; i < dgView.Rows.Count; i++)
-            {
-                otext = dgView.Rows[i].Cells[COL_TEXT].Value;
-                otime = dgView.Rows[i].Cells[COL_MS].Value;
-
-                if (otext == null || otime == null) continue;
-
-                time = double.Parse(otime.ToString());
-                sLyric = otext.ToString();
-
-                // Objective : separate linefeeds & pagragraphs from text in order to retrieve
-                // the same behaviour as midi edition and use the same code
-
-                if (sLyric.IndexOf(m_SepParagraph) != -1)
-                {
-                    // add a new line with a paragraph (except first line)
-                    if (i > 0)
-                        lstDgRows.Add((time, m_SepParagraph));
-                    
-                    sLyric = sLyric.Replace(m_SepParagraph, "");
-                }
-                else if (sLyric.IndexOf(m_SepLine) != -1)
-                {
-                    // Add a new line with a linefeed (except first line)
-                    if (i > 0)
-                    lstDgRows.Add((time, m_SepLine));
-                    
-                    sLyric = sLyric.Replace(m_SepLine, "");
-                }
-
-                lstDgRows.Add((time, sLyric));
-
-            }
-            return lstDgRows;
-        }
-
       
-        #endregion save lrc
 
-   
+        #endregion export lrc
+
+
+        #endregion lrc import export
+
+
+
+        #region txt import export
+
+        #region import txt
+
+        /// <summary>
+        /// Import a text file (no timestamps)
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void mnuEditImportLyricsTxt_Click(object sender, EventArgs e)
+        {
+            ImportLyricsFromTxt();
+
+        }
+
+        private void ImportLyricsFromTxt()
+        {
+
+            OpenFileDialog.Title = "Open a .txt file";
+            OpenFileDialog.DefaultExt = "txt";
+            OpenFileDialog.Filter = "Text files|*.txt|All files|*.*";
+            OpenFileDialog.InitialDirectory = Path.GetDirectoryName(Mp3FullPath);
+
+            if (OpenFileDialog.ShowDialog() == DialogResult.OK)
+            {
+                _lrcFileName = OpenFileDialog.FileName;
+
+                // Reset
+                InitGridView();
+
+                string[] lines = System.IO.File.ReadAllLines(_lrcFileName);
+                string line;
+
+                for (int i = 0; i < lines.Count(); i++)
+                {
+                    line = lines[i].Trim();
+                    if (line != "")
+                    {
+                        line = line.Replace(" ", "_");
+                        line = m_SepLine + line;
+                        dgView.Rows.Add("", "", line);
+                    }
+                }
+
+                // Update counters
+                //lblLyrics.Text = lvLyrics.Items.Count.ToString();
+                lblTimes.Text = "0";
+
+                // Select first row
+                dgView.Rows[0].Selected = true;
+
+                localSyncLyrics = GetCurrentDgViewContent(dgView, COL_MS, COL_TEXT);
+                PopulateTextBox(localSyncLyrics);
+
+
+                if (MessageBox.Show(Strings.SwitchToSyncMode + "?", "Karaboss", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+                {
+                    SetSyncEditMode();
+                }
+            }
+        }
+     
+
+        #endregion import txt
+
+        #region export txt
+        private void mnuExportLyricsTxt_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void mnuFileExportLyricsTxt_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        #endregion
+
+        #endregion txt import export
+
+
+
+        #endregion import export lyrics
+
+
+        #region Editor
+
+        private void InitEditor()
+        {
+            if (PlayerAppearance != PlayerAppearances.LyricsEditor) return;
+
+            LrcMode = LrcModes.Edit;
+
+            _lyricseditfont = Properties.Settings.Default.LyricsEditFont;
+            if (_lyricseditfont == null)
+                _lyricseditfont = new Font("Segoe UI", 11, FontStyle.Regular, GraphicsUnit.Pixel);
+            
+                
+            _fontSize = _lyricseditfont.Size;
+            txtResult.Font = _lyricseditfont;
+
+            // index for times entering
+            _index = 0;
+
+            // 2 or 3 digits for timestamp format 00:00.00 or 00:00.000
+            _LrcMillisecondsDigits = Properties.Settings.Default.LrcMillisecondsDigits;
+
+            pnlEdit.Visible = true;
+
+            // first hotkeys
+            lblHotkeys.Font = new Font("Courier New", 9);                        
+            string tx = Strings.Mp3TimeStampHotKey1;
+            tx = string.Format(tx, Environment.NewLine);            
+            lblHotkeys.Text = tx; // "<ENTER>" + " " + "Add a new timestamp" + "\r\n" + "<DEL>" + "   " + "Remove current timestamp" + "\r\n" + "<SPACE>" + " "+ "Pause Music" ;
+
+            // 2nd hotkeys
+            lblHotkeysOthers.Font = lblHotkeys.Font;
+            tx = Strings.Mp3TimeStampHotKey2;
+            tx = string.Format(tx, Environment.NewLine);
+            lblHotkeysOthers.Text = tx; // "+" + "       " + "Accelerate" + "\r\n" + "-" + "       " + "Slow down" + "\r\n" + "<-" + "      " + "Stop Music";
+
+
+            // Display mp3 infos
+            if (Player.Tag != null)
+            {
+                txtTitle.Text = Player.Tag.Title;
+                txtAlbum.Text = Player.Tag.Album;
+                
+                if (Player.Tag.AlbumArtists.Count() > 0)
+                {
+                    txtArtist.Text = Player.Tag.AlbumArtists[0].ToString();
+
+                }
+
+                if (Player.Tag.Performers.Count() > 0)
+                {
+                    txtArtist.Text = Player.Tag.Performers[0].ToString();
+                    
+                }
+                
+                if (Player.Tag.Year > 0)
+                    txtYear.Text = Player.Tag.Year.ToString();
+            }
+            
+        }
+
+        /// <summary>
+        /// Key Enter was hit
+        /// </summary>
+        private void AddNewLrcTimeStamp() 
+        {
+            if (PlayerState != PlayerStates.Playing) return;
+
+            if (dgView.Rows.Count == 1)
+            {
+                MessageBox.Show("Please add lyrics before entering timestamps", "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }                        
+            
+            string tsp;            
+            double time = Player.Position * 1000;
+            tsp = Mp3LyricsMgmtHelper.MsToTime(time, _LrcMillisecondsDigits);
+                                 
+            if (_index < dgView.Rows.Count) // lvLyrics.Items.Count)
+            {
+                dgView.Rows[_index].Cells[COL_MS].Value = (long)time;
+                dgView.Rows[_index].Cells[COL_TIME].Value = tsp;
+                //lvLyrics.Items[_index].Text = tsp;
+
+                
+                // Scroll to 2 lines before bottom to ensure visibility
+                if (_index < dgView.Rows.Count - 2)
+                    dgView.CurrentCell = dgView.Rows[_index + 2].Cells[0];
+                else
+                    dgView.CurrentCell = dgView.Rows[_index].Cells[0];
+               
+
+                lblTimes.Text = (_index + 1).ToString(); // count number of lines done
+
+                // Select line (paint in blue) and scroll
+                dgView.Rows[_index].Selected = true;
+                dgView.CurrentCell = dgView.Rows[_index].Cells[0];
+            
+
+                _index++;
+            }            
+        }
+
+        /// <summary>
+        /// Remove current timestamp in case we have hit ENTER too soon
+        /// </summary>
+        private void RemoveCurrentLrcTimeStamp()
+        {
+            if (PlayerState != PlayerStates.Playing || PlayerAppearance != PlayerAppearances.LyricsEditor) return;
+            if (dgView.Rows.Count == 1)
+            {
+                MessageBox.Show("Please add lyrics before entering timestamps", "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+            if (_index > 0)
+            {
+                _index--;
+                dgView.Rows[_index].Cells[COL_MS].Value = "";
+                dgView.Rows[_index].Cells[COL_TIME].Value = "";
+
+                // Select line (paint in blue) and scroll
+                dgView.Rows[_index].Selected = true;
+                dgView.CurrentCell = dgView.Rows[_index].Cells[0];
+            }
+        }
+
+                   
         private void frmMp3Player_KeyUp(object sender, KeyEventArgs e)
         {
             switch (e.KeyCode)
@@ -2976,7 +3072,7 @@ namespace Karaboss.Mp3
                 case Keys.Space:
                     
                     // If editing lyrics: exit
-                    if (PlayerAppearance == PlayerAppearances.LrcGenerator && LrcMode == LrcModes.Edit)
+                    if (PlayerAppearance == PlayerAppearances.LyricsEditor && LrcMode == LrcModes.Edit)
                         return;
                                         
                     PlayPauseMusic();
@@ -2988,7 +3084,7 @@ namespace Karaboss.Mp3
                     break;
 
                 case Keys.Enter:
-                    if (PlayerAppearance == PlayerAppearances.LrcGenerator && LrcMode == LrcModes.Sync && PlayerState == PlayerStates.Playing)
+                    if (PlayerAppearance == PlayerAppearances.LyricsEditor && LrcMode == LrcModes.Sync && PlayerState == PlayerStates.Playing)
                     {
                         // Add a new timestamp
                         AddNewLrcTimeStamp();
@@ -3004,7 +3100,7 @@ namespace Karaboss.Mp3
                     break;
 
                 case Keys.Delete:
-                    if (PlayerAppearance == PlayerAppearances.LrcGenerator && PlayerState == PlayerStates.Playing)
+                    if (PlayerAppearance == PlayerAppearances.LyricsEditor && PlayerState == PlayerStates.Playing)
                     {
                         // Remove currentline of timestamp in case we have hit ENTER too soon
                         RemoveCurrentLrcTimeStamp();
@@ -3118,10 +3214,10 @@ namespace Karaboss.Mp3
             }
         }
 
-       
 
-        #endregion LRC generator
-        
+
+        #endregion Editor
+
 
         #region Rich Textbox
 
@@ -3424,17 +3520,17 @@ namespace Karaboss.Mp3
             // it is not possible to save the file on the same file (file locked)
             string mp3file = Files.FindUniqueFileName(FileName);
 
-            saveFileDialog1 = new SaveFileDialog();
-            saveFileDialog1.Filter = "Mp3 files (*.mp3)|*.mp3|All files (*.*)|*.*";
-            saveFileDialog1.FilterIndex = 1;
-            saveFileDialog1.RestoreDirectory = true;
-            saveFileDialog1.InitialDirectory = Path.GetDirectoryName(mp3file);
-            saveFileDialog1.FileName = Path.GetFileName(mp3file);
+            SaveFileDialog = new SaveFileDialog();
+            SaveFileDialog.Filter = "Mp3 files (*.mp3)|*.mp3|All files (*.*)|*.*";
+            SaveFileDialog.FilterIndex = 1;
+            SaveFileDialog.RestoreDirectory = true;
+            SaveFileDialog.InitialDirectory = Path.GetDirectoryName(mp3file);
+            SaveFileDialog.FileName = Path.GetFileName(mp3file);
 
-            if (saveFileDialog1.ShowDialog() == DialogResult.OK)
+            if (SaveFileDialog.ShowDialog() == DialogResult.OK)
             {
 
-                string filename = saveFileDialog1.FileName;
+                string filename = SaveFileDialog.FileName;
 
                 try
                 {
@@ -3513,7 +3609,10 @@ namespace Karaboss.Mp3
                     {
 
                         lyric = dgView.Rows[i].Cells[COL_TEXT].Value.ToString();
+                        
+                        lyric = lyric.Replace(m_SepParagraph, "\n\n");
                         lyric = lyric.Replace(m_SepLine, "\n");
+                        
                         lyric = lyric.Replace("_", " ");
                         Mp3LyricsMgmtHelper.MySyncLyricsFrame.Text[i].Text = lyric;
                     }
@@ -3694,21 +3793,29 @@ namespace Karaboss.Mp3
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void btnDelete_Click(object sender, EventArgs e)
-        {
-            DeleteLine();
+        {            
+            DeleteSelectedLines();
         }
 
-        private void DeleteLine()
+
+        private void DeleteSelectedLines()
         {
+
+            if (dgView.SelectedRows.Count == 0) 
+            { 
+                MessageBox.Show("Please select at least one line to delete", "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return;
+            }
+
             try
             {
-                int row = dgView.CurrentRow.Index;
-                dgView.Rows.RemoveAt(row);
-
+                foreach (DataGridViewRow row in dgView.SelectedRows)
+                {
+                    dgView.Rows.RemoveAt(row.Index);
+                }
                 localSyncLyrics = LoadModifiedLyrics();
                 if (localSyncLyrics != null)
                     PopulateTextBox(localSyncLyrics);
-
                 FileModified();
             }
             catch (Exception Ex)
@@ -3718,6 +3825,7 @@ namespace Karaboss.Mp3
                                     MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
+
 
         /// <summary>
         /// Delete all lyrics
@@ -3925,7 +4033,7 @@ namespace Karaboss.Mp3
 
 
         #region populate dgView
-
+        /*
         /// <summary>
         /// Returns list of lyrics according to its origin: mp3 or mrc
         /// </summary>
@@ -3951,6 +4059,8 @@ namespace Karaboss.Mp3
             }          
             return null;
         }
+
+        */
 
         /// <summary>
         /// Populate gridview with lyrics
@@ -3978,12 +4088,13 @@ namespace Karaboss.Mp3
 
 
             // 1. Syncronized lyrics included in the mp3
-            if (SynchedLyrics != null)
+            if (SynchedLyrics != null && SynchedLyrics.Text.Count() > 0)
             {
                 for (int i = 0; i < SynchedLyrics.Text.Count(); i++)
                 {
                     // Put "/" everywhere
                     text = SynchedLyrics.Text[i].Text;
+                    text = text.Replace("\n\n", m_SepParagraph);
                     text = text.Replace("\r\n", m_SepLine);
                     text = text.Replace("\r", m_SepLine);
                     text = text.Replace("\n", m_SepLine);
@@ -3998,26 +4109,42 @@ namespace Karaboss.Mp3
             // 2. Lyrics coming from a lrc file
             else if (SyncLyrics != null && SyncLyrics.Count > 0)
             {
-                // For each line
-                for (int j = 0; j < SyncLyrics.Count; j++)
+                List<keffect.KaraokeEffect.kSyncText> SyncLine;
+                bool bParagraph = false;
+
+                for (int i = 0; i < SyncLyrics.Count; i++)
                 {
-                    // For each syllabes
-                    for (int i = 0; i < SyncLyrics[j].Count; i++)
+                    SyncLine = SyncLyrics[i];
+
+                    for (int j = 0; j < SyncLine.Count; j++)
                     {
-                        time = SyncLyrics[j][i].Time;
+                        time = SyncLine[j].Time;
                         sTime = Mp3LyricsMgmtHelper.MsToTime(time, _LrcMillisecondsDigits);
+                        text = SyncLine[j].Text;
+                        if (i > 0 && j == 0)
+                        {
+                            if (text.Trim() == "")
+                            {
+                                bParagraph = true;
+                                continue;
+                            }
 
-                        text = SyncLyrics[j][i].Text;
+                            if (bParagraph)
+                            {
+                                text = m_SepParagraph + text;
+                                bParagraph = false;
+                            }
+                            else
+                                text = m_SepLine + text;
+                            
 
-                        // Put "/" everywhere
-                        text = text.Replace("\r\n", m_SepLine);
-                        text = text.Replace("\r", m_SepLine);
-                        text = text.Replace("\n", m_SepLine);
+                        }
+                        
                         text = text.Replace(" ", "_");
-
                         dgView.Rows.Add(time, sTime, text);
                     }
-                }
+                }               
+
             }
             // Non synchronized lyrics coming from the mp3 file
             else if (TagLyrics != null && TagLyrics != "")
@@ -4036,7 +4163,69 @@ namespace Karaboss.Mp3
                 }
             }
 
-        }     
+        }
+
+        /// <summary>
+        /// Populate DataGridView with SyncLyrics
+        /// </summary>
+        /// <param name="SyncLyrics"></param>
+        private void PopulateDataGridView(List<List<keffect.KaraokeEffect.kSyncText>> SyncLyrics)
+        {
+            long time;
+            string sTime;
+            string text;
+
+            // Reset DataGridView
+            InitGridView();
+
+            // Tags
+            string TagLyrics = string.Empty;
+            TagLib.Tag Tag = Player.Tag;
+            if (Tag != null)
+                TagLyrics = Tag.Lyrics;
+
+            if (SyncLyrics == null || SyncLyrics.Count == 0)
+            {
+                MessageBox.Show("No Lyrics to display", "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+            
+            List<keffect.KaraokeEffect.kSyncText> SyncLine;
+            bool bParagraph = false;
+
+            for (int i = 0; i < SyncLyrics.Count; i++)
+            {
+                SyncLine = SyncLyrics[i];
+
+                for (int j = 0; j < SyncLine.Count; j++)
+                {
+                    time = SyncLine[j].Time;
+                    sTime = Mp3LyricsMgmtHelper.MsToTime(time, _LrcMillisecondsDigits);
+
+                    text = SyncLine[j].Text;
+                    if (i > 0 && j == 0)
+                    {
+                        if (text.Trim() == "")
+                        {
+                            bParagraph = true;
+                            continue;
+                        }
+
+                        if (bParagraph)
+                        {
+                            text = m_SepParagraph + text;
+                            bParagraph = false;
+                        }
+                        else
+                            text = m_SepLine + text;
+                    }
+
+                    text = text.Replace(" ", "_");
+                    dgView.Rows.Add(time, sTime, text);
+                }
+            }
+            
+        }
 
         private void dgView_RowsRemoved(object sender, DataGridViewRowsRemovedEventArgs e)
         {
@@ -4134,7 +4323,7 @@ namespace Karaboss.Mp3
         {
             if (e.Button == MouseButtons.Right)
             {
-                dgContextMenu = new ContextMenuStrip();
+                dgContextMenu = new ContextMenuStrip();                
                 dgContextMenu.Items.Clear();
 
 
@@ -4142,6 +4331,8 @@ namespace Karaboss.Mp3
                 ToolStripMenuItem menuInsertTextLine = new ToolStripMenuItem(Strings.InsertNewLine);
                 dgContextMenu.Items.Add(menuInsertTextLine);
                 menuInsertTextLine.Click += new System.EventHandler(this.MnuInsertTextLine_Click);
+                menuInsertTextLine.ShowShortcutKeys = true;
+                menuInsertTextLine.ShortcutKeys = Keys.Control | Keys.I;
 
                 // Insert LineFeed
                 ToolStripMenuItem menuInsertLineBreak = new ToolStripMenuItem(Strings.InsertLineBreak);
@@ -4157,7 +4348,9 @@ namespace Karaboss.Mp3
                 // Delete line
                 ToolStripMenuItem menuDeleteLine = new ToolStripMenuItem(Strings.DeleteLine);
                 dgContextMenu.Items.Add(menuDeleteLine);
-                menuDeleteLine.Click += new System.EventHandler(this.MnuDeleteLine_Click);
+                menuDeleteLine.Click += new System.EventHandler(this.MnuDeleteLine_Click);   
+                menuDeleteLine.ShowShortcutKeys = true;
+                menuDeleteLine.ShortcutKeys = Keys.Control | Keys.D;
 
 
                 ToolStripSeparator menusep1 = new ToolStripSeparator();
@@ -4225,8 +4418,9 @@ namespace Karaboss.Mp3
         /// <param name="e"></param>
         private void MnuDeleteLine_Click(object sender, EventArgs e)
         {
-            DeleteLine();
+            DeleteSelectedLines();
         }
+
 
         /// <summary>
         /// Offset up the third column
@@ -4385,9 +4579,7 @@ namespace Karaboss.Mp3
             }
         }
 
-
        
-
         /// <summary>
         /// Keydown event
         /// </summary>
@@ -4448,8 +4640,10 @@ namespace Karaboss.Mp3
                 frmMp3Lyrics.StopTimerBalls();
         }
 
-        #endregion aniballs
 
-       
+
+
+
+        #endregion aniballs
     }
 }

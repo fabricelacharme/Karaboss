@@ -48,6 +48,7 @@ namespace Karaboss.Mp3
     public partial class frmMp3Lyrics : Form, IMessageFilter
     {
 
+
         #region Move form without title bar
         public const int WM_NCLBUTTONDOWN = 0xA1;
         public const int HT_CAPTION = 0x2;
@@ -64,10 +65,10 @@ namespace Karaboss.Mp3
 
         #endregion
 
-        private string DefaultDirSlideShow;
-        private List<string> m_ImageFilePaths;
-        private string[] bgFiles;
-        private Font _karaokeFont;
+        //private string DefaultDirSlideShow;
+        //private List<string> m_ImageFilePaths;
+        //private string[] bgFiles;
+        
         private long _timerintervall = 50;
 
         private frmMp3LyrOptions frmMp3LyrOptions;
@@ -76,7 +77,8 @@ namespace Karaboss.Mp3
 
         #region properties
 
-        private Font _karaokefont;
+        //private Font _karaokefont;
+        private Font _karaokeFont;
         public Font KaraokeFont
         {
             get { return _karaokeFont; }
@@ -495,9 +497,9 @@ namespace Karaboss.Mp3
             if (Mp3LyricsMgmtHelper.SyncLyrics == null) return;
 
             // Karaoke Effect
-            karaokeEffect1.TransitionEffect = TransitionEffects.None;
-            karaokeEffect1.SyncLyrics = Mp3LyricsMgmtHelper.SyncLyrics;
-                                    
+            karaokeEffect1.TransitionEffect = TransitionEffects.None;                        
+            karaokeEffect1.SyncLyrics = Mp3LyricsMgmtHelper.SyncLyrics;                        
+
             karaokeEffect1.nbLyricsLines = 3;
         }
 
@@ -738,7 +740,7 @@ namespace Karaboss.Mp3
         }
 
       
-
+        /*
         private void LoadImageList(string dir)
         {
             bgFiles = Directory.GetFiles(@dir, "*.jpg");
@@ -749,6 +751,7 @@ namespace Karaboss.Mp3
                 m_ImageFilePaths.Add(file);
             }
         }
+        */
 
         #endregion Images
 

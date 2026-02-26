@@ -747,7 +747,7 @@ namespace TrkControl
         private void btnDel_Click(object sender, EventArgs e)
         {
             #region guard
-            // Allowed only if edit mode set on frmPlayer
+            // Allowed only if edit mode set on frmMidiPlayer
             if (!_enabled)
                 return;
             #endregion

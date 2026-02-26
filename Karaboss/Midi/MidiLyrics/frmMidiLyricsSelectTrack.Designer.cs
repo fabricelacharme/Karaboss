@@ -1,6 +1,6 @@
 ﻿namespace Karaboss
 {
-    partial class frmLyricsSelectTrack
+    partial class frmMidiLyricsSelectTrack
     {
         /// <summary>
         /// Required designer variable.
@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmLyricsSelectTrack));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmMidiLyricsSelectTrack));
             this.cbSelectTrack = new System.Windows.Forms.ComboBox();
             this.btnOk = new System.Windows.Forms.Button();
             this.btnCancel = new System.Windows.Forms.Button();
@@ -37,6 +37,7 @@
             this.lblSelectLyricFormat = new System.Windows.Forms.Label();
             this.optTextFormat = new System.Windows.Forms.RadioButton();
             this.optLyricFormat = new System.Windows.Forms.RadioButton();
+            this.btnPlayTrack = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // cbSelectTrack
@@ -44,6 +45,7 @@
             this.cbSelectTrack.FormattingEnabled = true;
             resources.ApplyResources(this.cbSelectTrack, "cbSelectTrack");
             this.cbSelectTrack.Name = "cbSelectTrack";
+            this.cbSelectTrack.SelectedIndexChanged += new System.EventHandler(this.cbSelectTrack_SelectedIndexChanged);
             // 
             // btnOk
             // 
@@ -90,10 +92,19 @@
             this.optLyricFormat.TabStop = true;
             this.optLyricFormat.UseVisualStyleBackColor = true;
             // 
-            // frmLyricsSelectTrack
+            // btnPlayTrack
+            // 
+            this.btnPlayTrack.Image = global::Karaboss.Properties.Resources.Media_Controls_Play_icon;
+            resources.ApplyResources(this.btnPlayTrack, "btnPlayTrack");
+            this.btnPlayTrack.Name = "btnPlayTrack";
+            this.btnPlayTrack.UseVisualStyleBackColor = true;
+            this.btnPlayTrack.Click += new System.EventHandler(this.btnPlayTrack_Click);
+            // 
+            // frmMidiLyricsSelectTrack
             // 
             resources.ApplyResources(this, "$this");
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.btnPlayTrack);
             this.Controls.Add(this.optLyricFormat);
             this.Controls.Add(this.optTextFormat);
             this.Controls.Add(this.lblSelectLyricFormat);
@@ -105,7 +116,7 @@
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
-            this.Name = "frmLyricsSelectTrack";
+            this.Name = "frmMidiLyricsSelectTrack";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FrmSelectTrack_FormClosing);
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -122,5 +133,6 @@
         private System.Windows.Forms.Label lblSelectLyricFormat;
         private System.Windows.Forms.RadioButton optTextFormat;
         private System.Windows.Forms.RadioButton optLyricFormat;
+        private System.Windows.Forms.Button btnPlayTrack;
     }
 }

@@ -240,38 +240,32 @@
   <data name="splitContainer1.ToolTip" xml:space="preserve">
     <value />
   </data>
-  <data name="mnuFileSave.Size" type="System.Drawing.Size, System.Drawing">
-    <value>258, 22</value>
-  </data>
   <data name="mnuFileSave.Text" xml:space="preserve">
     <value>&amp;Enregistrer</value>
-  </data>
-  <data name="mnuFileSaveAs.Size" type="System.Drawing.Size, System.Drawing">
-    <value>258, 22</value>
   </data>
   <data name="mnuFileSaveAs.Text" xml:space="preserve">
     <value>Enregistrer &amp;sous</value>
   </data>
-  <data name="mnuFileSep2.Size" type="System.Drawing.Size, System.Drawing">
-    <value>255, 6</value>
+  <data name="mnuFileExportLyricsLrc.Size" type="System.Drawing.Size, System.Drawing">
+    <value>140, 22</value>
   </data>
-  <data name="mnuFileSaveAsLrc.Size" type="System.Drawing.Size, System.Drawing">
-    <value>258, 22</value>
+  <data name="mnuFileExportLyricsLrc.Text" xml:space="preserve">
+    <value>Format LRC</value>
   </data>
-  <data name="mnuFileSaveAsLrc.Text" xml:space="preserve">
-    <value>Exporter les paroles au format .lrc</value>
+  <data name="mnuFileExportLyricsTxt.Size" type="System.Drawing.Size, System.Drawing">
+    <value>140, 22</value>
   </data>
-  <data name="MnuSaveAsText.Size" type="System.Drawing.Size, System.Drawing">
-    <value>258, 22</value>
+  <data name="mnuFileExportLyricsTxt.Text" xml:space="preserve">
+    <value>Format texte</value>
   </data>
-  <data name="MnuSaveAsText.Text" xml:space="preserve">
-    <value>Exporter les paroles au format texte</value>
+  <data name="MnuFileExportLyricsKok.Size" type="System.Drawing.Size, System.Drawing">
+    <value>140, 22</value>
   </data>
-  <data name="mnuFileSep1.Size" type="System.Drawing.Size, System.Drawing">
-    <value>255, 6</value>
+  <data name="MnuFileExportLyricsKok.Text" xml:space="preserve">
+    <value>Format KOK</value>
   </data>
-  <data name="mnuFileQuit.Size" type="System.Drawing.Size, System.Drawing">
-    <value>258, 22</value>
+  <data name="mnuFileExportLyrics.Text" xml:space="preserve">
+    <value>Exporter les paroles</value>
   </data>
   <data name="mnuFileQuit.Text" xml:space="preserve">
     <value>&amp;Quitter</value>
@@ -283,7 +277,7 @@
     <value>&amp;Fichier</value>
   </data>
   <data name="mnuEditLoadTrack.Size" type="System.Drawing.Size, System.Drawing">
-    <value>263, 22</value>
+    <value>182, 22</value>
   </data>
   <data name="mnuEditLoadTrack.Text" xml:space="preserve">
     <value>&amp;Charger une piste</value>
@@ -292,25 +286,31 @@
     <value>Charger une piste contenant des notes pour synchroniser le texte.</value>
   </data>
   <data name="mnuEditSep1.Size" type="System.Drawing.Size, System.Drawing">
-    <value>260, 6</value>
+    <value>179, 6</value>
   </data>
-  <data name="mnuEditLoadMelodyText.Size" type="System.Drawing.Size, System.Drawing">
-    <value>263, 22</value>
+  <data name="mnuEditImportLyricsLrc.Size" type="System.Drawing.Size, System.Drawing">
+    <value>142, 22</value>
   </data>
-  <data name="mnuEditLoadMelodyText.Text" xml:space="preserve">
-    <value>Charger un fichier texte (paroles)</value>
+  <data name="mnuEditImportLyricsLrc.Text" xml:space="preserve">
+    <value>Format LRC</value>
   </data>
-  <data name="mnuEditLoadMelodyText.ToolTipText" xml:space="preserve">
-    <value>Charger un fichier texte (uniquement des paroles, pas de temps)</value>
+  <data name="mnuEditImportLyricsTxt.Size" type="System.Drawing.Size, System.Drawing">
+    <value>142, 22</value>
   </data>
-  <data name="mnuEditLoadLRCFile.Size" type="System.Drawing.Size, System.Drawing">
-    <value>263, 22</value>
+  <data name="mnuEditImportLyricsTxt.Text" xml:space="preserve">
+    <value>Format Texte</value>
   </data>
-  <data name="mnuEditLoadLRCFile.Text" xml:space="preserve">
-    <value>Charger un fichier texte (format .lrc)</value>
+  <data name="mnuEditImportLyricsKok.Size" type="System.Drawing.Size, System.Drawing">
+    <value>142, 22</value>
   </data>
-  <data name="mnuEditLoadLRCFile.ToolTipText" xml:space="preserve">
-    <value>Charger un fichier texte au format LRC (temps + Lyriques)</value>
+  <data name="mnuEditImportLyricsKok.Text" xml:space="preserve">
+    <value>Format KOK</value>
+  </data>
+  <data name="mnuEditImportLyrics.Size" type="System.Drawing.Size, System.Drawing">
+    <value>182, 22</value>
+  </data>
+  <data name="mnuEditImportLyrics.Text" xml:space="preserve">
+    <value>Importer des paroles</value>
   </data>
   <data name="mnuEdit.Size" type="System.Drawing.Size, System.Drawing">
     <value>56, 20</value>

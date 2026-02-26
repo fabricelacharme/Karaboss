@@ -47,8 +47,8 @@ namespace PicControl
     public partial class pictureBoxControl : UserControl, IMessageFilter, IDisposable
     {
         /*
-         * timer5_Tick de frmPlayer appelle la fonction colorLyric de frmLyrics 
-         * La fenetre frmLyrics appelle la fonction ColorLyric(songposition) de picturebox control
+         * timer5_Tick de frmMidiPlayer appelle la fonction colorLyric de frmMidiLyrics 
+         * La fenetre frmMidiLyrics appelle la fonction ColorLyric(songposition) de picturebox control
          * Si songposition <> currenttextpos (syllabe active a changé) => redessine
          */
 

@@ -1,6 +1,6 @@
 ﻿namespace Karaboss
 {
-    partial class frmLyric
+    partial class frmMidiLyrics
     {
         /// <summary>
         /// Required designer variable.
@@ -29,7 +29,7 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmLyric));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmMidiLyrics));
             this.pnlBalls = new System.Windows.Forms.Panel();
             this.pnlTittle = new System.Windows.Forms.Panel();
             this.lblTittle = new System.Windows.Forms.Label();
@@ -218,6 +218,7 @@
             // 
             this.pBox.bColorContour = true;
             this.pBox.bDemo = false;
+            this.pBox.Beat = 200;
             this.pBox.BeatDuration = 0;
             this.pBox.bforceUppercase = false;
             this.pBox.bShowChords = false;
@@ -231,6 +232,9 @@
             this.pBox.DirSlideShow = null;
             resources.ApplyResources(this.pBox, "pBox");
             this.pBox.FreqDirSlideShow = 0;
+            this.pBox.GradientAngle = 45F;
+            this.pBox.GradientColor0 = System.Drawing.Color.Empty;
+            this.pBox.GradientColor1 = System.Drawing.Color.Empty;
             this.pBox.imgLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.pBox.KaraokeFont = new System.Drawing.Font("Segoe Print", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.pBox.LyricsTimes = ((System.Collections.Generic.List<int>)(resources.GetObject("pBox.LyricsTimes")));
@@ -242,21 +246,27 @@
             this.pBox.OptionBackground = "SolidColor";
             this.pBox.OptionDisplay = PicControl.pictureBoxControl.OptionsDisplay.Top;
             this.pBox.OptionShowChords = true;
+            this.pBox.RhythmColor0 = System.Drawing.Color.Empty;
+            this.pBox.RhythmColor1 = System.Drawing.Color.Empty;
             this.pBox.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Normal;
             this.pBox.TransparencyKey = System.Drawing.Color.Lime;
             this.pBox.Txt = "";
             this.pBox.TxtBackColor = System.Drawing.Color.White;
             this.pBox.TxtBeforeColor = System.Drawing.Color.YellowGreen;
             this.pBox.TxtContourColor = System.Drawing.Color.DarkTurquoise;
+            this.pBox.TxtGrad0Color = System.Drawing.Color.Empty;
+            this.pBox.TxtGrad1Color = System.Drawing.Color.Empty;
             this.pBox.TxtHighlightColor = System.Drawing.Color.Red;
             this.pBox.TxtNbLines = 3;
             this.pBox.TxtNextColor = System.Drawing.Color.White;
+            this.pBox.TxtRhythm0Color = System.Drawing.Color.Empty;
+            this.pBox.TxtRhythm1Color = System.Drawing.Color.Empty;
             // 
             // timer1
             // 
             this.timer1.Tick += new System.EventHandler(this.Timer1_Tick);
             // 
-            // frmLyric
+            // frmMidiLyric
             // 
             resources.ApplyResources(this, "$this");
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -266,12 +276,12 @@
             this.DoubleBuffered = true;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
-            this.Name = "frmLyric";
+            this.Name = "frmMidiLyrics";
             this.TopMost = true;
-            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FrmLyric_FormClosing);
-            this.Load += new System.EventHandler(this.FrmLyric_Load);
-            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.frmLyric_KeyDown);
-            this.Resize += new System.EventHandler(this.FrmLyric_Resize);
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.frmMidiLyrics_FormClosing);
+            this.Load += new System.EventHandler(this.frmMidiLyrics_Load);
+            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.frmMidiLyrics_KeyDown);
+            this.Resize += new System.EventHandler(this.frmMidiLyrics_Resize);
             this.pnlBalls.ResumeLayout(false);
             this.pnlTittle.ResumeLayout(false);
             this.pnlTittle.PerformLayout();

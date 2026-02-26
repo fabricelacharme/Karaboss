@@ -1,6 +1,6 @@
 ﻿namespace Karaboss
 {
-    partial class frmLyricsEdit
+    partial class frmMidiLyricsEdit
     {
         /// <summary>
         /// Required designer variable.
@@ -29,7 +29,7 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmLyricsEdit));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmMidiLyricsEdit));
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.dgView = new System.Windows.Forms.DataGridView();
             this.dTime = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -60,19 +60,23 @@
             this.mnuFileSave = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuFileSaveAs = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuFileSep2 = new System.Windows.Forms.ToolStripSeparator();
-            this.mnuFileSaveAsLrc = new System.Windows.Forms.ToolStripMenuItem();
-            this.MnuSaveAsText = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnuFileExportLyrics = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnuFileExportLyricsLrc = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnuFileExportLyricsTxt = new System.Windows.Forms.ToolStripMenuItem();
+            this.MnuFileExportLyricsKok = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuFileSep1 = new System.Windows.Forms.ToolStripSeparator();
             this.mnuFileQuit = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuEdit = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuEditLoadTrack = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuEditSep1 = new System.Windows.Forms.ToolStripSeparator();
-            this.mnuEditLoadMelodyText = new System.Windows.Forms.ToolStripMenuItem();
-            this.mnuEditLoadLRCFile = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnuEditImportLyrics = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnuEditImportLyricsLrc = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnuEditImportLyricsTxt = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnuEditImportLyricsKok = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuHelp = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuHelpAbout = new System.Windows.Forms.ToolStripMenuItem();
-            this.saveMidiFileDialog = new System.Windows.Forms.SaveFileDialog();
-            this.openFileDialog = new System.Windows.Forms.OpenFileDialog();
+            this.SaveFileDialog = new System.Windows.Forms.SaveFileDialog();
+            this.OpenFileDialog = new System.Windows.Forms.OpenFileDialog();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
@@ -93,6 +97,7 @@
             this.pnlMenus = new System.Windows.Forms.Panel();
             this.lblSelectTrack = new System.Windows.Forms.Label();
             this.cbSelectTrack = new System.Windows.Forms.ComboBox();
+            this.mnuFileExportLyricsSrt = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -341,8 +346,7 @@
             this.mnuFileSave,
             this.mnuFileSaveAs,
             this.mnuFileSep2,
-            this.mnuFileSaveAsLrc,
-            this.MnuSaveAsText,
+            this.mnuFileExportLyrics,
             this.mnuFileSep1,
             this.mnuFileQuit});
             this.mnuFile.Name = "mnuFile";
@@ -365,17 +369,33 @@
             this.mnuFileSep2.Name = "mnuFileSep2";
             resources.ApplyResources(this.mnuFileSep2, "mnuFileSep2");
             // 
-            // mnuFileSaveAsLrc
+            // mnuFileExportLyrics
             // 
-            this.mnuFileSaveAsLrc.Name = "mnuFileSaveAsLrc";
-            resources.ApplyResources(this.mnuFileSaveAsLrc, "mnuFileSaveAsLrc");
-            this.mnuFileSaveAsLrc.Click += new System.EventHandler(this.mnuFileSaveAsLrc_Click);
+            this.mnuFileExportLyrics.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.mnuFileExportLyricsLrc,
+            this.mnuFileExportLyricsTxt,
+            this.MnuFileExportLyricsKok,
+            this.mnuFileExportLyricsSrt});
+            this.mnuFileExportLyrics.Name = "mnuFileExportLyrics";
+            resources.ApplyResources(this.mnuFileExportLyrics, "mnuFileExportLyrics");
             // 
-            // MnuSaveAsText
+            // mnuFileExportLyricsLrc
             // 
-            this.MnuSaveAsText.Name = "MnuSaveAsText";
-            resources.ApplyResources(this.MnuSaveAsText, "MnuSaveAsText");
-            this.MnuSaveAsText.Click += new System.EventHandler(this.MnuSaveAsText_Click);
+            this.mnuFileExportLyricsLrc.Name = "mnuFileExportLyricsLrc";
+            resources.ApplyResources(this.mnuFileExportLyricsLrc, "mnuFileExportLyricsLrc");
+            this.mnuFileExportLyricsLrc.Click += new System.EventHandler(this.mnuFileExportLyricsLrc_Click);
+            // 
+            // mnuFileExportLyricsTxt
+            // 
+            this.mnuFileExportLyricsTxt.Name = "mnuFileExportLyricsTxt";
+            resources.ApplyResources(this.mnuFileExportLyricsTxt, "mnuFileExportLyricsTxt");
+            this.mnuFileExportLyricsTxt.Click += new System.EventHandler(this.mnuFileExportLyricsTxt_Click);
+            // 
+            // MnuFileExportLyricsKok
+            // 
+            this.MnuFileExportLyricsKok.Name = "MnuFileExportLyricsKok";
+            resources.ApplyResources(this.MnuFileExportLyricsKok, "MnuFileExportLyricsKok");
+            this.MnuFileExportLyricsKok.Click += new System.EventHandler(this.MnuFileExportLyricsKok_Click);
             // 
             // mnuFileSep1
             // 
@@ -393,8 +413,7 @@
             this.mnuEdit.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.mnuEditLoadTrack,
             this.mnuEditSep1,
-            this.mnuEditLoadMelodyText,
-            this.mnuEditLoadLRCFile});
+            this.mnuEditImportLyrics});
             this.mnuEdit.Name = "mnuEdit";
             resources.ApplyResources(this.mnuEdit, "mnuEdit");
             // 
@@ -409,17 +428,32 @@
             this.mnuEditSep1.Name = "mnuEditSep1";
             resources.ApplyResources(this.mnuEditSep1, "mnuEditSep1");
             // 
-            // mnuEditLoadMelodyText
+            // mnuEditImportLyrics
             // 
-            this.mnuEditLoadMelodyText.Name = "mnuEditLoadMelodyText";
-            resources.ApplyResources(this.mnuEditLoadMelodyText, "mnuEditLoadMelodyText");
-            this.mnuEditLoadMelodyText.Click += new System.EventHandler(this.MnuEditLoadMelodyText_Click);
+            this.mnuEditImportLyrics.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.mnuEditImportLyricsLrc,
+            this.mnuEditImportLyricsTxt,
+            this.mnuEditImportLyricsKok});
+            this.mnuEditImportLyrics.Name = "mnuEditImportLyrics";
+            resources.ApplyResources(this.mnuEditImportLyrics, "mnuEditImportLyrics");
             // 
-            // mnuEditLoadLRCFile
+            // mnuEditImportLyricsLrc
             // 
-            this.mnuEditLoadLRCFile.Name = "mnuEditLoadLRCFile";
-            resources.ApplyResources(this.mnuEditLoadLRCFile, "mnuEditLoadLRCFile");
-            this.mnuEditLoadLRCFile.Click += new System.EventHandler(this.mnuEditLoadLRCFile_Click);
+            this.mnuEditImportLyricsLrc.Name = "mnuEditImportLyricsLrc";
+            resources.ApplyResources(this.mnuEditImportLyricsLrc, "mnuEditImportLyricsLrc");
+            this.mnuEditImportLyricsLrc.Click += new System.EventHandler(this.mnuEditImportLyricsLrc_Click);
+            // 
+            // mnuEditImportLyricsTxt
+            // 
+            this.mnuEditImportLyricsTxt.Name = "mnuEditImportLyricsTxt";
+            resources.ApplyResources(this.mnuEditImportLyricsTxt, "mnuEditImportLyricsTxt");
+            this.mnuEditImportLyricsTxt.Click += new System.EventHandler(this.mnuEditImportLyricsTxt_Click);
+            // 
+            // mnuEditImportLyricsKok
+            // 
+            this.mnuEditImportLyricsKok.Name = "mnuEditImportLyricsKok";
+            resources.ApplyResources(this.mnuEditImportLyricsKok, "mnuEditImportLyricsKok");
+            this.mnuEditImportLyricsKok.Click += new System.EventHandler(this.mnuEditImportLyricsKok_Click);
             // 
             // mnuHelp
             // 
@@ -557,7 +591,13 @@
             this.cbSelectTrack.TabStop = false;
             this.cbSelectTrack.SelectedIndexChanged += new System.EventHandler(this.cbSelectTrack_SelectedIndexChanged);
             // 
-            // frmLyricsEdit
+            // mnuFileExportLyricsSrt
+            // 
+            this.mnuFileExportLyricsSrt.Name = "mnuFileExportLyricsSrt";
+            resources.ApplyResources(this.mnuFileExportLyricsSrt, "mnuFileExportLyricsSrt");
+            this.mnuFileExportLyricsSrt.Click += new System.EventHandler(this.mnuFileExportLyricsSrt_Click);
+            // 
+            // frmMidiLyricsEdit
             // 
             resources.ApplyResources(this, "$this");
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -565,10 +605,10 @@
             this.Controls.Add(this.tabControl1);
             this.Controls.Add(this.menuStrip1);
             this.MainMenuStrip = this.menuStrip1;
-            this.Name = "frmLyricsEdit";
-            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FrmLyricsEdit_FormClosing);
-            this.Load += new System.EventHandler(this.FrmLyricsEdit_Load);
-            this.Resize += new System.EventHandler(this.frmLyricsEdit_Resize);
+            this.Name = "frmMidiLyricsEdit";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.frmMidiLyricsEdit_FormClosing);
+            this.Load += new System.EventHandler(this.frmMidiLyricsEdit_Load);
+            this.Resize += new System.EventHandler(this.frmMidiLyricsEdit_Resize);
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
@@ -604,7 +644,7 @@
         private System.Windows.Forms.ToolStripMenuItem mnuHelpAbout;
         private System.Windows.Forms.ToolStripMenuItem mnuFileSave;
         private System.Windows.Forms.ToolStripMenuItem mnuFileSaveAs;
-        private System.Windows.Forms.SaveFileDialog saveMidiFileDialog;
+        private System.Windows.Forms.SaveFileDialog SaveFileDialog;
         private System.Windows.Forms.Button btnSave;
         private System.Windows.Forms.Button btnSpaceLeft;
         private System.Windows.Forms.Button btnSpaceRight;
@@ -612,8 +652,7 @@
         private System.Windows.Forms.ToolStripMenuItem mnuEditLoadTrack;
         private System.Windows.Forms.Button btnPlay;
         private System.Windows.Forms.RichTextBox txtResult;
-        private System.Windows.Forms.ToolStripMenuItem mnuEditLoadMelodyText;
-        private System.Windows.Forms.OpenFileDialog openFileDialog;
+        private System.Windows.Forms.OpenFileDialog OpenFileDialog;
         private System.Windows.Forms.RadioButton optFormatText;
         private System.Windows.Forms.RadioButton optFormatLyrics;
         private System.Windows.Forms.SplitContainer splitContainer1;
@@ -622,10 +661,8 @@
         private System.Windows.Forms.Button BtnFontMoins;
         private System.Windows.Forms.Button BtnFontPlus;
         private System.Windows.Forms.ToolStripSeparator mnuFileSep2;
-        private System.Windows.Forms.ToolStripMenuItem mnuFileSaveAsLrc;
         private System.Windows.Forms.ToolStripSeparator mnuFileSep1;
         private System.Windows.Forms.ToolStripSeparator mnuEditSep1;
-        private System.Windows.Forms.ToolStripMenuItem mnuEditLoadLRCFile;
         private System.Windows.Forms.DataGridViewTextBoxColumn dTime;
         private System.Windows.Forms.DataGridViewTextBoxColumn dRealTime;
         private System.Windows.Forms.DataGridViewTextBoxColumn dType;
@@ -650,10 +687,18 @@
         private System.Windows.Forms.TextBox txtKTag;
         private System.Windows.Forms.Button btnSaveTags;
         private System.Windows.Forms.Button btnDeleteAllLyrics;
-        private System.Windows.Forms.ToolStripMenuItem MnuSaveAsText;
         private System.Windows.Forms.Panel pnlMenus;
         private System.Windows.Forms.ComboBox cbSelectTrack;
         private System.Windows.Forms.Label lblSelectTrack;
         private System.Windows.Forms.Button btnDisplayOtherLyrics;
+        private System.Windows.Forms.ToolStripMenuItem mnuFileExportLyrics;
+        private System.Windows.Forms.ToolStripMenuItem mnuFileExportLyricsLrc;
+        private System.Windows.Forms.ToolStripMenuItem mnuFileExportLyricsTxt;
+        private System.Windows.Forms.ToolStripMenuItem MnuFileExportLyricsKok;
+        private System.Windows.Forms.ToolStripMenuItem mnuEditImportLyrics;
+        private System.Windows.Forms.ToolStripMenuItem mnuEditImportLyricsLrc;
+        private System.Windows.Forms.ToolStripMenuItem mnuEditImportLyricsTxt;
+        private System.Windows.Forms.ToolStripMenuItem mnuEditImportLyricsKok;
+        private System.Windows.Forms.ToolStripMenuItem mnuFileExportLyricsSrt;
     }
 }

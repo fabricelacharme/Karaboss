@@ -72,7 +72,7 @@ namespace ChordsAnalyser
         private static Sequence sequence1 = new Sequence();        
         
         // Midifile characteristics
-        private double _duration = 0;  // en secondes
+        //private double _duration = 0;  // en secondes
         private int _totalTicks = 0;        
         private double _ppqn;
         private int _tempo;

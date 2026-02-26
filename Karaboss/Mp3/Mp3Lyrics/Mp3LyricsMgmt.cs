@@ -67,14 +67,22 @@ namespace Karaboss.Mp3.Mp3Lyrics
 
     public static class Mp3LyricsMgmtHelper
     {
-               
-        //public static SyncText[] SyncTexts;
+                       
         public static SynchronisedLyricsFrame MySyncLyricsFrame;
         public static string m_SepLine = "/";
         public static string m_SepParagraph = "\\";
         public static Mp3LyricsTypes m_mp3lyricstype = Mp3LyricsTypes.None;
 
-        
+
+        // Tags
+        public static string Tool;
+        public static string Artist;
+        public static string Title;
+        public static string Description;
+        public static string Album;
+        public static uint Year;
+
+
         #region kEffect
 
         // Line of struct SyncText
@@ -99,8 +107,7 @@ namespace Karaboss.Mp3.Mp3Lyrics
             string lrcFile;
 
             if (SyncLyricsFrame != null && SyncLyricsFrame.Text.Count() > 0)
-            {
-                //m_mp3lyricstype = Mp3LyricsTypes.LyricsWithTimeStamps;
+            {                
                 return Mp3LyricsTypes.LyricsWithTimeStamps;
             }
 
@@ -119,6 +126,7 @@ namespace Karaboss.Mp3.Mp3Lyrics
             return lType;
         }
 
+        #region export lyrics to text
 
         /// <summary>
         /// Export mp3 sync lyrics to text file
@@ -186,7 +194,7 @@ namespace Karaboss.Mp3.Mp3Lyrics
 
 
         /// <summary>
-        /// Export lyrics issued form a LRC File
+        /// Export lyrics issued form a text File
         /// </summary>
         /// <param name="SyncLyrics"></param>
         public static void ExportSyncLyricsToText(List<List<keffect.KaraokeEffect.kSyncText>> SyncLyrics)
@@ -234,8 +242,12 @@ namespace Karaboss.Mp3.Mp3Lyrics
 
         }
 
+        #endregion export lyrics to text
+
+
+
         #region get synched lyrics
-     
+
 
         /// <summary>
         /// Get sync lyrics in List<List<SyncText>> for KEffect from SynchronisedLyricsFrame
@@ -247,7 +259,10 @@ namespace Karaboss.Mp3.Mp3Lyrics
             string lyric;
             long time;
             keffect.KaraokeEffect.kSyncText sct;
-            bool bNewLine = false;
+            
+            bool bNewLine = false;            
+            bool bParagraph = false;
+
             List<keffect.KaraokeEffect.kSyncText> SyncLine = new List<keffect.KaraokeEffect.kSyncText>();
             List<List<keffect.KaraokeEffect.kSyncText>> SyncLyrics = new List<List<keffect.KaraokeEffect.kSyncText>>();
 
@@ -272,18 +287,34 @@ namespace Karaboss.Mp3.Mp3Lyrics
                 {
                     lyric = SyncLyricsFrame.Text[i].Text;
                     time = SyncLyricsFrame.Text[i].Time;
-                    bNewLine = false;
+                    
+                    bNewLine = false;             
+                    bParagraph = false;
 
                     if (lyric.Trim() != "")
                     {
-                        // Search for new lines
-                        if (lyric.StartsWith("\r") || lyric.StartsWith("\n"))
-                        {
-                            lyric = lyric.Substring(1);
-                            bNewLine = true;
-                        }
 
-                        if (lyric.EndsWith("\r") || lyric.EndsWith("\n"))
+                        // Search for paragraph separator
+                        if (lyric.StartsWith("\n\n") || lyric.StartsWith("\r\r") || lyric.StartsWith("\r\n\r\n"))
+                        {
+                            //lyric = lyric.Substring(2);
+                            lyric = lyric.TrimStart(new char[] { '\r', '\n' });
+                            bParagraph = true;
+                        }
+                        else if (lyric.EndsWith("\n\n") || lyric.EndsWith("\r\r") || lyric.EndsWith("\r\n\r\n"))
+                        {
+                            lyric = lyric.Substring(0, lyric.Length - 2);
+                            bParagraph = true;
+                        }                        
+                        // Search for new lines
+                        else if (lyric.StartsWith("\r") || lyric.StartsWith("\n"))
+                        {
+                            //lyric = lyric.Substring(1);
+                            lyric = lyric.TrimStart(new char[] { '\r', '\n' });
+                            bNewLine = true;
+
+                        }
+                        else if (lyric.EndsWith("\r") || lyric.EndsWith("\n"))
                         {
                             lyric = lyric.Substring(0, lyric.Length - 1);
                             bNewLine = true;
@@ -291,16 +322,39 @@ namespace Karaboss.Mp3.Mp3Lyrics
                     }
 
                     sct = new keffect.KaraokeEffect.kSyncText(time, lyric);
-                    if (bNewLine)
+
+                    
+                    if (bParagraph)
                     {
+                        // Paragraph: add line to list of lines, and create a new line
+                        // previous line
                         if (SyncLine.Count > 0)
                             SyncLyrics.Add(SyncLine);
-                        
+
+                        // add a blank line for the paragraph
+                        SyncLine = new List<keffect.KaraokeEffect.kSyncText>();
+                        SyncLine.Add(new keffect.KaraokeEffect.kSyncText(time, ""));
+                        SyncLyrics.Add(SyncLine);
+
+                        // new line
+                        SyncLine = new List<keffect.KaraokeEffect.kSyncText>();
+                        SyncLine.Add(sct);
+                    }
+                    else if (bNewLine)
+                    {
+                        // New line: add line to list of lines, and create a new line
+
+                        // previous line
+                        if (SyncLine.Count > 0)
+                            SyncLyrics.Add(SyncLine);
+
+                        // new line
                         SyncLine = new List<keffect.KaraokeEffect.kSyncText>();
                         SyncLine.Add(sct);
                     }
                     else
                     {
+                        // No new line, add to current line
                         SyncLine.Add(sct);
                     }
                 }
@@ -323,6 +377,8 @@ namespace Karaboss.Mp3.Mp3Lyrics
                 }
             }
 
+
+            // Retuns lyrics without any separators
             return SyncLyrics;
         }
 
@@ -335,15 +391,6 @@ namespace Karaboss.Mp3.Mp3Lyrics
         /// <returns></returns>
         public static List<List<keffect.KaraokeEffect.kSyncText>> GetKEffectLrcLyrics(string FileName)
         {
-            // Search for existing LRC file
-            string lrcFile = Path.ChangeExtension(FileName, ".lrc");
-            if (!System.IO.File.Exists(lrcFile)) return null;
-            
-            string line;
-            string lyric = string.Empty;
-            long time;
-            string stime = string.Empty;
-
             // Format 1
             // [00:04.598]IT'S <00:04.830>BEEN <00:05.057>A <00:05.271>HARD <00:06.151>DAY'S <00:06.811>NIGHT               // New line                                                                              
             // [00:08.148]AND                                                                                               // New line
@@ -362,9 +409,121 @@ namespace Karaboss.Mp3.Mp3Lyrics
             // [00:25.10]JE SAIS PAS POURQUOI
 
             // Load Lrc file into list of lines                
-            //string[] lines = System.IO.File.ReadAllLines(lrcFile);
-            string[] lines;
 
+            string[] lines = GetLinesFromLrc(FileName);
+            if (lines == null)
+            {
+                MessageBox.Show("Invalid lrc file: " + Path.GetFileName(FileName), "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return null;
+            }
+
+
+            // Extract Artist, Title, Album, Year from LRC file
+            
+            Artist = string.Empty;
+            Title = string.Empty;
+            Album = string.Empty;
+            Year = 0;
+            Description = string.Empty;
+            Tool = string.Empty;
+
+            Artist = GetArtistFromLrc(lines);
+            Title = GetTitleFromLrc(lines);
+            Album = GetAlbumFromLrc(lines);
+            Year = GetYearFromLrc(lines);
+            Tool = GetToolFromLrc(lines);
+
+            /*
+                MySyncLyricsFrame = new SynchronisedLyricsFrame("Karaboss", "en", SynchedTextType.Lyrics);
+                MySyncLyricsFrame.TextEncoding = StringType.Latin1;
+                MySyncLyricsFrame.Format = TimestampFormat.AbsoluteMilliseconds;
+                MySyncLyricsFrame.Text = new SynchedText[0];
+                MySyncLyricsFrame.Description = "Karaboss";
+    
+                // Set tags in mp3 file
+                SetTags(FileName, Artist, Title, Album, Year, MySyncLyricsFrame);
+            */
+
+            // Extract sync lyrics from lines
+            List<List<keffect.KaraokeEffect.kSyncText>> SyncLyrics = GetSyncLyricsFromLines(lines);
+
+            if (SyncLyrics == null)
+            {
+                MessageBox.Show("No valid LRC format in file: " + Path.GetFileName(FileName), "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return null;
+            }
+
+            // Remove line separators and add lines for paragraph separators
+            SyncLyrics = RemoveSeparators(SyncLyrics);
+
+            return SyncLyrics;
+        }
+
+        private static string GetArtistFromLrc(string[] lines)
+        {
+            return GetTagFromLrc(lines, "ar");
+        }
+
+        private static string GetTitleFromLrc(string[] lines)
+        {
+            return GetTagFromLrc(lines, "ti");
+        }
+
+        private static string GetAlbumFromLrc(string[] lines)
+        {
+            return GetTagFromLrc(lines, "al");
+        }
+
+        private static string GetToolFromLrc(string[] lines)
+        {
+            return GetTagFromLrc(lines, "tool");
+        }
+
+        private static uint GetYearFromLrc(string[] lines)
+        {
+            string yearStr = GetTagFromLrc(lines, "by");
+            uint year;
+            if (uint.TryParse(yearStr, out year))
+                return year;
+            else
+                return 0;
+        }
+
+        private static string GetTagFromLrc(string[] lines, string tag)
+        {
+            string pattern = @"\[" + tag + @":(.*?)\]";
+            foreach (string line in lines)
+            {
+                Match match = Regex.Match(line, pattern);
+                if (match.Success)
+                {
+                    return match.Groups[1].Value.Trim();
+                }
+            }
+            return null;
+        }
+
+
+        /// <summary>
+        /// Retrieves the lines of lyrics and timing information from an LRC file associated with the specified file
+        /// name.
+        /// </summary>
+        /// <remarks>The method searches for an LRC file by replacing the extension of the provided file
+        /// name with ".lrc". If the LRC file is found, its contents are split and formatted according to specific rules
+        /// to extract lyric lines. If the file is not found or an error occurs, an error message is displayed and null
+        /// is returned.</remarks>
+        /// <param name="FileName">The name of the file for which to locate and read the corresponding LRC file. This value should include the
+        /// file's extension.</param>
+        /// <returns>An array of strings containing the processed lines from the LRC file, or null if the LRC file does not exist
+        /// or an error occurs during reading.</returns>
+        private static string[] GetLinesFromLrc(string FileName)
+        {
+            // Search for existing LRC file
+            string lrcFile = Path.ChangeExtension(FileName, ".lrc");
+            if (!System.IO.File.Exists(lrcFile)) return null;
+
+            string line;
+            string[] lines = null;
             try
             {
                 // Load lrc into a single string
@@ -397,16 +556,30 @@ namespace Karaboss.Mp3.Mp3Lyrics
             }
             catch (Exception e) { MessageBox.Show(e.Message, "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error); return null; }
 
+            return lines;
+
+        }
+
+
+        /// <summary>
+        /// Processes an array of lyric lines and extracts synchronized lyrics with associated timestamps for karaoke
+        /// display.
+        /// </summary>
+        /// <remarks>Lines that consist solely of timestamps are treated as paragraph markers. The method
+        /// uses regular expressions to identify timestamps and lyric words, and it cleans up the extracted words by
+        /// removing unnecessary characters. The output format is suitable for use with karaoke synchronization
+        /// features.</remarks>
+        /// <param name="lines">An array of strings representing the lines of lyrics, where each line may contain one or more timestamps and
+        /// corresponding lyric words.</param>
+        /// <returns>A list of lists, where each inner list contains synchronized text objects representing the timestamp and
+        /// associated lyric word for each segment. Returns null if the input format is not recognized.</returns>
+        private static List<List<keffect.KaraokeEffect.kSyncText>> GetSyncLyricsFromLines(string[] lines)
+        {
 
             // Regex to capture timestamps and words => for milliseconds having 3 digits or 2
             // Find out what type of digits the file is made out
             string pattern = GetPatternLRC(lines);
-            if (pattern == null)
-            {
-                MessageBox.Show("Invalid lrc file, no timestamps found: " + Path.GetFileName(FileName), "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return null;
-            }
-
+            if (pattern == null) return null;
 
             // Create a list of all lines
             // Load lyrics in KaraokeEffect format
@@ -416,15 +589,28 @@ namespace Karaboss.Mp3.Mp3Lyrics
             string timestamp;
             string word;
 
+            string line;
+            long time;
+
+            bool bParagraph = false;
+
             for (int i = 0; i < lines.Length; i++)
             {
                 // study line by line
                 line = lines[i];
 
-                // Warning lines with only a time stamp, without lyric [00:08.05] is rejected
+                // Warning lines with only a time stamp, without lyric [00:08.05] is rejected by the pattern because it doesn't contain any word.
+                // Lines with only a timestamp are paragraphs.
                 if (line.StartsWith("[") && line.EndsWith("]"))
-                    line = line + "/";
+                {
+                    // Is it a timestamp?
+                    string lin = line + "@";
+                    MatchCollection matchs = Regex.Matches(lin, pattern);
+                    if (matchs.Count == 0) continue;
+                    bParagraph = true;
+                }
 
+                // Search for timestamps and words in the line
                 MatchCollection matches = Regex.Matches(line, pattern);
                 if (matches.Count == 0) continue;
 
@@ -443,24 +629,104 @@ namespace Karaboss.Mp3.Mp3Lyrics
                     // => separate different words of a line
                     if (matches.Count > 1)
                         word = word + " ";
-                    
-                    // Add a linefeed if timestamp was "[]"
+
+                    // Add a paragraph separator if timestamp was "[]"
                     if (match.Groups[1].Value != "")
                     {
-                        // Why add a \r\n? => Keep information of start new line
-                        // This will be replaced by a "/" in frmMp3EditLyrics
-                        word = Environment.NewLine + word;    
+                        // If the line is only a timestamp, it is a paragraph, otherwise it is a line
+                        if (bParagraph)
+                        {
+                            word = m_SepParagraph + word;
+                            bParagraph = false;
+                        }
+                        else
+                        {
+                            word = m_SepLine + word;
+                        }
                     }
-
                     time = (long)TimeToMs(timestamp);
-                    
                     SyncLine.Add(new keffect.KaraokeEffect.kSyncText(time, word));
                 }
                 SyncLyrics.Add(SyncLine);
-            }               
+            }
 
             return SyncLyrics;
         }
+
+
+        /// <summary>
+        /// Processes a collection of synchronized lyric lines and inserts additional lines to represent detected
+        /// separator indicators, returning a new collection with these separator lines included.
+        /// </summary>
+        /// <remarks>Separator lines are added only when a line begins with a recognized separator
+        /// indicator and is not the first line in the collection. The method modifies the original lyric lines to
+        /// remove the separator indicator from the start of the line before adding them to the result.</remarks>
+        /// <param name="SyncLyrics">A list of lyric lines, where each line is a list of synchronized text elements. Lines may begin with special
+        /// separator indicators that denote line or paragraph breaks.</param>
+        /// <returns>A new list of lyric lines, including the original lyrics with additional lines inserted for each detected
+        /// separator indicator. The original lines are modified to remove the separator text from the beginning.</returns>
+        public static List<List<keffect.KaraokeEffect.kSyncText>> RemoveSeparators(List<List<keffect.KaraokeEffect.kSyncText>> SyncLyrics)
+        {
+            // For mp3, the editor is like that
+            // lines begins with a line separator on the same line of the lyric: "/Its been a hard day's night"
+            // Paragraphs : blank line 
+
+            List<List<keffect.KaraokeEffect.kSyncText>> result = new List<List<keffect.KaraokeEffect.kSyncText>>();
+
+
+            List<keffect.KaraokeEffect.kSyncText> tmplst;
+            keffect.KaraokeEffect.kSyncText tmp;
+
+            
+
+            
+            for (int i = 0; i < SyncLyrics.Count; i++)
+            {
+                SyncLine = SyncLyrics[i];
+
+                if (SyncLine.Count > 0)
+                {
+                    // Treatment for a line starting with a Line separator:
+                    if (SyncLine[0].Text.StartsWith(m_SepLine))
+                    {
+                        // Remove the line separator                                                
+                        SyncLine[0] = new keffect.KaraokeEffect.kSyncText(SyncLine[0].Time, SyncLine[0].Text.Replace(m_SepLine, ""));     
+                        result.Add(SyncLine);
+
+                    }
+                    else if (SyncLine[0].Text.StartsWith(m_SepParagraph))
+                    {
+                        // Add a line containing a line separator, except for the first line
+                        if (i == 0)
+                        {
+                            SyncLine[0] = new keffect.KaraokeEffect.kSyncText(SyncLine[0].Time, SyncLine[0].Text.Replace(m_SepParagraph, ""));
+                            result.Add(SyncLine);
+                            
+                        }
+                        else
+                        {
+                            // Add a line for the paragraph separator
+                            tmp = new keffect.KaraokeEffect.kSyncText(SyncLine[0].Time, " ");
+                            tmplst = new List<keffect.KaraokeEffect.kSyncText>();
+                            tmplst.Add(tmp);
+                            result.Add(tmplst);
+
+                            // Remove the paragraph separator from the first words of the line
+                            SyncLine[0] = new keffect.KaraokeEffect.kSyncText(SyncLine[0].Time, SyncLine[0].Text.Replace(m_SepParagraph, ""));
+                            result.Add(SyncLine);
+                            
+                        }  
+                        
+                    }
+                    else
+                    {
+                        result.Add(SyncLine);
+                    }                    
+                }
+            }
+            return result;
+        }
+
 
 
         /// <summary>
@@ -494,11 +760,13 @@ namespace Karaboss.Mp3.Mp3Lyrics
 
             return SyncLyrics;
         }
-
-
+       
 
         #endregion get synched lyrics
 
+
+
+        #region functions to convert time formats
 
         /// <summary>
         /// Find out what type of digits the file is made out
@@ -611,6 +879,22 @@ namespace Karaboss.Mp3.Mp3Lyrics
             else
                 return string.Format("{0:00}:{1:00}.{2:000}", ts.Minutes, ts.Seconds, ts.Milliseconds);            
         }
+
+        
+        public static string MsToSrtTime(double ms)
+        {
+            // Convert milliseconds to SRT time format "00:00:01,848"
+            TimeSpan ts = TimeSpan.FromMilliseconds(ms);
+
+            return string.Format("{0:00}:{1:00}:{2:00},{3:000}", ts.Hours, ts.Minutes,ts.Seconds, ts.Milliseconds);
+
+        }
+
+        #endregion functions to convert time formats
+
+
+
+
 
         #region id3v2
 

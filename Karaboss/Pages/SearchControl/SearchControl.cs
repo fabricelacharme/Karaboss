@@ -1333,6 +1333,11 @@ namespace Karaboss.Search
                             break;
                         }
 
+                    case ".mp3":
+                        {
+                            PlayMp3?.Invoke(this, new FileInfo(file), null, bplay); 
+                            break;
+                        }
                     default:
                         System.Diagnostics.Process.Start(@file);
                         break;

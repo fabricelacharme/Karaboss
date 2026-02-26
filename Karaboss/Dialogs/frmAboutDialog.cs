@@ -58,7 +58,7 @@ namespace Karaboss
             try
             {
                 Uri uri = new Uri(@Properties.Settings.Default.RemoteUrl);
-                lblUrl.Text = "http://" + uri.Host;
+                lblUrl.Text = "https://" + uri.Host;
             }
             catch (Exception ex)
             {
