@@ -37,6 +37,71 @@ using System.Runtime.InteropServices;
 
 namespace Sanford.Multimedia.Midi
 {
+    /*
+    /// <summary>
+    /// Represents the Windows Multimedia MIDIHDR structure.
+    /// </summary>
+    [StructLayout(LayoutKind.Sequential, Pack = 1)]
+    internal struct MidiHeader
+    {
+        #region MidiHeader Members
+
+        /// <summary>
+        /// Pointer to MIDI data.
+        /// </summary>
+        public IntPtr data;
+
+        /// <summary>
+        /// Size of the buffer.
+        /// </summary>
+        public int bufferLength;
+
+        /// <summary>
+        /// Actual amount of data in the buffer. This value should be less than 
+        /// or equal to the value given in the dwBufferLength member.
+        /// </summary>
+        public uint bytesRecorded;
+
+        /// <summary>
+        /// Custom user data.
+        /// </summary>
+        public IntPtr user;
+
+        /// <summary>
+        /// Flags giving information about the buffer.
+        /// </summary>
+        public uint flags;
+
+        /// <summary>
+        /// Reserved; do not use.
+        /// </summary>
+        public IntPtr next;
+
+        /// <summary>
+        /// Reserved; do not use.
+        /// </summary>
+        public IntPtr reserved;
+
+        /// <summary>
+        /// Offset into the buffer when a callback is performed. (This 
+        /// callback is generated because the MEVT_F_CALLBACK flag is 
+        /// set in the dwEvent member of the MidiEventArgs structure.) 
+        /// This offset enables an application to determine which 
+        /// event caused the callback. 
+        /// </summary>
+        public uint offset;
+
+        /// <summary>
+        /// Reserved; do not use.
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValArray, SizeConst = 8)]
+        public IntPtr[] reservedArray;
+
+        #endregion
+    }
+    */
+
+    
     /// <summary>
     /// Represents the Windows Multimedia MIDIHDR structure.
     /// </summary>
@@ -98,4 +163,5 @@ namespace Sanford.Multimedia.Midi
 
         #endregion
     }
+    
 }
