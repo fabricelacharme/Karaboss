@@ -1783,5 +1783,41 @@ namespace Karaboss.Properties {
                 this["DefaultEncoding"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool frmKfnViewMaximized {
+            get {
+                return ((bool)(this["frmKfnViewMaximized"]));
+            }
+            set {
+                this["frmKfnViewMaximized"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0, 0")]
+        public global::System.Drawing.Point frmKfnViewLocation {
+            get {
+                return ((global::System.Drawing.Point)(this["frmKfnViewLocation"]));
+            }
+            set {
+                this["frmKfnViewLocation"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("800, 430")]
+        public global::System.Drawing.Size frmKfnViewSize {
+            get {
+                return ((global::System.Drawing.Size)(this["frmKfnViewSize"]));
+            }
+            set {
+                this["frmKfnViewSize"] = value;
+            }
+        }
     }
 }

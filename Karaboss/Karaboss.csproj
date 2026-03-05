@@ -193,6 +193,30 @@
     <Compile Include="frmModifyDivision.Designer.cs">
       <DependentUpon>frmModifyDivision.cs</DependentUpon>
     </Compile>
+    <Compile Include="Kfn\frmKfnView.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Kfn\frmKfnView.Designer.cs">
+      <DependentUpon>frmKfnView.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Kfn\frmSongINI.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Kfn\frmSongINI.Designer.cs">
+      <DependentUpon>frmSongINI.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Kfn\frmViewImage.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Kfn\frmViewImage.Designer.cs">
+      <DependentUpon>frmViewImage.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Kfn\frmViewText.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Kfn\frmViewText.Designer.cs">
+      <DependentUpon>frmViewText.cs</DependentUpon>
+    </Compile>
     <Compile Include="Lrc\frmLrcGenerator.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -617,6 +641,18 @@
     <EmbeddedResource Include="GuitarTraining\frmGuitarTraining.resx">
       <DependentUpon>frmGuitarTraining.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Kfn\frmKfnView.resx">
+      <DependentUpon>frmKfnView.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Kfn\frmSongINI.resx">
+      <DependentUpon>frmSongINI.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Kfn\frmViewImage.resx">
+      <DependentUpon>frmViewImage.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Kfn\frmViewText.resx">
+      <DependentUpon>frmViewText.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Lrc\frmLrcGenerator.resx">
       <DependentUpon>frmLrcGenerator.cs</DependentUpon>
     </EmbeddedResource>
@@ -899,6 +935,10 @@
     <ProjectReference Include="..\KaraokeEffect\KaraokeEffect.csproj">
       <Project>{6d414dbf-73a0-4804-8c02-b50271b91357}</Project>
       <Name>KaraokeEffect</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\KFNViewer\KFNViewer.csproj">
+      <Project>{3c65aed8-cf22-4533-bbc1-9000683688b8}</Project>
+      <Name>KFNViewer</Name>
     </ProjectReference>
     <ProjectReference Include="..\KMusicTxt\KMusicTxt.csproj">
       <Project>{ee194ac1-0d74-4a84-84d6-c9be8ced2c10}</Project>

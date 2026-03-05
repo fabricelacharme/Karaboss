@@ -56,6 +56,8 @@ namespace Karaboss.xplorer
     public delegate void PlayXmlEventHandler(object sender, FileInfo fi, bool bplay);
     public delegate void PlayMxlEventHandler(object sender, FileInfo fi, bool bplay);
     public delegate void PlayMp3EventHandler(object sender, FileInfo fi, bool bplay);
+    public delegate void PlayKfnEventHandler(object sender, FileInfo fi, bool bplay);
+
     public delegate void ContentChangedEventHandler(object sender, string strContent, string strPath);
     public delegate void CreateNewMidiFileEventHandler(object sender);
 
@@ -72,6 +74,8 @@ namespace Karaboss.xplorer
         public event PlayXmlEventHandler PlayXml;
         public event PlayMxlEventHandler PlayMxl;
         public event PlayMp3EventHandler PlayMp3;
+        public event PlayKfnEventHandler PlayKfn;
+
         public event ContentChangedEventHandler LvContentChanged;
         public event CreateNewMidiFileEventHandler CreateNewMidiFile;
         
@@ -165,6 +169,7 @@ namespace Karaboss.xplorer
             shellListView.PlayXml += new FlShell.PlayXmlEventHandler(ShellListView_PlayXml);
             shellListView.PlayMxl += new FlShell.PlayMxlEventHandler(ShellListView_PlayMxl);
             shellListView.PlayMp3 += new FlShell.PlayMp3EventHandler(ShellListView_PlayMp3);
+            shellListView.PlayKfn += new FlShell.PlayKfnEventHandler(ShellListView_PlayKfn);
 
             shellListView.lvContentChanged += new FlShell.ContentChangedEvenHandler(ShellListView_ContentChanged);
             shellListView.SelectedIndexChanged += new FlShell.SelectedIndexChangedEventHandler(ShellListView_SelectedIndexChanged);
@@ -178,6 +183,8 @@ namespace Karaboss.xplorer
             // Load existing playlists
             LoadPlaylists();            
         }
+
+        
 
 
         #region public functions    
@@ -279,6 +286,15 @@ namespace Karaboss.xplorer
             Application.DoEvents();
             PlayMp3?.Invoke(this, fi, bplay);
         }
+
+        private void ShellListView_PlayKfn(object sender, FileInfo fi, bool bplay)
+        {
+            Cursor.Current = Cursors.WaitCursor;
+            Application.DoEvents();
+            PlayKfn?.Invoke(this, fi, bplay);
+
+        }
+
 
         private void ShellListView_AddToPlaylist(object sender, FlShell.ShellItem[] fls, string plname, string key, bool bnewPlaylist)
         {
@@ -1330,6 +1346,11 @@ namespace Karaboss.xplorer
                     case ".mp3":
                         {
                             PlayMp3?.Invoke(this, new FileInfo(file), bplay);
+                            break;
+                        }
+                    case ".kfn":
+                        {
+                            PlayKfn?.Invoke(this, new FileInfo(file), bplay);
                             break;
                         }
                     default:

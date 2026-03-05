@@ -49,7 +49,7 @@ namespace Sanford.Multimedia.Midi
         }
                
 
-        public int SysExBufferSize
+        public uint SysExBufferSize
         {
             get
             {

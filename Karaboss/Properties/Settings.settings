@@ -443,5 +443,14 @@
     <Setting Name="DefaultEncoding" Type="System.String" Scope="User">
       <Value Profile="(Default)">"UTF8</Value>
     </Setting>
+    <Setting Name="frmKfnViewMaximized" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="frmKfnViewLocation" Type="System.Drawing.Point" Scope="User">
+      <Value Profile="(Default)">0, 0</Value>
+    </Setting>
+    <Setting Name="frmKfnViewSize" Type="System.Drawing.Size" Scope="User">
+      <Value Profile="(Default)">800, 430</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

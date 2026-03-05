@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 18
-VisualStudioVersion = 18.2.11415.280 d18.0
+VisualStudioVersion = 18.2.11415.280
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Karaboss", "Karaboss\Karaboss.csproj", "{2F1767E7-39EB-48A6-9DDF-2896A27297D8}"
 EndProject
@@ -61,6 +61,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KaraokeEffect", "KaraokeEffect\KaraokeEffect.csproj", "{6D414DBF-73A0-4804-8C02-B50271B91357}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OvhLyrics.Api", "OvhLyrics.Api\OvhLyrics.Api.csproj", "{CB97F2F8-EA00-4E73-8CB4-A5C21E8AB174}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KFNViewer", "KFNViewer\KFNViewer.csproj", "{3C65AED8-CF22-4533-BBC1-9000683688B8}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -237,6 +239,12 @@ Global
 		{CB97F2F8-EA00-4E73-8CB4-A5C21E8AB174}.Release|Any CPU.Build.0 = Release|Any CPU
 		{CB97F2F8-EA00-4E73-8CB4-A5C21E8AB174}.Travis|Any CPU.ActiveCfg = Debug|Any CPU
 		{CB97F2F8-EA00-4E73-8CB4-A5C21E8AB174}.Travis|Any CPU.Build.0 = Debug|Any CPU
+		{3C65AED8-CF22-4533-BBC1-9000683688B8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3C65AED8-CF22-4533-BBC1-9000683688B8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3C65AED8-CF22-4533-BBC1-9000683688B8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3C65AED8-CF22-4533-BBC1-9000683688B8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3C65AED8-CF22-4533-BBC1-9000683688B8}.Travis|Any CPU.ActiveCfg = Debug|Any CPU
+		{3C65AED8-CF22-4533-BBC1-9000683688B8}.Travis|Any CPU.Build.0 = Debug|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

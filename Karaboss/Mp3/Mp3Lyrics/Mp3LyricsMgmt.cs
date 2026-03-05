@@ -1,6 +1,6 @@
 ﻿#region License
 
-/* Copyright (c) 2025 Fabrice Lacharme
+/* Copyright (c) 2026 Fabrice Lacharme
  * 
  * Permission is hereby granted, free of charge, to any person obtaining a copy 
  * of this software and associated documentation files (the "Software"), to 
@@ -39,8 +39,6 @@ using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using TagLib;
 using TagLib.Id3v2;
-using keffect;
-using AzLyrics.Api;
 
 namespace Karaboss.Mp3.Mp3Lyrics
 {
