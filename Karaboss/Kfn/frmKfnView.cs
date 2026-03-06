@@ -54,6 +54,8 @@ namespace Karaboss.Kfn
 
         private void InitControls()
         {            
+            InitEncodings();
+            
             // Reset lists 
             InitLvProperties();
             InitLvResources();
@@ -185,6 +187,45 @@ namespace Karaboss.Kfn
             lvResources.AllowDrop = false;
         }
 
+        private void InitEncodings()
+        {
+            foreach (EncodingInfo enc in Encoding.GetEncodings())
+            {
+                encodings.Add(enc.CodePage, enc.CodePage + ": " + enc.DisplayName);
+            }
+
+            foreach (KeyValuePair<int, string> enc in encodings)
+            {
+                ToolStripMenuItem mi = new ToolStripMenuItem
+                {
+                    Text = enc.Value,
+                    Tag = enc.Key,
+                    //IsCheckable = true
+                };
+                mi.Click += mnuRsourceEncodingSubItem_Select;
+                if (enc.Key == 0) { mi.Checked = true; }
+                mnuResourceEncoding.DropDownItems.Add(mi);
+            }
+            mnuResourceEncoding.Enabled = false;
+        }
+
+        private void mnuRsourceEncodingSubItem_Select(object sender, EventArgs e)
+        {
+            int enc = Convert.ToInt32(((ToolStripMenuItem)sender).Tag.ToString());
+            foreach (var item in mnuResourceEncoding.DropDownItems)
+            {
+                ((ToolStripMenuItem)item).Checked =
+                    (((ToolStripMenuItem)item).Tag == ((ToolStripMenuItem)sender).Tag)
+                    ? true : false;
+            }
+            if (KFN != null)
+            {
+                KFN.ReadFile(enc);
+                this.UpdateKFN();
+            }
+        }
+
+
         #endregion init controls
 
 
@@ -195,7 +236,7 @@ namespace Karaboss.Kfn
             KFN = new KFN(FullFileName);
             if (KFN.isError != null)
             {
-                MessageBox.Show(KFN.isError);
+                MessageBox.Show(KFN.isError, Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 
@@ -219,6 +260,9 @@ namespace Karaboss.Kfn
                 MessageBox.Show("This KFN file has properties that programm don`t know." +
                     "\nPlease send this file to madlord80@gmail.com for support");
             }
+
+            mnuResourceEncoding.Enabled = true;
+
         }
 
 
@@ -286,6 +330,15 @@ namespace Karaboss.Kfn
 
         #region context menus
 
+        /// <summary>
+        /// Handles the MouseUp event for the resource list view, displaying a context menu with options based on the
+        /// selected item and mouse button.
+        /// </summary>
+        /// <remarks>When the right mouse button is released over a resource item, this method displays a
+        /// context menu with options to export or view the selected resource, depending on its type. The available menu
+        /// items are determined by the type of the resource associated with the selected item.</remarks>
+        /// <param name="sender">The source of the event, typically the ListView control that raised the event.</param>
+        /// <param name="e">A MouseEventArgs that contains the event data, including information about which mouse button was released.</param>
         private void lvResources_MouseUp(object sender, MouseEventArgs e)
         {
             if (e.Button == MouseButtons.Right)

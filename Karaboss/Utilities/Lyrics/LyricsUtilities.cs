@@ -36,6 +36,7 @@ using Hqub.MusicBrainz.API.Entities;
 using Karaboss.MidiLyrics;
 using Karaboss.Mp3.Mp3Lyrics;
 using Karaboss.SRT;
+using Mozilla.NUniversalCharDet;
 using System;
 using System.Collections.Generic;
 using System.Drawing.Text;
@@ -481,6 +482,45 @@ namespace Karaboss.Utilities
             }
         }
 
+        /// <summary>
+        /// Determines the character encoding of a specified file based on its content.
+        /// </summary>
+        /// <remarks>This method uses a universal encoding detector to analyze the file's byte data and
+        /// identify the character set. If the detected encoding is not supported, the method defaults to
+        /// UTF-8.</remarks>
+        /// <param name="filename">The path to the file for which the encoding is to be detected. The file must exist and be accessible.</param>
+        /// <returns>An Encoding object representing the detected character encoding of the file. If the encoding cannot be
+        /// determined, UTF-8 is returned as a fallback.</returns>
+        public static Encoding GetEncodingFromFile(string filename)
+        {
+            try
+            {
+                // Read file into a byte array
+                byte[] data = File.ReadAllBytes(filename);
+                // UTF-8
+                int detEncoding = 65001;
+
+                UniversalDetector Det = new UniversalDetector(null);
+                Det.HandleData(data, 0, data.Length);
+                Det.DataEnd();
+                string enc = Det.GetDetectedCharset();
+                if (enc != null && enc != "Not supported")
+                {
+                    // fix encoding for 1251 upper case and MAC
+                    //if (enc == "KOI8-R" || enc == "X-MAC-CYRILLIC") { enc = "WINDOWS-1251"; }
+                    Encoding denc = Encoding.GetEncoding(enc);
+                    detEncoding = denc.CodePage;
+                }
+                return Encoding.GetEncoding(detEncoding);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                return Encoding.UTF8;
+            }
+        }
+
+
         #endregion commun functions
 
 
@@ -757,10 +797,14 @@ namespace Karaboss.Utilities
             #endregion guard
 
             
-
             try
             {
-                string[] lines = System.IO.File.ReadAllLines(FileName);
+
+                // Detect encoding                               
+                Encoding enc = GetEncodingFromFile(FileName);
+
+                //string[] lines = System.IO.File.ReadAllLines(FileName);
+                string[] lines = System.IO.File.ReadAllLines(FileName, enc);
                 if (lines.Count() == 0)
                 {
                     MessageBox.Show("Invalid LRC file", "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -2033,7 +2077,11 @@ namespace Karaboss.Utilities
             int lineNr = 0;
 
 
-            using (StreamReader reader = new StreamReader(FileName))
+            // Detect encoding                               
+            Encoding enc = GetEncodingFromFile(FileName);
+
+
+            using (StreamReader reader = new StreamReader(FileName, enc, true))
             {                
                 while ((line = reader.ReadLine()) != null)
                 {

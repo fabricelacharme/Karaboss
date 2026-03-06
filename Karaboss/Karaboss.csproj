@@ -1004,6 +1004,10 @@
       <Project>{e04f332f-ff37-4680-9d38-7962eacd58c0}</Project>
       <Name>TrkControl</Name>
     </ProjectReference>
+    <ProjectReference Include="..\uchardet\uchardet.csproj">
+      <Project>{2a706af9-3f44-4174-be9b-d4644a532185}</Project>
+      <Name>uchardet</Name>
+    </ProjectReference>
     <ProjectReference Include="..\VU_MeterLibrary\VU_MeterLibrary.csproj">
       <Project>{5d223b76-4462-4055-91b7-10ebfd8558e6}</Project>
       <Name>VU_MeterLibrary</Name>

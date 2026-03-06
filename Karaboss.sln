@@ -64,6 +64,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OvhLyrics.Api", "OvhLyrics.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KFNViewer", "KFNViewer\KFNViewer.csproj", "{3C65AED8-CF22-4533-BBC1-9000683688B8}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "uchardet", "uchardet\uchardet.csproj", "{2A706AF9-3F44-4174-BE9B-D4644A532185}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -245,6 +247,12 @@ Global
 		{3C65AED8-CF22-4533-BBC1-9000683688B8}.Release|Any CPU.Build.0 = Release|Any CPU
 		{3C65AED8-CF22-4533-BBC1-9000683688B8}.Travis|Any CPU.ActiveCfg = Debug|Any CPU
 		{3C65AED8-CF22-4533-BBC1-9000683688B8}.Travis|Any CPU.Build.0 = Debug|Any CPU
+		{2A706AF9-3F44-4174-BE9B-D4644A532185}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2A706AF9-3F44-4174-BE9B-D4644A532185}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2A706AF9-3F44-4174-BE9B-D4644A532185}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2A706AF9-3F44-4174-BE9B-D4644A532185}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2A706AF9-3F44-4174-BE9B-D4644A532185}.Travis|Any CPU.ActiveCfg = Debug|Any CPU
+		{2A706AF9-3F44-4174-BE9B-D4644A532185}.Travis|Any CPU.Build.0 = Debug|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
