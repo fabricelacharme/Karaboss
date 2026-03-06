@@ -221,7 +221,9 @@ namespace Karaboss.Mp3
             Player.PlayingCompleted += new EndingSyncHandler(HandlePlayingCompleted);
             
             DisplayMp3Characteristics();
-            ExtractMp3Lyrics(Mp3FullPath);            
+            ExtractMp3Lyrics(Mp3FullPath);
+
+            PopulateMetadataTags();
 
             #region playlists
 
@@ -1340,7 +1342,10 @@ namespace Karaboss.Mp3
                 // Lyrics brought by a lrc file in the same directory & having the same name
                 case Mp3LyricsTypes.LRCFile:
                     // TODO: return lyrics without separators as previous case
-                    Mp3LyricsMgmtHelper.SyncLyrics = Mp3LyricsMgmtHelper.GetKEffectLrcLyrics(FileName);                                       
+                    //Mp3LyricsMgmtHelper.SyncLyrics = Mp3LyricsMgmtHelper.GetKEffectLrcLyrics(FileName);
+                    Mp3LyricsMgmtHelper.SyncLyrics = Mp3LyricsMgmtHelper.GetLrcLyricsFromFile(FileName);
+
+
                     DisplayFrmMp3Lyrics();
                     break;
                 
@@ -2789,7 +2794,7 @@ namespace Karaboss.Mp3
                 Tag_Artist = txtArtist.Text;
                 Tag_Album = txtAlbum.Text;
                 
-                if (IsNumeric(txtTitle.Text))
+                if (IsNumeric(txtYear.Text))
                     Tag_Year = Convert.ToUInt32(txtYear.Text);
                 Tag_Lang = cbLanguage.Text;
 
@@ -2960,8 +2965,11 @@ namespace Karaboss.Mp3
             // Display mp3 infos
             if (Player.Tag != null)
             {
-                txtTitle.Text = Player.Tag.Title;
-                txtAlbum.Text = Player.Tag.Album;
+                if (Player.Tag.Title != null)
+                    txtTitle.Text = Player.Tag.Title;
+                
+                if (Player.Tags.album != null)
+                    txtAlbum.Text = Player.Tag.Album;
                 
                 if (Player.Tag.AlbumArtists.Count() > 0)
                 {

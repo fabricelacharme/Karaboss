@@ -32,22 +32,18 @@
 
 #endregion
 
-using Hqub.MusicBrainz.API.Entities;
 using Karaboss.MidiLyrics;
 using Karaboss.Mp3.Mp3Lyrics;
 using Karaboss.SRT;
 using Mozilla.NUniversalCharDet;
 using System;
 using System.Collections.Generic;
-using System.Drawing.Text;
 using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
-using static System.Windows.Forms.AxHost;
-using static System.Windows.Forms.LinkLabel;
 
 namespace Karaboss.Utilities
 {
