@@ -371,7 +371,6 @@ namespace Karaboss.Utilities
         }
 
 
-
         /// <summary>
         /// Convert a time stamp 01:15.510 (min 2digits, sec 2 digits, ms 2 or 3 digits) to milliseconds
         /// </summary>
@@ -451,6 +450,23 @@ namespace Karaboss.Utilities
             }
             else
                 return string.Format("{0:00}:{1:00}.{2:000}", ts.Minutes, ts.Seconds, ts.Milliseconds);
+        }
+
+        /// <summary>
+        /// Converts a time duration, specified in milliseconds, to the SubRip Subtitle (SRT) time format.
+        /// </summary>
+        /// <remarks>The returned string is formatted according to the SRT subtitle standard, which is
+        /// commonly used for video subtitles. The method does not validate that the input is within a typical SRT time
+        /// range; negative values may produce unexpected results.</remarks>
+        /// <param name="ms">The duration in milliseconds to convert. Must be a non-negative value.</param>
+        /// <returns>A string representing the equivalent time in SRT format ("HH:MM:SS,mmm").</returns>
+        public static string MsToSrtTime(double ms)
+        {
+            // Convert milliseconds to SRT time format "00:00:01,848"
+            TimeSpan ts = TimeSpan.FromMilliseconds(ms);
+
+            return string.Format("{0:00}:{1:00}:{2:00},{3:000}", ts.Hours, ts.Minutes, ts.Seconds, ts.Milliseconds);
+
         }
 
 
@@ -571,7 +587,8 @@ namespace Karaboss.Utilities
                 if (!match2digits.Success && !match3digits.Success) continue;
 
                 // Convert times to milliseconds (to have the same entry format with mp3 Lyrics edition)
-                time = Mp3LyricsMgmtHelper.TimeToMs(sTime);
+                //time = Mp3LyricsMgmtHelper.TimeToMs(sTime);
+                time = LyricsUtilities.TimeToMs(sTime);
 
                 // Clean separators for the format of separator on single lines
                 sLyric = vLyric.ToString();
@@ -755,7 +772,7 @@ namespace Karaboss.Utilities
         /// </summary>
         /// <param name="fileName"></param>
         /// <returns></returns>
-        public static List<List<keffect.KaraokeEffect.kSyncText>> ReadLrcFromFile(string FileName)
+        public static List<List<keffect.KaraokeEffect.kSyncText>> ReadLrcFromFileold(string FileName)
         {
             /* Example of LRC file:
              * 
@@ -791,11 +808,9 @@ namespace Karaboss.Utilities
             string lrcFile = Path.ChangeExtension(FileName, ".lrc");
             if (!System.IO.File.Exists(lrcFile)) return null;
             #endregion guard
-
             
             try
             {
-
                 // Detect encoding                               
                 Encoding enc = GetEncodingFromFile(FileName);
 
@@ -968,6 +983,219 @@ namespace Karaboss.Utilities
             
         }
 
+        public static List<List<keffect.KaraokeEffect.kSyncText>> ReadLrcFromFile(string FileName)
+        {
+            /* Example of LRC file:
+             * 
+             * Repetead lines in 4: [00:16.42][00:44.90][01:13.21][01:41.51]Comme dans un film de la Metro,"
+             * Paragraphs in 12: "[00:44.22]"
+             * Empty lines in 20 ??
+             * 
+             *   [0]: "[id: lf_wilsvzsu]"
+                 [1]: "[ar:Brigitte Fontaine]"
+                 [2]: "[ti:La Metro]"
+                 [3]: "[by:JuPaBaTo]"
+                 [4]: "[00:16.42][00:44.90][01:13.21][01:41.51]Comme dans un film de la Metro,"
+                 [5]: "[00:21.58]On voit très bien tous les détails"
+                 [6]: "[00:25.31]Des bonnes sœurs font leur numéro"
+                 [7]: "[00:30.41]Dans un voilier sans gouvernail,"
+                 [8]: "[00:33.77]Des milliardaires américains"
+                 [9]: "[00:35.89]S'en vont doucement vers le port"
+                [10]: "[00:38.19]Avec des copains saoudiens"
+                [11]: "[00:40.42]Qui vont très bien dans le décor"
+                [12]: "[00:44.22]"
+                [13]: "[00:49.88]Le soleil se couche sur l'eau"
+                [14]: "[00:53.42]Sous l'oeil des serveurs chicanos"
+                [15]: "[00:58.58]Qui se marrent avec les cuistots,"
+                [16]: "[01:02.14]Des stars adorées du public"
+                [17]: "[01:04.12]Traînent leur spleen intéressant"
+                [18]: "[01:06.49]Vers des paradis super chics"
+                [19]: "[01:08.67]Où l'on dégueule entre gagnants"
+                [20]: ""
+            */
+
+            #region guard
+            // Search for existing LRC file
+            string lrcFile = Path.ChangeExtension(FileName, ".lrc");
+            if (!System.IO.File.Exists(lrcFile)) return null;
+            #endregion guard
+
+            try
+            {
+                // Detect encoding                               
+                Encoding enc = GetEncodingFromFile(FileName);
+
+                //string[] lines = System.IO.File.ReadAllLines(FileName);
+                string[] lines = System.IO.File.ReadAllLines(FileName, enc);
+                if (lines.Count() == 0)
+                {
+                    MessageBox.Show("Invalid LRC file", "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return null;
+                }
+
+
+                // Search type of timestamp format for milliseconds (2 or 3 digits)
+                int digits = GetDigitsLRC(lines);
+                if (digits == -1)
+                {
+                    MessageBox.Show("Invalid LRC file", "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return null;
+                }
+                string patterntime;
+                if (digits == 2)
+                {
+                    patterntime = @"\[\d{2}[:]\d{2}[.]\d{2}\]";
+                }
+                else
+                {
+                    patterntime = @"\[\d{2}[:]\d{2}[.]\d{3}\]";
+                }
+
+                var regextime = new Regex(patterntime);
+
+                string patternline = GetPatternLRC(lines);
+                if (patternline == null)
+                {
+                    MessageBox.Show("Invalid LRC file", "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return null;
+                }
+
+
+                List<(string, string)> result = new List<(string, string)>();
+
+                List<keffect.KaraokeEffect.kSyncText> SyncLine = new List<keffect.KaraokeEffect.kSyncText>();
+                List<List<keffect.KaraokeEffect.kSyncText>> SyncLyrics = new List<List<keffect.KaraokeEffect.kSyncText>>();
+                long time;
+                string lyric;
+                string timestamp;
+                string element;
+
+                var regexCrotchets = new Regex(@"(?<=\[).*?(?=\])");
+
+                string line;
+                for (int i = 0; i < lines.Count(); i++)
+                {
+                    line = lines[i];
+                    // Eliminate empty lines
+                    if (line.Trim() == string.Empty) continue;
+
+
+                    var matchcrotchets = regexCrotchets.Match(line);
+                    if (!matchcrotchets.Success) continue;
+
+
+                    // Lyric is after the last crotchet "]" 
+                    lyric = line.Split(']').Last();
+
+                    if (lyric.Length == 0)
+                    {
+
+                        var matchtime = Regex.Match(line, patterntime);
+                        if (matchtime.Success)
+                        {
+                            // Paragraph 
+                            timestamp = matchtime.Value;
+                            timestamp = timestamp.Substring(1, timestamp.Length - 2);
+                            result.Add((timestamp, string.Empty));
+                        }
+                        else
+                        {
+                            // Else metadate
+                        }
+                    }
+                    else
+                    {
+                        // Lines with one or several timestamps and text
+                        var matchline = Regex.Match(line, patternline);
+                        if (!matchline.Success) continue;
+
+                        // Search for all timestamps                        
+
+                        foreach (var match in regexCrotchets.Matches(line))
+                        {
+                            timestamp = match.ToString();
+                            result.Add((timestamp, lyric));
+                        }
+                    }
+                }
+
+                // Sort SyncLyrics by time
+                // In case of repetead lines like: [00:16.42][00:44.90][01:13.21][01:41.51]Comme dans un film de la Metro,"
+                // We have to sort the result by the first item
+                List<(string, string)> sortedList = new List<(string, string)>();
+                sortedList = result.OrderBy(o => o.Item1).ToList();
+
+
+                // Now we have to separate the syllables                                               
+                for (int i = 0; i < sortedList.Count; i++)
+                {
+                    time = (long)TimeToMs(sortedList[i].Item1);
+
+                    lyric = (string)sortedList[i].Item2;
+                    int s = lyric.IndexOf("<");
+
+                    if (s > -1)
+                    {
+                        // LRC enhanced
+                        string firstsyllabe = lyric.Substring(0, s);
+                        string restline = lyric.Substring(s);
+
+                        SyncLine = new List<keffect.KaraokeEffect.kSyncText>();
+                        SyncLine.Add(new keffect.KaraokeEffect.kSyncText(time, firstsyllabe));
+
+                        string[] elements = restline.Split('<');
+                        
+                        // {string[7]}
+                        // [0]: ""
+                        // [1]: "00:01.93>l'ai "
+                        // [2]: "00:02.10>con"
+                        // [3]: "00:02.30>nue "
+                        // [4]: "00:02.41>là "
+                        // [5]: "00:02.78>là"
+                        // [6]: "00:03.23>"
+                        
+                        for (int j = 0; j < elements.Count(); j++)
+                        {
+                            element = elements[j];
+                            if (element.Length > 0)
+                            {
+                                lyric = element.Split('>').Last();
+                                if (lyric.Length > 0)
+                                {
+                                    timestamp = element.Substring(0, element.IndexOf(">"));
+                                    time = (long)TimeToMs(timestamp);
+                                    SyncLine.Add(new keffect.KaraokeEffect.kSyncText(time, lyric));
+                                }
+                            }
+                        }                                                
+                        SyncLyrics.Add(SyncLine);
+
+                    }
+                    else
+                    {
+                        // Case 1 : no syllabes <> 
+                        // LRC with only lines
+
+                        SyncLine = new List<keffect.KaraokeEffect.kSyncText>();
+                        SyncLine.Add(new keffect.KaraokeEffect.kSyncText(time, lyric));
+                        SyncLyrics.Add(SyncLine);
+                    }
+                }
+
+                return SyncLyrics;
+
+
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show(e.Message, "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return null;
+            }
+
+
+        }
+
+
         /// <summary>
         /// Formate SyncLyrics to meet Midi editor needs (line separators and paragraphs on dedicated lines)
         /// </summary>
@@ -1111,7 +1339,7 @@ namespace Karaboss.Utilities
                 // Midi format for timestamp is milliseconds
                 // Convert from "00:01.123" to "00.01.12" if necessary
                 time = lstDgRows[i].Item1;
-                sTime = Mp3LyricsMgmtHelper.MsToTime(time, _LrcMillisecondsDigits);                
+                sTime = LyricsUtilities.MsToTime(time, _LrcMillisecondsDigits);                
 
                 sTime = "[" + sTime + "]";
                 sLyric = lstDgRows[i].Item2;
@@ -1124,7 +1352,7 @@ namespace Karaboss.Utilities
                         sLyric = Regex.Replace(sLyric, _myLyricsMgmt.RemoveChordPattern, @"");
 
                     // Remove accents
-                    sLyric = bRemoveAccents ? Utilities.LyricsUtilities.RemoveDiacritics(sLyric) : sLyric;
+                    sLyric = bRemoveAccents ? LyricsUtilities.RemoveDiacritics(sLyric) : sLyric;
 
                     //Uppercase letters
                     sLyric = bUpperCase ? sLyric.ToUpper() : sLyric;
@@ -1135,7 +1363,7 @@ namespace Karaboss.Utilities
                     // Remove non alphanumeric chars
                     // Protect underscore
                     sLyric = sLyric.Replace("_", " ");
-                    sLyric = bRemoveNonAlphaNumeric ? Utilities.LyricsUtilities.RemoveNonAlphaNumeric(sLyric) : sLyric;
+                    sLyric = bRemoveNonAlphaNumeric ? LyricsUtilities.RemoveNonAlphaNumeric(sLyric) : sLyric;
                     sLyric = sLyric.Replace(" ", "_");
 
                     // check if syllabes has to be merged because they belong to a word
@@ -1259,7 +1487,7 @@ namespace Karaboss.Utilities
             @I	Information  ex Date(of Karaoke file, not song)
             @V	(single) Version ex 0100 ?             
             */
-            List<string> lstTags = new List<string>();
+                        List<string> lstTags = new List<string>();
             string Tag_Artist = string.Empty;
             string Tag_Title = string.Empty;
             int pos;
@@ -1902,7 +2130,6 @@ namespace Karaboss.Utilities
             return lstLinesCut;
         }
 
-
         public static List<string> GetLrcTimeLines(List<string> lstLyricsItems, int _LrcMillisecondsDigits)
         {
             List<string> lstTimeLines = new List<string>();
@@ -2371,8 +2598,7 @@ namespace Karaboss.Utilities
 
             // Fix EndTime of each line
             for (int i = 0; i < lstLyrics.Count ; i++)
-            {
-                
+            {                
                 if (i < lstLyrics.Count - 1)
                 {
                     lstLyrics[i] = (lstLyrics[i].starttime, lstLyrics[i].lyric, lstLyrics[i + 1].starttime - 500);
@@ -2389,9 +2615,9 @@ namespace Karaboss.Utilities
                 // Format of times must be like "00:00:01,848"
 
                 starttime = lstLyrics[i].starttime;
-                StartTime = Mp3LyricsMgmtHelper.MsToSrtTime(starttime);
+                StartTime = MsToSrtTime(starttime);
                 endtime = lstLyrics[i].endtime;
-                EndTime = Mp3LyricsMgmtHelper.MsToSrtTime(endtime);
+                EndTime = MsToSrtTime(endtime);
                 
                 lyric = lstLyrics[i].lyric;
 

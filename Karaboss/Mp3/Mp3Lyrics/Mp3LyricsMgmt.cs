@@ -254,7 +254,7 @@ namespace Karaboss.Mp3.Mp3Lyrics
         /// </summary>
         /// <param name="SyncLyricsFrame"></param>
         /// <returns></returns>
-        public static List<List<keffect.KaraokeEffect.kSyncText>> GetKEffectSyncLyrics(SynchronisedLyricsFrame SyncLyricsFrame)
+        public static List<List<keffect.KaraokeEffect.kSyncText>> GetLyricsFromMp3File(SynchronisedLyricsFrame SyncLyricsFrame)
         {
             string lyric;
             long time;
@@ -393,7 +393,7 @@ namespace Karaboss.Mp3.Mp3Lyrics
         /// have a .lrc extension.</param>
         /// <returns>A list of karaoke effect synchronization text elements extracted from the LRC file, or null if the LRC file
         /// does not exist or is invalid.</returns>
-        public static List<List<keffect.KaraokeEffect.kSyncText>> GetLrcLyricsFromFile(string FileName)
+        public static List<List<keffect.KaraokeEffect.kSyncText>> GetLyricsFromLrcFile(string FileName)
         {
             // Search for existing LRC file
             string lrcFile = Path.ChangeExtension(FileName, ".lrc");
@@ -505,104 +505,6 @@ namespace Karaboss.Mp3.Mp3Lyrics
        
 
         #endregion get synched lyrics
-
-
-
-        #region functions to convert time formats
-
-       
-        /// <summary>
-        /// Convert a time stamp 01:15.510 (min 2digits, sec 2 digits, ms 2 or 3 digits) to milliseconds
-        /// </summary>
-        /// <param name="stime"></param>
-        /// <returns></returns>
-        /// <exception cref="NotImplementedException"></exception>
-        public static double TimeToMs(string time)
-        {
-            string pattern3digits = @"(?:(\d{2}:\d{2}\.\d{3}))";
-            string pattern2digits = @"(?:(\d{2}:\d{2}\.\d{2}))";
-
-            double dur = 0;
-
-            MatchCollection matches3digits = Regex.Matches(time, pattern3digits);
-            MatchCollection matches2digits = Regex.Matches(time, pattern2digits);
-
-
-            string[] split1 = time.Split(new char[] { ':' }, StringSplitOptions.RemoveEmptyEntries);
-            if (split1.Length != 2)
-                return 0;
-
-            string min = split1[0];
-
-            string[] split2 = split1[1].Split(new char[] { '.' }, StringSplitOptions.RemoveEmptyEntries);
-            if (split2.Length != 2)
-                return 0;
-
-            string sec = split2[0];
-            string ms = split2[1];
-
-            // Calculate dur in seconds
-            int Min = Convert.ToInt32(min);
-            dur = Min * 60 * 1000;
-
-            int Sec = Convert.ToInt32(sec);
-            dur += Sec * 1000;
-
-            double Ms;
-            if (matches3digits.Count > 0)
-                Ms = Convert.ToDouble(ms);
-            else
-                Ms = Convert.ToDouble(ms) * 10;
-
-            dur += Ms;
-
-            return dur;
-        }
-
-        /// <summary>
-        /// Convert milliseconds to a LRC timespan
-        /// </summary>
-        /// <param name="ms"></param>
-        /// <param name="_LrcMillisecondsDigits"></param>
-        /// <returns></returns>
-        public static string MsToTime(double ms, int _LrcMillisecondsDigits)
-        {
-            int mls;
-            int sec;
-            int min;
-
-            TimeSpan ts = TimeSpan.FromMilliseconds(ms);
-
-            if (_LrcMillisecondsDigits == 2)
-            {
-                mls = (int)Math.Round(ts.Milliseconds / (double)10);
-                sec = ts.Seconds;
-                min = ts.Minutes;
-                if (mls == 100)
-                {
-                    mls = 0;
-                    sec += 1;
-                    if (sec == 60)
-                        min += 1;
-                }
-                return string.Format("{0:00}:{1:00}.{2:00}", min, sec, mls);
-            }
-            else
-                return string.Format("{0:00}:{1:00}.{2:000}", ts.Minutes, ts.Seconds, ts.Milliseconds);            
-        }
-
-        
-        public static string MsToSrtTime(double ms)
-        {
-            // Convert milliseconds to SRT time format "00:00:01,848"
-            TimeSpan ts = TimeSpan.FromMilliseconds(ms);
-
-            return string.Format("{0:00}:{1:00}:{2:00},{3:000}", ts.Hours, ts.Minutes,ts.Seconds, ts.Milliseconds);
-
-        }
-
-        #endregion functions to convert time formats
-
 
 
         #region id3v2
