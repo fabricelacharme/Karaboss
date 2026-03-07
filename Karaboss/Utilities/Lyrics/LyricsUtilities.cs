@@ -258,7 +258,7 @@ namespace Karaboss.Utilities
         /// </summary>
         /// <param name="time"></param>
         /// <returns></returns>
-        public static int TimeToTicks(string time, double Division, int max)
+        public static int TimeToTicks2(string time, double Division, int max)
         {
             int tic = 0;
             
@@ -296,6 +296,9 @@ namespace Karaboss.Utilities
             string tm;            
             do
             {
+                
+                
+                
                 // Start with step 100
                 tm = TicksToTime(tic, Division);                
                 if (tm == time)
@@ -361,6 +364,8 @@ namespace Karaboss.Utilities
                     } while (tic <= max);
                 }
 
+            
+            
             } while (tic <= max);
 
 
@@ -369,6 +374,141 @@ namespace Karaboss.Utilities
             // Return -1 if not found, but it should never happen because we are sure to find a tic with the same time as the one we are looking for (we are sure to find it with step 1)
             return -1;
             
+        }
+
+        public static int TimeToTicks(string time, double Division, int max)
+        {
+            int tic = 0;
+
+            // Caculate duration in seconds
+            double dur;
+
+            string[] split1 = time.Split(new char[] { ':' }, StringSplitOptions.RemoveEmptyEntries);
+            if (split1.Length != 2)
+                return tic;
+
+            string min = split1[0];
+
+            string[] split2 = split1[1].Split(new char[] { '.' }, StringSplitOptions.RemoveEmptyEntries);
+            if (split2.Length != 2)
+                return tic;
+
+            string sec = split2[0];
+            string ms = split2[1];
+
+            // Calculate dur in seconds
+            int Min = Convert.ToInt32(min);
+            dur = Min * 60;
+
+            int Sec = Convert.ToInt32(sec);
+            dur += Sec;
+
+            double Ms = Convert.ToDouble(ms);
+            dur += Ms / 1000;
+
+
+            // TODO
+            // Find ticks who are giving this time
+            // Search convergence
+            tic = 0;
+            string tm;
+            do
+            {
+                // Start with step 1000
+                tm = TicksToTime(tic, Division);
+                
+                if (tm == time)
+                    return tic;
+                tic += 1000;
+
+
+
+
+                // If the last increase of 1000 is too big
+                if (tic > max || TempoUtilities.GetMidiDuration(tic, Division) > dur)
+                {
+                    // Go back to previous value
+                    tic -= 1000;
+
+                    do 
+                    { 
+                        // Continue with step 100
+                        tm = TicksToTime(tic, Division);
+                        if (tm == time)
+                            return tic;
+                        tic += 100;
+
+                        // If the last increase of 100 is too big
+                        if (tic > max || TempoUtilities.GetMidiDuration(tic, Division) > dur)
+                        {
+                            // Go back to previous value
+                            tic -= 100;
+                            do
+                            {
+                                // Continue to increase with a step of 10
+                                tm = TicksToTime(tic, Division);
+                                if (tm == time)
+                                    return tic;
+                                tic += 10;
+
+                                // If the last increase of 10 is too big
+                                if (tic > max || TempoUtilities.GetMidiDuration(tic, Division) > dur)
+                                {
+                                    int maxistep = tic; // Next line, we decrease tic by 10. No need to go above maxistep 
+                                    int besttry = -1;
+
+                                    // Go back to the previous value
+                                    tic -= 10;
+                                    do
+                                    {
+                                        // Continue with a step of 1
+                                        tm = TicksToTime(tic, Division);
+
+                                        // Option: take the highest tic giving the right result.
+                                        // If next value of tic give also the same time, continue
+                                        if (tm == time && TicksToTime(tic + 1, Division) != time)
+                                            return tic;
+
+                                        // If it is not possible to get a valid tick for time
+                                        // keep the nearest value 
+                                        // This situation occurs with LRC files having only 2 digits for milliseconds
+                                        //if (TimeToMs(tm) - TimeToMs(time) >= 1 && besttry == -1)
+                                        //    besttry = tic;
+
+                                        if (Math.Abs(TimeToMs(time) - TimeToMs(tm)) == 1)
+                                            besttry = tic;
+
+
+                                        if (tic <= maxistep) // no need to go further maxistep 
+                                            tic++;
+                                        else
+                                        {
+                                            if (besttry > -1)
+                                                return besttry;
+                                            else
+                                                return tic;
+                                        }
+
+                                    } while (tic <= max);
+
+                                }
+
+
+                            } while (tic <= max);
+                        }
+                    
+                    
+                    } while (tic <= max);
+                }
+
+            } while (tic <= max);
+
+
+            MessageBox.Show("Unable to calculate TimeToTick for this timestamp: " + time, "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+            // Return -1 if not found, but it should never happen because we are sure to find a tic with the same time as the one we are looking for (we are sure to find it with step 1)
+            return -1;
+
         }
 
 
@@ -1029,10 +1169,8 @@ namespace Karaboss.Utilities
                     // Eliminate empty lines
                     if (line.Trim() == string.Empty) continue;
 
-
                     var matchcrotchets = regexCrotchets.Match(line);
                     if (!matchcrotchets.Success) continue;
-
 
                     // Lyric is after the last crotchet "]" 
                     lyric = line.Split(']').Last();

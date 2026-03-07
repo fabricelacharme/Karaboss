@@ -2274,7 +2274,8 @@ namespace Karaboss
                 // Convert timestamp to milliseconds if necessary
                 double ms = Convert.ToDouble(timestamp) * 1000; // Assuming timestamp is in seconds
                 // Convert ms to ticks
-                ms = Utilities.LyricsUtilities.TimeToTicks(sTimeStamp, _division, _tempo);
+                //ms = Utilities.LyricsUtilities.TimeToTicks(sTimeStamp, _division, _tempo);
+                ms = Utilities.LyricsUtilities.TimeToTicks(sTimeStamp, _division, _totalTicks);
 
                 if (ms == -1)
                 {
@@ -2518,7 +2519,8 @@ namespace Karaboss
                     // Convert timestamp to milliseconds if necessary
                     ms = time; // Assuming timestamp is already in milliseconds
                     // Convert ms to ticks
-                    ms = Utilities.LyricsUtilities.TimeToTicks(sTimeStamp, _division, _tempo);
+                    //ms = Utilities.LyricsUtilities.TimeToTicks(sTimeStamp, _division, _tempo);
+                    ms = Utilities.LyricsUtilities.TimeToTicks(sTimeStamp, _division, _totalTicks);
 
                     if (ms == -1)
                     {
@@ -2562,7 +2564,8 @@ namespace Karaboss
                     // Convert timestamp to milliseconds if necessary
                     double ms = time; // Assuming timestamp is already in milliseconds
                     // Convert ms to ticks
-                    ms = Utilities.LyricsUtilities.TimeToTicks(sTimeStamp, _division, _tempo);
+                    //ms = Utilities.LyricsUtilities.TimeToTicks(sTimeStamp, _division, _tempo);
+                    ms = Utilities.LyricsUtilities.TimeToTicks(sTimeStamp, _division, _totalTicks);
 
                     if (ms == -1)
                     {
