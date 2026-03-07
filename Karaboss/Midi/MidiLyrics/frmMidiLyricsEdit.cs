@@ -2546,6 +2546,8 @@ namespace Karaboss
         {
             string sTimeStamp;
             
+            if (SyncLyrics == null) return;
+            
             foreach (List < keffect.KaraokeEffect.kSyncText > SyncLine in SyncLyrics)
             {
                 

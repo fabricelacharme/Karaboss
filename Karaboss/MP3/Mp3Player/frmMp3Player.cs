@@ -265,7 +265,9 @@ namespace Karaboss.Mp3
            
         }
 
-
+        /// <summary>
+        /// Populate textboxes Title, Artist, Album, Year
+        /// </summary>
         private void PopulateMetadataTags()
         {
             if (Mp3LyricsMgmtHelper.SyncLyrics == null || Mp3LyricsMgmtHelper.SyncLyrics.Count == 0)
@@ -2481,12 +2483,9 @@ namespace Karaboss.Mp3
 
             Mp3LyricsMgmtHelper.MySyncLyricsFrame = null;
 
-            // TEST // Load LRC file without any separators
+            // Load LRC file
             Mp3LyricsMgmtHelper.SyncLyrics = LyricsUtilities.ReadLrcFromFile(FileName);            
             
-            // OLD procedure
-            //Mp3LyricsMgmtHelper.SyncLyrics = Mp3LyricsMgmtHelper.GetKEffectLrcLyrics(_lrcFileName);
-
             PopulateMetadataTags();
             
             PopulateDataGridView();
@@ -2499,12 +2498,10 @@ namespace Karaboss.Mp3
             dgView.Rows[0].Selected = true;
 
             localSyncLyrics = GetCurrentDgViewContent(dgView, COL_MS, COL_TEXT);
-            PopulateTextBox(localSyncLyrics);
-            
+            PopulateTextBox(localSyncLyrics);            
         }
              
-        
-     
+             
 
         /// <summary>
         /// Store dgView content
@@ -2689,29 +2686,6 @@ namespace Karaboss.Mp3
             LrcLinesSyllabesFormats LrcLinesSyllabesFormat = LrcOptionsDialog.LrcLinesSyllabesFormat;
 
             _LrcMillisecondsDigits = LrcOptionsDialog.LrcMillisecondsDigits;
-
-            #region warning LRC lose syllables
-            if (LrcLinesSyllabesFormat == LrcLinesSyllabesFormats.Syllabes)
-            {
-                // The LRC format does not allow words to be divided into syllables. Words must remain whole.
-                // They cannot be divided into syllables. The sentence composed of the three words “Long live karaoke” can only be divided into three parts: “Long,” “live” and “karaoke” 
-                // If you have divided the word “karaoke” into four syllables, “Ka,” “ra,” “o,” and “ke,” Karaboss will reconstruct the word “karaoke” and you will lose the syllables of the words.
-                // If you want to keep all the syllables, save the lyrics in the MP3 file.
-                string tx = Strings.Mp3SaveLRCWarning;
-                tx = string.Format(tx, Environment.NewLine);
-                string msg = tx;
-                /*
-                string msg = "Warning: The LRC format does not allow words to be divided into syllables. Words must remain whole." + Environment.NewLine + Environment.NewLine +
-                    "If you have divided words into syllables, Karaboss will reconstruct the words and you will lose the syllables of the words." + Environment.NewLine + Environment.NewLine +
-                    "If you want to keep all the syllables, save the lyrics in the MP3 file." + Environment.NewLine + Environment.NewLine +
-                    "Do you want to continue?";
-                */
-                if (MessageBox.Show(msg, "Karaboss", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.No)
-                    return;
-
-
-            }
-            #endregion warning 
 
             // Cut lines over x characters
             bool bCutLines = LrcOptionsDialog.bCutLines;
