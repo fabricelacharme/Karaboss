@@ -1791,16 +1791,7 @@ namespace Karaboss.Utilities
                 time = lstDgRowsTreated[i].time;
                 sLyric = lstDgRowsTreated[i].lyric;
 
-                if (_LrcMillisecondsDigits == 2)
-                {                    
-                    ts = TimeSpan.FromMilliseconds(time);
-                    sTime = string.Format("{0:00}:{1:00}.{2:00}", ts.Minutes, ts.Seconds, Math.Round(ts.Milliseconds / (double)10));
-                }
-                else
-                {
-                    ts = TimeSpan.FromMilliseconds(time);
-                    sTime = string.Format("{0:00}:{1:00}.{2:000}", ts.Minutes, ts.Seconds, ts.Milliseconds);
-                }
+                sTime = MsToTime(time, _LrcMillisecondsDigits);                
 
                 if (sLyric.Trim() != m_SepLine && sLyric.Trim() != m_SepParagraph)
                 {
