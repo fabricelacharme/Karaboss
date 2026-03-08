@@ -1,6 +1,6 @@
 ﻿namespace Karaboss.Kfn
 {
-    partial class frmSongINI
+    partial class frmKfnSongINI
     {
         /// <summary>
         /// Required designer variable.
@@ -64,8 +64,8 @@
             this.ClientSize = new System.Drawing.Size(800, 450);
             this.Controls.Add(this.txtBlockContent);
             this.Controls.Add(this.lvBlocks);
-            this.Name = "frmSongINI";
-            this.Text = "frmSongINI";
+            this.Name = "frmKfnSongINI";
+            this.Text = "frmKfnSongINI";
             this.ResumeLayout(false);
             this.PerformLayout();
 

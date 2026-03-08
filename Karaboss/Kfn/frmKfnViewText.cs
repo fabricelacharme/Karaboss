@@ -4,11 +4,11 @@ using System.Windows.Forms;
 
 namespace Karaboss.Kfn
 {
-    public partial class frmViewText : Form
+    public partial class frmKfnViewText : Form
     {
         private object[] textSizes = new object[] { 14, 16, 18, 20, 22, 24, 26, 28, 30 };
 
-        public frmViewText(string fileName, string text, string encoding)
+        public frmKfnViewText(string fileName, string text, string encoding)
         {
             InitializeComponent();
 

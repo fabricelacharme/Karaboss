@@ -1,6 +1,6 @@
 ﻿namespace Karaboss.Kfn
 {
-    partial class frmViewImage
+    partial class frmKfnViewImage
     {
         /// <summary>
         /// Required designer variable.
@@ -49,8 +49,8 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(425, 293);
             this.Controls.Add(this.imgElement);
-            this.Name = "frmViewImage";
-            this.Text = "frmViewImage";
+            this.Name = "frmKfnViewImage";
+            this.Text = "frmKfnViewImage";
             ((System.ComponentModel.ISupportInitialize)(this.imgElement)).EndInit();
             this.ResumeLayout(false);
 

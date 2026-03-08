@@ -2,7 +2,7 @@
 using System.IO;
 using System.Linq;
 
-class ID3Tags
+public class ID3Tags
 {
     public byte[] RemoveAllTags(byte[] data)
     {

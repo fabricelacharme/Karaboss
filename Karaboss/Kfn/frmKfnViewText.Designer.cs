@@ -1,6 +1,6 @@
 ﻿namespace Karaboss.Kfn
 {
-    partial class frmViewText
+    partial class frmKfnViewText
     {
         /// <summary>
         /// Required designer variable.
@@ -69,8 +69,8 @@
             this.ClientSize = new System.Drawing.Size(375, 287);
             this.Controls.Add(this.txtElement);
             this.Controls.Add(this.pnlTop);
-            this.Name = "frmViewText";
-            this.Text = "frmViewText";
+            this.Name = "frmKfnViewText";
+            this.Text = "frmKfnViewText";
             this.pnlTop.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();

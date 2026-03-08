@@ -12,12 +12,12 @@ using TagLib;
 
 namespace Karaboss.Kfn
 {
-    public partial class frmSongINI : Form
+    public partial class frmKfnSongINI : Form
     {
         private KFN KFN;
         private SongINI sINI;
 
-        public frmSongINI(KFN kFN)
+        public frmKfnSongINI(KFN kFN)
         {
             InitializeComponent();
             KFN = kFN;

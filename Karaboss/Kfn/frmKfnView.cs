@@ -46,6 +46,10 @@ namespace Karaboss.Kfn
 
             OpenFileDialog.Filter = "KFN files (*.kfn)|*.kfn|All files (*.*)|*.*";
 
+            //mnuExportToEMZ.Enabled = false;
+            //mnuExportKFN.Enabled = false;
+            //mnuExportToMP3LRC.Enabled = false;            
+
             ReadFile(FullFileName);
         }
 
@@ -312,17 +316,28 @@ namespace Karaboss.Kfn
 
         private void mnuExportToEMZ_Click(object sender, EventArgs e)
         {
-
+            Application.OpenForms["frmKfnExport"]?.Close();
+            frmKfnExport frmKfnExport = new frmKfnExport("EMZ", KFN);
+            frmKfnExport.Show();
         }
 
         private void mnuExportToMP3LRC_Click(object sender, EventArgs e)
         {
-
+            frmKfnExport frmKfnExport = new frmKfnExport("MP3+LRC", this.KFN);
+            frmKfnExport.Show();
         }
 
         private void mnuExportKFN_Click(object sender, EventArgs e)
         {
-
+            KFN.ChangeKFN(KFN.Resources.Where(r => r.IsExported == true).ToList(), (bool)chkDecryptKFN.Checked);
+            MessageBox.Show("Done!", Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Information);
+            KFN = new KFN(KFN.FullFileName);
+            if (KFN.isError != null)
+            {
+                MessageBox.Show(KFN.isError, Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+            this.UpdateKFN();
         }
 
         #endregion menus
@@ -414,9 +429,9 @@ namespace Karaboss.Kfn
                 string text = new string(Encoding.GetEncoding(detEncoding).GetChars(data));
 
                 // close frmViewText if exists
-                Application.OpenForms["frmViewText"]?.Close();
+                Application.OpenForms["frmKfnViewText"]?.Close();
                 // Show form
-                Form frmViewText = new frmViewText(
+                Form frmViewText = new frmKfnViewText(
                     resource.FileName,
                     text,
                     Encoding.GetEncodings().Where(en => en.CodePage == detEncoding).First().DisplayName
@@ -430,7 +445,7 @@ namespace Karaboss.Kfn
                 // close frmViewImage if exists
                 Application.OpenForms["frmViewImage"]?.Close();
                 // Show Form
-                Form frmViewImage = new frmViewImage(resource.FileName, Path.GetDirectoryName(KFN.FullFileName) , data);
+                Form frmViewImage = new frmKfnViewImage(resource.FileName, Path.GetDirectoryName(KFN.FullFileName) , data);
                 frmViewImage.Show();
             }
         }
@@ -504,7 +519,7 @@ namespace Karaboss.Kfn
 
             try
             {
-                Form frmSongINI = new frmSongINI(KFN);
+                Form frmSongINI = new frmKfnSongINI(KFN);
                 frmSongINI.Show();
 
             }
@@ -570,8 +585,9 @@ namespace Karaboss.Kfn
 
             #region close windows
 
-            Application.OpenForms["frmViewText"]?.Close();
-            Application.OpenForms["frmViewImage"]?.Close();
+            Application.OpenForms["frmKfnViewText"]?.Close();
+            Application.OpenForms["frmKfnViewImage"]?.Close();
+            Application.OpenForms["frmKfnExport"]?.Close();
 
             #endregion close windows
 

@@ -193,29 +193,35 @@
     <Compile Include="frmModifyDivision.Designer.cs">
       <DependentUpon>frmModifyDivision.cs</DependentUpon>
     </Compile>
+    <Compile Include="Kfn\frmKfnExport.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Kfn\frmKfnExport.Designer.cs">
+      <DependentUpon>frmKfnExport.cs</DependentUpon>
+    </Compile>
     <Compile Include="Kfn\frmKfnView.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Kfn\frmKfnView.Designer.cs">
       <DependentUpon>frmKfnView.cs</DependentUpon>
     </Compile>
-    <Compile Include="Kfn\frmSongINI.cs">
+    <Compile Include="Kfn\frmKfnSongINI.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Kfn\frmSongINI.Designer.cs">
-      <DependentUpon>frmSongINI.cs</DependentUpon>
+    <Compile Include="Kfn\frmKfnSongINI.Designer.cs">
+      <DependentUpon>frmKfnSongINI.cs</DependentUpon>
     </Compile>
-    <Compile Include="Kfn\frmViewImage.cs">
+    <Compile Include="Kfn\frmKfnViewImage.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Kfn\frmViewImage.Designer.cs">
-      <DependentUpon>frmViewImage.cs</DependentUpon>
+    <Compile Include="Kfn\frmKfnViewImage.Designer.cs">
+      <DependentUpon>frmKfnViewImage.cs</DependentUpon>
     </Compile>
-    <Compile Include="Kfn\frmViewText.cs">
+    <Compile Include="Kfn\frmKfnViewText.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Kfn\frmViewText.Designer.cs">
-      <DependentUpon>frmViewText.cs</DependentUpon>
+    <Compile Include="Kfn\frmKfnViewText.Designer.cs">
+      <DependentUpon>frmKfnViewText.cs</DependentUpon>
     </Compile>
     <Compile Include="Lrc\frmLrcGenerator.cs">
       <SubType>Form</SubType>
@@ -641,17 +647,20 @@
     <EmbeddedResource Include="GuitarTraining\frmGuitarTraining.resx">
       <DependentUpon>frmGuitarTraining.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Kfn\frmKfnExport.resx">
+      <DependentUpon>frmKfnExport.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Kfn\frmKfnView.resx">
       <DependentUpon>frmKfnView.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Kfn\frmSongINI.resx">
-      <DependentUpon>frmSongINI.cs</DependentUpon>
+    <EmbeddedResource Include="Kfn\frmKfnSongINI.resx">
+      <DependentUpon>frmKfnSongINI.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Kfn\frmViewImage.resx">
-      <DependentUpon>frmViewImage.cs</DependentUpon>
+    <EmbeddedResource Include="Kfn\frmKfnViewImage.resx">
+      <DependentUpon>frmKfnViewImage.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Kfn\frmViewText.resx">
-      <DependentUpon>frmViewText.cs</DependentUpon>
+    <EmbeddedResource Include="Kfn\frmKfnViewText.resx">
+      <DependentUpon>frmKfnViewText.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Lrc\frmLrcGenerator.resx">
       <DependentUpon>frmLrcGenerator.cs</DependentUpon>

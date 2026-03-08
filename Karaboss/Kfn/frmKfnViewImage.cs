@@ -8,13 +8,13 @@ using System.Windows.Forms;
 namespace Karaboss.Kfn
 {
     
-    public partial class frmViewImage : Form
+    public partial class frmKfnViewImage : Form
     {
         private string fPath = null;
         private string fName = null;
         byte[] fImageData = null;
 
-        public frmViewImage(string name, string fpath, byte[] image)
+        public frmKfnViewImage(string name, string fpath, byte[] image)
         {
             InitializeComponent();
 
