@@ -64,7 +64,7 @@ namespace Karaboss.Kfn
             InitLvProperties();
             InitLvResources();
 
-            pnlLeft.Top = pnlTop.Top + pnlTop.Height;
+            pnlLeft.Top = 0;
             pnlRight.Top = pnlLeft.Top;
 
             pnlLeft.Left = 0;
@@ -73,7 +73,7 @@ namespace Karaboss.Kfn
             pnlRight.Left = pnlLeft.Width;
             pnlRight.Width = 4 * ClientSize.Width / 7;
 
-            pnlLeft.Height = this.ClientSize.Height - pnlTop.Height - 30;
+            pnlLeft.Height = this.ClientSize.Height;
             pnlRight.Height = pnlLeft.Height;
         }
 
@@ -265,6 +265,8 @@ namespace Karaboss.Kfn
                     "\nPlease send this file to madlord80@gmail.com for support");
             }
 
+            lblAutoDetectedEnc.Text = KFN.AutoDetectEncoding;
+
             mnuResourceEncoding.Enabled = true;
 
         }
@@ -428,25 +430,25 @@ namespace Karaboss.Kfn
 
                 string text = new string(Encoding.GetEncoding(detEncoding).GetChars(data));
 
-                // close frmViewText if exists
+                // close frmKfnViewText if exists
                 Application.OpenForms["frmKfnViewText"]?.Close();
                 // Show form
-                Form frmViewText = new frmKfnViewText(
+                Form frmKfnViewText = new frmKfnViewText(
                     resource.FileName,
                     text,
                     Encoding.GetEncodings().Where(en => en.CodePage == detEncoding).First().DisplayName
                 );
-                frmViewText.Show();
+                frmKfnViewText.Show();
             }
             else if (resource.FileType == "Image")
             {
                 byte[] data = KFN.GetDataFromResource(resource);
 
-                // close frmViewImage if exists
-                Application.OpenForms["frmViewImage"]?.Close();
+                // close frmKfnViewImage if exists
+                Application.OpenForms["frmKfnViewImage"]?.Close();
                 // Show Form
-                Form frmViewImage = new frmKfnViewImage(resource.FileName, Path.GetDirectoryName(KFN.FullFileName) , data);
-                frmViewImage.Show();
+                Form frmKfnViewImage = new frmKfnViewImage(resource.FileName, Path.GetDirectoryName(KFN.FullFileName) , data);
+                frmKfnViewImage.Show();
             }
         }
 
@@ -514,13 +516,13 @@ namespace Karaboss.Kfn
 
         private void btnViewConfig_Click(object sender, EventArgs e)
         {
-            // Affiche le formulaire frmKfnView 
-            Application.OpenForms["frmSongINI"]?.Close();
+            // Affiche le formulaire frmKfnSongINI 
+            Application.OpenForms["frmKfnSongINI"]?.Close();
 
             try
             {
-                Form frmSongINI = new frmKfnSongINI(KFN);
-                frmSongINI.Show();
+                Form frmKfnSongINI = new frmKfnSongINI(KFN);
+                frmKfnSongINI.Show();
 
             }
             catch (Exception ex)
@@ -588,6 +590,7 @@ namespace Karaboss.Kfn
             Application.OpenForms["frmKfnViewText"]?.Close();
             Application.OpenForms["frmKfnViewImage"]?.Close();
             Application.OpenForms["frmKfnExport"]?.Close();
+            Application.OpenForms["frmKfnSongINI"]?.Close();
 
             #endregion close windows
 
@@ -598,8 +601,8 @@ namespace Karaboss.Kfn
 
         private void frmKfnView_Resize(object sender, EventArgs e)
         {
-            pnlLeft.Top = pnlTop.Top + pnlTop.Height;
-            pnlRight.Top = pnlLeft.Top;
+            pnlLeft.Top = 0;
+            pnlRight.Top = 0;
 
             pnlLeft.Left = 0;
 
@@ -607,7 +610,7 @@ namespace Karaboss.Kfn
             pnlRight.Left = pnlLeft.Width;
             pnlRight.Width = 4 * ClientSize.Width / 7;
 
-            pnlLeft.Height = this.ClientSize.Height - pnlTop.Height - 30;
+            pnlLeft.Height = this.ClientSize.Height;
             pnlRight.Height = pnlLeft.Height;
 
         }

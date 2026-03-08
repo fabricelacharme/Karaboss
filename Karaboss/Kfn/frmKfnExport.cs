@@ -1,17 +1,21 @@
-﻿using Mozilla.NUniversalCharDet;
+﻿using GradientApp;
+using Hqub.MusicBrainz.API.Entities;
+using Karaboss.Lrc.SharedFramework;
+using KFNViewer;
+using Mozilla.NUniversalCharDet;
 using Sanford.Multimedia.Midi;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using TagLib.Id3v2;
-using KFNViewer;
-using Hqub.MusicBrainz.API.Entities;
 
 namespace Karaboss.Kfn
 {
@@ -96,16 +100,24 @@ namespace Karaboss.Kfn
             }
 
             //cbLyricSelect.DisplayMemberPath = "Key";
-            foreach (var l in lyrics)
-            {
-                cbLyricSelect.Items.Add(l.Key);
-            }
-                        
-            cbLyricSelect.SelectedIndex = 0;
+            //foreach (var l in lyrics)
+            //{
+            //    cbLyricSelect.Items.Add(l.Key);              
+            //}                        
+            //cbLyricSelect.ItemsSource = lyrics;
+            cbLyricSelect.DataSource = new BindingSource(lyrics, null);
+            cbLyricSelect.ValueMember = "Value";
+            cbLyricSelect.DisplayMember = "Key";
+
+            if (cbLyricSelect.Items.Count > 0)
+                cbLyricSelect.SelectedIndex = 0;
+
             if (lyrics.Count == 1) { cbLyricSelect.Enabled = false; }
 
-            //cbLyricSelect.ItemsSource = lyrics;
-            //txtLyricPreview.Text = ((KeyValuePair<string, string>)cbLyricSelect.SelectedItem).Value;
+
+
+            txtLyricPreview.Text = ((KeyValuePair<string, string>)cbLyricSelect.SelectedItem).Value.Replace("\n", Environment.NewLine);
+            /*
             foreach (var l in lyrics)
             {
                 if (cbLyricSelect.SelectedItem.ToString() == l.Key)
@@ -114,6 +126,7 @@ namespace Karaboss.Kfn
                     break;
                 }
             }
+            */
             #endregion lyrics
 
 
@@ -144,7 +157,8 @@ namespace Karaboss.Kfn
                     if (string.IsNullOrEmpty(artist)) continue;
                     cbArtistSelect.Items.Add(artist);
                 }
-                cbArtistSelect.SelectedIndex = 0;
+                if (cbArtistSelect.Items.Count > 0)
+                    cbArtistSelect.SelectedIndex = 0;
 
                 //cbTitleSelect.ItemsSource = titles;
                 foreach (string title in titles)
@@ -152,7 +166,8 @@ namespace Karaboss.Kfn
                     if (string.IsNullOrEmpty(title)) continue;
                     cbTitleSelect.Items.Add(title);
                 }
-                cbTitleSelect.SelectedIndex = 0;
+                if (cbTitleSelect.Items.Count > 0)
+                    cbTitleSelect.SelectedIndex = 0;
 
                 //cbEncSelect.ItemsSource = this.encodings;
                 //cbEncSelect.DisplayMemberPath = "Value";
@@ -161,7 +176,8 @@ namespace Karaboss.Kfn
                     if (string.IsNullOrEmpty(encoding.Value)) continue;
                     cbEncSelect.Items.Add(encoding.Value);
                 }
-                cbEncSelect.SelectedIndex = 0;
+                if (cbEncSelect.Items.Count > 0)
+                    cbEncSelect.SelectedIndex = 0;
             }
             #endregion artist title
 
@@ -216,6 +232,35 @@ namespace Karaboss.Kfn
         }
 
 
+        private void UpdateArtistTitleInLRC(string artist, string title)
+        {
+            string origText = txtLyricPreview.Text;
+            if (artist != null && artist.Length > 0)
+            {
+                if (Regex.IsMatch(origText, @"\[ar:[^\]]+\]"))
+                {
+                    origText = Regex.Replace(origText, @"\[ar:[^\n]+", "[ar:" + artist + "]");
+                }
+                else
+                {
+                    origText = "[ar:" + artist + "]\n" + origText;
+                }
+            }
+            if (title != null && title.Length > 0)
+            {
+                if (Regex.IsMatch(origText, @"\[ti:[^\]]+\]"))
+                {
+                    origText = Regex.Replace(origText, @"\[ti:[^\n]+", "[ti:" + title + "]");
+                }
+                else
+                {
+                    origText = "[ti:" + title + "]\n" + origText;
+                }
+            }
+            txtLyricPreview.Text = origText;
+        }
+
+
         private void btnPlayVideo_Click(object sender, EventArgs e)
         {
 
@@ -228,12 +273,78 @@ namespace Karaboss.Kfn
 
         private void btnExport_Click(object sender, EventArgs e)
         {
+            KFN.ResourceFile audio = (KFN.ResourceFile)cbAudioSelect.SelectedItem;
+            if (audio == null) { return; }
 
+            string lyric = txtLyricPreview.Text;
+            if (lyric.Length == 0 || lyric.Contains("Can`t convert lyric from Song.ini")) { return; }
+
+            FileInfo kfnFile = new FileInfo(KFN.FullFileName);
+            FolderBrowserDialog.SelectedPath = kfnFile.DirectoryName;
+            if (FolderBrowserDialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            {
+                string exportFolder = FolderBrowserDialog.SelectedPath;
+                try
+                {
+                    System.Security.AccessControl.DirectorySecurity ds = Directory.GetAccessControl(exportFolder);
+                }
+                catch (UnauthorizedAccessException error)
+                {
+                    MessageBox.Show(error.Message);
+                    return;
+                }
+
+                if (this.exportType == "EMZ")
+                {
+                    KFN.ResourceFile video = (KFN.ResourceFile)cbVideoSelect.SelectedItem;
+                    byte[] fileData = KFN.createEMZ(lyric, video.FileLength > 0, video, audio);
+                    if (fileData == null)
+                    {
+                        MessageBox.Show((KFN.isError != null)
+                            ? KFN.isError
+                            : "Fail to create EMZ!");
+                        return;
+                    }
+                    string emzFileName = kfnFile.Name.Substring(0, kfnFile.Name.Length - kfnFile.Extension.Length) + ".emz";
+                    using (FileStream fs = new FileStream(exportFolder + "\\" + emzFileName, FileMode.Create, FileAccess.Write))
+                    {
+                        fs.Write(fileData, 0, fileData.Length);
+                    }
+                    MessageBox.Show("Export OK: " + exportFolder + "\\" + emzFileName);
+                }
+                else if (this.exportType == "MP3+LRC")
+                {
+                    FileInfo audioFile = new FileInfo(audio.FileName);
+                    string mp3FileName = kfnFile.Name.Substring(0, kfnFile.Name.Length - kfnFile.Extension.Length) + audioFile.Extension;
+                    string lrcFileName = kfnFile.Name.Substring(0, kfnFile.Name.Length - kfnFile.Extension.Length) + ".lrc";
+
+                    byte[] mp3Data = KFN.GetDataFromResource(audio);
+                    if (chkDeleteID3Tags.Checked == true)
+                    {
+                        mp3Data = ID3Class.RemoveAllTags(mp3Data);
+                    }
+                    using (FileStream fs = new FileStream(exportFolder + "\\" + mp3FileName, FileMode.Create, FileAccess.Write))
+                    {
+                        fs.Write(mp3Data, 0, mp3Data.Length);
+                    }
+
+                    int encCode = ((KeyValuePair<int, string>)cbEncSelect.SelectedItem).Key;
+                    Encoding lrcEnc = (encCode == 0) ? Encoding.Default : Encoding.GetEncoding(encCode);
+                    byte[] lrcData = lrcEnc.GetBytes(lyric);
+                    byte[] bom = lrcEnc.GetPreamble();
+                    using (FileStream fs = new FileStream(exportFolder + "\\" + lrcFileName, FileMode.Create, FileAccess.Write))
+                    {
+                        fs.Write(bom, 0, bom.Length);
+                        fs.Write(lrcData, 0, lrcData.Length);
+                    }
+                    MessageBox.Show("Export OK: " + exportFolder + "\\" + mp3FileName);
+                }
+            }
         }
 
         private void btnCancel_Click(object sender, EventArgs e)
         {
-
+            Close();
         }
 
         private void cbVideoSelect_SelectedIndexChanged(object sender, EventArgs e)
@@ -246,14 +357,19 @@ namespace Karaboss.Kfn
 
         }
 
+        private void cbLyricSelect_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            txtLyricPreview.Text = ((KeyValuePair<string, string>)cbLyricSelect.SelectedItem).Value.Replace("\n", Environment.NewLine);            
+        }
+
         private void cbArtistSelect_SelectedIndexChanged(object sender, EventArgs e)
         {
-
+            this.UpdateArtistTitleInLRC((string)cbArtistSelect.SelectedItem, null);
         }
 
         private void cbTitleSelect_SelectedIndexChanged(object sender, EventArgs e)
         {
-
+            this.UpdateArtistTitleInLRC(null, (string)cbTitleSelect.SelectedItem);
         }
 
         private void cbEncSelect_SelectedIndexChanged(object sender, EventArgs e)
@@ -266,6 +382,7 @@ namespace Karaboss.Kfn
 
         }
 
+        #region form load close
         private void frmKfnExport_Load(object sender, EventArgs e)
         {
 
@@ -281,5 +398,8 @@ namespace Karaboss.Kfn
             txtLyricPreview.Width = this.ClientSize.Width - txtLyricPreview.Left;
             txtLyricPreview.Height = ClientSize.Height - txtLyricPreview.Top;
         }
+
+        #endregion form load close
+
     }
 }

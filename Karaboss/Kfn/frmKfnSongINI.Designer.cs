@@ -34,7 +34,7 @@
             // 
             // lvBlocks
             // 
-            this.lvBlocks.BackColor = System.Drawing.Color.DimGray;
+            this.lvBlocks.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(51)))), ((int)(((byte)(51)))), ((int)(((byte)(51)))));
             this.lvBlocks.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lvBlocks.ForeColor = System.Drawing.Color.White;
             this.lvBlocks.HideSelection = false;
@@ -47,8 +47,8 @@
             // 
             // txtBlockContent
             // 
-            this.txtBlockContent.BackColor = System.Drawing.Color.DimGray;
-            this.txtBlockContent.Font = new System.Drawing.Font("Arial", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtBlockContent.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(51)))), ((int)(((byte)(51)))), ((int)(((byte)(51)))));
+            this.txtBlockContent.Font = new System.Drawing.Font("Calibri Light", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.txtBlockContent.ForeColor = System.Drawing.Color.White;
             this.txtBlockContent.Location = new System.Drawing.Point(342, 12);
             this.txtBlockContent.Multiline = true;
@@ -57,15 +57,19 @@
             this.txtBlockContent.Size = new System.Drawing.Size(446, 426);
             this.txtBlockContent.TabIndex = 2;
             // 
-            // frmSongINI
+            // frmKfnSongINI
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(68)))), ((int)(((byte)(68)))), ((int)(((byte)(68)))));
             this.ClientSize = new System.Drawing.Size(800, 450);
             this.Controls.Add(this.txtBlockContent);
             this.Controls.Add(this.lvBlocks);
             this.Name = "frmKfnSongINI";
-            this.Text = "frmKfnSongINI";
+            this.Text = "Song.ini";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.frmKfnSongINI_FormClosing);
+            this.Load += new System.EventHandler(this.frmKfnSongINI_Load);
+            this.Resize += new System.EventHandler(this.frmKfnSongINI_Resize);
             this.ResumeLayout(false);
             this.PerformLayout();
 

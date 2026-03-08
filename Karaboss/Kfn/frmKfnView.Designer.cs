@@ -41,7 +41,6 @@ namespace Karaboss.Kfn
             this.mnuExportKFN = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuTools = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuResourceEncoding = new System.Windows.Forms.ToolStripMenuItem();
-            this.pnlTop = new System.Windows.Forms.Panel();
             this.chkDecryptKFN = new System.Windows.Forms.CheckBox();
             this.pnlTopProperties = new System.Windows.Forms.Panel();
             this.label1 = new System.Windows.Forms.Label();
@@ -52,8 +51,9 @@ namespace Karaboss.Kfn
             this.pnlTopResources = new System.Windows.Forms.Panel();
             this.btnViewConfig = new System.Windows.Forms.Button();
             this.label2 = new System.Windows.Forms.Label();
+            this.lblAutoDetectedEnc2 = new System.Windows.Forms.Label();
+            this.lblAutoDetectedEnc = new System.Windows.Forms.Label();
             this.menuStrip1.SuspendLayout();
-            this.pnlTop.SuspendLayout();
             this.pnlTopProperties.SuspendLayout();
             this.pnlLeft.SuspendLayout();
             this.pnlRight.SuspendLayout();
@@ -135,28 +135,17 @@ namespace Karaboss.Kfn
             this.mnuResourceEncoding.Size = new System.Drawing.Size(120, 20);
             this.mnuResourceEncoding.Text = "Resource encoding";
             // 
-            // pnlTop
-            // 
-            this.pnlTop.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(68)))), ((int)(((byte)(68)))), ((int)(((byte)(68)))));
-            this.pnlTop.Controls.Add(this.chkDecryptKFN);
-            this.pnlTop.Dock = System.Windows.Forms.DockStyle.Top;
-            this.pnlTop.ForeColor = System.Drawing.Color.Gray;
-            this.pnlTop.Location = new System.Drawing.Point(0, 24);
-            this.pnlTop.Name = "pnlTop";
-            this.pnlTop.Size = new System.Drawing.Size(784, 35);
-            this.pnlTop.TabIndex = 1;
-            // 
             // chkDecryptKFN
             // 
             this.chkDecryptKFN.AutoSize = true;
             this.chkDecryptKFN.Checked = true;
             this.chkDecryptKFN.CheckState = System.Windows.Forms.CheckState.Checked;
             this.chkDecryptKFN.Enabled = false;
-            this.chkDecryptKFN.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.chkDecryptKFN.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.chkDecryptKFN.ForeColor = System.Drawing.Color.DarkGray;
-            this.chkDecryptKFN.Location = new System.Drawing.Point(12, 15);
+            this.chkDecryptKFN.Location = new System.Drawing.Point(4, 16);
             this.chkDecryptKFN.Name = "chkDecryptKFN";
-            this.chkDecryptKFN.Size = new System.Drawing.Size(203, 19);
+            this.chkDecryptKFN.Size = new System.Drawing.Size(219, 21);
             this.chkDecryptKFN.TabIndex = 0;
             this.chkDecryptKFN.Text = "Decrypt KFN while export to KFN";
             this.chkDecryptKFN.UseVisualStyleBackColor = true;
@@ -165,10 +154,11 @@ namespace Karaboss.Kfn
             // 
             this.pnlTopProperties.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(68)))), ((int)(((byte)(68)))), ((int)(((byte)(68)))));
             this.pnlTopProperties.Controls.Add(this.label1);
+            this.pnlTopProperties.Controls.Add(this.chkDecryptKFN);
             this.pnlTopProperties.Dock = System.Windows.Forms.DockStyle.Top;
             this.pnlTopProperties.Location = new System.Drawing.Point(0, 0);
             this.pnlTopProperties.Name = "pnlTopProperties";
-            this.pnlTopProperties.Size = new System.Drawing.Size(344, 39);
+            this.pnlTopProperties.Size = new System.Drawing.Size(344, 60);
             this.pnlTopProperties.TabIndex = 1;
             // 
             // label1
@@ -176,7 +166,7 @@ namespace Karaboss.Kfn
             this.label1.AutoSize = true;
             this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label1.ForeColor = System.Drawing.Color.White;
-            this.label1.Location = new System.Drawing.Point(12, 17);
+            this.label1.Location = new System.Drawing.Point(4, 40);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(72, 16);
             this.label1.TabIndex = 0;
@@ -186,7 +176,7 @@ namespace Karaboss.Kfn
             // 
             this.pnlLeft.Controls.Add(this.lvProperties);
             this.pnlLeft.Controls.Add(this.pnlTopProperties);
-            this.pnlLeft.Location = new System.Drawing.Point(12, 67);
+            this.pnlLeft.Location = new System.Drawing.Point(0, 27);
             this.pnlLeft.Name = "pnlLeft";
             this.pnlLeft.Size = new System.Drawing.Size(344, 319);
             this.pnlLeft.TabIndex = 4;
@@ -195,12 +185,12 @@ namespace Karaboss.Kfn
             // 
             this.lvProperties.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(51)))), ((int)(((byte)(51)))), ((int)(((byte)(51)))));
             this.lvProperties.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lvProperties.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lvProperties.Font = new System.Drawing.Font("Calibri Light", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lvProperties.ForeColor = System.Drawing.Color.White;
             this.lvProperties.HideSelection = false;
-            this.lvProperties.Location = new System.Drawing.Point(0, 39);
+            this.lvProperties.Location = new System.Drawing.Point(0, 60);
             this.lvProperties.Name = "lvProperties";
-            this.lvProperties.Size = new System.Drawing.Size(344, 280);
+            this.lvProperties.Size = new System.Drawing.Size(344, 259);
             this.lvProperties.TabIndex = 3;
             this.lvProperties.UseCompatibleStateImageBehavior = false;
             // 
@@ -208,7 +198,7 @@ namespace Karaboss.Kfn
             // 
             this.pnlRight.Controls.Add(this.lvResources);
             this.pnlRight.Controls.Add(this.pnlTopResources);
-            this.pnlRight.Location = new System.Drawing.Point(373, 67);
+            this.pnlRight.Location = new System.Drawing.Point(373, 27);
             this.pnlRight.Name = "pnlRight";
             this.pnlRight.Size = new System.Drawing.Size(332, 319);
             this.pnlRight.TabIndex = 5;
@@ -217,12 +207,12 @@ namespace Karaboss.Kfn
             // 
             this.lvResources.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(51)))), ((int)(((byte)(51)))), ((int)(((byte)(51)))));
             this.lvResources.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lvResources.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lvResources.Font = new System.Drawing.Font("Calibri Light", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lvResources.ForeColor = System.Drawing.Color.White;
             this.lvResources.HideSelection = false;
-            this.lvResources.Location = new System.Drawing.Point(0, 39);
+            this.lvResources.Location = new System.Drawing.Point(0, 60);
             this.lvResources.Name = "lvResources";
-            this.lvResources.Size = new System.Drawing.Size(332, 280);
+            this.lvResources.Size = new System.Drawing.Size(332, 259);
             this.lvResources.TabIndex = 6;
             this.lvResources.UseCompatibleStateImageBehavior = false;
             this.lvResources.DoubleClick += new System.EventHandler(this.lvResources_DoubleClick);
@@ -231,18 +221,20 @@ namespace Karaboss.Kfn
             // pnlTopResources
             // 
             this.pnlTopResources.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(68)))), ((int)(((byte)(68)))), ((int)(((byte)(68)))));
+            this.pnlTopResources.Controls.Add(this.lblAutoDetectedEnc);
             this.pnlTopResources.Controls.Add(this.btnViewConfig);
+            this.pnlTopResources.Controls.Add(this.lblAutoDetectedEnc2);
             this.pnlTopResources.Controls.Add(this.label2);
             this.pnlTopResources.Dock = System.Windows.Forms.DockStyle.Top;
             this.pnlTopResources.Location = new System.Drawing.Point(0, 0);
             this.pnlTopResources.Name = "pnlTopResources";
-            this.pnlTopResources.Size = new System.Drawing.Size(332, 39);
+            this.pnlTopResources.Size = new System.Drawing.Size(332, 60);
             this.pnlTopResources.TabIndex = 4;
             // 
             // btnViewConfig
             // 
             this.btnViewConfig.Anchor = System.Windows.Forms.AnchorStyles.Right;
-            this.btnViewConfig.Location = new System.Drawing.Point(245, 10);
+            this.btnViewConfig.Location = new System.Drawing.Point(243, 31);
             this.btnViewConfig.Name = "btnViewConfig";
             this.btnViewConfig.Size = new System.Drawing.Size(75, 23);
             this.btnViewConfig.TabIndex = 2;
@@ -255,20 +247,42 @@ namespace Karaboss.Kfn
             this.label2.AutoSize = true;
             this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label2.ForeColor = System.Drawing.Color.White;
-            this.label2.Location = new System.Drawing.Point(12, 17);
+            this.label2.Location = new System.Drawing.Point(4, 40);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(76, 16);
             this.label2.TabIndex = 1;
             this.label2.Text = "Resources:";
             // 
+            // lblAutoDetectedEnc2
+            // 
+            this.lblAutoDetectedEnc2.AutoSize = true;
+            this.lblAutoDetectedEnc2.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblAutoDetectedEnc2.ForeColor = System.Drawing.Color.White;
+            this.lblAutoDetectedEnc2.Location = new System.Drawing.Point(4, 16);
+            this.lblAutoDetectedEnc2.Name = "lblAutoDetectedEnc2";
+            this.lblAutoDetectedEnc2.Size = new System.Drawing.Size(91, 17);
+            this.lblAutoDetectedEnc2.TabIndex = 1;
+            this.lblAutoDetectedEnc2.Text = "Auto detect is:";
+            // 
+            // lblAutoDetectedEnc
+            // 
+            this.lblAutoDetectedEnc.AutoSize = true;
+            this.lblAutoDetectedEnc.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblAutoDetectedEnc.ForeColor = System.Drawing.Color.White;
+            this.lblAutoDetectedEnc.Location = new System.Drawing.Point(101, 16);
+            this.lblAutoDetectedEnc.Name = "lblAutoDetectedEnc";
+            this.lblAutoDetectedEnc.Size = new System.Drawing.Size(91, 17);
+            this.lblAutoDetectedEnc.TabIndex = 2;
+            this.lblAutoDetectedEnc.Text = "Auto detect is:";
+            // 
             // frmKfnView
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(68)))), ((int)(((byte)(68)))), ((int)(((byte)(68)))));
             this.ClientSize = new System.Drawing.Size(784, 391);
             this.Controls.Add(this.pnlRight);
             this.Controls.Add(this.pnlLeft);
-            this.Controls.Add(this.pnlTop);
             this.Controls.Add(this.menuStrip1);
             this.MainMenuStrip = this.menuStrip1;
             this.Name = "frmKfnView";
@@ -277,8 +291,6 @@ namespace Karaboss.Kfn
             this.Resize += new System.EventHandler(this.frmKfnView_Resize);
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
-            this.pnlTop.ResumeLayout(false);
-            this.pnlTop.PerformLayout();
             this.pnlTopProperties.ResumeLayout(false);
             this.pnlTopProperties.PerformLayout();
             this.pnlLeft.ResumeLayout(false);
@@ -303,7 +315,6 @@ namespace Karaboss.Kfn
         private System.Windows.Forms.ToolStripMenuItem mnuExportKFN;
         private System.Windows.Forms.ToolStripMenuItem mnuTools;
         private System.Windows.Forms.ToolStripMenuItem mnuResourceEncoding;
-        private System.Windows.Forms.Panel pnlTop;
         private System.Windows.Forms.Panel pnlTopProperties;
         private System.Windows.Forms.Panel pnlLeft;
         private System.Windows.Forms.Panel pnlRight;
@@ -314,5 +325,7 @@ namespace Karaboss.Kfn
         private System.Windows.Forms.ListView lvProperties;
         private System.Windows.Forms.ListView lvResources;
         private System.Windows.Forms.Button btnViewConfig;
+        private System.Windows.Forms.Label lblAutoDetectedEnc2;
+        private System.Windows.Forms.Label lblAutoDetectedEnc;
     }
 }

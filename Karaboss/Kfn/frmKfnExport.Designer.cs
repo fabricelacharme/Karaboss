@@ -107,6 +107,7 @@
             this.cbLyricSelect.Name = "cbLyricSelect";
             this.cbLyricSelect.Size = new System.Drawing.Size(422, 21);
             this.cbLyricSelect.TabIndex = 5;
+            this.cbLyricSelect.SelectedIndexChanged += new System.EventHandler(this.cbLyricSelect_SelectedIndexChanged);
             // 
             // btnPlayVideo
             // 
@@ -204,7 +205,7 @@
             // 
             // btnExport
             // 
-            this.btnExport.Location = new System.Drawing.Point(63, 248);
+            this.btnExport.Location = new System.Drawing.Point(138, 229);
             this.btnExport.Name = "btnExport";
             this.btnExport.Size = new System.Drawing.Size(75, 23);
             this.btnExport.TabIndex = 15;
@@ -214,7 +215,8 @@
             // 
             // btnCancel
             // 
-            this.btnCancel.Location = new System.Drawing.Point(200, 248);
+            this.btnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
+            this.btnCancel.Location = new System.Drawing.Point(262, 229);
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.Size = new System.Drawing.Size(75, 23);
             this.btnCancel.TabIndex = 16;

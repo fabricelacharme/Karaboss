@@ -132,5 +132,21 @@ namespace Karaboss.Kfn
 
             }
         }
+
+        private void frmKfnSongINI_Load(object sender, EventArgs e)
+        {
+
+        }
+
+        private void frmKfnSongINI_FormClosing(object sender, FormClosingEventArgs e)
+        {
+
+        }
+
+        private void frmKfnSongINI_Resize(object sender, EventArgs e)
+        {
+            txtBlockContent.Width = this.ClientSize.Width - txtBlockContent.Left;
+            txtBlockContent.Height = ClientSize.Height - txtBlockContent.Top;
+        }
     }
 }
