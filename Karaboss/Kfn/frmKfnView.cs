@@ -64,7 +64,7 @@ namespace Karaboss.Kfn
             InitLvProperties();
             InitLvResources();
 
-            pnlLeft.Top = 0;
+            pnlLeft.Top = menuStrip1.Top + menuStrip1.Height;
             pnlRight.Top = pnlLeft.Top;
 
             pnlLeft.Left = 0;
@@ -73,7 +73,7 @@ namespace Karaboss.Kfn
             pnlRight.Left = pnlLeft.Width;
             pnlRight.Width = 4 * ClientSize.Width / 7;
 
-            pnlLeft.Height = this.ClientSize.Height;
+            pnlLeft.Height = this.ClientSize.Height - menuStrip1.Height;
             pnlRight.Height = pnlLeft.Height;
         }
 
@@ -601,8 +601,8 @@ namespace Karaboss.Kfn
 
         private void frmKfnView_Resize(object sender, EventArgs e)
         {
-            pnlLeft.Top = 0;
-            pnlRight.Top = 0;
+            pnlLeft.Top = menuStrip1.Top + menuStrip1.Height;
+            pnlRight.Top = pnlLeft.Top;
 
             pnlLeft.Left = 0;
 
@@ -610,7 +610,7 @@ namespace Karaboss.Kfn
             pnlRight.Left = pnlLeft.Width;
             pnlRight.Width = 4 * ClientSize.Width / 7;
 
-            pnlLeft.Height = this.ClientSize.Height;
+            pnlLeft.Height = this.ClientSize.Height - menuStrip1.Height;
             pnlRight.Height = pnlLeft.Height;
 
         }

@@ -55,11 +55,16 @@ namespace Karaboss.Kfn
 
             //cbAudioSelect.ItemsSource = audios;                        
             //cbAudioSelect.DisplayMemberPath = "FileName";
+            cbAudioSelect.DataSource = audios;
+            cbAudioSelect.ValueMember = "FileName";            
+            cbAudioSelect.DisplayMember = "FileName";           
+            /*
             for (int i = 0; i < audios.Count; i++)
             {
                 cbAudioSelect.Items.Add(audios[i].FileName);
             }
-            
+            */
+
             cbAudioSelect.SelectedItem = audios.Where(a => a.FileName == audioSource).FirstOrDefault().FileName;                        
                         
             if (cbAudioSelect.SelectedItem == null)
@@ -197,12 +202,19 @@ namespace Karaboss.Kfn
                 }
                 //cbVideoSelect.ItemsSource = videos;
                 //cbVideoSelect.DisplayMemberPath = "FileName";
-                foreach (var video in videos)
-                {
-                    if (string.IsNullOrEmpty(video.FileName)) continue;
-                    cbVideoSelect.Items.Add(video.FileName);
-                }
-                cbVideoSelect.SelectedIndex = 0;
+
+                cbVideoSelect.DataSource = videos;
+                cbVideoSelect.ValueMember = "FileName";
+                cbVideoSelect.DisplayMember = "FileName";
+
+                //foreach (var video in videos)
+                //{
+                //    if (string.IsNullOrEmpty(video.FileName)) continue;
+                //    cbVideoSelect.Items.Add(video.FileName);
+                //}
+
+                if (cbVideoSelect.Items.Count > 0)
+                    cbVideoSelect.SelectedIndex = 0;
             }
             #endregion video
 
