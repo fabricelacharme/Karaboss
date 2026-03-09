@@ -100,7 +100,7 @@ namespace Karaboss
         private Sequence sequence1 = new Sequence();
 
         #endregion
-
+        
         Dictionary<string, GuitarControl> dicGuitar = new Dictionary<string, GuitarControl>();
         Dictionary<string, BassControl> dicBass = new Dictionary<string, BassControl>();
         int leftWith = 110;
@@ -498,7 +498,7 @@ namespace Karaboss
 
 
                                 // Add a guitar control
-                                GuitarControl GC = new GuitarControl();
+                                GuitarControl GC = new GuitarControl();                                
                                 GC.Name = "All Guitars";
                                 GC.Left = pnlLeft.Width;
                                 GC.Top = Y;
