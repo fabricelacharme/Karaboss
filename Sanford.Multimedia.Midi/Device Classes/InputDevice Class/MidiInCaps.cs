@@ -40,10 +40,12 @@ namespace Sanford.Multimedia.Midi
     /// <summary>
     /// Represents MIDI input device capabilities.
     /// </summary>
-    [StructLayout(LayoutKind.Sequential)]
+    [StructLayout(LayoutKind.Sequential, Pack = 1)]
     public struct MidiInCaps
     {
         #region MidiInCaps Members
+
+        internal static readonly int SizeOf = Marshal.SizeOf(typeof(MidiInCaps));
 
         /// <summary>
         /// Manufacturer identifier of the device driver for the Midi output 
