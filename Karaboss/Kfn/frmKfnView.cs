@@ -1,22 +1,11 @@
-﻿using FlShell.Interop;
-using Karaboss.Resources.Localization;
-using Karaboss.xplorer;
-using Mozilla.NUniversalCharDet;
+﻿using Mozilla.NUniversalCharDet;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
-using System.Runtime.InteropServices;
-using System.Runtime.InteropServices.ComTypes;
-using System.Runtime.Remoting.Contexts;
 using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 namespace Karaboss.Kfn
 {

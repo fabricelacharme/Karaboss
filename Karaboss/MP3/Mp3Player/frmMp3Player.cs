@@ -259,7 +259,6 @@ namespace Karaboss.Mp3
                 }
             }
             #endregion playlists
-
            
         }
 
@@ -2944,7 +2943,7 @@ namespace Karaboss.Mp3
                 if (Player.Tag.Title != null)
                     txtTitle.Text = Player.Tag.Title;
                 
-                if (Player.Tags.album != null)
+                if (Player.Tag.Album != null)
                     txtAlbum.Text = Player.Tag.Album;
                 
                 if (Player.Tag.AlbumArtists.Count() > 0)

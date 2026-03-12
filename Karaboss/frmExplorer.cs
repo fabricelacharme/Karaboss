@@ -56,10 +56,8 @@ using Karaboss.Kfn;
 
 namespace Karaboss
 {
-
     public partial class frmExplorer : Form
     {
-
         MusicXmlReader MXmlReader = new MusicXmlReader();
         MusicTxtReader MTxtReader; 
 
@@ -157,6 +155,7 @@ namespace Karaboss
 
             xplorerControl.LvContentChanged += new xplorer.ContentChangedEventHandler(Xplorer_ContentChanged);
             xplorerControl.CreateNewMidiFile += new xplorer.CreateNewMidiFileEventHandler(Xplorer_CreateNewMidiFile);
+            xplorerControl.CreateNewKfnFile += new xplorer.CreateNewKfnFileEventHandler(xplorer_CreateNewKfnFile);
 
             #endregion          
 
@@ -208,8 +207,7 @@ namespace Karaboss
             }
 
         }
-       
-
+      
         #region Content Changed
         /// <summary>
         /// Manage event songroot changed
@@ -1399,12 +1397,30 @@ namespace Karaboss
         #endregion midi
 
 
+        #region kfn
+
+        private void xplorer_CreateNewKfnFile(object sender)
+        {
+            NewKfnFile();
+        }
+
+
+        private void NewKfnFile()
+        {
+            Application.OpenForms["frmKfnCreate"]?.Close();
+            frmKfnCreate frmKfnCreate = new frmKfnCreate();
+            frmKfnCreate.Show();
+        }
+
+        #endregion kfn
+
+
         #region Players     
 
         // Specific xplorerControl    
         // Lauch a file from explorer, no playlist
         #region from explorer
-        
+
         /// <summary>
         /// Play or edit a Midi file from the explorer
         /// </summary>

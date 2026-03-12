@@ -48,7 +48,6 @@ using System.Windows.Forms;
 
 namespace Karaboss.Utilities
 {
-
     public enum LrcLinesSyllabesFormats
     {
         Lines = 0,
@@ -258,124 +257,6 @@ namespace Karaboss.Utilities
         /// </summary>
         /// <param name="time"></param>
         /// <returns></returns>
-        public static int TimeToTicks2(string time, double Division, int max)
-        {
-            int tic = 0;
-            
-            // Caculate duration in seconds
-            double dur;
-
-            string[] split1 = time.Split(new char[] { ':' }, StringSplitOptions.RemoveEmptyEntries);
-            if (split1.Length != 2)
-                return tic;
-
-            string min = split1[0];
-
-            string[] split2 = split1[1].Split(new char[] { '.' }, StringSplitOptions.RemoveEmptyEntries);
-            if (split2.Length != 2)
-                return tic;
-
-            string sec = split2[0];
-            string ms = split2[1];
-
-            // Calculate dur in seconds
-            int Min = Convert.ToInt32(min);
-            dur = Min * 60;
-
-            int Sec = Convert.ToInt32(sec);
-            dur += Sec;
-
-            double Ms = Convert.ToDouble(ms);
-            dur += Ms / 1000;
-                      
-            
-            // TODO
-            // Find ticks who are giving this time
-            // Search convergence
-            tic = 0;
-            string tm;            
-            do
-            {
-                
-                
-                
-                // Start with step 100
-                tm = TicksToTime(tic, Division);                
-                if (tm == time)
-                    return tic;                
-                tic += 100;
-
-                // If the last increase of 100 is too big
-                if (TempoUtilities.GetMidiDuration(tic, Division) > dur)
-                {
-                    // Go back to previous value
-                    tic -= 100;
-                    do
-                    {
-                        // Continue to increase with a step of 10
-                        tm = TicksToTime(tic, Division);
-                        if (tm == time)
-                            return tic;
-                        tic +=10;
-
-                        // If the last increase of 10 is too big
-                        if(TempoUtilities.GetMidiDuration(tic, Division) > dur)
-                        {
-                            int maxistep = tic; // Next line, we decrease tic by 10. No need to go above maxistep 
-                            int besttry = -1;   
-                            
-                            // Go back to the previous value
-                            tic -= 10;
-                            do
-                            {
-                                // Continue with a step of 1
-                                tm = TicksToTime(tic, Division);
-                                
-                                // Option: take the highest tic giving the right result.
-                                // If next value of tic give also the same time, continue
-                                if (tm == time && TicksToTime(tic + 1, Division) != time)                               
-                                    return tic;
-
-                                // If it is not possible to get a valid tick for time
-                                // keep the nearest value 
-                                // This situation occurs with LRC files having only 2 digits for milliseconds
-                                //if (TimeToMs(tm) - TimeToMs(time) >= 1 && besttry == -1)
-                                //    besttry = tic;
-                                
-                                if (Math.Abs(TimeToMs(time) - TimeToMs(tm)) == 1)                                                                    
-                                    besttry = tic;
-                                
-
-                                if (tic <= maxistep) // no need to go further maxistep 
-                                    tic++;
-                                else
-                                {
-                                    if (besttry > -1)
-                                        return besttry;
-                                    else
-                                        return tic;
-                                }
-
-                            } while (tic <= max);
-                            
-                        }
-
-
-                    } while (tic <= max);
-                }
-
-            
-            
-            } while (tic <= max);
-
-
-            MessageBox.Show("Unable to calculate TimeToTick for this timestamp: " + time, "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
-
-            // Return -1 if not found, but it should never happen because we are sure to find a tic with the same time as the one we are looking for (we are sure to find it with step 1)
-            return -1;
-            
-        }
-
         public static int TimeToTicks(string time, double Division, int max)
         {
             int tic = 0;
@@ -907,194 +788,7 @@ namespace Karaboss.Utilities
 
 
         #region import LRC
-
-        /*
-        /// <summary>
-        /// New proc for LRC files read
-        /// </summary>
-        /// <param name="fileName"></param>
-        /// <returns></returns>
-        public static List<List<keffect.KaraokeEffect.kSyncText>> ReadLrcFromFileold(string FileName)
-        {
-           #region guard
-            // Search for existing LRC file
-            string lrcFile = Path.ChangeExtension(FileName, ".lrc");
-            if (!System.IO.File.Exists(lrcFile)) return null;
-            #endregion guard
-            
-            try
-            {
-                // Detect encoding                               
-                Encoding enc = GetEncodingFromFile(FileName);
-
-                //string[] lines = System.IO.File.ReadAllLines(FileName);
-                string[] lines = System.IO.File.ReadAllLines(FileName, enc);
-                if (lines.Count() == 0)
-                {
-                    MessageBox.Show("Invalid LRC file", "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    return null;
-                }
-
-                
-                // Search type of timestamp format for milliseconds (2 or 3 digits)
-                int digits = GetDigitsLRC(lines);
-                if (digits == -1)
-                {
-                    MessageBox.Show("Invalid LRC file", "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    return null;
-                }
-                string patterntime;
-                if (digits == 2)
-                {                    
-                    patterntime = @"\[\d{2}[:]\d{2}[.]\d{2}\]";
-                }
-                else
-                {
-                    patterntime = @"\[\d{2}[:]\d{2}[.]\d{3}\]";
-                }
-
-                var regextime = new Regex(patterntime);
-
-                string patternline = GetPatternLRC(lines);
-                if (patternline == null)
-                {
-                    MessageBox.Show("Invalid LRC file", "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    return null;
-                }
-
-
-                List<(string, string)> result = new List<(string, string)>();
-
-                List<keffect.KaraokeEffect.kSyncText> SyncLine = new List<keffect.KaraokeEffect.kSyncText> ();
-                List<List<keffect.KaraokeEffect.kSyncText>> SyncLyrics = new List<List<keffect.KaraokeEffect.kSyncText>>();
-                long time;
-                string lyric;
-                string timestamp;
-                string element;
-
-                var regexCrotchets = new Regex(@"(?<=\[).*?(?=\])");
-
-                string line;
-                for (int i = 0; i < lines.Count(); i++)
-                {
-                    line = lines[i];
-                    // Eliminate empty lines
-                    if (line.Trim() == string.Empty) continue;
-
-                    
-                    var matchcrotchets = regexCrotchets.Match(line);
-                    if (!matchcrotchets.Success) continue;
-                    
-
-                    // Lyric is after the last crotchet "]" 
-                    lyric = line.Split(']').Last();
-                    
-                    if (lyric.Length == 0)
-                    {
-
-                        var matchtime = Regex.Match(line, patterntime);
-                        if (matchtime.Success)
-                        {
-                            // Paragraph 
-                            timestamp = matchtime.Value;                                                        
-                            timestamp = timestamp.Substring(1, timestamp.Length - 2);
-                            result.Add((timestamp, string.Empty));
-                        }
-                        else
-                        {
-                            // Else metadate
-                        }
-                    }
-                    else
-                    {
-                        // Lines with one or several timestamps and text
-                        var matchline = Regex.Match(line, patternline);
-                        if (!matchline.Success) continue;
-                        
-                        // Search for all timestamps                        
-                       
-                        foreach (var match in regexCrotchets.Matches(line))
-                        {                         
-                            timestamp = match.ToString();
-                            result.Add((timestamp, lyric));                                                         
-                        }
-                    }                                                                            
-                }
-
-                // Sort SyncLyrics by time
-                // In case of repetead lines like: [00:16.42][00:44.90][01:13.21][01:41.51]Comme dans un film de la Metro,"
-                // We have to sort the result by the first item
-                List<(string, string)> sortedList = new List<(string, string)> ();
-                sortedList = result.OrderBy(o=>o.Item1).ToList();
-
-
-
-                // Now we have to separate the syallabes                                
-                var regexsyllable = new Regex(@"(?<=<).*?(?=>)");
-
-                string pattern3digits = @"(?:<(\d{2}:\d{2}\.\d{3})>)(\S+\s?)";
-                string pattern2digits = @"(?:<(\d{2}:\d{2}\.\d{2})>)(\S+\s?)";
-                Regex regexcrotchets = null;
-                if (digits == 3)
-                    regexcrotchets = new Regex(pattern3digits);
-                else
-                    regexcrotchets = new Regex(pattern2digits);
-
-                for (int i = 0; i < sortedList.Count; i++)
-                {
-                    time = (long)TimeToMs(sortedList[i].Item1);
-                    
-                    lyric = (string)sortedList[i].Item2;
-                    int s = lyric.IndexOf("<");
-
-                    if (s > -1)
-                    {
-                        // LRC enhanced
-                        
-                        string firstsyllabe = lyric.Substring(0, s);
-                        string restline = lyric.Substring(s);
-
-                        SyncLine = new List<keffect.KaraokeEffect.kSyncText>();
-                        SyncLine.Add(new keffect.KaraokeEffect.kSyncText(time, firstsyllabe));
-
-                        // Case 2 : syllables
-                        // Tout <00:01.488>quitter, <00:02.021>mais <00:02.521>tout <00:03.000>emporter"
-                        foreach (var match in regexcrotchets.Matches(restline))
-                        {
-                            element = match.ToString();
-                            lyric = element.Split('>').Last();
-                            timestamp = element.Substring(0, element.IndexOf(">") + 1);
-                            timestamp = timestamp.Substring(1, timestamp.Length - 2);
-                            
-                            time = (long)TimeToMs(timestamp);
-                            SyncLine.Add(new keffect.KaraokeEffect.kSyncText(time, lyric));
-                            
-                        }
-                        SyncLyrics.Add(SyncLine);
-
-                    }
-                    else
-                    {
-                        // Case 1 : no syllabes <> 
-                        // LRC with only lines
-
-                        SyncLine = new List<keffect.KaraokeEffect.kSyncText>();
-                        SyncLine.Add(new keffect.KaraokeEffect.kSyncText(time, lyric));
-                        SyncLyrics.Add(SyncLine);
-                    }
-                }                                                               
-
-                return SyncLyrics;
-
-
-            }
-            catch (Exception e) 
-            { 
-                MessageBox.Show(e.Message, "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error); 
-                return null; }            
-        }
-        */
-
+      
         public static List<List<keffect.KaraokeEffect.kSyncText>> ReadLrcFromFile(string FileName)
         {            
             // Cases 
@@ -2802,9 +2496,7 @@ namespace Karaboss.Utilities
                 {
                     lstLyrics[i] = (lstLyrics[i].starttime, lstLyrics[i].lyric, lstLyrics[i + 1].starttime - 500);
                 }
-
             }
-
 
             var srtFile = new SRTFile();
             Subtitle subtitle;
@@ -2838,8 +2530,6 @@ namespace Karaboss.Utilities
             {
                 MessageBox.Show(ex.Message, "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
-
-
         }
 
         #endregion export SRT

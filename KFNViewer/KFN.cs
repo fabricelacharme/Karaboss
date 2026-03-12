@@ -1,13 +1,13 @@
-﻿using System;
+﻿using Mozilla.NUniversalCharDet;
+using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System.IO.Compression;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Text;
 using System.Text.RegularExpressions;
-using System.Security.Cryptography;
-using System.IO.Compression;
-
-using Mozilla.NUniversalCharDet;
 
 public class KFN
 {
@@ -63,6 +63,12 @@ public class KFN
         this.fullFileName = fileName;
         this.ReadFile();
     }
+
+    public KFN()
+    {
+
+    }
+
 
     public string isError
     {
@@ -208,6 +214,40 @@ public class KFN
         }
     }
 
+
+    // ***
+    private List<(string, string, string, string)> debugbytes = new List<(string, string, string, string)>();
+    
+    private void AddBytesToDebug(byte[] prop, byte[] propvalue, string item, string desc)
+    {
+        string sprop = string.Empty;
+
+        for (int i = 0; i < prop.Length; i++) 
+        {             
+            if (sprop != string.Empty)
+                sprop = sprop + "," + prop[i].ToString(); 
+            else
+                sprop = prop[i].ToString();
+        }
+
+        string spropvalue = string.Empty;
+        if (propvalue != null)
+        {
+            for (int i = 0; i < propvalue.Length; i++)
+            {
+                if (spropvalue != string.Empty)
+                    spropvalue = spropvalue + "," + propvalue[i].ToString();
+                else
+                    spropvalue = propvalue[i].ToString();
+            }
+        }
+
+        debugbytes.Add( (sprop, spropvalue, item, desc));                            
+    }
+
+    // ***
+
+
     public void ReadFile(int filesEncoding = 0)
     {
         this.error = null;
@@ -217,8 +257,10 @@ public class KFN
 
         using (FileStream fs = new FileStream(this.fullFileName, FileMode.Open, FileAccess.Read))
         {
+            
             byte[] signature = new byte[4];
             fs.Read(signature, 0, signature.Length);
+            
             string sign = new string(Encoding.UTF8.GetChars(signature));
             if (sign != "KFNB")
             {
@@ -226,22 +268,38 @@ public class KFN
                 return;
             }
 
+            //*************************************************          
+            //AddBytesToDebug(sign, null, "signature", signature);
+            AddBytesToDebug(signature, null,  sign, "signature");
+
             byte[] prop = new byte[5];
             byte[] propValue = new byte[4];
             int maxProps = 40;
             while (maxProps > 0)
             {
-                fs.Read(prop, 0, prop.Length);
+                fs.Read(prop, 0, prop.Length);                                
+
                 string propName = new string(Encoding.UTF8.GetChars(new ArraySegment<byte>(prop, 0, 4).ToArray()));
                 if (propName == "ENDH")
                 {
                     fs.Position += 4;
+
+                    //*************************************************
+                    //AddBytesToDebug(propName, null, "End of properties", prop);
+                    AddBytesToDebug(prop, null, propName, "End of properties");
+
                     break;
                 }
+
                 string SpropName = this.GetPropDesc(propName);
                 if (prop[4] == 1)
                 {
                     fs.Read(propValue, 0, propValue.Length);
+
+                    //*************************************************
+                    //AddBytesToDebug(propName, propValue, SpropName, prop);
+                    AddBytesToDebug(prop, propValue, propName, SpropName);
+
                     if (SpropName == "Genre" && BitConverter.ToUInt32(propValue, 0) == 0xffffffff)
                     {
                         this.properties.Add(SpropName, "Not set");
@@ -261,8 +319,14 @@ public class KFN
                 else if (prop[4] == 2)
                 {
                     fs.Read(propValue, 0, propValue.Length);
+
+                    //*************************************************
+                    //AddBytesToDebug(propName, propValue, SpropName, prop);
+                    AddBytesToDebug(prop, propValue, propName, SpropName);
+
                     byte[] value = new byte[BitConverter.ToUInt32(propValue, 0)];
                     fs.Read(value, 0, value.Length);
+
                     if (SpropName == "AES-ECB-128 Key")
                     {
                         string val = (value.Select(b => (int)b).Sum() == 0)
@@ -287,6 +351,9 @@ public class KFN
                     this.error = "unknown property block type - " + prop[4];
                     return;
                 }
+
+                
+
                 maxProps--;
             }
             this.endOfPropsOffset = fs.Position;
@@ -306,9 +373,11 @@ public class KFN
                 fs.Read(resourceNameLenght, 0, resourceNameLenght.Length);
                 byte[] resourceName = new byte[BitConverter.ToUInt32(resourceNameLenght, 0)];
                 fs.Read(resourceName, 0, resourceName.Length);
+                
                 fs.Read(resourceType, 0, resourceType.Length);
                 fs.Read(resourceLenght, 0, resourceLenght.Length);
                 fs.Read(resourceOffset, 0, resourceOffset.Length);
+                
                 fs.Read(resourceEncryptedLenght, 0, resourceEncryptedLenght.Length);
                 fs.Read(resourceEncrypted, 0, resourceEncrypted.Length);
                 int encrypted = BitConverter.ToInt32(resourceEncrypted, 0);
@@ -781,4 +850,8 @@ public class KFN
             return dest;
         }
     }
+
+
+ 
+
 }

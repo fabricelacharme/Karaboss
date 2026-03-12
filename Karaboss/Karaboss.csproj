@@ -193,6 +193,12 @@
     <Compile Include="frmModifyDivision.Designer.cs">
       <DependentUpon>frmModifyDivision.cs</DependentUpon>
     </Compile>
+    <Compile Include="Kfn\frmKfnCreate.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Kfn\frmKfnCreate.Designer.cs">
+      <DependentUpon>frmKfnCreate.cs</DependentUpon>
+    </Compile>
     <Compile Include="Kfn\frmKfnExport.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -646,6 +652,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="GuitarTraining\frmGuitarTraining.resx">
       <DependentUpon>frmGuitarTraining.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Kfn\frmKfnCreate.resx">
+      <DependentUpon>frmKfnCreate.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Kfn\frmKfnExport.resx">
       <DependentUpon>frmKfnExport.cs</DependentUpon>

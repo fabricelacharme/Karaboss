@@ -1,14 +1,8 @@
-﻿using Karaboss.Properties;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
+﻿using System;
 using System.Drawing;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using TagLib;
 
 namespace Karaboss.Kfn
 {
@@ -17,11 +11,23 @@ namespace Karaboss.Kfn
         private KFN KFN;
         private SongINI sINI;
 
+
+        private Brush ColumnHeaderBrush = new SolidBrush(Color.FromArgb(51, 51, 51));
+
         public frmKfnSongINI(KFN kFN)
         {
             InitializeComponent();
             KFN = kFN;
+            
+            // Init controls
+            InitControls();                                              
 
+            // Parse Song.ini
+            this.ParseINI(KFN);
+        }
+
+        private void InitControls()
+        {          
 
             int W_Name = 90; int W_ContentID = 90; int W_ContentType = 200;
 
@@ -42,7 +48,7 @@ namespace Karaboss.Kfn
             ColumnHeader columnHeader0 = new ColumnHeader()
             {
                 Text = "Name",
-                Width = W_Name,
+                Width = W_Name,                
             };
 
             ColumnHeader columnHeader1 = new ColumnHeader()
@@ -68,13 +74,13 @@ namespace Karaboss.Kfn
             lvBlocks.Sorting = SortOrder.None;
             lvBlocks.AllowDrop = false;
 
-                       
-            //iniBlocksView.View = blocksGrid;
+            txtBlockContent.Width = this.ClientSize.Width - txtBlockContent.Left;
+            txtBlockContent.Height = ClientSize.Height - txtBlockContent.Top;
 
-            this.ParseINI(KFN);
-
+            lvBlocks.Height = txtBlockContent.Height;
         }
 
+       
         private void ParseINI(KFN KFN)
         {
             KFN.ResourceFile resource = KFN.Resources.Where(r => r.FileName == "Song.ini").First();
@@ -101,6 +107,32 @@ namespace Karaboss.Kfn
             }
         }
 
+        
+
+
+        #region form load close
+        private void frmKfnSongINI_Load(object sender, EventArgs e)
+        {
+
+        }
+
+        private void frmKfnSongINI_FormClosing(object sender, FormClosingEventArgs e)
+        {
+
+        }
+
+        private void frmKfnSongINI_Resize(object sender, EventArgs e)
+        {
+            txtBlockContent.Width = this.ClientSize.Width - txtBlockContent.Left;
+            txtBlockContent.Height = ClientSize.Height - txtBlockContent.Top;
+
+            lvBlocks.Height = txtBlockContent.Height;
+
+        }
+
+        #endregion form load close
+
+
         private void lvBlocks_MouseUp(object sender, MouseEventArgs e)
         {
             if (e.Button == MouseButtons.Left)
@@ -119,34 +151,12 @@ namespace Karaboss.Kfn
                         {
                             txtBlockContent.Text = block.Content.Replace("\n", Environment.NewLine);
                         }
-
-                        //SongINI.BlockInfo.Content;
-                        //SongINI.BlockInfo block = SongINI.BlockInfo[idx];
-
-                        //SongINI.BlockInfo block = lvBlocks.Items[idx] as SongINI.BlockInfo;
-
-
-                        //txtBlockContent.Text = block.Content;
                     }
                 }
 
             }
         }
 
-        private void frmKfnSongINI_Load(object sender, EventArgs e)
-        {
-
-        }
-
-        private void frmKfnSongINI_FormClosing(object sender, FormClosingEventArgs e)
-        {
-
-        }
-
-        private void frmKfnSongINI_Resize(object sender, EventArgs e)
-        {
-            txtBlockContent.Width = this.ClientSize.Width - txtBlockContent.Left;
-            txtBlockContent.Height = ClientSize.Height - txtBlockContent.Top;
-        }
+      
     }
 }

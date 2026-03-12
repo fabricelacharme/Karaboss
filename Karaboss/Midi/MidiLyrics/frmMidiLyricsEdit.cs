@@ -2407,7 +2407,6 @@ namespace Karaboss
         #endregion kok import export
 
 
-
         #region Lrc import export
 
         #region import lrc
@@ -2464,35 +2463,22 @@ namespace Karaboss
 
 
         private void LoadLrcFile(string FileName)
-        {
-           
+        {           
             Cursor.Current = Cursors.WaitCursor;
-
-            // NEW
+         
             // Load LRC file without any separators
             List<List<keffect.KaraokeEffect.kSyncText>> SyncLyrics = LyricsUtilities.ReadLrcFromFile(FileName);
 
             // Formate SyncLyrics to meet Midi editor needs (line separators and paragraphs on dedicated lines)
             SyncLyrics = LyricsUtilities.FormateSyncLyricsForMidi(SyncLyrics);
-
-            
-
-            // OLD procedure
-            // Read the LRc file and store the result in a list of list of syllabes (each line is a list of syllabes)
-            //MidiLyricsMgmtHelper.SyncLyrics = MidiLyricsMgmtHelper.GetKEffectLrcLyrics(FileName);            
-            //List<List<keffect.KaraokeEffect.kSyncText>> SyncLyrics = MidiLyricsMgmtHelper.SyncLyrics;
-
-            
+                                   
             InitGridView();
 
             // populate the gridView with the list of syllabes
             LrcPopulateDgView(SyncLyrics);
-
             
             Cursor.Current = Cursors.Default;
-
         }
-
 
         private void PopulateDataGridView(List<List<keffect.KaraokeEffect.kSyncText>> SyncLyrics)
         {
@@ -2543,7 +2529,6 @@ namespace Karaboss
 
         }
 
-
         private void LrcPopulateDgView(List<List<keffect.KaraokeEffect.kSyncText>> SyncLyrics)
         {
             string sTimeStamp;
@@ -2583,13 +2568,9 @@ namespace Karaboss
                         text = text.Replace(" ", "_"); // replace spaces with _ to be able to display them in the datagridview
                         dgView.Rows.Add(ms, sTimeStamp, "text", "", text);
                     }
-                }
-                
-               
+                }                               
             }
-        }
-
-        
+        }        
 
         #endregion import lrc
 
@@ -2754,88 +2735,7 @@ namespace Karaboss
                     break;
             }                                
         }
-
-
-        /*
-        /// <summary>
-        /// Reads the contents of the data grid and extracts a list of time and lyric pairs, filtering out invalid or
-        /// improperly formatted entries.
-        /// </summary>
-        /// <remarks>The method ensures that only rows with valid time formats and non-empty lyrics are
-        /// included. It also normalizes certain characters in the lyrics to maintain consistency with expected
-        /// formats.</remarks>
-        /// <returns>A list of tuples, each containing the time in milliseconds and the corresponding lyric string. The list
-        /// excludes rows with missing or invalid data.</returns>
-        private List<(double Time, string lyric)> OldReadDataGridContent(DataGrid dgView, int colTime, int colText)
-        {                       
-
-            List<(double Time, string lyric)> Result = new List<(double Time, string lyric)>();
-
-            string sTime;
-            double time;
-            string sLyric;
-
-            object vLyric;
-            object vTime;
-
-            // Verify format of time "00:00.000"
-            string pattern = @"\d{2}:\d{2}.\d{3}";
-
-
-            string AllLyrics = string.Empty;
-
-            // Store rows of dgView in a list
-            // the aim is to have the same procedure between midi Lyrics edition and mp3 Lyrics edition            
-            for (int i = 0; i < dgView.Rows.Count; i++)
-            {
-                vTime = dgView.Rows[i].Cells[COL_TIME].Value;
-                vLyric = dgView.Rows[i].Cells[COL_TEXT].Value;
-
-                if (vLyric == null) continue;
-                if (vTime == null) continue;
-
-                // Don not keep empty cells ?
-                if (vTime.ToString().Trim() == "") continue;
-                if (vLyric.ToString().Trim() == "") continue;
-
-                sTime = vTime.ToString().Trim();
-
-                // Verify format of time "00:00.000"
-                var match = Regex.Match(sTime, pattern);
-                if (!match.Success) continue;
-
-                // Convert times to milliseconds (to have the same entry format with mp3 Lyrics edition)
-                time = Mp3LyricsMgmtHelper.TimeToMs(sTime);
-
-                sLyric = vLyric.ToString();
-                if (sLyric.Trim() == m_SepLine) sLyric = sLyric.Trim();
-                if (sLyric.Trim().Trim() == m_SepParagraph) sLyric = sLyric.Trim();
-
-                // Do not keep if first cell is a separator
-                if (AllLyrics.Length == 0 && sLyric == m_SepLine) continue;
-                if (AllLyrics.Length == 0 && sLyric == m_SepParagraph) continue;
-
-
-                // Eliminate some characters
-                sLyric = sLyric.Replace("_", " ");
-                if (sLyric.Trim().Length == 0) continue;
-
-                // Replace characters used in LRC format
-                sLyric = sLyric.Replace("[", "@");
-                sLyric = sLyric.Replace("]", "@");
-                sLyric = sLyric.Replace("<", "@");
-                sLyric = sLyric.Replace(">", "@");
-
-                AllLyrics += sLyric;
-
-                Result.Add((time, sLyric));
-            }
-
-            // At this level we can have several following linefeeds and or Paragraphs, they will be eliminated further
-            // in CreateLrcLines
-            return Result;
-        }
-        */     
+        
 
         #endregion export lrc
 

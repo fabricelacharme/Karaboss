@@ -1,6 +1,6 @@
 ﻿#region License
 
-/* Copyright (c) 2018 Fabrice Lacharme
+/* Copyright (c) 2026 Fabrice Lacharme
  * 
  * Permission is hereby granted, free of charge, to any person obtaining a copy 
  * of this software and associated documentation files (the "Software"), to 
@@ -60,6 +60,7 @@ namespace Karaboss.xplorer
 
     public delegate void ContentChangedEventHandler(object sender, string strContent, string strPath);
     public delegate void CreateNewMidiFileEventHandler(object sender);
+    public delegate void CreateNewKfnFileEventHandler(object sender);
 
 
     public partial class xplorerControl : UserControl
@@ -78,9 +79,11 @@ namespace Karaboss.xplorer
 
         public event ContentChangedEventHandler LvContentChanged;
         public event CreateNewMidiFileEventHandler CreateNewMidiFile;
+        public event CreateNewKfnFileEventHandler CreateNewKfnFile;
         
 
         #region properties
+
         private int _splitterdistance;
         public int SplitterDistance
         {
@@ -95,13 +98,11 @@ namespace Karaboss.xplorer
             }
         }
 
-
         public FlShell.ShellItem SelectedFolder
         {
             get { return treeView.SelectedFolder; }
 
         }
-
 
         public string CurrentFolder
         {
@@ -121,12 +122,10 @@ namespace Karaboss.xplorer
             }
         }
 
-
         public FlShell.ShellItem[] SelectedItems
         {
             get { return shellListView.SelectedItems; }
         }
-
 
         public string SelectedFile
         {
@@ -136,7 +135,6 @@ namespace Karaboss.xplorer
                     return null; 
                 else
                     return shellListView.SelectedItem.FileSystemPath; 
-
             }
         }
 
@@ -151,11 +149,9 @@ namespace Karaboss.xplorer
 
         #endregion
 
-
         private ObservableCollection<Playlist> allPlaylists = new ObservableCollection<Playlist>();        
         private PlaylistGroup PlGroup = new PlaylistGroup();
         private PlaylistGroupsHelper PlGroupHelper = new PlaylistGroupsHelper();
-
 
         public xplorerControl()
         {
@@ -183,9 +179,7 @@ namespace Karaboss.xplorer
             // Load existing playlists
             LoadPlaylists();            
         }
-
         
-
 
         #region public functions    
 
@@ -198,7 +192,6 @@ namespace Karaboss.xplorer
             SelectFirstItem();            
             base.Refresh();
         }
-
         
         public void SelectFirstItem()
         {
@@ -1229,13 +1222,23 @@ namespace Karaboss.xplorer
         #region buttons
 
         /// <summary>
-        /// Buton create a new Midi file
+        /// Button create a new Midi file
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void BtnNewMidiFile_Click(object sender, EventArgs e)
         {
             CreateNewMidiFile?.Invoke(this);
+        }
+        
+        /// <summary>
+        /// Button create a new kfn file
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void btnNewKfnFile_Click(object sender, EventArgs e)
+        {
+            CreateNewKfnFile?.Invoke(this);
         }
 
         /// <summary>
@@ -1673,8 +1676,11 @@ namespace Karaboss.xplorer
 
 
 
+
         #endregion playlists
 
+
        
+
     }
 }
