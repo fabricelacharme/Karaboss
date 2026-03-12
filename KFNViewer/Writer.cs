@@ -6,6 +6,7 @@ using System.Linq;
 using System.Resources;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 using static KFN;
 
 namespace KFNViewer
@@ -101,13 +102,18 @@ namespace KFNViewer
                     nbchars = resourceEncLength.Length;
                     bnbchars = BitConverter.GetBytes(nbchars);
                     fs.Write(bnbchars, 0, bnbchars.Length);
-                    fs.Write(resourceEncLength, 0, resourceEncLength.Length);                    
+                    byte[] resenc = new byte[4] { 0, 0, 0, 0 };
+                    fs.Write(resenc, 0, resenc.Length);                    
                 }
 
 
                 // Write mp3
+                byte[] fileBytes = File.ReadAllBytes(mp3FileName);
+                fs.Write(fileBytes, 0, fileBytes.Length);
 
                 // Write Song.ini
+                fileBytes = File.ReadAllBytes(iniFileName);
+                fs.Write(fileBytes, 0, fileBytes.Length);
             }
         }
 
@@ -136,6 +142,7 @@ namespace KFNViewer
            [16]: ("69,78,68,72,1", "", "ENDH", "End of properties")
            */
 
+            string prop;
             byte[] propValue;
             byte[] data;
 
@@ -151,7 +158,7 @@ namespace KFNViewer
             WriteProp(fs, new byte[] { 68, 73, 70, 87, 1 }, new byte[] { 1, 0, 0, 0 });
 
             // [3]: ("", "255,255,255,255", "GNRE", "Genre")
-            WriteProp(fs, new byte[] { 71, 78, 82, 69, 1 }, new byte[] { 1, 0, 0, 0 });
+            WriteProp(fs, new byte[] { 71, 78, 82, 69, 1 }, new byte[] { 255, 255, 255, 255 });
 
             // [4]: ("", "", "SFTV", "SFTV")
             WriteProp(fs, new byte[] { 83, 70, 84, 86, 1 }, new byte[] { 21, 90, 20, 1 });
@@ -175,32 +182,35 @@ namespace KFNViewer
             //[9]: ("", "", "LANG", "Language")
             WriteProp(fs, new byte[] { 76, 65, 78, 71, 2 }, new byte[] { 2, 0, 0, 0 });
             // Ecrire
-            propValue = new byte[] { 2, 0, 0, 0 };
-            data = new byte[BitConverter.ToUInt32(propValue, 0)];
-            fs.Write(data, 0, data.Length);
+            string lang = "en";
+            propValue = Encoding.GetEncoding(this.resourceNamesEncodingAuto).GetBytes(lang);
+            fs.Write(propValue, 0, propValue.Length);
 
             //[10]: ("", "", "TITL", "Title")
             WriteProp(fs, new byte[] { 84, 73, 84, 76, 2 }, new byte[] { 15, 0, 0, 0 });
-            // Ecrire
-            propValue = new byte[] { 15, 0, 0, 0 };
-            data = new byte[BitConverter.ToUInt32(propValue, 0)];
-            fs.Write(data, 0, data.Length);
+            // write string of 15 characters
+            string title = "Chiens - Louane";
+            title = title.PadRight(15);
+            propValue = Encoding.GetEncoding(this.resourceNamesEncodingAuto).GetBytes(title);
+            fs.Write(propValue, 0, propValue.Length);
 
             //[11]: ("", "", "SORC", "Source")
             WriteProp(fs, new byte[] { 83, 79, 82, 67, 2 }, new byte[] { 23, 0, 0, 0 });
-            // Ecrire
-            propValue = new byte[] { 23, 0, 0, 0 };
-            data = new byte[BitConverter.ToUInt32(propValue, 0)];
-            fs.Write(data, 0, data.Length);
+            // Ecrire "1,I,Chiens - Louane.mp3"
+            string source = "1,I,Chiens - Louane.mp3";
+            source = source.PadRight(23);
+            propValue = Encoding.GetEncoding(this.resourceNamesEncodingAuto).GetBytes(source);
+            fs.Write(propValue, 0, propValue.Length);
 
 
             //[12]: ("", "", "COMM", "Comment")
             WriteProp(fs, new byte[] { 67, 79, 77, 77, 2 }, new byte[] { 64, 0, 0, 0 });
             // Ecrire
-            propValue = new byte[] { 64, 0, 0, 0 };
-            data = new byte[BitConverter.ToUInt32(propValue, 0)];
-            fs.Write(data, 0, data.Length);
-
+            string comment = "Converti de  le 02/03/2026 avec KarPbo V1.2.0 (c)2009 A.Agapoff.";
+            comment = comment.Substring(0, 64);
+            comment = comment.PadRight(64);
+            propValue = Encoding.GetEncoding(this.resourceNamesEncodingAuto).GetBytes(comment);
+            fs.Write(propValue, 0, propValue.Length);
 
             //[13]: ("", "", "RGHT", "RGHT")
             WriteProp(fs, new byte[] { 82, 71, 72, 84, 1 }, new byte[] { 0, 0, 0, 0 });
@@ -231,6 +241,9 @@ namespace KFNViewer
             fs.Write(prop, 0, prop.Length);
             fs.Write(propValue, 0, propValue.Length);
         }
+
+
+
 
     }
        
