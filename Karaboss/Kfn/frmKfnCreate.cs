@@ -117,11 +117,13 @@ namespace Karaboss.Kfn
             // L'offset est caclulé en additionnant enclength avec l'offset précédant
 
             
-            
+            /*
             ResourceFile res = new ResourceFile("Audio", "Chiens - Louane.mp3", 2943507, 2943507, 0, false, true);
             Writer.Resources.Add(res);
+            
             res = new ResourceFile("Config", "Song.ini", 5654, 5654, 2943507, false, false);
             Writer.Resources.Add(res);
+            */
 
             Writer.CreateKFN();
         }

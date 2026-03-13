@@ -379,6 +379,7 @@ public class KFN
                 fs.Read(resourceOffset, 0, resourceOffset.Length);
                 
                 fs.Read(resourceEncryptedLenght, 0, resourceEncryptedLenght.Length);
+                
                 fs.Read(resourceEncrypted, 0, resourceEncrypted.Length);
                 int encrypted = BitConverter.ToInt32(resourceEncrypted, 0);
 

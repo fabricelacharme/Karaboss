@@ -6,7 +6,9 @@ using System.Linq;
 using System.Resources;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 using System.Xml.Linq;
+using TagLib;
 using static KFN;
 
 namespace KFNViewer
@@ -50,7 +52,33 @@ namespace KFNViewer
             fullFileName = fpath;
             mp3FileName = mp3;
             iniFileName = ini;
-            imageFileNameLst = imgLst;            
+            imageFileNameLst = imgLst;
+            
+            
+            FileInfo fi;
+            int Offset = 0;
+            int length = 0;
+
+            // Add list of resources
+            resources = new List<ResourceFile>();
+            ResourceFile res;
+
+            // MP3
+            fi = new FileInfo(mp3FileName);                        
+            length = (int)fi.Length;
+            //ResourceFile res = new ResourceFile("Audio", "Chiens - Louane.mp3", 2943507, 2943507, 0, false, true);
+            res = new ResourceFile("Audio", fi.Name, length, length, Offset, false, true);            
+            resources.Add(res);
+            Offset += length;
+
+            // Song.ini
+            fi = new FileInfo(iniFileName);  
+            length = (int)fi.Length;
+            //res = new ResourceFile("Config", "Song.ini", 5654, 5654, 2943507, false, false);
+            res = new ResourceFile("Config", fi.Name, length, length, Offset, false, false);
+            resources.Add(res);
+            Offset += length;
+
         }
                         
         /// <summary>
@@ -99,20 +127,23 @@ namespace KFNViewer
 
                     // [4] EncryptedLenght
                     byte[] resourceEncLength = BitConverter.GetBytes(res.EncLength);
-                    nbchars = resourceEncLength.Length;
+                    fs.Write(resourceEncLength, 0, resourceEncLength.Length);
+
+                    //[5] is encypted
+                    byte[] IsEncrypted = BitConverter.GetBytes(res.IsEncrypted);
+                    nbchars = IsEncrypted.Length;
                     bnbchars = BitConverter.GetBytes(nbchars);
-                    fs.Write(bnbchars, 0, bnbchars.Length);
-                    byte[] resenc = new byte[4] { 0, 0, 0, 0 };
-                    fs.Write(resenc, 0, resenc.Length);                    
+                    fs.Write(new byte[] { 0, 0, 0, 0 }, 0, 4);
+                    
                 }
 
 
                 // Write mp3
-                byte[] fileBytes = File.ReadAllBytes(mp3FileName);
+                byte[] fileBytes = System.IO.File.ReadAllBytes(mp3FileName);
                 fs.Write(fileBytes, 0, fileBytes.Length);
 
                 // Write Song.ini
-                fileBytes = File.ReadAllBytes(iniFileName);
+                fileBytes = System.IO.File.ReadAllBytes(iniFileName);
                 fs.Write(fileBytes, 0, fileBytes.Length);
             }
         }
@@ -141,6 +172,18 @@ namespace KFNViewer
            [15]: ("73,68,85,83,2", "16,0,0,0", "IDUS", "IDUS")
            [16]: ("69,78,68,72,1", "", "ENDH", "End of properties")
            */
+            /*
+            ?properties
+                Count = 8
+                [0]: { [Man difficult, 1]}
+                [1]: { [Woman difficult, 1]}
+                [2]: { [Genre, Not set]}
+                [3]: { [AES-ECB - 128 Key, Not present]}
+                [4]: { [Language, en]}
+                [5]: { [Title, Chiens -Louane]}
+                [6]: { [Source, 1,I,Chiens - Louane.mp3]}
+                [7]: { [Comment, Converti de  le 02 / 03 / 2026 avec KarPbo V1.2.0(c)2009 A.Agapoff.]}
+            */
 
             string prop;
             byte[] propValue;
@@ -157,8 +200,10 @@ namespace KFNViewer
             // [2]: Woman difficult = "DIFW"
             WriteProp(fs, new byte[] { 68, 73, 70, 87, 1 }, new byte[] { 1, 0, 0, 0 });
 
+
             // [3]: ("", "255,255,255,255", "GNRE", "Genre")
             WriteProp(fs, new byte[] { 71, 78, 82, 69, 1 }, new byte[] { 255, 255, 255, 255 });
+
 
             // [4]: ("", "", "SFTV", "SFTV")
             WriteProp(fs, new byte[] { 83, 70, 84, 86, 1 }, new byte[] { 21, 90, 20, 1 });
@@ -166,8 +211,10 @@ namespace KFNViewer
             // [5]: ("", "", "MUSL", "MUSL")
             WriteProp(fs, new byte[] { 77, 85, 83, 76, 1 }, new byte[] { 184, 0, 0, 0 });
 
+
             //[6]: ("", "", "ANME", "ANME")
-            WriteProp(fs, new byte[] { 65, 78, 77, 69, 1 }, new byte[] { 13, 0, 0, 0 });
+            WriteProp(fs, new byte[] { 65, 78, 77, 69, 1 }, new byte[] { 13, 0, 0, 0 });                      
+           
 
             //[7]: ("", "", "TYPE", "TYPE")
             WriteProp(fs, new byte[] { 84, 89, 80, 69, 1 }, new byte[] { 0, 0, 0, 0 });
@@ -213,17 +260,17 @@ namespace KFNViewer
             fs.Write(propValue, 0, propValue.Length);
 
             //[13]: ("", "", "RGHT", "RGHT")
-            WriteProp(fs, new byte[] { 82, 71, 72, 84, 1 }, new byte[] { 0, 0, 0, 0 });
+            //WriteProp(fs, new byte[] { 82, 71, 72, 84, 1 }, new byte[] { 0, 0, 0, 0 });
 
             //[14]: (",1", "0,0,0,0", "PROV", "PROV")
-            WriteProp(fs, new byte[] { 80, 82, 79, 86, 1 }, new byte[] { 10, 0, 0, 0 });
+            //WriteProp(fs, new byte[] { 80, 82, 79, 86, 1 }, new byte[] { 10, 0, 0, 0 });
 
             //[15]: ("", "", "IDUS", "IDUS")
-            WriteProp(fs, new byte[] { 73, 68, 85, 83, 2 }, new byte[] { 16, 0, 0, 0 });
+            //WriteProp(fs, new byte[] { 73, 68, 85, 83, 2 }, new byte[] { 16, 0, 0, 0 });
             // Ecrire
-            propValue = new byte[] { 16, 0, 0, 0 };
-            data = new byte[BitConverter.ToUInt32(propValue, 0)];
-            fs.Write(data, 0, data.Length);
+            //propValue = new byte[] { 16, 0, 0, 0 };
+            //data = new byte[BitConverter.ToUInt32(propValue, 0)];
+            //fs.Write(data, 0, data.Length);
 
 
             //[16]: ("69,78,68,72,1", "", "ENDH", "End of properties")

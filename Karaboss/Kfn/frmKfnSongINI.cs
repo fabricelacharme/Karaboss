@@ -83,6 +83,26 @@ namespace Karaboss.Kfn
        
         private void ParseINI(KFN KFN)
         {
+            /*
+            ?KFN.Resources[1]
+                { KFN.ResourceFile}                                       
+                    EncLength: 5654
+                    Encrypted: false
+                    EncryptedLength: 5654
+                    Exported: false
+                    FileLength: 5654
+                    FileName: "Song.ini"
+                    FileOffset: 2943507
+                    FileSize: "5,5 Kb"
+                    FileType: "Config"
+                    IsAudioSource: false
+                    IsEncrypted: false
+                    IsExported: true
+                    Length: 5654
+                    Name: "Song.ini"
+                    Offset: 2943507
+                    Type: "Config"
+            */
             KFN.ResourceFile resource = KFN.Resources.Where(r => r.FileName == "Song.ini").First();
             byte[] data = KFN.GetDataFromResource(resource);
             string iniText = new string(Encoding.UTF8.GetChars(data));
