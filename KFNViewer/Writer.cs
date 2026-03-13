@@ -84,71 +84,47 @@ namespace KFNViewer
         /// <summary>
         /// Create a new KFN file
         /// </summary>
-        public void CreateKFN()
+        public void CreateKFN(string Title, string Comment)
         {
-            byte[] data;
-            int nbchars;
-            byte[] bnbchars;
-
-            using (FileStream fs = new FileStream(fullFileName, FileMode.Create, FileAccess.ReadWrite))
+            try
             {
-                // Write properties
-                WriteProperties(fs);
+                using (FileStream fs = new FileStream(fullFileName, FileMode.Create, FileAccess.ReadWrite))
+                {
+                    // Write properties
+                    WriteProperties(fs, Title, Comment);
 
-                // Write number of resources : 2
-                int resourcesCount = 2;
-                byte[] numOfResources = BitConverter.GetBytes(resourcesCount);
-                fs.Write(numOfResources, 0, numOfResources.Length);
+                    // Write resources
+                    WriteResources(fs);
 
-                for (int i = 0; i < resourcesCount; i++)
-                {                    
-                    ResourceFile res = resources[i];
-                    
-                    // [0] name = "Chiens - Louane.mp3"                                        
-                    byte[] resourceName = Encoding.GetEncoding(this.resourceNamesEncodingAuto).GetBytes(res.FileName);                    
-                    nbchars = resourceName.Length;    // 19 chars
-                    bnbchars = BitConverter.GetBytes(nbchars);
-                    // First write the length of the name (ie 19 for "Chiens - Louane.mp3")
-                    fs.Write(bnbchars, 0, bnbchars.Length);
-                    // Second write the name itself
-                    fs.Write(resourceName, 0, resourceName.Length);
 
-                    // [1] Type
-                    byte[] type = BitConverter.GetBytes(this.GetFileTypeId(res.FileType));
-                    fs.Write(type, 0, type.Length);
+                    // Write mp3
+                    byte[] fileBytes = System.IO.File.ReadAllBytes(mp3FileName);
+                    fs.Write(fileBytes, 0, fileBytes.Length);
 
-                    // [2] Length
-                    byte[] resourceLenght = BitConverter.GetBytes(res.FileLength);
-                    fs.Write(resourceLenght, 0, resourceLenght.Length);
-
-                    // [3} Offset
-                    byte[] resourceOffet = BitConverter.GetBytes(res.FileOffset);
-                    fs.Write(resourceOffet, 0, resourceOffet.Length);
-
-                    // [4] EncryptedLenght
-                    byte[] resourceEncLength = BitConverter.GetBytes(res.EncLength);
-                    fs.Write(resourceEncLength, 0, resourceEncLength.Length);
-
-                    //[5] is encypted
-                    byte[] IsEncrypted = BitConverter.GetBytes(res.IsEncrypted);
-                    nbchars = IsEncrypted.Length;
-                    bnbchars = BitConverter.GetBytes(nbchars);
-                    fs.Write(new byte[] { 0, 0, 0, 0 }, 0, 4);
-                    
+                    // Write Song.ini
+                    fileBytes = System.IO.File.ReadAllBytes(iniFileName);
+                    fs.Write(fileBytes, 0, fileBytes.Length);
                 }
 
+                string tx = string.Format("File {0} \nwas created in the directory\n {1}", Path.GetFileName(fullFileName), Path.GetDirectoryName(fullFileName));
+                MessageBox.Show(tx, Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Information);
 
-                // Write mp3
-                byte[] fileBytes = System.IO.File.ReadAllBytes(mp3FileName);
-                fs.Write(fileBytes, 0, fileBytes.Length);
-
-                // Write Song.ini
-                fileBytes = System.IO.File.ReadAllBytes(iniFileName);
-                fs.Write(fileBytes, 0, fileBytes.Length);
             }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        
+        
         }
 
-        private void WriteProperties(FileStream fs)
+        /// <summary>
+        /// Write properties
+        /// </summary>
+        /// <param name="fs"></param>
+        /// <param name="sTitle"></param>
+        /// <param name="sComment"></param>
+        private void WriteProperties(FileStream fs, string sTitle, string sComment)
         {
             /*                                         
             *   prop (5 bytes)    propvalue (4 bytes)                                      
@@ -185,7 +161,7 @@ namespace KFNViewer
                 [7]: { [Comment, Converti de  le 02 / 03 / 2026 avec KarPbo V1.2.0(c)2009 A.Agapoff.]}
             */
 
-            string prop;
+            //string prop;
             byte[] propValue;
             byte[] data;
 
@@ -233,15 +209,16 @@ namespace KFNViewer
             propValue = Encoding.GetEncoding(this.resourceNamesEncodingAuto).GetBytes(lang);
             fs.Write(propValue, 0, propValue.Length);
 
-            //[10]: ("", "", "TITL", "Title")
+            //[10]: "TITL", "Title"
             WriteProp(fs, new byte[] { 84, 73, 84, 76, 2 }, new byte[] { 15, 0, 0, 0 });
             // write string of 15 characters
-            string title = "Chiens - Louane";
+            string title = sTitle;
+            title = TruncateLongString(title, 15);
             title = title.PadRight(15);
             propValue = Encoding.GetEncoding(this.resourceNamesEncodingAuto).GetBytes(title);
             fs.Write(propValue, 0, propValue.Length);
 
-            //[11]: ("", "", "SORC", "Source")
+            //[11]: "SORC", "Source"
             WriteProp(fs, new byte[] { 83, 79, 82, 67, 2 }, new byte[] { 23, 0, 0, 0 });
             // Ecrire "1,I,Chiens - Louane.mp3"
             string source = "1,I,Chiens - Louane.mp3";
@@ -250,11 +227,11 @@ namespace KFNViewer
             fs.Write(propValue, 0, propValue.Length);
 
 
-            //[12]: ("", "", "COMM", "Comment")
+            //[12]: "COMM", "Comment"
             WriteProp(fs, new byte[] { 67, 79, 77, 77, 2 }, new byte[] { 64, 0, 0, 0 });
             // Ecrire
-            string comment = "Converti de  le 02/03/2026 avec KarPbo V1.2.0 (c)2009 A.Agapoff.";
-            comment = comment.Substring(0, 64);
+            string comment = sComment;            
+            comment = TruncateLongString(comment, 64);            
             comment = comment.PadRight(64);
             propValue = Encoding.GetEncoding(this.resourceNamesEncodingAuto).GetBytes(comment);
             fs.Write(propValue, 0, propValue.Length);
@@ -289,7 +266,72 @@ namespace KFNViewer
             fs.Write(propValue, 0, propValue.Length);
         }
 
+        /// <summary>
+        /// Truncate string to maxLength characters
+        /// </summary>
+        /// <param name="str"></param>
+        /// <param name="maxLength"></param>
+        /// <returns></returns>
+        private string TruncateLongString(string str, int maxLength)
+        {
+            if (string.IsNullOrEmpty(str)) return str;
 
+            return str.Substring(0, Math.Min(str.Length, maxLength));
+        }
+
+
+        /// <summary>
+        /// Write resources
+        /// </summary>
+        /// <param name="fs"></param>
+        private void WriteResources(FileStream fs)
+        {            
+            int nbchars;
+            byte[] bnbchars;
+
+            // Write number of resources                        
+            int resourcesCount = resources.Count;
+
+            byte[] numOfResources = BitConverter.GetBytes(resourcesCount);
+            fs.Write(numOfResources, 0, numOfResources.Length);
+
+            for (int i = 0; i < resourcesCount; i++)
+            {
+                ResourceFile res = resources[i];
+
+                // [0] name = "Chiens - Louane.mp3"                                        
+                byte[] resourceName = Encoding.GetEncoding(this.resourceNamesEncodingAuto).GetBytes(res.FileName);
+                nbchars = resourceName.Length;    // 19 chars
+                bnbchars = BitConverter.GetBytes(nbchars);
+                // First write the length of the name (ie 19 for "Chiens - Louane.mp3")
+                fs.Write(bnbchars, 0, bnbchars.Length);
+                // Second write the name itself
+                fs.Write(resourceName, 0, resourceName.Length);
+
+                // [1] Type
+                byte[] type = BitConverter.GetBytes(this.GetFileTypeId(res.FileType));
+                fs.Write(type, 0, type.Length);
+
+                // [2] Length
+                byte[] resourceLenght = BitConverter.GetBytes(res.FileLength);
+                fs.Write(resourceLenght, 0, resourceLenght.Length);
+
+                // [3} Offset
+                byte[] resourceOffet = BitConverter.GetBytes(res.FileOffset);
+                fs.Write(resourceOffet, 0, resourceOffet.Length);
+
+                // [4] EncryptedLenght
+                byte[] resourceEncLength = BitConverter.GetBytes(res.EncLength);
+                fs.Write(resourceEncLength, 0, resourceEncLength.Length);
+
+                //[5] is encypted
+                byte[] IsEncrypted = BitConverter.GetBytes(res.IsEncrypted);
+                nbchars = IsEncrypted.Length;
+                bnbchars = BitConverter.GetBytes(nbchars);
+                fs.Write(new byte[] { 0, 0, 0, 0 }, 0, 4);
+
+            }
+        }
 
 
     }

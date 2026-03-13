@@ -1407,8 +1407,11 @@ namespace Karaboss
 
         private void NewKfnFile()
         {
+
+            string path = xplorerControl.CurrentFolder;
+
             Application.OpenForms["frmKfnCreate"]?.Close();
-            frmKfnCreate frmKfnCreate = new frmKfnCreate();
+            frmKfnCreate frmKfnCreate = new frmKfnCreate(path);
             frmKfnCreate.Show();
         }
 

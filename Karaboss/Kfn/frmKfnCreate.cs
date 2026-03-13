@@ -6,46 +6,88 @@ using System.Data;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using static KFN;
 
 namespace Karaboss.Kfn
-{
+{    
     public partial class frmKfnCreate : Form
     {
-        public frmKfnCreate()
+
+        string fPath;
+
+        public frmKfnCreate(string path)
         {
             InitializeComponent();
+
+            fPath = path;
+            OpenFileDialog.InitialDirectory = fPath;
         }
 
+        /// <summary>
+        /// Import mp3 file
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void btnImportMp3File_Click(object sender, EventArgs e)
         {
             string FileName;
             OpenFileDialog.Filter = "Mp3 files (*.mp3)|*.mp3|All files (*.*)|*.*";
             if (OpenFileDialog.ShowDialog() != DialogResult.OK) return;
+            
             FileName = OpenFileDialog.FileName;
+            OpenFileDialog.InitialDirectory = Path.GetDirectoryName(FileName);
+
 
             txtMp3File.Text = FileName;
 
+            string Title = txtTitle.Text.Trim();
+            if (Title.Length == 0) 
+                Title = Path.GetFileNameWithoutExtension(FileName);
+
+            Title = TruncateLongString(Title, 15);            
+            txtTitle.Text = Title;
+
+            string kfnFile = Path.ChangeExtension( Path.GetFileName(FileName), ".kfn");
+            lblKFNFile.Text = kfnFile;
+
         }
 
+        /// <summary>
+        /// Import Song.ini file
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void btnImportSongINIFile_Click(object sender, EventArgs e)
         {
             string FileName;
             OpenFileDialog.Filter = "Ini files (*.ini)|*.ini|All files (*.*)|*.*";
             if (OpenFileDialog.ShowDialog() != DialogResult.OK) return;
+            
             FileName = OpenFileDialog.FileName;
+            OpenFileDialog.InitialDirectory = Path.GetDirectoryName(FileName);
+
             txtSongINIFile.Text = FileName;
         }
 
+
+        /// <summary>
+        /// Import image
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void btnImportImage_Click(object sender, EventArgs e)
         {
             string FileName;
             OpenFileDialog.Filter = "Jpg files (*.jpg)|*.jpg|All files (*.*)|*.*";
             if (OpenFileDialog.ShowDialog() != DialogResult.OK) return;
+            
             FileName = OpenFileDialog.FileName;
+            OpenFileDialog.InitialDirectory = Path.GetDirectoryName(FileName);
+
             txtImageFile.Text = FileName;
         }
 
@@ -87,6 +129,20 @@ namespace Karaboss.Kfn
         private void CreateKfnFile(string mp3FileName, string songINIFileName , string imageFileName)
         {
 
+            string Title = txtTitle.Text.Trim();
+            Title = TruncateLongString(Title, 15);
+
+            string Comment = txtComment.Text.Trim();
+            Comment = TruncateLongString(Comment, 64);
+
+            string tx = "Create a KFN file";
+            tx += Environment.NewLine + "MP3: " + Path.GetFileName(mp3FileName);
+            tx += Environment.NewLine + "Song.ini: " + Path.GetFileName(songINIFileName);
+            tx += Environment.NewLine + "Title: " + Title;
+            tx += Environment.NewLine + "Comment: " + Comment;
+
+            if (MessageBox.Show(tx, Application.ProductName, MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question) != DialogResult.Yes) return;
+            
             // Create a kfn file using the name of the mp3 file ?
             string kfnFile = Path.ChangeExtension(mp3FileName, ".kfn");
             
@@ -125,8 +181,45 @@ namespace Karaboss.Kfn
             Writer.Resources.Add(res);
             */
 
-            Writer.CreateKFN();
+            Writer.CreateKFN(Title, Comment);
         }
 
+
+
+        #region navigation
+        private void btnTb1Next_Click(object sender, EventArgs e)
+        {
+            tbControl.SelectedTab = tbPageLyrics;
+        }
+
+        private void btnTb2Next_Click(object sender, EventArgs e)
+        {
+            tbControl.SelectedTab = tbPageImages;
+        }
+
+        private void btnTb2Previous_Click(object sender, EventArgs e)
+        {
+            tbControl.SelectedTab = tbPageMp3;
+        }
+
+        private void btnTb3Previous_Click(object sender, EventArgs e)
+        {
+            tbControl.SelectedTab = tbPageLyrics;
+        }
+        #endregion navigation
+
+
+        /// <summary>
+        /// Truncate string to maxLength characters
+        /// </summary>
+        /// <param name="str"></param>
+        /// <param name="maxLength"></param>
+        /// <returns></returns>
+        private string TruncateLongString(string str, int maxLength)
+        {
+            if (string.IsNullOrEmpty(str)) return str;
+
+            return str.Substring(0, Math.Min(str.Length, maxLength));
+        }
     }
 }
