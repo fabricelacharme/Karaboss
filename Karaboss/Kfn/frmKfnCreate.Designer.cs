@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmKfnCreate));
             this.lblMp3File = new System.Windows.Forms.Label();
             this.txtMp3File = new System.Windows.Forms.TextBox();
             this.btnImportMp3File = new System.Windows.Forms.Button();
@@ -39,23 +40,21 @@
             this.btnCancel = new System.Windows.Forms.Button();
             this.tbControl = new System.Windows.Forms.TabControl();
             this.tbPageMp3 = new System.Windows.Forms.TabPage();
-            this.tbPageLyrics = new System.Windows.Forms.TabPage();
-            this.label1 = new System.Windows.Forms.Label();
-            this.txtTitle = new System.Windows.Forms.TextBox();
+            this.lblKFNFile = new System.Windows.Forms.Label();
+            this.label5 = new System.Windows.Forms.Label();
+            this.btnTb1Next = new System.Windows.Forms.Button();
             this.txtComment = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
-            this.label3 = new System.Windows.Forms.Label();
-            this.label4 = new System.Windows.Forms.Label();
-            this.btnTb1Next = new System.Windows.Forms.Button();
+            this.txtTitle = new System.Windows.Forms.TextBox();
+            this.label1 = new System.Windows.Forms.Label();
+            this.tbPageLyrics = new System.Windows.Forms.TabPage();
+            this.btnTb2Next = new System.Windows.Forms.Button();
             this.btnTb2Previous = new System.Windows.Forms.Button();
             this.tbPageImages = new System.Windows.Forms.TabPage();
-            this.btnTb2Next = new System.Windows.Forms.Button();
-            this.btnTb3Previous = new System.Windows.Forms.Button();
             this.btnImportImage = new System.Windows.Forms.Button();
             this.lblImage = new System.Windows.Forms.Label();
             this.txtImageFile = new System.Windows.Forms.TextBox();
-            this.label5 = new System.Windows.Forms.Label();
-            this.lblKFNFile = new System.Windows.Forms.Label();
+            this.btnTb3Previous = new System.Windows.Forms.Button();
             this.tbControl.SuspendLayout();
             this.tbPageMp3.SuspendLayout();
             this.tbPageLyrics.SuspendLayout();
@@ -163,8 +162,6 @@
             this.tbPageMp3.Controls.Add(this.lblKFNFile);
             this.tbPageMp3.Controls.Add(this.label5);
             this.tbPageMp3.Controls.Add(this.btnTb1Next);
-            this.tbPageMp3.Controls.Add(this.label4);
-            this.tbPageMp3.Controls.Add(this.label3);
             this.tbPageMp3.Controls.Add(this.txtComment);
             this.tbPageMp3.Controls.Add(this.label2);
             this.tbPageMp3.Controls.Add(this.txtTitle);
@@ -178,6 +175,75 @@
             this.tbPageMp3.Size = new System.Drawing.Size(677, 211);
             this.tbPageMp3.TabIndex = 0;
             this.tbPageMp3.Text = "mp3";
+            // 
+            // lblKFNFile
+            // 
+            this.lblKFNFile.AutoSize = true;
+            this.lblKFNFile.Font = new System.Drawing.Font("Calibri", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblKFNFile.ForeColor = System.Drawing.Color.White;
+            this.lblKFNFile.Location = new System.Drawing.Point(77, 71);
+            this.lblKFNFile.Name = "lblKFNFile";
+            this.lblKFNFile.Size = new System.Drawing.Size(65, 14);
+            this.lblKFNFile.TabIndex = 12;
+            this.lblKFNFile.Text = "KfnFile.kfn";
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Font = new System.Drawing.Font("Calibri", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label5.ForeColor = System.Drawing.Color.White;
+            this.label5.Location = new System.Drawing.Point(4, 71);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(27, 14);
+            this.label5.TabIndex = 11;
+            this.label5.Text = "KFN";
+            // 
+            // btnTb1Next
+            // 
+            this.btnTb1Next.DialogResult = System.Windows.Forms.DialogResult.OK;
+            this.btnTb1Next.Location = new System.Drawing.Point(593, 184);
+            this.btnTb1Next.Name = "btnTb1Next";
+            this.btnTb1Next.Size = new System.Drawing.Size(75, 23);
+            this.btnTb1Next.TabIndex = 10;
+            this.btnTb1Next.Text = "Next";
+            this.btnTb1Next.UseVisualStyleBackColor = true;
+            this.btnTb1Next.Click += new System.EventHandler(this.btnTb1Next_Click);
+            // 
+            // txtComment
+            // 
+            this.txtComment.Location = new System.Drawing.Point(80, 138);
+            this.txtComment.Name = "txtComment";
+            this.txtComment.Size = new System.Drawing.Size(503, 23);
+            this.txtComment.TabIndex = 3;
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Font = new System.Drawing.Font("Calibri", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label2.ForeColor = System.Drawing.Color.White;
+            this.label2.Location = new System.Drawing.Point(4, 140);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(61, 15);
+            this.label2.TabIndex = 2;
+            this.label2.Text = "Comment:";
+            // 
+            // txtTitle
+            // 
+            this.txtTitle.Location = new System.Drawing.Point(80, 108);
+            this.txtTitle.Name = "txtTitle";
+            this.txtTitle.Size = new System.Drawing.Size(281, 23);
+            this.txtTitle.TabIndex = 1;
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Font = new System.Drawing.Font("Calibri", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label1.ForeColor = System.Drawing.Color.White;
+            this.label1.Location = new System.Drawing.Point(4, 110);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(34, 15);
+            this.label1.TabIndex = 0;
+            this.label1.Text = "Title:";
             // 
             // tbPageLyrics
             // 
@@ -195,76 +261,16 @@
             this.tbPageLyrics.TabIndex = 1;
             this.tbPageLyrics.Text = "Lyrics";
             // 
-            // label1
+            // btnTb2Next
             // 
-            this.label1.AutoSize = true;
-            this.label1.Font = new System.Drawing.Font("Calibri", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.ForeColor = System.Drawing.Color.White;
-            this.label1.Location = new System.Drawing.Point(4, 110);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(34, 15);
-            this.label1.TabIndex = 0;
-            this.label1.Text = "Title:";
-            // 
-            // txtTitle
-            // 
-            this.txtTitle.Location = new System.Drawing.Point(80, 108);
-            this.txtTitle.MaxLength = 15;
-            this.txtTitle.Name = "txtTitle";
-            this.txtTitle.Size = new System.Drawing.Size(281, 23);
-            this.txtTitle.TabIndex = 1;
-            // 
-            // txtComment
-            // 
-            this.txtComment.Location = new System.Drawing.Point(80, 138);
-            this.txtComment.MaxLength = 64;
-            this.txtComment.Name = "txtComment";
-            this.txtComment.Size = new System.Drawing.Size(503, 23);
-            this.txtComment.TabIndex = 3;
-            // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.Font = new System.Drawing.Font("Calibri", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label2.ForeColor = System.Drawing.Color.White;
-            this.label2.Location = new System.Drawing.Point(4, 140);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(61, 15);
-            this.label2.TabIndex = 2;
-            this.label2.Text = "Comment:";
-            // 
-            // label3
-            // 
-            this.label3.AutoSize = true;
-            this.label3.Font = new System.Drawing.Font("Calibri", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label3.ForeColor = System.Drawing.Color.White;
-            this.label3.Location = new System.Drawing.Point(363, 110);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(55, 15);
-            this.label3.TabIndex = 4;
-            this.label3.Text = "15 chars";
-            // 
-            // label4
-            // 
-            this.label4.AutoSize = true;
-            this.label4.Font = new System.Drawing.Font("Calibri", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label4.ForeColor = System.Drawing.Color.White;
-            this.label4.Location = new System.Drawing.Point(590, 138);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(55, 15);
-            this.label4.TabIndex = 5;
-            this.label4.Text = "64 chars";
-            // 
-            // btnTb1Next
-            // 
-            this.btnTb1Next.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.btnTb1Next.Location = new System.Drawing.Point(593, 184);
-            this.btnTb1Next.Name = "btnTb1Next";
-            this.btnTb1Next.Size = new System.Drawing.Size(75, 23);
-            this.btnTb1Next.TabIndex = 10;
-            this.btnTb1Next.Text = "Next";
-            this.btnTb1Next.UseVisualStyleBackColor = true;
-            this.btnTb1Next.Click += new System.EventHandler(this.btnTb1Next_Click);
+            this.btnTb2Next.DialogResult = System.Windows.Forms.DialogResult.OK;
+            this.btnTb2Next.Location = new System.Drawing.Point(593, 184);
+            this.btnTb2Next.Name = "btnTb2Next";
+            this.btnTb2Next.Size = new System.Drawing.Size(75, 23);
+            this.btnTb2Next.TabIndex = 12;
+            this.btnTb2Next.Text = "Next";
+            this.btnTb2Next.UseVisualStyleBackColor = true;
+            this.btnTb2Next.Click += new System.EventHandler(this.btnTb2Next_Click);
             // 
             // btnTb2Previous
             // 
@@ -291,28 +297,6 @@
             this.tbPageImages.Size = new System.Drawing.Size(677, 211);
             this.tbPageImages.TabIndex = 2;
             this.tbPageImages.Text = "Images";
-            // 
-            // btnTb2Next
-            // 
-            this.btnTb2Next.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.btnTb2Next.Location = new System.Drawing.Point(593, 184);
-            this.btnTb2Next.Name = "btnTb2Next";
-            this.btnTb2Next.Size = new System.Drawing.Size(75, 23);
-            this.btnTb2Next.TabIndex = 12;
-            this.btnTb2Next.Text = "Next";
-            this.btnTb2Next.UseVisualStyleBackColor = true;
-            this.btnTb2Next.Click += new System.EventHandler(this.btnTb2Next_Click);
-            // 
-            // btnTb3Previous
-            // 
-            this.btnTb3Previous.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.btnTb3Previous.Location = new System.Drawing.Point(593, 184);
-            this.btnTb3Previous.Name = "btnTb3Previous";
-            this.btnTb3Previous.Size = new System.Drawing.Size(75, 23);
-            this.btnTb3Previous.TabIndex = 12;
-            this.btnTb3Previous.Text = "Previous";
-            this.btnTb3Previous.UseVisualStyleBackColor = true;
-            this.btnTb3Previous.Click += new System.EventHandler(this.btnTb3Previous_Click);
             // 
             // btnImportImage
             // 
@@ -342,27 +326,16 @@
             this.txtImageFile.Size = new System.Drawing.Size(500, 23);
             this.txtImageFile.TabIndex = 14;
             // 
-            // label5
+            // btnTb3Previous
             // 
-            this.label5.AutoSize = true;
-            this.label5.Font = new System.Drawing.Font("Calibri", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label5.ForeColor = System.Drawing.Color.White;
-            this.label5.Location = new System.Drawing.Point(4, 71);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(27, 14);
-            this.label5.TabIndex = 11;
-            this.label5.Text = "KFN";
-            // 
-            // lblKFNFile
-            // 
-            this.lblKFNFile.AutoSize = true;
-            this.lblKFNFile.Font = new System.Drawing.Font("Calibri", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblKFNFile.ForeColor = System.Drawing.Color.White;
-            this.lblKFNFile.Location = new System.Drawing.Point(77, 71);
-            this.lblKFNFile.Name = "lblKFNFile";
-            this.lblKFNFile.Size = new System.Drawing.Size(65, 14);
-            this.lblKFNFile.TabIndex = 12;
-            this.lblKFNFile.Text = "KfnFile.kfn";
+            this.btnTb3Previous.DialogResult = System.Windows.Forms.DialogResult.OK;
+            this.btnTb3Previous.Location = new System.Drawing.Point(593, 184);
+            this.btnTb3Previous.Name = "btnTb3Previous";
+            this.btnTb3Previous.Size = new System.Drawing.Size(75, 23);
+            this.btnTb3Previous.TabIndex = 12;
+            this.btnTb3Previous.Text = "Previous";
+            this.btnTb3Previous.UseVisualStyleBackColor = true;
+            this.btnTb3Previous.Click += new System.EventHandler(this.btnTb3Previous_Click);
             // 
             // frmKfnCreate
             // 
@@ -374,6 +347,7 @@
             this.Controls.Add(this.btnCancel);
             this.Controls.Add(this.btnCreateKfn);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
             this.Name = "frmKfnCreate";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
@@ -403,8 +377,6 @@
         private System.Windows.Forms.TabControl tbControl;
         private System.Windows.Forms.TabPage tbPageMp3;
         private System.Windows.Forms.Button btnTb1Next;
-        private System.Windows.Forms.Label label4;
-        private System.Windows.Forms.Label label3;
         private System.Windows.Forms.TextBox txtComment;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.TextBox txtTitle;

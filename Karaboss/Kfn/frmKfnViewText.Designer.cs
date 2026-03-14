@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmKfnViewText));
             this.pnlTop = new System.Windows.Forms.Panel();
             this.cbTextSize = new System.Windows.Forms.ComboBox();
             this.txtElement = new System.Windows.Forms.TextBox();
@@ -62,13 +63,14 @@
             this.txtElement.Size = new System.Drawing.Size(375, 250);
             this.txtElement.TabIndex = 2;
             // 
-            // frmViewText
+            // frmKfnViewText
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(375, 287);
             this.Controls.Add(this.txtElement);
             this.Controls.Add(this.pnlTop);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "frmKfnViewText";
             this.Text = "frmKfnViewText";
             this.pnlTop.ResumeLayout(false);

@@ -47,8 +47,7 @@ namespace Karaboss.Kfn
             string Title = txtTitle.Text.Trim();
             if (Title.Length == 0) 
                 Title = Path.GetFileNameWithoutExtension(FileName);
-
-            Title = TruncateLongString(Title, 15);            
+                  
             txtTitle.Text = Title;
 
             string kfnFile = Path.ChangeExtension( Path.GetFileName(FileName), ".kfn");
@@ -129,12 +128,9 @@ namespace Karaboss.Kfn
         private void CreateKfnFile(string mp3FileName, string songINIFileName , string imageFileName)
         {
 
-            string Title = txtTitle.Text.Trim();
-            Title = TruncateLongString(Title, 15);
-
+            string Title = txtTitle.Text.Trim();            
             string Comment = txtComment.Text.Trim();
-            Comment = TruncateLongString(Comment, 64);
-
+            
             string tx = "Create a KFN file";
             tx += Environment.NewLine + "MP3: " + Path.GetFileName(mp3FileName);
             tx += Environment.NewLine + "Song.ini: " + Path.GetFileName(songINIFileName);
@@ -181,7 +177,7 @@ namespace Karaboss.Kfn
             Writer.Resources.Add(res);
             */
 
-            Writer.CreateKFN(Title, Comment);
+            Writer.CreateKFN(Path.GetFileName(mp3FileName), Title, Comment);
         }
 
 
@@ -208,18 +204,6 @@ namespace Karaboss.Kfn
         }
         #endregion navigation
 
-
-        /// <summary>
-        /// Truncate string to maxLength characters
-        /// </summary>
-        /// <param name="str"></param>
-        /// <param name="maxLength"></param>
-        /// <returns></returns>
-        private string TruncateLongString(string str, int maxLength)
-        {
-            if (string.IsNullOrEmpty(str)) return str;
-
-            return str.Substring(0, Math.Min(str.Length, maxLength));
-        }
+       
     }
 }

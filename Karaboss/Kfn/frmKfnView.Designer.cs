@@ -30,6 +30,7 @@ namespace Karaboss.Kfn
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmKfnView));
             this.OpenFileDialog = new System.Windows.Forms.OpenFileDialog();
             this.FolderBrowserDialog = new System.Windows.Forms.FolderBrowserDialog();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
@@ -49,10 +50,10 @@ namespace Karaboss.Kfn
             this.pnlRight = new System.Windows.Forms.Panel();
             this.lvResources = new System.Windows.Forms.ListView();
             this.pnlTopResources = new System.Windows.Forms.Panel();
-            this.btnViewConfig = new System.Windows.Forms.Button();
-            this.label2 = new System.Windows.Forms.Label();
-            this.lblAutoDetectedEnc2 = new System.Windows.Forms.Label();
             this.lblAutoDetectedEnc = new System.Windows.Forms.Label();
+            this.btnViewConfig = new System.Windows.Forms.Button();
+            this.lblAutoDetectedEnc2 = new System.Windows.Forms.Label();
+            this.label2 = new System.Windows.Forms.Label();
             this.menuStrip1.SuspendLayout();
             this.pnlTopProperties.SuspendLayout();
             this.pnlLeft.SuspendLayout();
@@ -231,6 +232,17 @@ namespace Karaboss.Kfn
             this.pnlTopResources.Size = new System.Drawing.Size(332, 60);
             this.pnlTopResources.TabIndex = 4;
             // 
+            // lblAutoDetectedEnc
+            // 
+            this.lblAutoDetectedEnc.AutoSize = true;
+            this.lblAutoDetectedEnc.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblAutoDetectedEnc.ForeColor = System.Drawing.Color.White;
+            this.lblAutoDetectedEnc.Location = new System.Drawing.Point(101, 16);
+            this.lblAutoDetectedEnc.Name = "lblAutoDetectedEnc";
+            this.lblAutoDetectedEnc.Size = new System.Drawing.Size(91, 17);
+            this.lblAutoDetectedEnc.TabIndex = 2;
+            this.lblAutoDetectedEnc.Text = "Auto detect is:";
+            // 
             // btnViewConfig
             // 
             this.btnViewConfig.Anchor = System.Windows.Forms.AnchorStyles.Right;
@@ -241,17 +253,6 @@ namespace Karaboss.Kfn
             this.btnViewConfig.Text = "View Config";
             this.btnViewConfig.UseVisualStyleBackColor = true;
             this.btnViewConfig.Click += new System.EventHandler(this.btnViewConfig_Click);
-            // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label2.ForeColor = System.Drawing.Color.White;
-            this.label2.Location = new System.Drawing.Point(4, 40);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(76, 16);
-            this.label2.TabIndex = 1;
-            this.label2.Text = "Resources:";
             // 
             // lblAutoDetectedEnc2
             // 
@@ -264,16 +265,16 @@ namespace Karaboss.Kfn
             this.lblAutoDetectedEnc2.TabIndex = 1;
             this.lblAutoDetectedEnc2.Text = "Auto detect is:";
             // 
-            // lblAutoDetectedEnc
+            // label2
             // 
-            this.lblAutoDetectedEnc.AutoSize = true;
-            this.lblAutoDetectedEnc.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblAutoDetectedEnc.ForeColor = System.Drawing.Color.White;
-            this.lblAutoDetectedEnc.Location = new System.Drawing.Point(101, 16);
-            this.lblAutoDetectedEnc.Name = "lblAutoDetectedEnc";
-            this.lblAutoDetectedEnc.Size = new System.Drawing.Size(91, 17);
-            this.lblAutoDetectedEnc.TabIndex = 2;
-            this.lblAutoDetectedEnc.Text = "Auto detect is:";
+            this.label2.AutoSize = true;
+            this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label2.ForeColor = System.Drawing.Color.White;
+            this.label2.Location = new System.Drawing.Point(4, 40);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(76, 16);
+            this.label2.TabIndex = 1;
+            this.label2.Text = "Resources:";
             // 
             // frmKfnView
             // 
@@ -284,6 +285,7 @@ namespace Karaboss.Kfn
             this.Controls.Add(this.pnlRight);
             this.Controls.Add(this.pnlLeft);
             this.Controls.Add(this.menuStrip1);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MainMenuStrip = this.menuStrip1;
             this.Name = "frmKfnView";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.frmKfnView_FormClosing);

@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmKfnSongINI));
             this.lvBlocks = new System.Windows.Forms.ListView();
             this.txtBlockContent = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
@@ -93,6 +94,7 @@
             this.Controls.Add(this.label1);
             this.Controls.Add(this.txtBlockContent);
             this.Controls.Add(this.lvBlocks);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "frmKfnSongINI";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Song.ini";

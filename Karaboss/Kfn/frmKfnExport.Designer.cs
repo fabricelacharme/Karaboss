@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmKfnExport));
             this.lblVideo = new System.Windows.Forms.Label();
             this.lblAudio = new System.Windows.Forms.Label();
             this.lblLyric = new System.Windows.Forms.Label();
@@ -272,6 +273,7 @@
             this.Controls.Add(this.lblLyric);
             this.Controls.Add(this.lblAudio);
             this.Controls.Add(this.lblVideo);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "frmKfnExport";
             this.Text = "frmKfnExport";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.frmKfnExport_FormClosing);

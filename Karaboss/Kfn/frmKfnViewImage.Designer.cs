@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmKfnViewImage));
             this.imgElement = new System.Windows.Forms.PictureBox();
             this.FolderBrowserDialog = new System.Windows.Forms.FolderBrowserDialog();
             ((System.ComponentModel.ISupportInitialize)(this.imgElement)).BeginInit();
@@ -43,12 +44,13 @@
             this.imgElement.TabStop = false;
             this.imgElement.MouseDown += new System.Windows.Forms.MouseEventHandler(this.imgElement_MouseDown);
             // 
-            // frmViewImage
+            // frmKfnViewImage
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(425, 293);
             this.Controls.Add(this.imgElement);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "frmKfnViewImage";
             this.Text = "frmKfnViewImage";
             ((System.ComponentModel.ISupportInitialize)(this.imgElement)).EndInit();

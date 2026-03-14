@@ -39,6 +39,7 @@
             this.btnDownloads = new System.Windows.Forms.ToolStripButton();
             this.lvToolbar = new System.Windows.Forms.ToolStrip();
             this.btnNewMidiFile = new System.Windows.Forms.ToolStripButton();
+            this.btnNewKfnFile = new System.Windows.Forms.ToolStripButton();
             this.btnPlay = new System.Windows.Forms.ToolStripButton();
             this.btnEdit = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
@@ -52,7 +53,6 @@
             this.pnlSubject = new System.Windows.Forms.Panel();
             this.picSubject = new System.Windows.Forms.PictureBox();
             this.lblSubject = new System.Windows.Forms.Label();
-            this.btnNewKfnFile = new System.Windows.Forms.ToolStripButton();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainerFiles)).BeginInit();
             this.splitContainerFiles.Panel1.SuspendLayout();
             this.splitContainerFiles.Panel2.SuspendLayout();
@@ -157,6 +157,14 @@
             this.btnNewMidiFile.Name = "btnNewMidiFile";
             this.btnNewMidiFile.Click += new System.EventHandler(this.BtnNewMidiFile_Click);
             // 
+            // btnNewKfnFile
+            // 
+            this.btnNewKfnFile.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.btnNewKfnFile.Image = global::Karaboss.Properties.Resources.karafun24_png;
+            resources.ApplyResources(this.btnNewKfnFile, "btnNewKfnFile");
+            this.btnNewKfnFile.Name = "btnNewKfnFile";
+            this.btnNewKfnFile.Click += new System.EventHandler(this.btnNewKfnFile_Click);
+            // 
             // btnPlay
             // 
             this.btnPlay.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
@@ -242,13 +250,6 @@
             resources.ApplyResources(this.lblSubject, "lblSubject");
             this.lblSubject.ForeColor = System.Drawing.Color.White;
             this.lblSubject.Name = "lblSubject";
-            // 
-            // btnNewKfnFile
-            // 
-            this.btnNewKfnFile.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            resources.ApplyResources(this.btnNewKfnFile, "btnNewKfnFile");
-            this.btnNewKfnFile.Name = "btnNewKfnFile";
-            this.btnNewKfnFile.Click += new System.EventHandler(this.btnNewKfnFile_Click);
             // 
             // xplorerControl
             // 
