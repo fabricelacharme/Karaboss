@@ -1,6 +1,9 @@
 ﻿using KFNViewer.Properties;
+using KFNViewer.SongIni;
 using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Drawing.Drawing2D;
 using System.IO;
 using System.Linq;
 using System.Resources;
@@ -85,6 +88,10 @@ namespace KFNViewer
         /// </summary>
         public void CreateKFN(string mp3file, string Title, string Comment)
         {
+
+            CreateIniFile(mp3file, Title, Comment);
+            return;
+
             try
             {
                 using (FileStream fs = new FileStream(fullFileName, FileMode.Create, FileAccess.ReadWrite))
@@ -125,6 +132,8 @@ namespace KFNViewer
         /// <param name="sComment"></param>
         private void WriteProperties(FileStream fs, string sTitle, string sComment, string mp3file)
         {
+            #region example
+
             /*                                         
             *   prop (5 bytes)    propvalue (4 bytes)                                      
            [0]: ("75,70,78,66", "", "KFNB", "signature")
@@ -159,6 +168,8 @@ namespace KFNViewer
                 [6]: { [Source, 1,I,Chiens - Louane.mp3]}
                 [7]: { [Comment, Converti de  le 02 / 03 / 2026 avec KarPbo V1.2.0(c)2009 A.Agapoff.]}
             */
+
+            #endregion example
 
             //string prop;
             byte[] propValue = new byte[4];
@@ -322,6 +333,51 @@ namespace KFNViewer
 
             }
         }
+    
+    
+        /// <summary>
+        /// Create Song.ini file
+        /// </summary>
+        /// <param name="fs"></param>
+        private void CreateIniFile(string Source, string Title, string Comment)
+        {
+            /*
+            [General]
+            Title = Ya ya twist
+            Artist = Johnny Hallyday, richard antohny, petula clarck......etc
+            Album =
+            Composer =
+            Year =
+            Track =
+            GenreID = -1
+            Copyright =
+            Comment = chanson type des années 60 reprise par une multitude d'artistes
+            Source = 1,I,Richard_Anthony_Yaya_twist_(Instrumental)_17710.mp3
+            EffectCount = 2
+            LanguageID = FR
+            DiffMen = 0
+            DiffWomen = 0
+            KFNType = 0
+            Properties = 24
+            KaraokeVersion =
+            VocalGuide =
+            KaraFunization = Dankaraok
+            InfoScreenBmp =
+            */
+
+            KfnIni kfnIni = new KfnIni();
+            kfnIni.PopulateEmpty();
+            
+
+            KfnHeader kfnHeader = new KfnHeader();
+            kfnHeader.Title = Title;
+            kfnHeader.Comment = Comment;           
+            kfnIni.PopulateFromHeader(kfnHeader);
+
+            kfnIni.SetSource(Source);
+
+        }
+    
     }       
 }
 

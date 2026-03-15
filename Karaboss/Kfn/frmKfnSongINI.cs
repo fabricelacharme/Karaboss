@@ -28,7 +28,6 @@ namespace Karaboss.Kfn
 
         private void InitControls()
         {          
-
             int W_Name = 90; int W_ContentID = 90; int W_ContentType = 200;
 
             // Affichage mode détails

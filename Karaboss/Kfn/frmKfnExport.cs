@@ -1,21 +1,11 @@
-﻿using GradientApp;
-using Hqub.MusicBrainz.API.Entities;
-using Karaboss.Lrc.SharedFramework;
-using KFNViewer;
-using Mozilla.NUniversalCharDet;
-using Sanford.Multimedia.Midi;
+﻿using Mozilla.NUniversalCharDet;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using TagLib.Id3v2;
 
 namespace Karaboss.Kfn
 {
@@ -32,9 +22,12 @@ namespace Karaboss.Kfn
             { 65001, "UTF-8 (KFN default)" }
         };
 
-        public frmKfnExport(string exportType, KFN KFN)
+        public frmKfnExport(string ExportType, KFN Kfn)
         {
             InitializeComponent();
+
+            KFN = Kfn;
+            exportType = ExportType;
 
             lblVideo.Visible = (exportType == "EMZ");
             cbVideoSelect.Visible = (exportType == "EMZ");
@@ -174,17 +167,31 @@ namespace Karaboss.Kfn
                 if (cbTitleSelect.Items.Count > 0)
                     cbTitleSelect.SelectedIndex = 0;
 
-                //cbEncSelect.ItemsSource = this.encodings;
-                //cbEncSelect.DisplayMemberPath = "Value";
-                foreach (var encoding in encodings)
-                {
-                    if (string.IsNullOrEmpty(encoding.Value)) continue;
-                    cbEncSelect.Items.Add(encoding.Value);
-                }
-                if (cbEncSelect.Items.Count > 0)
-                    cbEncSelect.SelectedIndex = 0;
+               
             }
             #endregion artist title
+
+
+            #region encoding
+
+            //cbEncSelect.ItemsSource = this.encodings;
+            //cbEncSelect.DisplayMemberPath = "Value";
+            cbEncSelect.DataSource = new BindingSource(encodings, null);
+            cbEncSelect.ValueMember = "Key";
+            cbEncSelect.DisplayMember = "Value";                      
+            /*
+            foreach (var encoding in encodings)
+            {
+                if (string.IsNullOrEmpty(encoding.Value)) continue;
+                cbEncSelect.Items.Add(encoding.Value);
+            }
+            */
+
+            if (cbEncSelect.Items.Count > 0)
+                cbEncSelect.SelectedIndex = 0;
+
+            #endregion encoding
+
 
             // VIDEO
             #region video

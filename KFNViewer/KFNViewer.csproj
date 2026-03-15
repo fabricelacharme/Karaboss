@@ -78,6 +78,10 @@
     <Compile Include="Slogi.cs" />
     <Compile Include="SongINI.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SongIni\Effs.cs" />
+    <Compile Include="SongIni\KfnHeader.cs" />
+    <Compile Include="SongIni\KfnIni.cs" />
+    <Compile Include="SongIni\Trajectory.cs" />
     <Compile Include="Writer.cs" />
     <Service Include="{94E38DFF-614B-4cbd-B67C-F211BB35CE8B}" />
   </ItemGroup>

@@ -1,16 +1,8 @@
 ﻿using KFNViewer;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
 using System.IO;
-using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using static KFN;
 
 namespace Karaboss.Kfn
 {    
@@ -101,6 +93,7 @@ namespace Karaboss.Kfn
             string SongINIFileName;
             string ImageFileName;
 
+            #region guard
             Mp3FileName = txtMp3File.Text.Trim();
             if (!File.Exists(Mp3FileName))
             {
@@ -121,6 +114,7 @@ namespace Karaboss.Kfn
                 MessageBox.Show("Invalid image file", Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
+            #endregion guard
 
             CreateKfnFile(Mp3FileName, SongINIFileName, ImageFileName);
         }
