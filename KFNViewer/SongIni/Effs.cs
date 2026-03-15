@@ -17,6 +17,7 @@ namespace KFNViewer.SongIni
         /// Every following starts from 1.
         /// </summary>
         public int id;
+
         public int num;
         /// <summary>
         /// Collection of the animations.
@@ -55,7 +56,8 @@ namespace KFNViewer.SongIni
         /// </summary>
         public Trajectory initial_trajectory;
 
-        public Eff(int Id, 
+        public Eff(
+            int Id, 
             int Num, 
             List<Anim> Anims, 
             string Initial_lib_image, 
@@ -67,6 +69,7 @@ namespace KFNViewer.SongIni
             List<TextEntry> Texts,
             Trajectory Initial_trajectory)
         {
+            id = Id;
             num = Num;
             anims = Anims;
             initial_lib_image = Initial_lib_image;

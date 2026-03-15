@@ -12,6 +12,7 @@ using System.Resources;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Xml;
 using System.Xml.Linq;
 using TagLib;
 using static KFN;
@@ -464,8 +465,126 @@ namespace KFNViewer
                 }
             }
             kfnIni.SetMaterials(entries);
-            
+
             #endregion Materials
+
+
+            #region Eff
+            /*             
+            id = Id;
+            num = Num;
+            anims = Anims;
+            initial_lib_image = Initial_lib_image;
+            initial_video_file = Initial_video_file;
+            initial_font = Initial_font;
+            initial_active_color =  ;
+            initial_inactive_color = Initial_inactive_color;
+            syncs = Syncs;
+            texts = Texts;
+            initial_trajectory = Initial_trajectory;
+
+            [Eff1]
+            ID=51
+            InPractice=0
+            Enabled=-1
+            Locked=0
+            Color=#000000
+            LibImage=
+            ImageColor=#FFFFFFFF
+            AlphaBlending=Opacity
+            OffsetX=0
+            OffsetY=0
+            Depth=0
+            NbAnim=0
+
+            */
+
+            // Reset effs
+            kfnIni.Effs = new List<Eff>();
+                       
+            #region eff1
+            int effnum = 1;
+
+            Eff eff = new Eff(
+                51,                         // first is always 51
+                effnum,                          // num
+                new List<Anim>(),           // anims
+                null, 
+                null,
+                ("", 0),                    // font
+                null, 
+                null,
+                new List<int>(),           // syncs
+                new List<TextEntry>(),     // Texts
+                Trajectory.Default());
+            
+            kfnIni.Effs.Add(eff);
+
+            #endregion eff1
+
+
+            #region eff2
+            List<TextEntry> textLst = new List<TextEntry>();
+            List<(int, string)> fragments = new List<(int, string)>();
+            TextEntry text;
+            effnum = 2;
+            
+            List<int> syncsLst = new List<int>() { 757, 820, 898, 938, 985, 1040, 1097, 1120, 1149, 1172, 1218, 1310, 1336, 1359, 1387, 1433, 1485, 1504, 1529, 1551, 1602, 1641, 1680, 1700, 1724, 1768, 1788, 1817, 1866, 1888, 1911, 1982, 2026, 2059, 2082, 2106, 2328, 2375, 2497, 2519, 2548, 2590, 2642, 2662 };
+            //fragments = new List<(int, string)>() { (1, "TU"), (2, " M'AS"), (3, " TROP"), (4, " SOU"), (5, "VENT"), (6, " DIT") };                       
+            text = new TextEntry("TU M'AS TROP SOU/VENT DIT", fragments, effnum);
+            textLst.Add(text);
+
+            //fragments = new List<(int, string)>() { (1, "QUE"), (2, " T'AI"), (3, "MAIS"), (4, " MES"), (5, "YEUX") };
+            text = new TextEntry("QUE T'AI/MAIS MES YEUX,", fragments, effnum);
+            textLst.Add(text);
+
+            text = new TextEntry("QUE T'AI/MAIS NOS NUITS,", fragments, effnum);
+            textLst.Add(text);
+
+            text = new TextEntry("MAIN/T'NANT,", fragments, effnum);
+            textLst.Add(text);
+
+            text = new TextEntry("J'AI L'AIR D'UNE FOLLE,", fragments, effnum);
+            textLst.Add(text);
+
+            text = new TextEntry("LE MAS/CA/RA DE/COLLE,", fragments, effnum);
+            textLst.Add(text);
+
+            text = new TextEntry("TU M'Y AS FAIT CROIRE,", fragments, effnum);
+            textLst.Add(text);
+
+            text = new TextEntry("MAIS T'ES QU'UN", fragments, effnum);
+            textLst.Add(text);
+
+            text = new TextEntry("TU M'AS CAS/SEE EN DEUX", fragments, effnum);
+            textLst.Add(text);
+
+            text = new TextEntry("ET MOI, J'AI AP/PRIS", fragments, effnum);
+            textLst.Add(text);
+
+            eff = new Eff(
+                1,  // second is 1
+                effnum,  // num
+                new List<Anim>(),           // anims
+                null,
+                null,
+                ("", 0),                    // font
+                "#00ACFFFF",                // initial active color
+                "#FFFFFFFF",                // initial inactive color
+                syncsLst,                   // Sync
+                textLst,                    // Texts
+                Trajectory.Default());
+
+            kfnIni.Effs.Add(eff) ;
+
+            #endregion eff2
+
+            kfnIni.SetEff();
+
+
+            #endregion Eff
+
+
         }
 
     }       

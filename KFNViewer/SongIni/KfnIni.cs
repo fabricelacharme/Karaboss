@@ -444,7 +444,7 @@ namespace KFNViewer.SongIni
                 effSection += effNum.ToString();
 
                 var section = Ini[effSection];
-                Eff eff = Effs[effNum];
+                Eff eff = Effs[effNum - 1];
 
                 // get essential fields
                 section["ID"] = eff.id.ToString();
@@ -453,7 +453,7 @@ namespace KFNViewer.SongIni
                 section["Trajectory"] = eff.initial_trajectory.ToString();
 
                 // iterate through Anim# 
-                for (var animN = 0; animN < Effs[effNum].anims.Count; animN++)
+                for (var animN = 0; animN < Effs[effNum -1].anims.Count; animN++)
                 {
                     // get into the appropriate section
                     var animSection = Ini[effSection];
@@ -489,19 +489,17 @@ namespace KFNViewer.SongIni
 
                 //Ini.WithSection(effSection)
                 //    .Set("Sync0", string.Join(",", Effs[effNum].syncs.ToList().Select(n => n.ToString())));
-                Ini[effSection]["Sync0"] = string.Join(",", Effs[effNum].syncs.ToList().Select(n => n.ToString()));
+                Ini[effSection]["Sync0"] = string.Join(",", Effs[effNum - 1].syncs.ToList().Select(n => n.ToString()));
 
-            
+                            
 
-                
-
-                for (int textIndex = 0; textIndex < Effs[effNum].texts.Count; textIndex++)
+                for (int textIndex = 0; textIndex < Effs[effNum - 1].texts.Count; textIndex++)
                 {
                     // Obtain the INI section that corresponds to the current effect
                     var textSection = Ini[effSection];
 
                     // Get the current text entry and its display string
-                    var textValue = Effs[effNum].texts[textIndex];
+                    var textValue = Effs[effNum - 1].texts[textIndex];
                     //string displayText = currentTextEntry.display;   // other fields are ignored
 
                     // Build the key "Text{rowNumber}"
