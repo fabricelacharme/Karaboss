@@ -153,7 +153,7 @@ namespace KFNViewer.SongIni
             {
                 if (!string.Equals(header.SourceFile.Substring(0, 4), "1,I,", StringComparison.Ordinal))
                 {
-                    source += "1,I,";
+                    source = "1,I,";
                 }
             }
 
@@ -167,7 +167,7 @@ namespace KFNViewer.SongIni
             Ini.Sections["General"]["Track"] = header.Trak;
             Ini.Sections["General"]["GenreID"] = header.Genre.ToString();
             Ini.Sections["General"]["Copyright"] = header.Copyright;
-            Ini.Sections["General"]["Comment"] = "";
+            Ini.Sections["General"]["Comment"] = header.Comment;
             Ini.Sections["General"]["Source"] = source;
             Ini.Sections["General"]["EffectCount"] = "";
             Ini.Sections["General"]["LanguageID"] = header.Language;
@@ -530,7 +530,7 @@ namespace KFNViewer.SongIni
         /// Sets the list of files in the ini, based on the entries given.
         public void SetMaterials(List<Entry> materials)
         {
-            var matCount = materials.Count - 1;
+            var matCount = materials.Count;
 
             Ini["Materials"]["MatCount"] = matCount.ToString(CultureInfo.InvariantCulture);
 

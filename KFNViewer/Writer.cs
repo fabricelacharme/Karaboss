@@ -3,9 +3,11 @@ using KFNViewer.SongIni;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Resources;
 using System.Text;
 using System.Threading.Tasks;
@@ -38,7 +40,7 @@ namespace KFNViewer
         {4, "Font"},
         {5, "Video"},
         {6, "Visualization"}
-    };
+         };
 
         private int GetFileTypeId(string type)
         {
@@ -73,6 +75,17 @@ namespace KFNViewer
             resources.Add(res);
             Offset += length;
 
+            // Images
+            for (int i = 0; i < imgLst.Count; i++)
+            {
+                fi = new FileInfo(imgLst[i]);
+                length = (int)fi.Length;
+                res = new ResourceFile("Image", fi.Name, length, length, Offset, false, false);
+                resources.Add(res);
+                Offset += length;
+            }
+
+
             // Song.ini
             fi = new FileInfo(iniFileName);  
             length = (int)fi.Length;
@@ -80,6 +93,9 @@ namespace KFNViewer
             res = new ResourceFile("Config", fi.Name, length, length, Offset, false, false);
             resources.Add(res);
             Offset += length;
+
+
+
 
         }
                         
@@ -341,6 +357,12 @@ namespace KFNViewer
         /// <param name="fs"></param>
         private void CreateIniFile(string Source, string Title, string Comment)
         {
+            
+
+            KfnIni kfnIni = new KfnIni();
+            kfnIni.PopulateEmpty();
+
+            #region General
             /*
             [General]
             Title = Ya ya twist
@@ -365,19 +387,87 @@ namespace KFNViewer
             InfoScreenBmp =
             */
 
-            KfnIni kfnIni = new KfnIni();
-            kfnIni.PopulateEmpty();
-            
 
             KfnHeader kfnHeader = new KfnHeader();
             kfnHeader.Title = Title;
-            kfnHeader.Comment = Comment;           
+            kfnHeader.Comment = Comment;   
+            kfnHeader.SourceFile = Source;
+            
             kfnIni.PopulateFromHeader(kfnHeader);
 
-            kfnIni.SetSource(Source);
+            #endregion General
 
+
+            #region Materials
+            /*
+            [Materials]
+            MatCount = 10
+            Mat0 = Richard_Anthony_Yaya_twist_(Instrumental)_17710.mp3
+            Mat1 = Richard_Anthony_Yaya_twist_(Instrumental_avec_chanteur)_17711.mp3
+            Mat2 = imagesCAKS0X8N.jpg
+            Mat3 = imagesCA8G8R3P.jpg
+            Mat4 = imagesCAA3W1ZK.jpg
+            Mat5 = imagesCAAOWOS3.jpg
+            Mat6 = imagesCAD7NM53.jpg
+            Mat7 = imagesCAJS9BBJ.jpg
+            Mat8 = imagesCAJUNNLW.jpg
+            Mat9 = Copie de dan fond karafun.bmp
+            */
+
+
+            /* ResourceFile
+            Type = type;
+            Name = name;
+            EncryptedLength = enclength;
+            Length = length;
+            Offset = offset;
+            Encrypted = encrypted;
+            IsAudioSource = aSource;
+ 
+            //ResourceFile res = new ResourceFile("Audio", "Chiens - Louane.mp3", 2943507, 2943507, 0, false, true);
+            res = new ResourceFile("Audio", fi.Name, length, length, Offset, false, true); 
+             */
+
+            List<Entry> entries = new List<Entry>();
+            
+
+            int Offset = 0;
+            
+            // Audio files
+            foreach (KFN.ResourceFile resource in Resources)
+            {
+                if (resource.FileType == "Audio")
+                {
+                    Entry entry = new Entry();
+                    entry.FileName = resource.FileName;
+                    entry.Length1 = resource.EncLength;
+                    entry.Length2 = resource.FileLength;
+                    entry.Offset = Offset;
+
+                    entries.Add(entry);
+                    Offset += Offset;
+                }
+            }
+            // Images
+            foreach (KFN.ResourceFile resource in Resources)
+            {
+                if (resource.FileType == "Image")
+                {
+                    Entry entry = new Entry();
+                    entry.FileName = resource.FileName;
+                    entry.Length1 = resource.EncLength;
+                    entry.Length2 = resource.FileLength;
+                    entry.Offset = Offset;
+
+                    entries.Add(entry);
+                    Offset += Offset;
+                }
+            }
+            kfnIni.SetMaterials(entries);
+            
+            #endregion Materials
         }
-    
+
     }       
 }
 
