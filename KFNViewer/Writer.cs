@@ -22,9 +22,11 @@ namespace KFNViewer
     public class KfnWriter
     {
         public string fullFileName {  get; set; }
-        public string mp3FileName {  get; set; }
-        public string iniFileName { get; set; }
-        public List<string> imageFileNameLst { get; set; }
+        public List<string> lstAudioFiles {  get; set; }
+        public string lyricsFileName { get; set; }
+        public List<string> lstImages { get; set; }
+
+        public int Offset { get; set; }
 
         private List<ResourceFile> resources = new List<ResourceFile>();
 
@@ -52,34 +54,39 @@ namespace KFNViewer
         // US-ASCII
         private int resourceNamesEncodingAuto = 20127;
 
-        public KfnWriter(string fpath, string mp3, string ini, List<string> imgLst)
+        public KfnWriter(string fpath, List<string> LstAudioFiles, string LyricsFile, List<string> lstImg)
         {
             fullFileName = fpath;
-            mp3FileName = mp3;
-            iniFileName = ini;
-            imageFileNameLst = imgLst;
+            lstAudioFiles = LstAudioFiles;
+            lyricsFileName = LyricsFile;
+            lstImages = lstImg;
             
             
             FileInfo fi;
-            int Offset = 0;
+            Offset = 0;
+            
             int length = 0;
 
             // Add list of resources
             resources = new List<ResourceFile>();
             ResourceFile res;
 
-            // MP3
-            fi = new FileInfo(mp3FileName);                        
-            length = (int)fi.Length;
-            //ResourceFile res = new ResourceFile("Audio", "Chiens - Louane.mp3", 2943507, 2943507, 0, false, true);
-            res = new ResourceFile("Audio", fi.Name, length, length, Offset, false, true);            
-            resources.Add(res);
-            Offset += length;
+            // Audios
+            for (int i = 0; i < lstAudioFiles.Count; i++)
+            {
+                fi = new FileInfo(lstAudioFiles[i]);
+                length = (int)fi.Length;
+                //ResourceFile res = new ResourceFile("Audio", "Chiens - Louane.mp3", 2943507, 2943507, 0, false, true);
+                res = new ResourceFile("Audio", fi.Name, length, length, Offset, false, true);
+                resources.Add(res);
+                Offset += length;
+            }
+
 
             // Images
-            for (int i = 0; i < imgLst.Count; i++)
+            for (int i = 0; i < lstImg.Count; i++)
             {
-                fi = new FileInfo(imgLst[i]);
+                fi = new FileInfo(lstImg[i]);
                 length = (int)fi.Length;
                 res = new ResourceFile("Image", fi.Name, length, length, Offset, false, false);
                 resources.Add(res);
@@ -87,14 +94,15 @@ namespace KFNViewer
             }
 
 
-            // Song.ini
-            fi = new FileInfo(iniFileName);  
+            // Lyrics
+            /*
+            fi = new FileInfo(lyricsFileName);  
             length = (int)fi.Length;
             //res = new ResourceFile("Config", "Song.ini", 5654, 5654, 2943507, false, false);
             res = new ResourceFile("Config", fi.Name, length, length, Offset, false, false);
             resources.Add(res);
             Offset += length;
-
+            */
 
 
 
@@ -103,30 +111,34 @@ namespace KFNViewer
         /// <summary>
         /// Create a new KFN file
         /// </summary>
-        public void CreateKFN(string mp3file, string Title, string Comment)
+        public void CreateKFN(string fullFileName, string Title, string Comment, string Year, string Author, string BgColor)
         {
 
-            CreateIniFile(mp3file, Title, Comment);
-            return;
+            string Source = Path.GetFileName(lstAudioFiles[0]);
+            string IniFileData = string.Empty;
+
+            IniFileData = CreateIniFile(Source, Title, Comment, Year, Author, BgColor);
+
+            int length = IniFileData.Length;
+            //res = new ResourceFile("Config", "Song.ini", 5654, 5654, 2943507, false, false);
+            ResourceFile res = new ResourceFile("Config", "Song.ini", length, length, Offset, false, false);
+            resources.Add(res);
+            
 
             try
             {
                 using (FileStream fs = new FileStream(fullFileName, FileMode.Create, FileAccess.ReadWrite))
-                {
-                    // Write properties
-                    WriteProperties(fs, Title, Comment, mp3file);
+                {                                                                                
+                    // Write bytes properties
+                    WriteBytesProperties(fs, Title, Comment, Source);
 
-                    // Write resources
-                    WriteResources(fs);
+                    // Write bytes resources
+                    WriteBytesResources(fs);
 
+                    // Write files content
+                    WriteFilesContents(fs, IniFileData);
 
-                    // Write mp3
-                    byte[] fileBytes = System.IO.File.ReadAllBytes(mp3FileName);
-                    fs.Write(fileBytes, 0, fileBytes.Length);
-
-                    // Write Song.ini
-                    fileBytes = System.IO.File.ReadAllBytes(iniFileName);
-                    fs.Write(fileBytes, 0, fileBytes.Length);
+                    
                 }
 
                 string tx = string.Format("File {0} \nwas created in the directory\n {1}", Path.GetFileName(fullFileName), Path.GetDirectoryName(fullFileName));
@@ -136,9 +148,7 @@ namespace KFNViewer
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message, Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-        
-        
+            }                
         }
 
         /// <summary>
@@ -147,7 +157,7 @@ namespace KFNViewer
         /// <param name="fs"></param>
         /// <param name="sTitle"></param>
         /// <param name="sComment"></param>
-        private void WriteProperties(FileStream fs, string sTitle, string sComment, string mp3file)
+        private void WriteBytesProperties(FileStream fs, string sTitle, string sComment, string mp3file)
         {
             #region example
 
@@ -301,7 +311,7 @@ namespace KFNViewer
         /// Write resources
         /// </summary>
         /// <param name="fs"></param>
-        private void WriteResources(FileStream fs)
+        private void WriteBytesResources(FileStream fs)
         {            
             int nbchars;
             byte[] bnbchars;
@@ -352,11 +362,35 @@ namespace KFNViewer
         }
     
     
+        private void WriteFilesContents(FileStream fs, string IniFileData)
+        {
+            byte[] fileBytes;
+
+            // Write mp3
+            for (int i = 0; i < lstAudioFiles.Count; i++)
+            {
+                fileBytes = System.IO.File.ReadAllBytes(lstAudioFiles[i]);
+                fs.Write(fileBytes, 0, fileBytes.Length);
+            }
+
+            // Write images
+            for (int i = 0; i < lstImages.Count; i++)
+            {
+                fileBytes = System.IO.File.ReadAllBytes(lstImages[i]);
+                fs.Write(fileBytes, 0, fileBytes.Length);
+            }
+
+            // Last, write Song.ini
+            fileBytes = Encoding.UTF8.GetBytes(IniFileData);
+            fs.Write(fileBytes, 0, fileBytes.Length);
+        }
+
+
         /// <summary>
         /// Create Song.ini file
         /// </summary>
         /// <param name="fs"></param>
-        private void CreateIniFile(string Source, string Title, string Comment)
+        private string CreateIniFile(string Source, string Title, string Comment, string Year, string Author, string BgColor)
         {
             
 
@@ -393,7 +427,9 @@ namespace KFNViewer
             kfnHeader.Title = Title;
             kfnHeader.Comment = Comment;   
             kfnHeader.SourceFile = Source;
-            
+            kfnHeader.Year = Year;
+            kfnHeader.Karafunizer = Author;
+
             kfnIni.PopulateFromHeader(kfnHeader);
 
             #endregion General
@@ -584,6 +620,8 @@ namespace KFNViewer
 
             #endregion Eff
 
+
+            return kfnIni.ToString();
 
         }
 

@@ -543,8 +543,37 @@ namespace KFNViewer.SongIni
                 Ini["Materials"][key] = value;
             }
         }
+
+
+        /// <summary>
+        /// // impl ToString for KfnIni
+        /// </summary>
+        /// <returns></returns>
+        public override string ToString()
+        {
+            string result = string.Empty;
+
+            
+            foreach (var IniSection in Ini.Sections)
+            {
+
+                if (result == string.Empty)
+                    result = "[" + IniSection.SectionName + "]" + Environment.NewLine;
+                else
+                    result += Environment.NewLine + "[" + IniSection.SectionName + "]" + Environment.NewLine;
+
+                
+                SectionData sa = Ini.Sections.GetSectionData(IniSection.SectionName);
+
+                foreach(var k in sa.Keys)
+                {
+                    string w = k.KeyName;
+                    string v = k.Value;
+                                        
+                    result += k.KeyName + "=" + k.Value + Environment.NewLine;
+                }
+            }            
+            return result;
+        }
     }
-
- 
-
 }

@@ -24,7 +24,7 @@ namespace Karaboss.Kfn
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void btnImportMp3File_Click(object sender, EventArgs e)
+        private void btnImportAudio1_Click(object sender, EventArgs e)
         {
             string FileName;
             OpenFileDialog.Filter = "Mp3 files (*.mp3)|*.mp3|All files (*.*)|*.*";
@@ -33,35 +33,56 @@ namespace Karaboss.Kfn
             FileName = OpenFileDialog.FileName;
             OpenFileDialog.InitialDirectory = Path.GetDirectoryName(FileName);
 
+            txtAudio1.Text = FileName;
 
-            txtMp3File.Text = FileName;
+            SetTitleFromFile(FileName);          
+        }
 
+        private void btnImportAudio2_Click(object sender, EventArgs e)
+        {
+            string FileName;
+            OpenFileDialog.Filter = "Mp3 files (*.mp3)|*.mp3|All files (*.*)|*.*";
+            if (OpenFileDialog.ShowDialog() != DialogResult.OK) return;
+
+            FileName = OpenFileDialog.FileName;
+            OpenFileDialog.InitialDirectory = Path.GetDirectoryName(FileName);
+
+
+            txtAudio2.Text = FileName;            
+        }
+
+        /// <summary>
+        /// Starting from the file name, sets the title of song and the name of the future KFN file
+        /// </summary>
+        /// <param name="FileName"></param>
+        private void SetTitleFromFile(string FileName)
+        {
             string Title = txtTitle.Text.Trim();
-            if (Title.Length == 0) 
+            if (Title.Length == 0)
                 Title = Path.GetFileNameWithoutExtension(FileName);
-                  
+
             txtTitle.Text = Title;
 
-            string kfnFile = Path.ChangeExtension( Path.GetFileName(FileName), ".kfn");
-            lblKFNFile.Text = kfnFile;
-
+            string kfnFile = Path.ChangeExtension(Path.GetFileName(FileName), ".kfn");
+            txtKfnFileName.Text = kfnFile;
         }
+
 
         /// <summary>
         /// Import Song.ini file
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void btnImportSongINIFile_Click(object sender, EventArgs e)
+        private void btnImportLyrics_Click(object sender, EventArgs e)
         {
             string FileName;
-            OpenFileDialog.Filter = "Ini files (*.ini)|*.ini|All files (*.*)|*.*";
+            OpenFileDialog.Filter = "LRC files (*.lrc)|*.lrc|All files (*.*)|*.*";
             if (OpenFileDialog.ShowDialog() != DialogResult.OK) return;
             
             FileName = OpenFileDialog.FileName;
             OpenFileDialog.InitialDirectory = Path.GetDirectoryName(FileName);
 
-            txtSongINIFile.Text = FileName;
+            txtLyrics.Text = FileName;
         }
 
 
@@ -89,22 +110,51 @@ namespace Karaboss.Kfn
 
         private void btnCreateKfn_Click(object sender, EventArgs e)
         {
-            string Mp3FileName;
-            string SongINIFileName;
+           // Create KFN File
+            CreateKfnFile();
+        }
+
+        /// <summary>
+        /// Create KFN file
+        /// </summary>
+        /// <param name="AudioFiles"></param>
+        /// <param name="LyricsFileName"></param>
+        /// <param name="imageFileName"></param>
+        /// <param name="BgColor"></param>
+        private void CreateKfnFile()
+        {
+
+            string AudioFileName1;
+            string AudioFileName2;
+            string LyricsFileName;
             string ImageFileName;
+            string BgColor;
+            string Year;
+            string Author;
+            string Title;
+            string Comment;
 
             #region guard
-            Mp3FileName = txtMp3File.Text.Trim();
-            if (!File.Exists(Mp3FileName))
+            
+            AudioFileName1 = txtAudio1.Text.Trim();
+            if (!File.Exists(AudioFileName1))
             {
-                MessageBox.Show("Invalid mp3 file", Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error );
+                MessageBox.Show("Invalid audio file", Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 
-            SongINIFileName = txtSongINIFile.Text.Trim();
-            if (!File.Exists(SongINIFileName))
+            AudioFileName2 = txtAudio2.Text.Trim();
+            if (AudioFileName2 != string.Empty && !File.Exists(AudioFileName2))
             {
-                MessageBox.Show("Invalid Song.ini file", Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Invalid audio file", Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
+
+            LyricsFileName = txtLyrics.Text.Trim();
+            if (!File.Exists(LyricsFileName))
+            {
+                MessageBox.Show("Invalid lyrics file", Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 
@@ -114,30 +164,49 @@ namespace Karaboss.Kfn
                 MessageBox.Show("Invalid image file", Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
+
+            BgColor = txtBgColor.Text.Trim();
+
             #endregion guard
 
-            CreateKfnFile(Mp3FileName, SongINIFileName, ImageFileName);
-        }
-
-        private void CreateKfnFile(string mp3FileName, string songINIFileName , string imageFileName)
-        {
-
-            string Title = txtTitle.Text.Trim();            
-            string Comment = txtComment.Text.Trim();
             
-            string tx = "Create a KFN file";
-            tx += Environment.NewLine + "MP3: " + Path.GetFileName(mp3FileName);
-            tx += Environment.NewLine + "Song.ini: " + Path.GetFileName(songINIFileName);
+            List<string> lstAudioFiles = new List<string>() { AudioFileName1 };
+            if (AudioFileName2 != string.Empty)
+                lstAudioFiles.Add(AudioFileName2);
+
+            // Title
+            Title = txtTitle.Text.Trim();            
+            // Comment
+            Comment = txtComment.Text.Trim();
+            // Year
+            Year = txtYear.Text.Trim();
+            // Author
+            Author = txtAuthor.Text.Trim();
+
+            string tx = "Create a KFN file" + Environment.NewLine;
+
+            for (int i = 0; i < lstAudioFiles.Count; i++)
+            {
+                tx += Environment.NewLine + string.Format("Audio{0}: {1}", i + 1, Path.GetFileName(lstAudioFiles[i]));
+            }
+            
+            tx += Environment.NewLine + "Lyrics: " + Path.GetFileName(LyricsFileName);
             tx += Environment.NewLine + "Title: " + Title;
             tx += Environment.NewLine + "Comment: " + Comment;
 
             if (MessageBox.Show(tx, Application.ProductName, MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question) != DialogResult.Yes) return;
             
             // Create a kfn file using the name of the mp3 file ?
-            string kfnFile = Path.ChangeExtension(mp3FileName, ".kfn");
+            string kfnFile = Path.Combine(  Path.GetDirectoryName(AudioFileName1) , txtKfnFileName.Text);
             
-            KfnWriter Writer = new KfnWriter(kfnFile, mp3FileName, songINIFileName, new List<string> { imageFileName });
+            // List of images (only 1 for the moment)
+            List<string> lstImages = new List<string>() { ImageFileName};
 
+
+            // Initialize Writer
+            KfnWriter Writer = new KfnWriter(kfnFile, lstAudioFiles, LyricsFileName, lstImages);
+            if (Writer != null) 
+                Writer.CreateKFN(kfnFile, Title, Comment, Year, Author, BgColor);
 
 
             // Creeate 3 resources
@@ -162,7 +231,7 @@ namespace Karaboss.Kfn
 
             // L'offset est caclulé en additionnant enclength avec l'offset précédant
 
-            
+
             /*
             ResourceFile res = new ResourceFile("Audio", "Chiens - Louane.mp3", 2943507, 2943507, 0, false, true);
             Writer.Resources.Add(res);
@@ -170,34 +239,56 @@ namespace Karaboss.Kfn
             res = new ResourceFile("Config", "Song.ini", 5654, 5654, 2943507, false, false);
             Writer.Resources.Add(res);
             */
-
-            Writer.CreateKFN(Path.GetFileName(mp3FileName), Title, Comment);
         }
 
 
-
         #region navigation
+        // Page1 
         private void btnTb1Next_Click(object sender, EventArgs e)
         {
             tbControl.SelectedTab = tbPageLyrics;
         }
 
+        // Page 2
         private void btnTb2Next_Click(object sender, EventArgs e)
         {
             tbControl.SelectedTab = tbPageImages;
         }
-
+        
         private void btnTb2Previous_Click(object sender, EventArgs e)
         {
-            tbControl.SelectedTab = tbPageMp3;
+            tbControl.SelectedTab = tbPageAudios;
         }
 
+        // Page 3
         private void btnTb3Previous_Click(object sender, EventArgs e)
         {
             tbControl.SelectedTab = tbPageLyrics;
+        }        
+
+        private void btnTb3Next_Click(object sender, EventArgs e)
+        {
+            tbControl.SelectedTab= tbPageBackground;
         }
+
+        // Page 4
+
+        private void btnTb4Previous_Click(object sender, EventArgs e)
+        {
+            tbControl.SelectedTab = tbPageImages;
+        }
+
+
         #endregion navigation
 
-       
+        private void btnBgColorSelect_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void btnBgColorPicker_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 }
