@@ -82,6 +82,7 @@
     <Compile Include="SongIni\KfnHeader.cs" />
     <Compile Include="SongIni\KfnIni.cs" />
     <Compile Include="SongIni\Trajectory.cs" />
+    <Compile Include="Utilities\LyricsUtilities.cs" />
     <Compile Include="Writer.cs" />
     <Service Include="{94E38DFF-614B-4cbd-B67C-F211BB35CE8B}" />
   </ItemGroup>

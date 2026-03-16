@@ -69,7 +69,6 @@ public class KFN
 
     }
 
-
     public string isError
     {
         get { return this.error; }
@@ -284,9 +283,8 @@ public class KFN
                 {
                     fs.Position += 4;
 
-                    //*************************************************
-                    //AddBytesToDebug(propName, null, "End of properties", prop);
-                    AddBytesToDebug(prop, null, propName, "End of properties");
+                    //*************************************************                    
+                    //AddBytesToDebug(prop, null, propName, "End of properties");
 
                     break;
                 }
@@ -296,9 +294,8 @@ public class KFN
                 {
                     fs.Read(propValue, 0, propValue.Length);
 
-                    //*************************************************
-                    //AddBytesToDebug(propName, propValue, SpropName, prop);
-                    AddBytesToDebug(prop, propValue, propName, SpropName);
+                    //*************************************************                    
+                    //AddBytesToDebug(prop, propValue, propName, SpropName);
 
                     if (SpropName == "Genre" && BitConverter.ToUInt32(propValue, 0) == 0xffffffff)
                     {
@@ -320,9 +317,8 @@ public class KFN
                 {
                     fs.Read(propValue, 0, propValue.Length);
 
-                    //*************************************************
-                    //AddBytesToDebug(propName, propValue, SpropName, prop);
-                    AddBytesToDebug(prop, propValue, propName, SpropName);
+                    //*************************************************                    
+                    //AddBytesToDebug(prop, propValue, propName, SpropName);
 
                     byte[] value = new byte[BitConverter.ToUInt32(propValue, 0)];
                     fs.Read(value, 0, value.Length);
@@ -351,9 +347,7 @@ public class KFN
                     this.error = "unknown property block type - " + prop[4];
                     return;
                 }
-
                 
-
                 maxProps--;
             }
             this.endOfPropsOffset = fs.Position;

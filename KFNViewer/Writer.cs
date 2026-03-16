@@ -1,30 +1,35 @@
 ﻿using KFNViewer.Properties;
 using KFNViewer.SongIni;
+using KFNViewer.Utilities;
+using Mozilla.NUniversalCharDet;
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Drawing;
-using System.Drawing.Drawing2D;
 using System.IO;
 using System.Linq;
-using System.Net;
-using System.Resources;
 using System.Text;
-using System.Threading.Tasks;
+using System.Text.RegularExpressions;
+using System.Web;
 using System.Windows.Forms;
-using System.Xml;
-using System.Xml.Linq;
-using TagLib;
 using static KFN;
 
 namespace KFNViewer
 {
     public class KfnWriter
     {
+        public string Title { get; set; }
+        public string Artist { get; set; }
+        public string Comment { get; set; }
+        public string Year { get; set; }
+        public string Author { get; set; }
+
+        public string BgColor { get; set; }
+        
         public string fullFileName {  get; set; }
         public List<string> lstAudioFiles {  get; set; }
         public string lyricsFileName { get; set; }
         public List<string> lstImages { get; set; }
+
+        public string SongIniFile { get; set; }
 
         public int Offset { get; set; }
 
@@ -34,6 +39,10 @@ namespace KFNViewer
         {
             get { return this.resources; }
         }
+
+        // Song.ini file
+        public KfnIni kfnIni { get; set; }
+
 
         private Dictionary<int, string> fileTypes = new Dictionary<int, string> {
         {0, "Text"},
@@ -54,76 +63,52 @@ namespace KFNViewer
         // US-ASCII
         private int resourceNamesEncodingAuto = 20127;
 
-        public KfnWriter(string fpath, List<string> LstAudioFiles, string LyricsFile, List<string> lstImg)
+        public KfnWriter(string fpath, List<string> LstAudioFiles, string LyricsFile, List<string> lstImg, string title, string artist, string comment, string year, string author, string bgColor)
         {
             fullFileName = fpath;
             lstAudioFiles = LstAudioFiles;
             lyricsFileName = LyricsFile;
             lstImages = lstImg;
-            
-            
-            FileInfo fi;
+                        
+
+            Title = title;
+            Artist = artist;
+            Comment = comment;
+            Year = year;
+            Author = author;
+            BgColor = bgColor;
+
             Offset = 0;
-            
-            int length = 0;
-
-            // Add list of resources
+                        
+            // Initialize list of resources
             resources = new List<ResourceFile>();
-            ResourceFile res;
 
-            // Audios
-            for (int i = 0; i < lstAudioFiles.Count; i++)
-            {
-                fi = new FileInfo(lstAudioFiles[i]);
-                length = (int)fi.Length;
-                //ResourceFile res = new ResourceFile("Audio", "Chiens - Louane.mp3", 2943507, 2943507, 0, false, true);
-                res = new ResourceFile("Audio", fi.Name, length, length, Offset, false, true);
-                resources.Add(res);
-                Offset += length;
-            }
-
-
-            // Images
-            for (int i = 0; i < lstImg.Count; i++)
-            {
-                fi = new FileInfo(lstImg[i]);
-                length = (int)fi.Length;
-                res = new ResourceFile("Image", fi.Name, length, length, Offset, false, false);
-                resources.Add(res);
-                Offset += length;
-            }
-
-
-            // Lyrics
-            /*
-            fi = new FileInfo(lyricsFileName);  
-            length = (int)fi.Length;
-            //res = new ResourceFile("Config", "Song.ini", 5654, 5654, 2943507, false, false);
-            res = new ResourceFile("Config", fi.Name, length, length, Offset, false, false);
-            resources.Add(res);
-            Offset += length;
-            */
-
-
-
+            // Initalize Song.ini
+            kfnIni = new KfnIni();
         }
                         
+
+      
         /// <summary>
         /// Create a new KFN file
         /// </summary>
-        public void CreateKFN(string fullFileName, string Title, string Comment, string Year, string Author, string BgColor)
-        {
-
+        public void CreateKFN()
+        {           
             string Source = Path.GetFileName(lstAudioFiles[0]);
-            string IniFileData = string.Empty;
 
-            IniFileData = CreateIniFile(Source, Title, Comment, Year, Author, BgColor);
+            // Populate resources with audios, images except Song.ini
+            AddFilesToRessource();
 
-            int length = IniFileData.Length;
-            //res = new ResourceFile("Config", "Song.ini", 5654, 5654, 2943507, false, false);
-            ResourceFile res = new ResourceFile("Config", "Song.ini", length, length, Offset, false, false);
-            resources.Add(res);
+            // Convert LRC File
+            (List<int>, List<string>) Eff2Lyrics = LrcToIni(lyricsFileName);
             
+
+            // Create Song.ini
+            CreateIniFile(Source, Title, Artist, Comment, Year, Author, BgColor, Eff2Lyrics);
+
+            // Add Song.ini
+            SongIniFile = kfnIni.ToString();
+            AddSongIniToResources(SongIniFile);                                          
 
             try
             {
@@ -135,13 +120,11 @@ namespace KFNViewer
                     // Write bytes resources
                     WriteBytesResources(fs);
 
-                    // Write files content
-                    WriteFilesContents(fs, IniFileData);
-
-                    
+                    // Write files contents
+                    WriteFilesContents(fs);                    
                 }
 
-                string tx = string.Format("File {0} \nwas created in the directory\n {1}", Path.GetFileName(fullFileName), Path.GetDirectoryName(fullFileName));
+                string tx = string.Format("The File \n{0} \nwas created in the directory\n {1}", Path.GetFileName(fullFileName), Path.GetDirectoryName(fullFileName));
                 MessageBox.Show(tx, Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Information);
 
             }
@@ -267,7 +250,6 @@ namespace KFNViewer
             fs.Write(propValue, 0, propValue.Length);
 
 
-
             // [12]: "COMM", "Comment"
             string comment = sComment;
             // convert length to byte[4]
@@ -308,7 +290,7 @@ namespace KFNViewer
 
        
         /// <summary>
-        /// Write resources
+        /// Write resources informations in bytes
         /// </summary>
         /// <param name="fs"></param>
         private void WriteBytesResources(FileStream fs)
@@ -361,27 +343,37 @@ namespace KFNViewer
             }
         }
     
-    
-        private void WriteFilesContents(FileStream fs, string IniFileData)
+
+        /// <summary>
+        /// Write files contents of audios, images and Song.ini  at the end of kfn file
+        /// </summary>
+        /// <param name="fs"></param>
+        private void WriteFilesContents(FileStream fs)
         {
             byte[] fileBytes;
 
             // Write mp3
             for (int i = 0; i < lstAudioFiles.Count; i++)
             {
-                fileBytes = System.IO.File.ReadAllBytes(lstAudioFiles[i]);
-                fs.Write(fileBytes, 0, fileBytes.Length);
+                if (File.Exists(lstAudioFiles[i]))
+                {
+                    fileBytes = System.IO.File.ReadAllBytes(lstAudioFiles[i]);
+                    fs.Write(fileBytes, 0, fileBytes.Length);
+                }
             }
 
             // Write images
             for (int i = 0; i < lstImages.Count; i++)
             {
-                fileBytes = System.IO.File.ReadAllBytes(lstImages[i]);
-                fs.Write(fileBytes, 0, fileBytes.Length);
+                if (File.Exists(lstImages[i]))
+                {
+                    fileBytes = System.IO.File.ReadAllBytes(lstImages[i]);
+                    fs.Write(fileBytes, 0, fileBytes.Length);
+                }
             }
 
             // Last, write Song.ini
-            fileBytes = Encoding.UTF8.GetBytes(IniFileData);
+            fileBytes = Encoding.UTF8.GetBytes(SongIniFile);
             fs.Write(fileBytes, 0, fileBytes.Length);
         }
 
@@ -390,11 +382,8 @@ namespace KFNViewer
         /// Create Song.ini file
         /// </summary>
         /// <param name="fs"></param>
-        private string CreateIniFile(string Source, string Title, string Comment, string Year, string Author, string BgColor)
-        {
-            
-
-            KfnIni kfnIni = new KfnIni();
+        private void CreateIniFile(string Source, string Title, string Artist, string Comment, string Year, string Author, string BgColor, (List<int>, List<string>) Eff2Lyrics )  
+        {            
             kfnIni.PopulateEmpty();
 
             #region General
@@ -425,6 +414,7 @@ namespace KFNViewer
 
             KfnHeader kfnHeader = new KfnHeader();
             kfnHeader.Title = Title;
+            kfnHeader.Artist = Artist;
             kfnHeader.Comment = Comment;   
             kfnHeader.SourceFile = Source;
             kfnHeader.Year = Year;
@@ -469,37 +459,42 @@ namespace KFNViewer
             
 
             int Offset = 0;
-            
+
+            if (Resources.Count == 0)
+            {
+                MessageBox.Show("Song.ini creation: Warning, no resources found");
+            }
+
             // Audio files
-            foreach (KFN.ResourceFile resource in Resources)
+            ResourceFile[] audios = resources.Where(r => r.FileType == "Audio").ToArray();
+            foreach (ResourceFile resource in audios)
             {
-                if (resource.FileType == "Audio")
-                {
-                    Entry entry = new Entry();
-                    entry.FileName = resource.FileName;
-                    entry.Length1 = resource.EncLength;
-                    entry.Length2 = resource.FileLength;
-                    entry.Offset = Offset;
+                Entry entry = new Entry();
+                entry.FileName = resource.FileName;
+                entry.Length1 = resource.EncLength;
+                entry.Length2 = resource.FileLength;
+                entry.Offset = Offset;
 
-                    entries.Add(entry);
-                    Offset += Offset;
-                }
+                entries.Add(entry);
+                Offset += Offset;
             }
+            
+
             // Images
-            foreach (KFN.ResourceFile resource in Resources)
+            ResourceFile[] images = resources.Where(r => r.FileType == "Image").ToArray();
+            foreach (ResourceFile resource in images)
             {
-                if (resource.FileType == "Image")
-                {
-                    Entry entry = new Entry();
-                    entry.FileName = resource.FileName;
-                    entry.Length1 = resource.EncLength;
-                    entry.Length2 = resource.FileLength;
-                    entry.Offset = Offset;
+                Entry entry = new Entry();
+                entry.FileName = resource.FileName;
+                entry.Length1 = resource.EncLength;
+                entry.Length2 = resource.FileLength;
+                entry.Offset = Offset;
 
-                    entries.Add(entry);
-                    Offset += Offset;
-                }
+                entries.Add(entry);
+                Offset += Offset;
             }
+
+           // Populate section [Materials]
             kfnIni.SetMaterials(entries);
 
             #endregion Materials
@@ -564,9 +559,24 @@ namespace KFNViewer
             List<(int, string)> fragments = new List<(int, string)>();
             TextEntry text;
             effnum = 2;
+
+            // List<string> syncsLst = Eff2Lyrics.Item1;
+            // List<string> textLst = Eff2Lyrics.Item2;
+
+            // List<int> syncsLst = new List<int>() { 757, 820, 898, 938, 985, 1040, 1097, 1120, 1149, 1172, 1218, 1310, 1336, 1359, 1387, 1433, 1485, 1504, 1529, 1551, 1602, 1641, 1680, 1700, 1724, 1768, 1788, 1817, 1866, 1888, 1911, 1982, 2026, 2059, 2082, 2106, 2328, 2375, 2497, 2519, 2548, 2590, 2642, 2662 };
+            // fragments = new List<(int, string)>() { (1, "TU"), (2, " M'AS"), (3, " TROP"), (4, " SOU"), (5, "VENT"), (6, " DIT") };                       
+
+            // All times (must be cut further)
+            List<int> syncsLst = Eff2Lyrics.Item1;
+
+            // Texts: Tex0=bla bla
+            for (int i = 0; i < Eff2Lyrics.Item2.Count; i++)
+            {
+                text = new TextEntry(Eff2Lyrics.Item2[i], fragments, effnum);
+                textLst.Add(text);
+            }
             
-            List<int> syncsLst = new List<int>() { 757, 820, 898, 938, 985, 1040, 1097, 1120, 1149, 1172, 1218, 1310, 1336, 1359, 1387, 1433, 1485, 1504, 1529, 1551, 1602, 1641, 1680, 1700, 1724, 1768, 1788, 1817, 1866, 1888, 1911, 1982, 2026, 2059, 2082, 2106, 2328, 2375, 2497, 2519, 2548, 2590, 2642, 2662 };
-            //fragments = new List<(int, string)>() { (1, "TU"), (2, " M'AS"), (3, " TROP"), (4, " SOU"), (5, "VENT"), (6, " DIT") };                       
+            /*
             text = new TextEntry("TU M'AS TROP SOU/VENT DIT", fragments, effnum);
             textLst.Add(text);
 
@@ -597,6 +607,7 @@ namespace KFNViewer
 
             text = new TextEntry("ET MOI, J'AI AP/PRIS", fragments, effnum);
             textLst.Add(text);
+            */
 
             eff = new Eff(
                 1,  // second is 1
@@ -617,14 +628,171 @@ namespace KFNViewer
 
             kfnIni.SetEff();
 
+            #endregion Eff            
+        }
 
-            #endregion Eff
+        /// <summary>
+        /// Add audio files, images and Song.ini to resources
+        /// </summary>
+        private void AddFilesToRessource()
+        {
+            FileInfo fi;
+            int length;
+            ResourceFile res;
 
+            // Audios files
+            for (int i = 0; i < lstAudioFiles.Count; i++)
+            {
+                if (File.Exists(lstAudioFiles[i]))
+                {
+                    fi = new FileInfo(lstAudioFiles[i]);
+                    length = (int)fi.Length;
+                    //ResourceFile res = new ResourceFile("Audio", "Chiens - Louane.mp3", 2943507, 2943507, 0, false, true);
+                    res = new ResourceFile("Audio", fi.Name, length, length, Offset, false, true);
+                    resources.Add(res);
+                    Offset += length;
+                }
+            }
 
-            return kfnIni.ToString();
+            // Images files
+            for (int i = 0; i < lstImages.Count; i++)
+            {
+                if (File.Exists(lstImages[i]))
+                {
+                    fi = new FileInfo(lstImages[i]);
+                    length = (int)fi.Length;
+                    res = new ResourceFile("Image", fi.Name, length, length, Offset, false, false);
+                    resources.Add(res);
+                    Offset += length;
+                }
+            }
+        }
+
+        private void AddSongIniToResources(string content)
+        {
+            int length;
+
+            // Song.ini
+            length = content.Length;
+            ResourceFile res = new ResourceFile("Config", "Song.ini", length, length, Offset, false, false);
+            resources.Add(res);
 
         }
 
-    }       
+
+        /// <summary>
+        /// Convert an LRC file content to lyrics compatible with Song.ini
+        /// </summary>
+        private (List<int>,List<string>) LrcToIni(string fpath)
+        {
+            List<List<Syllable>> Lyrics =  LyricsUtilities.ReadLrcFromFile(fpath);
+
+            List<int> AllSyncs = new List<int>();
+            List<string> EffTexts = new List<string>();
+
+            string element = string.Empty;
+            bool isSlash = false;
+            int time;
+
+            foreach (List<Syllable> Line in Lyrics)
+            {
+                isSlash = false;
+                element = string.Empty;
+                
+                foreach (Syllable sy in Line)
+                {
+                    if (isSlash)
+                        element += "/" + sy.Text;
+                    else
+                        element += sy.Text;
+                    
+                    if (sy.Text.EndsWith(" "))
+                        isSlash = false;
+                    else
+                        isSlash = true;
+                    
+                    time = sy.Time;
+                    AllSyncs.Add(time);  
+                }
+                EffTexts.Add(element);
+            }
+
+            // Convert time in ms to KFN time format in sec + ms on 2 digits
+            // 7570 ms = 
+            List<int> EffSyncs = new List<int>();
+            int t;            
+            int rest = 0;
+            string strRest;
+            string strTime = string.Empty;
+            int sec = 0;
+            
+            for (int i = 0; i < AllSyncs.Count; i++)
+            {
+                t = AllSyncs[i];
+                sec = t / 1000;
+                rest = t % 1000; // 7570 => 570 ms                
+                strRest = string.Format("{0:00}", rest / 10);
+                strTime = sec + strRest;
+                
+                EffSyncs.Add((Int32.Parse(strTime)));
+            }
+
+
+            /*
+            List<string> Syncs = new List<string>();
+            int c = AllSyncs.Count;
+
+            string tout = string.Empty;
+            // Il faut couper à 202
+            for (int i = 0; i < AllSyncs.Count; i++)
+            {
+                tout += AllSyncs[i] + ",";
+            }
+            tout = tout.Substring(0, tout.Length - 1);
+
+            string parcel = string.Empty;
+            bool bCut = false;
+
+            List<string> lst = new List<string>();
+
+
+            // Cut to 202 chars
+            char[] characters = tout.ToCharArray();
+            for (int i = 0; i < characters.Length; i++)
+            {
+                if (!bCut)
+                    parcel += characters[i];
+                if (bCut)
+                {
+                    if (characters[i] != ',')
+                        parcel += characters[i];
+                    else
+                    {
+                        lst.Add(parcel);
+                        bCut = false;
+                        parcel = string.Empty;
+                    }
+                }
+                
+                if (parcel.Length > 202)
+                    bCut = true;                
+            }
+
+            
+
+            List<string> EffSyncs = new List<string>();
+            string s = "Sync";            
+            for (int i = 0; i < lst.Count; i++)
+            {
+                EffSyncs.Add("Sync" + i.ToString() + "=" + lst[i]);
+            }
+            */
+
+            return (EffSyncs, EffTexts);
+
+        }
+
+
+    }
 }
 

@@ -132,6 +132,7 @@ namespace Karaboss.Kfn
             string Year;
             string Author;
             string Title;
+            string Artist;
             string Comment;
 
             #region guard
@@ -175,7 +176,9 @@ namespace Karaboss.Kfn
                 lstAudioFiles.Add(AudioFileName2);
 
             // Title
-            Title = txtTitle.Text.Trim();            
+            Title = txtTitle.Text.Trim();   
+            // Artist
+            Artist = txtArtist.Text.Trim();
             // Comment
             Comment = txtComment.Text.Trim();
             // Year
@@ -183,7 +186,7 @@ namespace Karaboss.Kfn
             // Author
             Author = txtAuthor.Text.Trim();
 
-            string tx = "Create a KFN file" + Environment.NewLine;
+            string tx = "Create a new KFN file" + Environment.NewLine;
 
             for (int i = 0; i < lstAudioFiles.Count; i++)
             {
@@ -192,6 +195,7 @@ namespace Karaboss.Kfn
             
             tx += Environment.NewLine + "Lyrics: " + Path.GetFileName(LyricsFileName);
             tx += Environment.NewLine + "Title: " + Title;
+            tx += Environment.NewLine + "Artist: " + Artist;
             tx += Environment.NewLine + "Comment: " + Comment;
 
             if (MessageBox.Show(tx, Application.ProductName, MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question) != DialogResult.Yes) return;
@@ -204,9 +208,9 @@ namespace Karaboss.Kfn
 
 
             // Initialize Writer
-            KfnWriter Writer = new KfnWriter(kfnFile, lstAudioFiles, LyricsFileName, lstImages);
+            KfnWriter Writer = new KfnWriter(kfnFile, lstAudioFiles, LyricsFileName, lstImages, Title, Artist, Comment, Year, Author, BgColor);
             if (Writer != null) 
-                Writer.CreateKFN(kfnFile, Title, Comment, Year, Author, BgColor);
+                Writer.CreateKFN();
 
 
             // Creeate 3 resources

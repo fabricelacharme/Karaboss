@@ -9,7 +9,9 @@ using System.Reflection;
 using System.Security.Policy;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 using TagLib.Matroska;
+using TagLib.Riff;
 
 namespace KFNViewer.SongIni
 {
@@ -487,12 +489,58 @@ namespace KFNViewer.SongIni
                     animSection[animKey] = animVal;
                 }
 
-                //Ini.WithSection(effSection)
-                //    .Set("Sync0", string.Join(",", Effs[effNum].syncs.ToList().Select(n => n.ToString())));
-                Ini[effSection]["Sync0"] = string.Join(",", Effs[effNum - 1].syncs.ToList().Select(n => n.ToString()));
 
-                            
+                // Buid Sync0=... Sync1=...
+                //Ini[effSection]["Sync0"] = string.Join(",", Effs[effNum - 1].syncs.ToList().Select(n => n.ToString()));
 
+                // Convert List<int> to string
+                if (Effs[effNum - 1].syncs.Count > 0)
+                {
+                    string strSyncs = string.Empty;
+                    for (int i = 0; i < Effs[effNum - 1].syncs.Count; i++)
+                    {
+                        strSyncs += Effs[effNum - 1].syncs[i] + ",";
+                    }
+                    strSyncs = strSyncs.Substring(0, strSyncs.Length - 1);
+
+                    bool bCut = false;
+                    string parcel = string.Empty;
+                    char[] characters = strSyncs.ToCharArray();
+                    List<string> lstEffSyncs = new List<string>();
+                    // Cut to 202 chars
+                    for (int i = 0; i < characters.Length; i++)
+                    {
+                        if (!bCut)
+                            parcel += characters[i];
+                        if (bCut)
+                        {
+                            if (characters[i] != ',')
+                                parcel += characters[i];
+                            else
+                            {
+                                lstEffSyncs.Add(parcel);
+                                bCut = false;
+                                parcel = string.Empty;
+                            }
+                        }
+
+                        if (parcel.Length > 200)
+                            bCut = true;
+                    }
+
+                    if (parcel.Length > 0)
+                        lstEffSyncs.Add(parcel);
+                    
+                    for (int i = 0; i < lstEffSyncs.Count; i++)
+                    {
+                        Ini[effSection]["Sync" + i.ToString()] = lstEffSyncs[i].ToString();
+                    }
+                }
+
+
+
+                Ini[effSection]["TextCount"] = Effs[effNum - 1].texts.Count.ToString();
+                // Buid Text0=... Text1=...
                 for (int textIndex = 0; textIndex < Effs[effNum - 1].texts.Count; textIndex++)
                 {
                     // Obtain the INI section that corresponds to the current effect

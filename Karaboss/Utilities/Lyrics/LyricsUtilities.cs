@@ -385,7 +385,7 @@ namespace Karaboss.Utilities
             } while (tic <= max);
 
 
-            MessageBox.Show("Unable to calculate TimeToTick for this timestamp: " + time, "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            MessageBox.Show("Unable to calculate TimeToTick for this timestamp: " + time, Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
 
             // Return -1 if not found, but it should never happen because we are sure to find a tic with the same time as the one we are looking for (we are sure to find it with step 1)
             return -1;
@@ -779,7 +779,7 @@ namespace Karaboss.Utilities
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message, "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(ex.Message, Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -813,7 +813,7 @@ namespace Karaboss.Utilities
                 string[] lines = System.IO.File.ReadAllLines(FileName, enc);
                 if (lines.Count() == 0)
                 {
-                    MessageBox.Show("Invalid LRC file", "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show("Invalid LRC file", Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return null;
                 }
 
@@ -822,7 +822,7 @@ namespace Karaboss.Utilities
                 int digits = GetDigitsLRC(lines);
                 if (digits == -1)
                 {
-                    MessageBox.Show("Invalid LRC file", "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show("Invalid LRC file", Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return null;
                 }
                 string patterntime;
@@ -840,7 +840,7 @@ namespace Karaboss.Utilities
                 string patternline = GetPatternLRC(lines);
                 if (patternline == null)
                 {
-                    MessageBox.Show("Invalid LRC file", "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show("Invalid LRC file", Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return null;
                 }
 
@@ -995,7 +995,7 @@ namespace Karaboss.Utilities
             }
             catch (Exception e)
             {
-                MessageBox.Show(e.Message, "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(e.Message, Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return null;
             }
         }
@@ -1173,7 +1173,7 @@ namespace Karaboss.Utilities
             }
             catch (Exception e) 
             {
-                MessageBox.Show(e.Message, "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error); 
+                MessageBox.Show(e.Message, Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error); 
             }
 
             return new List<string> { Tag_Artist, Tag_Title };
@@ -2003,7 +2003,7 @@ namespace Karaboss.Utilities
             }
             catch (Exception e)
             {
-                MessageBox.Show(e.Message, "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(e.Message, Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 //return null;
             }
             return lstLinesCut;
@@ -2528,7 +2528,7 @@ namespace Karaboss.Utilities
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message, "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(ex.Message, Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
