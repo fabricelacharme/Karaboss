@@ -332,12 +332,15 @@
             this.tbControl.Controls.Add(this.tbPageLyrics);
             this.tbControl.Controls.Add(this.tbPageImages);
             this.tbControl.Controls.Add(this.tbPageBackground);
+            this.tbControl.DrawMode = System.Windows.Forms.TabDrawMode.OwnerDrawFixed;
             resources.ApplyResources(this.tbControl, "tbControl");
             this.tbControl.Name = "tbControl";
             this.tbControl.SelectedIndex = 0;
+            this.tbControl.DrawItem += new System.Windows.Forms.DrawItemEventHandler(this.tbControl_DrawItem);
             // 
             // tbPageBackground
             // 
+            this.tbPageBackground.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(58)))), ((int)(((byte)(58)))), ((int)(((byte)(58)))));
             this.tbPageBackground.Controls.Add(this.btnBgColorPicker);
             this.tbPageBackground.Controls.Add(this.btnBgColorSelect);
             this.tbPageBackground.Controls.Add(this.picBgColor);
@@ -346,7 +349,6 @@
             this.tbPageBackground.Controls.Add(this.btnTb4Previous);
             resources.ApplyResources(this.tbPageBackground, "tbPageBackground");
             this.tbPageBackground.Name = "tbPageBackground";
-            this.tbPageBackground.UseVisualStyleBackColor = true;
             // 
             // btnBgColorPicker
             // 
@@ -380,6 +382,7 @@
             // lblColor
             // 
             resources.ApplyResources(this.lblColor, "lblColor");
+            this.lblColor.ForeColor = System.Drawing.Color.White;
             this.lblColor.Name = "lblColor";
             // 
             // btnTb4Previous
@@ -394,7 +397,6 @@
             // 
             resources.ApplyResources(this, "$this");
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(51)))), ((int)(((byte)(51)))), ((int)(((byte)(51)))));
             this.Controls.Add(this.tbControl);
             this.Controls.Add(this.btnCancel);
             this.Controls.Add(this.btnCreateKfn);

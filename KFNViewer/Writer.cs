@@ -4,6 +4,7 @@ using KFNViewer.Utilities;
 using Mozilla.NUniversalCharDet;
 using System;
 using System.Collections.Generic;
+using System.Drawing.Drawing2D;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -500,6 +501,28 @@ namespace KFNViewer
 
             #endregion Materials
 
+            #region set Marks
+
+            kfnIni.SetMarks();
+
+            #endregion set MArks
+
+
+            #region Anims
+
+            List<Anim> lstAnim = new List<Anim>();           
+            
+            string s = "souchon03.jpg, Effect = NoTransition, TransitionTime = 0, TransType = Linear";
+            SongIni.Action action = new SongIni.Action.ChgBgImg(s);
+            AnimEntry ae = new AnimEntry(action, EffectKind.AlphaBlending, 0, TransType.Smooth);
+            List<AnimEntry> lstAnimEntries = new List<AnimEntry>();
+            lstAnimEntries.Add(ae);
+            
+            Anim anim = new Anim(0, lstAnimEntries);
+            lstAnim.Add(anim);
+
+            #endregion Anims
+
 
             #region Eff
             /*             
@@ -540,7 +563,7 @@ namespace KFNViewer
             Eff eff = new Eff(
                 51,                         // first ID is always 51
                 effnum,                     // num
-                new List<Anim>(),           // anims
+                lstAnim,                   //new List<Anim>(),           // anims
                 null, 
                 null,
                 ("", 0),                    // font
@@ -575,7 +598,8 @@ namespace KFNViewer
                 textLst.Add(text);
             }
             
-          
+           
+
             eff = new Eff(
                 1,  // second ID is 1
                 effnum,  // num
@@ -595,7 +619,11 @@ namespace KFNViewer
 
             kfnIni.SetEff();
 
-            #endregion Eff            
+            #endregion Eff           
+
+
+           
+
         }
 
         /// <summary>

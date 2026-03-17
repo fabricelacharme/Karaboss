@@ -462,7 +462,7 @@ namespace KFNViewer.SongIni
                 section["Locked"] = "0";
                 
                 section["LibImage"] = eff.initial_lib_image;
-                section["ImageColor"] = eff.initial_active_color;
+                //section["ImageColor"] = eff.initial_active_color;
                 section["OffsetX"] = "0";
                 section["OffsetY"] = "0";
                 section["Depth"] = "0";
@@ -475,7 +475,7 @@ namespace KFNViewer.SongIni
                     var animSection = Ini[effSection];
 
                     // clone the Anim#
-                    Anim anim = Effs[effNum].anims[animN].Clone();
+                    Anim anim = Effs[effNum - 1].anims[animN].Clone();
 
                     // prepare string for manipulation
                     var animKey = "Anim";
@@ -592,11 +592,16 @@ namespace KFNViewer.SongIni
             Ini["General"]["Source"] = value; 
         }
 
+
+
+        // TODO CREATE VARIABLE FOR IMAGECOLOR
+
         // Set background color (for ex "#8000FF")
         public void SetBackground(string bgColor)
         {
             Ini["Eff1"]["Color"] = bgColor;
             Ini["Eff1"]["AlphaBlending"] = "Opacity";
+            Ini["Eff1"]["ImageColor"] = "#FFFFFFFF";
         }
 
         /// Sets the list of files in the ini, based on the entries given.
@@ -618,6 +623,14 @@ namespace KFNViewer.SongIni
             }
         }
 
+        public void SetMarks()
+        {
+            for (int i = 0; i < 9; i++)
+            {
+                var key = "Mark" + i.ToString(CultureInfo.InvariantCulture);
+                Ini["Marks"][key] = "-1";
+            }
+        }
 
         /// <summary>
         /// // impl ToString for KfnIni

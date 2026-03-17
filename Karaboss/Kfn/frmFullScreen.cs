@@ -44,21 +44,20 @@ namespace Karaboss.Kfn
         {
             InitializeComponent();            
 
+            
             ShowInTaskbar = false;
             FormBorderStyle = FormBorderStyle.None;
             WindowState = FormWindowState.Maximized;
             KeyPreview = true;
-
-            //Bitmap bitmap = new Bitmap(32, 32);
+            
             // Get bitmap from resources
             Bitmap bitmap = Karaboss.Properties.Resources.color_picker_black18;
 
             //Graphics g = Graphics.FromImage(bitmap);
-            this.Cursor = CreateCursor(bitmap, 3, 3);
+            Cursor = CreateCursor(bitmap, 3, 3);
 
             bitmap.Dispose();
-
-            //Cursor = Cursors.Hand;
+            
         }
 
         public static Cursor CreateCursor(Bitmap bmp, int xHotSpot, int yHotSpot)
@@ -126,6 +125,8 @@ namespace Karaboss.Kfn
             {
                 Close();
             }
+
+
         }
 
         private Color GetColorAt(int x, int y)
@@ -141,6 +142,15 @@ namespace Karaboss.Kfn
         {
             if (e.KeyCode == Keys.Escape)  
                 Close();  
+        }
+
+        private void frmFullScreen_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            if (Application.OpenForms.OfType<frmKfnCreate>().Count() > 0)
+            {
+                frmKfnCreate frmKfnCreate = Utilities.FormUtilities.GetForm<frmKfnCreate>();
+                frmKfnCreate.Show();
+            }
         }
     }
 }

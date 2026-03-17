@@ -1,12 +1,8 @@
 ﻿using KFNViewer;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Drawing;
 using System.IO;
-using System.Net;
-using System.Net.NetworkInformation;
-using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 
@@ -22,9 +18,17 @@ namespace Karaboss.Kfn
         {
             InitializeComponent();
 
+            TopMost = true;            
+
+            tbControl.SizeMode = TabSizeMode.Fixed;
+            tbControl.DrawMode = TabDrawMode.OwnerDrawFixed;
+            tbControl.ItemSize = new Size((tbControl.Width / tbControl.TabCount) - 1, tbControl.ItemSize.Height);
+
             fPath = path;
             OpenFileDialog.InitialDirectory = fPath;
         }
+
+        #region select audios
 
         /// <summary>
         /// Import mp3 file
@@ -92,6 +96,10 @@ namespace Karaboss.Kfn
             txtLyrics.Text = FileName;
         }
 
+        #endregion select audios
+
+
+        #region select images
 
         /// <summary>
         /// Import image
@@ -109,6 +117,8 @@ namespace Karaboss.Kfn
 
             txtImageFile.Text = FileName;
         }
+
+        #endregion select images
 
         private void btnCancel_Click(object sender, EventArgs e)
         {
@@ -292,6 +302,9 @@ namespace Karaboss.Kfn
 
         #endregion navigation
 
+
+        #region background color
+
         private void btnBgColorSelect_Click(object sender, EventArgs e)
         {
             ColorDialog dlg = new ColorDialog();
@@ -329,14 +342,18 @@ namespace Karaboss.Kfn
 
 
         private void btnBgColorPicker_Click(object sender, EventArgs e)
-        {                        
+        {
+            this.Hide();
             frmFullScreen frmFullScreen = new frmFullScreen();
-            frmFullScreen.Show();                                            
+            frmFullScreen.Show();
+
+            
         }
 
         public void GetColorFromPicker(Color c)
         {
             txtBgColor.Text = ToHex(c);
+            this.Show();
         }
 
         private void txtBgColor_TextChanged(object sender, EventArgs e)
@@ -344,20 +361,69 @@ namespace Karaboss.Kfn
             picBgColor.BackColor = Parse(txtBgColor.Text);
 
         }
-      
 
+        #endregion background color
+
+
+        #region form load close
         private void frmKfnCreate_Load(object sender, EventArgs e)
-        {  
-            
+        {
+            txtAuthor.Text = Properties.Settings.Default.KfnAuthor;
+            txtComment.Text  = Properties.Settings.Default.KfnComment;
+            txtBgColor.Text = Properties.Settings.Default.KfnBgColor;
         }
 
     
 
         private void frmKfnCreate_FormClosing(object sender, FormClosingEventArgs e)
         {
+            if (txtBgColor.Text.Trim().Length > 0)
+                Properties.Settings.Default.KfnBgColor = txtBgColor.Text.Trim();
             
+            if (txtAuthor.Text.Trim().Length > 0) 
+                Properties.Settings.Default.KfnAuthor = txtAuthor.Text.Trim();
+            if (txtComment.Text.Trim().Length > 0)
+                Properties.Settings.Default.KfnComment = txtComment.Text.Trim();
+            Properties.Settings.Default.Save();
         }
 
-        
+        #endregion form load close
+
+        private void tbControl_DrawItem(object sender, DrawItemEventArgs e)
+        {
+            // This event is called once for each tab button in your tab control
+            // First paint the background with a color based on the current tab
+            // e.Index is the index of the tab in the TabPages collection.
+            //#f1c40f
+
+            switch (e.Index)
+            {
+                case 0:
+                    e.Graphics.FillRectangle(new SolidBrush(ColorTranslator.FromHtml("#99cc33")), e.Bounds);
+                    break;
+                case 1:
+                    e.Graphics.FillRectangle(new SolidBrush(ColorTranslator.FromHtml("#3399ff")), e.Bounds);
+                    break;
+                case 2:
+                    e.Graphics.FillRectangle(new SolidBrush(ColorTranslator.FromHtml("#c0392b")), e.Bounds);
+                    break;
+                case 3:
+                    e.Graphics.FillRectangle(new SolidBrush(ColorTranslator.FromHtml("#e67e22")), e.Bounds);
+                    break;
+                default:
+                    e.Graphics.FillRectangle(new SolidBrush(ColorTranslator.FromHtml("#d35400")), e.Bounds);
+                    break;
+            }
+
+            // Then draw the current tab button text 
+
+            
+            Rectangle paddedBounds = e.Bounds;
+            paddedBounds.Inflate(-2, -2);
+            Font f = new Font("Sego UI", 14, FontStyle.Regular, GraphicsUnit.Pixel);
+            Brush b = new SolidBrush(Color.White);                       
+            e.Graphics.DrawString(tbControl.TabPages[e.Index].Text, f, b, paddedBounds);
+
+        }
     }
 }

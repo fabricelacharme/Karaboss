@@ -50,6 +50,7 @@
             this.Controls.Add(this.picScreen);
             this.Name = "frmFullScreen";
             this.Text = "frmFullScreen";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.frmFullScreen_FormClosing);
             this.Load += new System.EventHandler(this.frmFullScreen_Load);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.frmFullScreen_KeyDown);
             this.MouseDown += new System.Windows.Forms.MouseEventHandler(this.frmFullScreen_MouseDown);

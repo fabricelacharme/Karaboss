@@ -452,5 +452,14 @@
     <Setting Name="frmKfnViewSize" Type="System.Drawing.Size" Scope="User">
       <Value Profile="(Default)">800, 430</Value>
     </Setting>
+    <Setting Name="KfnComment" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="KfnAuthor" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="KfnBgColor" Type="System.String" Scope="User">
+      <Value Profile="(Default)">"#000000"</Value>
+    </Setting>
   </Settings>
 </SettingsFile>
