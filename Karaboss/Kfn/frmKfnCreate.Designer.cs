@@ -30,6 +30,8 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmKfnCreate));
             this.tbPageAudios = new System.Windows.Forms.TabPage();
+            this.txtArtist = new System.Windows.Forms.TextBox();
+            this.lblArtist = new System.Windows.Forms.Label();
             this.txtKfnFileName = new System.Windows.Forms.TextBox();
             this.txtAuthor = new System.Windows.Forms.TextBox();
             this.lblAuthor = new System.Windows.Forms.Label();
@@ -70,8 +72,6 @@
             this.txtBgColor = new System.Windows.Forms.TextBox();
             this.lblColor = new System.Windows.Forms.Label();
             this.btnTb4Previous = new System.Windows.Forms.Button();
-            this.txtArtist = new System.Windows.Forms.TextBox();
-            this.lblArtist = new System.Windows.Forms.Label();
             this.tbPageAudios.SuspendLayout();
             this.tbPageLyrics.SuspendLayout();
             this.tbPageImages.SuspendLayout();
@@ -110,19 +110,38 @@
             this.tbPageAudios.TabIndex = 0;
             this.tbPageAudios.Text = "mp3";
             // 
+            // txtArtist
+            // 
+            this.txtArtist.Location = new System.Drawing.Point(80, 178);
+            this.txtArtist.Name = "txtArtist";
+            this.txtArtist.Size = new System.Drawing.Size(281, 26);
+            this.txtArtist.TabIndex = 11;
+            // 
+            // lblArtist
+            // 
+            this.lblArtist.AutoSize = true;
+            this.lblArtist.Font = new System.Drawing.Font("Calibri", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblArtist.ForeColor = System.Drawing.Color.White;
+            this.lblArtist.Location = new System.Drawing.Point(4, 183);
+            this.lblArtist.Name = "lblArtist";
+            this.lblArtist.Size = new System.Drawing.Size(39, 15);
+            this.lblArtist.TabIndex = 10;
+            this.lblArtist.Text = "Artist:";
+            // 
             // txtKfnFileName
             // 
             this.txtKfnFileName.Location = new System.Drawing.Point(80, 102);
             this.txtKfnFileName.Name = "txtKfnFileName";
             this.txtKfnFileName.Size = new System.Drawing.Size(500, 26);
-            this.txtKfnFileName.TabIndex = 17;
+            this.txtKfnFileName.TabIndex = 7;
             // 
             // txtAuthor
             // 
             this.txtAuthor.Location = new System.Drawing.Point(80, 274);
             this.txtAuthor.Name = "txtAuthor";
             this.txtAuthor.Size = new System.Drawing.Size(281, 26);
-            this.txtAuthor.TabIndex = 15;
+            this.txtAuthor.TabIndex = 17;
+            this.txtAuthor.Text = "Fab le gueu";
             // 
             // lblAuthor
             // 
@@ -132,7 +151,7 @@
             this.lblAuthor.Location = new System.Drawing.Point(4, 279);
             this.lblAuthor.Name = "lblAuthor";
             this.lblAuthor.Size = new System.Drawing.Size(47, 15);
-            this.lblAuthor.TabIndex = 14;
+            this.lblAuthor.TabIndex = 16;
             this.lblAuthor.Text = "Author:";
             // 
             // txtYear
@@ -140,7 +159,7 @@
             this.txtYear.Location = new System.Drawing.Point(80, 242);
             this.txtYear.Name = "txtYear";
             this.txtYear.Size = new System.Drawing.Size(281, 26);
-            this.txtYear.TabIndex = 13;
+            this.txtYear.TabIndex = 15;
             this.txtYear.Text = "1980";
             // 
             // lblYear
@@ -151,7 +170,7 @@
             this.lblYear.Location = new System.Drawing.Point(3, 247);
             this.lblYear.Name = "lblYear";
             this.lblYear.Size = new System.Drawing.Size(33, 15);
-            this.lblYear.TabIndex = 12;
+            this.lblYear.TabIndex = 14;
             this.lblYear.Text = "Year:";
             // 
             // txtAudio2
@@ -199,7 +218,7 @@
             this.btnTb1Next.Location = new System.Drawing.Point(596, 278);
             this.btnTb1Next.Name = "btnTb1Next";
             this.btnTb1Next.Size = new System.Drawing.Size(75, 23);
-            this.btnTb1Next.TabIndex = 16;
+            this.btnTb1Next.TabIndex = 18;
             this.btnTb1Next.Text = "Next";
             this.btnTb1Next.UseVisualStyleBackColor = true;
             this.btnTb1Next.Click += new System.EventHandler(this.btnTb1Next_Click);
@@ -209,7 +228,7 @@
             this.txtComment.Location = new System.Drawing.Point(80, 210);
             this.txtComment.Name = "txtComment";
             this.txtComment.Size = new System.Drawing.Size(503, 26);
-            this.txtComment.TabIndex = 11;
+            this.txtComment.TabIndex = 13;
             this.txtComment.Text = "Une oeuvre de Fabrice hé hé";
             // 
             // label2
@@ -220,7 +239,7 @@
             this.label2.Location = new System.Drawing.Point(4, 215);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(61, 15);
-            this.label2.TabIndex = 10;
+            this.label2.TabIndex = 12;
             this.label2.Text = "Comment:";
             // 
             // txtTitle
@@ -411,7 +430,7 @@
             this.btnCreateKfn.Location = new System.Drawing.Point(205, 386);
             this.btnCreateKfn.Name = "btnCreateKfn";
             this.btnCreateKfn.Size = new System.Drawing.Size(110, 23);
-            this.btnCreateKfn.TabIndex = 9;
+            this.btnCreateKfn.TabIndex = 40;
             this.btnCreateKfn.Text = "Create KFN";
             this.btnCreateKfn.UseVisualStyleBackColor = true;
             this.btnCreateKfn.Click += new System.EventHandler(this.btnCreateKfn_Click);
@@ -422,7 +441,7 @@
             this.btnCancel.Location = new System.Drawing.Point(352, 386);
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.Size = new System.Drawing.Size(99, 23);
-            this.btnCancel.TabIndex = 10;
+            this.btnCancel.TabIndex = 41;
             this.btnCancel.Text = "Quit";
             this.btnCancel.UseVisualStyleBackColor = true;
             this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
@@ -460,7 +479,7 @@
             this.btnBgColorPicker.Location = new System.Drawing.Point(254, 9);
             this.btnBgColorPicker.Name = "btnBgColorPicker";
             this.btnBgColorPicker.Size = new System.Drawing.Size(44, 26);
-            this.btnBgColorPicker.TabIndex = 30;
+            this.btnBgColorPicker.TabIndex = 33;
             this.btnBgColorPicker.Text = "//";
             this.btnBgColorPicker.UseVisualStyleBackColor = true;
             this.btnBgColorPicker.Click += new System.EventHandler(this.btnBgColorPicker_Click);
@@ -470,7 +489,7 @@
             this.btnBgColorSelect.Location = new System.Drawing.Point(204, 9);
             this.btnBgColorSelect.Name = "btnBgColorSelect";
             this.btnBgColorSelect.Size = new System.Drawing.Size(44, 26);
-            this.btnBgColorSelect.TabIndex = 29;
+            this.btnBgColorSelect.TabIndex = 32;
             this.btnBgColorSelect.Text = "...";
             this.btnBgColorSelect.UseVisualStyleBackColor = true;
             this.btnBgColorSelect.Click += new System.EventHandler(this.btnBgColorSelect_Click);
@@ -491,7 +510,7 @@
             this.txtBgColor.MaxLength = 7;
             this.txtBgColor.Name = "txtBgColor";
             this.txtBgColor.Size = new System.Drawing.Size(67, 26);
-            this.txtBgColor.TabIndex = 28;
+            this.txtBgColor.TabIndex = 31;
             this.txtBgColor.Text = "#000000";
             // 
             // lblColor
@@ -500,7 +519,7 @@
             this.lblColor.Location = new System.Drawing.Point(10, 12);
             this.lblColor.Name = "lblColor";
             this.lblColor.Size = new System.Drawing.Size(41, 18);
-            this.lblColor.TabIndex = 27;
+            this.lblColor.TabIndex = 30;
             this.lblColor.Text = "Color";
             // 
             // btnTb4Previous
@@ -509,28 +528,10 @@
             this.btnTb4Previous.Location = new System.Drawing.Point(515, 278);
             this.btnTb4Previous.Name = "btnTb4Previous";
             this.btnTb4Previous.Size = new System.Drawing.Size(75, 23);
-            this.btnTb4Previous.TabIndex = 31;
+            this.btnTb4Previous.TabIndex = 34;
             this.btnTb4Previous.Text = "Previous";
             this.btnTb4Previous.UseVisualStyleBackColor = true;
             this.btnTb4Previous.Click += new System.EventHandler(this.btnTb4Previous_Click);
-            // 
-            // txtArtist
-            // 
-            this.txtArtist.Location = new System.Drawing.Point(80, 178);
-            this.txtArtist.Name = "txtArtist";
-            this.txtArtist.Size = new System.Drawing.Size(281, 26);
-            this.txtArtist.TabIndex = 19;
-            // 
-            // lblArtist
-            // 
-            this.lblArtist.AutoSize = true;
-            this.lblArtist.Font = new System.Drawing.Font("Calibri", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblArtist.ForeColor = System.Drawing.Color.White;
-            this.lblArtist.Location = new System.Drawing.Point(4, 183);
-            this.lblArtist.Name = "lblArtist";
-            this.lblArtist.Size = new System.Drawing.Size(39, 15);
-            this.lblArtist.TabIndex = 18;
-            this.lblArtist.Text = "Artist:";
             // 
             // frmKfnCreate
             // 

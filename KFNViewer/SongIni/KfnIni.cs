@@ -453,6 +453,22 @@ namespace KFNViewer.SongIni
                 section["NbAnim"] = eff.anims.Count.ToString();
                 section["TextCount"] = eff.texts.Count.ToString();
                 section["Trajectory"] = eff.initial_trajectory.ToString();
+                    
+                section["InPractice"] = "0";
+                section["Enabled"] = "-1";
+                section["Locked"] = "0";
+                
+                
+                // TODO add a field to Eff for the backgroud color
+                if (effNum == 1)
+                    section["Color"] = "#8000FF";
+
+                section["LibImage"] = eff.initial_lib_image;
+                section["ImageColor"] = eff.initial_active_color;
+                section["OffsetX"] = "0";
+                section["OffsetY"] = "0";
+                section["Depth"] = "0";
+
 
                 // iterate through Anim# 
                 for (var animN = 0; animN < Effs[effNum -1].anims.Count; animN++)
@@ -490,6 +506,7 @@ namespace KFNViewer.SongIni
                 }
 
 
+                #region lyrics times
                 // Buid Sync0=... Sync1=...
                 //Ini[effSection]["Sync0"] = string.Join(",", Effs[effNum - 1].syncs.ToList().Select(n => n.ToString()));
 
@@ -537,9 +554,13 @@ namespace KFNViewer.SongIni
                     }
                 }
 
+                #endregion lyrics times
 
 
+
+                #region lyrics texts
                 Ini[effSection]["TextCount"] = Effs[effNum - 1].texts.Count.ToString();
+                
                 // Buid Text0=... Text1=...
                 for (int textIndex = 0; textIndex < Effs[effNum - 1].texts.Count; textIndex++)
                 {
@@ -556,7 +577,7 @@ namespace KFNViewer.SongIni
                     // Store the value in the INI section
                     textSection[textKey] = textValue;
                 }
-
+                #endregion lyrics texts
 
             }
         }
