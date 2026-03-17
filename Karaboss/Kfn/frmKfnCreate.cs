@@ -1,15 +1,22 @@
 ﻿using KFNViewer;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.Drawing;
 using System.IO;
+using System.Net;
+using System.Net.NetworkInformation;
+using System.Runtime.InteropServices;
+using System.Text.RegularExpressions;
 using System.Windows.Forms;
 
 namespace Karaboss.Kfn
-{    
+{
     public partial class frmKfnCreate : Form
-    {
+    {      
 
-        string fPath;
+        private string fPath;
+        private bool bPickColor = false;
 
         public frmKfnCreate(string path)
         {
@@ -29,13 +36,13 @@ namespace Karaboss.Kfn
             string FileName;
             OpenFileDialog.Filter = "Mp3 files (*.mp3)|*.mp3|All files (*.*)|*.*";
             if (OpenFileDialog.ShowDialog() != DialogResult.OK) return;
-            
+
             FileName = OpenFileDialog.FileName;
             OpenFileDialog.InitialDirectory = Path.GetDirectoryName(FileName);
 
             txtAudio1.Text = FileName;
 
-            SetTitleFromFile(FileName);          
+            SetTitleFromFile(FileName);
         }
 
         private void btnImportAudio2_Click(object sender, EventArgs e)
@@ -48,7 +55,7 @@ namespace Karaboss.Kfn
             OpenFileDialog.InitialDirectory = Path.GetDirectoryName(FileName);
 
 
-            txtAudio2.Text = FileName;            
+            txtAudio2.Text = FileName;
         }
 
         /// <summary>
@@ -78,7 +85,7 @@ namespace Karaboss.Kfn
             string FileName;
             OpenFileDialog.Filter = "LRC files (*.lrc)|*.lrc|All files (*.*)|*.*";
             if (OpenFileDialog.ShowDialog() != DialogResult.OK) return;
-            
+
             FileName = OpenFileDialog.FileName;
             OpenFileDialog.InitialDirectory = Path.GetDirectoryName(FileName);
 
@@ -96,7 +103,7 @@ namespace Karaboss.Kfn
             string FileName;
             OpenFileDialog.Filter = "Jpg files (*.jpg)|*.jpg|All files (*.*)|*.*";
             if (OpenFileDialog.ShowDialog() != DialogResult.OK) return;
-            
+
             FileName = OpenFileDialog.FileName;
             OpenFileDialog.InitialDirectory = Path.GetDirectoryName(FileName);
 
@@ -110,7 +117,7 @@ namespace Karaboss.Kfn
 
         private void btnCreateKfn_Click(object sender, EventArgs e)
         {
-           // Create KFN File
+            // Create KFN File
             CreateKfnFile();
         }
 
@@ -136,7 +143,7 @@ namespace Karaboss.Kfn
             string Comment;
 
             #region guard
-            
+
             AudioFileName1 = txtAudio1.Text.Trim();
             if (!File.Exists(AudioFileName1))
             {
@@ -170,13 +177,13 @@ namespace Karaboss.Kfn
 
             #endregion guard
 
-            
+
             List<string> lstAudioFiles = new List<string>() { AudioFileName1 };
             if (AudioFileName2 != string.Empty)
                 lstAudioFiles.Add(AudioFileName2);
 
             // Title
-            Title = txtTitle.Text.Trim();   
+            Title = txtTitle.Text.Trim();
             // Artist
             Artist = txtArtist.Text.Trim();
             // Comment
@@ -192,24 +199,24 @@ namespace Karaboss.Kfn
             {
                 tx += Environment.NewLine + string.Format("Audio{0}: {1}", i + 1, Path.GetFileName(lstAudioFiles[i]));
             }
-            
+
             tx += Environment.NewLine + "Lyrics: " + Path.GetFileName(LyricsFileName);
             tx += Environment.NewLine + "Title: " + Title;
             tx += Environment.NewLine + "Artist: " + Artist;
             tx += Environment.NewLine + "Comment: " + Comment;
 
             if (MessageBox.Show(tx, Application.ProductName, MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question) != DialogResult.Yes) return;
-            
+
             // Create a kfn file using the name of the mp3 file ?
-            string kfnFile = Path.Combine(  Path.GetDirectoryName(AudioFileName1) , txtKfnFileName.Text);
-            
+            string kfnFile = Path.Combine(Path.GetDirectoryName(AudioFileName1), txtKfnFileName.Text);
+
             // List of images (only 1 for the moment)
-            List<string> lstImages = new List<string>() { ImageFileName};
+            List<string> lstImages = new List<string>() { ImageFileName };
 
 
             // Initialize Writer
             KfnWriter Writer = new KfnWriter(kfnFile, lstAudioFiles, LyricsFileName, lstImages, Title, Artist, Comment, Year, Author, BgColor);
-            if (Writer != null) 
+            if (Writer != null)
                 Writer.CreateKFN();
 
 
@@ -258,7 +265,7 @@ namespace Karaboss.Kfn
         {
             tbControl.SelectedTab = tbPageImages;
         }
-        
+
         private void btnTb2Previous_Click(object sender, EventArgs e)
         {
             tbControl.SelectedTab = tbPageAudios;
@@ -268,11 +275,11 @@ namespace Karaboss.Kfn
         private void btnTb3Previous_Click(object sender, EventArgs e)
         {
             tbControl.SelectedTab = tbPageLyrics;
-        }        
+        }
 
         private void btnTb3Next_Click(object sender, EventArgs e)
         {
-            tbControl.SelectedTab= tbPageBackground;
+            tbControl.SelectedTab = tbPageBackground;
         }
 
         // Page 4
@@ -287,12 +294,70 @@ namespace Karaboss.Kfn
 
         private void btnBgColorSelect_Click(object sender, EventArgs e)
         {
+            ColorDialog dlg = new ColorDialog();
+            dlg.FullOpen = true;
+            dlg.ShowHelp = true;
+            // Sets the initial color select to the current text color.
+            dlg.Color = picBgColor.BackColor;
 
+            if (dlg.ShowDialog() != DialogResult.OK) return;
+
+            picBgColor.BackColor = dlg.Color;
+            txtBgColor.Text = ToHex(dlg.Color);
         }
+
+        private static String ToHex(System.Drawing.Color c) => $"#{c.R:X2}{c.G:X2}{c.B:X2}";
+
+        public static Color Parse(string input)
+        {
+            input = input.Trim();
+            string strRegex = @"^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$";
+            Regex re = new Regex(strRegex);
+            if (re.IsMatch(input))
+            {
+                return ColorTranslator.FromHtml(input);
+            }
+
+            Color named = Color.FromName(input);
+            if (named.IsKnownColor || named.IsNamedColor)
+            {
+                return named;
+            }
+
+            throw new ArgumentException($"Unsupported color value: {input}", nameof(input));
+        }
+
 
         private void btnBgColorPicker_Click(object sender, EventArgs e)
+        {                        
+            frmFullScreen frmFullScreen = new frmFullScreen();
+            frmFullScreen.Show();                                            
+        }
+
+        public void GetColorFromPicker(Color c)
         {
+            txtBgColor.Text = ToHex(c);
+        }
+
+        private void txtBgColor_TextChanged(object sender, EventArgs e)
+        {
+            picBgColor.BackColor = Parse(txtBgColor.Text);
 
         }
+      
+
+        private void frmKfnCreate_Load(object sender, EventArgs e)
+        {  
+            
+        }
+
+    
+
+        private void frmKfnCreate_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            
+        }
+
+        
     }
 }

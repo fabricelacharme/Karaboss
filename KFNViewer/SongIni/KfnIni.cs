@@ -3,8 +3,11 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Drawing;
 using System.Globalization;
+using System.IO.Ports;
 using System.Linq;
+using System.Net.Sockets;
 using System.Reflection;
 using System.Security.Policy;
 using System.Text;
@@ -458,11 +461,6 @@ namespace KFNViewer.SongIni
                 section["Enabled"] = "-1";
                 section["Locked"] = "0";
                 
-                
-                // TODO add a field to Eff for the backgroud color
-                if (effNum == 1)
-                    section["Color"] = "#8000FF";
-
                 section["LibImage"] = eff.initial_lib_image;
                 section["ImageColor"] = eff.initial_active_color;
                 section["OffsetX"] = "0";
@@ -504,7 +502,7 @@ namespace KFNViewer.SongIni
                     //animSection.Set(animKey, animVal);
                     animSection[animKey] = animVal;
                 }
-
+                
 
                 #region lyrics times
                 // Buid Sync0=... Sync1=...
@@ -592,6 +590,13 @@ namespace KFNViewer.SongIni
 
             //Ini.WithSection("General").Set("Source", value);
             Ini["General"]["Source"] = value; 
+        }
+
+        // Set background color (for ex "#8000FF")
+        public void SetBackground(string bgColor)
+        {
+            Ini["Eff1"]["Color"] = bgColor;
+            Ini["Eff1"]["AlphaBlending"] = "Opacity";
         }
 
         /// Sets the list of files in the ini, based on the entries given.

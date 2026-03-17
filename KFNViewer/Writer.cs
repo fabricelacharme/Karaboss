@@ -552,6 +552,9 @@ namespace KFNViewer
             
             kfnIni.Effs.Add(eff);
 
+            // Set backgroud color
+            kfnIni.SetBackground(BgColor);
+
             #endregion eff1
 
 

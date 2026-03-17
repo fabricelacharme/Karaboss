@@ -72,6 +72,7 @@
             this.txtBgColor = new System.Windows.Forms.TextBox();
             this.lblColor = new System.Windows.Forms.Label();
             this.btnTb4Previous = new System.Windows.Forms.Button();
+            this.ColorDialog = new System.Windows.Forms.ColorDialog();
             this.tbPageAudios.SuspendLayout();
             this.tbPageLyrics.SuspendLayout();
             this.tbPageImages.SuspendLayout();
@@ -83,7 +84,7 @@
             // tbPageAudios
             // 
             this.tbPageAudios.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(58)))), ((int)(((byte)(58)))), ((int)(((byte)(58)))));
-            this.tbPageAudios.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
+            resources.ApplyResources(this.tbPageAudios, "tbPageAudios");
             this.tbPageAudios.Controls.Add(this.txtArtist);
             this.tbPageAudios.Controls.Add(this.lblArtist);
             this.tbPageAudios.Controls.Add(this.txtKfnFileName);
@@ -103,320 +104,205 @@
             this.tbPageAudios.Controls.Add(this.txtAudio1);
             this.tbPageAudios.Controls.Add(this.lblAudio1);
             this.tbPageAudios.Controls.Add(this.btnImportAudio1);
-            this.tbPageAudios.Location = new System.Drawing.Point(4, 27);
             this.tbPageAudios.Name = "tbPageAudios";
-            this.tbPageAudios.Padding = new System.Windows.Forms.Padding(3);
-            this.tbPageAudios.Size = new System.Drawing.Size(677, 307);
-            this.tbPageAudios.TabIndex = 0;
-            this.tbPageAudios.Text = "mp3";
             // 
             // txtArtist
             // 
-            this.txtArtist.Location = new System.Drawing.Point(80, 178);
+            resources.ApplyResources(this.txtArtist, "txtArtist");
             this.txtArtist.Name = "txtArtist";
-            this.txtArtist.Size = new System.Drawing.Size(281, 26);
-            this.txtArtist.TabIndex = 11;
             // 
             // lblArtist
             // 
-            this.lblArtist.AutoSize = true;
-            this.lblArtist.Font = new System.Drawing.Font("Calibri", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            resources.ApplyResources(this.lblArtist, "lblArtist");
             this.lblArtist.ForeColor = System.Drawing.Color.White;
-            this.lblArtist.Location = new System.Drawing.Point(4, 183);
             this.lblArtist.Name = "lblArtist";
-            this.lblArtist.Size = new System.Drawing.Size(39, 15);
-            this.lblArtist.TabIndex = 10;
-            this.lblArtist.Text = "Artist:";
             // 
             // txtKfnFileName
             // 
-            this.txtKfnFileName.Location = new System.Drawing.Point(80, 102);
+            resources.ApplyResources(this.txtKfnFileName, "txtKfnFileName");
             this.txtKfnFileName.Name = "txtKfnFileName";
-            this.txtKfnFileName.Size = new System.Drawing.Size(500, 26);
-            this.txtKfnFileName.TabIndex = 7;
             // 
             // txtAuthor
             // 
-            this.txtAuthor.Location = new System.Drawing.Point(80, 274);
+            resources.ApplyResources(this.txtAuthor, "txtAuthor");
             this.txtAuthor.Name = "txtAuthor";
-            this.txtAuthor.Size = new System.Drawing.Size(281, 26);
-            this.txtAuthor.TabIndex = 17;
-            this.txtAuthor.Text = "Fab le gueu";
             // 
             // lblAuthor
             // 
-            this.lblAuthor.AutoSize = true;
-            this.lblAuthor.Font = new System.Drawing.Font("Calibri", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            resources.ApplyResources(this.lblAuthor, "lblAuthor");
             this.lblAuthor.ForeColor = System.Drawing.Color.White;
-            this.lblAuthor.Location = new System.Drawing.Point(4, 279);
             this.lblAuthor.Name = "lblAuthor";
-            this.lblAuthor.Size = new System.Drawing.Size(47, 15);
-            this.lblAuthor.TabIndex = 16;
-            this.lblAuthor.Text = "Author:";
             // 
             // txtYear
             // 
-            this.txtYear.Location = new System.Drawing.Point(80, 242);
+            resources.ApplyResources(this.txtYear, "txtYear");
             this.txtYear.Name = "txtYear";
-            this.txtYear.Size = new System.Drawing.Size(281, 26);
-            this.txtYear.TabIndex = 15;
-            this.txtYear.Text = "1980";
             // 
             // lblYear
             // 
-            this.lblYear.AutoSize = true;
-            this.lblYear.Font = new System.Drawing.Font("Calibri", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            resources.ApplyResources(this.lblYear, "lblYear");
             this.lblYear.ForeColor = System.Drawing.Color.White;
-            this.lblYear.Location = new System.Drawing.Point(3, 247);
             this.lblYear.Name = "lblYear";
-            this.lblYear.Size = new System.Drawing.Size(33, 15);
-            this.lblYear.TabIndex = 14;
-            this.lblYear.Text = "Year:";
             // 
             // txtAudio2
             // 
-            this.txtAudio2.Location = new System.Drawing.Point(80, 70);
+            resources.ApplyResources(this.txtAudio2, "txtAudio2");
             this.txtAudio2.Name = "txtAudio2";
-            this.txtAudio2.Size = new System.Drawing.Size(500, 26);
-            this.txtAudio2.TabIndex = 4;
             // 
             // lblAudio2
             // 
-            this.lblAudio2.AutoSize = true;
-            this.lblAudio2.Font = new System.Drawing.Font("Calibri", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            resources.ApplyResources(this.lblAudio2, "lblAudio2");
             this.lblAudio2.ForeColor = System.Drawing.Color.White;
-            this.lblAudio2.Location = new System.Drawing.Point(3, 76);
             this.lblAudio2.Name = "lblAudio2";
-            this.lblAudio2.Size = new System.Drawing.Size(48, 14);
-            this.lblAudio2.TabIndex = 3;
-            this.lblAudio2.Text = "Audio 2";
             // 
             // btnImportAudio2
             // 
-            this.btnImportAudio2.Location = new System.Drawing.Point(596, 68);
+            resources.ApplyResources(this.btnImportAudio2, "btnImportAudio2");
             this.btnImportAudio2.Name = "btnImportAudio2";
-            this.btnImportAudio2.Size = new System.Drawing.Size(75, 23);
-            this.btnImportAudio2.TabIndex = 5;
-            this.btnImportAudio2.Text = "Import";
             this.btnImportAudio2.UseVisualStyleBackColor = true;
             this.btnImportAudio2.Click += new System.EventHandler(this.btnImportAudio2_Click);
             // 
             // label5
             // 
-            this.label5.AutoSize = true;
-            this.label5.Font = new System.Drawing.Font("Calibri", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            resources.ApplyResources(this.label5, "label5");
             this.label5.ForeColor = System.Drawing.Color.White;
-            this.label5.Location = new System.Drawing.Point(4, 108);
             this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(27, 14);
-            this.label5.TabIndex = 6;
-            this.label5.Text = "KFN";
             // 
             // btnTb1Next
             // 
             this.btnTb1Next.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.btnTb1Next.Location = new System.Drawing.Point(596, 278);
+            resources.ApplyResources(this.btnTb1Next, "btnTb1Next");
             this.btnTb1Next.Name = "btnTb1Next";
-            this.btnTb1Next.Size = new System.Drawing.Size(75, 23);
-            this.btnTb1Next.TabIndex = 18;
-            this.btnTb1Next.Text = "Next";
             this.btnTb1Next.UseVisualStyleBackColor = true;
             this.btnTb1Next.Click += new System.EventHandler(this.btnTb1Next_Click);
             // 
             // txtComment
             // 
-            this.txtComment.Location = new System.Drawing.Point(80, 210);
+            resources.ApplyResources(this.txtComment, "txtComment");
             this.txtComment.Name = "txtComment";
-            this.txtComment.Size = new System.Drawing.Size(503, 26);
-            this.txtComment.TabIndex = 13;
-            this.txtComment.Text = "Une oeuvre de Fabrice hé hé";
             // 
             // label2
             // 
-            this.label2.AutoSize = true;
-            this.label2.Font = new System.Drawing.Font("Calibri", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            resources.ApplyResources(this.label2, "label2");
             this.label2.ForeColor = System.Drawing.Color.White;
-            this.label2.Location = new System.Drawing.Point(4, 215);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(61, 15);
-            this.label2.TabIndex = 12;
-            this.label2.Text = "Comment:";
             // 
             // txtTitle
             // 
-            this.txtTitle.Location = new System.Drawing.Point(80, 146);
+            resources.ApplyResources(this.txtTitle, "txtTitle");
             this.txtTitle.Name = "txtTitle";
-            this.txtTitle.Size = new System.Drawing.Size(281, 26);
-            this.txtTitle.TabIndex = 9;
             // 
             // label1
             // 
-            this.label1.AutoSize = true;
-            this.label1.Font = new System.Drawing.Font("Calibri", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            resources.ApplyResources(this.label1, "label1");
             this.label1.ForeColor = System.Drawing.Color.White;
-            this.label1.Location = new System.Drawing.Point(4, 151);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(34, 15);
-            this.label1.TabIndex = 8;
-            this.label1.Text = "Title:";
             // 
             // txtAudio1
             // 
-            this.txtAudio1.Location = new System.Drawing.Point(80, 37);
+            resources.ApplyResources(this.txtAudio1, "txtAudio1");
             this.txtAudio1.Name = "txtAudio1";
-            this.txtAudio1.Size = new System.Drawing.Size(500, 26);
-            this.txtAudio1.TabIndex = 1;
             // 
             // lblAudio1
             // 
-            this.lblAudio1.AutoSize = true;
-            this.lblAudio1.Font = new System.Drawing.Font("Calibri", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            resources.ApplyResources(this.lblAudio1, "lblAudio1");
             this.lblAudio1.ForeColor = System.Drawing.Color.White;
-            this.lblAudio1.Location = new System.Drawing.Point(4, 40);
             this.lblAudio1.Name = "lblAudio1";
-            this.lblAudio1.Size = new System.Drawing.Size(48, 14);
-            this.lblAudio1.TabIndex = 0;
-            this.lblAudio1.Text = "Audio 1";
             // 
             // btnImportAudio1
             // 
-            this.btnImportAudio1.Location = new System.Drawing.Point(596, 38);
+            resources.ApplyResources(this.btnImportAudio1, "btnImportAudio1");
             this.btnImportAudio1.Name = "btnImportAudio1";
-            this.btnImportAudio1.Size = new System.Drawing.Size(75, 23);
-            this.btnImportAudio1.TabIndex = 2;
-            this.btnImportAudio1.Text = "Import";
             this.btnImportAudio1.UseVisualStyleBackColor = true;
             this.btnImportAudio1.Click += new System.EventHandler(this.btnImportAudio1_Click);
             // 
             // tbPageLyrics
             // 
             this.tbPageLyrics.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(58)))), ((int)(((byte)(58)))), ((int)(((byte)(58)))));
-            this.tbPageLyrics.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
+            resources.ApplyResources(this.tbPageLyrics, "tbPageLyrics");
             this.tbPageLyrics.Controls.Add(this.btnTb2Next);
             this.tbPageLyrics.Controls.Add(this.btnTb2Previous);
             this.tbPageLyrics.Controls.Add(this.txtLyrics);
             this.tbPageLyrics.Controls.Add(this.lblLyrics);
             this.tbPageLyrics.Controls.Add(this.btnImportLyrics);
-            this.tbPageLyrics.Location = new System.Drawing.Point(4, 27);
             this.tbPageLyrics.Name = "tbPageLyrics";
-            this.tbPageLyrics.Padding = new System.Windows.Forms.Padding(3);
-            this.tbPageLyrics.Size = new System.Drawing.Size(677, 307);
-            this.tbPageLyrics.TabIndex = 1;
-            this.tbPageLyrics.Text = "Lyrics";
             // 
             // btnTb2Next
             // 
             this.btnTb2Next.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.btnTb2Next.Location = new System.Drawing.Point(596, 278);
+            resources.ApplyResources(this.btnTb2Next, "btnTb2Next");
             this.btnTb2Next.Name = "btnTb2Next";
-            this.btnTb2Next.Size = new System.Drawing.Size(75, 23);
-            this.btnTb2Next.TabIndex = 21;
-            this.btnTb2Next.Text = "Next";
             this.btnTb2Next.UseVisualStyleBackColor = true;
             this.btnTb2Next.Click += new System.EventHandler(this.btnTb2Next_Click);
             // 
             // btnTb2Previous
             // 
             this.btnTb2Previous.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.btnTb2Previous.Location = new System.Drawing.Point(515, 278);
+            resources.ApplyResources(this.btnTb2Previous, "btnTb2Previous");
             this.btnTb2Previous.Name = "btnTb2Previous";
-            this.btnTb2Previous.Size = new System.Drawing.Size(75, 23);
-            this.btnTb2Previous.TabIndex = 20;
-            this.btnTb2Previous.Text = "Previous";
             this.btnTb2Previous.UseVisualStyleBackColor = true;
             this.btnTb2Previous.Click += new System.EventHandler(this.btnTb2Previous_Click);
             // 
             // txtLyrics
             // 
-            this.txtLyrics.Location = new System.Drawing.Point(80, 37);
+            resources.ApplyResources(this.txtLyrics, "txtLyrics");
             this.txtLyrics.Name = "txtLyrics";
-            this.txtLyrics.Size = new System.Drawing.Size(500, 26);
-            this.txtLyrics.TabIndex = 18;
             // 
             // lblLyrics
             // 
-            this.lblLyrics.AutoSize = true;
-            this.lblLyrics.Font = new System.Drawing.Font("Calibri", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            resources.ApplyResources(this.lblLyrics, "lblLyrics");
             this.lblLyrics.ForeColor = System.Drawing.Color.White;
-            this.lblLyrics.Location = new System.Drawing.Point(4, 40);
             this.lblLyrics.Name = "lblLyrics";
-            this.lblLyrics.Size = new System.Drawing.Size(38, 15);
-            this.lblLyrics.TabIndex = 17;
-            this.lblLyrics.Text = "Lyrics";
             // 
             // btnImportLyrics
             // 
-            this.btnImportLyrics.Location = new System.Drawing.Point(596, 38);
+            resources.ApplyResources(this.btnImportLyrics, "btnImportLyrics");
             this.btnImportLyrics.Name = "btnImportLyrics";
-            this.btnImportLyrics.Size = new System.Drawing.Size(75, 23);
-            this.btnImportLyrics.TabIndex = 19;
-            this.btnImportLyrics.Text = "Import";
             this.btnImportLyrics.UseVisualStyleBackColor = true;
             this.btnImportLyrics.Click += new System.EventHandler(this.btnImportLyrics_Click);
             // 
             // tbPageImages
             // 
             this.tbPageImages.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(58)))), ((int)(((byte)(58)))), ((int)(((byte)(58)))));
-            this.tbPageImages.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
+            resources.ApplyResources(this.tbPageImages, "tbPageImages");
             this.tbPageImages.Controls.Add(this.btnTb3Next);
             this.tbPageImages.Controls.Add(this.btnImportImage);
             this.tbPageImages.Controls.Add(this.lblImage);
             this.tbPageImages.Controls.Add(this.txtImageFile);
             this.tbPageImages.Controls.Add(this.btnTb3Previous);
-            this.tbPageImages.Location = new System.Drawing.Point(4, 27);
             this.tbPageImages.Name = "tbPageImages";
-            this.tbPageImages.Padding = new System.Windows.Forms.Padding(3);
-            this.tbPageImages.Size = new System.Drawing.Size(677, 307);
-            this.tbPageImages.TabIndex = 2;
-            this.tbPageImages.Text = "Images";
             // 
             // btnTb3Next
             // 
             this.btnTb3Next.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.btnTb3Next.Location = new System.Drawing.Point(596, 278);
+            resources.ApplyResources(this.btnTb3Next, "btnTb3Next");
             this.btnTb3Next.Name = "btnTb3Next";
-            this.btnTb3Next.Size = new System.Drawing.Size(75, 23);
-            this.btnTb3Next.TabIndex = 26;
-            this.btnTb3Next.Text = "Next";
             this.btnTb3Next.UseVisualStyleBackColor = true;
             this.btnTb3Next.Click += new System.EventHandler(this.btnTb3Next_Click);
             // 
             // btnImportImage
             // 
-            this.btnImportImage.Location = new System.Drawing.Point(596, 38);
+            resources.ApplyResources(this.btnImportImage, "btnImportImage");
             this.btnImportImage.Name = "btnImportImage";
-            this.btnImportImage.Size = new System.Drawing.Size(75, 23);
-            this.btnImportImage.TabIndex = 24;
-            this.btnImportImage.Text = "Import";
             this.btnImportImage.UseVisualStyleBackColor = true;
             this.btnImportImage.Click += new System.EventHandler(this.btnImportImage_Click);
             // 
             // lblImage
             // 
-            this.lblImage.AutoSize = true;
-            this.lblImage.Font = new System.Drawing.Font("Calibri", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            resources.ApplyResources(this.lblImage, "lblImage");
             this.lblImage.ForeColor = System.Drawing.Color.White;
-            this.lblImage.Location = new System.Drawing.Point(4, 40);
             this.lblImage.Name = "lblImage";
-            this.lblImage.Size = new System.Drawing.Size(40, 15);
-            this.lblImage.TabIndex = 22;
-            this.lblImage.Text = "Image";
             // 
             // txtImageFile
             // 
-            this.txtImageFile.Location = new System.Drawing.Point(80, 37);
+            resources.ApplyResources(this.txtImageFile, "txtImageFile");
             this.txtImageFile.Name = "txtImageFile";
-            this.txtImageFile.Size = new System.Drawing.Size(500, 26);
-            this.txtImageFile.TabIndex = 23;
             // 
             // btnTb3Previous
             // 
             this.btnTb3Previous.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.btnTb3Previous.Location = new System.Drawing.Point(515, 278);
+            resources.ApplyResources(this.btnTb3Previous, "btnTb3Previous");
             this.btnTb3Previous.Name = "btnTb3Previous";
-            this.btnTb3Previous.Size = new System.Drawing.Size(75, 23);
-            this.btnTb3Previous.TabIndex = 25;
-            this.btnTb3Previous.Text = "Previous";
             this.btnTb3Previous.UseVisualStyleBackColor = true;
             this.btnTb3Previous.Click += new System.EventHandler(this.btnTb3Previous_Click);
             // 
@@ -427,22 +313,16 @@
             // btnCreateKfn
             // 
             this.btnCreateKfn.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.btnCreateKfn.Location = new System.Drawing.Point(205, 386);
+            resources.ApplyResources(this.btnCreateKfn, "btnCreateKfn");
             this.btnCreateKfn.Name = "btnCreateKfn";
-            this.btnCreateKfn.Size = new System.Drawing.Size(110, 23);
-            this.btnCreateKfn.TabIndex = 40;
-            this.btnCreateKfn.Text = "Create KFN";
             this.btnCreateKfn.UseVisualStyleBackColor = true;
             this.btnCreateKfn.Click += new System.EventHandler(this.btnCreateKfn_Click);
             // 
             // btnCancel
             // 
             this.btnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.btnCancel.Location = new System.Drawing.Point(352, 386);
+            resources.ApplyResources(this.btnCancel, "btnCancel");
             this.btnCancel.Name = "btnCancel";
-            this.btnCancel.Size = new System.Drawing.Size(99, 23);
-            this.btnCancel.TabIndex = 41;
-            this.btnCancel.Text = "Quit";
             this.btnCancel.UseVisualStyleBackColor = true;
             this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
             // 
@@ -452,12 +332,9 @@
             this.tbControl.Controls.Add(this.tbPageLyrics);
             this.tbControl.Controls.Add(this.tbPageImages);
             this.tbControl.Controls.Add(this.tbPageBackground);
-            this.tbControl.Font = new System.Drawing.Font("Calibri", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tbControl.Location = new System.Drawing.Point(4, 25);
+            resources.ApplyResources(this.tbControl, "tbControl");
             this.tbControl.Name = "tbControl";
             this.tbControl.SelectedIndex = 0;
-            this.tbControl.Size = new System.Drawing.Size(685, 338);
-            this.tbControl.TabIndex = 11;
             // 
             // tbPageBackground
             // 
@@ -467,30 +344,22 @@
             this.tbPageBackground.Controls.Add(this.txtBgColor);
             this.tbPageBackground.Controls.Add(this.lblColor);
             this.tbPageBackground.Controls.Add(this.btnTb4Previous);
-            this.tbPageBackground.Location = new System.Drawing.Point(4, 27);
+            resources.ApplyResources(this.tbPageBackground, "tbPageBackground");
             this.tbPageBackground.Name = "tbPageBackground";
-            this.tbPageBackground.Size = new System.Drawing.Size(677, 307);
-            this.tbPageBackground.TabIndex = 3;
-            this.tbPageBackground.Text = "Background";
             this.tbPageBackground.UseVisualStyleBackColor = true;
             // 
             // btnBgColorPicker
             // 
-            this.btnBgColorPicker.Location = new System.Drawing.Point(254, 9);
+            this.btnBgColorPicker.Image = global::Karaboss.Properties.Resources.color_picker_black18;
+            resources.ApplyResources(this.btnBgColorPicker, "btnBgColorPicker");
             this.btnBgColorPicker.Name = "btnBgColorPicker";
-            this.btnBgColorPicker.Size = new System.Drawing.Size(44, 26);
-            this.btnBgColorPicker.TabIndex = 33;
-            this.btnBgColorPicker.Text = "//";
             this.btnBgColorPicker.UseVisualStyleBackColor = true;
             this.btnBgColorPicker.Click += new System.EventHandler(this.btnBgColorPicker_Click);
             // 
             // btnBgColorSelect
             // 
-            this.btnBgColorSelect.Location = new System.Drawing.Point(204, 9);
+            resources.ApplyResources(this.btnBgColorSelect, "btnBgColorSelect");
             this.btnBgColorSelect.Name = "btnBgColorSelect";
-            this.btnBgColorSelect.Size = new System.Drawing.Size(44, 26);
-            this.btnBgColorSelect.TabIndex = 32;
-            this.btnBgColorSelect.Text = "...";
             this.btnBgColorSelect.UseVisualStyleBackColor = true;
             this.btnBgColorSelect.Click += new System.EventHandler(this.btnBgColorSelect_Click);
             // 
@@ -498,56 +367,42 @@
             // 
             this.picBgColor.BackColor = System.Drawing.Color.Black;
             this.picBgColor.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.picBgColor.Location = new System.Drawing.Point(135, 9);
+            resources.ApplyResources(this.picBgColor, "picBgColor");
             this.picBgColor.Name = "picBgColor";
-            this.picBgColor.Size = new System.Drawing.Size(63, 26);
-            this.picBgColor.TabIndex = 16;
             this.picBgColor.TabStop = false;
             // 
             // txtBgColor
             // 
-            this.txtBgColor.Location = new System.Drawing.Point(62, 9);
-            this.txtBgColor.MaxLength = 7;
+            resources.ApplyResources(this.txtBgColor, "txtBgColor");
             this.txtBgColor.Name = "txtBgColor";
-            this.txtBgColor.Size = new System.Drawing.Size(67, 26);
-            this.txtBgColor.TabIndex = 31;
-            this.txtBgColor.Text = "#000000";
+            this.txtBgColor.TextChanged += new System.EventHandler(this.txtBgColor_TextChanged);
             // 
             // lblColor
             // 
-            this.lblColor.AutoSize = true;
-            this.lblColor.Location = new System.Drawing.Point(10, 12);
+            resources.ApplyResources(this.lblColor, "lblColor");
             this.lblColor.Name = "lblColor";
-            this.lblColor.Size = new System.Drawing.Size(41, 18);
-            this.lblColor.TabIndex = 30;
-            this.lblColor.Text = "Color";
             // 
             // btnTb4Previous
             // 
             this.btnTb4Previous.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.btnTb4Previous.Location = new System.Drawing.Point(515, 278);
+            resources.ApplyResources(this.btnTb4Previous, "btnTb4Previous");
             this.btnTb4Previous.Name = "btnTb4Previous";
-            this.btnTb4Previous.Size = new System.Drawing.Size(75, 23);
-            this.btnTb4Previous.TabIndex = 34;
-            this.btnTb4Previous.Text = "Previous";
             this.btnTb4Previous.UseVisualStyleBackColor = true;
             this.btnTb4Previous.Click += new System.EventHandler(this.btnTb4Previous_Click);
             // 
             // frmKfnCreate
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            resources.ApplyResources(this, "$this");
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(51)))), ((int)(((byte)(51)))), ((int)(((byte)(51)))));
-            this.ClientSize = new System.Drawing.Size(695, 416);
             this.Controls.Add(this.tbControl);
             this.Controls.Add(this.btnCancel);
             this.Controls.Add(this.btnCreateKfn);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
-            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
             this.Name = "frmKfnCreate";
-            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "Karaboss - Create a new KFN file";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.frmKfnCreate_FormClosing);
+            this.Load += new System.EventHandler(this.frmKfnCreate_Load);
             this.tbPageAudios.ResumeLayout(false);
             this.tbPageAudios.PerformLayout();
             this.tbPageLyrics.ResumeLayout(false);
@@ -607,5 +462,6 @@
         private System.Windows.Forms.TextBox txtKfnFileName;
         private System.Windows.Forms.TextBox txtArtist;
         private System.Windows.Forms.Label lblArtist;
+        private System.Windows.Forms.ColorDialog ColorDialog;
     }
 }

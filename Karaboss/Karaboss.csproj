@@ -193,6 +193,12 @@
     <Compile Include="frmModifyDivision.Designer.cs">
       <DependentUpon>frmModifyDivision.cs</DependentUpon>
     </Compile>
+    <Compile Include="Kfn\frmFullScreen.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Kfn\frmFullScreen.Designer.cs">
+      <DependentUpon>frmFullScreen.cs</DependentUpon>
+    </Compile>
     <Compile Include="Kfn\frmKfnCreate.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -653,6 +659,12 @@
     <EmbeddedResource Include="GuitarTraining\frmGuitarTraining.resx">
       <DependentUpon>frmGuitarTraining.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Kfn\frmFullScreen.resx">
+      <DependentUpon>frmFullScreen.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Kfn\frmKfnCreate.fr.resx">
+      <DependentUpon>frmKfnCreate.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Kfn\frmKfnCreate.resx">
       <DependentUpon>frmKfnCreate.cs</DependentUpon>
     </EmbeddedResource>
@@ -1062,6 +1074,10 @@
     <None Include="Resources\gear.ico" />
     <None Include="Resources\cdg.png" />
     <None Include="Resources\cdg.ico" />
+    <None Include="Resources\color_picker_black32.ico" />
+    <None Include="Resources\color_picker_black32.png" />
+    <None Include="Resources\color_picker_black24.png" />
+    <None Include="Resources\color_picker_black18.png" />
     <Content Include="Resources\Ico\mml.ico" />
     <None Include="Resources\Media-Controls-Skip-To-Start-icon.png" />
     <None Include="Resources\Media-Controls-Skip-To-End-icon.png" />
