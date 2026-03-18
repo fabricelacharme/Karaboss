@@ -1846,7 +1846,7 @@ namespace Karaboss.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("\"#000000\"")]
+        [global::System.Configuration.DefaultSettingValueAttribute("#000000")]
         public string KfnBgColor {
             get {
                 return ((string)(this["KfnBgColor"]));

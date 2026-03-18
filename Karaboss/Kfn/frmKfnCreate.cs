@@ -456,9 +456,17 @@ namespace Karaboss.Kfn
         #region form load close
         private void frmKfnCreate_Load(object sender, EventArgs e)
         {
-            txtAuthor.Text = Properties.Settings.Default.KfnAuthor;
-            txtComment.Text  = Properties.Settings.Default.KfnComment;
-            txtBgColor.Text = Properties.Settings.Default.KfnBgColor;
+            try
+            {
+
+                txtAuthor.Text = Properties.Settings.Default.KfnAuthor;
+                txtComment.Text = Properties.Settings.Default.KfnComment;
+                txtBgColor.Text = Properties.Settings.Default.KfnBgColor;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
 
