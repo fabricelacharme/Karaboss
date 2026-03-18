@@ -1565,12 +1565,33 @@ namespace Karaboss.Resources.Localization {
             {
                 return ResourceManager.GetString("AllLines", resourceCulture);
             }
-        }
-        internal static string Mp3SaveLRCWarning
+        }        
+        internal static string kfnCreateTb1
         {
             get
             {
-                return ResourceManager.GetString("Mp3SaveLRCWarning", resourceCulture);
+                return ResourceManager.GetString("kfnCreateTb1", resourceCulture);
+            }
+        }
+        internal static string kfnCreateTb2
+        {
+            get
+            {
+                return ResourceManager.GetString("kfnCreateTb2", resourceCulture);
+            }
+        }
+        internal static string kfnCreateTb3
+        {
+            get
+            {
+                return ResourceManager.GetString("kfnCreateTb3", resourceCulture);
+            }
+        }
+        internal static string kfnCreateTb4
+        {
+            get
+            {
+                return ResourceManager.GetString("kfnCreateTb4", resourceCulture);
             }
         }
     }

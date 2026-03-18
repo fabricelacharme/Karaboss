@@ -15,6 +15,8 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using TagLib.Matroska;
 using TagLib.Riff;
+using static KFN;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.TrackBar;
 
 namespace KFNViewer.SongIni
 {
@@ -639,6 +641,22 @@ namespace KFNViewer.SongIni
                 var key = "Mark" + i.ToString(CultureInfo.InvariantCulture);
                 Ini["Marks"][key] = "-1";
             }
+        }
+
+
+        public void SetMP3Music(ResourceFile[] audios_resources)
+        {
+            //[MP3Music]
+            //NumTracks = 1
+            //Track0 = Richard_Anthony_Yaya_twist_(Instrumental_avec_chanteur)_17711.mp3,0,-1,,
+            if (audios_resources != null && audios_resources.Count() == 2)
+            {
+                string AudioFileWithSinger = audios_resources[1].FileName;
+                string value = AudioFileWithSinger + ",0,-1,,";
+                Ini["MP3Music"]["NumTracks"] = "1";
+                Ini["MP3Music"]["Track0"] = value;
+            }
+
         }
 
         /// <summary>

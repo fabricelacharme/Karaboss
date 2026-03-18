@@ -6,6 +6,7 @@ using System.Drawing;
 using System.IO;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
+using Karaboss.Resources.Localization;
 
 namespace Karaboss.Kfn
 {
@@ -40,6 +41,20 @@ namespace Karaboss.Kfn
             tbControl.DrawMode = TabDrawMode.OwnerDrawFixed;
             tbControl.ItemSize = new Size((tbControl.Width / tbControl.TabCount) - 1, tbControl.ItemSize.Height);
 
+            string tx = Strings.kfnCreateTb1;
+            tx = string.Format(tx, Environment.NewLine);
+            lblHelpTb1.Text = tx;
+
+            lblHelpTb2.Text = Karaboss.Resources.Localization.Strings.kfnCreateTb2;
+
+            tx = Strings.kfnCreateTb3;
+            tx = string.Format(tx, Environment.NewLine);
+            lblHelpTb3.Text = tx;
+
+            tx = Strings.kfnCreateTb4;
+            tx = string.Format(tx, Environment.NewLine);
+            lblHelpTb4.Text = tx;
+
             ftName = "Arial";
             ftSize = 18;
 
@@ -56,28 +71,43 @@ namespace Karaboss.Kfn
         private void btnImportAudio1_Click(object sender, EventArgs e)
         {
             string FileName;
-            OpenFileDialog.Filter = "Mp3 files (*.mp3)|*.mp3|All files (*.*)|*.*";
-            if (OpenFileDialog.ShowDialog() != DialogResult.OK) return;
 
-            FileName = OpenFileDialog.FileName;
-            OpenFileDialog.InitialDirectory = Path.GetDirectoryName(FileName);
+            try
+            {
 
-            txtAudio1.Text = FileName;
+                OpenFileDialog.Filter = "Mp3 files (*.mp3)|*.mp3|All files (*.*)|*.*";
+                if (OpenFileDialog.ShowDialog() != DialogResult.OK) return;
 
-            SetTitleFromFile(FileName);
+                FileName = OpenFileDialog.FileName;
+                OpenFileDialog.InitialDirectory = Path.GetDirectoryName(FileName);
+
+                txtAudio1.Text = FileName;
+
+                SetTitleFromFile(FileName);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message,Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         private void btnImportAudio2_Click(object sender, EventArgs e)
         {
             string FileName;
-            OpenFileDialog.Filter = "Mp3 files (*.mp3)|*.mp3|All files (*.*)|*.*";
-            if (OpenFileDialog.ShowDialog() != DialogResult.OK) return;
+            try
+            {
+                OpenFileDialog.Filter = "Mp3 files (*.mp3)|*.mp3|All files (*.*)|*.*";
+                if (OpenFileDialog.ShowDialog() != DialogResult.OK) return;
 
-            FileName = OpenFileDialog.FileName;
-            OpenFileDialog.InitialDirectory = Path.GetDirectoryName(FileName);
+                FileName = OpenFileDialog.FileName;
+                OpenFileDialog.InitialDirectory = Path.GetDirectoryName(FileName);
 
-
-            txtAudio2.Text = FileName;
+                txtAudio2.Text = FileName;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         /// <summary>
@@ -139,8 +169,23 @@ namespace Karaboss.Kfn
             txtImageFile.Text = FileName;
 
             // Load image into picImage
-            picImage.SizeMode = PictureBoxSizeMode.StretchImage;
-            picImage.Image = Image.FromFile(FileName);
+            try
+            {
+                Image img = Image.FromFile(FileName);
+                lblSize.Text = "Size: " + img.Width.ToString() + " x " + img.Height.ToString();
+
+                double ratio = img.Width / (double)img.Height;
+                lblRatio.Text = "Ratio: " + String.Format("{0:N2}", ratio);
+
+                picImage.SizeMode = PictureBoxSizeMode.StretchImage;
+                picImage.Image = img;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+
+
         }
 
         #endregion select images

@@ -117,88 +117,57 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="splitContainerFiles.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
-    <value>Fill</value>
+  <data name="&gt;&gt;mnuRenameFiles.Name" xml:space="preserve">
+    <value>mnuRenameFiles</value>
+  </data>
+  <data name="&gt;&gt;btnPlay.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripButton, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
-  <data name="splitContainerFiles.Location" type="System.Drawing.Point, System.Drawing">
-    <value>0, 40</value>
+  <data name="upButton.ImageTransparentColor" type="System.Drawing.Color, System.Drawing">
+    <value>Magenta</value>
   </data>
-  <data name="treeView.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
-    <value>Fill</value>
+  <data name="mnuInvertAuthorSong.ToolTipText" xml:space="preserve">
+    <value>Invert author and song</value>
   </data>
-  <data name="treeView.Font" type="System.Drawing.Font, System.Drawing">
-    <value>Segoe UI, 9pt</value>
+  <data name="&gt;&gt;mnuRenameFiles.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="treeView.Location" type="System.Drawing.Point, System.Drawing">
-    <value>0, 25</value>
+  <data name="&gt;&gt;picSubject.Name" xml:space="preserve">
+    <value>picSubject</value>
   </data>
-  <data name="shellListView.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
-    <value>Fill</value>
+  <data name="mnuRename.Text" xml:space="preserve">
+    <value>Rename</value>
   </data>
-  <data name="shellListView.Location" type="System.Drawing.Point, System.Drawing">
-    <value>0, 25</value>
+  <data name="&gt;&gt;btnNewKfnFile.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripButton, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="shellListView.Size" type="System.Drawing.Size, System.Drawing">
-    <value>470, 406</value>
+  <data name="pnlSubject.Location" type="System.Drawing.Point, System.Drawing">
+    <value>0, 0</value>
   </data>
-  <assembly alias="mscorlib" name="mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="shellListView.TabIndex" type="System.Int32, mscorlib">
+  <data name="&gt;&gt;mnuInvertAuthorSong.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="mnuRenameFiles.Size" type="System.Drawing.Size, System.Drawing">
+    <value>220, 22</value>
+  </data>
+  <data name="tvToolbar.Text" xml:space="preserve">
+    <value>toolStrip1</value>
+  </data>
+  <data name="&gt;&gt;splitContainerFiles.ZOrder" xml:space="preserve">
     <value>0</value>
   </data>
-  <data name="shellListView.Text" xml:space="preserve">
-    <value>listView</value>
+  <data name="&gt;&gt;mnuInvertAuthorSong.Name" xml:space="preserve">
+    <value>mnuInvertAuthorSong</value>
   </data>
-  <data name="&gt;&gt;shellListView.Name" xml:space="preserve">
-    <value>shellListView</value>
+  <data name="&gt;&gt;replaceButton.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripButton, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="&gt;&gt;shellListView.Type" xml:space="preserve">
-    <value>FlShell.ShellListView, FlShell, Version=1.0.1.2, Culture=neutral, PublicKeyToken=null</value>
-  </data>
-  <data name="&gt;&gt;shellListView.Parent" xml:space="preserve">
-    <value>splitContainerFiles.Panel2</value>
-  </data>
-  <data name="&gt;&gt;shellListView.ZOrder" xml:space="preserve">
-    <value>0</value>
-  </data>
-  <data name="treeView.Size" type="System.Drawing.Size, System.Drawing">
-    <value>234, 406</value>
-  </data>
-  <data name="treeView.TabIndex" type="System.Int32, mscorlib">
-    <value>1</value>
-  </data>
-  <data name="&gt;&gt;treeView.Name" xml:space="preserve">
-    <value>treeView</value>
-  </data>
-  <data name="&gt;&gt;treeView.Type" xml:space="preserve">
-    <value>FlShell.ShellTreeView, FlShell, Version=1.0.1.2, Culture=neutral, PublicKeyToken=null</value>
-  </data>
-  <data name="&gt;&gt;treeView.Parent" xml:space="preserve">
-    <value>splitContainerFiles.Panel1</value>
+  <data name="replaceButton.ImageTransparentColor" type="System.Drawing.Color, System.Drawing">
+    <value>Magenta</value>
   </data>
   <data name="&gt;&gt;treeView.ZOrder" xml:space="preserve">
     <value>0</value>
-  </data>
-  <metadata name="tvToolbar.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>224, 17</value>
-  </metadata>
-  <data name="backButton.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
-    <value>
-        iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
-        YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAJySURBVDhPrZJbTNJhGMYhJhGalpLaBNs8lVMxrcQUVlvi
-        rJs27aLmhdRGJuaqdcCxtcwaw5luVEzX1hGXa6ECyiGMPwPUWpgsnYoMTKfrsHVTq268eBp/BgrUXc/2
-        3n3P732+Zy+FEiX3KgHphxbwnTzwrTzwX/MgGRNBv6BG9NsILX52oWlKhGOuGii9t/HcdwfKmWa0uY7j
-        jI0Lni4dR4YqYPdqY0EBc8V4GW7Ot2JgqRe981LIp+pxZbwS5x3F4Wmw5iP3URrsnihI03sRbs1dwxNv
-        O7qnGyF7K0Sftw2/135A4++IgIhthdhzfxcWV1xBiHuFgIAohWr2Mton63BprAzqhesIiVjtiwA0O7g4
-        1J8B+StZECCdbMHZCSGkbw6TDzaaV356cHWCHzY32otQb8vDSSIH5feKggCBgYcLzv0x5tB2w3IPObol
-        FTQf76LWmoVqCwesNgbsPi0oAj2PNN94dzTC/C8JLWxUmtPB7oqHe5kARaAJAqIT/Fr7Tm4MjNrfjWf+
-        Ljz0deKAaQf2GpOxvZUe/ILELELDaH4Y8nQDxPZJg5pRDqosGThoTkWJMQUFhm3I1McjrzUzCBieUaO8
-        Lz2iJNWcNAx5ufQApUYWio3JyBpOAEfPREoPHfXy2vVbqHpcgROmHJwicsMlKWYukgDiiwG7R5LIrTt1
-        DCQO0sBqSoJ7llgHuH0EsjtTUW3khEsKxK1zCsA1ZYCt34LkoTgwB6ign6NC9UIRe86OaS32KQqR3buV
-        LClvJJGMm6bdjITBTWAoqWCJk/5uDunbVw9URgVKZAVgSmhgiGmIa6Ai6zQbkg5RZOz/pT9Lfwouk2im
-        zQAAAABJRU5ErkJggg==
-</value>
   </data>
   <data name="backButton.ImageTransparentColor" type="System.Drawing.Color, System.Drawing">
     <value>Magenta</value>
@@ -206,461 +175,491 @@
   <data name="backButton.Size" type="System.Drawing.Size, System.Drawing">
     <value>23, 22</value>
   </data>
-  <data name="backButton.Text" xml:space="preserve">
-    <value>back</value>
+  <data name="&gt;&gt;splitContainerFiles.Panel2.Parent" xml:space="preserve">
+    <value>splitContainerFiles</value>
   </data>
-  <data name="forwardButton.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
-    <value>
-        iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
-        YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAJNSURBVDhPrZJdSFNxGMZdw7Wm2VoLF7miqSupthL7lKNe
-        NJFugooojQbGsn1AhKFb3ZhFNspoMHFXURDWRWqbbhOXZ6ltEmay75RVrtVVC1Kjmy6eOGd27GwFXfTA
-        c/P/v8/vfXl5c3IyFPkSgilqAuEnQDwnUOUlYHipg2vOhcxalpJfE9AHdTg8WQfL7HX0xG/DEtKjbfII
-        Gr0K7LNLcMhRA19iPBtEhSsnDuJqzIjeORtssVbceN2AS75KGMaUjNUjZSi9J4HvfQZEH9DhWrQF92fb
-        cSfYxASciW4WgLLGuwPbumRIphJpSPhzEARZjq5IM9pfHcPFF3vpwkCKBKXktzcsgH5MgepHG2EmO9IA
-        U8CIc34VWidqWIUdUyfw/ccCC9I0uhMNXjlOkiU40LU7DagaInBhvCJrVMpP3pppAKUPizH67eiIDLXD
-        Uojb+EsAJ0F/3A2cZYr/pneLEaiGi1A5JEFRZ94SoP/fAa5Pj7HHvR67XCKsNfLSAMMzLdSeMmbsOo+U
-        dj0pR3e0lQnbP/bQ4e1OITY58iA3bUkD3DMO7H8oYS2JAlijLayw0iWCbCAfUocA67p5OG2uX74F1YNq
-        HHeX4BRZyiwpvhBmwlsH19BdN9j5KOjjQqwVIhSfXgaEk9MovlWIWpeUWVLz1BncjFymuxY5VkHUnwtB
-        Lwe88xzY+qzZ5+yfGUWFWYli22p6SfLBAnrcwqcrkd+3AnwLB2KN8M/hX5qfT8HmsaL8igICHRd8DRe5
-        ag5kjZth6NQi/PvY/0s/AZuZBhGEx2rkAAAAAElFTkSuQmCC
-</value>
+  <data name="&gt;&gt;mnutbAddToPlayList.Name" xml:space="preserve">
+    <value>mnutbAddToPlayList</value>
   </data>
-  <data name="forwardButton.ImageTransparentColor" type="System.Drawing.Color, System.Drawing">
-    <value>Magenta</value>
+  <data name="lvToolbar.Size" type="System.Drawing.Size, System.Drawing">
+    <value>470, 25</value>
   </data>
-  <data name="forwardButton.Size" type="System.Drawing.Size, System.Drawing">
-    <value>23, 22</value>
+  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="picSubject.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
+    <value>Left</value>
   </data>
-  <data name="forwardButton.Text" xml:space="preserve">
-    <value>forward</value>
+  <data name="&gt;&gt;mnuRename.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripDropDownButton, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="upButton.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
-    <value>
-        iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
-        YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAIHSURBVDhPjZNtaJJRGIYnFK22CEOS0pCEkqQPgo2xkNHa
-        YAQhrH6MqB9GxQgqCgpxE4bIWpHMH2uQEMywotFifRCtcJJRtlIYb9TIrXQf7a1MEGRCA+kK31JYr7nd
-        cP8559wXz/Occ8rKSuik14Kpq4bR8QD/7i2qh299lFuXsf7aatS2tXQ+aFs6JDYVZlP7RrTeNVQ90tD4
-        RI/BrWJ7h5GgcH9xUK50latCCu8b3kzLy220Rqow3dBRfmY51jun5ZDPg9XkrWhVUGlbgdK+koZ7eil8
-        SqhFZ9VKaznLwsmoh+z8KKmMvwDK2eBSSeEL43ulgS4I5pU7yK/XgOevA4AAhFhnr5TCHTP72e00lgD8
-        vA3zPQucW69pq5DC5z82YXbXFyqTAxK9ZL/YSX84jviikfgzE8loH/WuOjoTBzkUqMXt7wLSxIInigAm
-        LjM91EAqfhf4CkSlFvQONd1zR9hyZQNxcZC0eJMZoVcOyL53Mh06BwwUZhFPXmTnVR2WV3s42rMD0v3E
-        hs3yOeQAiectZBJBSLsKdgw0YXBp2OXQkJpsJxO3MRW+VBwg+pthbgS+OQtWnl1Fc/dWROEYyZCZ2ONq
-        fsyG/wN4YwPRC5+spCOHEf11PL2uJOJRIPi0RIcOyHvP689D6mPslloKvOs3MuG3SIHvk0v4ifm7nR3z
-        FS+xhH4D0/e1Ir4sDasAAAAASUVORK5CYII=
-</value>
-  </data>
-  <data name="upButton.ImageTransparentColor" type="System.Drawing.Color, System.Drawing">
-    <value>Magenta</value>
-  </data>
-  <data name="upButton.Size" type="System.Drawing.Size, System.Drawing">
-    <value>23, 22</value>
-  </data>
-  <data name="upButton.Text" xml:space="preserve">
-    <value>Up</value>
-  </data>
-  <data name="btnDownloads.ImageTransparentColor" type="System.Drawing.Color, System.Drawing">
-    <value>Magenta</value>
-  </data>
-  <data name="btnDownloads.Size" type="System.Drawing.Size, System.Drawing">
-    <value>23, 22</value>
-  </data>
-  <data name="btnDownloads.Text" xml:space="preserve">
-    <value>Downloads</value>
-  </data>
-  <data name="tvToolbar.Location" type="System.Drawing.Point, System.Drawing">
-    <value>0, 0</value>
-  </data>
-  <data name="tvToolbar.Size" type="System.Drawing.Size, System.Drawing">
-    <value>234, 25</value>
-  </data>
-  <data name="tvToolbar.TabIndex" type="System.Int32, mscorlib">
-    <value>5</value>
-  </data>
-  <data name="tvToolbar.Text" xml:space="preserve">
-    <value>toolStrip1</value>
-  </data>
-  <data name="&gt;&gt;tvToolbar.Name" xml:space="preserve">
-    <value>tvToolbar</value>
-  </data>
-  <data name="&gt;&gt;tvToolbar.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ToolStrip, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;tvToolbar.Parent" xml:space="preserve">
-    <value>splitContainerFiles.Panel1</value>
-  </data>
-  <data name="&gt;&gt;tvToolbar.ZOrder" xml:space="preserve">
+  <data name="&gt;&gt;lvToolbar.ZOrder" xml:space="preserve">
     <value>1</value>
   </data>
-  <data name="&gt;&gt;splitContainerFiles.Panel1.Name" xml:space="preserve">
-    <value>splitContainerFiles.Panel1</value>
+  <data name="lblSubject.Text" xml:space="preserve">
+    <value>EXPLORER</value>
+  </data>
+  <data name="splitContainerFiles.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
+    <value>Fill</value>
+  </data>
+  <data name="&gt;&gt;mnuRename.Name" xml:space="preserve">
+    <value>mnuRename</value>
+  </data>
+  <data name="splitContainerFiles.Location" type="System.Drawing.Point, System.Drawing">
+    <value>0, 40</value>
+  </data>
+  <data name="&gt;&gt;shellListView.Parent" xml:space="preserve">
+    <value>splitContainerFiles.Panel2</value>
+  </data>
+  <data name="$this.Size" type="System.Drawing.Size, System.Drawing">
+    <value>708, 471</value>
   </data>
   <data name="&gt;&gt;splitContainerFiles.Panel1.Type" xml:space="preserve">
     <value>System.Windows.Forms.SplitterPanel, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
+  <data name="lblSubject.Size" type="System.Drawing.Size, System.Drawing">
+    <value>708, 40</value>
+  </data>
+  <data name="&gt;&gt;btnDownloads.Name" xml:space="preserve">
+    <value>btnDownloads</value>
+  </data>
+  <assembly alias="mscorlib" name="mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="tvToolbar.TabIndex" type="System.Int32, mscorlib">
+    <value>5</value>
+  </data>
+  <data name="&gt;&gt;tvToolbar.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStrip, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="forwardButton.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAO
+        wgAADsIBFShKgAAAAk1JREFUOE+tkl1IU3EYxl3DtabZWgsXuaKpK6m2EvuUo140kW6CiiiNBsayfUCE
+        oVvdmEU2ymgwcVdRENZFaptuE5dnqW0SZrLvlFWu1VULUqObLp44Z3bsbAVd9MBz8/+/z+99eXlzcjIU
+        +RKCKWoC4SdAPCdQ5SVgeKmDa86FzFqWkl8T0Ad1ODxZB8vsdfTEb8MS0qNt8ggavQrss0twyFEDX2I8
+        G0SFKycO4mrMiN45G2yxVtx43YBLvkoYxpSM1SNlKL0nge99BkQf0OFatAX3Z9txJ9jEBJyJbhaAssa7
+        A9u6ZEimEmlI+HMQBFmOrkgz2l8dw8UXe+nCQIoEpeS3NyyAfkyB6kcbYSY70gBTwIhzfhVaJ2pYhR1T
+        J/D9xwIL0jS6Ew1eOU6SJTjQtTsNqBoicGG8ImtUyk/emmkApQ+LMfrt6IgMtcNSiNv4SwAnQX/cDZxl
+        iv+md4sRqIaLUDkkQVFn3hKg/98Brk+Psce9HrtcIqw18tIAwzMt1J4yZuw6j5R2PSlHd7SVCds/9tDh
+        7U4hNjnyIDdtSQPcMw7sfyhhLYkCWKMtrLDSJYJsIB9ShwDrunk4ba5fvgXVg2ocd5fgFFnKLCm+EGbC
+        WwfX0F032Pko6ONCrBUiFJ9eBoST0yi+VYhal5RZUvPUGdyMXKa7FjlWQdSfC0EvB7zzHNj6rNnn7J8Z
+        RYVZiWLbanpJ8sECetzCpyuR37cCfAsHYo3wz+Ffmp9PweaxovyKAgIdF3wNF7lqDmSNm2Ho1CL8+9j/
+        Sz8Bm5kGEYTHauQAAAAASUVORK5CYII=
+</value>
+  </data>
+  <data name="replaceButton.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAO
+        wgAADsIBFShKgAAAAgVJREFUOE+lku1LU2EYxs8/EmaaVhKCoeIrMZTUQPGDiIpgrIbZYGiCoxglA60I
+        RVEUEZ1MEIl9GeRLhVppY1PmyrHUFTFFfEMdjEAku+S6wR4Fo8AH7nPgnOf63df9ouGcR+Ojyb50Khr7
+        v8Lc7Yep7TMML7wob5xFkdmF3NppZNVMIsMwhjS98zTg1+Hvv8b+wSHCkQNs7e0jtPETy6sRXL319P8A
+        vmBYMutMH+GcXhexbSSEK7mWfwOYmWJPYBetw0GxTWCP8wficx4rAGs+S0zbzExxfv0MUqsccPl30Pbq
+        G+JzHikAG3aWmDXTNjNTTOvv57fFcZyuQQHY7ZM15z2ckXAHdqVmfmNmit94NmHpDeDyzToF4KgoXgxF
+        RGgfX4Fjag0Jt5vRMhyUhjE6HN/x+tM66jsXEJttUgDOmeLSJx4Rzy+HMTAaQkOXHzfKbGJ96N0qNE2T
+        /w9afIjJNCoAl6TSOofB8RWxy7fVtoi7z73SxMTidjTbl1Db/kUg+mdeXMq4rwAcFTMei3nZ2OpDodmF
+        9HsjAriYqke28QMyq98KJDrNoABczzH3hohZM2sssbiRVTOBpNI+XMu3Ik5nFtvXC1/KDhD4B8DdpmUG
+        62NJ/EZxQkGTiDm24/eFpApEpdxRAM6Zu81Ok84l4UWOit1mZtZM28xMcVRylQKc5xwB0AEgNdcTWfMA
+        AAAASUVORK5CYII=
+</value>
+  </data>
+  <data name="&gt;&gt;$this.Name" xml:space="preserve">
+    <value>xplorerControl</value>
+  </data>
+  <data name="btnDownloads.ImageTransparentColor" type="System.Drawing.Color, System.Drawing">
+    <value>Magenta</value>
+  </data>
+  <data name="&gt;&gt;mnutbAddToPlayList.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripDropDownButton, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;upButton.Name" xml:space="preserve">
+    <value>upButton</value>
+  </data>
+  <data name="&gt;&gt;treeView.Type" xml:space="preserve">
+    <value>FlShell.ShellTreeView, FlShell, Version=1.0.1.2, Culture=neutral, PublicKeyToken=null</value>
+  </data>
+  <data name="upButton.Size" type="System.Drawing.Size, System.Drawing">
+    <value>23, 22</value>
+  </data>
+  <data name="&gt;&gt;btnPlay.Name" xml:space="preserve">
+    <value>btnPlay</value>
+  </data>
+  <data name="&gt;&gt;lblSubject.Parent" xml:space="preserve">
+    <value>pnlSubject</value>
+  </data>
+  <data name="replaceButton.Text" xml:space="preserve">
+    <value>Replace All (F4)</value>
+  </data>
+  <data name="forwardButton.Text" xml:space="preserve">
+    <value>forward</value>
+  </data>
+  <data name="&gt;&gt;picSubject.Type" xml:space="preserve">
+    <value>System.Windows.Forms.PictureBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;toolStripSeparator3.Name" xml:space="preserve">
+    <value>toolStripSeparator3</value>
+  </data>
+  <data name="&gt;&gt;btnEdit.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripButton, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="btnNewMidiFile.ImageTransparentColor" type="System.Drawing.Color, System.Drawing">
+    <value>Magenta</value>
+  </data>
+  <data name="&gt;&gt;tvToolbar.Parent" xml:space="preserve">
+    <value>splitContainerFiles.Panel1</value>
+  </data>
+  <data name="&gt;&gt;splitContainerFiles.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;pnlSubject.Name" xml:space="preserve">
+    <value>pnlSubject</value>
+  </data>
+  <data name="mnuRenameFiles.Text" xml:space="preserve">
+    <value>Rename all (F3)</value>
+  </data>
+  <data name="treeView.Location" type="System.Drawing.Point, System.Drawing">
+    <value>0, 25</value>
+  </data>
+  <data name="&gt;&gt;pnlSubject.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="&gt;&gt;replaceButton.Name" xml:space="preserve">
+    <value>replaceButton</value>
+  </data>
+  <data name="&gt;&gt;toolStripSeparator1.Name" xml:space="preserve">
+    <value>toolStripSeparator1</value>
+  </data>
+  <data name="&gt;&gt;toolStripSeparator2.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripSeparator, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="mnuRenameFiles.ToolTipText" xml:space="preserve">
+    <value>Rename all files using upper directory</value>
+  </data>
+  <data name="&gt;&gt;forwardButton.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripButton, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="btnNewKfnFile.ImageTransparentColor" type="System.Drawing.Color, System.Drawing">
+    <value>Magenta</value>
+  </data>
+  <data name="shellListView.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
+    <value>Fill</value>
+  </data>
+  <data name="&gt;&gt;treeView.Parent" xml:space="preserve">
+    <value>splitContainerFiles.Panel1</value>
+  </data>
   <data name="&gt;&gt;splitContainerFiles.Panel1.Parent" xml:space="preserve">
     <value>splitContainerFiles</value>
   </data>
+  <data name="&gt;&gt;lblSubject.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="&gt;&gt;shellListView.Name" xml:space="preserve">
+    <value>shellListView</value>
+  </data>
+  <data name="&gt;&gt;btnNewMidiFile.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripButton, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;lvToolbar.Name" xml:space="preserve">
+    <value>lvToolbar</value>
+  </data>
+  <data name="$this.AutoScaleDimensions" type="System.Drawing.SizeF, System.Drawing">
+    <value>6, 13</value>
+  </data>
+  <data name="&gt;&gt;pnlSubject.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Panel, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;lvToolbar.Parent" xml:space="preserve">
+    <value>splitContainerFiles.Panel2</value>
+  </data>
+  <data name="btnEdit.Text" xml:space="preserve">
+    <value>Edit</value>
+  </data>
+  <data name="tvToolbar.Location" type="System.Drawing.Point, System.Drawing">
+    <value>0, 0</value>
+  </data>
+  <data name="lblSubject.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
+    <value>Fill</value>
+  </data>
+  <data name="upButton.Text" xml:space="preserve">
+    <value>Up</value>
+  </data>
+  <data name="lblSubject.Font" type="System.Drawing.Font, System.Drawing">
+    <value>Segoe UI, 20.25pt</value>
+  </data>
+  <data name="&gt;&gt;backButton.Name" xml:space="preserve">
+    <value>backButton</value>
+  </data>
+  <data name="mnutbAddToPlayList.Size" type="System.Drawing.Size, System.Drawing">
+    <value>112, 22</value>
+  </data>
+  <data name="treeView.Font" type="System.Drawing.Font, System.Drawing">
+    <value>Segoe UI, 9pt</value>
+  </data>
+  <data name="&gt;&gt;$this.Type" xml:space="preserve">
+    <value>System.Windows.Forms.UserControl, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;upButton.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripButton, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="pnlSubject.Size" type="System.Drawing.Size, System.Drawing">
+    <value>708, 40</value>
+  </data>
+  <data name="btnEdit.ImageTransparentColor" type="System.Drawing.Color, System.Drawing">
+    <value>Magenta</value>
+  </data>
+  <data name="&gt;&gt;tvToolbar.Name" xml:space="preserve">
+    <value>tvToolbar</value>
+  </data>
+  <data name="&gt;&gt;splitContainerFiles.Panel2.Type" xml:space="preserve">
+    <value>System.Windows.Forms.SplitterPanel, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="mnutbAddToPlayList.Text" xml:space="preserve">
+    <value>Add to playlist</value>
+  </data>
+  <data name="&gt;&gt;backButton.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripButton, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="btnNewMidiFile.Text" xml:space="preserve">
+    <value>New Midi file</value>
+  </data>
+  <data name="mnuInvertAuthorSong.Text" xml:space="preserve">
+    <value>Invert author and song (F7) </value>
+  </data>
+  <data name="splitContainerFiles.Size" type="System.Drawing.Size, System.Drawing">
+    <value>708, 431</value>
+  </data>
+  <data name="mnutbAddToPlayList.ImageTransparentColor" type="System.Drawing.Color, System.Drawing">
+    <value>Magenta</value>
+  </data>
+  <data name="treeView.TabIndex" type="System.Int32, mscorlib">
+    <value>1</value>
+  </data>
+  <data name="&gt;&gt;tvToolbar.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="pnlSubject.TabIndex" type="System.Int32, mscorlib">
+    <value>10</value>
+  </data>
+  <data name="shellListView.Text" xml:space="preserve">
+    <value>listView</value>
+  </data>
+  <data name="btnDownloads.Size" type="System.Drawing.Size, System.Drawing">
+    <value>23, 22</value>
+  </data>
+  <data name="&gt;&gt;lblSubject.Name" xml:space="preserve">
+    <value>lblSubject</value>
+  </data>
+  <data name="&gt;&gt;toolStripSeparator3.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripSeparator, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;splitContainerFiles.Name" xml:space="preserve">
+    <value>splitContainerFiles</value>
+  </data>
+  <data name="btnPlay.Size" type="System.Drawing.Size, System.Drawing">
+    <value>23, 22</value>
+  </data>
+  <data name="&gt;&gt;treeView.Name" xml:space="preserve">
+    <value>treeView</value>
+  </data>
+  <data name="btnDownloads.Text" xml:space="preserve">
+    <value>Downloads</value>
+  </data>
+  <data name="shellListView.TabIndex" type="System.Int32, mscorlib">
+    <value>0</value>
+  </data>
+  <data name="pnlSubject.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
+    <value>Top</value>
+  </data>
+  <data name="&gt;&gt;pnlSubject.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="backButton.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAO
+        wgAADsIBFShKgAAAAnJJREFUOE+tkltM0mEYxiEmEZqWktoE2zyVUzGtxBRWW+KsmzbtouaF1EYm5qp1
+        wLG1zBrDmW5UTNfWEZdroQLKIYw/A9RamCydigxMp+uwdVOrbrx4Gn8GCtRdz/befc/vfb5nL4USJfcq
+        AemHFvCdPPCtPPBf8yAZE0G/oEb02wgtfnahaUqEY64aKL238dx3B8qZZrS5juOMjQueLh1Hhipg92pj
+        QQFzxXgZbs63YmCpF73zUsin6nFlvBLnHcXhabDmI/dRGuyeKEjTexFuzV3DE287uqcbIXsrRJ+3Db/X
+        fkDj74iAiG2F2HN/FxZXXEGIe4WAgCiFavYy2ifrcGmsDOqF6wiJWO2LADQ7uDjUnwH5K1kQIJ1swdkJ
+        IaRvDpMPNppXfnpwdYIfNjfai1Bvy8NJIgfl94qCAIGBhwvO/THm0HbDcg85uiUVNB/votaahWoLB6w2
+        Buw+LSgCPY8033h3NML8LwktbFSa08Huiod7mQBFoAkCohP8WvtObgyM2t+NZ/4uPPR14oBpB/Yak7G9
+        lR78gsQsQsNofhjydAPE9kmDmlEOqiwZOGhORYkxBQWGbcjUxyOvNTMIGJ5Ro7wvPaIk1Zw0DHm59ACl
+        RhaKjcnIGk4AR89ESg8d9fLa9VuoelyBE6YcnCJywyUpZi6SAOKLAbtHksitO3UMJA7SwGpKgnuWWAe4
+        fQSyO1NRbeSESwrErXMKwDVlgK3fguShODAHqKCfo0L1QhF7zo5pLfYpCpHdu5UsKW8kkYybpt2MhMFN
+        YCipYImT/m4O6dtXD1RGBUpkBWBKaGCIaYhroCLrNBuSDlFk7P+lP0t/Ci6TaKbNAAAAAElFTkSuQmCC
+</value>
+  </data>
+  <data name="lblSubject.Location" type="System.Drawing.Point, System.Drawing">
+    <value>0, 0</value>
+  </data>
+  <data name="&gt;&gt;btnEdit.Name" xml:space="preserve">
+    <value>btnEdit</value>
+  </data>
+  <data name="&gt;&gt;splitContainerFiles.Panel1.Name" xml:space="preserve">
+    <value>splitContainerFiles.Panel1</value>
+  </data>
+  <data name="lvToolbar.TabIndex" type="System.Int32, mscorlib">
+    <value>3</value>
+  </data>
+  <data name="mnuInvertAuthorSong.Size" type="System.Drawing.Size, System.Drawing">
+    <value>220, 22</value>
+  </data>
+  <data name="lvToolbar.Location" type="System.Drawing.Point, System.Drawing">
+    <value>0, 0</value>
+  </data>
   <data name="&gt;&gt;splitContainerFiles.Panel1.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="btnNewKfnFile.Size" type="System.Drawing.Size, System.Drawing">
+    <value>23, 22</value>
+  </data>
+  <data name="picSubject.TabIndex" type="System.Int32, mscorlib">
+    <value>4</value>
+  </data>
+  <data name="picSubject.Location" type="System.Drawing.Point, System.Drawing">
+    <value>0, 0</value>
+  </data>
+  <data name="lblSubject.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
+    <value>MiddleCenter</value>
+  </data>
+  <data name="splitContainerFiles.SplitterDistance" type="System.Int32, mscorlib">
+    <value>234</value>
+  </data>
+  <data name="btnPlay.ImageTransparentColor" type="System.Drawing.Color, System.Drawing">
+    <value>Magenta</value>
+  </data>
+  <data name="&gt;&gt;splitContainerFiles.Type" xml:space="preserve">
+    <value>System.Windows.Forms.SplitContainer, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;toolStripSeparator2.Name" xml:space="preserve">
+    <value>toolStripSeparator2</value>
+  </data>
+  <data name="lblSubject.TabIndex" type="System.Int32, mscorlib">
+    <value>11</value>
+  </data>
+  <data name="shellListView.Location" type="System.Drawing.Point, System.Drawing">
+    <value>0, 25</value>
+  </data>
+  <data name="&gt;&gt;shellListView.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="splitContainerFiles.TabIndex" type="System.Int32, mscorlib">
+    <value>3</value>
+  </data>
+  <data name="&gt;&gt;btnDownloads.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripButton, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="shellListView.Size" type="System.Drawing.Size, System.Drawing">
+    <value>470, 406</value>
+  </data>
+  <data name="replaceButton.Size" type="System.Drawing.Size, System.Drawing">
+    <value>92, 22</value>
+  </data>
+  <data name="&gt;&gt;picSubject.Parent" xml:space="preserve">
+    <value>pnlSubject</value>
+  </data>
+  <data name="treeView.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
+    <value>Fill</value>
+  </data>
+  <data name="btnPlay.Text" xml:space="preserve">
+    <value>Play</value>
+  </data>
+  <data name="upButton.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAO
+        wgAADsIBFShKgAAAAgdJREFUOE+Nk21oklEYhicUrbYIQ5LSkISSpA+CjbGQ0dpgBCGsfoyoH0bFCCoK
+        CnEThshakcwfa5AQzLCi0WJ9EK1wklG2Uhhv1MitdB/trUwQZEID6QrfUlivud1w/znn3BfP85xzyspK
+        6KTXgqmrhtHxAP/uLaqHb32UW5ex/tpq1La1dD5oWzokNhVmU/tGtN41VD3S0PhEj8GtYnuHkaBwf3FQ
+        rnSVq0IK7xveTMvLbbRGqjDd0FF+ZjnWO6flkM+D1eStaFVQaVuB0r6Shnt6KXxKqEVn1UprOcvCyaiH
+        7PwoqYy/AMrZ4FJJ4Qvje6WBLgjmlTvIr9eA568DgACEWGevlMIdM/vZ7TSWAPy8DfM9C5xbr2mrkMLn
+        PzZhdtcXKpMDEr1kv9hJfziO+KKR+DMTyWgf9a46OhMHORSoxe3vAtLEgieKACYuMz3UQCp+F/gKRKUW
+        9A413XNH2HJlA3FxkLR4kxmhVw7IvncyHToHDBRmEU9eZOdVHZZXezjaswPS/cSGzfI55ACJ5y1kEkFI
+        uwp2DDRhcGnY5dCQmmwnE7cxFb5UHCD6m2FuBL45C1aeXUVz91ZE4RjJkJnY42p+zIb/A3hjA9ELn6yk
+        I4cR/XU8va4k4lEg+LREhw7Ie8/rz0PqY+yWWgq86zcy4bdIge+TS/iJ+budHfMVL7GEfgPT97UiviwN
+        qwAAAABJRU5ErkJggg==
+</value>
+  </data>
+  <data name="forwardButton.Size" type="System.Drawing.Size, System.Drawing">
+    <value>23, 22</value>
+  </data>
+  <data name="btnNewMidiFile.Size" type="System.Drawing.Size, System.Drawing">
+    <value>23, 22</value>
+  </data>
+  <data name="&gt;&gt;lblSubject.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="lvToolbar.Text" xml:space="preserve">
+    <value>toolStrip2</value>
+  </data>
+  <data name="toolStripSeparator1.Size" type="System.Drawing.Size, System.Drawing">
+    <value>6, 25</value>
+  </data>
+  <data name="&gt;&gt;splitContainerFiles.Panel2.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="&gt;&gt;btnNewMidiFile.Name" xml:space="preserve">
+    <value>btnNewMidiFile</value>
+  </data>
+  <data name="treeView.Size" type="System.Drawing.Size, System.Drawing">
+    <value>234, 406</value>
+  </data>
+  <data name="toolStripSeparator2.Size" type="System.Drawing.Size, System.Drawing">
+    <value>6, 25</value>
+  </data>
+  <data name="mnuRename.Size" type="System.Drawing.Size, System.Drawing">
+    <value>79, 22</value>
+  </data>
+  <data name="toolStripSeparator3.Size" type="System.Drawing.Size, System.Drawing">
+    <value>6, 25</value>
+  </data>
+  <data name="picSubject.Size" type="System.Drawing.Size, System.Drawing">
+    <value>40, 40</value>
+  </data>
+  <data name="tvToolbar.Size" type="System.Drawing.Size, System.Drawing">
+    <value>234, 25</value>
+  </data>
+  <data name="btnNewKfnFile.Text" xml:space="preserve">
+    <value>New Kfn File</value>
+  </data>
+  <data name="&gt;&gt;splitContainerFiles.Panel2.Name" xml:space="preserve">
+    <value>splitContainerFiles.Panel2</value>
+  </data>
+  <data name="&gt;&gt;lvToolbar.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStrip, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;btnNewKfnFile.Name" xml:space="preserve">
+    <value>btnNewKfnFile</value>
+  </data>
+  <data name="&gt;&gt;shellListView.Type" xml:space="preserve">
+    <value>FlShell.ShellListView, FlShell, Version=1.0.1.2, Culture=neutral, PublicKeyToken=null</value>
+  </data>
+  <data name="btnEdit.Size" type="System.Drawing.Size, System.Drawing">
+    <value>23, 22</value>
+  </data>
+  <data name="mnuRename.ImageTransparentColor" type="System.Drawing.Color, System.Drawing">
+    <value>Magenta</value>
+  </data>
+  <data name="&gt;&gt;toolStripSeparator1.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripSeparator, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="backButton.Text" xml:space="preserve">
+    <value>back</value>
+  </data>
+  <data name="forwardButton.ImageTransparentColor" type="System.Drawing.Color, System.Drawing">
+    <value>Magenta</value>
+  </data>
+  <data name="&gt;&gt;forwardButton.Name" xml:space="preserve">
+    <value>forwardButton</value>
+  </data>
+  <data name="&gt;&gt;picSubject.ZOrder" xml:space="preserve">
     <value>0</value>
   </data>
   <metadata name="lvToolbar.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>327, 17</value>
   </metadata>
-  <data name="btnNewMidiFile.ImageTransparentColor" type="System.Drawing.Color, System.Drawing">
-    <value>Magenta</value>
-  </data>
-  <data name="btnNewMidiFile.Size" type="System.Drawing.Size, System.Drawing">
-    <value>23, 22</value>
-  </data>
-  <data name="btnNewMidiFile.Text" xml:space="preserve">
-    <value>New Midi file</value>
-  </data>
-  <data name="btnNewKfnFile.ImageTransparentColor" type="System.Drawing.Color, System.Drawing">
-    <value>Magenta</value>
-  </data>
-  <data name="btnNewKfnFile.Size" type="System.Drawing.Size, System.Drawing">
-    <value>23, 22</value>
-  </data>
-  <data name="btnNewKfnFile.Text" xml:space="preserve">
-    <value>New Kfn File</value>
-  </data>
-  <data name="btnPlay.ImageTransparentColor" type="System.Drawing.Color, System.Drawing">
-    <value>Magenta</value>
-  </data>
-  <data name="btnPlay.Size" type="System.Drawing.Size, System.Drawing">
-    <value>23, 22</value>
-  </data>
-  <data name="btnPlay.Text" xml:space="preserve">
-    <value>Play</value>
-  </data>
-  <data name="btnEdit.ImageTransparentColor" type="System.Drawing.Color, System.Drawing">
-    <value>Magenta</value>
-  </data>
-  <data name="btnEdit.Size" type="System.Drawing.Size, System.Drawing">
-    <value>23, 22</value>
-  </data>
-  <data name="btnEdit.Text" xml:space="preserve">
-    <value>Edit</value>
-  </data>
-  <data name="toolStripSeparator1.Size" type="System.Drawing.Size, System.Drawing">
-    <value>6, 25</value>
-  </data>
-  <data name="mnutbAddToPlayList.ImageTransparentColor" type="System.Drawing.Color, System.Drawing">
-    <value>Magenta</value>
-  </data>
-  <data name="mnutbAddToPlayList.Size" type="System.Drawing.Size, System.Drawing">
-    <value>112, 22</value>
-  </data>
-  <data name="mnutbAddToPlayList.Text" xml:space="preserve">
-    <value>Add to playlist</value>
-  </data>
-  <data name="toolStripSeparator2.Size" type="System.Drawing.Size, System.Drawing">
-    <value>6, 25</value>
-  </data>
-  <data name="mnuRenameFiles.Size" type="System.Drawing.Size, System.Drawing">
-    <value>220, 22</value>
-  </data>
-  <data name="mnuRenameFiles.Text" xml:space="preserve">
-    <value>Rename all (F3)</value>
-  </data>
-  <data name="mnuRenameFiles.ToolTipText" xml:space="preserve">
-    <value>Rename all files using upper directory</value>
-  </data>
-  <data name="mnuInvertAuthorSong.Size" type="System.Drawing.Size, System.Drawing">
-    <value>220, 22</value>
-  </data>
-  <data name="mnuInvertAuthorSong.Text" xml:space="preserve">
-    <value>Invert author and song (F7) </value>
-  </data>
-  <data name="mnuInvertAuthorSong.ToolTipText" xml:space="preserve">
-    <value>Invert author and song</value>
-  </data>
-  <data name="mnuRename.ImageTransparentColor" type="System.Drawing.Color, System.Drawing">
-    <value>Magenta</value>
-  </data>
-  <data name="mnuRename.Size" type="System.Drawing.Size, System.Drawing">
-    <value>79, 22</value>
-  </data>
-  <data name="mnuRename.Text" xml:space="preserve">
-    <value>Rename</value>
-  </data>
-  <data name="toolStripSeparator3.Size" type="System.Drawing.Size, System.Drawing">
-    <value>6, 25</value>
-  </data>
-  <data name="replaceButton.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
-    <value>
-        iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
-        YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAIFSURBVDhPpZLtS1NhGMbPPxJmmlYSgqHiKzGU1EDxg4iK
-        YKyG2WBogqMYJQOtCEVRFBGdTBCJfRnkS4VaaWNT5sqx1BUxRXxDHYxAJLvkusEeBaPAB+5z4Jzn+t3X
-        /aLhnEfjo8m+dCoa+7/C3O2Hqe0zDC+8KG+cRZHZhdzaaWTVTCLDMIY0vfM04Nfh77/G/sEhwpEDbO3t
-        I7TxE8urEVy99fT/AL5gWDLrTB/hnF4XsW0khCu5ln8DmJliT2AXrcNBsU1gj/MH4nMeKwBrPktM28xM
-        cX79DFKrHHD5d9D26hvicx4pABt2lpg10zYzU0zr7+e3xXGcrkEB2O2TNec9nJFwB3alZn5jZorfeDZh
-        6Q3g8s06BeCoKF4MRURoH1+BY2oNCbeb0TIclIYxOhzf8frTOuo7FxCbbVIAzpni0iceEc8vhzEwGkJD
-        lx83ymxifejdKjRNk/8PWnyIyTQqAJek0jqHwfEVscu31baIu8+90sTE4nY025dQ2/5FIPpnXlzKuK8A
-        HBUzHot52djqQ6HZhfR7IwK4mKpHtvEDMqvfCiQ6zaAAXM8x94aIWTNrLLG4kVUzgaTSPlzLtyJOZxbb
-        1wtfyg4Q+AfA3aZlButjSfxGcUJBk4g5tuP3haQKRKXcUQDOmbvNTpPOJeFFjordZmbWTNvMTHFUcpUC
-        nOccAdABIDXXE1nzAAAAAElFTkSuQmCC
-</value>
-  </data>
-  <data name="replaceButton.ImageTransparentColor" type="System.Drawing.Color, System.Drawing">
-    <value>Magenta</value>
-  </data>
-  <data name="replaceButton.Size" type="System.Drawing.Size, System.Drawing">
-    <value>92, 22</value>
-  </data>
-  <data name="replaceButton.Text" xml:space="preserve">
-    <value>Replace All (F4)</value>
-  </data>
-  <data name="lvToolbar.Location" type="System.Drawing.Point, System.Drawing">
-    <value>0, 0</value>
-  </data>
-  <data name="lvToolbar.Size" type="System.Drawing.Size, System.Drawing">
-    <value>470, 25</value>
-  </data>
-  <data name="lvToolbar.TabIndex" type="System.Int32, mscorlib">
-    <value>3</value>
-  </data>
-  <data name="lvToolbar.Text" xml:space="preserve">
-    <value>toolStrip2</value>
-  </data>
-  <data name="&gt;&gt;lvToolbar.Name" xml:space="preserve">
-    <value>lvToolbar</value>
-  </data>
-  <data name="&gt;&gt;lvToolbar.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ToolStrip, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;lvToolbar.Parent" xml:space="preserve">
-    <value>splitContainerFiles.Panel2</value>
-  </data>
-  <data name="&gt;&gt;lvToolbar.ZOrder" xml:space="preserve">
-    <value>1</value>
-  </data>
-  <data name="&gt;&gt;splitContainerFiles.Panel2.Name" xml:space="preserve">
-    <value>splitContainerFiles.Panel2</value>
-  </data>
-  <data name="&gt;&gt;splitContainerFiles.Panel2.Type" xml:space="preserve">
-    <value>System.Windows.Forms.SplitterPanel, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;splitContainerFiles.Panel2.Parent" xml:space="preserve">
-    <value>splitContainerFiles</value>
-  </data>
-  <data name="&gt;&gt;splitContainerFiles.Panel2.ZOrder" xml:space="preserve">
-    <value>1</value>
-  </data>
-  <data name="splitContainerFiles.Size" type="System.Drawing.Size, System.Drawing">
-    <value>708, 431</value>
-  </data>
-  <data name="splitContainerFiles.SplitterDistance" type="System.Int32, mscorlib">
-    <value>234</value>
-  </data>
-  <data name="splitContainerFiles.TabIndex" type="System.Int32, mscorlib">
-    <value>3</value>
-  </data>
-  <data name="&gt;&gt;splitContainerFiles.Name" xml:space="preserve">
-    <value>splitContainerFiles</value>
-  </data>
-  <data name="&gt;&gt;splitContainerFiles.Type" xml:space="preserve">
-    <value>System.Windows.Forms.SplitContainer, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;splitContainerFiles.Parent" xml:space="preserve">
-    <value>$this</value>
-  </data>
-  <data name="&gt;&gt;splitContainerFiles.ZOrder" xml:space="preserve">
-    <value>0</value>
-  </data>
-  <data name="picSubject.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
-    <value>Left</value>
-  </data>
-  <data name="picSubject.Location" type="System.Drawing.Point, System.Drawing">
-    <value>0, 0</value>
-  </data>
-  <data name="picSubject.Size" type="System.Drawing.Size, System.Drawing">
-    <value>40, 40</value>
-  </data>
-  <data name="picSubject.TabIndex" type="System.Int32, mscorlib">
-    <value>4</value>
-  </data>
-  <data name="&gt;&gt;picSubject.Name" xml:space="preserve">
-    <value>picSubject</value>
-  </data>
-  <data name="&gt;&gt;picSubject.Type" xml:space="preserve">
-    <value>System.Windows.Forms.PictureBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;picSubject.Parent" xml:space="preserve">
-    <value>pnlSubject</value>
-  </data>
-  <data name="&gt;&gt;picSubject.ZOrder" xml:space="preserve">
-    <value>0</value>
-  </data>
-  <data name="lblSubject.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
-    <value>Fill</value>
-  </data>
-  <data name="lblSubject.Font" type="System.Drawing.Font, System.Drawing">
-    <value>Segoe UI, 20.25pt</value>
-  </data>
-  <data name="lblSubject.Location" type="System.Drawing.Point, System.Drawing">
-    <value>0, 0</value>
-  </data>
-  <data name="lblSubject.Size" type="System.Drawing.Size, System.Drawing">
-    <value>708, 40</value>
-  </data>
-  <data name="lblSubject.TabIndex" type="System.Int32, mscorlib">
-    <value>11</value>
-  </data>
-  <data name="lblSubject.Text" xml:space="preserve">
-    <value>EXPLORER</value>
-  </data>
-  <data name="lblSubject.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
-    <value>MiddleCenter</value>
-  </data>
-  <data name="&gt;&gt;lblSubject.Name" xml:space="preserve">
-    <value>lblSubject</value>
-  </data>
-  <data name="&gt;&gt;lblSubject.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;lblSubject.Parent" xml:space="preserve">
-    <value>pnlSubject</value>
-  </data>
-  <data name="&gt;&gt;lblSubject.ZOrder" xml:space="preserve">
-    <value>1</value>
-  </data>
-  <data name="pnlSubject.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
-    <value>Top</value>
-  </data>
-  <data name="pnlSubject.Location" type="System.Drawing.Point, System.Drawing">
-    <value>0, 0</value>
-  </data>
-  <data name="pnlSubject.Size" type="System.Drawing.Size, System.Drawing">
-    <value>708, 40</value>
-  </data>
-  <data name="pnlSubject.TabIndex" type="System.Int32, mscorlib">
-    <value>10</value>
-  </data>
-  <data name="&gt;&gt;pnlSubject.Name" xml:space="preserve">
-    <value>pnlSubject</value>
-  </data>
-  <data name="&gt;&gt;pnlSubject.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Panel, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;pnlSubject.Parent" xml:space="preserve">
-    <value>$this</value>
-  </data>
-  <data name="&gt;&gt;pnlSubject.ZOrder" xml:space="preserve">
-    <value>1</value>
-  </data>
+  <metadata name="tvToolbar.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>224, 17</value>
+  </metadata>
   <metadata name="$this.Localizable" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
   </metadata>
   <metadata name="$this.TrayHeight" type="System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>37</value>
   </metadata>
-  <data name="$this.AutoScaleDimensions" type="System.Drawing.SizeF, System.Drawing">
-    <value>6, 13</value>
-  </data>
-  <data name="$this.Size" type="System.Drawing.Size, System.Drawing">
-    <value>708, 471</value>
-  </data>
-  <data name="&gt;&gt;backButton.Name" xml:space="preserve">
-    <value>backButton</value>
-  </data>
-  <data name="&gt;&gt;backButton.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ToolStripButton, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;forwardButton.Name" xml:space="preserve">
-    <value>forwardButton</value>
-  </data>
-  <data name="&gt;&gt;forwardButton.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ToolStripButton, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;upButton.Name" xml:space="preserve">
-    <value>upButton</value>
-  </data>
-  <data name="&gt;&gt;upButton.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ToolStripButton, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;btnDownloads.Name" xml:space="preserve">
-    <value>btnDownloads</value>
-  </data>
-  <data name="&gt;&gt;btnDownloads.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ToolStripButton, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;btnNewMidiFile.Name" xml:space="preserve">
-    <value>btnNewMidiFile</value>
-  </data>
-  <data name="&gt;&gt;btnNewMidiFile.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ToolStripButton, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;btnNewKfnFile.Name" xml:space="preserve">
-    <value>btnNewKfnFile</value>
-  </data>
-  <data name="&gt;&gt;btnNewKfnFile.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ToolStripButton, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;btnPlay.Name" xml:space="preserve">
-    <value>btnPlay</value>
-  </data>
-  <data name="&gt;&gt;btnPlay.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ToolStripButton, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;btnEdit.Name" xml:space="preserve">
-    <value>btnEdit</value>
-  </data>
-  <data name="&gt;&gt;btnEdit.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ToolStripButton, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;toolStripSeparator1.Name" xml:space="preserve">
-    <value>toolStripSeparator1</value>
-  </data>
-  <data name="&gt;&gt;toolStripSeparator1.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ToolStripSeparator, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;mnutbAddToPlayList.Name" xml:space="preserve">
-    <value>mnutbAddToPlayList</value>
-  </data>
-  <data name="&gt;&gt;mnutbAddToPlayList.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ToolStripDropDownButton, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;toolStripSeparator2.Name" xml:space="preserve">
-    <value>toolStripSeparator2</value>
-  </data>
-  <data name="&gt;&gt;toolStripSeparator2.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ToolStripSeparator, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;mnuRename.Name" xml:space="preserve">
-    <value>mnuRename</value>
-  </data>
-  <data name="&gt;&gt;mnuRename.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ToolStripDropDownButton, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;mnuRenameFiles.Name" xml:space="preserve">
-    <value>mnuRenameFiles</value>
-  </data>
-  <data name="&gt;&gt;mnuRenameFiles.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;mnuInvertAuthorSong.Name" xml:space="preserve">
-    <value>mnuInvertAuthorSong</value>
-  </data>
-  <data name="&gt;&gt;mnuInvertAuthorSong.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;toolStripSeparator3.Name" xml:space="preserve">
-    <value>toolStripSeparator3</value>
-  </data>
-  <data name="&gt;&gt;toolStripSeparator3.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ToolStripSeparator, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;replaceButton.Name" xml:space="preserve">
-    <value>replaceButton</value>
-  </data>
-  <data name="&gt;&gt;replaceButton.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ToolStripButton, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;$this.Name" xml:space="preserve">
-    <value>xplorerControl</value>
-  </data>
-  <data name="&gt;&gt;$this.Type" xml:space="preserve">
-    <value>System.Windows.Forms.UserControl, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
 </root>

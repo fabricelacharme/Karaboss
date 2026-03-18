@@ -501,6 +501,15 @@ namespace KFNViewer
 
             #endregion Materials
 
+
+            #region Set MP3File
+
+            kfnIni.SetMP3Music(audios_resources);
+
+
+            #endregion set MP3File
+
+
             #region set Marks
 
             kfnIni.SetMarks();
@@ -624,11 +633,7 @@ namespace KFNViewer
 
             kfnIni.SetEff();
 
-            #endregion Eff           
-
-
-           
-
+            #endregion Eff                      
         }
 
         /// <summary>
