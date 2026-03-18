@@ -157,9 +157,6 @@
   <data name="btnImportAudio1.Text" xml:space="preserve">
     <value>Importer</value>
   </data>
-  <data name="tbPageLyrics.Text" xml:space="preserve">
-    <value>Paroles</value>
-  </data>
   <data name="btnTb2Next.Text" xml:space="preserve">
     <value>Suivant</value>
   </data>
@@ -174,6 +171,9 @@
   </data>
   <data name="btnImportLyrics.Text" xml:space="preserve">
     <value>Importer</value>
+  </data>
+  <data name="tbPageLyrics.Text" xml:space="preserve">
+    <value>Paroles</value>
   </data>
   <data name="btnTb3Next.Text" xml:space="preserve">
     <value>Suivant</value>
@@ -190,20 +190,20 @@
   <data name="btnCancel.Text" xml:space="preserve">
     <value>Quitter</value>
   </data>
-  <data name="tbControl.Location" type="System.Drawing.Point, System.Drawing">
-    <value>4, 25</value>
+  <data name="lblColor.Size" type="System.Drawing.Size, System.Drawing">
+    <value>135, 15</value>
+  </data>
+  <data name="lblColor.Text" xml:space="preserve">
+    <value>Couleur d'arrière plan :</value>
+  </data>
+  <data name="btnTb4Previous.Text" xml:space="preserve">
+    <value>Précédant</value>
   </data>
   <data name="tbPageBackground.Text" xml:space="preserve">
     <value>Arrière plan</value>
   </data>
-  <data name="lblColor.Size" type="System.Drawing.Size, System.Drawing">
-    <value>50, 15</value>
-  </data>
-  <data name="lblColor.Text" xml:space="preserve">
-    <value>Couleur</value>
-  </data>
-  <data name="btnTb4Previous.Text" xml:space="preserve">
-    <value>Précédant</value>
+  <data name="tbControl.Location" type="System.Drawing.Point, System.Drawing">
+    <value>4, 25</value>
   </data>
   <data name="$this.Icon" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
@@ -331,5 +331,8 @@
         AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
         AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=
 </value>
+  </data>
+  <data name="$this.Text" xml:space="preserve">
+    <value>Karaboss - Créer un nouveau fichier KFN</value>
   </data>
 </root>

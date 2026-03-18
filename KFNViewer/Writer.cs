@@ -24,6 +24,7 @@ namespace KFNViewer
         public string Author { get; set; }
 
         public string BgColor { get; set; }
+        public (string, uint) Font { get; set; }
         
         public string fullFileName {  get; set; }
         public List<string> lstAudioFiles {  get; set; }
@@ -64,7 +65,7 @@ namespace KFNViewer
         // US-ASCII
         private int resourceNamesEncodingAuto = 20127;
 
-        public KfnWriter(string fpath, List<string> LstAudioFiles, string LyricsFile, List<string> lstImg, string title, string artist, string comment, string year, string author, string bgColor)
+        public KfnWriter(string fpath, List<string> LstAudioFiles, string LyricsFile, List<string> lstImg, string title, string artist, string comment, string year, string author, string bgColor, (string, uint) font)
         {
             fullFileName = fpath;
             lstAudioFiles = LstAudioFiles;
@@ -78,6 +79,7 @@ namespace KFNViewer
             Year = year;
             Author = author;
             BgColor = bgColor;
+            Font = font;
 
             Offset = 0;
                         
@@ -105,7 +107,7 @@ namespace KFNViewer
             
 
             // Create Song.ini
-            CreateIniFile(Source, Title, Artist, Comment, Year, Author, BgColor, Eff2Lyrics);
+            CreateIniFile(Source, Title, Artist, Comment, Year, Author, BgColor, Font, Eff2Lyrics);
 
             // Add Song.ini
             SongIniFile = kfnIni.ToString();
@@ -384,7 +386,7 @@ namespace KFNViewer
         /// Create Song.ini file
         /// </summary>
         /// <param name="fs"></param>
-        private void CreateIniFile(string Source, string Title, string Artist, string Comment, string Year, string Author, string BgColor, (List<int>, List<string>) Eff2Lyrics )  
+        private void CreateIniFile(string Source, string Title, string Artist, string Comment, string Year, string Author, string BgColor, (string, uint) Font, (List<int>, List<string>) Eff2Lyrics )  
         {            
             kfnIni.PopulateEmpty();
 
@@ -457,9 +459,7 @@ namespace KFNViewer
             res = new ResourceFile("Audio", fi.Name, length, length, Offset, false, true); 
              */
 
-            List<Entry> entries = new List<Entry>();
-            
-
+            List<Entry> entries = new List<Entry>();           
             int Offset = 0;
 
             if (Resources.Count == 0)
@@ -468,8 +468,8 @@ namespace KFNViewer
             }
 
             // Audio files
-            ResourceFile[] audios = resources.Where(r => r.FileType == "Audio").ToArray();
-            foreach (ResourceFile resource in audios)
+            ResourceFile[] audios_resources = resources.Where(r => r.FileType == "Audio").ToArray();
+            foreach (ResourceFile resource in audios_resources)
             {
                 Entry entry = new Entry();
                 entry.FileName = resource.FileName;
@@ -483,8 +483,8 @@ namespace KFNViewer
             
 
             // Images
-            ResourceFile[] images = resources.Where(r => r.FileType == "Image").ToArray();
-            foreach (ResourceFile resource in images)
+            ResourceFile[] images_resources = resources.Where(r => r.FileType == "Image").ToArray();
+            foreach (ResourceFile resource in images_resources)
             {
                 Entry entry = new Entry();
                 entry.FileName = resource.FileName;
@@ -510,17 +510,20 @@ namespace KFNViewer
 
             #region Anims
 
-            List<Anim> lstAnim = new List<Anim>();           
+            List<Anim> lstAnim = new List<Anim>();
             
-            string s = "souchon03.jpg, Effect = NoTransition, TransitionTime = 0, TransType = Linear";
-            SongIni.Action action = new SongIni.Action.ChgBgImg(s);
-            AnimEntry ae = new AnimEntry(action, EffectKind.AlphaBlending, 0, TransType.Smooth);
-            List<AnimEntry> lstAnimEntries = new List<AnimEntry>();
-            lstAnimEntries.Add(ae);
-            
-            Anim anim = new Anim(0, lstAnimEntries);
-            lstAnim.Add(anim);
+            if (images_resources.Count() > 0)
+            {
+                string imageName = images_resources[0].FileName;
+                string s =  imageName + ", Effect = NoTransition, TransitionTime = 0, TransType = Linear";
+                SongIni.Action action = new SongIni.Action.ChgBgImg(s);
+                AnimEntry ae = new AnimEntry(action, EffectKind.AlphaBlending, 0, TransType.Smooth);
+                List<AnimEntry> lstAnimEntries = new List<AnimEntry>();
+                lstAnimEntries.Add(ae);
 
+                Anim anim = new Anim(0, lstAnimEntries);
+                lstAnim.Add(anim);
+            }
             #endregion Anims
 
 
@@ -566,7 +569,7 @@ namespace KFNViewer
                 lstAnim,                   //new List<Anim>(),           // anims
                 null, 
                 null,
-                ("", 0),                    // font
+                Font,                    // font
                 "#00ACFFFF",                       // Initial active color
                 "#FFFFFFFF",                       // initial inactive color
                 new List<int>(),           // syncs
@@ -582,11 +585,13 @@ namespace KFNViewer
 
 
             #region eff2
+
+            effnum = 2;
+
+            #region lyrics
             List<TextEntry> textLst = new List<TextEntry>();
             List<(int, string)> fragments = new List<(int, string)>();
             TextEntry text;
-            effnum = 2;
-         
 
             // All times (must be cut further)
             List<int> syncsLst = Eff2Lyrics.Item1;
@@ -597,16 +602,16 @@ namespace KFNViewer
                 text = new TextEntry(Eff2Lyrics.Item2[i], fragments, effnum);
                 textLst.Add(text);
             }
-            
-           
+            #endregion lyrics
 
+           
             eff = new Eff(
                 1,  // second ID is 1
                 effnum,  // num
                 new List<Anim>(),           // anims
                 null,
                 null,
-                ("", 0),                    // font
+                Font,        //   ("", 0),                    // font
                 "#00ACFFFF",                // initial active color
                 "#FFFFFFFF",                // initial inactive color
                 syncsLst,                   // Sync

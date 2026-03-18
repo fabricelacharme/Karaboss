@@ -53,7 +53,6 @@
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.frmFullScreen_FormClosing);
             this.Load += new System.EventHandler(this.frmFullScreen_Load);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.frmFullScreen_KeyDown);
-            this.MouseDown += new System.Windows.Forms.MouseEventHandler(this.frmFullScreen_MouseDown);
             ((System.ComponentModel.ISupportInitialize)(this.picScreen)).EndInit();
             this.ResumeLayout(false);
 

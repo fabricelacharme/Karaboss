@@ -1,4 +1,5 @@
-﻿using KFNViewer;
+﻿using Hqub.MusicBrainz.API.Entities;
+using KFNViewer;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -10,22 +11,39 @@ namespace Karaboss.Kfn
 {
     public partial class frmKfnCreate : Form
     {      
-
-        private string fPath;
-        private bool bPickColor = false;
+        private string fPath;      
+        private readonly string strColorRegex = @"^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$";
+        Regex regexColor;
+        string ftName;
+        uint ftSize;
 
         public frmKfnCreate(string path)
         {
             InitializeComponent();
 
-            TopMost = true;            
+            TopMost = true;                       
+            fPath = path;            
+
+            regexColor = new Regex(strColorRegex);
+
+            InitControls();
+        }
+
+        /// <summary>
+        /// Initialize controls
+        /// </summary>
+        private void InitControls()
+        {
+            OpenFileDialog.InitialDirectory = fPath;
 
             tbControl.SizeMode = TabSizeMode.Fixed;
             tbControl.DrawMode = TabDrawMode.OwnerDrawFixed;
             tbControl.ItemSize = new Size((tbControl.Width / tbControl.TabCount) - 1, tbControl.ItemSize.Height);
 
-            fPath = path;
-            OpenFileDialog.InitialDirectory = fPath;
+            ftName = "Arial";
+            ftSize = 18;
+
+            PopulateFonts();
         }
 
         #region select audios
@@ -109,17 +127,26 @@ namespace Karaboss.Kfn
         private void btnImportImage_Click(object sender, EventArgs e)
         {
             string FileName;
-            OpenFileDialog.Filter = "Jpg files (*.jpg)|*.jpg|All files (*.*)|*.*";
+            
+            OpenFileDialog.Filter = "Image Files|*.jpg;*.jpeg;*.png;*.gif;*.tif;...|All files (*.*)|*.*";
+            OpenFileDialog.FileName = string.Empty;
+
             if (OpenFileDialog.ShowDialog() != DialogResult.OK) return;
 
             FileName = OpenFileDialog.FileName;
             OpenFileDialog.InitialDirectory = Path.GetDirectoryName(FileName);
 
             txtImageFile.Text = FileName;
+
+            // Load image into picImage
+            picImage.SizeMode = PictureBoxSizeMode.StretchImage;
+            picImage.Image = Image.FromFile(FileName);
         }
 
         #endregion select images
 
+
+        #region Button Create
         private void btnCancel_Click(object sender, EventArgs e)
         {
             Close();
@@ -140,7 +167,6 @@ namespace Karaboss.Kfn
         /// <param name="BgColor"></param>
         private void CreateKfnFile()
         {
-
             string AudioFileName1;
             string AudioFileName2;
             string LyricsFileName;
@@ -151,6 +177,7 @@ namespace Karaboss.Kfn
             string Title;
             string Artist;
             string Comment;
+            (string, uint) fontName;
 
             #region guard
 
@@ -183,7 +210,14 @@ namespace Karaboss.Kfn
                 return;
             }
 
-            BgColor = txtBgColor.Text.Trim();
+            // Check background color            
+            if (regexColor.IsMatch(txtBgColor.Text.Trim()))
+                BgColor = txtBgColor.Text.Trim();
+            else
+            {
+                BgColor = "#000000";    // Black default
+                txtBgColor.Text = BgColor;
+            }
 
             #endregion guard
 
@@ -194,14 +228,25 @@ namespace Karaboss.Kfn
 
             // Title
             Title = txtTitle.Text.Trim();
+            
             // Artist
             Artist = txtArtist.Text.Trim();
+            
             // Comment
             Comment = txtComment.Text.Trim();
+            
             // Year
             Year = txtYear.Text.Trim();
+            
             // Author
             Author = txtAuthor.Text.Trim();
+
+            // Background color: BgColor
+            // See guard
+
+            // Font
+            fontName = (txtLoremIpsum.Font.Name, (uint)txtLoremIpsum.Font.Size);
+
 
             string tx = "Create a new KFN file" + Environment.NewLine;
 
@@ -214,53 +259,29 @@ namespace Karaboss.Kfn
             tx += Environment.NewLine + "Title: " + Title;
             tx += Environment.NewLine + "Artist: " + Artist;
             tx += Environment.NewLine + "Comment: " + Comment;
+            tx += Environment.NewLine + "Author: " + Author;
 
             if (MessageBox.Show(tx, Application.ProductName, MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question) != DialogResult.Yes) return;
 
-            // Create a kfn file using the name of the mp3 file ?
+            // Create a kfn file using the name of the audio1 file ?
             string kfnFile = Path.Combine(Path.GetDirectoryName(AudioFileName1), txtKfnFileName.Text);
 
             // List of images (only 1 for the moment)
-            List<string> lstImages = new List<string>() { ImageFileName };
+            List<string> lstImages = new List<string>();
+            if (ImageFileName != string.Empty)
+                lstImages = new List<string>() { ImageFileName };
 
-
+            Cursor = Cursors.WaitCursor;
             // Initialize Writer
-            KfnWriter Writer = new KfnWriter(kfnFile, lstAudioFiles, LyricsFileName, lstImages, Title, Artist, Comment, Year, Author, BgColor);
+            KfnWriter Writer = new KfnWriter(kfnFile, lstAudioFiles, LyricsFileName, lstImages, Title, Artist, Comment, Year, Author, BgColor, fontName);
             if (Writer != null)
                 Writer.CreateKFN();
 
-
-            // Creeate 3 resources
-            //string                              type,          string name                             , int enclength, int length, int offset, bool encrypted, bool aSource = false
-            //ResourceFile res = new ResourceFile("Image"        , "Cadre_or_640_480.png"                , 51456        , 51456     , 0         , true, false);
-            //ResourceFile res = new ResourceFile("Image"        , "- SpriteNinieblhzor.png"             , 2144         , 2136      , 51456     , true, false);
-            //ResourceFile res = new ResourceFile("Image"        , "v35-2.jpg"                           , 37968        , 37965     , 53600     , true, false);
-            //ResourceFile res = new ResourceFile("Visualization", "Eo.S. - ether_phat_edit.milk"        , 6608         , 6598      , 91568     , true, false);
-            //ResourceFile res = new ResourceFile("Image"        , "h35-1.jpg"                           , 38192        , 38183     , 98176     , true, false);
-            //ResourceFile res = new ResourceFile("Image"        , "h35-2.jpg"                           , 38768        , 38757     , 136368    , true, false);
-            //ResourceFile res = new ResourceFile("Image"        , "movingb01.png"                       , 56384        , 56374     , 175136    , true, false);
-            //ResourceFile res = new ResourceFile("Image"        , "v35-1.jpg"                           , 40352        , 40349     , 231520    , true, false);
-            //ResourceFile res = new ResourceFile("Font"         , "HUNII017.TTF"                        , 41328        , 41328     , 271872    , true, false);
-            //ResourceFile res = new ResourceFile("Image"        , "__black_screen__.png"                , 96           , 92        , 313200    , true, false);
-            //ResourceFile res = new ResourceFile("Image"        , "cadre or fin 640_460.png"            , 13536        , 13524     , 313296    , true, false);
-            //ResourceFile res = new ResourceFile("Image"        , "Hor_or_640.jpg"                      , 1408         , 1407      , 326832    , true, false);
-            //ResourceFile res = new ResourceFile("Image"        , "mae_lune_kfn.jpg"                    , 63440        , 63434     , 328240    , true, false);
-            //ResourceFile res = new ResourceFile("Image"        , "mae_bouquet.png"                     , 303296       , 303289    , 391680    , true, false);
-            //ResourceFile res = new ResourceFile("Audio"        , "Christophe Maé - La lune (vocal).mp3", 3884160      , 3884146   , 694976    , true, false);
-            //ResourceFile res = new ResourceFile("Audio"        , "Christophe Maé - La lune.mp3"        , 4338720      , 4338712   , 4579136   , true, true);
-            //ResourceFile res = new ResourceFile("Config"       , "Song.ini"                            , 316080       , 316065    , 8917856   , true, false);
-
-            // L'offset est caclulé en additionnant enclength avec l'offset précédant
-
-
-            /*
-            ResourceFile res = new ResourceFile("Audio", "Chiens - Louane.mp3", 2943507, 2943507, 0, false, true);
-            Writer.Resources.Add(res);
-            
-            res = new ResourceFile("Config", "Song.ini", 5654, 5654, 2943507, false, false);
-            Writer.Resources.Add(res);
-            */
+            btnPlay.Visible = true;
+            Cursor = Cursors.Default;
         }
+
+        #endregion Button Create
 
 
         #region navigation
@@ -324,8 +345,8 @@ namespace Karaboss.Kfn
         public static Color Parse(string input)
         {
             input = input.Trim();
-            string strRegex = @"^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$";
-            Regex re = new Regex(strRegex);
+            string strColorRegex = @"^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$";
+            Regex re = new Regex(strColorRegex);
             if (re.IsMatch(input))
             {
                 return ColorTranslator.FromHtml(input);
@@ -336,7 +357,6 @@ namespace Karaboss.Kfn
             {
                 return named;
             }
-
             throw new ArgumentException($"Unsupported color value: {input}", nameof(input));
         }
 
@@ -345,9 +365,7 @@ namespace Karaboss.Kfn
         {
             this.Hide();
             frmFullScreen frmFullScreen = new frmFullScreen();
-            frmFullScreen.Show();
-
-            
+            frmFullScreen.Show();            
         }
 
         public void GetColorFromPicker(Color c)
@@ -359,8 +377,33 @@ namespace Karaboss.Kfn
         private void txtBgColor_TextChanged(object sender, EventArgs e)
         {
             picBgColor.BackColor = Parse(txtBgColor.Text);
+            txtLoremIpsum.BackColor = picBgColor.BackColor;
 
         }
+
+        private void PopulateFonts()
+        {
+            foreach (System.Drawing.FontFamily fnt in System.Drawing.FontFamily.Families)
+            {
+                cbFont.Items.Add(fnt.Name);
+            }
+
+            cbFont.SelectedIndex = cbFont.FindString("Arial");
+        }
+
+
+        private void cbFont_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            ftName = cbFont.SelectedItem.ToString();
+            txtLoremIpsum.Font = new Font(ftName, ftSize, FontStyle.Regular, GraphicsUnit.Pixel);
+        }
+
+        private void UpDown_ValueChanged(object sender, EventArgs e)
+        {
+            ftSize = (uint)UpDown.Value;
+            txtLoremIpsum.Font = new Font(ftName, ftSize, FontStyle.Regular, GraphicsUnit.Pixel);
+        }
+
 
         #endregion background color
 
@@ -373,12 +416,22 @@ namespace Karaboss.Kfn
             txtBgColor.Text = Properties.Settings.Default.KfnBgColor;
         }
 
-    
+
 
         private void frmKfnCreate_FormClosing(object sender, FormClosingEventArgs e)
         {
-            if (txtBgColor.Text.Trim().Length > 0)
-                Properties.Settings.Default.KfnBgColor = txtBgColor.Text.Trim();
+            if (txtBgColor.Text.Trim().Length > 0) 
+            {
+                string BgColor;
+                // Check background color            
+                if (regexColor.IsMatch(txtBgColor.Text.Trim()))
+                    BgColor = txtBgColor.Text.Trim();
+                else
+                {
+                    BgColor = "#000000";    // Black default                    
+                }
+                Properties.Settings.Default.KfnBgColor = BgColor;
+            }
             
             if (txtAuthor.Text.Trim().Length > 0) 
                 Properties.Settings.Default.KfnAuthor = txtAuthor.Text.Trim();
@@ -389,6 +442,8 @@ namespace Karaboss.Kfn
 
         #endregion form load close
 
+
+        #region tabControl
         private void tbControl_DrawItem(object sender, DrawItemEventArgs e)
         {
             // This event is called once for each tab button in your tab control
@@ -423,6 +478,27 @@ namespace Karaboss.Kfn
             Font f = new Font("Sego UI", 14, FontStyle.Regular, GraphicsUnit.Pixel);
             Brush b = new SolidBrush(Color.White);                       
             e.Graphics.DrawString(tbControl.TabPages[e.Index].Text, f, b, paddedBounds);
+
+        }
+
+        #endregion tabControl
+
+       
+
+        private void btnPlay_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                string FileName = Path.Combine(fPath, txtKfnFileName.Text);
+                if (File.Exists(FileName))
+                {
+                    System.Diagnostics.Process.Start(FileName);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
 
         }
     }

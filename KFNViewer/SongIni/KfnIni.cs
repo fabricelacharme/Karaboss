@@ -467,6 +467,15 @@ namespace KFNViewer.SongIni
                 section["OffsetY"] = "0";
                 section["Depth"] = "0";
 
+                
+                // Font
+                if (eff.initial_font != ("", 0)) 
+                {
+                    string fontName = eff.initial_font.Item1.ToString();
+                    string fontSize = eff.initial_font.Item2.ToString();
+                    section["Font"] = fontName + "*" + fontSize;
+                }
+
 
                 // iterate through Anim# 
                 for (var animN = 0; animN < Effs[effNum -1].anims.Count; animN++)

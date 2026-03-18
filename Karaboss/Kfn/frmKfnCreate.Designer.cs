@@ -30,6 +30,7 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmKfnCreate));
             this.tbPageAudios = new System.Windows.Forms.TabPage();
+            this.btnPlay = new System.Windows.Forms.Button();
             this.txtArtist = new System.Windows.Forms.TextBox();
             this.lblArtist = new System.Windows.Forms.Label();
             this.txtKfnFileName = new System.Windows.Forms.TextBox();
@@ -56,6 +57,7 @@
             this.lblLyrics = new System.Windows.Forms.Label();
             this.btnImportLyrics = new System.Windows.Forms.Button();
             this.tbPageImages = new System.Windows.Forms.TabPage();
+            this.picImage = new System.Windows.Forms.PictureBox();
             this.btnTb3Next = new System.Windows.Forms.Button();
             this.btnImportImage = new System.Windows.Forms.Button();
             this.lblImage = new System.Windows.Forms.Label();
@@ -66,6 +68,10 @@
             this.btnCancel = new System.Windows.Forms.Button();
             this.tbControl = new System.Windows.Forms.TabControl();
             this.tbPageBackground = new System.Windows.Forms.TabPage();
+            this.UpDown = new System.Windows.Forms.NumericUpDown();
+            this.txtLoremIpsum = new System.Windows.Forms.TextBox();
+            this.lblFont = new System.Windows.Forms.Label();
+            this.cbFont = new System.Windows.Forms.ComboBox();
             this.btnBgColorPicker = new System.Windows.Forms.Button();
             this.btnBgColorSelect = new System.Windows.Forms.Button();
             this.picBgColor = new System.Windows.Forms.PictureBox();
@@ -76,15 +82,18 @@
             this.tbPageAudios.SuspendLayout();
             this.tbPageLyrics.SuspendLayout();
             this.tbPageImages.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.picImage)).BeginInit();
             this.tbControl.SuspendLayout();
             this.tbPageBackground.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.UpDown)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.picBgColor)).BeginInit();
             this.SuspendLayout();
             // 
             // tbPageAudios
             // 
-            this.tbPageAudios.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(58)))), ((int)(((byte)(58)))), ((int)(((byte)(58)))));
             resources.ApplyResources(this.tbPageAudios, "tbPageAudios");
+            this.tbPageAudios.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(58)))), ((int)(((byte)(58)))), ((int)(((byte)(58)))));
+            this.tbPageAudios.Controls.Add(this.btnPlay);
             this.tbPageAudios.Controls.Add(this.txtArtist);
             this.tbPageAudios.Controls.Add(this.lblArtist);
             this.tbPageAudios.Controls.Add(this.txtKfnFileName);
@@ -105,6 +114,14 @@
             this.tbPageAudios.Controls.Add(this.lblAudio1);
             this.tbPageAudios.Controls.Add(this.btnImportAudio1);
             this.tbPageAudios.Name = "tbPageAudios";
+            // 
+            // btnPlay
+            // 
+            resources.ApplyResources(this.btnPlay, "btnPlay");
+            this.btnPlay.Image = global::Karaboss.Properties.Resources.Media_Controls_Play_icon;
+            this.btnPlay.Name = "btnPlay";
+            this.btnPlay.UseVisualStyleBackColor = true;
+            this.btnPlay.Click += new System.EventHandler(this.btnPlay_Click);
             // 
             // txtArtist
             // 
@@ -170,8 +187,8 @@
             // 
             // btnTb1Next
             // 
-            this.btnTb1Next.DialogResult = System.Windows.Forms.DialogResult.OK;
             resources.ApplyResources(this.btnTb1Next, "btnTb1Next");
+            this.btnTb1Next.DialogResult = System.Windows.Forms.DialogResult.OK;
             this.btnTb1Next.Name = "btnTb1Next";
             this.btnTb1Next.UseVisualStyleBackColor = true;
             this.btnTb1Next.Click += new System.EventHandler(this.btnTb1Next_Click);
@@ -218,8 +235,8 @@
             // 
             // tbPageLyrics
             // 
-            this.tbPageLyrics.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(58)))), ((int)(((byte)(58)))), ((int)(((byte)(58)))));
             resources.ApplyResources(this.tbPageLyrics, "tbPageLyrics");
+            this.tbPageLyrics.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(58)))), ((int)(((byte)(58)))), ((int)(((byte)(58)))));
             this.tbPageLyrics.Controls.Add(this.btnTb2Next);
             this.tbPageLyrics.Controls.Add(this.btnTb2Previous);
             this.tbPageLyrics.Controls.Add(this.txtLyrics);
@@ -229,16 +246,16 @@
             // 
             // btnTb2Next
             // 
-            this.btnTb2Next.DialogResult = System.Windows.Forms.DialogResult.OK;
             resources.ApplyResources(this.btnTb2Next, "btnTb2Next");
+            this.btnTb2Next.DialogResult = System.Windows.Forms.DialogResult.OK;
             this.btnTb2Next.Name = "btnTb2Next";
             this.btnTb2Next.UseVisualStyleBackColor = true;
             this.btnTb2Next.Click += new System.EventHandler(this.btnTb2Next_Click);
             // 
             // btnTb2Previous
             // 
-            this.btnTb2Previous.DialogResult = System.Windows.Forms.DialogResult.OK;
             resources.ApplyResources(this.btnTb2Previous, "btnTb2Previous");
+            this.btnTb2Previous.DialogResult = System.Windows.Forms.DialogResult.OK;
             this.btnTb2Previous.Name = "btnTb2Previous";
             this.btnTb2Previous.UseVisualStyleBackColor = true;
             this.btnTb2Previous.Click += new System.EventHandler(this.btnTb2Previous_Click);
@@ -263,8 +280,9 @@
             // 
             // tbPageImages
             // 
-            this.tbPageImages.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(58)))), ((int)(((byte)(58)))), ((int)(((byte)(58)))));
             resources.ApplyResources(this.tbPageImages, "tbPageImages");
+            this.tbPageImages.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(58)))), ((int)(((byte)(58)))), ((int)(((byte)(58)))));
+            this.tbPageImages.Controls.Add(this.picImage);
             this.tbPageImages.Controls.Add(this.btnTb3Next);
             this.tbPageImages.Controls.Add(this.btnImportImage);
             this.tbPageImages.Controls.Add(this.lblImage);
@@ -272,10 +290,16 @@
             this.tbPageImages.Controls.Add(this.btnTb3Previous);
             this.tbPageImages.Name = "tbPageImages";
             // 
+            // picImage
+            // 
+            resources.ApplyResources(this.picImage, "picImage");
+            this.picImage.Name = "picImage";
+            this.picImage.TabStop = false;
+            // 
             // btnTb3Next
             // 
-            this.btnTb3Next.DialogResult = System.Windows.Forms.DialogResult.OK;
             resources.ApplyResources(this.btnTb3Next, "btnTb3Next");
+            this.btnTb3Next.DialogResult = System.Windows.Forms.DialogResult.OK;
             this.btnTb3Next.Name = "btnTb3Next";
             this.btnTb3Next.UseVisualStyleBackColor = true;
             this.btnTb3Next.Click += new System.EventHandler(this.btnTb3Next_Click);
@@ -300,8 +324,8 @@
             // 
             // btnTb3Previous
             // 
-            this.btnTb3Previous.DialogResult = System.Windows.Forms.DialogResult.OK;
             resources.ApplyResources(this.btnTb3Previous, "btnTb3Previous");
+            this.btnTb3Previous.DialogResult = System.Windows.Forms.DialogResult.OK;
             this.btnTb3Previous.Name = "btnTb3Previous";
             this.btnTb3Previous.UseVisualStyleBackColor = true;
             this.btnTb3Previous.Click += new System.EventHandler(this.btnTb3Previous_Click);
@@ -309,51 +333,93 @@
             // OpenFileDialog
             // 
             this.OpenFileDialog.FileName = "openFileDialog1";
+            resources.ApplyResources(this.OpenFileDialog, "OpenFileDialog");
             // 
             // btnCreateKfn
             // 
-            this.btnCreateKfn.DialogResult = System.Windows.Forms.DialogResult.OK;
             resources.ApplyResources(this.btnCreateKfn, "btnCreateKfn");
+            this.btnCreateKfn.DialogResult = System.Windows.Forms.DialogResult.OK;
             this.btnCreateKfn.Name = "btnCreateKfn";
             this.btnCreateKfn.UseVisualStyleBackColor = true;
             this.btnCreateKfn.Click += new System.EventHandler(this.btnCreateKfn_Click);
             // 
             // btnCancel
             // 
-            this.btnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             resources.ApplyResources(this.btnCancel, "btnCancel");
+            this.btnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.UseVisualStyleBackColor = true;
             this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
             // 
             // tbControl
             // 
+            resources.ApplyResources(this.tbControl, "tbControl");
             this.tbControl.Controls.Add(this.tbPageAudios);
             this.tbControl.Controls.Add(this.tbPageLyrics);
             this.tbControl.Controls.Add(this.tbPageImages);
             this.tbControl.Controls.Add(this.tbPageBackground);
             this.tbControl.DrawMode = System.Windows.Forms.TabDrawMode.OwnerDrawFixed;
-            resources.ApplyResources(this.tbControl, "tbControl");
             this.tbControl.Name = "tbControl";
             this.tbControl.SelectedIndex = 0;
             this.tbControl.DrawItem += new System.Windows.Forms.DrawItemEventHandler(this.tbControl_DrawItem);
             // 
             // tbPageBackground
             // 
+            resources.ApplyResources(this.tbPageBackground, "tbPageBackground");
             this.tbPageBackground.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(58)))), ((int)(((byte)(58)))), ((int)(((byte)(58)))));
+            this.tbPageBackground.Controls.Add(this.UpDown);
+            this.tbPageBackground.Controls.Add(this.txtLoremIpsum);
+            this.tbPageBackground.Controls.Add(this.lblFont);
+            this.tbPageBackground.Controls.Add(this.cbFont);
             this.tbPageBackground.Controls.Add(this.btnBgColorPicker);
             this.tbPageBackground.Controls.Add(this.btnBgColorSelect);
             this.tbPageBackground.Controls.Add(this.picBgColor);
             this.tbPageBackground.Controls.Add(this.txtBgColor);
             this.tbPageBackground.Controls.Add(this.lblColor);
             this.tbPageBackground.Controls.Add(this.btnTb4Previous);
-            resources.ApplyResources(this.tbPageBackground, "tbPageBackground");
             this.tbPageBackground.Name = "tbPageBackground";
+            // 
+            // UpDown
+            // 
+            resources.ApplyResources(this.UpDown, "UpDown");
+            this.UpDown.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.UpDown.Name = "UpDown";
+            this.UpDown.Tag = "18";
+            this.UpDown.Value = new decimal(new int[] {
+            18,
+            0,
+            0,
+            0});
+            this.UpDown.ValueChanged += new System.EventHandler(this.UpDown_ValueChanged);
+            // 
+            // txtLoremIpsum
+            // 
+            resources.ApplyResources(this.txtLoremIpsum, "txtLoremIpsum");
+            this.txtLoremIpsum.BackColor = System.Drawing.Color.Black;
+            this.txtLoremIpsum.ForeColor = System.Drawing.Color.White;
+            this.txtLoremIpsum.Name = "txtLoremIpsum";
+            // 
+            // lblFont
+            // 
+            resources.ApplyResources(this.lblFont, "lblFont");
+            this.lblFont.ForeColor = System.Drawing.Color.White;
+            this.lblFont.Name = "lblFont";
+            // 
+            // cbFont
+            // 
+            resources.ApplyResources(this.cbFont, "cbFont");
+            this.cbFont.FormattingEnabled = true;
+            this.cbFont.Name = "cbFont";
+            this.cbFont.SelectedIndexChanged += new System.EventHandler(this.cbFont_SelectedIndexChanged);
             // 
             // btnBgColorPicker
             // 
-            this.btnBgColorPicker.Image = global::Karaboss.Properties.Resources.color_picker_black18;
             resources.ApplyResources(this.btnBgColorPicker, "btnBgColorPicker");
+            this.btnBgColorPicker.Image = global::Karaboss.Properties.Resources.color_picker_black18;
             this.btnBgColorPicker.Name = "btnBgColorPicker";
             this.btnBgColorPicker.UseVisualStyleBackColor = true;
             this.btnBgColorPicker.Click += new System.EventHandler(this.btnBgColorPicker_Click);
@@ -367,9 +433,9 @@
             // 
             // picBgColor
             // 
+            resources.ApplyResources(this.picBgColor, "picBgColor");
             this.picBgColor.BackColor = System.Drawing.Color.Black;
             this.picBgColor.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            resources.ApplyResources(this.picBgColor, "picBgColor");
             this.picBgColor.Name = "picBgColor";
             this.picBgColor.TabStop = false;
             // 
@@ -387,8 +453,8 @@
             // 
             // btnTb4Previous
             // 
-            this.btnTb4Previous.DialogResult = System.Windows.Forms.DialogResult.OK;
             resources.ApplyResources(this.btnTb4Previous, "btnTb4Previous");
+            this.btnTb4Previous.DialogResult = System.Windows.Forms.DialogResult.OK;
             this.btnTb4Previous.Name = "btnTb4Previous";
             this.btnTb4Previous.UseVisualStyleBackColor = true;
             this.btnTb4Previous.Click += new System.EventHandler(this.btnTb4Previous_Click);
@@ -411,9 +477,11 @@
             this.tbPageLyrics.PerformLayout();
             this.tbPageImages.ResumeLayout(false);
             this.tbPageImages.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.picImage)).EndInit();
             this.tbControl.ResumeLayout(false);
             this.tbPageBackground.ResumeLayout(false);
             this.tbPageBackground.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.UpDown)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.picBgColor)).EndInit();
             this.ResumeLayout(false);
 
@@ -465,5 +533,11 @@
         private System.Windows.Forms.TextBox txtArtist;
         private System.Windows.Forms.Label lblArtist;
         private System.Windows.Forms.ColorDialog ColorDialog;
+        private System.Windows.Forms.PictureBox picImage;
+        private System.Windows.Forms.Label lblFont;
+        private System.Windows.Forms.ComboBox cbFont;
+        private System.Windows.Forms.TextBox txtLoremIpsum;
+        private System.Windows.Forms.NumericUpDown UpDown;
+        private System.Windows.Forms.Button btnPlay;
     }
 }
