@@ -95,7 +95,7 @@ namespace KFNV
         /// <summary>
         /// Create a new KFN file
         /// </summary>
-        public void CreateKFN()
+        public string  CreateKFN()
         {           
             string Source = Path.GetFileName(lstAudioFiles[0]);
 
@@ -111,8 +111,14 @@ namespace KFNV
 
             // Add Song.ini
             SongIniFile = kfnIni.ToString();
-            AddSongIniToResources(SongIniFile);                                          
+            AddSongIniToResources(SongIniFile);
 
+
+            // Save to disk new KFN file
+            string result = SaveKfnFile(fullFileName, Title, Comment, Source);
+
+            return result;
+            /*
             try
             {
                 using (FileStream fs = new FileStream(fullFileName, FileMode.Create, FileAccess.ReadWrite))
@@ -135,7 +141,46 @@ namespace KFNV
             {
                 MessageBox.Show(ex.Message, Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }                
+            */
         }
+
+        private string SaveKfnFile(string fName, string Title, string Comment, string Source)
+        {
+            SaveFileDialog saveDialog = new SaveFileDialog();
+            saveDialog.Filter = "KFN files (*.kfn)|*.kfn";
+            saveDialog.FileName = Path.GetFileName(fName);
+            
+            DialogResult result =  saveDialog.ShowDialog();
+            if (result != DialogResult.OK) return null;
+            
+            String fullFileName = saveDialog.FileName;
+
+            try
+            {
+                using (FileStream fs = new FileStream(fullFileName, FileMode.Create, FileAccess.ReadWrite))
+                {
+                    // Write bytes properties
+                    WriteBytesProperties(fs, Title, Comment, Source);
+
+                    // Write bytes resources
+                    WriteBytesResources(fs);
+
+                    // Write files contents
+                    WriteFilesContents(fs);
+                }
+
+                string tx = string.Format("The File \n{0} \nwas created in the directory\n {1}", Path.GetFileName(fullFileName), Path.GetDirectoryName(fullFileName));
+                MessageBox.Show(tx, Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                return fullFileName;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return null;
+            }
+        }
+
 
         /// <summary>
         /// Write properties

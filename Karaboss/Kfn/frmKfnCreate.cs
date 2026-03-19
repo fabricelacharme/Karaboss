@@ -327,7 +327,12 @@ namespace Karaboss.Kfn
             // Initialize Writer
             KfnWriter Writer = new KfnWriter(kfnFile, lstAudioFiles, LyricsFileName, lstImages, Title, Artist, Comment, Year, Author, BgColor, fontName);
             if (Writer != null)
-                Writer.CreateKFN();
+            {
+                string result = Writer.CreateKFN();
+
+                if (result != null)
+                    txtKfnFileName.Text = result;
+            }
 
             btnPlay.Visible = true;
             Cursor = Cursors.Default;
@@ -336,8 +341,8 @@ namespace Karaboss.Kfn
 
         private void btnPlay_Click(object sender, EventArgs e)
         {
-            string path = Path.GetDirectoryName(txtAudio1.Text.Trim());
-            string FileName = Path.Combine (path, txtKfnFileName.Text);
+            //string path = Path.GetDirectoryName(txtAudio1.Text.Trim());
+            string FileName = txtKfnFileName.Text.Trim(); //       Path.Combine (path, txtKfnFileName.Text);
             
             try
             {
