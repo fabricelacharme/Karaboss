@@ -1612,7 +1612,7 @@ namespace Karaboss.Utilities
             string sLyric;
             string sTime;
             double time;
-            TimeSpan ts;
+            //TimeSpan ts;
 
             bool bLineFeed = true;
             bool bParagraph = true;

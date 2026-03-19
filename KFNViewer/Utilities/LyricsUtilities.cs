@@ -8,7 +8,7 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace KFNViewer.Utilities
+namespace KFNV.Utilities
 {
 
     public class Syllable

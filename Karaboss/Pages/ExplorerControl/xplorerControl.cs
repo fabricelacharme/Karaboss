@@ -174,7 +174,7 @@ namespace Karaboss.xplorer
             shellListView.lvFunctionKeyClicked += new FlShell.lvFunctionKeyEventHandler(ShellListView_lvFunctionKeyClicked);
             shellListView.SenKeyToParent += new FlShell.SenKeyToParentHandler(shellListView_SendKeyToParent);
 
-            treeView.tvFunctionKeyClicked += new FlShell.tvFunctionKeyEventHandler(TreeView_tvFunctionKeyClicked);
+            treeView.tvFunctionKeyClicked += new FlShell.tvFunctionKeyEventHandler(TreeView_tvFunctionKeyClicked);                      
 
             // Load existing playlists
             LoadPlaylists();            
@@ -1228,9 +1228,21 @@ namespace Karaboss.xplorer
         /// <param name="e"></param>
         private void BtnNewMidiFile_Click(object sender, EventArgs e)
         {
+            CreateNewMidiFile?.Invoke(this);            
+        }
+
+      
+
+        private void MnuNewKfnFile_Click(object sender, EventArgs e)
+        {
+            CreateNewKfnFile?.Invoke(this);
+        }
+
+        private void MnuNewMidiFile_Click(object sender, EventArgs e)
+        {
             CreateNewMidiFile?.Invoke(this);
         }
-        
+
         /// <summary>
         /// Button create a new kfn file
         /// </summary>
@@ -1677,10 +1689,11 @@ namespace Karaboss.xplorer
 
 
 
+
+
+
         #endregion playlists
 
-
-       
-
+      
     }
 }

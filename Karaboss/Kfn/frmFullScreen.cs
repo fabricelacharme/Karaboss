@@ -33,13 +33,7 @@ namespace Karaboss.Kfn
             public IntPtr hbmMask;
             public IntPtr hbmColor;
         }
-        
-        private Bitmap bmpScreenshot;
-        private Graphics gfxScreenshot;
-
-
-
-
+                
         public frmFullScreen()
         {
             InitializeComponent();            

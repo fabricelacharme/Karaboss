@@ -62,7 +62,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KaraokeEffect", "KaraokeEff
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OvhLyrics.Api", "OvhLyrics.Api\OvhLyrics.Api.csproj", "{CB97F2F8-EA00-4E73-8CB4-A5C21E8AB174}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KFNViewer", "KFNViewer\KFNViewer.csproj", "{3C65AED8-CF22-4533-BBC1-9000683688B8}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KFNV", "KFNViewer\KFNV.csproj", "{3C65AED8-CF22-4533-BBC1-9000683688B8}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "uchardet", "uchardet\uchardet.csproj", "{2A706AF9-3F44-4174-BE9B-D4644A532185}"
 EndProject

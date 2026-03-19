@@ -81,7 +81,7 @@ namespace Karaboss.Mp3
 
         #endregion dgview
 
-        string _lrcFileName;
+        //string _lrcFileName;
 
         private enum Directions
         {
@@ -1346,10 +1346,11 @@ namespace Karaboss.Mp3
             // Mp3 sync lyrics with time stamps
             TagLib.Id3v2.SynchronisedLyricsFrame SyncLyricsFrame = Player.SyncLyricsFrame;
             Mp3LyricsMgmtHelper.MySyncLyricsFrame = SyncLyricsFrame;
+
            
             // Get lyrics type origin
-            Mp3LyricsMgmtHelper.m_mp3lyricstype = Mp3LyricsMgmtHelper.GetLyricsType(SyncLyricsFrame, TagLyrics, TagSubTitles, FileName);            
-
+            Mp3LyricsMgmtHelper.m_mp3lyricstype = Mp3LyricsMgmtHelper.GetLyricsType(SyncLyricsFrame, TagLyrics, TagSubTitles, FileName);
+          
             
             switch (Mp3LyricsMgmtHelper.m_mp3lyricstype)
             {
@@ -1365,11 +1366,12 @@ namespace Karaboss.Mp3
                     // TODO: return lyrics without separators as previous case
                     //Mp3LyricsMgmtHelper.SyncLyrics = Mp3LyricsMgmtHelper.GetKEffectLrcLyrics(FileName);
                     Mp3LyricsMgmtHelper.SyncLyrics = Mp3LyricsMgmtHelper.GetLyricsFromLrcFile(FileName);
-
-
                     DisplayFrmMp3Lyrics();
                     break;
                 
+                case Mp3LyricsTypes.KOKFile:
+                    break;
+              
                 // Non synchronized Lyrics included in the mp3 file
                 case Mp3LyricsTypes.LyricsWithoutTimeStamps:                    
                     string tx = string.Empty;
@@ -2840,12 +2842,12 @@ namespace Karaboss.Mp3
 
             if (OpenFileDialog.ShowDialog() == DialogResult.OK)
             {
-                _lrcFileName = OpenFileDialog.FileName;
+                string FileName = OpenFileDialog.FileName;
 
                 // Reset
                 InitGridView();
 
-                string[] lines = System.IO.File.ReadAllLines(_lrcFileName);
+                string[] lines = System.IO.File.ReadAllLines(FileName);
                 string line;
 
                 for (int i = 0; i < lines.Count(); i++)

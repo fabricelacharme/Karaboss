@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace KFNViewer.SongIni
+namespace KFNV.SongIni
 {
     /// <summary>
     /// Interface for types that can be converted to binary data.

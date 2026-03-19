@@ -160,6 +160,9 @@
   <data name="btnImportAudio1.Text" xml:space="preserve">
     <value>Importer</value>
   </data>
+  <data name="btnLyricsUpdate.Text" xml:space="preserve">
+    <value>Modifier les paroles</value>
+  </data>
   <data name="btnTb2Next.Text" xml:space="preserve">
     <value>Suivant</value>
   </data>
@@ -178,6 +181,12 @@
   <data name="tbPageLyrics.Text" xml:space="preserve">
     <value>Paroles</value>
   </data>
+  <data name="lblSize.Size" type="System.Drawing.Size, System.Drawing">
+    <value>40, 15</value>
+  </data>
+  <data name="lblSize.Text" xml:space="preserve">
+    <value>Taille:</value>
+  </data>
   <data name="btnTb3Next.Text" xml:space="preserve">
     <value>Suivant</value>
   </data>
@@ -192,6 +201,9 @@
   </data>
   <data name="btnCancel.Text" xml:space="preserve">
     <value>Quitter</value>
+  </data>
+  <data name="tbPageBackground.Text" xml:space="preserve">
+    <value>Arrière plan</value>
   </data>
   <data name="lblFont.Size" type="System.Drawing.Size, System.Drawing">
     <value>43, 15</value>
@@ -208,8 +220,23 @@
   <data name="btnTb4Previous.Text" xml:space="preserve">
     <value>Précédant</value>
   </data>
-  <data name="tbPageBackground.Text" xml:space="preserve">
-    <value>Arrière plan</value>
+  <data name="mnuFile.Size" type="System.Drawing.Size, System.Drawing">
+    <value>54, 20</value>
+  </data>
+  <data name="mnuFile.Text" xml:space="preserve">
+    <value>&amp;Fichier</value>
+  </data>
+  <data name="mnuHelpAbout.Text" xml:space="preserve">
+    <value>&amp;A propos</value>
+  </data>
+  <data name="mnuHelp.Size" type="System.Drawing.Size, System.Drawing">
+    <value>43, 20</value>
+  </data>
+  <data name="mnuHelp.Text" xml:space="preserve">
+    <value>&amp;Aide</value>
+  </data>
+  <data name="mnuFileQuit.Text" xml:space="preserve">
+    <value>&amp;Quitter</value>
   </data>
   <data name="$this.Icon" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>

@@ -1,12 +1,14 @@
 ﻿using Hqub.MusicBrainz.API.Entities;
-using KFNViewer;
+using Karaboss.Mp3;
+using Karaboss.Resources.Localization;
+using KFNV;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
+using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
-using Karaboss.Resources.Localization;
 
 namespace Karaboss.Kfn
 {
@@ -84,6 +86,11 @@ namespace Karaboss.Kfn
                 txtAudio1.Text = FileName;
 
                 SetTitleFromFile(FileName);
+
+
+                btnLyricsUpdate.Visible = true;
+                lblLyricsUpdate.Visible = true;
+
             }
             catch (Exception ex)
             {
@@ -191,7 +198,7 @@ namespace Karaboss.Kfn
         #endregion select images
 
 
-        #region Button Create
+        #region Button Create Play
         private void btnCancel_Click(object sender, EventArgs e)
         {
             Close();
@@ -326,7 +333,71 @@ namespace Karaboss.Kfn
             Cursor = Cursors.Default;
         }
 
-        #endregion Button Create
+
+        private void btnPlay_Click(object sender, EventArgs e)
+        {
+            string path = Path.GetDirectoryName(txtAudio1.Text.Trim());
+            string FileName = Path.Combine (path, txtKfnFileName.Text);
+            
+            try
+            {
+                //string FileName = Path.Combine(fPath, txtKfnFileName.Text);
+                if (File.Exists(FileName))
+                {
+                    System.Diagnostics.Process.Start(FileName);
+                }
+                else
+                {
+                    MessageBox.Show("File not found:\n" + FileName, Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void btnLyricsUpdate_Click(object sender, EventArgs e)
+        {            
+            string AudioFileName1 = txtAudio1.Text.Trim();
+            string AudioFileName2 = txtAudio2.Text.Trim();
+            string AudioFileName = AudioFileName1;
+
+            // Check lyrics
+            string LyricsFileName = txtLyrics.Text.Trim();
+            if (!File.Exists(LyricsFileName))
+                LyricsFileName = null;
+
+            // At least, audio1 must exists
+            if (!File.Exists(AudioFileName1))
+            {
+                MessageBox.Show("Invalid audio1 file", Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error); return;
+            }
+
+
+            // Close frmMp3Player if displayed
+            if (Application.OpenForms.OfType<frmMp3Player>().Count() > 0)
+            {
+                frmMp3Player frm = Utilities.FormUtilities.GetForm<frmMp3Player>();
+                frm.Close();
+            }
+
+            // If audio2 exists, select audio2 because it contains vocals
+            // It's easier for lyrics synchronisation.
+            if (File.Exists(AudioFileName2))
+                AudioFileName = AudioFileName2;
+
+
+            // If lyrics are set, take them
+            frmMp3Player frmMp3Player = new frmMp3Player(AudioFileName,null, false);
+
+            frmMp3Player.Show();
+
+
+
+        }
+
+        #endregion Button Create Play
 
 
         #region navigation
@@ -428,24 +499,28 @@ namespace Karaboss.Kfn
 
         private void PopulateFonts()
         {
+            // Karafun seems to support only a few fonts
             foreach (System.Drawing.FontFamily fnt in System.Drawing.FontFamily.Families)
             {
-                cbFont.Items.Add(fnt.Name);
+                cbFontName.Items.Add(fnt.Name);
             }
 
-            cbFont.SelectedIndex = cbFont.FindString("Arial");
+            //List<string> fontNames = new List<string>() { "Arial", "Arial Black", "Arial Unicode MS", "Courier New", "Georgia", "Impact", "Tahoma", "Times New Roman", "Verdana" };
+            //cbFontName.DataSource = fontNames;
+
+            cbFontName.SelectedIndex = cbFontName.FindString("Arial");
         }
 
 
-        private void cbFont_SelectedIndexChanged(object sender, EventArgs e)
+        private void cbFontName_SelectedIndexChanged(object sender, EventArgs e)
         {
-            ftName = cbFont.SelectedItem.ToString();
+            ftName = cbFontName.SelectedItem.ToString();
             txtLoremIpsum.Font = new Font(ftName, ftSize, FontStyle.Regular, GraphicsUnit.Pixel);
         }
 
-        private void UpDown_ValueChanged(object sender, EventArgs e)
+        private void UpDownFontSize_ValueChanged(object sender, EventArgs e)
         {
-            ftSize = (uint)UpDown.Value;
+            ftSize = (uint)UpDownFontSize.Value;
             txtLoremIpsum.Font = new Font(ftName, ftSize, FontStyle.Regular, GraphicsUnit.Pixel);
         }
 
@@ -462,6 +537,22 @@ namespace Karaboss.Kfn
                 txtAuthor.Text = Properties.Settings.Default.KfnAuthor;
                 txtComment.Text = Properties.Settings.Default.KfnComment;
                 txtBgColor.Text = Properties.Settings.Default.KfnBgColor;
+                
+                UpDownFontSize.Value = Properties.Settings.Default.KfnFontSize;
+
+                string f = Properties.Settings.Default.KfnFontName;
+                //cbFontName.SelectedItem = cbFontName.FindString(f);       // Fix find Arial before Arial Black
+                for (int i = 0; i < cbFontName.Items.Count; i++)
+                {
+                    if (cbFontName.Items[i].ToString() == f)
+                    {
+                        cbFontName.SelectedIndex = i;
+                        break;
+                    }
+                }
+                
+
+
             }
             catch (Exception ex)
             {
@@ -490,6 +581,11 @@ namespace Karaboss.Kfn
                 Properties.Settings.Default.KfnAuthor = txtAuthor.Text.Trim();
             if (txtComment.Text.Trim().Length > 0)
                 Properties.Settings.Default.KfnComment = txtComment.Text.Trim();
+
+            Properties.Settings.Default.KfnFontName = cbFontName.SelectedItem.ToString();
+            Properties.Settings.Default.KfnFontSize = (int)UpDownFontSize.Value;
+
+
             Properties.Settings.Default.Save();
         }
 
@@ -534,25 +630,26 @@ namespace Karaboss.Kfn
 
         }
 
+
+
+
+
         #endregion tabControl
 
-       
 
-        private void btnPlay_Click(object sender, EventArgs e)
+        #region menus
+
+        private void mnuFileQuit_Click(object sender, EventArgs e)
         {
-            try
-            {
-                string FileName = Path.Combine(fPath, txtKfnFileName.Text);
-                if (File.Exists(FileName))
-                {
-                    System.Diagnostics.Process.Start(FileName);
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message, Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-
+            Close();
         }
+
+        private void mnuHelpAbout_Click(object sender, EventArgs e)
+        {
+            Form frmAboutDialog = new frmAboutDialog();
+            frmAboutDialog.ShowDialog();
+        }
+
+        #endregion menus
     }
 }

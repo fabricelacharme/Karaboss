@@ -461,5 +461,11 @@
     <Setting Name="KfnBgColor" Type="System.String" Scope="User">
       <Value Profile="(Default)">#000000</Value>
     </Setting>
+    <Setting Name="KfnFontName" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Arial</Value>
+    </Setting>
+    <Setting Name="KfnFontSize" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">18</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

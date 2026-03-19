@@ -1,6 +1,6 @@
-﻿using KFNViewer.Properties;
-using KFNViewer.SongIni;
-using KFNViewer.Utilities;
+﻿using KFNV.Properties;
+using KFNV.SongIni;
+using KFNV.Utilities;
 using Mozilla.NUniversalCharDet;
 using System;
 using System.Collections.Generic;
@@ -13,7 +13,7 @@ using System.Web;
 using System.Windows.Forms;
 using static KFN;
 
-namespace KFNViewer
+namespace KFNV
 {
     public class KfnWriter
     {

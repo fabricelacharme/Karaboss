@@ -49,7 +49,8 @@ namespace Karaboss.Mp3.Mp3Lyrics
     {
         None,
         LyricsWithTimeStamps,
-        LRCFile,
+        LRCFile,                // LRC file having same name than the mp3
+        KOKFile,                // KOK file having the same name than the mp3          
         LyricsWithoutTimeStamps,
     }
     
@@ -101,7 +102,7 @@ namespace Karaboss.Mp3.Mp3Lyrics
         /// <param name="TagSubTitles"></param>
         /// <param name="FileName"></param>
         /// <returns></returns>
-        public static Mp3LyricsTypes GetLyricsType(SynchronisedLyricsFrame SyncLyricsFrame, string TagLyrics, string TagSubTitles, string FileName)
+        public static Mp3LyricsTypes GetLyricsType(SynchronisedLyricsFrame SyncLyricsFrame, string TagLyrics, string TagSubTitles, string FileName, string LyricsFileName = null)
         {
             Mp3LyricsTypes lType = Mp3LyricsTypes.None;
             string lrcFile;

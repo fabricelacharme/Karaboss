@@ -568,7 +568,8 @@
     <value>All lines starting from this line</value>
   </data>
   <data name="kfnCreateTb1" xml:space="preserve">
-    <value>Creating a KFN file.{0}You can upload either one or two audio files (MP3). If you upload only one, your KFN will not have a voice guide.{0}If you upload two, you will have a voice guide by placing the instrumental audio file in audio1 and the file with the vocals in audio2.</value>
+    <value>You must upload at least one audio file (MP3) to audio1.{0}If you want a vocal guide, you must upload two audio files:
+{0}An instrumental file to audio1 and a file with vocals to audio2.</value>
   </data>
   <data name="kfnCreateTb2" xml:space="preserve">
     <value>Required: Upload a lyrics file containing synchronized syllables (LRC format)</value>

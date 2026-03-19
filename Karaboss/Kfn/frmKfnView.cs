@@ -17,7 +17,7 @@ namespace Karaboss.Kfn
 
         private string windowTitle = "KFN Viewer";
         private KFN KFN;
-        private SongINI sINI;
+        //private SongINI sINI;
 
         private readonly Dictionary<int, string> encodings = new Dictionary<int, string>
         { { 0, "Use auto detect" } };

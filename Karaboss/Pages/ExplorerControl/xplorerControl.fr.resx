@@ -154,6 +154,9 @@
         ag5kjZth6NQi/PvY/0s/AZuZBhGEx2rkAAAAAElFTkSuQmCC
 </value>
   </data>
+  <data name="forwardButton.Text" xml:space="preserve">
+    <value>Avancer</value>
+  </data>
   <data name="upButton.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
@@ -175,11 +178,23 @@
   <data name="btnDownloads.Text" xml:space="preserve">
     <value>Téléchargements</value>
   </data>
-  <data name="btnNewMidiFile.ToolTipText" xml:space="preserve">
-    <value>Nouveau fichier MIDI</value>
+  <data name="mnuNewMidiFile.Size" type="System.Drawing.Size, System.Drawing">
+    <value>185, 22</value>
   </data>
-  <data name="btnNewKfnFile.ToolTipText" xml:space="preserve">
+  <data name="mnuNewMidiFile.Text" xml:space="preserve">
+    <value>Nouveau fichier midi</value>
+  </data>
+  <data name="mnuNewKfnFile.Size" type="System.Drawing.Size, System.Drawing">
+    <value>185, 22</value>
+  </data>
+  <data name="mnuNewKfnFile.Text" xml:space="preserve">
     <value>Nouveau fichier KFN</value>
+  </data>
+  <data name="mnuNewFile.Text" xml:space="preserve">
+    <value />
+  </data>
+  <data name="mnuNewFile.ToolTipText" xml:space="preserve">
+    <value>Créer un nouveau fichier</value>
   </data>
   <data name="btnPlay.Text" xml:space="preserve">
     <value>Lire</value>

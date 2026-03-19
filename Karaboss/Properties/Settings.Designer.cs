@@ -1855,5 +1855,29 @@ namespace Karaboss.Properties {
                 this["KfnBgColor"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Arial")]
+        public string KfnFontName {
+            get {
+                return ((string)(this["KfnFontName"]));
+            }
+            set {
+                this["KfnFontName"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("18")]
+        public int KfnFontSize {
+            get {
+                return ((int)(this["KfnFontSize"]));
+            }
+            set {
+                this["KfnFontSize"] = value;
+            }
+        }
     }
 }

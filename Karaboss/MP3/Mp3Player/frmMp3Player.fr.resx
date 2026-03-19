@@ -117,48 +117,69 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="dgView.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="splitContainer1.Panel1.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="txtResult.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="splitContainer1.Panel2.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="splitContainer1.ToolTip" xml:space="preserve">
+    <value />
+  </data>
   <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
-  <data name="mnuFile.Size" type="System.Drawing.Size, System.Drawing">
-    <value>54, 20</value>
-  </data>
-  <data name="mnuFile.Text" xml:space="preserve">
-    <value>&amp;Fichier</value>
-  </data>
   <data name="mnuFileOpen.Size" type="System.Drawing.Size, System.Drawing">
-    <value>137, 22</value>
+    <value>180, 22</value>
   </data>
   <data name="mnuFileOpen.Text" xml:space="preserve">
     <value>&amp;Ouvrir...</value>
   </data>
   <data name="MnuFileSep1.Size" type="System.Drawing.Size, System.Drawing">
-    <value>134, 6</value>
-  </data>
-  <data name="mnuFileExportLyrics.Size" type="System.Drawing.Size, System.Drawing">
-    <value>137, 22</value>
+    <value>177, 6</value>
   </data>
   <data name="mnuFileExportLyricsLrc.Size" type="System.Drawing.Size, System.Drawing">
-    <value>134, 22</value>
+    <value>180, 22</value>
+  </data>
+  <data name="mnuFileExportLyricsLrc.Text" xml:space="preserve">
+    <value>Format LRC</value>
   </data>
   <data name="mnuFileExportLyricsTxt.Size" type="System.Drawing.Size, System.Drawing">
-    <value>134, 22</value>
+    <value>180, 22</value>
+  </data>
+  <data name="mnuFileExportLyricsTxt.Text" xml:space="preserve">
+    <value>Format Texte</value>
   </data>
   <data name="mnuFileExportLyricsKok.Size" type="System.Drawing.Size, System.Drawing">
-    <value>134, 22</value>
+    <value>180, 22</value>
+  </data>
+  <data name="mnuFileExportLyricsKok.Text" xml:space="preserve">
+    <value>Format KOK</value>
+  </data>
+  <data name="mnuFileExportLyrics.Size" type="System.Drawing.Size, System.Drawing">
+    <value>180, 22</value>
+  </data>
+  <data name="mnuFileExportLyrics.Text" xml:space="preserve">
+    <value>Exporter les paroles</value>
   </data>
   <data name="mnuFileSep2.Size" type="System.Drawing.Size, System.Drawing">
-    <value>134, 6</value>
+    <value>177, 6</value>
   </data>
   <data name="mnuFileQuit.Size" type="System.Drawing.Size, System.Drawing">
-    <value>137, 22</value>
+    <value>180, 22</value>
   </data>
   <data name="mnuFileQuit.Text" xml:space="preserve">
     <value>&amp;Quitter</value>
   </data>
-  <data name="mnuEdit.Size" type="System.Drawing.Size, System.Drawing">
-    <value>56, 20</value>
+  <data name="mnuFile.Size" type="System.Drawing.Size, System.Drawing">
+    <value>54, 20</value>
   </data>
-  <data name="mnuEdit.Text" xml:space="preserve">
-    <value>&amp;Edition</value>
+  <data name="mnuFile.Text" xml:space="preserve">
+    <value>&amp;Fichier</value>
   </data>
   <data name="mnuEditLyrics.Size" type="System.Drawing.Size, System.Drawing">
     <value>246, 22</value>
@@ -184,20 +205,41 @@
   <data name="mnuEditSep2.Size" type="System.Drawing.Size, System.Drawing">
     <value>243, 6</value>
   </data>
+  <data name="mnuEditImportLyricsLrc.Size" type="System.Drawing.Size, System.Drawing">
+    <value>180, 22</value>
+  </data>
+  <data name="mnuEditImportLyricsLrc.Text" xml:space="preserve">
+    <value>Format LRC</value>
+  </data>
+  <data name="mnuEditImportLyricsTxt.Size" type="System.Drawing.Size, System.Drawing">
+    <value>180, 22</value>
+  </data>
+  <data name="mnuEditImportLyricsTxt.Text" xml:space="preserve">
+    <value>Format Text</value>
+  </data>
+  <data name="mnuEditImportLyricsKok.Size" type="System.Drawing.Size, System.Drawing">
+    <value>180, 22</value>
+  </data>
+  <data name="mnuEditImportLyricsKok.Text" xml:space="preserve">
+    <value>Format KOK</value>
+  </data>
   <data name="mnuEditImportLyrics.Size" type="System.Drawing.Size, System.Drawing">
     <value>246, 22</value>
   </data>
   <data name="mnuEditImportLyrics.Text" xml:space="preserve">
     <value>Importer des paroles</value>
   </data>
-  <data name="mnuEditImportLyricsLrc.Text" xml:space="preserve">
-    <value>Format LRC</value>
+  <data name="mnuEdit.Size" type="System.Drawing.Size, System.Drawing">
+    <value>56, 20</value>
   </data>
-  <data name="mnuEditImportLyricsTxt.Text" xml:space="preserve">
-    <value>Format Text</value>
+  <data name="mnuEdit.Text" xml:space="preserve">
+    <value>&amp;Edition</value>
   </data>
-  <data name="mnuEditImportLyricsKok.Text" xml:space="preserve">
-    <value>Format KOK</value>
+  <data name="mnuHelpAbout.Size" type="System.Drawing.Size, System.Drawing">
+    <value>180, 22</value>
+  </data>
+  <data name="mnuHelpAbout.Text" xml:space="preserve">
+    <value>&amp;A propos...</value>
   </data>
   <data name="mnuHelp.Size" type="System.Drawing.Size, System.Drawing">
     <value>43, 20</value>
@@ -205,14 +247,77 @@
   <data name="mnuHelp.Text" xml:space="preserve">
     <value>&amp;Aide</value>
   </data>
-  <data name="mnuHelpAbout.Size" type="System.Drawing.Size, System.Drawing">
-    <value>131, 22</value>
+  <data name="menuStrip1.ToolTip" xml:space="preserve">
+    <value />
   </data>
-  <data name="mnuHelpAbout.Text" xml:space="preserve">
-    <value>&amp;A propos...</value>
+  <data name="pBox.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="lblPlaylist.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="btnTempoMinus.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="btnTempoPlus.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="lblTempoValue.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="lblTemp.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="btnTranspoMinus.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="btnTranspoPlus.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="lblTranspoValue.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="lblTransp.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="VuPeakVolumeRight.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="VuPeakVolumeLeft.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="lblMainVolume.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="pnlDisplay.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="btnPrev.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="btnNext.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="positionHScrollBar.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="btnStop.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="btnPlay.ToolTip" xml:space="preserve">
+    <value />
   </data>
   <data name="sldMainVolume.Size" type="System.Drawing.Size, System.Drawing">
-    <value>24, 80</value>
+    <value>80, 24</value>
+  </data>
+  <data name="sldMainVolume.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="lnlVol.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="pnlControls.ToolTip" xml:space="preserve">
+    <value />
   </data>
   <data name="BtnFontMoins.ToolTip" xml:space="preserve">
     <value>Diminue la taille de la fonte</value>
@@ -250,11 +355,29 @@
   <data name="btnMsMinor.ToolTip" xml:space="preserve">
     <value>Enlève des millisecondes au texte</value>
   </data>
+  <data name="lblLyrics.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="lblTimes.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="pnlMiddle.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="lblLa.ToolTip" xml:space="preserve">
+    <value />
+  </data>
   <data name="lblYear.Size" type="System.Drawing.Size, System.Drawing">
     <value>38, 13</value>
   </data>
   <data name="lblYear.Text" xml:space="preserve">
     <value>Année</value>
+  </data>
+  <data name="lblYear.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="lblAl.ToolTip" xml:space="preserve">
+    <value />
   </data>
   <data name="lblAr.Size" type="System.Drawing.Size, System.Drawing">
     <value>36, 13</value>
@@ -262,14 +385,44 @@
   <data name="lblAr.Text" xml:space="preserve">
     <value>Artiste</value>
   </data>
+  <data name="lblAr.ToolTip" xml:space="preserve">
+    <value />
+  </data>
   <data name="lblTi.Size" type="System.Drawing.Size, System.Drawing">
     <value>28, 13</value>
   </data>
   <data name="lblTi.Text" xml:space="preserve">
     <value>Titre</value>
   </data>
-  <data name="toolstrip1.Size" type="System.Drawing.Size, System.Drawing">
-    <value>520, 28</value>
+  <data name="lblTi.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="cbLanguage.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="lblHotkeys.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="lblMode.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="mnuImportLyricsLrc.Size" type="System.Drawing.Size, System.Drawing">
+    <value>168, 26</value>
+  </data>
+  <data name="mnuImportLyricsLrc.Text" xml:space="preserve">
+    <value>Format LRC</value>
+  </data>
+  <data name="mnuImportLyricsTxt.Size" type="System.Drawing.Size, System.Drawing">
+    <value>168, 26</value>
+  </data>
+  <data name="mnuImportLyricsTxt.Text" xml:space="preserve">
+    <value>Format Texte</value>
+  </data>
+  <data name="mnuImportLyricsKok.Size" type="System.Drawing.Size, System.Drawing">
+    <value>168, 26</value>
+  </data>
+  <data name="mnuImportLyricsKok.Text" xml:space="preserve">
+    <value>Format KOK</value>
   </data>
   <data name="mnuImportLyrics.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
@@ -292,13 +445,22 @@
   <data name="mnuImportLyrics.Text" xml:space="preserve">
     <value>Importer des paroles</value>
   </data>
-  <data name="mnuImportLyricsLrc.Text" xml:space="preserve">
+  <data name="mnuExportLyricsLrc.Size" type="System.Drawing.Size, System.Drawing">
+    <value>168, 26</value>
+  </data>
+  <data name="mnuExportLyricsLrc.Text" xml:space="preserve">
     <value>Format LRC</value>
   </data>
-  <data name="mnuImportLyricsTxt.Text" xml:space="preserve">
+  <data name="mnuExportLyricsTxt.Size" type="System.Drawing.Size, System.Drawing">
+    <value>168, 26</value>
+  </data>
+  <data name="mnuExportLyricsTxt.Text" xml:space="preserve">
     <value>Format Texte</value>
   </data>
-  <data name="mnuImportLyricsKok.Text" xml:space="preserve">
+  <data name="mnuExportLyricsKok.Size" type="System.Drawing.Size, System.Drawing">
+    <value>168, 26</value>
+  </data>
+  <data name="mnuExportLyricsKok.Text" xml:space="preserve">
     <value>Format KOK</value>
   </data>
   <data name="mnuExportLyrics.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
@@ -322,15 +484,6 @@
   <data name="mnuExportLyrics.Text" xml:space="preserve">
     <value>Exporter les paroles</value>
   </data>
-  <data name="mnuExportLyricsLrc.Text" xml:space="preserve">
-    <value>Format LRC</value>
-  </data>
-  <data name="mnuExportLyricsTxt.Text" xml:space="preserve">
-    <value>Format Texte</value>
-  </data>
-  <data name="mnuExportLyricsKok.Text" xml:space="preserve">
-    <value>Format KOK</value>
-  </data>
   <data name="btnSwitchSyncEdit.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
@@ -351,6 +504,36 @@
   </data>
   <data name="btnSwitchSyncEdit.Text" xml:space="preserve">
     <value>Passer en mode synchro</value>
+  </data>
+  <data name="toolstrip1.Size" type="System.Drawing.Size, System.Drawing">
+    <value>520, 28</value>
+  </data>
+  <data name="toolstrip1.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="lblTextSize.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="btnOffsetMinus.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="btnOffsetPlus.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="pnlEdit.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="lblHotkeysOthers.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="pnlSync.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="pnlTop.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="pnlLrc.ToolTip" xml:space="preserve">
+    <value />
   </data>
   <data name="$this.Icon" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
@@ -376,8 +559,7 @@
         AADAAwAA8A8AAA==
 </value>
   </data>
-  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="$this.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
-    <value>NoControl</value>
+  <data name="$this.ToolTip" xml:space="preserve">
+    <value />
   </data>
 </root>

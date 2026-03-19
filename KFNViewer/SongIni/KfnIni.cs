@@ -16,9 +16,9 @@ using System.Windows.Forms;
 using TagLib.Matroska;
 using TagLib.Riff;
 using static KFN;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement.TrackBar;
+//using static System.Windows.Forms.VisualStyles.VisualStyleElement.TrackBar;
 
-namespace KFNViewer.SongIni
+namespace KFNV.SongIni
 {
 
     /// Representing a file entry in the KFN file.

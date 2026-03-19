@@ -129,7 +129,7 @@
     <value>NoControl</value>
   </data>
   <data name="lblHelpTb1.Location" type="System.Drawing.Point, System.Drawing">
-    <value>4, 4</value>
+    <value>4, 8</value>
   </data>
   <data name="lblHelpTb1.Size" type="System.Drawing.Size, System.Drawing">
     <value>697, 61</value>
@@ -139,7 +139,7 @@
     <value>20</value>
   </data>
   <data name="lblHelpTb1.Text" xml:space="preserve">
-    <value>Création d'un fichier KFN.\nVous pouvez charger un seul fichier audio (mp3), soit deux. Si vous n'en chargez qu'un, votre KFN n'aura pas de guide vocal. \nSi vous en chargez deux, vous aurez un guide vocal en mettant le fichier audio instrumental dans audio1 et le fichier avec la voix dans audio2.</value>
+    <value>Création d'un fichier KFN.\nVous pouvez charger un seul fichier audio (mp3), soit deux. Si vous n'en chargez qu'un, votre KFN n'aura pas de guide vocal. \nSi vous en chargez deux, vous aurez un guide vocal en mettant le fichier audio instrumental dans audio1 et le fichier avec la voix dans audio2. wxdfdwf xwcfxcwf xcxcv xxcvxcvxcv xcvxcvxcvxcvxcv xcvxcvxcvxcvxc xcvxv xcvxcv qxvxcxcvxqcvxc  xv qx  xcvv xv </value>
   </data>
   <data name="&gt;&gt;lblHelpTb1.Name" xml:space="preserve">
     <value>lblHelpTb1</value>
@@ -181,7 +181,7 @@
     <value>1</value>
   </data>
   <data name="txtArtist.Location" type="System.Drawing.Point, System.Drawing">
-    <value>125, 210</value>
+    <value>125, 219</value>
   </data>
   <data name="txtArtist.Size" type="System.Drawing.Size, System.Drawing">
     <value>281, 23</value>
@@ -208,7 +208,7 @@
     <value>Calibri, 9.75pt</value>
   </data>
   <data name="lblArtist.Location" type="System.Drawing.Point, System.Drawing">
-    <value>4, 215</value>
+    <value>4, 222</value>
   </data>
   <data name="lblArtist.Size" type="System.Drawing.Size, System.Drawing">
     <value>39, 15</value>
@@ -280,7 +280,7 @@
     <value>Calibri, 9.75pt</value>
   </data>
   <data name="lblAuthor.Location" type="System.Drawing.Point, System.Drawing">
-    <value>4, 311</value>
+    <value>4, 309</value>
   </data>
   <data name="lblAuthor.Size" type="System.Drawing.Size, System.Drawing">
     <value>47, 15</value>
@@ -304,16 +304,13 @@
     <value>6</value>
   </data>
   <data name="txtYear.Location" type="System.Drawing.Point, System.Drawing">
-    <value>125, 274</value>
+    <value>125, 277</value>
   </data>
   <data name="txtYear.Size" type="System.Drawing.Size, System.Drawing">
     <value>281, 23</value>
   </data>
   <data name="txtYear.TabIndex" type="System.Int32, mscorlib">
     <value>15</value>
-  </data>
-  <data name="txtYear.Text" xml:space="preserve">
-    <value>1980</value>
   </data>
   <data name="&gt;&gt;txtYear.Name" xml:space="preserve">
     <value>txtYear</value>
@@ -334,7 +331,7 @@
     <value>Calibri, 9.75pt</value>
   </data>
   <data name="lblYear.Location" type="System.Drawing.Point, System.Drawing">
-    <value>3, 279</value>
+    <value>4, 280</value>
   </data>
   <data name="lblYear.Size" type="System.Drawing.Size, System.Drawing">
     <value>33, 15</value>
@@ -433,7 +430,7 @@
     <value>Calibri, 9pt</value>
   </data>
   <data name="label5.Location" type="System.Drawing.Point, System.Drawing">
-    <value>4, 138</value>
+    <value>4, 134</value>
   </data>
   <data name="label5.Size" type="System.Drawing.Size, System.Drawing">
     <value>114, 36</value>
@@ -481,7 +478,7 @@
     <value>13</value>
   </data>
   <data name="txtComment.Location" type="System.Drawing.Point, System.Drawing">
-    <value>125, 242</value>
+    <value>125, 248</value>
   </data>
   <data name="txtComment.Size" type="System.Drawing.Size, System.Drawing">
     <value>490, 23</value>
@@ -508,7 +505,7 @@
     <value>Calibri, 9.75pt</value>
   </data>
   <data name="label2.Location" type="System.Drawing.Point, System.Drawing">
-    <value>4, 247</value>
+    <value>4, 251</value>
   </data>
   <data name="label2.Size" type="System.Drawing.Size, System.Drawing">
     <value>61, 15</value>
@@ -532,7 +529,7 @@
     <value>15</value>
   </data>
   <data name="txtTitle.Location" type="System.Drawing.Point, System.Drawing">
-    <value>125, 178</value>
+    <value>125, 190</value>
   </data>
   <data name="txtTitle.Size" type="System.Drawing.Size, System.Drawing">
     <value>281, 23</value>
@@ -559,7 +556,7 @@
     <value>Calibri, 9.75pt</value>
   </data>
   <data name="label1.Location" type="System.Drawing.Point, System.Drawing">
-    <value>4, 183</value>
+    <value>4, 193</value>
   </data>
   <data name="label1.Size" type="System.Drawing.Size, System.Drawing">
     <value>34, 15</value>
@@ -684,6 +681,87 @@
   <data name="tbPageLyrics.BackgroundImageLayout" type="System.Windows.Forms.ImageLayout, System.Windows.Forms">
     <value>Center</value>
   </data>
+  <data name="lblLyricsUpdate.Font" type="System.Drawing.Font, System.Drawing">
+    <value>Calibri, 9pt</value>
+  </data>
+  <data name="lblLyricsUpdate.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="lblLyricsUpdate.Location" type="System.Drawing.Point, System.Drawing">
+    <value>3, 150</value>
+  </data>
+  <data name="lblLyricsUpdate.Size" type="System.Drawing.Size, System.Drawing">
+    <value>80, 64</value>
+  </data>
+  <data name="lblLyricsUpdate.TabIndex" type="System.Int32, mscorlib">
+    <value>24</value>
+  </data>
+  <data name="lblLyricsUpdate.Text" xml:space="preserve">
+    <value>Créer, modifier, caler vos paroles</value>
+  </data>
+  <data name="lblLyricsUpdate.Visible" type="System.Boolean, mscorlib">
+    <value>False</value>
+  </data>
+  <data name="&gt;&gt;lblLyricsUpdate.Name" xml:space="preserve">
+    <value>lblLyricsUpdate</value>
+  </data>
+  <data name="&gt;&gt;lblLyricsUpdate.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;lblLyricsUpdate.Parent" xml:space="preserve">
+    <value>tbPageLyrics</value>
+  </data>
+  <data name="&gt;&gt;lblLyricsUpdate.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="btnLyricsUpdate.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="btnLyricsUpdate.Location" type="System.Drawing.Point, System.Drawing">
+    <value>90, 150</value>
+  </data>
+  <data name="btnLyricsUpdate.Size" type="System.Drawing.Size, System.Drawing">
+    <value>135, 23</value>
+  </data>
+  <data name="btnLyricsUpdate.TabIndex" type="System.Int32, mscorlib">
+    <value>23</value>
+  </data>
+  <data name="btnLyricsUpdate.Text" xml:space="preserve">
+    <value>Modify Lyrics</value>
+  </data>
+  <data name="btnLyricsUpdate.Visible" type="System.Boolean, mscorlib">
+    <value>False</value>
+  </data>
+  <data name="&gt;&gt;btnLyricsUpdate.Name" xml:space="preserve">
+    <value>btnLyricsUpdate</value>
+  </data>
+  <data name="&gt;&gt;btnLyricsUpdate.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;btnLyricsUpdate.Parent" xml:space="preserve">
+    <value>tbPageLyrics</value>
+  </data>
+  <data name="&gt;&gt;btnLyricsUpdate.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="lblHelpTb2.Font" type="System.Drawing.Font, System.Drawing">
+    <value>Calibri, 9pt</value>
+  </data>
+  <data name="lblHelpTb2.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="lblHelpTb2.Location" type="System.Drawing.Point, System.Drawing">
+    <value>4, 8</value>
+  </data>
+  <data name="lblHelpTb2.Size" type="System.Drawing.Size, System.Drawing">
+    <value>697, 61</value>
+  </data>
+  <data name="lblHelpTb2.TabIndex" type="System.Int32, mscorlib">
+    <value>22</value>
+  </data>
+  <data name="lblHelpTb2.Text" xml:space="preserve">
+    <value>Obligatoire : charger un fichier de paroles contenant les syllables synchronisées (format LRC)</value>
+  </data>
   <data name="&gt;&gt;lblHelpTb2.Name" xml:space="preserve">
     <value>lblHelpTb2</value>
   </data>
@@ -694,7 +772,19 @@
     <value>tbPageLyrics</value>
   </data>
   <data name="&gt;&gt;lblHelpTb2.ZOrder" xml:space="preserve">
-    <value>0</value>
+    <value>2</value>
+  </data>
+  <data name="btnTb2Next.Location" type="System.Drawing.Point, System.Drawing">
+    <value>630, 340</value>
+  </data>
+  <data name="btnTb2Next.Size" type="System.Drawing.Size, System.Drawing">
+    <value>75, 23</value>
+  </data>
+  <data name="btnTb2Next.TabIndex" type="System.Int32, mscorlib">
+    <value>21</value>
+  </data>
+  <data name="btnTb2Next.Text" xml:space="preserve">
+    <value>Next</value>
   </data>
   <data name="&gt;&gt;btnTb2Next.Name" xml:space="preserve">
     <value>btnTb2Next</value>
@@ -706,7 +796,19 @@
     <value>tbPageLyrics</value>
   </data>
   <data name="&gt;&gt;btnTb2Next.ZOrder" xml:space="preserve">
-    <value>1</value>
+    <value>3</value>
+  </data>
+  <data name="btnTb2Previous.Location" type="System.Drawing.Point, System.Drawing">
+    <value>549, 340</value>
+  </data>
+  <data name="btnTb2Previous.Size" type="System.Drawing.Size, System.Drawing">
+    <value>75, 23</value>
+  </data>
+  <data name="btnTb2Previous.TabIndex" type="System.Int32, mscorlib">
+    <value>20</value>
+  </data>
+  <data name="btnTb2Previous.Text" xml:space="preserve">
+    <value>Previous</value>
   </data>
   <data name="&gt;&gt;btnTb2Previous.Name" xml:space="preserve">
     <value>btnTb2Previous</value>
@@ -718,7 +820,16 @@
     <value>tbPageLyrics</value>
   </data>
   <data name="&gt;&gt;btnTb2Previous.ZOrder" xml:space="preserve">
-    <value>2</value>
+    <value>4</value>
+  </data>
+  <data name="txtLyrics.Location" type="System.Drawing.Point, System.Drawing">
+    <value>90, 70</value>
+  </data>
+  <data name="txtLyrics.Size" type="System.Drawing.Size, System.Drawing">
+    <value>490, 23</value>
+  </data>
+  <data name="txtLyrics.TabIndex" type="System.Int32, mscorlib">
+    <value>18</value>
   </data>
   <data name="&gt;&gt;txtLyrics.Name" xml:space="preserve">
     <value>txtLyrics</value>
@@ -730,7 +841,25 @@
     <value>tbPageLyrics</value>
   </data>
   <data name="&gt;&gt;txtLyrics.ZOrder" xml:space="preserve">
-    <value>3</value>
+    <value>5</value>
+  </data>
+  <data name="lblLyrics.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="lblLyrics.Font" type="System.Drawing.Font, System.Drawing">
+    <value>Calibri, 9.75pt</value>
+  </data>
+  <data name="lblLyrics.Location" type="System.Drawing.Point, System.Drawing">
+    <value>4, 73</value>
+  </data>
+  <data name="lblLyrics.Size" type="System.Drawing.Size, System.Drawing">
+    <value>38, 15</value>
+  </data>
+  <data name="lblLyrics.TabIndex" type="System.Int32, mscorlib">
+    <value>17</value>
+  </data>
+  <data name="lblLyrics.Text" xml:space="preserve">
+    <value>Lyrics</value>
   </data>
   <data name="&gt;&gt;lblLyrics.Name" xml:space="preserve">
     <value>lblLyrics</value>
@@ -742,7 +871,19 @@
     <value>tbPageLyrics</value>
   </data>
   <data name="&gt;&gt;lblLyrics.ZOrder" xml:space="preserve">
-    <value>4</value>
+    <value>6</value>
+  </data>
+  <data name="btnImportLyrics.Location" type="System.Drawing.Point, System.Drawing">
+    <value>596, 69</value>
+  </data>
+  <data name="btnImportLyrics.Size" type="System.Drawing.Size, System.Drawing">
+    <value>75, 23</value>
+  </data>
+  <data name="btnImportLyrics.TabIndex" type="System.Int32, mscorlib">
+    <value>19</value>
+  </data>
+  <data name="btnImportLyrics.Text" xml:space="preserve">
+    <value>Import</value>
   </data>
   <data name="&gt;&gt;btnImportLyrics.Name" xml:space="preserve">
     <value>btnImportLyrics</value>
@@ -754,7 +895,7 @@
     <value>tbPageLyrics</value>
   </data>
   <data name="&gt;&gt;btnImportLyrics.ZOrder" xml:space="preserve">
-    <value>5</value>
+    <value>7</value>
   </data>
   <data name="tbPageLyrics.Location" type="System.Drawing.Point, System.Drawing">
     <value>4, 27</value>
@@ -782,159 +923,6 @@
   </data>
   <data name="&gt;&gt;tbPageLyrics.ZOrder" xml:space="preserve">
     <value>1</value>
-  </data>
-  <data name="lblHelpTb2.Font" type="System.Drawing.Font, System.Drawing">
-    <value>Calibri, 9pt</value>
-  </data>
-  <data name="lblHelpTb2.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
-    <value>NoControl</value>
-  </data>
-  <data name="lblHelpTb2.Location" type="System.Drawing.Point, System.Drawing">
-    <value>4, 4</value>
-  </data>
-  <data name="lblHelpTb2.Size" type="System.Drawing.Size, System.Drawing">
-    <value>697, 61</value>
-  </data>
-  <data name="lblHelpTb2.TabIndex" type="System.Int32, mscorlib">
-    <value>22</value>
-  </data>
-  <data name="lblHelpTb2.Text" xml:space="preserve">
-    <value>Obligatoire : charger un fichier de paroles contenant les syllables synchronisées (format LRC)</value>
-  </data>
-  <data name="&gt;&gt;lblHelpTb2.Name" xml:space="preserve">
-    <value>lblHelpTb2</value>
-  </data>
-  <data name="&gt;&gt;lblHelpTb2.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;lblHelpTb2.Parent" xml:space="preserve">
-    <value>tbPageLyrics</value>
-  </data>
-  <data name="&gt;&gt;lblHelpTb2.ZOrder" xml:space="preserve">
-    <value>0</value>
-  </data>
-  <data name="btnTb2Next.Location" type="System.Drawing.Point, System.Drawing">
-    <value>630, 340</value>
-  </data>
-  <data name="btnTb2Next.Size" type="System.Drawing.Size, System.Drawing">
-    <value>75, 23</value>
-  </data>
-  <data name="btnTb2Next.TabIndex" type="System.Int32, mscorlib">
-    <value>21</value>
-  </data>
-  <data name="btnTb2Next.Text" xml:space="preserve">
-    <value>Next</value>
-  </data>
-  <data name="&gt;&gt;btnTb2Next.Name" xml:space="preserve">
-    <value>btnTb2Next</value>
-  </data>
-  <data name="&gt;&gt;btnTb2Next.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;btnTb2Next.Parent" xml:space="preserve">
-    <value>tbPageLyrics</value>
-  </data>
-  <data name="&gt;&gt;btnTb2Next.ZOrder" xml:space="preserve">
-    <value>1</value>
-  </data>
-  <data name="btnTb2Previous.Location" type="System.Drawing.Point, System.Drawing">
-    <value>549, 340</value>
-  </data>
-  <data name="btnTb2Previous.Size" type="System.Drawing.Size, System.Drawing">
-    <value>75, 23</value>
-  </data>
-  <data name="btnTb2Previous.TabIndex" type="System.Int32, mscorlib">
-    <value>20</value>
-  </data>
-  <data name="btnTb2Previous.Text" xml:space="preserve">
-    <value>Previous</value>
-  </data>
-  <data name="&gt;&gt;btnTb2Previous.Name" xml:space="preserve">
-    <value>btnTb2Previous</value>
-  </data>
-  <data name="&gt;&gt;btnTb2Previous.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;btnTb2Previous.Parent" xml:space="preserve">
-    <value>tbPageLyrics</value>
-  </data>
-  <data name="&gt;&gt;btnTb2Previous.ZOrder" xml:space="preserve">
-    <value>2</value>
-  </data>
-  <data name="txtLyrics.Location" type="System.Drawing.Point, System.Drawing">
-    <value>90, 70</value>
-  </data>
-  <data name="txtLyrics.Size" type="System.Drawing.Size, System.Drawing">
-    <value>490, 23</value>
-  </data>
-  <data name="txtLyrics.TabIndex" type="System.Int32, mscorlib">
-    <value>18</value>
-  </data>
-  <data name="&gt;&gt;txtLyrics.Name" xml:space="preserve">
-    <value>txtLyrics</value>
-  </data>
-  <data name="&gt;&gt;txtLyrics.Type" xml:space="preserve">
-    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;txtLyrics.Parent" xml:space="preserve">
-    <value>tbPageLyrics</value>
-  </data>
-  <data name="&gt;&gt;txtLyrics.ZOrder" xml:space="preserve">
-    <value>3</value>
-  </data>
-  <data name="lblLyrics.AutoSize" type="System.Boolean, mscorlib">
-    <value>True</value>
-  </data>
-  <data name="lblLyrics.Font" type="System.Drawing.Font, System.Drawing">
-    <value>Calibri, 9.75pt</value>
-  </data>
-  <data name="lblLyrics.Location" type="System.Drawing.Point, System.Drawing">
-    <value>6, 73</value>
-  </data>
-  <data name="lblLyrics.Size" type="System.Drawing.Size, System.Drawing">
-    <value>38, 15</value>
-  </data>
-  <data name="lblLyrics.TabIndex" type="System.Int32, mscorlib">
-    <value>17</value>
-  </data>
-  <data name="lblLyrics.Text" xml:space="preserve">
-    <value>Lyrics</value>
-  </data>
-  <data name="&gt;&gt;lblLyrics.Name" xml:space="preserve">
-    <value>lblLyrics</value>
-  </data>
-  <data name="&gt;&gt;lblLyrics.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;lblLyrics.Parent" xml:space="preserve">
-    <value>tbPageLyrics</value>
-  </data>
-  <data name="&gt;&gt;lblLyrics.ZOrder" xml:space="preserve">
-    <value>4</value>
-  </data>
-  <data name="btnImportLyrics.Location" type="System.Drawing.Point, System.Drawing">
-    <value>596, 69</value>
-  </data>
-  <data name="btnImportLyrics.Size" type="System.Drawing.Size, System.Drawing">
-    <value>75, 23</value>
-  </data>
-  <data name="btnImportLyrics.TabIndex" type="System.Int32, mscorlib">
-    <value>19</value>
-  </data>
-  <data name="btnImportLyrics.Text" xml:space="preserve">
-    <value>Import</value>
-  </data>
-  <data name="&gt;&gt;btnImportLyrics.Name" xml:space="preserve">
-    <value>btnImportLyrics</value>
-  </data>
-  <data name="&gt;&gt;btnImportLyrics.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;btnImportLyrics.Parent" xml:space="preserve">
-    <value>tbPageLyrics</value>
-  </data>
-  <data name="&gt;&gt;btnImportLyrics.ZOrder" xml:space="preserve">
-    <value>5</value>
   </data>
   <data name="tbPageImages.BackgroundImageLayout" type="System.Windows.Forms.ImageLayout, System.Windows.Forms">
     <value>Center</value>
@@ -1012,7 +1000,7 @@
     <value>NoControl</value>
   </data>
   <data name="lblHelpTb3.Location" type="System.Drawing.Point, System.Drawing">
-    <value>4, 4</value>
+    <value>4, 8</value>
   </data>
   <data name="lblHelpTb3.Size" type="System.Drawing.Size, System.Drawing">
     <value>697, 61</value>
@@ -1210,7 +1198,7 @@
     <value>17, 17</value>
   </metadata>
   <data name="btnCreateKfn.Location" type="System.Drawing.Point, System.Drawing">
-    <value>241, 444</value>
+    <value>237, 444</value>
   </data>
   <data name="btnCreateKfn.Size" type="System.Drawing.Size, System.Drawing">
     <value>110, 23</value>
@@ -1234,7 +1222,7 @@
     <value>2</value>
   </data>
   <data name="btnCancel.Location" type="System.Drawing.Point, System.Drawing">
-    <value>388, 444</value>
+    <value>384, 444</value>
   </data>
   <data name="btnCancel.Size" type="System.Drawing.Size, System.Drawing">
     <value>99, 23</value>
@@ -1257,189 +1245,6 @@
   <data name="&gt;&gt;btnCancel.ZOrder" xml:space="preserve">
     <value>1</value>
   </data>
-  <data name="&gt;&gt;lblHelpTb4.Name" xml:space="preserve">
-    <value>lblHelpTb4</value>
-  </data>
-  <data name="&gt;&gt;lblHelpTb4.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;lblHelpTb4.Parent" xml:space="preserve">
-    <value>tbPageBackground</value>
-  </data>
-  <data name="&gt;&gt;lblHelpTb4.ZOrder" xml:space="preserve">
-    <value>0</value>
-  </data>
-  <data name="&gt;&gt;UpDown.Name" xml:space="preserve">
-    <value>UpDown</value>
-  </data>
-  <data name="&gt;&gt;UpDown.Type" xml:space="preserve">
-    <value>System.Windows.Forms.NumericUpDown, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;UpDown.Parent" xml:space="preserve">
-    <value>tbPageBackground</value>
-  </data>
-  <data name="&gt;&gt;UpDown.ZOrder" xml:space="preserve">
-    <value>1</value>
-  </data>
-  <data name="&gt;&gt;txtLoremIpsum.Name" xml:space="preserve">
-    <value>txtLoremIpsum</value>
-  </data>
-  <data name="&gt;&gt;txtLoremIpsum.Type" xml:space="preserve">
-    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;txtLoremIpsum.Parent" xml:space="preserve">
-    <value>tbPageBackground</value>
-  </data>
-  <data name="&gt;&gt;txtLoremIpsum.ZOrder" xml:space="preserve">
-    <value>2</value>
-  </data>
-  <data name="&gt;&gt;lblFont.Name" xml:space="preserve">
-    <value>lblFont</value>
-  </data>
-  <data name="&gt;&gt;lblFont.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;lblFont.Parent" xml:space="preserve">
-    <value>tbPageBackground</value>
-  </data>
-  <data name="&gt;&gt;lblFont.ZOrder" xml:space="preserve">
-    <value>3</value>
-  </data>
-  <data name="&gt;&gt;cbFont.Name" xml:space="preserve">
-    <value>cbFont</value>
-  </data>
-  <data name="&gt;&gt;cbFont.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ComboBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;cbFont.Parent" xml:space="preserve">
-    <value>tbPageBackground</value>
-  </data>
-  <data name="&gt;&gt;cbFont.ZOrder" xml:space="preserve">
-    <value>4</value>
-  </data>
-  <data name="&gt;&gt;btnBgColorPicker.Name" xml:space="preserve">
-    <value>btnBgColorPicker</value>
-  </data>
-  <data name="&gt;&gt;btnBgColorPicker.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;btnBgColorPicker.Parent" xml:space="preserve">
-    <value>tbPageBackground</value>
-  </data>
-  <data name="&gt;&gt;btnBgColorPicker.ZOrder" xml:space="preserve">
-    <value>5</value>
-  </data>
-  <data name="&gt;&gt;btnBgColorSelect.Name" xml:space="preserve">
-    <value>btnBgColorSelect</value>
-  </data>
-  <data name="&gt;&gt;btnBgColorSelect.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;btnBgColorSelect.Parent" xml:space="preserve">
-    <value>tbPageBackground</value>
-  </data>
-  <data name="&gt;&gt;btnBgColorSelect.ZOrder" xml:space="preserve">
-    <value>6</value>
-  </data>
-  <data name="&gt;&gt;picBgColor.Name" xml:space="preserve">
-    <value>picBgColor</value>
-  </data>
-  <data name="&gt;&gt;picBgColor.Type" xml:space="preserve">
-    <value>System.Windows.Forms.PictureBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;picBgColor.Parent" xml:space="preserve">
-    <value>tbPageBackground</value>
-  </data>
-  <data name="&gt;&gt;picBgColor.ZOrder" xml:space="preserve">
-    <value>7</value>
-  </data>
-  <data name="&gt;&gt;txtBgColor.Name" xml:space="preserve">
-    <value>txtBgColor</value>
-  </data>
-  <data name="&gt;&gt;txtBgColor.Type" xml:space="preserve">
-    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;txtBgColor.Parent" xml:space="preserve">
-    <value>tbPageBackground</value>
-  </data>
-  <data name="&gt;&gt;txtBgColor.ZOrder" xml:space="preserve">
-    <value>8</value>
-  </data>
-  <data name="&gt;&gt;lblColor.Name" xml:space="preserve">
-    <value>lblColor</value>
-  </data>
-  <data name="&gt;&gt;lblColor.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;lblColor.Parent" xml:space="preserve">
-    <value>tbPageBackground</value>
-  </data>
-  <data name="&gt;&gt;lblColor.ZOrder" xml:space="preserve">
-    <value>9</value>
-  </data>
-  <data name="&gt;&gt;btnTb4Previous.Name" xml:space="preserve">
-    <value>btnTb4Previous</value>
-  </data>
-  <data name="&gt;&gt;btnTb4Previous.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;btnTb4Previous.Parent" xml:space="preserve">
-    <value>tbPageBackground</value>
-  </data>
-  <data name="&gt;&gt;btnTb4Previous.ZOrder" xml:space="preserve">
-    <value>10</value>
-  </data>
-  <data name="tbPageBackground.Location" type="System.Drawing.Point, System.Drawing">
-    <value>4, 27</value>
-  </data>
-  <data name="tbPageBackground.Size" type="System.Drawing.Size, System.Drawing">
-    <value>713, 370</value>
-  </data>
-  <data name="tbPageBackground.TabIndex" type="System.Int32, mscorlib">
-    <value>3</value>
-  </data>
-  <data name="tbPageBackground.Text" xml:space="preserve">
-    <value>Background</value>
-  </data>
-  <data name="&gt;&gt;tbPageBackground.Name" xml:space="preserve">
-    <value>tbPageBackground</value>
-  </data>
-  <data name="&gt;&gt;tbPageBackground.Type" xml:space="preserve">
-    <value>System.Windows.Forms.TabPage, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;tbPageBackground.Parent" xml:space="preserve">
-    <value>tbControl</value>
-  </data>
-  <data name="&gt;&gt;tbPageBackground.ZOrder" xml:space="preserve">
-    <value>3</value>
-  </data>
-  <data name="tbControl.Font" type="System.Drawing.Font, System.Drawing">
-    <value>Calibri, 9.75pt</value>
-  </data>
-  <data name="tbControl.ItemSize" type="System.Drawing.Size, System.Drawing">
-    <value>60, 23</value>
-  </data>
-  <data name="tbControl.Location" type="System.Drawing.Point, System.Drawing">
-    <value>4, 25</value>
-  </data>
-  <data name="tbControl.Size" type="System.Drawing.Size, System.Drawing">
-    <value>721, 401</value>
-  </data>
-  <data name="tbControl.TabIndex" type="System.Int32, mscorlib">
-    <value>11</value>
-  </data>
-  <data name="&gt;&gt;tbControl.Name" xml:space="preserve">
-    <value>tbControl</value>
-  </data>
-  <data name="&gt;&gt;tbControl.Type" xml:space="preserve">
-    <value>System.Windows.Forms.TabControl, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;tbControl.Parent" xml:space="preserve">
-    <value>$this</value>
-  </data>
-  <data name="&gt;&gt;tbControl.ZOrder" xml:space="preserve">
-    <value>0</value>
-  </data>
   <data name="lblHelpTb4.Font" type="System.Drawing.Font, System.Drawing">
     <value>Calibri, 9pt</value>
   </data>
@@ -1447,7 +1252,7 @@
     <value>NoControl</value>
   </data>
   <data name="lblHelpTb4.Location" type="System.Drawing.Point, System.Drawing">
-    <value>4, 4</value>
+    <value>4, 8</value>
   </data>
   <data name="lblHelpTb4.Size" type="System.Drawing.Size, System.Drawing">
     <value>697, 61</value>
@@ -1470,28 +1275,28 @@
   <data name="&gt;&gt;lblHelpTb4.ZOrder" xml:space="preserve">
     <value>0</value>
   </data>
-  <data name="UpDown.Location" type="System.Drawing.Point, System.Drawing">
+  <data name="UpDownFontSize.Location" type="System.Drawing.Point, System.Drawing">
     <value>300, 136</value>
   </data>
-  <data name="UpDown.Size" type="System.Drawing.Size, System.Drawing">
+  <data name="UpDownFontSize.Size" type="System.Drawing.Size, System.Drawing">
     <value>40, 23</value>
   </data>
-  <data name="UpDown.TabIndex" type="System.Int32, mscorlib">
+  <data name="UpDownFontSize.TabIndex" type="System.Int32, mscorlib">
     <value>38</value>
   </data>
-  <data name="UpDown.TextAlign" type="System.Windows.Forms.HorizontalAlignment, System.Windows.Forms">
+  <data name="UpDownFontSize.TextAlign" type="System.Windows.Forms.HorizontalAlignment, System.Windows.Forms">
     <value>Right</value>
   </data>
-  <data name="&gt;&gt;UpDown.Name" xml:space="preserve">
-    <value>UpDown</value>
+  <data name="&gt;&gt;UpDownFontSize.Name" xml:space="preserve">
+    <value>UpDownFontSize</value>
   </data>
-  <data name="&gt;&gt;UpDown.Type" xml:space="preserve">
+  <data name="&gt;&gt;UpDownFontSize.Type" xml:space="preserve">
     <value>System.Windows.Forms.NumericUpDown, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="&gt;&gt;UpDown.Parent" xml:space="preserve">
+  <data name="&gt;&gt;UpDownFontSize.Parent" xml:space="preserve">
     <value>tbPageBackground</value>
   </data>
-  <data name="&gt;&gt;UpDown.ZOrder" xml:space="preserve">
+  <data name="&gt;&gt;UpDownFontSize.ZOrder" xml:space="preserve">
     <value>1</value>
   </data>
   <data name="txtLoremIpsum.Font" type="System.Drawing.Font, System.Drawing">
@@ -1557,25 +1362,25 @@
   <data name="&gt;&gt;lblFont.ZOrder" xml:space="preserve">
     <value>3</value>
   </data>
-  <data name="cbFont.Location" type="System.Drawing.Point, System.Drawing">
+  <data name="cbFontName.Location" type="System.Drawing.Point, System.Drawing">
     <value>153, 136</value>
   </data>
-  <data name="cbFont.Size" type="System.Drawing.Size, System.Drawing">
+  <data name="cbFontName.Size" type="System.Drawing.Size, System.Drawing">
     <value>137, 23</value>
   </data>
-  <data name="cbFont.TabIndex" type="System.Int32, mscorlib">
+  <data name="cbFontName.TabIndex" type="System.Int32, mscorlib">
     <value>35</value>
   </data>
-  <data name="&gt;&gt;cbFont.Name" xml:space="preserve">
-    <value>cbFont</value>
+  <data name="&gt;&gt;cbFontName.Name" xml:space="preserve">
+    <value>cbFontName</value>
   </data>
-  <data name="&gt;&gt;cbFont.Type" xml:space="preserve">
+  <data name="&gt;&gt;cbFontName.Type" xml:space="preserve">
     <value>System.Windows.Forms.ComboBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="&gt;&gt;cbFont.Parent" xml:space="preserve">
+  <data name="&gt;&gt;cbFontName.Parent" xml:space="preserve">
     <value>tbPageBackground</value>
   </data>
-  <data name="&gt;&gt;cbFont.ZOrder" xml:space="preserve">
+  <data name="&gt;&gt;cbFontName.ZOrder" xml:space="preserve">
     <value>4</value>
   </data>
   <data name="btnBgColorPicker.Location" type="System.Drawing.Point, System.Drawing">
@@ -1725,9 +1530,111 @@
   <data name="&gt;&gt;btnTb4Previous.ZOrder" xml:space="preserve">
     <value>10</value>
   </data>
+  <data name="tbPageBackground.Location" type="System.Drawing.Point, System.Drawing">
+    <value>4, 27</value>
+  </data>
+  <data name="tbPageBackground.Size" type="System.Drawing.Size, System.Drawing">
+    <value>713, 370</value>
+  </data>
+  <data name="tbPageBackground.TabIndex" type="System.Int32, mscorlib">
+    <value>3</value>
+  </data>
+  <data name="tbPageBackground.Text" xml:space="preserve">
+    <value>Background</value>
+  </data>
+  <data name="&gt;&gt;tbPageBackground.Name" xml:space="preserve">
+    <value>tbPageBackground</value>
+  </data>
+  <data name="&gt;&gt;tbPageBackground.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TabPage, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;tbPageBackground.Parent" xml:space="preserve">
+    <value>tbControl</value>
+  </data>
+  <data name="&gt;&gt;tbPageBackground.ZOrder" xml:space="preserve">
+    <value>3</value>
+  </data>
+  <data name="tbControl.Font" type="System.Drawing.Font, System.Drawing">
+    <value>Calibri, 9.75pt</value>
+  </data>
+  <data name="tbControl.ItemSize" type="System.Drawing.Size, System.Drawing">
+    <value>60, 23</value>
+  </data>
+  <data name="tbControl.Location" type="System.Drawing.Point, System.Drawing">
+    <value>0, 23</value>
+  </data>
+  <data name="tbControl.Size" type="System.Drawing.Size, System.Drawing">
+    <value>721, 401</value>
+  </data>
+  <data name="tbControl.TabIndex" type="System.Int32, mscorlib">
+    <value>11</value>
+  </data>
+  <data name="&gt;&gt;tbControl.Name" xml:space="preserve">
+    <value>tbControl</value>
+  </data>
+  <data name="&gt;&gt;tbControl.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TabControl, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;tbControl.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;tbControl.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
   <metadata name="ColorDialog.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>152, 17</value>
   </metadata>
+  <metadata name="menuStrip1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>269, 17</value>
+  </metadata>
+  <data name="mnuFileQuit.Size" type="System.Drawing.Size, System.Drawing">
+    <value>97, 22</value>
+  </data>
+  <data name="mnuFileQuit.Text" xml:space="preserve">
+    <value>&amp;Quit</value>
+  </data>
+  <data name="mnuFile.Size" type="System.Drawing.Size, System.Drawing">
+    <value>37, 20</value>
+  </data>
+  <data name="mnuFile.Text" xml:space="preserve">
+    <value>&amp;File</value>
+  </data>
+  <data name="mnuHelpAbout.Size" type="System.Drawing.Size, System.Drawing">
+    <value>107, 22</value>
+  </data>
+  <data name="mnuHelpAbout.Text" xml:space="preserve">
+    <value>&amp;About</value>
+  </data>
+  <data name="mnuHelp.Size" type="System.Drawing.Size, System.Drawing">
+    <value>44, 20</value>
+  </data>
+  <data name="mnuHelp.Text" xml:space="preserve">
+    <value>&amp;Help</value>
+  </data>
+  <data name="menuStrip1.Location" type="System.Drawing.Point, System.Drawing">
+    <value>0, 0</value>
+  </data>
+  <data name="menuStrip1.Size" type="System.Drawing.Size, System.Drawing">
+    <value>721, 24</value>
+  </data>
+  <data name="menuStrip1.TabIndex" type="System.Int32, mscorlib">
+    <value>42</value>
+  </data>
+  <data name="menuStrip1.Text" xml:space="preserve">
+    <value>menuStrip1</value>
+  </data>
+  <data name="&gt;&gt;menuStrip1.Name" xml:space="preserve">
+    <value>menuStrip1</value>
+  </data>
+  <data name="&gt;&gt;menuStrip1.Type" xml:space="preserve">
+    <value>System.Windows.Forms.MenuStrip, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;menuStrip1.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;menuStrip1.ZOrder" xml:space="preserve">
+    <value>3</value>
+  </data>
   <metadata name="$this.Localizable" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
   </metadata>
@@ -1735,7 +1642,7 @@
     <value>6, 13</value>
   </data>
   <data name="$this.ClientSize" type="System.Drawing.Size, System.Drawing">
-    <value>728, 476</value>
+    <value>721, 476</value>
   </data>
   <data name="$this.Icon" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
@@ -1881,6 +1788,30 @@
   </data>
   <data name="&gt;&gt;ColorDialog.Type" xml:space="preserve">
     <value>System.Windows.Forms.ColorDialog, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;mnuFile.Name" xml:space="preserve">
+    <value>mnuFile</value>
+  </data>
+  <data name="&gt;&gt;mnuFile.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;mnuFileQuit.Name" xml:space="preserve">
+    <value>mnuFileQuit</value>
+  </data>
+  <data name="&gt;&gt;mnuFileQuit.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;mnuHelp.Name" xml:space="preserve">
+    <value>mnuHelp</value>
+  </data>
+  <data name="&gt;&gt;mnuHelp.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;mnuHelpAbout.Name" xml:space="preserve">
+    <value>mnuHelpAbout</value>
+  </data>
+  <data name="&gt;&gt;mnuHelpAbout.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;$this.Name" xml:space="preserve">
     <value>frmKfnCreate</value>

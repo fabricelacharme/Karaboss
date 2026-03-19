@@ -6,8 +6,8 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{3C65AED8-CF22-4533-BBC1-9000683688B8}</ProjectGuid>
     <OutputType>Library</OutputType>
-    <RootNamespace>KFNViewer</RootNamespace>
-    <AssemblyName>KFNViewer</AssemblyName>
+    <RootNamespace>KFNV</RootNamespace>
+    <AssemblyName>KFNV</AssemblyName>
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
