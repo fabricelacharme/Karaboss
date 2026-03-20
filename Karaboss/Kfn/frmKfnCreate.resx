@@ -211,13 +211,13 @@
     <value>4, 222</value>
   </data>
   <data name="lblArtist.Size" type="System.Drawing.Size, System.Drawing">
-    <value>39, 15</value>
+    <value>36, 15</value>
   </data>
   <data name="lblArtist.TabIndex" type="System.Int32, mscorlib">
     <value>10</value>
   </data>
   <data name="lblArtist.Text" xml:space="preserve">
-    <value>Artist:</value>
+    <value>Artist</value>
   </data>
   <data name="&gt;&gt;lblArtist.Name" xml:space="preserve">
     <value>lblArtist</value>
@@ -283,13 +283,13 @@
     <value>4, 309</value>
   </data>
   <data name="lblAuthor.Size" type="System.Drawing.Size, System.Drawing">
-    <value>47, 15</value>
+    <value>44, 15</value>
   </data>
   <data name="lblAuthor.TabIndex" type="System.Int32, mscorlib">
     <value>16</value>
   </data>
   <data name="lblAuthor.Text" xml:space="preserve">
-    <value>Author:</value>
+    <value>Author</value>
   </data>
   <data name="&gt;&gt;lblAuthor.Name" xml:space="preserve">
     <value>lblAuthor</value>
@@ -334,13 +334,13 @@
     <value>4, 280</value>
   </data>
   <data name="lblYear.Size" type="System.Drawing.Size, System.Drawing">
-    <value>33, 15</value>
+    <value>30, 15</value>
   </data>
   <data name="lblYear.TabIndex" type="System.Int32, mscorlib">
     <value>14</value>
   </data>
   <data name="lblYear.Text" xml:space="preserve">
-    <value>Year:</value>
+    <value>Year</value>
   </data>
   <data name="&gt;&gt;lblYear.Name" xml:space="preserve">
     <value>lblYear</value>
@@ -508,13 +508,13 @@
     <value>4, 251</value>
   </data>
   <data name="label2.Size" type="System.Drawing.Size, System.Drawing">
-    <value>61, 15</value>
+    <value>58, 15</value>
   </data>
   <data name="label2.TabIndex" type="System.Int32, mscorlib">
     <value>12</value>
   </data>
   <data name="label2.Text" xml:space="preserve">
-    <value>Comment:</value>
+    <value>Comment</value>
   </data>
   <data name="&gt;&gt;label2.Name" xml:space="preserve">
     <value>label2</value>
@@ -559,13 +559,13 @@
     <value>4, 193</value>
   </data>
   <data name="label1.Size" type="System.Drawing.Size, System.Drawing">
-    <value>34, 15</value>
+    <value>31, 15</value>
   </data>
   <data name="label1.TabIndex" type="System.Int32, mscorlib">
     <value>8</value>
   </data>
   <data name="label1.Text" xml:space="preserve">
-    <value>Title:</value>
+    <value>Title</value>
   </data>
   <data name="&gt;&gt;label1.Name" xml:space="preserve">
     <value>label1</value>
@@ -697,7 +697,7 @@
     <value>24</value>
   </data>
   <data name="lblLyricsUpdate.Text" xml:space="preserve">
-    <value>Créer, modifier, caler vos paroles</value>
+    <value>Create, edit, and sync your lyrics</value>
   </data>
   <data name="lblLyricsUpdate.Visible" type="System.Boolean, mscorlib">
     <value>False</value>
@@ -1276,13 +1276,13 @@
     <value>8, 276</value>
   </data>
   <data name="lblBorder.Size" type="System.Drawing.Size, System.Drawing">
-    <value>47, 15</value>
+    <value>44, 15</value>
   </data>
   <data name="lblBorder.TabIndex" type="System.Int32, mscorlib">
     <value>60</value>
   </data>
   <data name="lblBorder.Text" xml:space="preserve">
-    <value>Border:</value>
+    <value>Border</value>
   </data>
   <data name="&gt;&gt;lblBorder.Name" xml:space="preserve">
     <value>lblBorder</value>
@@ -1408,13 +1408,13 @@
     <value>8, 247</value>
   </data>
   <data name="lblInactiveColorBorder.Size" type="System.Drawing.Size, System.Drawing">
-    <value>125, 15</value>
+    <value>122, 15</value>
   </data>
   <data name="lblInactiveColorBorder.TabIndex" type="System.Int32, mscorlib">
     <value>56</value>
   </data>
   <data name="lblInactiveColorBorder.Text" xml:space="preserve">
-    <value>Inactive color border:</value>
+    <value>Inactive color border</value>
   </data>
   <data name="&gt;&gt;lblInactiveColorBorder.Name" xml:space="preserve">
     <value>lblInactiveColorBorder</value>
@@ -1540,13 +1540,13 @@
     <value>8, 218</value>
   </data>
   <data name="lblActiveColorBorder.Size" type="System.Drawing.Size, System.Drawing">
-    <value>114, 15</value>
+    <value>111, 15</value>
   </data>
   <data name="lblActiveColorBorder.TabIndex" type="System.Int32, mscorlib">
     <value>51</value>
   </data>
   <data name="lblActiveColorBorder.Text" xml:space="preserve">
-    <value>Active color border:</value>
+    <value>Active color border</value>
   </data>
   <data name="&gt;&gt;lblActiveColorBorder.Name" xml:space="preserve">
     <value>lblActiveColorBorder</value>
@@ -1672,13 +1672,13 @@
     <value>8, 189</value>
   </data>
   <data name="lblInactiveColor.Size" type="System.Drawing.Size, System.Drawing">
-    <value>85, 15</value>
+    <value>82, 15</value>
   </data>
   <data name="lblInactiveColor.TabIndex" type="System.Int32, mscorlib">
     <value>46</value>
   </data>
   <data name="lblInactiveColor.Text" xml:space="preserve">
-    <value>Inactive color:</value>
+    <value>Inactive color</value>
   </data>
   <data name="&gt;&gt;lblInactiveColor.Name" xml:space="preserve">
     <value>lblInactiveColor</value>
@@ -1804,13 +1804,13 @@
     <value>8, 160</value>
   </data>
   <data name="lblActiveColor.Size" type="System.Drawing.Size, System.Drawing">
-    <value>74, 15</value>
+    <value>71, 15</value>
   </data>
   <data name="lblActiveColor.TabIndex" type="System.Int32, mscorlib">
     <value>41</value>
   </data>
   <data name="lblActiveColor.Text" xml:space="preserve">
-    <value>Active color:</value>
+    <value>Active color</value>
   </data>
   <data name="&gt;&gt;lblActiveColor.Name" xml:space="preserve">
     <value>lblActiveColor</value>
@@ -1921,13 +1921,13 @@
     <value>8, 109</value>
   </data>
   <data name="lblFont.Size" type="System.Drawing.Size, System.Drawing">
-    <value>34, 15</value>
+    <value>31, 15</value>
   </data>
   <data name="lblFont.TabIndex" type="System.Int32, mscorlib">
     <value>36</value>
   </data>
   <data name="lblFont.Text" xml:space="preserve">
-    <value>Font:</value>
+    <value>Font</value>
   </data>
   <data name="&gt;&gt;lblFont.Name" xml:space="preserve">
     <value>lblFont</value>
@@ -2065,13 +2065,13 @@
     <value>8, 80</value>
   </data>
   <data name="lblColor.Size" type="System.Drawing.Size, System.Drawing">
-    <value>107, 15</value>
+    <value>104, 15</value>
   </data>
   <data name="lblColor.TabIndex" type="System.Int32, mscorlib">
     <value>30</value>
   </data>
   <data name="lblColor.Text" xml:space="preserve">
-    <value>Background color:</value>
+    <value>Background color</value>
   </data>
   <data name="&gt;&gt;lblColor.Name" xml:space="preserve">
     <value>lblColor</value>

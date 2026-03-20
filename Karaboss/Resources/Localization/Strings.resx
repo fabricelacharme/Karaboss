@@ -583,4 +583,31 @@
   <data name="FileCreatedSucessfully" xml:space="preserve">
     <value>The file {0}{1}{0}{0}was created successfully in the directory{0}{2}</value>
   </data>
+  <data name="KfnBorderNoBorder" xml:space="preserve">
+    <value>No border</value>
+  </data>
+  <data name="KfnBorderFrameThin" xml:space="preserve">
+    <value>Thin border</value>
+  </data>
+  <data name="KfnBorderFrame1" xml:space="preserve">
+    <value>1 - pixel border</value>
+  </data>
+  <data name="KfnBorderFrame2" xml:space="preserve">
+    <value>2 - pixel border</value>
+  </data>
+  <data name="KfnBorderFrame3" xml:space="preserve">
+    <value>3 - pixel border</value>
+  </data>
+  <data name="KfnBorderFrame4" xml:space="preserve">
+    <value>4 - pixel border</value>
+  </data>
+  <data name="KfnBorderFrame5" xml:space="preserve">
+    <value>5 - pixel border</value>
+  </data>
+  <data name="KfnBorderShadow" xml:space="preserve">
+    <value>Shaded</value>
+  </data>
+  <data name="KfnBorderNeon" xml:space="preserve">
+    <value>Neon</value>
+  </data>
 </root>

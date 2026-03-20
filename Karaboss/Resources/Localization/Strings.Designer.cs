@@ -1601,5 +1601,69 @@ namespace Karaboss.Resources.Localization {
                 return ResourceManager.GetString("FileCreatedSucessfully", resourceCulture);
             }
         }
+        internal static string KfnBorderNoBorder
+        {
+            get
+            {
+                return ResourceManager.GetString("KfnBorderNoBorder", resourceCulture);
+            }
+        }
+
+        internal static string KfnBorderFrameThin
+        {
+            get
+            {
+                return ResourceManager.GetString("KfnBorderFrameThin", resourceCulture);
+            }
+        }
+        internal static string KfnBorderFrame1
+        {
+            get
+            {
+                return ResourceManager.GetString("KfnBorderFrame1", resourceCulture);
+            }
+        }
+        internal static string KfnBorderFrame2
+        {
+            get
+            {
+                return ResourceManager.GetString("KfnBorderFrame2", resourceCulture);
+            }
+        }
+        internal static string KfnBorderFrame3
+        {
+            get
+            {
+                return ResourceManager.GetString("KfnBorderFrame3", resourceCulture);
+            }
+        }
+        internal static string KfnBorderFrame4
+        {
+            get
+            {
+                return ResourceManager.GetString("KfnBorderFrame4", resourceCulture);
+            }
+        }
+        internal static string KfnBorderFrame5
+        {
+            get
+            {
+                return ResourceManager.GetString("KfnBorderFrame5", resourceCulture);
+            }
+        }
+        internal static string KfnBorderShadow
+        {
+            get
+            {
+                return ResourceManager.GetString("KfnBorderShadow", resourceCulture);
+            }
+        }
+        internal static string KfnBorderNeon
+        {
+            get
+            {
+                return ResourceManager.GetString("KfnBorderNeon", resourceCulture);
+            }
+        }
     }
 }

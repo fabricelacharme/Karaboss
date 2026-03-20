@@ -1,4 +1,5 @@
 ﻿using Hqub.MusicBrainz.API.Entities;
+using Karaboss.Lrc.SharedFramework;
 using Karaboss.Mp3;
 using Karaboss.Resources.Localization;
 using KFNV;
@@ -91,14 +92,33 @@ namespace Karaboss.Kfn
 
         }
 
+        /// <summary>
+        /// Frames
+        /// </summary>
         private void PopulateLyricBorders()
         {
 
+            Dictionary<string,string> Frames = new Dictionary<string,string>();
+            Frames.Add("NoBorder", Strings.KfnBorderNoBorder);
+            Frames.Add("FrameThin", Strings.KfnBorderFrameThin);
+            Frames.Add("Frame1", Strings.KfnBorderFrame1);
+            Frames.Add("Frame2", Strings.KfnBorderFrame2);
+            Frames.Add("Frame3", Strings.KfnBorderFrame3);
+            Frames.Add("Frame4", Strings.KfnBorderFrame4);
+            Frames.Add("Frame5", Strings.KfnBorderFrame5);
+            Frames.Add("Shadow", Strings.KfnBorderShadow);
+            Frames.Add("Neon", Strings.KfnBorderNeon);
+
+            /*
             //List<string> lstBorders = new List<string>() { "Aucune bordure", "Fine bordure", "Bordure 1 pixel", "Bordure 2 pixel", "Bordure 3 pixel", "Bordure 4 pixel", "Bordure 5 pixel", "Ombré", "Neon" };
             List<string> lstBorders = new List<string>() { "NoBorder", "FrameThin", "Frame1", "Frame2", "Frame3", "Frame4", "Frame5", "Shadow", "Neon" };
-
             //List<string> lstBorders = new List<string>() { "No border", "Thin border", "1 - pixel border", "2 - pixel border", "3 - pixel border", "4 - pixel border", "5 - pixel border", "Shaded", "Neon" };
             cbFrame.DataSource = lstBorders;
+            */
+
+            cbFrame.DataSource = new BindingSource(Frames, null);
+            cbFrame.ValueMember = "Key";
+            cbFrame.DisplayMember = "Value";
 
             if (cbFrame.Items.Count > 2 )
                 cbFrame.SelectedIndex = 2; // 1 pixel
@@ -392,8 +412,9 @@ namespace Karaboss.Kfn
             InactiveColor = txtInactiveColor.Text.Trim();
             FrameColor = txtActiveColorBorder.Text.Trim();
             InactiveFrameColor = txtInactiveColorBorder.Text.Trim();
-            FrameType = cbFrame.Items[cbFrame.SelectedIndex].ToString();
-
+            
+            
+            FrameType = ((KeyValuePair<string, string>)cbFrame.SelectedItem).Key;
 
             Dictionary<string, string> KfnParameters = new Dictionary<string, string> ();
             KfnParameters.Add("Artist", Artist);
