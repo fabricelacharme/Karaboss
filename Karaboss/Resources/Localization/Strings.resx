@@ -569,7 +569,7 @@
   </data>
   <data name="kfnCreateTb1" xml:space="preserve">
     <value>You must upload at least one audio file (MP3) to audio1.{0}If you want a vocal guide, you must upload two audio files:
-{0}An instrumental file to audio1 and a file with vocals to audio2.</value>
+{0}A file with vocals to audio1 and an instrumental files to audio2.</value>
   </data>
   <data name="kfnCreateTb2" xml:space="preserve">
     <value>Required: Upload a lyrics file containing synchronized syllables (LRC format)</value>

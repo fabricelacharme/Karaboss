@@ -96,13 +96,17 @@ namespace KFNV
         /// Create a new KFN file
         /// </summary>
         public string  CreateKFN()
-        {           
-            string Source = Path.GetFileName(lstAudioFiles[0]);
+        {
+            string Source = string.Empty;
+
+            // Source is the instrumental audio file in 2nd position
+            if (lstAudioFiles.Count > 1) 
+                Source = Path.GetFileName(lstAudioFiles[1]);
 
             // Populate resources with audios, images except Song.ini
             AddFilesToRessource();
 
-            // Convert LRC File
+            // Convert LRC File to Song.ini format
             (List<int>, List<string>) Eff2Lyrics = LrcToIni(lyricsFileName);
             
 
@@ -430,7 +434,15 @@ namespace KFNV
         /// <summary>
         /// Create Song.ini file
         /// </summary>
-        /// <param name="fs"></param>
+        /// <param name="Source" Source is the intrumental audio file in 2nd position></param>
+        /// <param name="Title"></param>
+        /// <param name="Artist"></param>
+        /// <param name="Comment"></param>
+        /// <param name="Year"></param>
+        /// <param name="Author"></param>
+        /// <param name="BgColor"></param>
+        /// <param name="Font"></param>
+        /// <param name="Eff2Lyrics"></param>
         private void CreateIniFile(string Source, string Title, string Artist, string Comment, string Year, string Author, string BgColor, (string, uint) Font, (List<int>, List<string>) Eff2Lyrics )  
         {            
             kfnIni.PopulateEmpty();
@@ -459,7 +471,6 @@ namespace KFNV
             KaraFunization = Dankaraok
             InfoScreenBmp =
             */
-
 
             KfnHeader kfnHeader = new KfnHeader();
             kfnHeader.Title = Title;

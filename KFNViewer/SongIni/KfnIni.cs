@@ -649,9 +649,9 @@ namespace KFNV.SongIni
             //[MP3Music]
             //NumTracks = 1
             //Track0 = Richard_Anthony_Yaya_twist_(Instrumental_avec_chanteur)_17711.mp3,0,-1,,
-            if (audios_resources != null && audios_resources.Count() == 2)
+            if (audios_resources != null && audios_resources.Count() > 0)
             {
-                string AudioFileWithSinger = audios_resources[1].FileName;
+                string AudioFileWithSinger = audios_resources[0].FileName;
                 string value = AudioFileWithSinger + ",0,-1,,";
                 Ini["MP3Music"]["NumTracks"] = "1";
                 Ini["MP3Music"]["Track0"] = value;

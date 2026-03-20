@@ -58,8 +58,8 @@ namespace Karaboss.Kfn
             tx = string.Format(tx, Environment.NewLine);
             lblHelpTb4.Text = tx;
 
-            ftName = "Arial";
-            ftSize = 18;
+            ftName = "Arial Black";
+            ftSize = 20;
 
             PopulateFonts();
         }
@@ -67,7 +67,7 @@ namespace Karaboss.Kfn
         #region select audios
 
         /// <summary>
-        /// Import mp3 file
+        /// Import audio file with vocals
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -79,6 +79,9 @@ namespace Karaboss.Kfn
             {
 
                 OpenFileDialog.Filter = "Mp3 files (*.mp3)|*.mp3|All files (*.*)|*.*";
+                OpenFileDialog.FileName = string.Empty;
+                OpenFileDialog.Title = "Vocal audio";
+
                 if (OpenFileDialog.ShowDialog() != DialogResult.OK) return;
 
                 FileName = OpenFileDialog.FileName;
@@ -99,12 +102,20 @@ namespace Karaboss.Kfn
             }
         }
 
+        /// <summary>
+        /// Import audio file instrumental
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void btnImportAudio2_Click(object sender, EventArgs e)
         {
             string FileName;
             try
             {
                 OpenFileDialog.Filter = "Mp3 files (*.mp3)|*.mp3|All files (*.*)|*.*";
+                OpenFileDialog.FileName = string.Empty;
+                OpenFileDialog.Title = "Instrumental audio";
+
                 if (OpenFileDialog.ShowDialog() != DialogResult.OK) return;
 
                 FileName = OpenFileDialog.FileName;
@@ -124,11 +135,28 @@ namespace Karaboss.Kfn
         /// <param name="FileName"></param>
         private void SetTitleFromFile(string FileName)
         {
-            string Title = txtTitle.Text.Trim();
-            if (Title.Length == 0)
-                Title = Path.GetFileNameWithoutExtension(FileName);
+                        
+            if (txtTitle.Text.Trim().Length > 0) return;
 
-            txtTitle.Text = Title;
+
+            string artist = string.Empty;
+            string song = string.Empty;
+            string sname = Path.GetFileNameWithoutExtension(FileName);
+
+            int n = sname.IndexOf(" - ");
+            if (n > 0)
+            {
+                artist = sname.Substring(0, n);
+                song = sname.Substring(n + 3);
+
+            }
+            else
+            {
+                song = sname;
+            }
+
+            txtTitle.Text = song;
+            txtArtist.Text = artist;
 
             string kfnFile = Path.ChangeExtension(Path.GetFileName(FileName), ".kfn");
             txtKfnFileName.Text = kfnFile;
@@ -207,6 +235,8 @@ namespace Karaboss.Kfn
 
         private void btnCreateKfn_Click(object sender, EventArgs e)
         {
+            tbControl.SelectedTab = tbPageAudios;
+
             // Create KFN File
             CreateKfnFile();
         }
@@ -332,10 +362,12 @@ namespace Karaboss.Kfn
                 string result = Writer.CreateKFN();
 
                 if (result != null)
+                {
                     txtKfnFileName.Text = result;
+                    btnPlay.Visible = true;
+                }
             }
-
-            btnPlay.Visible = true;
+            
             Cursor = Cursors.Default;
         }
 
@@ -514,7 +546,7 @@ namespace Karaboss.Kfn
             //List<string> fontNames = new List<string>() { "Arial", "Arial Black", "Arial Unicode MS", "Courier New", "Georgia", "Impact", "Tahoma", "Times New Roman", "Verdana" };
             //cbFontName.DataSource = fontNames;
 
-            cbFontName.SelectedIndex = cbFontName.FindString("Arial");
+            cbFontName.SelectedIndex = cbFontName.FindString("Arial Black");
         }
 
 
@@ -635,10 +667,6 @@ namespace Karaboss.Kfn
             e.Graphics.DrawString(tbControl.TabPages[e.Index].Text, f, b, paddedBounds);
 
         }
-
-
-
-
 
         #endregion tabControl
 

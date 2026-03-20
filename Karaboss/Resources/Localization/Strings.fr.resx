@@ -568,8 +568,7 @@
     <value>Toutes les lignes à partir de cette ligne</value>
   </data>
   <data name="kfnCreateTb1" xml:space="preserve">
-    <value>Vous devez obligatoirement charger au moins un fichier audio (mp3) dans audio1.{0}Si vous voulez un guide vocal, vous devez charger deux fichiers audio :{0}Un fichier instrumental dans audio1 et un fichier avec la voix dans audio2.
-</value>
+    <value>Vous devez télécharger au moins un fichier audio (MP3) dans audio1.{0}Si vous souhaitez un guide vocal, vous devez télécharger deux fichiers audio :{0}un fichier avec la voix dans audio1 et un fichier instrumental dans audio2.</value>
   </data>
   <data name="kfnCreateTb2" xml:space="preserve">
     <value>Obligatoire : charger un fichier de paroles contenant les syllabes synchronisées (format LRC)</value>
