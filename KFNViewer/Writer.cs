@@ -100,9 +100,13 @@ namespace KFNV
             string Source = string.Empty;
 
             // Source is the instrumental audio file in 2nd position
-            if (lstAudioFiles.Count > 1) 
-                Source = Path.GetFileName(lstAudioFiles[1]);
-
+            if (lstAudioFiles.Count > 0)
+            {
+                if (lstAudioFiles.Count > 1)
+                    Source = Path.GetFileName(lstAudioFiles[1]);
+                else
+                    Source = Path.GetFileName(lstAudioFiles[0]);
+            }
             // Populate resources with audios, images except Song.ini
             AddFilesToRessource();
 
@@ -171,11 +175,9 @@ namespace KFNV
 
                     // Write files contents
                     WriteFilesContents(fs);
-                }
-
-                string tx = string.Format("The File \n{0} \nwas created in the directory\n {1}", Path.GetFileName(fullFileName), Path.GetDirectoryName(fullFileName));
-                MessageBox.Show(tx, Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Information);
-
+                }                
+                //string tx = string.Format("The File\n{0} \n\nwas created successfully in the directory\n {1}", Path.GetFileName(fullFileName), Path.GetDirectoryName(fullFileName));
+                //MessageBox.Show(tx, Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Information);
                 return fullFileName;
             }
             catch (Exception ex)

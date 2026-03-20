@@ -1593,6 +1593,13 @@ namespace Karaboss.Resources.Localization {
             {
                 return ResourceManager.GetString("kfnCreateTb4", resourceCulture);
             }
+        }        
+        internal static string FileCreatedSucessfully
+        {
+            get
+            {
+                return ResourceManager.GetString("FileCreatedSucessfully", resourceCulture);
+            }
         }
     }
 }

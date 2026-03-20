@@ -363,6 +363,14 @@ namespace Karaboss.Kfn
 
                 if (result != null)
                 {
+                    //string txresult = string.Format("The File\n{0} \n\nwas created successfully in the directory\n {1}", Path.GetFileName(result), Path.GetDirectoryName(result));                    
+                    string txresult = Strings.FileCreatedSucessfully;
+                    txresult = txresult.Replace("{0}", Environment.NewLine);
+                    txresult = txresult.Replace("{1}", Path.GetFileName(result));
+                    txresult = txresult.Replace("{2}", Path.GetDirectoryName(result));
+
+                    MessageBox.Show(txresult, Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Information);
+
                     txtKfnFileName.Text = result;
                     btnPlay.Visible = true;
                 }

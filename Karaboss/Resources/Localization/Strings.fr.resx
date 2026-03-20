@@ -579,4 +579,7 @@
   <data name="kfnCreateTb3" xml:space="preserve">
     <value>Facultatif : vous pouvez charger une image qui sera le fond d'écran de la chanson. {0}Choisissez une image pas trop sombre pour faciliter la lecture des paroles et un ratio largeur-hauteur de 1.33 pour ne pas être déformée.</value>
   </data>
+  <data name="FileCreatedSucessfully" xml:space="preserve">
+    <value>Le fichier {0}{1}{0}{0}a été créé avec succès dans le dossier {0}{2}</value>
+  </data>
 </root>

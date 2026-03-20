@@ -580,4 +580,7 @@
   <data name="kfnCreateTb3" xml:space="preserve">
     <value>Optional: You can upload an image to use as the background. {0}Choose an image that isn't too dark so the lyrics are easy to read, and make sure the width-to-height ratio is 1.33 to prevent distortion.</value>
   </data>
+  <data name="FileCreatedSucessfully" xml:space="preserve">
+    <value>The file {0}{1}{0}{0}was created successfully in the directory{0}{2}</value>
+  </data>
 </root>
