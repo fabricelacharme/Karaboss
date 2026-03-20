@@ -79,9 +79,8 @@ namespace Karaboss.Mp3
         int COL_TIME = 1;
         int COL_TEXT = 2;
 
-        #endregion dgview
+        #endregion dgview        
 
-        //string _lrcFileName;
 
         private enum Directions
         {
@@ -1231,6 +1230,7 @@ namespace Karaboss.Mp3
 
         #endregion
 
+        #region menu Help
 
         private void mnuHelpAbout_Click(object sender, EventArgs e)
         {
@@ -1264,6 +1264,19 @@ namespace Karaboss.Mp3
                 MessageBox.Show(e.Message, "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
+
+        private void mnuHelpForums_Click(object sender, EventArgs e)
+        {
+            Karaclass.DisplayUrl(Karaclass.url_forums);
+        }
+
+        private void mnuHelpDocumentation_Click(object sender, EventArgs e)
+        {
+            Karaclass.DisplayUrl(Karaclass.url_documentation);
+        }
+
+
+        #endregion menu Help
 
         #endregion menus
 
@@ -2057,7 +2070,6 @@ namespace Karaboss.Mp3
         }
 
         #endregion Timer
-
 
 
         #region import export lyrics
@@ -4631,5 +4643,7 @@ namespace Karaboss.Mp3
 
 
         #endregion aniballs
+
+     
     }
 }

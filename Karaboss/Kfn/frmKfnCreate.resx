@@ -1599,11 +1599,17 @@
   <data name="mnuFile.Text" xml:space="preserve">
     <value>&amp;File</value>
   </data>
-  <data name="mnuHelpAbout.Size" type="System.Drawing.Size, System.Drawing">
-    <value>107, 22</value>
+  <data name="mnuHelpForums.Size" type="System.Drawing.Size, System.Drawing">
+    <value>157, 22</value>
   </data>
-  <data name="mnuHelpAbout.Text" xml:space="preserve">
-    <value>&amp;About</value>
+  <data name="mnuHelpForums.Text" xml:space="preserve">
+    <value>Forums</value>
+  </data>
+  <data name="mnuHelpDocumentation.Size" type="System.Drawing.Size, System.Drawing">
+    <value>157, 22</value>
+  </data>
+  <data name="mnuHelpDocumentation.Text" xml:space="preserve">
+    <value>Documentation</value>
   </data>
   <data name="mnuHelp.Size" type="System.Drawing.Size, System.Drawing">
     <value>44, 20</value>
@@ -1807,10 +1813,16 @@
   <data name="&gt;&gt;mnuHelp.Type" xml:space="preserve">
     <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="&gt;&gt;mnuHelpAbout.Name" xml:space="preserve">
-    <value>mnuHelpAbout</value>
+  <data name="&gt;&gt;mnuHelpForums.Name" xml:space="preserve">
+    <value>mnuHelpForums</value>
   </data>
-  <data name="&gt;&gt;mnuHelpAbout.Type" xml:space="preserve">
+  <data name="&gt;&gt;mnuHelpForums.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;mnuHelpDocumentation.Name" xml:space="preserve">
+    <value>mnuHelpDocumentation</value>
+  </data>
+  <data name="&gt;&gt;mnuHelpDocumentation.Type" xml:space="preserve">
     <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;$this.Name" xml:space="preserve">

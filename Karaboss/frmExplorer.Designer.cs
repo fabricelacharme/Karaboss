@@ -96,6 +96,9 @@
             this.xplorerControl = new Karaboss.xplorer.xplorerControl();
             this.playlistsControl = new Karaboss.playlists.PlaylistsControl();
             this.searchControl = new Karaboss.Search.SearchControl();
+            this.toolStripMenuItem3 = new System.Windows.Forms.ToolStripSeparator();
+            this.mnuHelpForums = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnuHelpDocumentation = new System.Windows.Forms.ToolStripMenuItem();
             this.statusBar.SuspendLayout();
             this.mnuExplorer.SuspendLayout();
             this.pnlFileInfos.SuspendLayout();
@@ -424,6 +427,9 @@
             // mnuHelp
             // 
             this.mnuHelp.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.mnuHelpForums,
+            this.mnuHelpDocumentation,
+            this.toolStripMenuItem3,
             this.MnuHelpCheckNewVersion,
             this.mnuHelpAbout});
             this.mnuHelp.Name = "mnuHelp";
@@ -570,6 +576,23 @@
             this.searchControl.SongRoot = "C:\\Users\\Fabrice\\OneDrive\\Music";
             this.searchControl.SView = Karaboss.Search.SearchViewStyle.Author;
             // 
+            // toolStripMenuItem3
+            // 
+            this.toolStripMenuItem3.Name = "toolStripMenuItem3";
+            resources.ApplyResources(this.toolStripMenuItem3, "toolStripMenuItem3");
+            // 
+            // mnuHelpForums
+            // 
+            this.mnuHelpForums.Name = "mnuHelpForums";
+            resources.ApplyResources(this.mnuHelpForums, "mnuHelpForums");
+            this.mnuHelpForums.Click += new System.EventHandler(this.mnuHelpForums_Click);
+            // 
+            // mnuHelpDocumentation
+            // 
+            this.mnuHelpDocumentation.Name = "mnuHelpDocumentation";
+            resources.ApplyResources(this.mnuHelpDocumentation, "mnuHelpDocumentation");
+            this.mnuHelpDocumentation.Click += new System.EventHandler(this.mnuHelpDocumentation_Click);
+            // 
             // frmExplorer
             // 
             resources.ApplyResources(this, "$this");
@@ -671,5 +694,8 @@
         private System.Windows.Forms.ToolStripMenuItem mnuEditReplaceAll;
         private System.Windows.Forms.ToolStripMenuItem mnuEditRenameAll;
         private System.Windows.Forms.ToolStripMenuItem invertAuthorAndSongToolStripMenuItem;
+        private System.Windows.Forms.ToolStripSeparator toolStripMenuItem3;
+        private System.Windows.Forms.ToolStripMenuItem mnuHelpForums;
+        private System.Windows.Forms.ToolStripMenuItem mnuHelpDocumentation;
     }
 }

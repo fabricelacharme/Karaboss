@@ -91,7 +91,8 @@
             this.mnuFile = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuFileQuit = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuHelp = new System.Windows.Forms.ToolStripMenuItem();
-            this.mnuHelpAbout = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnuHelpForums = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnuHelpDocumentation = new System.Windows.Forms.ToolStripMenuItem();
             this.tbPageAudios.SuspendLayout();
             this.tbPageLyrics.SuspendLayout();
             this.tbPageImages.SuspendLayout();
@@ -311,7 +312,7 @@
             // lblLyrics
             // 
             resources.ApplyResources(this.lblLyrics, "lblLyrics");
-            this.lblLyrics.ForeColor = System.Drawing.Color.OrangeRed;
+            this.lblLyrics.ForeColor = System.Drawing.Color.Salmon;
             this.lblLyrics.Name = "lblLyrics";
             // 
             // btnImportLyrics
@@ -553,15 +554,22 @@
             // mnuHelp
             // 
             this.mnuHelp.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.mnuHelpAbout});
+            this.mnuHelpForums,
+            this.mnuHelpDocumentation});
             this.mnuHelp.Name = "mnuHelp";
             resources.ApplyResources(this.mnuHelp, "mnuHelp");
             // 
-            // mnuHelpAbout
+            // mnuHelpForums
             // 
-            this.mnuHelpAbout.Name = "mnuHelpAbout";
-            resources.ApplyResources(this.mnuHelpAbout, "mnuHelpAbout");
-            this.mnuHelpAbout.Click += new System.EventHandler(this.mnuHelpAbout_Click);
+            this.mnuHelpForums.Name = "mnuHelpForums";
+            resources.ApplyResources(this.mnuHelpForums, "mnuHelpForums");
+            this.mnuHelpForums.Click += new System.EventHandler(this.mnuHelpForums_Click);
+            // 
+            // mnuHelpDocumentation
+            // 
+            this.mnuHelpDocumentation.Name = "mnuHelpDocumentation";
+            resources.ApplyResources(this.mnuHelpDocumentation, "mnuHelpDocumentation");
+            this.mnuHelpDocumentation.Click += new System.EventHandler(this.mnuHelpDocumentation_Click);
             // 
             // frmKfnCreate
             // 
@@ -661,6 +669,7 @@
         private System.Windows.Forms.ToolStripMenuItem mnuFile;
         private System.Windows.Forms.ToolStripMenuItem mnuFileQuit;
         private System.Windows.Forms.ToolStripMenuItem mnuHelp;
-        private System.Windows.Forms.ToolStripMenuItem mnuHelpAbout;
+        private System.Windows.Forms.ToolStripMenuItem mnuHelpForums;
+        private System.Windows.Forms.ToolStripMenuItem mnuHelpDocumentation;
     }
 }

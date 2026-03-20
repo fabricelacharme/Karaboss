@@ -4,6 +4,7 @@ using Karaboss.Resources.Localization;
 using KFNV;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -608,7 +609,7 @@ namespace Karaboss.Kfn
             switch (e.Index)
             {
                 case 0:
-                    e.Graphics.FillRectangle(new SolidBrush(ColorTranslator.FromHtml("#99cc33")), e.Bounds);
+                    e.Graphics.FillRectangle(new SolidBrush(ColorTranslator.FromHtml("#2ECC71")), e.Bounds);
                     break;
                 case 1:
                     e.Graphics.FillRectangle(new SolidBrush(ColorTranslator.FromHtml("#3399ff")), e.Bounds);
@@ -649,12 +650,20 @@ namespace Karaboss.Kfn
             Close();
         }
 
-        private void mnuHelpAbout_Click(object sender, EventArgs e)
+              
+        private void mnuHelpForums_Click(object sender, EventArgs e)
         {
-            Form frmAboutDialog = new frmAboutDialog();
-            frmAboutDialog.ShowDialog();
+            Karaclass.DisplayUrl(Karaclass.url_forums);            
+        }
+
+
+        private void mnuHelpDocumentation_Click(object sender, EventArgs e)
+        {
+            Karaclass.DisplayUrl(Karaclass.url_documentation);
         }
 
         #endregion menus
+
+
     }
 }
