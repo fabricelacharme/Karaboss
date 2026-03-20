@@ -43,6 +43,13 @@ namespace KFNV.SongIni
         /// Initial inactive font color
         /// </summary>
         public string initial_inactive_color;
+
+        public string frame_color;
+
+        public string inactive_frame_color;
+
+        public string frame_type;
+
         /// <summary>
         /// Collection of the sync timestamps in ms.
         /// </summary>
@@ -65,6 +72,11 @@ namespace KFNV.SongIni
             (string, uint) Initial_font, 
             string Initial_active_color,
             string Initial_inactive_color,
+            
+            string Frame_color,
+            string Inactive_frame_color,
+            string Frame_type,
+
             List<int> Syncs,
             List<TextEntry> Texts,
             Trajectory Initial_trajectory)
@@ -77,6 +89,11 @@ namespace KFNV.SongIni
             initial_font = Initial_font;
             initial_active_color = Initial_active_color;
             initial_inactive_color = Initial_inactive_color;
+            
+            frame_color = Frame_color;
+            inactive_frame_color = Inactive_frame_color;
+            frame_type = Frame_type;
+            
             syncs = Syncs;
             texts = Texts;
             initial_trajectory = Initial_trajectory;

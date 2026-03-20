@@ -23,7 +23,7 @@ namespace Karaboss.Kfn
         [return: MarshalAs(UnmanagedType.Bool)]
         public static extern bool GetIconInfo(IntPtr hIcon, ref IconInfo pIconInfo);
 
-
+        private TextBox _sender = null;
 
         public struct IconInfo
         {
@@ -34,11 +34,12 @@ namespace Karaboss.Kfn
             public IntPtr hbmColor;
         }
                 
-        public frmFullScreen()
+        public frmFullScreen(TextBox sender)
         {
             InitializeComponent();            
 
-            
+            _sender = sender;
+
             ShowInTaskbar = false;
             FormBorderStyle = FormBorderStyle.None;
             WindowState = FormWindowState.Maximized;
@@ -63,8 +64,6 @@ namespace Karaboss.Kfn
             tmp.fIcon = false;
             return new Cursor(CreateIconIndirect(ref tmp));
         }
-
-
       
         private void frmFullScreen_Load(object sender, EventArgs e)
         {
@@ -104,7 +103,7 @@ namespace Karaboss.Kfn
                     if (Application.OpenForms.OfType<frmKfnCreate>().Count() > 0)
                     {
                         frmKfnCreate frmKfnCreate = Utilities.FormUtilities.GetForm<frmKfnCreate>();
-                        frmKfnCreate.GetColorFromPicker(c);
+                        frmKfnCreate.GetColorFromPicker(c, _sender);
                     }
                 }
                 Close();
@@ -113,8 +112,6 @@ namespace Karaboss.Kfn
             {
                 Close();
             }
-
-
         }
 
         private Color GetColorAt(int x, int y)
@@ -127,8 +124,7 @@ namespace Karaboss.Kfn
         }
 
         private void frmFullScreen_KeyDown(object sender, KeyEventArgs e)
-        {
-            //if (e.KeyCode == Keys.Escape)  
+        {           
                 Close();  
         }
 

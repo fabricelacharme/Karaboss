@@ -75,6 +75,28 @@
             this.btnCancel = new System.Windows.Forms.Button();
             this.tbControl = new System.Windows.Forms.TabControl();
             this.tbPageBackground = new System.Windows.Forms.TabPage();
+            this.cbFrame = new System.Windows.Forms.ComboBox();
+            this.lblBorder = new System.Windows.Forms.Label();
+            this.btnInactiveColorBorderPicker = new System.Windows.Forms.Button();
+            this.btnInactiveColorBorderSelect = new System.Windows.Forms.Button();
+            this.picInactiveColorBorder = new System.Windows.Forms.PictureBox();
+            this.txtInactiveColorBorder = new System.Windows.Forms.TextBox();
+            this.lblInactiveColorBorder = new System.Windows.Forms.Label();
+            this.btnActiveColorBorderPicker = new System.Windows.Forms.Button();
+            this.btnActiveColorBorderSelect = new System.Windows.Forms.Button();
+            this.picActiveColorBorder = new System.Windows.Forms.PictureBox();
+            this.txtActiveColorBorder = new System.Windows.Forms.TextBox();
+            this.lblActiveColorBorder = new System.Windows.Forms.Label();
+            this.btnInactiveColorPicker = new System.Windows.Forms.Button();
+            this.btnInactiveColorSelect = new System.Windows.Forms.Button();
+            this.picInactiveColor = new System.Windows.Forms.PictureBox();
+            this.txtInactiveColor = new System.Windows.Forms.TextBox();
+            this.lblInactiveColor = new System.Windows.Forms.Label();
+            this.btnActiveColorPicker = new System.Windows.Forms.Button();
+            this.btnActiveColorSelect = new System.Windows.Forms.Button();
+            this.picActiveColor = new System.Windows.Forms.PictureBox();
+            this.txtActiveColor = new System.Windows.Forms.TextBox();
+            this.lblActiveColor = new System.Windows.Forms.Label();
             this.lblHelpTb4 = new System.Windows.Forms.Label();
             this.UpDownFontSize = new System.Windows.Forms.NumericUpDown();
             this.txtLoremIpsum = new System.Windows.Forms.TextBox();
@@ -99,6 +121,10 @@
             ((System.ComponentModel.ISupportInitialize)(this.picImage)).BeginInit();
             this.tbControl.SuspendLayout();
             this.tbPageBackground.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.picInactiveColorBorder)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.picActiveColorBorder)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.picInactiveColor)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.picActiveColor)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.UpDownFontSize)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.picBgColor)).BeginInit();
             this.menuStrip1.SuspendLayout();
@@ -106,8 +132,8 @@
             // 
             // tbPageAudios
             // 
-            resources.ApplyResources(this.tbPageAudios, "tbPageAudios");
             this.tbPageAudios.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(58)))), ((int)(((byte)(58)))), ((int)(((byte)(58)))));
+            resources.ApplyResources(this.tbPageAudios, "tbPageAudios");
             this.tbPageAudios.Controls.Add(this.lblHelpTb1);
             this.tbPageAudios.Controls.Add(this.btnPlay);
             this.tbPageAudios.Controls.Add(this.txtArtist);
@@ -139,8 +165,8 @@
             // 
             // btnPlay
             // 
-            resources.ApplyResources(this.btnPlay, "btnPlay");
             this.btnPlay.Image = global::Karaboss.Properties.Resources.Media_Controls_Play_icon;
+            resources.ApplyResources(this.btnPlay, "btnPlay");
             this.btnPlay.Name = "btnPlay";
             this.btnPlay.UseVisualStyleBackColor = true;
             this.btnPlay.Click += new System.EventHandler(this.btnPlay_Click);
@@ -209,8 +235,8 @@
             // 
             // btnTb1Next
             // 
-            resources.ApplyResources(this.btnTb1Next, "btnTb1Next");
             this.btnTb1Next.DialogResult = System.Windows.Forms.DialogResult.OK;
+            resources.ApplyResources(this.btnTb1Next, "btnTb1Next");
             this.btnTb1Next.Name = "btnTb1Next";
             this.btnTb1Next.UseVisualStyleBackColor = true;
             this.btnTb1Next.Click += new System.EventHandler(this.btnTb1Next_Click);
@@ -257,8 +283,8 @@
             // 
             // tbPageLyrics
             // 
-            resources.ApplyResources(this.tbPageLyrics, "tbPageLyrics");
             this.tbPageLyrics.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(58)))), ((int)(((byte)(58)))), ((int)(((byte)(58)))));
+            resources.ApplyResources(this.tbPageLyrics, "tbPageLyrics");
             this.tbPageLyrics.Controls.Add(this.lblLyricsUpdate);
             this.tbPageLyrics.Controls.Add(this.btnLyricsUpdate);
             this.tbPageLyrics.Controls.Add(this.lblHelpTb2);
@@ -290,16 +316,16 @@
             // 
             // btnTb2Next
             // 
-            resources.ApplyResources(this.btnTb2Next, "btnTb2Next");
             this.btnTb2Next.DialogResult = System.Windows.Forms.DialogResult.OK;
+            resources.ApplyResources(this.btnTb2Next, "btnTb2Next");
             this.btnTb2Next.Name = "btnTb2Next";
             this.btnTb2Next.UseVisualStyleBackColor = true;
             this.btnTb2Next.Click += new System.EventHandler(this.btnTb2Next_Click);
             // 
             // btnTb2Previous
             // 
-            resources.ApplyResources(this.btnTb2Previous, "btnTb2Previous");
             this.btnTb2Previous.DialogResult = System.Windows.Forms.DialogResult.OK;
+            resources.ApplyResources(this.btnTb2Previous, "btnTb2Previous");
             this.btnTb2Previous.Name = "btnTb2Previous";
             this.btnTb2Previous.UseVisualStyleBackColor = true;
             this.btnTb2Previous.Click += new System.EventHandler(this.btnTb2Previous_Click);
@@ -324,8 +350,8 @@
             // 
             // tbPageImages
             // 
-            resources.ApplyResources(this.tbPageImages, "tbPageImages");
             this.tbPageImages.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(58)))), ((int)(((byte)(58)))), ((int)(((byte)(58)))));
+            resources.ApplyResources(this.tbPageImages, "tbPageImages");
             this.tbPageImages.Controls.Add(this.lblRatio);
             this.tbPageImages.Controls.Add(this.lblSize);
             this.tbPageImages.Controls.Add(this.lblHelpTb3);
@@ -363,8 +389,8 @@
             // 
             // btnTb3Next
             // 
-            resources.ApplyResources(this.btnTb3Next, "btnTb3Next");
             this.btnTb3Next.DialogResult = System.Windows.Forms.DialogResult.OK;
+            resources.ApplyResources(this.btnTb3Next, "btnTb3Next");
             this.btnTb3Next.Name = "btnTb3Next";
             this.btnTb3Next.UseVisualStyleBackColor = true;
             this.btnTb3Next.Click += new System.EventHandler(this.btnTb3Next_Click);
@@ -389,8 +415,8 @@
             // 
             // btnTb3Previous
             // 
-            resources.ApplyResources(this.btnTb3Previous, "btnTb3Previous");
             this.btnTb3Previous.DialogResult = System.Windows.Forms.DialogResult.OK;
+            resources.ApplyResources(this.btnTb3Previous, "btnTb3Previous");
             this.btnTb3Previous.Name = "btnTb3Previous";
             this.btnTb3Previous.UseVisualStyleBackColor = true;
             this.btnTb3Previous.Click += new System.EventHandler(this.btnTb3Previous_Click);
@@ -398,40 +424,60 @@
             // OpenFileDialog
             // 
             this.OpenFileDialog.FileName = "openFileDialog1";
-            resources.ApplyResources(this.OpenFileDialog, "OpenFileDialog");
             // 
             // btnCreateKfn
             // 
-            resources.ApplyResources(this.btnCreateKfn, "btnCreateKfn");
             this.btnCreateKfn.DialogResult = System.Windows.Forms.DialogResult.OK;
+            resources.ApplyResources(this.btnCreateKfn, "btnCreateKfn");
             this.btnCreateKfn.Name = "btnCreateKfn";
             this.btnCreateKfn.UseVisualStyleBackColor = true;
             this.btnCreateKfn.Click += new System.EventHandler(this.btnCreateKfn_Click);
             // 
             // btnCancel
             // 
-            resources.ApplyResources(this.btnCancel, "btnCancel");
             this.btnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
+            resources.ApplyResources(this.btnCancel, "btnCancel");
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.UseVisualStyleBackColor = true;
             this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
             // 
             // tbControl
             // 
-            resources.ApplyResources(this.tbControl, "tbControl");
             this.tbControl.Controls.Add(this.tbPageAudios);
             this.tbControl.Controls.Add(this.tbPageLyrics);
             this.tbControl.Controls.Add(this.tbPageImages);
             this.tbControl.Controls.Add(this.tbPageBackground);
             this.tbControl.DrawMode = System.Windows.Forms.TabDrawMode.OwnerDrawFixed;
+            resources.ApplyResources(this.tbControl, "tbControl");
             this.tbControl.Name = "tbControl";
             this.tbControl.SelectedIndex = 0;
             this.tbControl.DrawItem += new System.Windows.Forms.DrawItemEventHandler(this.tbControl_DrawItem);
             // 
             // tbPageBackground
             // 
-            resources.ApplyResources(this.tbPageBackground, "tbPageBackground");
             this.tbPageBackground.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(58)))), ((int)(((byte)(58)))), ((int)(((byte)(58)))));
+            this.tbPageBackground.Controls.Add(this.cbFrame);
+            this.tbPageBackground.Controls.Add(this.lblBorder);
+            this.tbPageBackground.Controls.Add(this.btnInactiveColorBorderPicker);
+            this.tbPageBackground.Controls.Add(this.btnInactiveColorBorderSelect);
+            this.tbPageBackground.Controls.Add(this.picInactiveColorBorder);
+            this.tbPageBackground.Controls.Add(this.txtInactiveColorBorder);
+            this.tbPageBackground.Controls.Add(this.lblInactiveColorBorder);
+            this.tbPageBackground.Controls.Add(this.btnActiveColorBorderPicker);
+            this.tbPageBackground.Controls.Add(this.btnActiveColorBorderSelect);
+            this.tbPageBackground.Controls.Add(this.picActiveColorBorder);
+            this.tbPageBackground.Controls.Add(this.txtActiveColorBorder);
+            this.tbPageBackground.Controls.Add(this.lblActiveColorBorder);
+            this.tbPageBackground.Controls.Add(this.btnInactiveColorPicker);
+            this.tbPageBackground.Controls.Add(this.btnInactiveColorSelect);
+            this.tbPageBackground.Controls.Add(this.picInactiveColor);
+            this.tbPageBackground.Controls.Add(this.txtInactiveColor);
+            this.tbPageBackground.Controls.Add(this.lblInactiveColor);
+            this.tbPageBackground.Controls.Add(this.btnActiveColorPicker);
+            this.tbPageBackground.Controls.Add(this.btnActiveColorSelect);
+            this.tbPageBackground.Controls.Add(this.picActiveColor);
+            this.tbPageBackground.Controls.Add(this.txtActiveColor);
+            this.tbPageBackground.Controls.Add(this.lblActiveColor);
             this.tbPageBackground.Controls.Add(this.lblHelpTb4);
             this.tbPageBackground.Controls.Add(this.UpDownFontSize);
             this.tbPageBackground.Controls.Add(this.txtLoremIpsum);
@@ -443,7 +489,161 @@
             this.tbPageBackground.Controls.Add(this.txtBgColor);
             this.tbPageBackground.Controls.Add(this.lblColor);
             this.tbPageBackground.Controls.Add(this.btnTb4Previous);
+            resources.ApplyResources(this.tbPageBackground, "tbPageBackground");
             this.tbPageBackground.Name = "tbPageBackground";
+            // 
+            // cbFrame
+            // 
+            this.cbFrame.FormattingEnabled = true;
+            resources.ApplyResources(this.cbFrame, "cbFrame");
+            this.cbFrame.Name = "cbFrame";
+            this.cbFrame.SelectedIndexChanged += new System.EventHandler(this.cbBorderEffectSelect_SelectedIndexChanged);
+            // 
+            // lblBorder
+            // 
+            resources.ApplyResources(this.lblBorder, "lblBorder");
+            this.lblBorder.ForeColor = System.Drawing.Color.White;
+            this.lblBorder.Name = "lblBorder";
+            // 
+            // btnInactiveColorBorderPicker
+            // 
+            this.btnInactiveColorBorderPicker.Image = global::Karaboss.Properties.Resources.color_picker_black18;
+            resources.ApplyResources(this.btnInactiveColorBorderPicker, "btnInactiveColorBorderPicker");
+            this.btnInactiveColorBorderPicker.Name = "btnInactiveColorBorderPicker";
+            this.btnInactiveColorBorderPicker.UseVisualStyleBackColor = true;
+            this.btnInactiveColorBorderPicker.Click += new System.EventHandler(this.btnInactiveColorBorderPicker_Click);
+            // 
+            // btnInactiveColorBorderSelect
+            // 
+            resources.ApplyResources(this.btnInactiveColorBorderSelect, "btnInactiveColorBorderSelect");
+            this.btnInactiveColorBorderSelect.Name = "btnInactiveColorBorderSelect";
+            this.btnInactiveColorBorderSelect.UseVisualStyleBackColor = true;
+            this.btnInactiveColorBorderSelect.Click += new System.EventHandler(this.btnInactiveColorBorderSelect_Click);
+            // 
+            // picInactiveColorBorder
+            // 
+            this.picInactiveColorBorder.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(1)))), ((int)(((byte)(1)))), ((int)(((byte)(1)))));
+            this.picInactiveColorBorder.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            resources.ApplyResources(this.picInactiveColorBorder, "picInactiveColorBorder");
+            this.picInactiveColorBorder.Name = "picInactiveColorBorder";
+            this.picInactiveColorBorder.TabStop = false;
+            // 
+            // txtInactiveColorBorder
+            // 
+            resources.ApplyResources(this.txtInactiveColorBorder, "txtInactiveColorBorder");
+            this.txtInactiveColorBorder.Name = "txtInactiveColorBorder";
+            this.txtInactiveColorBorder.TextChanged += new System.EventHandler(this.txtInactiveColorBorder_TextChanged);
+            // 
+            // lblInactiveColorBorder
+            // 
+            resources.ApplyResources(this.lblInactiveColorBorder, "lblInactiveColorBorder");
+            this.lblInactiveColorBorder.ForeColor = System.Drawing.Color.White;
+            this.lblInactiveColorBorder.Name = "lblInactiveColorBorder";
+            // 
+            // btnActiveColorBorderPicker
+            // 
+            this.btnActiveColorBorderPicker.Image = global::Karaboss.Properties.Resources.color_picker_black18;
+            resources.ApplyResources(this.btnActiveColorBorderPicker, "btnActiveColorBorderPicker");
+            this.btnActiveColorBorderPicker.Name = "btnActiveColorBorderPicker";
+            this.btnActiveColorBorderPicker.UseVisualStyleBackColor = true;
+            this.btnActiveColorBorderPicker.Click += new System.EventHandler(this.btnActiveColorBorderPicker_Click);
+            // 
+            // btnActiveColorBorderSelect
+            // 
+            resources.ApplyResources(this.btnActiveColorBorderSelect, "btnActiveColorBorderSelect");
+            this.btnActiveColorBorderSelect.Name = "btnActiveColorBorderSelect";
+            this.btnActiveColorBorderSelect.UseVisualStyleBackColor = true;
+            this.btnActiveColorBorderSelect.Click += new System.EventHandler(this.btnActiveColorBorderSelect_Click);
+            // 
+            // picActiveColorBorder
+            // 
+            this.picActiveColorBorder.BackColor = System.Drawing.Color.Black;
+            this.picActiveColorBorder.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            resources.ApplyResources(this.picActiveColorBorder, "picActiveColorBorder");
+            this.picActiveColorBorder.Name = "picActiveColorBorder";
+            this.picActiveColorBorder.TabStop = false;
+            // 
+            // txtActiveColorBorder
+            // 
+            resources.ApplyResources(this.txtActiveColorBorder, "txtActiveColorBorder");
+            this.txtActiveColorBorder.Name = "txtActiveColorBorder";
+            this.txtActiveColorBorder.TextChanged += new System.EventHandler(this.txtActiveColorBorder_TextChanged);
+            // 
+            // lblActiveColorBorder
+            // 
+            resources.ApplyResources(this.lblActiveColorBorder, "lblActiveColorBorder");
+            this.lblActiveColorBorder.ForeColor = System.Drawing.Color.White;
+            this.lblActiveColorBorder.Name = "lblActiveColorBorder";
+            // 
+            // btnInactiveColorPicker
+            // 
+            this.btnInactiveColorPicker.Image = global::Karaboss.Properties.Resources.color_picker_black18;
+            resources.ApplyResources(this.btnInactiveColorPicker, "btnInactiveColorPicker");
+            this.btnInactiveColorPicker.Name = "btnInactiveColorPicker";
+            this.btnInactiveColorPicker.UseVisualStyleBackColor = true;
+            this.btnInactiveColorPicker.Click += new System.EventHandler(this.btnInactiveColorPicker_Click);
+            // 
+            // btnInactiveColorSelect
+            // 
+            resources.ApplyResources(this.btnInactiveColorSelect, "btnInactiveColorSelect");
+            this.btnInactiveColorSelect.Name = "btnInactiveColorSelect";
+            this.btnInactiveColorSelect.UseVisualStyleBackColor = true;
+            this.btnInactiveColorSelect.Click += new System.EventHandler(this.btnInactiveColorSelect_Click);
+            // 
+            // picInactiveColor
+            // 
+            this.picInactiveColor.BackColor = System.Drawing.Color.Black;
+            this.picInactiveColor.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            resources.ApplyResources(this.picInactiveColor, "picInactiveColor");
+            this.picInactiveColor.Name = "picInactiveColor";
+            this.picInactiveColor.TabStop = false;
+            // 
+            // txtInactiveColor
+            // 
+            resources.ApplyResources(this.txtInactiveColor, "txtInactiveColor");
+            this.txtInactiveColor.Name = "txtInactiveColor";
+            this.txtInactiveColor.TextChanged += new System.EventHandler(this.txtInactiveColor_TextChanged);
+            // 
+            // lblInactiveColor
+            // 
+            resources.ApplyResources(this.lblInactiveColor, "lblInactiveColor");
+            this.lblInactiveColor.ForeColor = System.Drawing.Color.White;
+            this.lblInactiveColor.Name = "lblInactiveColor";
+            // 
+            // btnActiveColorPicker
+            // 
+            this.btnActiveColorPicker.Image = global::Karaboss.Properties.Resources.color_picker_black18;
+            resources.ApplyResources(this.btnActiveColorPicker, "btnActiveColorPicker");
+            this.btnActiveColorPicker.Name = "btnActiveColorPicker";
+            this.btnActiveColorPicker.UseVisualStyleBackColor = true;
+            this.btnActiveColorPicker.Click += new System.EventHandler(this.btnActiveColorPicker_Click);
+            // 
+            // btnActiveColorSelect
+            // 
+            resources.ApplyResources(this.btnActiveColorSelect, "btnActiveColorSelect");
+            this.btnActiveColorSelect.Name = "btnActiveColorSelect";
+            this.btnActiveColorSelect.UseVisualStyleBackColor = true;
+            this.btnActiveColorSelect.Click += new System.EventHandler(this.btnActiveColorSelect_Click);
+            // 
+            // picActiveColor
+            // 
+            this.picActiveColor.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(172)))), ((int)(((byte)(255)))));
+            this.picActiveColor.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            resources.ApplyResources(this.picActiveColor, "picActiveColor");
+            this.picActiveColor.Name = "picActiveColor";
+            this.picActiveColor.TabStop = false;
+            // 
+            // txtActiveColor
+            // 
+            resources.ApplyResources(this.txtActiveColor, "txtActiveColor");
+            this.txtActiveColor.Name = "txtActiveColor";
+            this.txtActiveColor.TextChanged += new System.EventHandler(this.txtActiveColor_TextChanged);
+            // 
+            // lblActiveColor
+            // 
+            resources.ApplyResources(this.lblActiveColor, "lblActiveColor");
+            this.lblActiveColor.ForeColor = System.Drawing.Color.White;
+            this.lblActiveColor.Name = "lblActiveColor";
             // 
             // lblHelpTb4
             // 
@@ -470,8 +670,8 @@
             // 
             // txtLoremIpsum
             // 
-            resources.ApplyResources(this.txtLoremIpsum, "txtLoremIpsum");
             this.txtLoremIpsum.BackColor = System.Drawing.Color.Black;
+            resources.ApplyResources(this.txtLoremIpsum, "txtLoremIpsum");
             this.txtLoremIpsum.ForeColor = System.Drawing.Color.White;
             this.txtLoremIpsum.Name = "txtLoremIpsum";
             // 
@@ -483,15 +683,15 @@
             // 
             // cbFontName
             // 
-            resources.ApplyResources(this.cbFontName, "cbFontName");
             this.cbFontName.FormattingEnabled = true;
+            resources.ApplyResources(this.cbFontName, "cbFontName");
             this.cbFontName.Name = "cbFontName";
             this.cbFontName.SelectedIndexChanged += new System.EventHandler(this.cbFontName_SelectedIndexChanged);
             // 
             // btnBgColorPicker
             // 
-            resources.ApplyResources(this.btnBgColorPicker, "btnBgColorPicker");
             this.btnBgColorPicker.Image = global::Karaboss.Properties.Resources.color_picker_black18;
+            resources.ApplyResources(this.btnBgColorPicker, "btnBgColorPicker");
             this.btnBgColorPicker.Name = "btnBgColorPicker";
             this.btnBgColorPicker.UseVisualStyleBackColor = true;
             this.btnBgColorPicker.Click += new System.EventHandler(this.btnBgColorPicker_Click);
@@ -505,9 +705,9 @@
             // 
             // picBgColor
             // 
-            resources.ApplyResources(this.picBgColor, "picBgColor");
             this.picBgColor.BackColor = System.Drawing.Color.Black;
             this.picBgColor.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            resources.ApplyResources(this.picBgColor, "picBgColor");
             this.picBgColor.Name = "picBgColor";
             this.picBgColor.TabStop = false;
             // 
@@ -525,51 +725,51 @@
             // 
             // btnTb4Previous
             // 
-            resources.ApplyResources(this.btnTb4Previous, "btnTb4Previous");
             this.btnTb4Previous.DialogResult = System.Windows.Forms.DialogResult.OK;
+            resources.ApplyResources(this.btnTb4Previous, "btnTb4Previous");
             this.btnTb4Previous.Name = "btnTb4Previous";
             this.btnTb4Previous.UseVisualStyleBackColor = true;
             this.btnTb4Previous.Click += new System.EventHandler(this.btnTb4Previous_Click);
             // 
             // menuStrip1
             // 
-            resources.ApplyResources(this.menuStrip1, "menuStrip1");
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.mnuFile,
             this.mnuHelp});
+            resources.ApplyResources(this.menuStrip1, "menuStrip1");
             this.menuStrip1.Name = "menuStrip1";
             // 
             // mnuFile
             // 
-            resources.ApplyResources(this.mnuFile, "mnuFile");
             this.mnuFile.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.mnuFileQuit});
             this.mnuFile.Name = "mnuFile";
+            resources.ApplyResources(this.mnuFile, "mnuFile");
             // 
             // mnuFileQuit
             // 
-            resources.ApplyResources(this.mnuFileQuit, "mnuFileQuit");
             this.mnuFileQuit.Name = "mnuFileQuit";
+            resources.ApplyResources(this.mnuFileQuit, "mnuFileQuit");
             this.mnuFileQuit.Click += new System.EventHandler(this.mnuFileQuit_Click);
             // 
             // mnuHelp
             // 
-            resources.ApplyResources(this.mnuHelp, "mnuHelp");
             this.mnuHelp.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.mnuHelpForums,
             this.mnuHelpDocumentation});
             this.mnuHelp.Name = "mnuHelp";
+            resources.ApplyResources(this.mnuHelp, "mnuHelp");
             // 
             // mnuHelpForums
             // 
-            resources.ApplyResources(this.mnuHelpForums, "mnuHelpForums");
             this.mnuHelpForums.Name = "mnuHelpForums";
+            resources.ApplyResources(this.mnuHelpForums, "mnuHelpForums");
             this.mnuHelpForums.Click += new System.EventHandler(this.mnuHelpForums_Click);
             // 
             // mnuHelpDocumentation
             // 
-            resources.ApplyResources(this.mnuHelpDocumentation, "mnuHelpDocumentation");
             this.mnuHelpDocumentation.Name = "mnuHelpDocumentation";
+            resources.ApplyResources(this.mnuHelpDocumentation, "mnuHelpDocumentation");
             this.mnuHelpDocumentation.Click += new System.EventHandler(this.mnuHelpDocumentation_Click);
             // 
             // frmKfnCreate
@@ -597,6 +797,10 @@
             this.tbControl.ResumeLayout(false);
             this.tbPageBackground.ResumeLayout(false);
             this.tbPageBackground.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.picInactiveColorBorder)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.picActiveColorBorder)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.picInactiveColor)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.picActiveColor)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.UpDownFontSize)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.picBgColor)).EndInit();
             this.menuStrip1.ResumeLayout(false);
@@ -672,5 +876,27 @@
         private System.Windows.Forms.ToolStripMenuItem mnuHelp;
         private System.Windows.Forms.ToolStripMenuItem mnuHelpForums;
         private System.Windows.Forms.ToolStripMenuItem mnuHelpDocumentation;
+        private System.Windows.Forms.ComboBox cbFrame;
+        private System.Windows.Forms.Label lblBorder;
+        private System.Windows.Forms.Button btnInactiveColorBorderPicker;
+        private System.Windows.Forms.Button btnInactiveColorBorderSelect;
+        private System.Windows.Forms.PictureBox picInactiveColorBorder;
+        private System.Windows.Forms.TextBox txtInactiveColorBorder;
+        private System.Windows.Forms.Label lblInactiveColorBorder;
+        private System.Windows.Forms.Button btnActiveColorBorderPicker;
+        private System.Windows.Forms.Button btnActiveColorBorderSelect;
+        private System.Windows.Forms.PictureBox picActiveColorBorder;
+        private System.Windows.Forms.TextBox txtActiveColorBorder;
+        private System.Windows.Forms.Label lblActiveColorBorder;
+        private System.Windows.Forms.Button btnInactiveColorPicker;
+        private System.Windows.Forms.Button btnInactiveColorSelect;
+        private System.Windows.Forms.PictureBox picInactiveColor;
+        private System.Windows.Forms.TextBox txtInactiveColor;
+        private System.Windows.Forms.Label lblInactiveColor;
+        private System.Windows.Forms.Button btnActiveColorPicker;
+        private System.Windows.Forms.Button btnActiveColorSelect;
+        private System.Windows.Forms.PictureBox picActiveColor;
+        private System.Windows.Forms.TextBox txtActiveColor;
+        private System.Windows.Forms.Label lblActiveColor;
     }
 }

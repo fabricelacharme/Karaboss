@@ -467,5 +467,20 @@
     <Setting Name="KfnFontSize" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">18</Value>
     </Setting>
+    <Setting Name="KfnActiveColor" Type="System.String" Scope="User">
+      <Value Profile="(Default)">#00ACFF</Value>
+    </Setting>
+    <Setting Name="KfnInactiveColor" Type="System.String" Scope="User">
+      <Value Profile="(Default)">#FFFFFF</Value>
+    </Setting>
+    <Setting Name="KfnActiveColorBorder" Type="System.String" Scope="User">
+      <Value Profile="(Default)">#000000</Value>
+    </Setting>
+    <Setting Name="KfnInactiveColorBorder" Type="System.String" Scope="User">
+      <Value Profile="(Default)">#010101</Value>
+    </Setting>
+    <Setting Name="KfnBorderEffectIndex" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">2</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

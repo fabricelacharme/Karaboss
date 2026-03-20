@@ -33,6 +33,8 @@ namespace Karaboss.Kfn
             InitControls();
         }
 
+        #region initializations
+
         /// <summary>
         /// Initialize controls
         /// </summary>
@@ -62,7 +64,49 @@ namespace Karaboss.Kfn
             ftSize = 20;
 
             PopulateFonts();
+            PopulateLyricBorders();
         }
+
+
+        private void PopulateFonts()
+        {
+            // Karafun seems to support only a few fonts
+            foreach (System.Drawing.FontFamily fnt in System.Drawing.FontFamily.Families)
+            {
+                cbFontName.Items.Add(fnt.Name);
+            }
+
+            //List<string> fontNames = new List<string>() { "Arial", "Arial Black", "Arial Unicode MS", "Courier New", "Georgia", "Impact", "Tahoma", "Times New Roman", "Verdana" };
+            //cbFontName.DataSource = fontNames;
+
+            //cbFontName.SelectedIndex = cbFontName.FindString("Arial Black");
+            for (int i = 0; i < cbFontName.Items.Count; i++)
+            {
+                if (cbFontName.Items[i].ToString() == "Arial Black")
+                {
+                    cbFontName.SelectedIndex = i;
+                    break;
+                }
+            }
+
+        }
+
+        private void PopulateLyricBorders()
+        {
+
+            //List<string> lstBorders = new List<string>() { "Aucune bordure", "Fine bordure", "Bordure 1 pixel", "Bordure 2 pixel", "Bordure 3 pixel", "Bordure 4 pixel", "Bordure 5 pixel", "Ombré", "Neon" };
+            List<string> lstBorders = new List<string>() { "NoBorder", "FrameThin", "Frame1", "Frame2", "Frame3", "Frame4", "Frame5", "Shadow", "Neon" };
+
+            //List<string> lstBorders = new List<string>() { "No border", "Thin border", "1 - pixel border", "2 - pixel border", "3 - pixel border", "4 - pixel border", "5 - pixel border", "Shaded", "Neon" };
+            cbFrame.DataSource = lstBorders;
+
+            if (cbFrame.Items.Count > 2 )
+                cbFrame.SelectedIndex = 2; // 1 pixel
+        }
+
+
+        #endregion initializations
+
 
         #region select audios
 
@@ -262,6 +306,19 @@ namespace Karaboss.Kfn
             string Comment;
             (string, uint) fontName;
 
+            /*
+            ActiveColor=#00ACFFFF
+            InactiveColor=#FFFFFFFF
+            FrameColor=#000000FF
+            InactiveFrameColor=#8000FFFF
+            FrameType=Neon
+            */
+            string ActiveColor;         // ACtiveColor
+            string InactiveColor;       // InactiveColor
+            string FrameColor;          // ActiveColorBorder
+            string InactiveFrameColor;  // InactiveColorBorder
+            string FrameType;           // 
+
             #region guard
 
             AudioFileName1 = txtAudio1.Text.Trim();
@@ -331,6 +388,31 @@ namespace Karaboss.Kfn
             fontName = (txtLoremIpsum.Font.Name, (uint)txtLoremIpsum.Font.Size);
 
 
+            ActiveColor = txtActiveColor.Text.Trim();
+            InactiveColor = txtInactiveColor.Text.Trim();
+            FrameColor = txtActiveColorBorder.Text.Trim();
+            InactiveFrameColor = txtInactiveColorBorder.Text.Trim();
+            FrameType = cbFrame.Items[cbFrame.SelectedIndex].ToString();
+
+
+            Dictionary<string, string> KfnParameters = new Dictionary<string, string> ();
+            KfnParameters.Add("Artist", Artist);
+            KfnParameters.Add("Title", Title);
+            KfnParameters.Add("Comment", Comment);
+            KfnParameters.Add("Author", Author);
+            KfnParameters.Add("Year", Year);
+            
+            KfnParameters.Add("BgColor", BgColor);
+            KfnParameters.Add("FontName", fontName.Item1);
+            KfnParameters.Add("FontSize", fontName.Item2.ToString());
+
+            KfnParameters.Add("ActiveColor", ActiveColor);
+            KfnParameters.Add("InactiveColor", InactiveColor);
+            KfnParameters.Add("FrameColor", FrameColor);
+            KfnParameters.Add("InactiveFrameColor", InactiveFrameColor);
+            KfnParameters.Add("FrameType", FrameType);
+
+
             string tx = "Create a new KFN file" + Environment.NewLine;
 
             for (int i = 0; i < lstAudioFiles.Count; i++)
@@ -356,7 +438,7 @@ namespace Karaboss.Kfn
 
             Cursor = Cursors.WaitCursor;
             // Initialize Writer
-            KfnWriter Writer = new KfnWriter(kfnFile, lstAudioFiles, LyricsFileName, lstImages, Title, Artist, Comment, Year, Author, BgColor, fontName);
+            KfnWriter Writer = new KfnWriter(kfnFile, lstAudioFiles, LyricsFileName, lstImages, KfnParameters);
             if (Writer != null)
             {
                 string result = Writer.CreateKFN();
@@ -486,9 +568,14 @@ namespace Karaboss.Kfn
         #endregion navigation
 
 
-        #region background color
+        #region functions
 
-        private void btnBgColorSelect_Click(object sender, EventArgs e)
+        /// <summary>
+        /// Select a color with the ColorDialog box and update colors for picBox and textBox
+        /// </summary>
+        /// <param name="picBox"></param>
+        /// <param name="textBox"></param>
+        private void SelectColorFromButton(PictureBox picBox, TextBox textBox)
         {
             ColorDialog dlg = new ColorDialog();
             dlg.FullOpen = true;
@@ -498,12 +585,39 @@ namespace Karaboss.Kfn
 
             if (dlg.ShowDialog() != DialogResult.OK) return;
 
-            picBgColor.BackColor = dlg.Color;
-            txtBgColor.Text = ToHex(dlg.Color);
+            picBox.BackColor = dlg.Color;
+            textBox.Text = ToHex(dlg.Color);
         }
 
+        private void SelectColorFromPicker(TextBox textBox)
+        {
+            this.Hide();
+            frmFullScreen frmFullScreen = new frmFullScreen(textBox);
+            frmFullScreen.Show();
+        }
+
+        public void GetColorFromPicker(Color c, TextBox txb)
+        {
+            txb.Text = ToHex(c);
+
+            //txtBgColor.Text = ToHex(c);
+            this.Show();
+        }
+
+
+        /// <summary>
+        /// Translate color to hexa
+        /// </summary>
+        /// <param name="c"></param>
+        /// <returns></returns>
         private static String ToHex(System.Drawing.Color c) => $"#{c.R:X2}{c.G:X2}{c.B:X2}";
 
+        /// <summary>
+        /// Check text representing a color
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentException"></exception>
         public static Color Parse(string input)
         {
             input = input.Trim();
@@ -523,39 +637,38 @@ namespace Karaboss.Kfn
         }
 
 
+        private string CheckColor(string color)
+        {
+            if (regexColor.IsMatch(color))
+                return color;
+            else
+            {
+                return "#000000";    // Black default                    
+            }
+        }
+
+        #endregion functions
+
+
+        #region background color
+
+        private void btnBgColorSelect_Click(object sender, EventArgs e)
+        {
+            SelectColorFromButton(picBgColor, txtBgColor);           
+        }
+          
         private void btnBgColorPicker_Click(object sender, EventArgs e)
         {
-            this.Hide();
-            frmFullScreen frmFullScreen = new frmFullScreen();
-            frmFullScreen.Show();            
+            SelectColorFromPicker(txtBgColor);
         }
-
-        public void GetColorFromPicker(Color c)
-        {
-            txtBgColor.Text = ToHex(c);
-            this.Show();
-        }
-
+      
         private void txtBgColor_TextChanged(object sender, EventArgs e)
         {
             picBgColor.BackColor = Parse(txtBgColor.Text);
             txtLoremIpsum.BackColor = picBgColor.BackColor;
-
         }
 
-        private void PopulateFonts()
-        {
-            // Karafun seems to support only a few fonts
-            foreach (System.Drawing.FontFamily fnt in System.Drawing.FontFamily.Families)
-            {
-                cbFontName.Items.Add(fnt.Name);
-            }
-
-            //List<string> fontNames = new List<string>() { "Arial", "Arial Black", "Arial Unicode MS", "Courier New", "Georgia", "Impact", "Tahoma", "Times New Roman", "Verdana" };
-            //cbFontName.DataSource = fontNames;
-
-            cbFontName.SelectedIndex = cbFontName.FindString("Arial Black");
-        }
+      
 
 
         private void cbFontName_SelectedIndexChanged(object sender, EventArgs e)
@@ -575,15 +688,26 @@ namespace Karaboss.Kfn
 
 
         #region form load close
+
+        /// <summary>
+        /// Forpm loading
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void frmKfnCreate_Load(object sender, EventArgs e)
         {
             try
             {
-
                 txtAuthor.Text = Properties.Settings.Default.KfnAuthor;
                 txtComment.Text = Properties.Settings.Default.KfnComment;
                 txtBgColor.Text = Properties.Settings.Default.KfnBgColor;
                 
+                txtActiveColor.Text = Properties.Settings.Default.KfnActiveColor;
+                txtInactiveColor.Text = Properties.Settings.Default.KfnInactiveColor;
+                txtActiveColorBorder.Text = Properties.Settings.Default.KfnActiveColorBorder;
+                txtInactiveColorBorder.Text = Properties.Settings.Default.KfnInactiveColorBorder;
+
+
                 UpDownFontSize.Value = Properties.Settings.Default.KfnFontSize;
 
                 string f = Properties.Settings.Default.KfnFontName;
@@ -596,8 +720,11 @@ namespace Karaboss.Kfn
                         break;
                     }
                 }
-                
 
+                // Lyrics border effect (int)
+                int n = Properties.Settings.Default.KfnBorderEffectIndex; 
+                if (cbFrame.Items.Count > n)
+                    cbFrame.SelectedIndex = n;
 
             }
             catch (Exception ex)
@@ -606,38 +733,41 @@ namespace Karaboss.Kfn
             }
         }
 
-
-
+        /// <summary>
+        /// Form closing
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void frmKfnCreate_FormClosing(object sender, FormClosingEventArgs e)
         {
-            if (txtBgColor.Text.Trim().Length > 0) 
-            {
-                string BgColor;
-                // Check background color            
-                if (regexColor.IsMatch(txtBgColor.Text.Trim()))
-                    BgColor = txtBgColor.Text.Trim();
-                else
-                {
-                    BgColor = "#000000";    // Black default                    
-                }
-                Properties.Settings.Default.KfnBgColor = BgColor;
-            }
-            
+            // Background color
+            Properties.Settings.Default.KfnBgColor = CheckColor(txtBgColor.Text.Trim());
+                       
+            // Autor & comment
             if (txtAuthor.Text.Trim().Length > 0) 
                 Properties.Settings.Default.KfnAuthor = txtAuthor.Text.Trim();
             if (txtComment.Text.Trim().Length > 0)
                 Properties.Settings.Default.KfnComment = txtComment.Text.Trim();
 
+            // Font
             Properties.Settings.Default.KfnFontName = cbFontName.SelectedItem.ToString();
             Properties.Settings.Default.KfnFontSize = (int)UpDownFontSize.Value;
 
+            // Lyrics color & border
+            Properties.Settings.Default.KfnActiveColor = CheckColor(txtActiveColor.Text.Trim());
+            Properties.Settings.Default.KfnInactiveColor = CheckColor(txtInactiveColor.Text.Trim());
+            Properties.Settings.Default.KfnActiveColorBorder = CheckColor(txtActiveColorBorder.Text.Trim());
+            Properties.Settings.Default.KfnInactiveColorBorder = CheckColor(txtInactiveColorBorder.Text.Trim());
+
+            // Lyrics border effect
+            Properties.Settings.Default.KfnBorderEffectIndex = cbFrame.SelectedIndex;
 
             Properties.Settings.Default.Save();
         }
 
         #endregion form load close
 
-
+    
         #region tabControl
         private void tbControl_DrawItem(object sender, DrawItemEventArgs e)
         {
@@ -698,8 +828,87 @@ namespace Karaboss.Kfn
             Karaclass.DisplayUrl(Karaclass.url_documentation);
         }
 
+
         #endregion menus
 
 
+        #region Lyrics decoration 
+
+        #region text events
+        private void txtActiveColor_TextChanged(object sender, EventArgs e)
+        {
+            picActiveColor.BackColor = Parse(txtActiveColor.Text);            
+        }
+
+        private void txtInactiveColor_TextChanged(object sender, EventArgs e)
+        {
+            picInactiveColor.BackColor = Parse(txtInactiveColor.Text);
+        }
+
+        private void txtActiveColorBorder_TextChanged(object sender, EventArgs e)
+        {
+            picActiveColorBorder.BackColor = Parse(txtActiveColorBorder.Text);
+        }
+
+        private void txtInactiveColorBorder_TextChanged(object sender, EventArgs e)
+        {
+            picInactiveColorBorder.BackColor = Parse(txtInactiveColorBorder.Text);
+        }
+
+        #endregion text events
+
+        private void cbBorderEffectSelect_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        #region select color with button
+        private void btnActiveColorSelect_Click(object sender, EventArgs e)
+        {
+            SelectColorFromButton(picActiveColor, txtActiveColor);
+        }
+
+        private void btnInactiveColorSelect_Click(object sender, EventArgs e)
+        {
+            SelectColorFromButton(picInactiveColor, txtInactiveColor);
+        }
+
+        private void btnActiveColorBorderSelect_Click(object sender, EventArgs e)
+        {
+            SelectColorFromButton(picActiveColorBorder, txtActiveColorBorder);
+        }
+
+        private void btnInactiveColorBorderSelect_Click(object sender, EventArgs e)
+        {
+            SelectColorFromButton(picInactiveColorBorder, txtInactiveColorBorder);
+        }
+
+        #endregion select color with button
+
+        #region select color with picker
+
+        private void btnActiveColorPicker_Click(object sender, EventArgs e)
+        {
+            SelectColorFromPicker(txtActiveColor);
+        }
+
+        private void btnInactiveColorPicker_Click(object sender, EventArgs e)
+        {
+            SelectColorFromPicker(txtInactiveColor);
+        }
+
+        private void btnActiveColorBorderPicker_Click(object sender, EventArgs e)
+        {
+            SelectColorFromPicker(txtActiveColorBorder);
+        }
+
+        private void btnInactiveColorBorderPicker_Click(object sender, EventArgs e)
+        {
+            SelectColorFromPicker(txtInactiveColorBorder);
+        }
+
+        #endregion select color with picker
+
+        #endregion lyrics decoration
     }
 }

@@ -242,6 +242,10 @@ namespace KFNV.SongIni
 
                 string initialActiveColor = section["ActiveColor"] != "" ? section["ActiveColor"] : null;
 
+                string frameColor = section["FrameColor"] != "" ? section["FrameColor"] : null;
+                string inactiveFrameColor = section["InactiveFrameColor"] != "" ? section["InactiveFrameColor"] : null;
+                string frameType = section["FrameType"] != "" ? section["FrameType"] : null;
+
                 // list of animations in Anim# form
                 var anims = new List<Anim>();
                 var syncs = new List<int>();
@@ -381,6 +385,11 @@ namespace KFNV.SongIni
                         initialFont,
                         initialActiveColor,
                         initialInactiveColor,
+
+                        frameColor,
+                        inactiveFrameColor,
+                        frameType,
+
                         syncs,
                         texts,
                         initialTrajectory
@@ -458,16 +467,31 @@ namespace KFNV.SongIni
                 section["NbAnim"] = eff.anims.Count.ToString();
                 section["TextCount"] = eff.texts.Count.ToString();
                 section["Trajectory"] = eff.initial_trajectory.ToString();
-                    
+
                 section["InPractice"] = "0";
                 section["Enabled"] = "-1";
                 section["Locked"] = "0";
-                
+
                 section["LibImage"] = eff.initial_lib_image;
                 //section["ImageColor"] = eff.initial_active_color;
                 section["OffsetX"] = "0";
                 section["OffsetY"] = "0";
                 section["Depth"] = "0";
+
+                if (eff.initial_active_color != null)
+                    section["ActiveColor"] = eff.initial_active_color;
+                
+                if (eff.initial_inactive_color != null)
+                    section["InactiveColor"] = eff.initial_inactive_color;
+
+                if (eff.frame_color != null)                 // frame_color
+                    section["FrameColor"] = eff.frame_color;
+
+                if (eff.inactive_frame_color != null)
+                    section["InactiveFrameColor"] = eff.inactive_frame_color;         // inactive_frame_color
+                
+                if (eff.frame_type != null)
+                    section["FrameType"] = eff.frame_type;   
 
                 
                 // Font
@@ -564,7 +588,6 @@ namespace KFNV.SongIni
                 }
 
                 #endregion lyrics times
-
 
 
                 #region lyrics texts

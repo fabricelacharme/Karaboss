@@ -1879,5 +1879,65 @@ namespace Karaboss.Properties {
                 this["KfnFontSize"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("#00ACFF")]
+        public string KfnActiveColor {
+            get {
+                return ((string)(this["KfnActiveColor"]));
+            }
+            set {
+                this["KfnActiveColor"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("#FFFFFF")]
+        public string KfnInactiveColor {
+            get {
+                return ((string)(this["KfnInactiveColor"]));
+            }
+            set {
+                this["KfnInactiveColor"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("#000000")]
+        public string KfnActiveColorBorder {
+            get {
+                return ((string)(this["KfnActiveColorBorder"]));
+            }
+            set {
+                this["KfnActiveColorBorder"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("#010101")]
+        public string KfnInactiveColorBorder {
+            get {
+                return ((string)(this["KfnInactiveColorBorder"]));
+            }
+            set {
+                this["KfnInactiveColorBorder"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("2")]
+        public int KfnBorderEffectIndex {
+            get {
+                return ((int)(this["KfnBorderEffectIndex"]));
+            }
+            set {
+                this["KfnBorderEffectIndex"] = value;
+            }
+        }
     }
 }

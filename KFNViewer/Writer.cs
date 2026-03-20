@@ -25,7 +25,15 @@ namespace KFNV
 
         public string BgColor { get; set; }
         public (string, uint) Font { get; set; }
-        
+
+
+        public string ActiveColor { get; set; }
+        public string InactiveColor { get; set; }
+        public string FrameColor { get; set; }
+        public string InactiveFrameColor { get; set; }
+        public string FrameType { get; set; }
+
+
         public string fullFileName {  get; set; }
         public List<string> lstAudioFiles {  get; set; }
         public string lyricsFileName { get; set; }
@@ -65,21 +73,26 @@ namespace KFNV
         // US-ASCII
         private int resourceNamesEncodingAuto = 20127;
 
-        public KfnWriter(string fpath, List<string> LstAudioFiles, string LyricsFile, List<string> lstImg, string title, string artist, string comment, string year, string author, string bgColor, (string, uint) font)
+        public KfnWriter(string fpath, List<string> LstAudioFiles, string LyricsFile, List<string> lstImg, Dictionary<string, string> KfnParameters)
         {
             fullFileName = fpath;
             lstAudioFiles = LstAudioFiles;
             lyricsFileName = LyricsFile;
             lstImages = lstImg;
-                        
 
-            Title = title;
-            Artist = artist;
-            Comment = comment;
-            Year = year;
-            Author = author;
-            BgColor = bgColor;
-            Font = font;
+            Title = KfnParameters["Title"];      
+            Artist = KfnParameters["Artist"];    
+            Comment = KfnParameters["Comment"];  
+            Year = KfnParameters["Year"];        
+            Author = KfnParameters["Author"];    
+            BgColor = KfnParameters["BgColor"];  
+            Font = (KfnParameters["FontName"], Convert.ToUInt32(KfnParameters["FontSize"])); // font;
+
+            ActiveColor = KfnParameters["ActiveColor"];
+            InactiveColor = KfnParameters["InactiveColor"];
+            FrameColor = KfnParameters["FrameColor"];
+            InactiveFrameColor = KfnParameters["InactiveFrameColor"];
+            FrameType = KfnParameters["FrameType"];
 
             Offset = 0;
                         
@@ -89,9 +102,7 @@ namespace KFNV
             // Initalize Song.ini
             kfnIni = new KfnIni();
         }
-                        
-
-      
+                              
         /// <summary>
         /// Create a new KFN file
         /// </summary>
@@ -115,7 +126,7 @@ namespace KFNV
             
 
             // Create Song.ini
-            CreateIniFile(Source, Title, Artist, Comment, Year, Author, BgColor, Font, Eff2Lyrics);
+            CreateIniFile(Source, Eff2Lyrics);
 
             // Add Song.ini
             SongIniFile = kfnIni.ToString();
@@ -125,31 +136,7 @@ namespace KFNV
             // Save to disk new KFN file
             string result = SaveKfnFile(fullFileName, Title, Comment, Source);
 
-            return result;
-            /*
-            try
-            {
-                using (FileStream fs = new FileStream(fullFileName, FileMode.Create, FileAccess.ReadWrite))
-                {                                                                                
-                    // Write bytes properties
-                    WriteBytesProperties(fs, Title, Comment, Source);
-
-                    // Write bytes resources
-                    WriteBytesResources(fs);
-
-                    // Write files contents
-                    WriteFilesContents(fs);                    
-                }
-
-                string tx = string.Format("The File \n{0} \nwas created in the directory\n {1}", Path.GetFileName(fullFileName), Path.GetDirectoryName(fullFileName));
-                MessageBox.Show(tx, Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Information);
-
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message, Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }                
-            */
+            return result;          
         }
 
         private string SaveKfnFile(string fName, string Title, string Comment, string Source)
@@ -445,34 +432,11 @@ namespace KFNV
         /// <param name="BgColor"></param>
         /// <param name="Font"></param>
         /// <param name="Eff2Lyrics"></param>
-        private void CreateIniFile(string Source, string Title, string Artist, string Comment, string Year, string Author, string BgColor, (string, uint) Font, (List<int>, List<string>) Eff2Lyrics )  
+        private void CreateIniFile(string Source, (List<int>, List<string>) Eff2Lyrics )  
         {            
             kfnIni.PopulateEmpty();
 
-            #region General
-            /*
-            [General]
-            Title = Ya ya twist
-            Artist = Johnny Hallyday, richard antohny, petula clarck......etc
-            Album =
-            Composer =
-            Year =
-            Track =
-            GenreID = -1
-            Copyright =
-            Comment = chanson type des années 60 reprise par une multitude d'artistes
-            Source = 1,I,Richard_Anthony_Yaya_twist_(Instrumental)_17710.mp3
-            EffectCount = 2
-            LanguageID = FR
-            DiffMen = 0
-            DiffWomen = 0
-            KFNType = 0
-            Properties = 24
-            KaraokeVersion =
-            VocalGuide =
-            KaraFunization = Dankaraok
-            InfoScreenBmp =
-            */
+            #region General           
 
             KfnHeader kfnHeader = new KfnHeader();
             kfnHeader.Title = Title;
@@ -488,35 +452,6 @@ namespace KFNV
 
 
             #region Materials
-            /*
-            [Materials]
-            MatCount = 10
-            Mat0 = Richard_Anthony_Yaya_twist_(Instrumental)_17710.mp3
-            Mat1 = Richard_Anthony_Yaya_twist_(Instrumental_avec_chanteur)_17711.mp3
-            Mat2 = imagesCAKS0X8N.jpg
-            Mat3 = imagesCA8G8R3P.jpg
-            Mat4 = imagesCAA3W1ZK.jpg
-            Mat5 = imagesCAAOWOS3.jpg
-            Mat6 = imagesCAD7NM53.jpg
-            Mat7 = imagesCAJS9BBJ.jpg
-            Mat8 = imagesCAJUNNLW.jpg
-            Mat9 = Copie de dan fond karafun.bmp
-            */
-
-
-            /* ResourceFile
-            Type = type;
-            Name = name;
-            EncryptedLength = enclength;
-            Length = length;
-            Offset = offset;
-            Encrypted = encrypted;
-            IsAudioSource = aSource;
- 
-            //ResourceFile res = new ResourceFile("Audio", "Chiens - Louane.mp3", 2943507, 2943507, 0, false, true);
-            res = new ResourceFile("Audio", fi.Name, length, length, Offset, false, true); 
-             */
-
             List<Entry> entries = new List<Entry>();           
             int Offset = 0;
 
@@ -539,7 +474,6 @@ namespace KFNV
                 Offset += Offset;
             }
             
-
             // Images
             ResourceFile[] images_resources = resources.Where(r => r.FileType == "Image").ToArray();
             foreach (ResourceFile resource in images_resources)
@@ -554,7 +488,7 @@ namespace KFNV
                 Offset += Offset;
             }
 
-           // Populate section [Materials]
+            // Populate section [Materials]
             kfnIni.SetMaterials(entries);
 
             #endregion Materials
@@ -563,7 +497,6 @@ namespace KFNV
             #region Set MP3File
 
             kfnIni.SetMP3Music(audios_resources);
-
 
             #endregion set MP3File
 
@@ -595,6 +528,7 @@ namespace KFNV
 
 
             #region Eff
+
             /*             
             id = Id;
             num = Num;
@@ -633,15 +567,20 @@ namespace KFNV
             Eff eff = new Eff(
                 51,                         // first ID is always 51
                 effnum,                     // num
-                lstAnim,                   //new List<Anim>(),           // anims
-                null, 
-                null,
-                Font,                    // font
-                "#00ACFFFF",                       // Initial active color
-                "#FFFFFFFF",                       // initial inactive color
-                new List<int>(),           // syncs
-                new List<TextEntry>(),     // Texts
-                Trajectory.Default());
+                lstAnim,                    // new List<Anim>(),   
+                null,                       // initial_lib_image
+                null,                       // initial_video_file
+                Font,                       // font
+                null,                       // initial_active_color
+                null,                       // initial_inactive_color
+
+                null,                       // frame_color
+                null,                       // inactive_frame_color
+                null,                       // frame_type
+
+                new List<int>(),            // syncs
+                new List<TextEntry>(),      // Texts
+                Trajectory.Default());      // Trajectory
             
             kfnIni.Effs.Add(eff);
 
@@ -676,11 +615,16 @@ namespace KFNV
                 1,  // second ID is 1
                 effnum,  // num
                 new List<Anim>(),           // anims
-                null,
-                null,
-                Font,        //   ("", 0),                    // font
-                "#00ACFFFF",                // initial active color
-                "#FFFFFFFF",                // initial inactive color
+                null,                       // initial_lib_image
+                null,                       // initial_video_file
+                Font,                       // font
+                ActiveColor,                // initial_active_color
+                InactiveColor,              // initial_inactive_color
+
+                FrameColor,                 // frame_color
+                InactiveFrameColor,         // inactive_frame_color
+                FrameType,                  // frame_type
+
                 syncsLst,                   // Sync
                 textLst,                    // Texts
                 Trajectory.Default());
@@ -689,6 +633,8 @@ namespace KFNV
 
             #endregion eff2
 
+            
+            // Load all effects
             kfnIni.SetEff();
 
             #endregion Eff                      
