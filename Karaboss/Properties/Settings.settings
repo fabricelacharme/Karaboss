@@ -459,10 +459,10 @@
       <Value Profile="(Default)" />
     </Setting>
     <Setting Name="KfnBgColor" Type="System.String" Scope="User">
-      <Value Profile="(Default)">#000000</Value>
+      <Value Profile="(Default)">#FFFFFF</Value>
     </Setting>
     <Setting Name="KfnFontName" Type="System.String" Scope="User">
-      <Value Profile="(Default)">Arial</Value>
+      <Value Profile="(Default)">Arial Black</Value>
     </Setting>
     <Setting Name="KfnFontSize" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">18</Value>
@@ -471,13 +471,13 @@
       <Value Profile="(Default)">#00ACFF</Value>
     </Setting>
     <Setting Name="KfnInactiveColor" Type="System.String" Scope="User">
-      <Value Profile="(Default)">#FFFFFF</Value>
-    </Setting>
-    <Setting Name="KfnActiveColorBorder" Type="System.String" Scope="User">
       <Value Profile="(Default)">#000000</Value>
     </Setting>
-    <Setting Name="KfnInactiveColorBorder" Type="System.String" Scope="User">
+    <Setting Name="KfnActiveColorBorder" Type="System.String" Scope="User">
       <Value Profile="(Default)">#010101</Value>
+    </Setting>
+    <Setting Name="KfnInactiveColorBorder" Type="System.String" Scope="User">
+      <Value Profile="(Default)">#FFFFFF</Value>
     </Setting>
     <Setting Name="KfnBorderEffectIndex" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">2</Value>

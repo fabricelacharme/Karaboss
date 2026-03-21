@@ -1,4 +1,5 @@
-﻿using Hqub.MusicBrainz.API.Entities;
+﻿using FlShell.Interop;
+using Hqub.MusicBrainz.API.Entities;
 using Karaboss.Lrc.SharedFramework;
 using Karaboss.Mp3;
 using Karaboss.Resources.Localization;
@@ -7,10 +8,12 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
+using System.Drawing.Drawing2D;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
+using TagLib.Id3v2;
 
 namespace Karaboss.Kfn
 {
@@ -21,6 +24,9 @@ namespace Karaboss.Kfn
         Regex regexColor;
         string ftName;
         uint ftSize;
+
+        List<string> LstTextPreview = new List<string>();
+
 
         public frmKfnCreate(string path)
         {
@@ -41,6 +47,9 @@ namespace Karaboss.Kfn
         /// </summary>
         private void InitControls()
         {
+            picImage.SizeMode = PictureBoxSizeMode.StretchImage;
+            picPreview.SizeMode = PictureBoxSizeMode.StretchImage;
+
             OpenFileDialog.InitialDirectory = fPath;
 
             tbControl.SizeMode = TabSizeMode.Fixed;
@@ -51,7 +60,7 @@ namespace Karaboss.Kfn
             tx = string.Format(tx, Environment.NewLine);
             lblHelpTb1.Text = tx;
 
-            lblHelpTb2.Text = Karaboss.Resources.Localization.Strings.kfnCreateTb2;
+            lblHelpTb2.Text = Strings.kfnCreateTb2;
 
             tx = Strings.kfnCreateTb3;
             tx = string.Format(tx, Environment.NewLine);
@@ -63,11 +72,12 @@ namespace Karaboss.Kfn
 
             ftName = "Arial Black";
             ftSize = 20;
-
+           
             PopulateFonts();
             PopulateLyricBorders();
+            PopulatePicPreview();
         }
-
+       
 
         private void PopulateFonts()
         {
@@ -277,8 +287,14 @@ namespace Karaboss.Kfn
                 double ratio = img.Width / (double)img.Height;
                 lblRatio.Text = "Ratio: " + String.Format("{0:N2}", ratio);
 
-                picImage.SizeMode = PictureBoxSizeMode.StretchImage;
+                //picImage.SizeMode = PictureBoxSizeMode.StretchImage;
                 picImage.Image = img;
+
+                if (img != null)
+                {
+                    picPreview.Image = img;
+                }
+
             }
             catch (Exception ex)
             {
@@ -289,6 +305,50 @@ namespace Karaboss.Kfn
         }
 
         #endregion select images
+
+
+        #region background color
+
+        private void btnBgColorSelect_Click(object sender, EventArgs e)
+        {
+            SelectColorFromButton(picBgColor, txtBgColor);
+        }
+
+        private void btnBgColorPicker_Click(object sender, EventArgs e)
+        {
+            SelectColorFromPicker(txtBgColor);
+        }
+
+        private void txtBgColor_TextChanged(object sender, EventArgs e)
+        {
+            picBgColor.BackColor = Parse(txtBgColor.Text);
+            picPreview.BackColor = picBgColor.BackColor;
+        }
+
+        /// <summary>
+        /// Change font
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void cbFontName_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            ftName = cbFontName.SelectedItem.ToString();            
+            picPreview.Invalidate();
+        }
+
+        /// <summary>
+        /// Change font size
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void UpDownFontSize_ValueChanged(object sender, EventArgs e)
+        {
+            ftSize = (uint)UpDownFontSize.Value;            
+            picPreview.Invalidate();
+        }
+
+
+        #endregion background color
 
 
         #region Button Create Play
@@ -405,7 +465,8 @@ namespace Karaboss.Kfn
             // See guard
 
             // Font
-            fontName = (txtLoremIpsum.Font.Name, (uint)txtLoremIpsum.Font.Size);
+            //fontName = (txtLoremIpsum.Font.Name, (uint)txtLoremIpsum.Font.Size);
+            fontName = (ftName, ftSize);
 
 
             ActiveColor = txtActiveColor.Text.Trim();
@@ -669,43 +730,179 @@ namespace Karaboss.Kfn
         }
 
         #endregion functions
-
-
-        #region background color
-
-        private void btnBgColorSelect_Click(object sender, EventArgs e)
-        {
-            SelectColorFromButton(picBgColor, txtBgColor);           
-        }
-          
-        private void btnBgColorPicker_Click(object sender, EventArgs e)
-        {
-            SelectColorFromPicker(txtBgColor);
-        }
-      
-        private void txtBgColor_TextChanged(object sender, EventArgs e)
-        {
-            picBgColor.BackColor = Parse(txtBgColor.Text);
-            txtLoremIpsum.BackColor = picBgColor.BackColor;
-        }
-
       
 
+        #region Preview
 
-        private void cbFontName_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            ftName = cbFontName.SelectedItem.ToString();
-            txtLoremIpsum.Font = new Font(ftName, ftSize, FontStyle.Regular, GraphicsUnit.Pixel);
+        private void picPreview_Paint(object sender, PaintEventArgs e)
+        {            
+            int ftHeight = 0;           
+            SizeF textWith;
+            int textHeight = 0;
+            string line;
+            int W = picPreview.Width;
+            int H = picPreview.Height;
+            int x = 0;
+            int y = 0;
+
+
+            Brush ActiveColorBrush = new SolidBrush(picActiveColor.BackColor);
+            Brush InactiveColorBrush = new SolidBrush(picInactiveColor.BackColor);            
+            Brush ActiveColorBorderBrush = new SolidBrush(picActiveColorBorder.BackColor);
+            Brush InactiveColorBorderBrush = new SolidBrush(picInactiveColorBorder.BackColor);
+
+            //Brush brush;
+
+            using (Font myFont = new Font(ftName, ftSize))
+            {                                
+                // Calculate y
+                ftHeight = myFont.Height;                
+                textHeight = ftHeight * LstTextPreview.Count;
+                y = (H - textHeight) / 2;
+
+
+                /*
+                Graphics g = e.Graphics;
+                
+                for (int i = 0; i < LstTextPreview.Count; i++)
+                {
+                    line = LstTextPreview[i];
+                    
+                    // Calculate x
+                    textWith = g.MeasureString(line, myFont);
+                    x = (W - (int)textWith.Width)/2;
+
+                    if (i < 2)
+                        brush = ActiveColorBrush;
+                    else
+                        brush = InactiveColorBrush;
+
+                    e.Graphics.DrawString(line, myFont, brush, new Point(x, y + ftHeight * i));
+                }
+                */             
+
+                try
+                {
+                    Graphics g = e.Graphics;
+                    g.SmoothingMode = SmoothingMode.AntiAlias;
+
+                    //create a path
+                    GraphicsPath pth = new GraphicsPath();
+
+
+                    // Create pens
+
+                    float thick = 1.0f;
+                    string FrameType = ((KeyValuePair<string, string>)cbFrame.SelectedItem).Key;
+                    switch (FrameType)
+                    {
+                        case "NoBorder":
+                            thick = 0.0f;
+                            break;
+                        case "FrameThin":
+                            break;
+                        case "Frame1":
+                            thick = 1.0f;
+                            break;
+                        case "Frame2":
+                            thick = 2.0f;
+                            break;                            
+                        case "Frame3":
+                            thick = 3.0f;
+                            break;
+                        case "Frame4":
+                            thick = 4.0f;
+                            break;
+                        case "Frame5":
+                            thick = 5.0f;
+                            break;
+                        case "Shadow":
+                            break;
+                        case "Neon":
+                            break;
+                        default:
+                            thick = 1.0f;
+                            break;
+                    }                    
+
+                    Pen ActiveBorderPen = new Pen(ActiveColorBorderBrush, thick);
+                    Pen InactiveBorderPen = new Pen(InactiveColorBorderBrush, thick);
+                    Pen pen;
+                    Brush brush;
+                    Point point;
+
+                    Rectangle rect = picPreview.ClientRectangle;
+                    //RectangleF rect = new RectangleF(0, 0, picPreview.Width, picPreview.Height);
+
+                    StringFormat sf = new StringFormat();
+                    sf.Alignment = StringAlignment.Center;
+                    sf.LineAlignment = StringAlignment.Center;
+
+                    float emSize = g.DpiY * ftSize / 72f;
+
+                    for (int i = 0; i < LstTextPreview.Count; i++)
+                    {
+                        if (i < 3)
+                        {
+                            pen = ActiveBorderPen;
+                            brush = ActiveColorBrush;
+                        }
+                        else
+                        {
+                            pen = InactiveBorderPen;
+                            brush = InactiveColorBrush;
+                        }
+
+                        //rect.Y += 10;
+                        
+                        
+                        // Active line
+                        pth.AddString(
+                            LstTextPreview[i],
+                            new FontFamily(ftName),
+                            0,
+                            emSize,
+                            new Point(169, (int)(55 + i * emSize)), //picPreview.ClientRectangle,     
+                            sf); // StringFormat.GenericTypographic);
+                        
+                        // Fill
+                        g.FillPath(brush, pth);
+                        
+                        //outline it
+                        if (thick > 0.0f)
+                            g.DrawPath(pen, pth);
+                        
+                        // Reset for next
+                        pth.Reset();
+
+                    }
+
+                    //tidy up.
+                    ActiveBorderPen.Dispose();
+                    InactiveBorderPen.Dispose();
+                    //pth.Dispose();
+                    //g.Dispose();
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.Message);
+                }
+
+            }
         }
 
-        private void UpDownFontSize_ValueChanged(object sender, EventArgs e)
-        {
-            ftSize = (uint)UpDownFontSize.Value;
-            txtLoremIpsum.Font = new Font(ftName, ftSize, FontStyle.Regular, GraphicsUnit.Pixel);
+
+        private void PopulatePicPreview()
+        {            
+            LstTextPreview.Add("Lorem ipsum dolor");
+            LstTextPreview.Add("sit amet,");
+            LstTextPreview.Add("consectetur adipiscing");
+            LstTextPreview.Add("elit,");
+            LstTextPreview.Add("sed do eiusmod tempor");
+            LstTextPreview.Add("incididunt");                                
         }
 
-
-        #endregion background color
+        #endregion Preview
 
 
         #region form load close
@@ -721,12 +918,19 @@ namespace Karaboss.Kfn
             {
                 txtAuthor.Text = Properties.Settings.Default.KfnAuthor;
                 txtComment.Text = Properties.Settings.Default.KfnComment;
-                txtBgColor.Text = Properties.Settings.Default.KfnBgColor;
                 
+                txtBgColor.Text = Properties.Settings.Default.KfnBgColor;                
                 txtActiveColor.Text = Properties.Settings.Default.KfnActiveColor;
                 txtInactiveColor.Text = Properties.Settings.Default.KfnInactiveColor;
                 txtActiveColorBorder.Text = Properties.Settings.Default.KfnActiveColorBorder;
                 txtInactiveColorBorder.Text = Properties.Settings.Default.KfnInactiveColorBorder;
+
+                picBgColor.BackColor = Parse(txtBgColor.Text);
+                picPreview.BackColor = picBgColor.BackColor;
+                picActiveColor.BackColor = Parse(txtActiveColor.Text);
+                picInactiveColor.BackColor = Parse(txtInactiveColor.Text);
+                picActiveColorBorder.BackColor = Parse(txtActiveColorBorder.Text);
+                picInactiveColorBorder.BackColor = Parse(txtInactiveColorBorder.Text);
 
 
                 UpDownFontSize.Value = Properties.Settings.Default.KfnFontSize;
@@ -880,13 +1084,13 @@ namespace Karaboss.Kfn
 
         private void cbBorderEffectSelect_SelectedIndexChanged(object sender, EventArgs e)
         {
-
+            picPreview.Invalidate();
         }
 
         #region select color with button
         private void btnActiveColorSelect_Click(object sender, EventArgs e)
         {
-            SelectColorFromButton(picActiveColor, txtActiveColor);
+            SelectColorFromButton(picActiveColor, txtActiveColor);            
         }
 
         private void btnInactiveColorSelect_Click(object sender, EventArgs e)
@@ -931,5 +1135,7 @@ namespace Karaboss.Kfn
         #endregion select color with picker
 
         #endregion lyrics decoration
+
+       
     }
 }

@@ -75,6 +75,7 @@
             this.btnCancel = new System.Windows.Forms.Button();
             this.tbControl = new System.Windows.Forms.TabControl();
             this.tbPageBackground = new System.Windows.Forms.TabPage();
+            this.picPreview = new System.Windows.Forms.PictureBox();
             this.cbFrame = new System.Windows.Forms.ComboBox();
             this.lblBorder = new System.Windows.Forms.Label();
             this.btnInactiveColorBorderPicker = new System.Windows.Forms.Button();
@@ -99,7 +100,6 @@
             this.lblActiveColor = new System.Windows.Forms.Label();
             this.lblHelpTb4 = new System.Windows.Forms.Label();
             this.UpDownFontSize = new System.Windows.Forms.NumericUpDown();
-            this.txtLoremIpsum = new System.Windows.Forms.TextBox();
             this.lblFont = new System.Windows.Forms.Label();
             this.cbFontName = new System.Windows.Forms.ComboBox();
             this.btnBgColorPicker = new System.Windows.Forms.Button();
@@ -121,6 +121,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.picImage)).BeginInit();
             this.tbControl.SuspendLayout();
             this.tbPageBackground.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.picPreview)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.picInactiveColorBorder)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.picActiveColorBorder)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.picInactiveColor)).BeginInit();
@@ -456,6 +457,7 @@
             // tbPageBackground
             // 
             this.tbPageBackground.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(58)))), ((int)(((byte)(58)))), ((int)(((byte)(58)))));
+            this.tbPageBackground.Controls.Add(this.picPreview);
             this.tbPageBackground.Controls.Add(this.cbFrame);
             this.tbPageBackground.Controls.Add(this.lblBorder);
             this.tbPageBackground.Controls.Add(this.btnInactiveColorBorderPicker);
@@ -480,7 +482,6 @@
             this.tbPageBackground.Controls.Add(this.lblActiveColor);
             this.tbPageBackground.Controls.Add(this.lblHelpTb4);
             this.tbPageBackground.Controls.Add(this.UpDownFontSize);
-            this.tbPageBackground.Controls.Add(this.txtLoremIpsum);
             this.tbPageBackground.Controls.Add(this.lblFont);
             this.tbPageBackground.Controls.Add(this.cbFontName);
             this.tbPageBackground.Controls.Add(this.btnBgColorPicker);
@@ -491,6 +492,14 @@
             this.tbPageBackground.Controls.Add(this.btnTb4Previous);
             resources.ApplyResources(this.tbPageBackground, "tbPageBackground");
             this.tbPageBackground.Name = "tbPageBackground";
+            // 
+            // picPreview
+            // 
+            this.picPreview.BackColor = System.Drawing.Color.White;
+            resources.ApplyResources(this.picPreview, "picPreview");
+            this.picPreview.Name = "picPreview";
+            this.picPreview.TabStop = false;
+            this.picPreview.Paint += new System.Windows.Forms.PaintEventHandler(this.picPreview_Paint);
             // 
             // cbFrame
             // 
@@ -522,7 +531,7 @@
             // 
             // picInactiveColorBorder
             // 
-            this.picInactiveColorBorder.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(1)))), ((int)(((byte)(1)))), ((int)(((byte)(1)))));
+            this.picInactiveColorBorder.BackColor = System.Drawing.Color.Black;
             this.picInactiveColorBorder.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             resources.ApplyResources(this.picInactiveColorBorder, "picInactiveColorBorder");
             this.picInactiveColorBorder.Name = "picInactiveColorBorder";
@@ -557,7 +566,7 @@
             // 
             // picActiveColorBorder
             // 
-            this.picActiveColorBorder.BackColor = System.Drawing.Color.Black;
+            this.picActiveColorBorder.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(1)))), ((int)(((byte)(1)))), ((int)(((byte)(1)))));
             this.picActiveColorBorder.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             resources.ApplyResources(this.picActiveColorBorder, "picActiveColorBorder");
             this.picActiveColorBorder.Name = "picActiveColorBorder";
@@ -592,7 +601,7 @@
             // 
             // picInactiveColor
             // 
-            this.picInactiveColor.BackColor = System.Drawing.Color.Black;
+            this.picInactiveColor.BackColor = System.Drawing.Color.White;
             this.picInactiveColor.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             resources.ApplyResources(this.picInactiveColor, "picInactiveColor");
             this.picInactiveColor.Name = "picInactiveColor";
@@ -667,13 +676,6 @@
             0,
             0});
             this.UpDownFontSize.ValueChanged += new System.EventHandler(this.UpDownFontSize_ValueChanged);
-            // 
-            // txtLoremIpsum
-            // 
-            this.txtLoremIpsum.BackColor = System.Drawing.Color.Black;
-            resources.ApplyResources(this.txtLoremIpsum, "txtLoremIpsum");
-            this.txtLoremIpsum.ForeColor = System.Drawing.Color.White;
-            this.txtLoremIpsum.Name = "txtLoremIpsum";
             // 
             // lblFont
             // 
@@ -797,6 +799,7 @@
             this.tbControl.ResumeLayout(false);
             this.tbPageBackground.ResumeLayout(false);
             this.tbPageBackground.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.picPreview)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.picInactiveColorBorder)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.picActiveColorBorder)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.picInactiveColor)).EndInit();
@@ -859,7 +862,6 @@
         private System.Windows.Forms.PictureBox picImage;
         private System.Windows.Forms.Label lblFont;
         private System.Windows.Forms.ComboBox cbFontName;
-        private System.Windows.Forms.TextBox txtLoremIpsum;
         private System.Windows.Forms.NumericUpDown UpDownFontSize;
         private System.Windows.Forms.Button btnPlay;
         private System.Windows.Forms.Label lblHelpTb1;
@@ -898,5 +900,6 @@
         private System.Windows.Forms.PictureBox picActiveColor;
         private System.Windows.Forms.TextBox txtActiveColor;
         private System.Windows.Forms.Label lblActiveColor;
+        private System.Windows.Forms.PictureBox picPreview;
     }
 }

@@ -1846,7 +1846,7 @@ namespace Karaboss.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("#000000")]
+        [global::System.Configuration.DefaultSettingValueAttribute("#FFFFFF")]
         public string KfnBgColor {
             get {
                 return ((string)(this["KfnBgColor"]));
@@ -1858,7 +1858,7 @@ namespace Karaboss.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("Arial")]
+        [global::System.Configuration.DefaultSettingValueAttribute("Arial Black")]
         public string KfnFontName {
             get {
                 return ((string)(this["KfnFontName"]));
@@ -1894,7 +1894,7 @@ namespace Karaboss.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("#FFFFFF")]
+        [global::System.Configuration.DefaultSettingValueAttribute("#000000")]
         public string KfnInactiveColor {
             get {
                 return ((string)(this["KfnInactiveColor"]));
@@ -1906,7 +1906,7 @@ namespace Karaboss.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("#000000")]
+        [global::System.Configuration.DefaultSettingValueAttribute("#010101")]
         public string KfnActiveColorBorder {
             get {
                 return ((string)(this["KfnActiveColorBorder"]));
@@ -1918,7 +1918,7 @@ namespace Karaboss.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("#010101")]
+        [global::System.Configuration.DefaultSettingValueAttribute("#FFFFFF")]
         public string KfnInactiveColorBorder {
             get {
                 return ((string)(this["KfnInactiveColorBorder"]));

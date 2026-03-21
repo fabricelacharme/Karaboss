@@ -1245,6 +1245,27 @@
   <data name="&gt;&gt;btnCancel.ZOrder" xml:space="preserve">
     <value>1</value>
   </data>
+  <data name="picPreview.Location" type="System.Drawing.Point, System.Drawing">
+    <value>366, 74</value>
+  </data>
+  <data name="picPreview.Size" type="System.Drawing.Size, System.Drawing">
+    <value>340, 255</value>
+  </data>
+  <data name="picPreview.TabIndex" type="System.Int32, mscorlib">
+    <value>62</value>
+  </data>
+  <data name="&gt;&gt;picPreview.Name" xml:space="preserve">
+    <value>picPreview</value>
+  </data>
+  <data name="&gt;&gt;picPreview.Type" xml:space="preserve">
+    <value>System.Windows.Forms.PictureBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;picPreview.Parent" xml:space="preserve">
+    <value>tbPageBackground</value>
+  </data>
+  <data name="&gt;&gt;picPreview.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
   <data name="cbFrame.Location" type="System.Drawing.Point, System.Drawing">
     <value>157, 273</value>
   </data>
@@ -1264,7 +1285,7 @@
     <value>tbPageBackground</value>
   </data>
   <data name="&gt;&gt;cbFrame.ZOrder" xml:space="preserve">
-    <value>0</value>
+    <value>1</value>
   </data>
   <data name="lblBorder.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -1294,7 +1315,7 @@
     <value>tbPageBackground</value>
   </data>
   <data name="&gt;&gt;lblBorder.ZOrder" xml:space="preserve">
-    <value>1</value>
+    <value>2</value>
   </data>
   <data name="btnInactiveColorBorderPicker.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
@@ -1318,7 +1339,7 @@
     <value>tbPageBackground</value>
   </data>
   <data name="&gt;&gt;btnInactiveColorBorderPicker.ZOrder" xml:space="preserve">
-    <value>2</value>
+    <value>3</value>
   </data>
   <data name="btnInactiveColorBorderSelect.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
@@ -1345,7 +1366,7 @@
     <value>tbPageBackground</value>
   </data>
   <data name="&gt;&gt;btnInactiveColorBorderSelect.ZOrder" xml:space="preserve">
-    <value>3</value>
+    <value>4</value>
   </data>
   <data name="picInactiveColorBorder.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
@@ -1369,7 +1390,7 @@
     <value>tbPageBackground</value>
   </data>
   <data name="&gt;&gt;picInactiveColorBorder.ZOrder" xml:space="preserve">
-    <value>4</value>
+    <value>5</value>
   </data>
   <data name="txtInactiveColorBorder.Location" type="System.Drawing.Point, System.Drawing">
     <value>157, 244</value>
@@ -1384,7 +1405,7 @@
     <value>57</value>
   </data>
   <data name="txtInactiveColorBorder.Text" xml:space="preserve">
-    <value>#010101</value>
+    <value>#FFFFFF</value>
   </data>
   <data name="&gt;&gt;txtInactiveColorBorder.Name" xml:space="preserve">
     <value>txtInactiveColorBorder</value>
@@ -1396,7 +1417,7 @@
     <value>tbPageBackground</value>
   </data>
   <data name="&gt;&gt;txtInactiveColorBorder.ZOrder" xml:space="preserve">
-    <value>5</value>
+    <value>6</value>
   </data>
   <data name="lblInactiveColorBorder.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -1426,7 +1447,7 @@
     <value>tbPageBackground</value>
   </data>
   <data name="&gt;&gt;lblInactiveColorBorder.ZOrder" xml:space="preserve">
-    <value>6</value>
+    <value>7</value>
   </data>
   <data name="btnActiveColorBorderPicker.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
@@ -1450,7 +1471,7 @@
     <value>tbPageBackground</value>
   </data>
   <data name="&gt;&gt;btnActiveColorBorderPicker.ZOrder" xml:space="preserve">
-    <value>7</value>
+    <value>8</value>
   </data>
   <data name="btnActiveColorBorderSelect.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
@@ -1477,7 +1498,7 @@
     <value>tbPageBackground</value>
   </data>
   <data name="&gt;&gt;btnActiveColorBorderSelect.ZOrder" xml:space="preserve">
-    <value>8</value>
+    <value>9</value>
   </data>
   <data name="picActiveColorBorder.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
@@ -1501,7 +1522,7 @@
     <value>tbPageBackground</value>
   </data>
   <data name="&gt;&gt;picActiveColorBorder.ZOrder" xml:space="preserve">
-    <value>9</value>
+    <value>10</value>
   </data>
   <data name="txtActiveColorBorder.Location" type="System.Drawing.Point, System.Drawing">
     <value>157, 215</value>
@@ -1516,7 +1537,7 @@
     <value>52</value>
   </data>
   <data name="txtActiveColorBorder.Text" xml:space="preserve">
-    <value>#000000</value>
+    <value>#010101</value>
   </data>
   <data name="&gt;&gt;txtActiveColorBorder.Name" xml:space="preserve">
     <value>txtActiveColorBorder</value>
@@ -1528,7 +1549,7 @@
     <value>tbPageBackground</value>
   </data>
   <data name="&gt;&gt;txtActiveColorBorder.ZOrder" xml:space="preserve">
-    <value>10</value>
+    <value>11</value>
   </data>
   <data name="lblActiveColorBorder.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -1558,7 +1579,7 @@
     <value>tbPageBackground</value>
   </data>
   <data name="&gt;&gt;lblActiveColorBorder.ZOrder" xml:space="preserve">
-    <value>11</value>
+    <value>12</value>
   </data>
   <data name="btnInactiveColorPicker.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
@@ -1582,7 +1603,7 @@
     <value>tbPageBackground</value>
   </data>
   <data name="&gt;&gt;btnInactiveColorPicker.ZOrder" xml:space="preserve">
-    <value>12</value>
+    <value>13</value>
   </data>
   <data name="btnInactiveColorSelect.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
@@ -1609,7 +1630,7 @@
     <value>tbPageBackground</value>
   </data>
   <data name="&gt;&gt;btnInactiveColorSelect.ZOrder" xml:space="preserve">
-    <value>13</value>
+    <value>14</value>
   </data>
   <data name="picInactiveColor.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
@@ -1633,7 +1654,7 @@
     <value>tbPageBackground</value>
   </data>
   <data name="&gt;&gt;picInactiveColor.ZOrder" xml:space="preserve">
-    <value>14</value>
+    <value>15</value>
   </data>
   <data name="txtInactiveColor.Location" type="System.Drawing.Point, System.Drawing">
     <value>157, 186</value>
@@ -1648,7 +1669,7 @@
     <value>47</value>
   </data>
   <data name="txtInactiveColor.Text" xml:space="preserve">
-    <value>#FFFFFF</value>
+    <value>#000000</value>
   </data>
   <data name="&gt;&gt;txtInactiveColor.Name" xml:space="preserve">
     <value>txtInactiveColor</value>
@@ -1660,7 +1681,7 @@
     <value>tbPageBackground</value>
   </data>
   <data name="&gt;&gt;txtInactiveColor.ZOrder" xml:space="preserve">
-    <value>15</value>
+    <value>16</value>
   </data>
   <data name="lblInactiveColor.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -1690,7 +1711,7 @@
     <value>tbPageBackground</value>
   </data>
   <data name="&gt;&gt;lblInactiveColor.ZOrder" xml:space="preserve">
-    <value>16</value>
+    <value>17</value>
   </data>
   <data name="btnActiveColorPicker.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
@@ -1714,7 +1735,7 @@
     <value>tbPageBackground</value>
   </data>
   <data name="&gt;&gt;btnActiveColorPicker.ZOrder" xml:space="preserve">
-    <value>17</value>
+    <value>18</value>
   </data>
   <data name="btnActiveColorSelect.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
@@ -1741,7 +1762,7 @@
     <value>tbPageBackground</value>
   </data>
   <data name="&gt;&gt;btnActiveColorSelect.ZOrder" xml:space="preserve">
-    <value>18</value>
+    <value>19</value>
   </data>
   <data name="picActiveColor.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
@@ -1765,7 +1786,7 @@
     <value>tbPageBackground</value>
   </data>
   <data name="&gt;&gt;picActiveColor.ZOrder" xml:space="preserve">
-    <value>19</value>
+    <value>20</value>
   </data>
   <data name="txtActiveColor.Location" type="System.Drawing.Point, System.Drawing">
     <value>157, 157</value>
@@ -1792,7 +1813,7 @@
     <value>tbPageBackground</value>
   </data>
   <data name="&gt;&gt;txtActiveColor.ZOrder" xml:space="preserve">
-    <value>20</value>
+    <value>21</value>
   </data>
   <data name="lblActiveColor.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -1822,7 +1843,7 @@
     <value>tbPageBackground</value>
   </data>
   <data name="&gt;&gt;lblActiveColor.ZOrder" xml:space="preserve">
-    <value>21</value>
+    <value>22</value>
   </data>
   <data name="lblHelpTb4.Font" type="System.Drawing.Font, System.Drawing">
     <value>Calibri, 9pt</value>
@@ -1852,7 +1873,7 @@
     <value>tbPageBackground</value>
   </data>
   <data name="&gt;&gt;lblHelpTb4.ZOrder" xml:space="preserve">
-    <value>22</value>
+    <value>23</value>
   </data>
   <data name="UpDownFontSize.Location" type="System.Drawing.Point, System.Drawing">
     <value>320, 106</value>
@@ -1876,39 +1897,6 @@
     <value>tbPageBackground</value>
   </data>
   <data name="&gt;&gt;UpDownFontSize.ZOrder" xml:space="preserve">
-    <value>23</value>
-  </data>
-  <data name="txtLoremIpsum.Font" type="System.Drawing.Font, System.Drawing">
-    <value>Calibri, 15.75pt</value>
-  </data>
-  <data name="txtLoremIpsum.Location" type="System.Drawing.Point, System.Drawing">
-    <value>413, 74</value>
-  </data>
-  <data name="txtLoremIpsum.Multiline" type="System.Boolean, mscorlib">
-    <value>True</value>
-  </data>
-  <data name="txtLoremIpsum.Size" type="System.Drawing.Size, System.Drawing">
-    <value>252, 179</value>
-  </data>
-  <data name="txtLoremIpsum.TabIndex" type="System.Int32, mscorlib">
-    <value>37</value>
-  </data>
-  <data name="txtLoremIpsum.Text" xml:space="preserve">
-    <value>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. </value>
-  </data>
-  <data name="txtLoremIpsum.TextAlign" type="System.Windows.Forms.HorizontalAlignment, System.Windows.Forms">
-    <value>Center</value>
-  </data>
-  <data name="&gt;&gt;txtLoremIpsum.Name" xml:space="preserve">
-    <value>txtLoremIpsum</value>
-  </data>
-  <data name="&gt;&gt;txtLoremIpsum.Type" xml:space="preserve">
-    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;txtLoremIpsum.Parent" xml:space="preserve">
-    <value>tbPageBackground</value>
-  </data>
-  <data name="&gt;&gt;txtLoremIpsum.ZOrder" xml:space="preserve">
     <value>24</value>
   </data>
   <data name="lblFont.AutoSize" type="System.Boolean, mscorlib">
@@ -2044,7 +2032,7 @@
     <value>31</value>
   </data>
   <data name="txtBgColor.Text" xml:space="preserve">
-    <value>#000000</value>
+    <value>#FFFFFF</value>
   </data>
   <data name="&gt;&gt;txtBgColor.Name" xml:space="preserve">
     <value>txtBgColor</value>
