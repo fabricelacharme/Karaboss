@@ -735,105 +735,88 @@ namespace Karaboss.Kfn
         #region Preview
 
         private void picPreview_Paint(object sender, PaintEventArgs e)
-        {            
-            int ftHeight = 0;           
-            SizeF textWith;
-            int textHeight = 0;
-            string line;
-            int W = picPreview.Width;
-            int H = picPreview.Height;
-            int x = 0;
-            int y = 0;
+        {
+
+            // Select drawing mode
+            float thick;
+
+            string FrameType = ((KeyValuePair<string, string>)cbFrame.SelectedItem).Key;
+            switch (FrameType)
+            {
+                case "NoBorder":
+                    thick = 0.0f;
+                    DrawTextWithBorder(thick, e);
+                    return;
+                    
+                case "FrameThin":
+                    break;
+
+                case "Frame1":
+                    thick = 1.0f;
+                    DrawTextWithBorder(thick, e);
+                    return;
+                    
+                case "Frame2":
+                    thick = 2.0f;
+                    DrawTextWithBorder(thick, e);
+                    return;
+
+                case "Frame3":
+                    thick = 3.0f;
+                    DrawTextWithBorder(thick, e);
+                    return;
+
+                case "Frame4":
+                    thick = 4.0f;
+                    DrawTextWithBorder(thick, e);
+                    return;
+
+                case "Frame5":
+                    thick = 5.0f;
+                    DrawTextWithBorder(thick, e);
+                    return;
+
+                case "Shadow":
+                    DrawTextWithNeon(e);
+                    return;
+
+                case "Neon":
+                    DrawTextWithNeon(e);
+                    return;
+                
+                default:
+                    thick = 1.0f;
+                    DrawTextWithBorder(thick, e);
+                    return;
+            }                                   
+        }
 
 
+        private void DrawTextWithBorder(float thick, PaintEventArgs e)
+        {           
+            Pen pen;
+            Brush brush;
+
+            // Create brush
             Brush ActiveColorBrush = new SolidBrush(picActiveColor.BackColor);
-            Brush InactiveColorBrush = new SolidBrush(picInactiveColor.BackColor);            
+            Brush InactiveColorBrush = new SolidBrush(picInactiveColor.BackColor);
             Brush ActiveColorBorderBrush = new SolidBrush(picActiveColorBorder.BackColor);
             Brush InactiveColorBorderBrush = new SolidBrush(picInactiveColorBorder.BackColor);
 
-            //Brush brush;
+            // Create pens                 
+            Pen ActiveBorderPen = new Pen(ActiveColorBorderBrush, thick);
+            Pen InactiveBorderPen = new Pen(InactiveColorBorderBrush, thick);
 
             using (Font myFont = new Font(ftName, ftSize))
-            {                                
-                // Calculate y
-                ftHeight = myFont.Height;                
-                textHeight = ftHeight * LstTextPreview.Count;
-                y = (H - textHeight) / 2;
-
-
-                /*
-                Graphics g = e.Graphics;
-                
-                for (int i = 0; i < LstTextPreview.Count; i++)
-                {
-                    line = LstTextPreview[i];
-                    
-                    // Calculate x
-                    textWith = g.MeasureString(line, myFont);
-                    x = (W - (int)textWith.Width)/2;
-
-                    if (i < 2)
-                        brush = ActiveColorBrush;
-                    else
-                        brush = InactiveColorBrush;
-
-                    e.Graphics.DrawString(line, myFont, brush, new Point(x, y + ftHeight * i));
-                }
-                */             
-
+            {
                 try
                 {
                     Graphics g = e.Graphics;
                     g.SmoothingMode = SmoothingMode.AntiAlias;
-
                     //create a path
                     GraphicsPath pth = new GraphicsPath();
 
-
-                    // Create pens
-
-                    float thick = 1.0f;
-                    string FrameType = ((KeyValuePair<string, string>)cbFrame.SelectedItem).Key;
-                    switch (FrameType)
-                    {
-                        case "NoBorder":
-                            thick = 0.0f;
-                            break;
-                        case "FrameThin":
-                            break;
-                        case "Frame1":
-                            thick = 1.0f;
-                            break;
-                        case "Frame2":
-                            thick = 2.0f;
-                            break;                            
-                        case "Frame3":
-                            thick = 3.0f;
-                            break;
-                        case "Frame4":
-                            thick = 4.0f;
-                            break;
-                        case "Frame5":
-                            thick = 5.0f;
-                            break;
-                        case "Shadow":
-                            break;
-                        case "Neon":
-                            break;
-                        default:
-                            thick = 1.0f;
-                            break;
-                    }                    
-
-                    Pen ActiveBorderPen = new Pen(ActiveColorBorderBrush, thick);
-                    Pen InactiveBorderPen = new Pen(InactiveColorBorderBrush, thick);
-                    Pen pen;
-                    Brush brush;
-                    Point point;
-
-                    Rectangle rect = picPreview.ClientRectangle;
-                    //RectangleF rect = new RectangleF(0, 0, picPreview.Width, picPreview.Height);
-
+                                   
                     StringFormat sf = new StringFormat();
                     sf.Alignment = StringAlignment.Center;
                     sf.LineAlignment = StringAlignment.Center;
@@ -853,44 +836,107 @@ namespace Karaboss.Kfn
                             brush = InactiveColorBrush;
                         }
 
-                        //rect.Y += 10;
-                        
-                        
                         // Active line
                         pth.AddString(
                             LstTextPreview[i],
                             new FontFamily(ftName),
                             0,
                             emSize,
-                            new Point(169, (int)(55 + i * emSize)), //picPreview.ClientRectangle,     
-                            sf); // StringFormat.GenericTypographic);
-                        
+                            new Point(169, (int)(55 + i * emSize)), 
+                            sf); 
+
                         // Fill
                         g.FillPath(brush, pth);
-                        
+
                         //outline it
                         if (thick > 0.0f)
                             g.DrawPath(pen, pth);
-                        
+
                         // Reset for next
                         pth.Reset();
-
                     }
 
                     //tidy up.
                     ActiveBorderPen.Dispose();
                     InactiveBorderPen.Dispose();
-                    //pth.Dispose();
+                    pth.Dispose();
                     //g.Dispose();
                 }
                 catch (Exception ex)
                 {
                     Console.WriteLine(ex.Message);
                 }
-
             }
         }
 
+
+        private void DrawTextWithNeon(PaintEventArgs e)
+        {
+
+            Color HaloColor = picInactiveColorBorder.BackColor;
+            Brush HaloBrush = new SolidBrush(HaloColor);
+            
+            Brush ActiveColorBrush = new SolidBrush(picActiveColor.BackColor);
+            Brush InactiveColorBrush = new SolidBrush(picInactiveColor.BackColor);
+
+
+            //Create a bitmap in a fixed ratio to the original drawing area.
+            Bitmap bm = new Bitmap(picPreview.ClientSize.Width / 5, picPreview.ClientSize.Height / 5);
+
+            //Create a GraphicsPath object. 
+            GraphicsPath pth = new GraphicsPath();
+
+            //Get the graphics object for the image. 
+            Graphics g = Graphics.FromImage(bm);
+            Graphics ge = e.Graphics;
+
+            //Add the string in the chosen style. 
+            float emSize = g.DpiY * ftSize / 72f;
+            pth.AddString(LstTextPreview[0], new FontFamily(ftName), (int)FontStyle.Regular, emSize, new Point(20, 20), StringFormat.GenericTypographic);
+          
+
+            //Create a matrix that shrinks the drawing output by the fixed ratio. 
+            Matrix mx = new Matrix(1.0f / 5, 0, 0, 1.0f / 5, -(1.0f / 5), -(1.0f / 5));
+
+            //Choose an appropriate smoothing mode for the halo. 
+            g.SmoothingMode = SmoothingMode.AntiAlias;
+
+            //Transform the graphics object so that the same half may be used for both halo and text output. 
+            g.Transform = mx;
+
+            //Using a suitable pen...
+            Pen p = new Pen(HaloColor, 3);
+
+            //Draw around the outline of the path
+            g.DrawPath(p, pth);
+
+            //and then fill in for good measure. 
+            g.FillPath(HaloBrush, pth);
+
+            //We no longer need this graphics object
+            g.Dispose();
+
+            //this just shifts the effect a little bit so that the edge isn't cut off in the demonstration
+            ge.Transform = new Matrix(1, 0, 0, 1, 50, 50);
+
+            //setup the smoothing mode for path drawing
+            ge.SmoothingMode = SmoothingMode.AntiAlias;
+
+            //and the interpolation mode for the expansion of the halo bitmap
+            ge.InterpolationMode = InterpolationMode.HighQualityBicubic;
+
+            //expand the halo making the edges nice and fuzzy. 
+            ge.DrawImage(bm, picPreview.ClientRectangle, 0, 0, bm.Width, bm.Height, GraphicsUnit.Pixel);
+
+            //Redraw the original text
+            ge.FillPath(InactiveColorBrush, pth);
+
+            // FAB
+            ge.DrawPath(new Pen(new SolidBrush(picInactiveColorBorder.BackColor)), pth);
+
+            //and you're done. 
+            pth.Dispose();
+        }
 
         private void PopulatePicPreview()
         {            
