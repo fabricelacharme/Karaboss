@@ -1,19 +1,16 @@
-﻿using FlShell.Interop;
-using Hqub.MusicBrainz.API.Entities;
-using Karaboss.Lrc.SharedFramework;
-using Karaboss.Mp3;
+﻿using Karaboss.Mp3;
 using Karaboss.Resources.Localization;
 using KFNV;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Drawing2D;
+using System.Drawing.Text;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
-using TagLib.Id3v2;
+using TagLib.Mpeg4;
 
 namespace Karaboss.Kfn
 {
@@ -402,14 +399,14 @@ namespace Karaboss.Kfn
             #region guard
 
             AudioFileName1 = txtAudio1.Text.Trim();
-            if (!File.Exists(AudioFileName1))
+            if (!System.IO.File.Exists(AudioFileName1))
             {
                 MessageBox.Show("Invalid audio file", Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 
             AudioFileName2 = txtAudio2.Text.Trim();
-            if (AudioFileName2 != string.Empty && !File.Exists(AudioFileName2))
+            if (AudioFileName2 != string.Empty && !System.IO.File.Exists(AudioFileName2))
             {
                 MessageBox.Show("Invalid audio file", Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
@@ -417,14 +414,14 @@ namespace Karaboss.Kfn
 
 
             LyricsFileName = txtLyrics.Text.Trim();
-            if (!File.Exists(LyricsFileName))
+            if (!System.IO.File.Exists(LyricsFileName))
             {
                 MessageBox.Show("Invalid lyrics file", Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 
             ImageFileName = txtImageFile.Text.Trim();
-            if (ImageFileName != string.Empty && !File.Exists(ImageFileName))
+            if (ImageFileName != string.Empty && !System.IO.File.Exists(ImageFileName))
             {
                 MessageBox.Show("Invalid image file", Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
@@ -552,7 +549,7 @@ namespace Karaboss.Kfn
             try
             {
                 //string FileName = Path.Combine(fPath, txtKfnFileName.Text);
-                if (File.Exists(FileName))
+                if (System.IO.File.Exists(FileName))
                 {
                     System.Diagnostics.Process.Start(FileName);
                 }
@@ -575,11 +572,11 @@ namespace Karaboss.Kfn
 
             // Check lyrics
             string LyricsFileName = txtLyrics.Text.Trim();
-            if (!File.Exists(LyricsFileName))
+            if (!System.IO.File.Exists(LyricsFileName))
                 LyricsFileName = null;
 
             // At least, audio1 must exists
-            if (!File.Exists(AudioFileName1))
+            if (!System.IO.File.Exists(AudioFileName1))
             {
                 MessageBox.Show("Invalid audio1 file", Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error); return;
             }
@@ -594,7 +591,7 @@ namespace Karaboss.Kfn
 
             // If audio2 exists, select audio2 because it contains vocals
             // It's easier for lyrics synchronisation.
-            if (File.Exists(AudioFileName2))
+            if (System.IO.File.Exists(AudioFileName2))
                 AudioFileName = AudioFileName2;
 
 
@@ -777,7 +774,7 @@ namespace Karaboss.Kfn
                     return;
 
                 case "Shadow":
-                    DrawTextWithNeon(e);
+                    DrawTextWithShadow(e);
                     return;
 
                 case "Neon":
@@ -825,6 +822,7 @@ namespace Karaboss.Kfn
 
                     for (int i = 0; i < LstTextPreview.Count; i++)
                     {
+                        #region select active/inactive
                         if (i < 3)
                         {
                             pen = ActiveBorderPen;
@@ -835,6 +833,7 @@ namespace Karaboss.Kfn
                             pen = InactiveBorderPen;
                             brush = InactiveColorBrush;
                         }
+                        #endregion
 
                         // Active line
                         pth.AddString(
@@ -872,70 +871,227 @@ namespace Karaboss.Kfn
 
         private void DrawTextWithNeon(PaintEventArgs e)
         {
+            float thick = 2.0f;
 
-            Color HaloColor = picInactiveColorBorder.BackColor;
-            Brush HaloBrush = new SolidBrush(HaloColor);
+            Color HaloColor;
+            Brush HaloBrush; 
             
             Brush ActiveColorBrush = new SolidBrush(picActiveColor.BackColor);
             Brush InactiveColorBrush = new SolidBrush(picInactiveColor.BackColor);
+            Brush ActiveColorBorderBrush = new SolidBrush(picActiveColorBorder.BackColor);
+            Brush InactiveColorBorderBrush = new SolidBrush(picInactiveColorBorder.BackColor);
+            Brush brush;
+            Pen pen;
+            Pen ActiveBorderPen = new Pen(ActiveColorBorderBrush, thick);
+            Pen InactiveBorderPen = new Pen(InactiveColorBorderBrush, thick);
 
 
-            //Create a bitmap in a fixed ratio to the original drawing area.
-            Bitmap bm = new Bitmap(picPreview.ClientSize.Width / 5, picPreview.ClientSize.Height / 5);
+            for (int i = 0; i < LstTextPreview.Count; i++)
+            {
 
-            //Create a GraphicsPath object. 
-            GraphicsPath pth = new GraphicsPath();
+                #region select active/inactive
+                if (i < 3)
+                {
+                    pen = ActiveBorderPen;
+                    brush = ActiveColorBrush;
+                    HaloColor = pen.Color;
+                    HaloBrush = new SolidBrush(HaloColor);
+                }
+                else
+                {
+                    pen = InactiveBorderPen;
+                    brush = InactiveColorBrush;
+                    HaloColor = pen.Color;
+                    HaloBrush = new SolidBrush(HaloColor);
+                }
+                #endregion
 
-            //Get the graphics object for the image. 
-            Graphics g = Graphics.FromImage(bm);
-            Graphics ge = e.Graphics;
+                //Create a bitmap in a fixed ratio to the original drawing area.
+                Bitmap bm = new Bitmap(picPreview.ClientSize.Width / 5, picPreview.ClientSize.Height / 5);
 
-            //Add the string in the chosen style. 
-            float emSize = g.DpiY * ftSize / 72f;
-            pth.AddString(LstTextPreview[0], new FontFamily(ftName), (int)FontStyle.Regular, emSize, new Point(20, 20), StringFormat.GenericTypographic);
-          
+                //Create a GraphicsPath object. 
+                GraphicsPath pth = new GraphicsPath();
 
-            //Create a matrix that shrinks the drawing output by the fixed ratio. 
-            Matrix mx = new Matrix(1.0f / 5, 0, 0, 1.0f / 5, -(1.0f / 5), -(1.0f / 5));
+                //Get the graphics object for the image. 
+                Graphics g = Graphics.FromImage(bm);
+                Graphics ge = e.Graphics;
 
-            //Choose an appropriate smoothing mode for the halo. 
-            g.SmoothingMode = SmoothingMode.AntiAlias;
 
-            //Transform the graphics object so that the same half may be used for both halo and text output. 
-            g.Transform = mx;
+                //Add the string in the chosen style.
+                string tx = LstTextPreview[i];
+                //int x0 = HCenterText(tx);      // Center horizontally
+                float emSize = g.DpiY * ftSize / 72f;
+                pth.AddString(tx, new FontFamily(ftName), (int)FontStyle.Regular, emSize, new Point(10, (int)(i * emSize)), StringFormat.GenericTypographic);
 
-            //Using a suitable pen...
-            Pen p = new Pen(HaloColor, 3);
 
-            //Draw around the outline of the path
-            g.DrawPath(p, pth);
+                //Create a matrix that shrinks the drawing output by the fixed ratio. 
+                Matrix mx = new Matrix(1.0f / 5, 0, 0, 1.0f / 5, -(1.0f / 5), -(1.0f / 5));
 
-            //and then fill in for good measure. 
-            g.FillPath(HaloBrush, pth);
+                //Choose an appropriate smoothing mode for the halo. 
+                g.SmoothingMode = SmoothingMode.AntiAlias;
 
-            //We no longer need this graphics object
-            g.Dispose();
+                //Transform the graphics object so that the same half may be used for both halo and text output. 
+                g.Transform = mx;
 
-            //this just shifts the effect a little bit so that the edge isn't cut off in the demonstration
-            ge.Transform = new Matrix(1, 0, 0, 1, 50, 50);
+                //Using a suitable pen...
+                Pen p = new Pen(HaloColor, 3);
 
-            //setup the smoothing mode for path drawing
-            ge.SmoothingMode = SmoothingMode.AntiAlias;
+                //Draw around the outline of the path
+                g.DrawPath(p, pth);
 
-            //and the interpolation mode for the expansion of the halo bitmap
-            ge.InterpolationMode = InterpolationMode.HighQualityBicubic;
+                //and then fill in for good measure. 
+                g.FillPath(HaloBrush, pth);
 
-            //expand the halo making the edges nice and fuzzy. 
-            ge.DrawImage(bm, picPreview.ClientRectangle, 0, 0, bm.Width, bm.Height, GraphicsUnit.Pixel);
+                //We no longer need this graphics object
+                g.Dispose();
 
-            //Redraw the original text
-            ge.FillPath(InactiveColorBrush, pth);
+                //this just shifts the effect a little bit so that the edge isn't cut off in the demonstration
+                ge.Transform = new Matrix(1, 0, 0, 1, 50, 50);
 
-            // FAB
-            ge.DrawPath(new Pen(new SolidBrush(picInactiveColorBorder.BackColor)), pth);
+                //setup the smoothing mode for path drawing
+                ge.SmoothingMode = SmoothingMode.AntiAlias;
+
+                //and the interpolation mode for the expansion of the halo bitmap
+                ge.InterpolationMode = InterpolationMode.HighQualityBicubic;
+
+                //expand the halo making the edges nice and fuzzy. 
+                ge.DrawImage(bm, picPreview.ClientRectangle, 0, 0, bm.Width, bm.Height, GraphicsUnit.Pixel);
+
+                //Redraw the original text
+                ge.FillPath(brush, pth);
+
+                // FAB outline
+                ge.DrawPath(pen, pth);
+
+
+                pth.Dispose();
+            }
+
 
             //and you're done. 
-            pth.Dispose();
+            //pth.Dispose();
+        }
+
+
+        private void DrawTextWithShadow(PaintEventArgs e)
+        {
+            string tx;
+            Brush brush;
+            Pen pen;
+            Color ColorShadow;
+            
+            for (int i = 0; i < LstTextPreview.Count; i++)
+            {
+                #region select active/inactive
+                if (i < 3)
+                {
+                    brush = new SolidBrush(picActiveColor.BackColor);
+                    pen = new Pen(new SolidBrush(picActiveColorBorder.BackColor));
+                    ColorShadow = pen.Color;
+                }
+                else
+                {
+                    brush = new SolidBrush(picInactiveColor.BackColor);
+                    pen = new Pen(new SolidBrush(picInactiveColorBorder.BackColor));
+                    ColorShadow = pen.Color;
+                }
+                #endregion
+
+                tx = LstTextPreview[i];
+                Font myFont = new Font(ftName, ftSize);
+                Bitmap bm = new Bitmap(picPreview.ClientSize.Width / 4, picPreview.ClientSize.Height / 4);
+
+                //Get a graphics object for it
+                Graphics g = Graphics.FromImage(bm);
+                Graphics ge = e.Graphics;
+
+                //Create a GraphicsPath object. 
+                GraphicsPath pth = new GraphicsPath();
+
+
+                // must use an antialiased rendering hint
+                g.TextRenderingHint = TextRenderingHint.AntiAlias;
+
+                //this matrix zooms the text out to 1/4 size and offsets it by a little right and down
+                //Matrix mx = new Matrix(0.25f, 0, 0, 0.25f, 3, 3);
+                Matrix mx = new Matrix(0.25f, 0, 0, 0.25f, 1.3f, 1.3f);
+                //Matrix mx = new Matrix(0.25f, 0, 0, 0.25f, 1, 1);
+                //Matrix mx = new Matrix(0.255f, 0, 0, 0.25f, 1, 1);
+
+                g.Transform = mx;
+                //pth.Transform(mx);                                                      // FAB
+                float emSize = ge.DpiY * ftSize / 72f;
+
+                //The shadow is drawn
+                //g.DrawString(tx, myFont, new SolidBrush(Color.FromArgb(128, Color.Black)), 10, 10 + i * emSize, StringFormat.GenericTypographic);
+                g.DrawString(tx, myFont, new SolidBrush(ColorShadow), 10, 10 + i * emSize, StringFormat.GenericTypographic);               // FAB
+
+                //pth.AddString(tx, new FontFamily(ftName), (int)FontStyle.Regular, emSize, new Point(10, (int)(i * emSize)), StringFormat.GenericTypographic);  // FAB
+                //ge.FillPath(new SolidBrush(Color.FromArgb(128, Color.Black)), pth);                                                                            // FAB
+
+
+                //Don't need this anymore
+                g.Dispose();
+
+                //The destination Graphics uses a high quality mode
+                ge.InterpolationMode = InterpolationMode.HighQualityBicubic;
+
+                //and draws antialiased text for accurate fitting
+                ge.TextRenderingHint = TextRenderingHint.AntiAlias;
+
+                //The small image is blown up to fill the main client rectangle
+                ge.DrawImage(bm, picPreview.ClientRectangle, 0, 0, bm.Width, bm.Height, GraphicsUnit.Pixel);
+
+                //finally, the text is drawn on top
+                //ge.DrawString(tx, myFont, brush, 10, 10 + i * emSize, StringFormat.GenericTypographic);
+                pth.AddString(tx, new FontFamily(ftName), (int)FontStyle.Regular, emSize, new Point(10, 10 + (int)(i * emSize)), StringFormat.GenericTypographic);   // FAB
+                ge.FillPath(brush, pth);                                                                                                                        // FAB
+                                                                                                                                                                // FAB outline
+                ge.DrawPath(pen, pth);
+
+
+                bm.Dispose();
+                pth.Dispose();
+
+            }
+        }
+
+        /// <summary>
+        /// Center text horizontally
+        /// </summary>
+        /// <param name="s"></param>
+        /// <returns></returns>
+        private int HCenterText(string s)
+        {
+            int res = -(int)ftSize / 2 + (picPreview.ClientSize.Width - (int)MeasureString(s, ftSize)) / 2;                        
+            return res > 0 ? res : 0;
+        }
+
+        /// <summary>
+        /// Measure the length of a string with a specific size
+        /// </summary>
+        /// <param name="line"></param>
+        /// <param name="fSize"></param>
+        /// <returns></returns>
+        private float MeasureString(string line, float femSize)
+        {
+            float ret = 0;
+            StringFormat sf = new StringFormat(StringFormat.GenericTypographic) { FormatFlags = StringFormatFlags.MeasureTrailingSpaces };
+
+            if (line != "")
+            {
+                using (Graphics g = picPreview.CreateGraphics())
+                {
+                    g.TextRenderingHint = TextRenderingHint.AntiAlias;
+                    g.PageUnit = GraphicsUnit.Pixel;
+
+                    Font m_font = new Font(ftName, femSize, FontStyle.Regular, GraphicsUnit.Pixel);
+                    SizeF sz = g.MeasureString(line, m_font, new Point(0, 0), sf);
+                    ret = sz.Width;
+                    g.Dispose();
+                }
+            }
+            return ret;
         }
 
         private void PopulatePicPreview()
