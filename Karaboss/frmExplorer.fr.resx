@@ -121,6 +121,18 @@
   <data name="statusBar.Location" type="System.Drawing.Point, System.Drawing">
     <value>0, 439</value>
   </data>
+  <data name="mnuFileNewMidiFile.Size" type="System.Drawing.Size, System.Drawing">
+    <value>180, 22</value>
+  </data>
+  <data name="mnuFileNewMidiFile.Text" xml:space="preserve">
+    <value>Fichier midi</value>
+  </data>
+  <data name="mnuFileNewKfnFile.Size" type="System.Drawing.Size, System.Drawing">
+    <value>180, 22</value>
+  </data>
+  <data name="mnuFileNewKfnFile.Text" xml:space="preserve">
+    <value>Fichier KFN</value>
+  </data>
   <data name="mnuFileNew.Size" type="System.Drawing.Size, System.Drawing">
     <value>180, 22</value>
   </data>
@@ -320,13 +332,13 @@
     <value>186, 6</value>
   </data>
   <data name="MnuMidiExternalPlay.Size" type="System.Drawing.Size, System.Drawing">
-    <value>180, 22</value>
+    <value>130, 22</value>
   </data>
   <data name="MnuMidiExternalPlay.Text" xml:space="preserve">
     <value>Jouer</value>
   </data>
   <data name="MnuMidiExternalRecord.Size" type="System.Drawing.Size, System.Drawing">
-    <value>180, 22</value>
+    <value>130, 22</value>
   </data>
   <data name="MnuMidiExternalRecord.Text" xml:space="preserve">
     <value>Enregistrer</value>
@@ -336,6 +348,15 @@
   </data>
   <data name="MnuMidiExternal.Text" xml:space="preserve">
     <value>Instrument externe</value>
+  </data>
+  <data name="mnuHelpForums.Size" type="System.Drawing.Size, System.Drawing">
+    <value>199, 22</value>
+  </data>
+  <data name="mnuHelpDocumentation.Size" type="System.Drawing.Size, System.Drawing">
+    <value>199, 22</value>
+  </data>
+  <data name="toolStripMenuItem3.Size" type="System.Drawing.Size, System.Drawing">
+    <value>196, 6</value>
   </data>
   <data name="MnuHelpCheckNewVersion.Size" type="System.Drawing.Size, System.Drawing">
     <value>199, 22</value>
