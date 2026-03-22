@@ -37,7 +37,7 @@ using System.Runtime.InteropServices;
 
 namespace Sanford.Multimedia.Midi
 {
-    /*
+    
     /// <summary>
     /// Represents the Windows Multimedia MIDIHDR structure.
     /// </summary>
@@ -54,7 +54,7 @@ namespace Sanford.Multimedia.Midi
         /// <summary>
         /// Size of the buffer.
         /// </summary>
-        public int bufferLength;
+        public uint bufferLength;
 
         /// <summary>
         /// Actual amount of data in the buffer. This value should be less than 
@@ -99,9 +99,9 @@ namespace Sanford.Multimedia.Midi
 
         #endregion
     }
-    */
-
     
+
+    /*
     /// <summary>
     /// Represents the Windows Multimedia MIDIHDR structure.
     /// </summary>
@@ -163,5 +163,5 @@ namespace Sanford.Multimedia.Midi
 
         #endregion
     }
-    
+    */
 }

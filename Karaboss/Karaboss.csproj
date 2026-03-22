@@ -193,6 +193,48 @@
     <Compile Include="frmModifyDivision.Designer.cs">
       <DependentUpon>frmModifyDivision.cs</DependentUpon>
     </Compile>
+    <Compile Include="Kfn\frmFullScreen.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Kfn\frmFullScreen.Designer.cs">
+      <DependentUpon>frmFullScreen.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Kfn\frmKfnCreate.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Kfn\frmKfnCreate.Designer.cs">
+      <DependentUpon>frmKfnCreate.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Kfn\frmKfnExport.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Kfn\frmKfnExport.Designer.cs">
+      <DependentUpon>frmKfnExport.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Kfn\frmKfnView.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Kfn\frmKfnView.Designer.cs">
+      <DependentUpon>frmKfnView.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Kfn\frmKfnSongINI.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Kfn\frmKfnSongINI.Designer.cs">
+      <DependentUpon>frmKfnSongINI.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Kfn\frmKfnViewImage.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Kfn\frmKfnViewImage.Designer.cs">
+      <DependentUpon>frmKfnViewImage.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Kfn\frmKfnViewText.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Kfn\frmKfnViewText.Designer.cs">
+      <DependentUpon>frmKfnViewText.cs</DependentUpon>
+    </Compile>
     <Compile Include="Lrc\frmLrcGenerator.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -617,6 +659,30 @@
     <EmbeddedResource Include="GuitarTraining\frmGuitarTraining.resx">
       <DependentUpon>frmGuitarTraining.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Kfn\frmFullScreen.resx">
+      <DependentUpon>frmFullScreen.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Kfn\frmKfnCreate.fr.resx">
+      <DependentUpon>frmKfnCreate.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Kfn\frmKfnCreate.resx">
+      <DependentUpon>frmKfnCreate.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Kfn\frmKfnExport.resx">
+      <DependentUpon>frmKfnExport.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Kfn\frmKfnView.resx">
+      <DependentUpon>frmKfnView.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Kfn\frmKfnSongINI.resx">
+      <DependentUpon>frmKfnSongINI.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Kfn\frmKfnViewImage.resx">
+      <DependentUpon>frmKfnViewImage.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Kfn\frmKfnViewText.resx">
+      <DependentUpon>frmKfnViewText.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Lrc\frmLrcGenerator.resx">
       <DependentUpon>frmLrcGenerator.cs</DependentUpon>
     </EmbeddedResource>
@@ -823,7 +889,7 @@
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
+      <Generator>PublicResXFileCodeGenerator</Generator>
       <SubType>Designer</SubType>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
@@ -900,6 +966,10 @@
       <Project>{6d414dbf-73a0-4804-8c02-b50271b91357}</Project>
       <Name>KaraokeEffect</Name>
     </ProjectReference>
+    <ProjectReference Include="..\KFNViewer\KFNV.csproj">
+      <Project>{3c65aed8-cf22-4533-bbc1-9000683688b8}</Project>
+      <Name>KFNV</Name>
+    </ProjectReference>
     <ProjectReference Include="..\KMusicTxt\KMusicTxt.csproj">
       <Project>{ee194ac1-0d74-4a84-84d6-c9be8ced2c10}</Project>
       <Name>KMusicTxt</Name>
@@ -964,6 +1034,10 @@
       <Project>{e04f332f-ff37-4680-9d38-7962eacd58c0}</Project>
       <Name>TrkControl</Name>
     </ProjectReference>
+    <ProjectReference Include="..\uchardet\uchardet.csproj">
+      <Project>{2a706af9-3f44-4174-be9b-d4644a532185}</Project>
+      <Name>uchardet</Name>
+    </ProjectReference>
     <ProjectReference Include="..\VU_MeterLibrary\VU_MeterLibrary.csproj">
       <Project>{5d223b76-4462-4055-91b7-10ebfd8558e6}</Project>
       <Name>VU_MeterLibrary</Name>
@@ -1000,6 +1074,10 @@
     <None Include="Resources\gear.ico" />
     <None Include="Resources\cdg.png" />
     <None Include="Resources\cdg.ico" />
+    <None Include="Resources\color_picker_black32.ico" />
+    <None Include="Resources\color_picker_black32.png" />
+    <None Include="Resources\color_picker_black24.png" />
+    <None Include="Resources\color_picker_black18.png" />
     <Content Include="Resources\Ico\mml.ico" />
     <None Include="Resources\Media-Controls-Skip-To-Start-icon.png" />
     <None Include="Resources\Media-Controls-Skip-To-End-icon.png" />

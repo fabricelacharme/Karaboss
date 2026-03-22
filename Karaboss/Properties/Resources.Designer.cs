@@ -19,10 +19,10 @@ namespace Karaboss.Properties {
     // à l'aide d'un outil, tel que ResGen ou Visual Studio.
     // Pour ajouter ou supprimer un membre, modifiez votre fichier .ResX, puis réexécutez ResGen
     // avec l'option /str ou régénérez votre projet VS.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "17.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "18.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    internal class Resources {
+    public class Resources {
         
         private static global::System.Resources.ResourceManager resourceMan;
         
@@ -36,7 +36,7 @@ namespace Karaboss.Properties {
         ///   Retourne l'instance ResourceManager mise en cache utilisée par cette classe.
         /// </summary>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-        internal static global::System.Resources.ResourceManager ResourceManager {
+        public static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
                     global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Karaboss.Properties.Resources", typeof(Resources).Assembly);
@@ -51,7 +51,7 @@ namespace Karaboss.Properties {
         ///   les recherches de ressources à l'aide de cette classe de ressource fortement typée.
         /// </summary>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-        internal static global::System.Globalization.CultureInfo Culture {
+        public static global::System.Globalization.CultureInfo Culture {
             get {
                 return resourceCulture;
             }
@@ -63,7 +63,7 @@ namespace Karaboss.Properties {
         /// <summary>
         ///   Recherche une ressource localisée de type System.Drawing.Icon semblable à (Icône).
         /// </summary>
-        internal static System.Drawing.Icon abc {
+        public static System.Drawing.Icon abc {
             get {
                 object obj = ResourceManager.GetObject("abc", resourceCulture);
                 return ((System.Drawing.Icon)(obj));
@@ -73,7 +73,7 @@ namespace Karaboss.Properties {
         /// <summary>
         ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap Action_Edit {
+        public static System.Drawing.Bitmap Action_Edit {
             get {
                 object obj = ResourceManager.GetObject("Action_Edit", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -83,7 +83,7 @@ namespace Karaboss.Properties {
         /// <summary>
         ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap Action_File_Save_icon {
+        public static System.Drawing.Bitmap Action_File_Save_icon {
             get {
                 object obj = ResourceManager.GetObject("Action_File_Save_icon", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -93,7 +93,7 @@ namespace Karaboss.Properties {
         /// <summary>
         ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap Action_folder_delete24 {
+        public static System.Drawing.Bitmap Action_folder_delete24 {
             get {
                 object obj = ResourceManager.GetObject("Action_folder_delete24", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -103,7 +103,7 @@ namespace Karaboss.Properties {
         /// <summary>
         ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap Action_Folder_icon {
+        public static System.Drawing.Bitmap Action_Folder_icon {
             get {
                 object obj = ResourceManager.GetObject("Action_Folder_icon", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -113,7 +113,7 @@ namespace Karaboss.Properties {
         /// <summary>
         ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap Action_folder_open24 {
+        public static System.Drawing.Bitmap Action_folder_open24 {
             get {
                 object obj = ResourceManager.GetObject("Action_folder_open24", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -123,7 +123,7 @@ namespace Karaboss.Properties {
         /// <summary>
         ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap Action_folder24 {
+        public static System.Drawing.Bitmap Action_folder24 {
             get {
                 object obj = ResourceManager.GetObject("Action_folder24", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -133,7 +133,7 @@ namespace Karaboss.Properties {
         /// <summary>
         ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap Action_folder241 {
+        public static System.Drawing.Bitmap Action_folder241 {
             get {
                 object obj = ResourceManager.GetObject("Action_folder241", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -143,7 +143,7 @@ namespace Karaboss.Properties {
         /// <summary>
         ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap Action_New_File_icon {
+        public static System.Drawing.Bitmap Action_New_File_icon {
             get {
                 object obj = ResourceManager.GetObject("Action_New_File_icon", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -153,7 +153,7 @@ namespace Karaboss.Properties {
         /// <summary>
         ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap Action_Play_icon24 {
+        public static System.Drawing.Bitmap Action_Play_icon24 {
             get {
                 object obj = ResourceManager.GetObject("Action_Play_icon24", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -163,7 +163,7 @@ namespace Karaboss.Properties {
         /// <summary>
         ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap Action_playlist_delete24 {
+        public static System.Drawing.Bitmap Action_playlist_delete24 {
             get {
                 object obj = ResourceManager.GetObject("Action_playlist_delete24", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -173,7 +173,7 @@ namespace Karaboss.Properties {
         /// <summary>
         ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap Action_Playlist_icon {
+        public static System.Drawing.Bitmap Action_Playlist_icon {
             get {
                 object obj = ResourceManager.GetObject("Action_Playlist_icon", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -183,7 +183,7 @@ namespace Karaboss.Properties {
         /// <summary>
         ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap Action_Search_icon {
+        public static System.Drawing.Bitmap Action_Search_icon {
             get {
                 object obj = ResourceManager.GetObject("Action_Search_icon", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -193,7 +193,7 @@ namespace Karaboss.Properties {
         /// <summary>
         ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap Actions_delete_icon {
+        public static System.Drawing.Bitmap Actions_delete_icon {
             get {
                 object obj = ResourceManager.GetObject("Actions_delete_icon", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -203,7 +203,7 @@ namespace Karaboss.Properties {
         /// <summary>
         ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap Actions_folder_new_icon {
+        public static System.Drawing.Bitmap Actions_folder_new_icon {
             get {
                 object obj = ResourceManager.GetObject("Actions_folder_new_icon", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -213,7 +213,7 @@ namespace Karaboss.Properties {
         /// <summary>
         ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap add {
+        public static System.Drawing.Bitmap add {
             get {
                 object obj = ResourceManager.GetObject("add", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -223,7 +223,7 @@ namespace Karaboss.Properties {
         /// <summary>
         ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap Apps_Pdf_icon {
+        public static System.Drawing.Bitmap Apps_Pdf_icon {
             get {
                 object obj = ResourceManager.GetObject("Apps_Pdf_icon", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -233,7 +233,7 @@ namespace Karaboss.Properties {
         /// <summary>
         ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap arrow_branch {
+        public static System.Drawing.Bitmap arrow_branch {
             get {
                 object obj = ResourceManager.GetObject("arrow_branch", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -243,7 +243,7 @@ namespace Karaboss.Properties {
         /// <summary>
         ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap arrow_down {
+        public static System.Drawing.Bitmap arrow_down {
             get {
                 object obj = ResourceManager.GetObject("arrow_down", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -253,7 +253,7 @@ namespace Karaboss.Properties {
         /// <summary>
         ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap arrow_refresh {
+        public static System.Drawing.Bitmap arrow_refresh {
             get {
                 object obj = ResourceManager.GetObject("arrow_refresh", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -263,7 +263,7 @@ namespace Karaboss.Properties {
         /// <summary>
         ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap arrow_up {
+        public static System.Drawing.Bitmap arrow_up {
             get {
                 object obj = ResourceManager.GetObject("arrow_up", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -273,7 +273,7 @@ namespace Karaboss.Properties {
         /// <summary>
         ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap ball {
+        public static System.Drawing.Bitmap ball {
             get {
                 object obj = ResourceManager.GetObject("ball", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -283,7 +283,7 @@ namespace Karaboss.Properties {
         /// <summary>
         ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap bass30 {
+        public static System.Drawing.Bitmap bass30 {
             get {
                 object obj = ResourceManager.GetObject("bass30", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -293,7 +293,7 @@ namespace Karaboss.Properties {
         /// <summary>
         ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap becarre {
+        public static System.Drawing.Bitmap becarre {
             get {
                 object obj = ResourceManager.GetObject("becarre", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -303,7 +303,7 @@ namespace Karaboss.Properties {
         /// <summary>
         ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap bemol {
+        public static System.Drawing.Bitmap bemol {
             get {
                 object obj = ResourceManager.GetObject("bemol", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -313,7 +313,7 @@ namespace Karaboss.Properties {
         /// <summary>
         ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap book_open {
+        public static System.Drawing.Bitmap book_open {
             get {
                 object obj = ResourceManager.GetObject("book_open", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -323,7 +323,7 @@ namespace Karaboss.Properties {
         /// <summary>
         ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap Bouton_Check_Gray_32 {
+        public static System.Drawing.Bitmap Bouton_Check_Gray_32 {
             get {
                 object obj = ResourceManager.GetObject("Bouton_Check_Gray_32", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -333,7 +333,7 @@ namespace Karaboss.Properties {
         /// <summary>
         ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap Bouton_Check_PaleGreen_32 {
+        public static System.Drawing.Bitmap Bouton_Check_PaleGreen_32 {
             get {
                 object obj = ResourceManager.GetObject("Bouton_Check_PaleGreen_32", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -343,7 +343,7 @@ namespace Karaboss.Properties {
         /// <summary>
         ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap Bouton_Cross_Gray_32 {
+        public static System.Drawing.Bitmap Bouton_Cross_Gray_32 {
             get {
                 object obj = ResourceManager.GetObject("Bouton_Cross_Gray_32", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -353,7 +353,7 @@ namespace Karaboss.Properties {
         /// <summary>
         ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap Bouton_Cross_Red_32 {
+        public static System.Drawing.Bitmap Bouton_Cross_Red_32 {
             get {
                 object obj = ResourceManager.GetObject("Bouton_Cross_Red_32", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -363,7 +363,7 @@ namespace Karaboss.Properties {
         /// <summary>
         ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap Bouton_minus_gris_32 {
+        public static System.Drawing.Bitmap Bouton_minus_gris_32 {
             get {
                 object obj = ResourceManager.GetObject("Bouton_minus_gris_32", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -373,7 +373,7 @@ namespace Karaboss.Properties {
         /// <summary>
         ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap Bouton_minus_palegreen_32 {
+        public static System.Drawing.Bitmap Bouton_minus_palegreen_32 {
             get {
                 object obj = ResourceManager.GetObject("Bouton_minus_palegreen_32", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -383,7 +383,7 @@ namespace Karaboss.Properties {
         /// <summary>
         ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap Bouton_minus_vert1_32 {
+        public static System.Drawing.Bitmap Bouton_minus_vert1_32 {
             get {
                 object obj = ResourceManager.GetObject("Bouton_minus_vert1_32", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -393,7 +393,7 @@ namespace Karaboss.Properties {
         /// <summary>
         ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap Bouton_minus_vert2_32 {
+        public static System.Drawing.Bitmap Bouton_minus_vert2_32 {
             get {
                 object obj = ResourceManager.GetObject("Bouton_minus_vert2_32", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -403,7 +403,7 @@ namespace Karaboss.Properties {
         /// <summary>
         ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap Bouton_plus_gris_32 {
+        public static System.Drawing.Bitmap Bouton_plus_gris_32 {
             get {
                 object obj = ResourceManager.GetObject("Bouton_plus_gris_32", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -413,7 +413,7 @@ namespace Karaboss.Properties {
         /// <summary>
         ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap Bouton_plus_palegreen_32 {
+        public static System.Drawing.Bitmap Bouton_plus_palegreen_32 {
             get {
                 object obj = ResourceManager.GetObject("Bouton_plus_palegreen_32", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -423,7 +423,7 @@ namespace Karaboss.Properties {
         /// <summary>
         ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap Bouton_plus_vert1_32 {
+        public static System.Drawing.Bitmap Bouton_plus_vert1_32 {
             get {
                 object obj = ResourceManager.GetObject("Bouton_plus_vert1_32", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -433,7 +433,7 @@ namespace Karaboss.Properties {
         /// <summary>
         ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap Bouton_plus_vert2_32 {
+        public static System.Drawing.Bitmap Bouton_plus_vert2_32 {
             get {
                 object obj = ResourceManager.GetObject("Bouton_plus_vert2_32", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -443,7 +443,7 @@ namespace Karaboss.Properties {
         /// <summary>
         ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap btn_black_next {
+        public static System.Drawing.Bitmap btn_black_next {
             get {
                 object obj = ResourceManager.GetObject("btn_black_next", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -453,7 +453,7 @@ namespace Karaboss.Properties {
         /// <summary>
         ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap btn_black_pause {
+        public static System.Drawing.Bitmap btn_black_pause {
             get {
                 object obj = ResourceManager.GetObject("btn_black_pause", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -463,7 +463,7 @@ namespace Karaboss.Properties {
         /// <summary>
         ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap btn_black_play {
+        public static System.Drawing.Bitmap btn_black_play {
             get {
                 object obj = ResourceManager.GetObject("btn_black_play", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -473,7 +473,7 @@ namespace Karaboss.Properties {
         /// <summary>
         ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap btn_black_prev {
+        public static System.Drawing.Bitmap btn_black_prev {
             get {
                 object obj = ResourceManager.GetObject("btn_black_prev", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -483,7 +483,7 @@ namespace Karaboss.Properties {
         /// <summary>
         ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap btn_black_stop {
+        public static System.Drawing.Bitmap btn_black_stop {
             get {
                 object obj = ResourceManager.GetObject("btn_black_stop", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -493,7 +493,7 @@ namespace Karaboss.Properties {
         /// <summary>
         ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap btn_blue_next {
+        public static System.Drawing.Bitmap btn_blue_next {
             get {
                 object obj = ResourceManager.GetObject("btn_blue_next", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -503,7 +503,7 @@ namespace Karaboss.Properties {
         /// <summary>
         ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap btn_blue_pause {
+        public static System.Drawing.Bitmap btn_blue_pause {
             get {
                 object obj = ResourceManager.GetObject("btn_blue_pause", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -513,7 +513,7 @@ namespace Karaboss.Properties {
         /// <summary>
         ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap btn_blue_play {
+        public static System.Drawing.Bitmap btn_blue_play {
             get {
                 object obj = ResourceManager.GetObject("btn_blue_play", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -523,7 +523,7 @@ namespace Karaboss.Properties {
         /// <summary>
         ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap btn_blue_prev {
+        public static System.Drawing.Bitmap btn_blue_prev {
             get {
                 object obj = ResourceManager.GetObject("btn_blue_prev", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -533,7 +533,7 @@ namespace Karaboss.Properties {
         /// <summary>
         ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap btn_blue_stop {
+        public static System.Drawing.Bitmap btn_blue_stop {
             get {
                 object obj = ResourceManager.GetObject("btn_blue_stop", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -543,7 +543,7 @@ namespace Karaboss.Properties {
         /// <summary>
         ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap btn_green_next {
+        public static System.Drawing.Bitmap btn_green_next {
             get {
                 object obj = ResourceManager.GetObject("btn_green_next", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -553,7 +553,7 @@ namespace Karaboss.Properties {
         /// <summary>
         ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap btn_green_pause {
+        public static System.Drawing.Bitmap btn_green_pause {
             get {
                 object obj = ResourceManager.GetObject("btn_green_pause", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -563,7 +563,7 @@ namespace Karaboss.Properties {
         /// <summary>
         ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap btn_green_play {
+        public static System.Drawing.Bitmap btn_green_play {
             get {
                 object obj = ResourceManager.GetObject("btn_green_play", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -573,7 +573,7 @@ namespace Karaboss.Properties {
         /// <summary>
         ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap btn_green_prev {
+        public static System.Drawing.Bitmap btn_green_prev {
             get {
                 object obj = ResourceManager.GetObject("btn_green_prev", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -583,7 +583,7 @@ namespace Karaboss.Properties {
         /// <summary>
         ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap btn_red_next {
+        public static System.Drawing.Bitmap btn_red_next {
             get {
                 object obj = ResourceManager.GetObject("btn_red_next", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -593,7 +593,7 @@ namespace Karaboss.Properties {
         /// <summary>
         ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap btn_red_pause {
+        public static System.Drawing.Bitmap btn_red_pause {
             get {
                 object obj = ResourceManager.GetObject("btn_red_pause", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -603,7 +603,7 @@ namespace Karaboss.Properties {
         /// <summary>
         ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap btn_red_prev {
+        public static System.Drawing.Bitmap btn_red_prev {
             get {
                 object obj = ResourceManager.GetObject("btn_red_prev", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -613,7 +613,7 @@ namespace Karaboss.Properties {
         /// <summary>
         ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap btn_red_stop {
+        public static System.Drawing.Bitmap btn_red_stop {
             get {
                 object obj = ResourceManager.GetObject("btn_red_stop", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -623,7 +623,7 @@ namespace Karaboss.Properties {
         /// <summary>
         ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap BTN_Thumb_Blue {
+        public static System.Drawing.Bitmap BTN_Thumb_Blue {
             get {
                 object obj = ResourceManager.GetObject("BTN_Thumb_Blue", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -633,7 +633,7 @@ namespace Karaboss.Properties {
         /// <summary>
         ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap button_black_ffw {
+        public static System.Drawing.Bitmap button_black_ffw {
             get {
                 object obj = ResourceManager.GetObject("button_black_ffw", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -643,7 +643,7 @@ namespace Karaboss.Properties {
         /// <summary>
         ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap button_black_pause {
+        public static System.Drawing.Bitmap button_black_pause {
             get {
                 object obj = ResourceManager.GetObject("button_black_pause", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -653,7 +653,7 @@ namespace Karaboss.Properties {
         /// <summary>
         ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap button_black_play {
+        public static System.Drawing.Bitmap button_black_play {
             get {
                 object obj = ResourceManager.GetObject("button_black_play", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -663,7 +663,7 @@ namespace Karaboss.Properties {
         /// <summary>
         ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap button_black_rew {
+        public static System.Drawing.Bitmap button_black_rew {
             get {
                 object obj = ResourceManager.GetObject("button_black_rew", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -673,7 +673,7 @@ namespace Karaboss.Properties {
         /// <summary>
         ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap button_black_stop {
+        public static System.Drawing.Bitmap button_black_stop {
             get {
                 object obj = ResourceManager.GetObject("button_black_stop", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -683,7 +683,7 @@ namespace Karaboss.Properties {
         /// <summary>
         ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap button_green_play {
+        public static System.Drawing.Bitmap button_green_play {
             get {
                 object obj = ResourceManager.GetObject("button_green_play", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -693,7 +693,7 @@ namespace Karaboss.Properties {
         /// <summary>
         ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap cdg {
+        public static System.Drawing.Bitmap cdg {
             get {
                 object obj = ResourceManager.GetObject("cdg", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -703,7 +703,7 @@ namespace Karaboss.Properties {
         /// <summary>
         ///   Recherche une ressource localisée de type System.Drawing.Icon semblable à (Icône).
         /// </summary>
-        internal static System.Drawing.Icon cdg1 {
+        public static System.Drawing.Icon cdg1 {
             get {
                 object obj = ResourceManager.GetObject("cdg1", resourceCulture);
                 return ((System.Drawing.Icon)(obj));
@@ -713,7 +713,7 @@ namespace Karaboss.Properties {
         /// <summary>
         ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap checkgreen16 {
+        public static System.Drawing.Bitmap checkgreen16 {
             get {
                 object obj = ResourceManager.GetObject("checkgreen16", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -723,7 +723,7 @@ namespace Karaboss.Properties {
         /// <summary>
         ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap Close {
+        public static System.Drawing.Bitmap Close {
             get {
                 object obj = ResourceManager.GetObject("Close", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -733,7 +733,7 @@ namespace Karaboss.Properties {
         /// <summary>
         ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap CloseOver {
+        public static System.Drawing.Bitmap CloseOver {
             get {
                 object obj = ResourceManager.GetObject("CloseOver", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -743,7 +743,7 @@ namespace Karaboss.Properties {
         /// <summary>
         ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap cog_add {
+        public static System.Drawing.Bitmap cog_add {
             get {
                 object obj = ResourceManager.GetObject("cog_add", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -753,7 +753,7 @@ namespace Karaboss.Properties {
         /// <summary>
         ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap cog_delete {
+        public static System.Drawing.Bitmap cog_delete {
             get {
                 object obj = ResourceManager.GetObject("cog_delete", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -763,7 +763,7 @@ namespace Karaboss.Properties {
         /// <summary>
         ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap cog_edit {
+        public static System.Drawing.Bitmap cog_edit {
             get {
                 object obj = ResourceManager.GetObject("cog_edit", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -773,7 +773,17 @@ namespace Karaboss.Properties {
         /// <summary>
         ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap comment {
+        public static System.Drawing.Bitmap color_picker_black18 {
+            get {
+                object obj = ResourceManager.GetObject("color_picker_black18", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
+        /// </summary>
+        public static System.Drawing.Bitmap comment {
             get {
                 object obj = ResourceManager.GetObject("comment", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -783,7 +793,7 @@ namespace Karaboss.Properties {
         /// <summary>
         ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap control_fastforward_blue {
+        public static System.Drawing.Bitmap control_fastforward_blue {
             get {
                 object obj = ResourceManager.GetObject("control_fastforward_blue", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -793,7 +803,7 @@ namespace Karaboss.Properties {
         /// <summary>
         ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap control_pause_blue {
+        public static System.Drawing.Bitmap control_pause_blue {
             get {
                 object obj = ResourceManager.GetObject("control_pause_blue", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -803,7 +813,7 @@ namespace Karaboss.Properties {
         /// <summary>
         ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap control_play_blue {
+        public static System.Drawing.Bitmap control_play_blue {
             get {
                 object obj = ResourceManager.GetObject("control_play_blue", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -813,7 +823,7 @@ namespace Karaboss.Properties {
         /// <summary>
         ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap control_stop_blue {
+        public static System.Drawing.Bitmap control_stop_blue {
             get {
                 object obj = ResourceManager.GetObject("control_stop_blue", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -823,7 +833,7 @@ namespace Karaboss.Properties {
         /// <summary>
         ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap cross_icon {
+        public static System.Drawing.Bitmap cross_icon {
             get {
                 object obj = ResourceManager.GetObject("cross_icon", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -833,7 +843,7 @@ namespace Karaboss.Properties {
         /// <summary>
         ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap cut {
+        public static System.Drawing.Bitmap cut {
             get {
                 object obj = ResourceManager.GetObject("cut", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -843,7 +853,7 @@ namespace Karaboss.Properties {
         /// <summary>
         ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap cut1 {
+        public static System.Drawing.Bitmap cut1 {
             get {
                 object obj = ResourceManager.GetObject("cut1", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -853,7 +863,7 @@ namespace Karaboss.Properties {
         /// <summary>
         ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap D {
+        public static System.Drawing.Bitmap D {
             get {
                 object obj = ResourceManager.GetObject("D", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -863,7 +873,7 @@ namespace Karaboss.Properties {
         /// <summary>
         ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap delete {
+        public static System.Drawing.Bitmap delete {
             get {
                 object obj = ResourceManager.GetObject("delete", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -873,7 +883,7 @@ namespace Karaboss.Properties {
         /// <summary>
         ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap delete_icon {
+        public static System.Drawing.Bitmap delete_icon {
             get {
                 object obj = ResourceManager.GetObject("delete_icon", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -883,7 +893,7 @@ namespace Karaboss.Properties {
         /// <summary>
         ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap diese {
+        public static System.Drawing.Bitmap diese {
             get {
                 object obj = ResourceManager.GetObject("diese", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -893,7 +903,7 @@ namespace Karaboss.Properties {
         /// <summary>
         ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap erase {
+        public static System.Drawing.Bitmap erase {
             get {
                 object obj = ResourceManager.GetObject("erase", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -903,7 +913,7 @@ namespace Karaboss.Properties {
         /// <summary>
         ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap export_pdf32 {
+        public static System.Drawing.Bitmap export_pdf32 {
             get {
                 object obj = ResourceManager.GetObject("export_pdf32", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -913,7 +923,7 @@ namespace Karaboss.Properties {
         /// <summary>
         ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap export_txt48_2 {
+        public static System.Drawing.Bitmap export_txt48_2 {
             get {
                 object obj = ResourceManager.GetObject("export_txt48_2", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -923,7 +933,7 @@ namespace Karaboss.Properties {
         /// <summary>
         ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap floppy_icon {
+        public static System.Drawing.Bitmap floppy_icon {
             get {
                 object obj = ResourceManager.GetObject("floppy_icon", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -933,7 +943,7 @@ namespace Karaboss.Properties {
         /// <summary>
         ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap folder_classic_down {
+        public static System.Drawing.Bitmap folder_classic_down {
             get {
                 object obj = ResourceManager.GetObject("folder_classic_down", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -943,7 +953,7 @@ namespace Karaboss.Properties {
         /// <summary>
         ///   Recherche une ressource localisée de type System.Drawing.Icon semblable à (Icône).
         /// </summary>
-        internal static System.Drawing.Icon gear {
+        public static System.Drawing.Icon gear {
             get {
                 object obj = ResourceManager.GetObject("gear", resourceCulture);
                 return ((System.Drawing.Icon)(obj));
@@ -953,7 +963,7 @@ namespace Karaboss.Properties {
         /// <summary>
         ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap help {
+        public static System.Drawing.Bitmap help {
             get {
                 object obj = ResourceManager.GetObject("help", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -963,7 +973,7 @@ namespace Karaboss.Properties {
         /// <summary>
         ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap innosetupwizzardsmall {
+        public static System.Drawing.Bitmap innosetupwizzardsmall {
             get {
                 object obj = ResourceManager.GetObject("innosetupwizzardsmall", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -971,9 +981,29 @@ namespace Karaboss.Properties {
         }
         
         /// <summary>
+        ///   Recherche une ressource localisée de type System.Byte[].
+        /// </summary>
+        public static byte[] karafun {
+            get {
+                object obj = ResourceManager.GetObject("karafun", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
         ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap Karaoke_About_Screen_Metro_UI {
+        public static System.Drawing.Bitmap karafun24_png {
+            get {
+                object obj = ResourceManager.GetObject("karafun24.png", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
+        /// </summary>
+        public static System.Drawing.Bitmap Karaoke_About_Screen_Metro_UI {
             get {
                 object obj = ResourceManager.GetObject("Karaoke_About_Screen_Metro_UI", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -983,7 +1013,7 @@ namespace Karaboss.Properties {
         /// <summary>
         ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap Karaoke_Splash_Screen_Metro_UI_2 {
+        public static System.Drawing.Bitmap Karaoke_Splash_Screen_Metro_UI_2 {
             get {
                 object obj = ResourceManager.GetObject("Karaoke_Splash_Screen_Metro_UI_2", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -993,7 +1023,7 @@ namespace Karaboss.Properties {
         /// <summary>
         ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap layers {
+        public static System.Drawing.Bitmap layers {
             get {
                 object obj = ResourceManager.GetObject("layers", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -1003,7 +1033,7 @@ namespace Karaboss.Properties {
         /// <summary>
         ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap logo {
+        public static System.Drawing.Bitmap logo {
             get {
                 object obj = ResourceManager.GetObject("logo", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -1013,7 +1043,7 @@ namespace Karaboss.Properties {
         /// <summary>
         ///   Recherche une ressource localisée de type System.Drawing.Icon semblable à (Icône).
         /// </summary>
-        internal static System.Drawing.Icon LOMM {
+        public static System.Drawing.Icon LOMM {
             get {
                 object obj = ResourceManager.GetObject("LOMM", resourceCulture);
                 return ((System.Drawing.Icon)(obj));
@@ -1023,7 +1053,7 @@ namespace Karaboss.Properties {
         /// <summary>
         ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap magnifyminus24 {
+        public static System.Drawing.Bitmap magnifyminus24 {
             get {
                 object obj = ResourceManager.GetObject("magnifyminus24", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -1033,7 +1063,7 @@ namespace Karaboss.Properties {
         /// <summary>
         ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap magnifyplus24 {
+        public static System.Drawing.Bitmap magnifyplus24 {
             get {
                 object obj = ResourceManager.GetObject("magnifyplus24", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -1043,7 +1073,7 @@ namespace Karaboss.Properties {
         /// <summary>
         ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap Max {
+        public static System.Drawing.Bitmap Max {
             get {
                 object obj = ResourceManager.GetObject("Max", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -1053,7 +1083,7 @@ namespace Karaboss.Properties {
         /// <summary>
         ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap MaxNormal {
+        public static System.Drawing.Bitmap MaxNormal {
             get {
                 object obj = ResourceManager.GetObject("MaxNormal", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -1063,7 +1093,7 @@ namespace Karaboss.Properties {
         /// <summary>
         ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap Media_Controls_Fast_Forward_icon {
+        public static System.Drawing.Bitmap Media_Controls_Fast_Forward_icon {
             get {
                 object obj = ResourceManager.GetObject("Media_Controls_Fast_Forward_icon", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -1073,7 +1103,7 @@ namespace Karaboss.Properties {
         /// <summary>
         ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap Media_Controls_Pause_icon {
+        public static System.Drawing.Bitmap Media_Controls_Pause_icon {
             get {
                 object obj = ResourceManager.GetObject("Media-Controls-Pause-icon", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -1083,7 +1113,7 @@ namespace Karaboss.Properties {
         /// <summary>
         ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap Media_Controls_Play_icon {
+        public static System.Drawing.Bitmap Media_Controls_Play_icon {
             get {
                 object obj = ResourceManager.GetObject("Media-Controls-Play-icon", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -1093,7 +1123,7 @@ namespace Karaboss.Properties {
         /// <summary>
         ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap Media_Controls_Rewind_icon {
+        public static System.Drawing.Bitmap Media_Controls_Rewind_icon {
             get {
                 object obj = ResourceManager.GetObject("Media_Controls_Rewind_icon", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -1103,7 +1133,7 @@ namespace Karaboss.Properties {
         /// <summary>
         ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap Media_Controls_Skip_To_End_icon {
+        public static System.Drawing.Bitmap Media_Controls_Skip_To_End_icon {
             get {
                 object obj = ResourceManager.GetObject("Media_Controls_Skip_To_End_icon", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -1113,7 +1143,7 @@ namespace Karaboss.Properties {
         /// <summary>
         ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap Media_Controls_Skip_To_Start_icon {
+        public static System.Drawing.Bitmap Media_Controls_Skip_To_Start_icon {
             get {
                 object obj = ResourceManager.GetObject("Media_Controls_Skip_To_Start_icon", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -1123,7 +1153,7 @@ namespace Karaboss.Properties {
         /// <summary>
         ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap Media_Controls_Stop_icon {
+        public static System.Drawing.Bitmap Media_Controls_Stop_icon {
             get {
                 object obj = ResourceManager.GetObject("Media-Controls-Stop-icon", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -1131,9 +1161,19 @@ namespace Karaboss.Properties {
         }
         
         /// <summary>
+        ///   Recherche une ressource localisée de type System.Byte[].
+        /// </summary>
+        public static byte[] midi {
+            get {
+                object obj = ResourceManager.GetObject("midi", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
         ///   Recherche une ressource localisée de type System.Drawing.Icon semblable à (Icône).
         /// </summary>
-        internal static System.Drawing.Icon mml {
+        public static System.Drawing.Icon mml {
             get {
                 object obj = ResourceManager.GetObject("mml", resourceCulture);
                 return ((System.Drawing.Icon)(obj));
@@ -1143,7 +1183,7 @@ namespace Karaboss.Properties {
         /// <summary>
         ///   Recherche une ressource localisée de type System.Drawing.Icon semblable à (Icône).
         /// </summary>
-        internal static System.Drawing.Icon mp3 {
+        public static System.Drawing.Icon mp3 {
             get {
                 object obj = ResourceManager.GetObject("mp3", resourceCulture);
                 return ((System.Drawing.Icon)(obj));
@@ -1153,7 +1193,7 @@ namespace Karaboss.Properties {
         /// <summary>
         ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap mp3_logo_200 {
+        public static System.Drawing.Bitmap mp3_logo_200 {
             get {
                 object obj = ResourceManager.GetObject("mp3_logo_200", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -1163,7 +1203,7 @@ namespace Karaboss.Properties {
         /// <summary>
         ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap music {
+        public static System.Drawing.Bitmap music {
             get {
                 object obj = ResourceManager.GetObject("music", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -1187,7 +1227,7 @@ namespace Karaboss.Properties {
         ///|ABCD|EFG&gt;^G|[A4a4C4E4]||
         ///.
         /// </summary>
-        internal static string NewABC {
+        public static string NewABC {
             get {
                 return ResourceManager.GetString("NewABC", resourceCulture);
             }
@@ -1196,7 +1236,7 @@ namespace Karaboss.Properties {
         /// <summary>
         ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap note1 {
+        public static System.Drawing.Bitmap note1 {
             get {
                 object obj = ResourceManager.GetObject("note1", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -1206,7 +1246,7 @@ namespace Karaboss.Properties {
         /// <summary>
         ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap note16 {
+        public static System.Drawing.Bitmap note16 {
             get {
                 object obj = ResourceManager.GetObject("note16", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -1216,7 +1256,7 @@ namespace Karaboss.Properties {
         /// <summary>
         ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap note2 {
+        public static System.Drawing.Bitmap note2 {
             get {
                 object obj = ResourceManager.GetObject("note2", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -1226,7 +1266,7 @@ namespace Karaboss.Properties {
         /// <summary>
         ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap note32 {
+        public static System.Drawing.Bitmap note32 {
             get {
                 object obj = ResourceManager.GetObject("note32", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -1236,7 +1276,7 @@ namespace Karaboss.Properties {
         /// <summary>
         ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap note4 {
+        public static System.Drawing.Bitmap note4 {
             get {
                 object obj = ResourceManager.GetObject("note4", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -1246,7 +1286,7 @@ namespace Karaboss.Properties {
         /// <summary>
         ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap note64 {
+        public static System.Drawing.Bitmap note64 {
             get {
                 object obj = ResourceManager.GetObject("note64", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -1256,7 +1296,7 @@ namespace Karaboss.Properties {
         /// <summary>
         ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap note8 {
+        public static System.Drawing.Bitmap note8 {
             get {
                 object obj = ResourceManager.GetObject("note8", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -1266,7 +1306,7 @@ namespace Karaboss.Properties {
         /// <summary>
         ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap page_add {
+        public static System.Drawing.Bitmap page_add {
             get {
                 object obj = ResourceManager.GetObject("page_add", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -1276,7 +1316,7 @@ namespace Karaboss.Properties {
         /// <summary>
         ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap page_copy {
+        public static System.Drawing.Bitmap page_copy {
             get {
                 object obj = ResourceManager.GetObject("page_copy", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -1286,7 +1326,7 @@ namespace Karaboss.Properties {
         /// <summary>
         ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap page_copy1 {
+        public static System.Drawing.Bitmap page_copy1 {
             get {
                 object obj = ResourceManager.GetObject("page_copy1", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -1296,7 +1336,7 @@ namespace Karaboss.Properties {
         /// <summary>
         ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap page_delete {
+        public static System.Drawing.Bitmap page_delete {
             get {
                 object obj = ResourceManager.GetObject("page_delete", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -1306,7 +1346,7 @@ namespace Karaboss.Properties {
         /// <summary>
         ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap page_edit {
+        public static System.Drawing.Bitmap page_edit {
             get {
                 object obj = ResourceManager.GetObject("page_edit", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -1316,7 +1356,7 @@ namespace Karaboss.Properties {
         /// <summary>
         ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap page_paste {
+        public static System.Drawing.Bitmap page_paste {
             get {
                 object obj = ResourceManager.GetObject("page_paste", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -1326,7 +1366,7 @@ namespace Karaboss.Properties {
         /// <summary>
         ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap page_paste1 {
+        public static System.Drawing.Bitmap page_paste1 {
             get {
                 object obj = ResourceManager.GetObject("page_paste1", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -1336,7 +1376,7 @@ namespace Karaboss.Properties {
         /// <summary>
         ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap page_refresh {
+        public static System.Drawing.Bitmap page_refresh {
             get {
                 object obj = ResourceManager.GetObject("page_refresh", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -1346,7 +1386,7 @@ namespace Karaboss.Properties {
         /// <summary>
         ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap page_save {
+        public static System.Drawing.Bitmap page_save {
             get {
                 object obj = ResourceManager.GetObject("page_save", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -1356,7 +1396,7 @@ namespace Karaboss.Properties {
         /// <summary>
         ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap pencil {
+        public static System.Drawing.Bitmap pencil {
             get {
                 object obj = ResourceManager.GetObject("pencil", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -1366,7 +1406,7 @@ namespace Karaboss.Properties {
         /// <summary>
         ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap picture_add {
+        public static System.Drawing.Bitmap picture_add {
             get {
                 object obj = ResourceManager.GetObject("picture_add", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -1376,7 +1416,7 @@ namespace Karaboss.Properties {
         /// <summary>
         ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap Play_Music_icon {
+        public static System.Drawing.Bitmap Play_Music_icon {
             get {
                 object obj = ResourceManager.GetObject("Play_Music_icon", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -1386,7 +1426,7 @@ namespace Karaboss.Properties {
         /// <summary>
         ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap player_play {
+        public static System.Drawing.Bitmap player_play {
             get {
                 object obj = ResourceManager.GetObject("player_play", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -1396,7 +1436,7 @@ namespace Karaboss.Properties {
         /// <summary>
         ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap plugin {
+        public static System.Drawing.Bitmap plugin {
             get {
                 object obj = ResourceManager.GetObject("plugin", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -1406,7 +1446,7 @@ namespace Karaboss.Properties {
         /// <summary>
         ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap pointer {
+        public static System.Drawing.Bitmap pointer {
             get {
                 object obj = ResourceManager.GetObject("pointer", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -1416,7 +1456,7 @@ namespace Karaboss.Properties {
         /// <summary>
         ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap resultset_next {
+        public static System.Drawing.Bitmap resultset_next {
             get {
                 object obj = ResourceManager.GetObject("resultset_next", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -1426,7 +1466,7 @@ namespace Karaboss.Properties {
         /// <summary>
         ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap resultset_next1 {
+        public static System.Drawing.Bitmap resultset_next1 {
             get {
                 object obj = ResourceManager.GetObject("resultset_next1", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -1436,7 +1476,7 @@ namespace Karaboss.Properties {
         /// <summary>
         ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap script_add {
+        public static System.Drawing.Bitmap script_add {
             get {
                 object obj = ResourceManager.GetObject("script_add", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -1446,7 +1486,7 @@ namespace Karaboss.Properties {
         /// <summary>
         ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap script_delete {
+        public static System.Drawing.Bitmap script_delete {
             get {
                 object obj = ResourceManager.GetObject("script_delete", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -1456,7 +1496,7 @@ namespace Karaboss.Properties {
         /// <summary>
         ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap script_edit {
+        public static System.Drawing.Bitmap script_edit {
             get {
                 object obj = ResourceManager.GetObject("script_edit", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -1466,7 +1506,7 @@ namespace Karaboss.Properties {
         /// <summary>
         ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap script_gear {
+        public static System.Drawing.Bitmap script_gear {
             get {
                 object obj = ResourceManager.GetObject("script_gear", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -1476,7 +1516,7 @@ namespace Karaboss.Properties {
         /// <summary>
         ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap script_lightning {
+        public static System.Drawing.Bitmap script_lightning {
             get {
                 object obj = ResourceManager.GetObject("script_lightning", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -1486,7 +1526,7 @@ namespace Karaboss.Properties {
         /// <summary>
         ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap script_link {
+        public static System.Drawing.Bitmap script_link {
             get {
                 object obj = ResourceManager.GetObject("script_link", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -1496,7 +1536,7 @@ namespace Karaboss.Properties {
         /// <summary>
         ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap script_save {
+        public static System.Drawing.Bitmap script_save {
             get {
                 object obj = ResourceManager.GetObject("script_save", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -1506,7 +1546,7 @@ namespace Karaboss.Properties {
         /// <summary>
         ///   Recherche une ressource localisée de type System.Drawing.Icon semblable à (Icône).
         /// </summary>
-        internal static System.Drawing.Icon Separator {
+        public static System.Drawing.Icon Separator {
             get {
                 object obj = ResourceManager.GetObject("Separator", resourceCulture);
                 return ((System.Drawing.Icon)(obj));
@@ -1516,7 +1556,7 @@ namespace Karaboss.Properties {
         /// <summary>
         ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap silence {
+        public static System.Drawing.Bitmap silence {
             get {
                 object obj = ResourceManager.GetObject("silence", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -1526,7 +1566,7 @@ namespace Karaboss.Properties {
         /// <summary>
         ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap table_multiple {
+        public static System.Drawing.Bitmap table_multiple {
             get {
                 object obj = ResourceManager.GetObject("table_multiple", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -1536,7 +1576,7 @@ namespace Karaboss.Properties {
         /// <summary>
         ///   Recherche une ressource localisée de type System.Drawing.Icon semblable à (Icône).
         /// </summary>
-        internal static System.Drawing.Icon text {
+        public static System.Drawing.Icon text {
             get {
                 object obj = ResourceManager.GetObject("text", resourceCulture);
                 return ((System.Drawing.Icon)(obj));
@@ -1546,7 +1586,7 @@ namespace Karaboss.Properties {
         /// <summary>
         ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap textfield_add {
+        public static System.Drawing.Bitmap textfield_add {
             get {
                 object obj = ResourceManager.GetObject("textfield_add", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -1556,7 +1596,7 @@ namespace Karaboss.Properties {
         /// <summary>
         ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap treble30 {
+        public static System.Drawing.Bitmap treble30 {
             get {
                 object obj = ResourceManager.GetObject("treble30", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -1566,7 +1606,7 @@ namespace Karaboss.Properties {
         /// <summary>
         ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap triolet30 {
+        public static System.Drawing.Bitmap triolet30 {
             get {
                 object obj = ResourceManager.GetObject("triolet30", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -1576,7 +1616,7 @@ namespace Karaboss.Properties {
         /// <summary>
         ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap wand {
+        public static System.Drawing.Bitmap wand {
             get {
                 object obj = ResourceManager.GetObject("wand", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -1586,7 +1626,7 @@ namespace Karaboss.Properties {
         /// <summary>
         ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap wrench {
+        public static System.Drawing.Bitmap wrench {
             get {
                 object obj = ResourceManager.GetObject("wrench", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));

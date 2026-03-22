@@ -41,8 +41,6 @@ using System.ComponentModel;
 using System.Drawing;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using TagLib;
 using TagLib.Id3v2;
@@ -81,9 +79,8 @@ namespace Karaboss.Mp3
         int COL_TIME = 1;
         int COL_TEXT = 2;
 
-        #endregion dgview
+        #endregion dgview        
 
-        string _lrcFileName;
 
         private enum Directions
         {
@@ -221,7 +218,9 @@ namespace Karaboss.Mp3
             Player.PlayingCompleted += new EndingSyncHandler(HandlePlayingCompleted);
             
             DisplayMp3Characteristics();
-            ExtractMp3Lyrics(Mp3FullPath);            
+            ExtractMp3Lyrics(Mp3FullPath);
+
+            PopulateMetadataTags();
 
             #region playlists
 
@@ -259,10 +258,33 @@ namespace Karaboss.Mp3
                 }
             }
             #endregion playlists
-
            
         }
-    
+
+        /// <summary>
+        /// Populate textboxes Title, Artist, Album, Year
+        /// </summary>
+        private void PopulateMetadataTags()
+        {
+            if (Mp3LyricsMgmtHelper.SyncLyrics == null || Mp3LyricsMgmtHelper.SyncLyrics.Count == 0)
+                return;
+
+            string title = Mp3LyricsMgmtHelper.Title;
+            string artist = Mp3LyricsMgmtHelper.Artist;
+            string album = Mp3LyricsMgmtHelper.Album;
+            string tool = Mp3LyricsMgmtHelper.Tool;
+            uint year = Mp3LyricsMgmtHelper.Year;
+
+            if (title != "")
+                txtTitle.Text = title;
+            if (artist != "")
+                txtArtist.Text = artist;
+            if (album != "")
+                txtAlbum.Text = album;
+            if (year != 0)
+                txtYear.Text = year.ToString();
+        }
+
 
         #region Form load close resize
 
@@ -1208,6 +1230,7 @@ namespace Karaboss.Mp3
 
         #endregion
 
+        #region menu Help
 
         private void mnuHelpAbout_Click(object sender, EventArgs e)
         {
@@ -1241,6 +1264,19 @@ namespace Karaboss.Mp3
                 MessageBox.Show(e.Message, "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
+
+        private void mnuHelpForums_Click(object sender, EventArgs e)
+        {
+            Karaclass.DisplayUrl(Karaclass.url_forums);
+        }
+
+        private void mnuHelpDocumentation_Click(object sender, EventArgs e)
+        {
+            Karaclass.DisplayUrl(Karaclass.url_documentation);
+        }
+
+
+        #endregion menu Help
 
         #endregion menus
 
@@ -1323,27 +1359,32 @@ namespace Karaboss.Mp3
             // Mp3 sync lyrics with time stamps
             TagLib.Id3v2.SynchronisedLyricsFrame SyncLyricsFrame = Player.SyncLyricsFrame;
             Mp3LyricsMgmtHelper.MySyncLyricsFrame = SyncLyricsFrame;
+
            
             // Get lyrics type origin
-            Mp3LyricsMgmtHelper.m_mp3lyricstype = Mp3LyricsMgmtHelper.GetLyricsType(SyncLyricsFrame, TagLyrics, TagSubTitles, FileName);            
-
+            Mp3LyricsMgmtHelper.m_mp3lyricstype = Mp3LyricsMgmtHelper.GetLyricsType(SyncLyricsFrame, TagLyrics, TagSubTitles, FileName);
+          
             
             switch (Mp3LyricsMgmtHelper.m_mp3lyricstype)
             {
                 // Synchronized Lyrics included in the mp3 file
                 case Mp3LyricsTypes.LyricsWithTimeStamps:                                        
                     // This one returns lyrics without separators
-                    Mp3LyricsMgmtHelper.SyncLyrics = Mp3LyricsMgmtHelper.GetKEffectSyncLyrics(SyncLyricsFrame);    // KaraokeEffect
+                    Mp3LyricsMgmtHelper.SyncLyrics = Mp3LyricsMgmtHelper.GetLyricsFromMp3File(SyncLyricsFrame);    // KaraokeEffect
                     DisplayFrmMp3Lyrics();
                     break;
 
                 // Lyrics brought by a lrc file in the same directory & having the same name
                 case Mp3LyricsTypes.LRCFile:
                     // TODO: return lyrics without separators as previous case
-                    Mp3LyricsMgmtHelper.SyncLyrics = Mp3LyricsMgmtHelper.GetKEffectLrcLyrics(FileName);                                       
+                    //Mp3LyricsMgmtHelper.SyncLyrics = Mp3LyricsMgmtHelper.GetKEffectLrcLyrics(FileName);
+                    Mp3LyricsMgmtHelper.SyncLyrics = Mp3LyricsMgmtHelper.GetLyricsFromLrcFile(FileName);
                     DisplayFrmMp3Lyrics();
                     break;
                 
+                case Mp3LyricsTypes.KOKFile:
+                    break;
+              
                 // Non synchronized Lyrics included in the mp3 file
                 case Mp3LyricsTypes.LyricsWithoutTimeStamps:                    
                     string tx = string.Empty;
@@ -2031,7 +2072,6 @@ namespace Karaboss.Mp3
         #endregion Timer
 
 
-
         #region import export lyrics
 
 
@@ -2454,12 +2494,9 @@ namespace Karaboss.Mp3
 
             Mp3LyricsMgmtHelper.MySyncLyricsFrame = null;
 
-            // TEST // Load LRC file without any separators
+            // Load LRC file
             Mp3LyricsMgmtHelper.SyncLyrics = LyricsUtilities.ReadLrcFromFile(FileName);            
             
-            // OLD procedure
-            //Mp3LyricsMgmtHelper.SyncLyrics = Mp3LyricsMgmtHelper.GetKEffectLrcLyrics(_lrcFileName);
-
             PopulateMetadataTags();
             
             PopulateDataGridView();
@@ -2472,30 +2509,10 @@ namespace Karaboss.Mp3
             dgView.Rows[0].Selected = true;
 
             localSyncLyrics = GetCurrentDgViewContent(dgView, COL_MS, COL_TEXT);
-            PopulateTextBox(localSyncLyrics);
-            
+            PopulateTextBox(localSyncLyrics);            
         }
              
-        
-        private void PopulateMetadataTags()
-        {
-            if (Mp3LyricsMgmtHelper.SyncLyrics == null || Mp3LyricsMgmtHelper.SyncLyrics.Count == 0)
-                return;
-            string title = Mp3LyricsMgmtHelper.Title;
-            string artist = Mp3LyricsMgmtHelper.Artist;
-            string album = Mp3LyricsMgmtHelper.Album;
-            string tool = Mp3LyricsMgmtHelper.Tool;
-            uint year = Mp3LyricsMgmtHelper.Year;
-
-            if (title != "")
-                txtTitle.Text = title;
-            if (artist != "")
-                txtArtist.Text = artist;
-            if (album != "")
-                txtAlbum.Text = album;
-            if ( year != 0)
-                txtYear.Text = year.ToString();                                        
-        }
+             
 
         /// <summary>
         /// Store dgView content
@@ -2681,29 +2698,6 @@ namespace Karaboss.Mp3
 
             _LrcMillisecondsDigits = LrcOptionsDialog.LrcMillisecondsDigits;
 
-            #region warning LRC lose syllables
-            if (LrcLinesSyllabesFormat == LrcLinesSyllabesFormats.Syllabes)
-            {
-                // The LRC format does not allow words to be divided into syllables. Words must remain whole.
-                // They cannot be divided into syllables. The sentence composed of the three words “Long live karaoke” can only be divided into three parts: “Long,” “live” and “karaoke” 
-                // If you have divided the word “karaoke” into four syllables, “Ka,” “ra,” “o,” and “ke,” Karaboss will reconstruct the word “karaoke” and you will lose the syllables of the words.
-                // If you want to keep all the syllables, save the lyrics in the MP3 file.
-                string tx = Strings.Mp3SaveLRCWarning;
-                tx = string.Format(tx, Environment.NewLine);
-                string msg = tx;
-                /*
-                string msg = "Warning: The LRC format does not allow words to be divided into syllables. Words must remain whole." + Environment.NewLine + Environment.NewLine +
-                    "If you have divided words into syllables, Karaboss will reconstruct the words and you will lose the syllables of the words." + Environment.NewLine + Environment.NewLine +
-                    "If you want to keep all the syllables, save the lyrics in the MP3 file." + Environment.NewLine + Environment.NewLine +
-                    "Do you want to continue?";
-                */
-                if (MessageBox.Show(msg, "Karaboss", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.No)
-                    return;
-
-
-            }
-            #endregion warning 
-
             // Cut lines over x characters
             bool bCutLines = LrcOptionsDialog.bCutLines;
             int LrcCutLinesChars = LrcOptionsDialog.LrcCutLinesChars;
@@ -2789,7 +2783,7 @@ namespace Karaboss.Mp3
                 Tag_Artist = txtArtist.Text;
                 Tag_Album = txtAlbum.Text;
                 
-                if (IsNumeric(txtTitle.Text))
+                if (IsNumeric(txtYear.Text))
                     Tag_Year = Convert.ToUInt32(txtYear.Text);
                 Tag_Lang = cbLanguage.Text;
 
@@ -2860,12 +2854,12 @@ namespace Karaboss.Mp3
 
             if (OpenFileDialog.ShowDialog() == DialogResult.OK)
             {
-                _lrcFileName = OpenFileDialog.FileName;
+                string FileName = OpenFileDialog.FileName;
 
                 // Reset
                 InitGridView();
 
-                string[] lines = System.IO.File.ReadAllLines(_lrcFileName);
+                string[] lines = System.IO.File.ReadAllLines(FileName);
                 string line;
 
                 for (int i = 0; i < lines.Count(); i++)
@@ -2960,8 +2954,11 @@ namespace Karaboss.Mp3
             // Display mp3 infos
             if (Player.Tag != null)
             {
-                txtTitle.Text = Player.Tag.Title;
-                txtAlbum.Text = Player.Tag.Album;
+                if (Player.Tag.Title != null)
+                    txtTitle.Text = Player.Tag.Title;
+                
+                if (Player.Tag.Album != null)
+                    txtAlbum.Text = Player.Tag.Album;
                 
                 if (Player.Tag.AlbumArtists.Count() > 0)
                 {
@@ -2996,8 +2993,9 @@ namespace Karaboss.Mp3
             
             string tsp;            
             double time = Player.Position * 1000;
-            tsp = Mp3LyricsMgmtHelper.MsToTime(time, _LrcMillisecondsDigits);
-                                 
+            //tsp = Mp3LyricsMgmtHelper.MsToTime(time, _LrcMillisecondsDigits);
+            tsp = LyricsUtilities.MsToTime(time, _LrcMillisecondsDigits);
+
             if (_index < dgView.Rows.Count) // lvLyrics.Items.Count)
             {
                 dgView.Rows[_index].Cells[COL_MS].Value = (long)time;
@@ -3110,8 +3108,6 @@ namespace Karaboss.Mp3
         }
 
         
-
-
         /// <summary>
         /// I am able to detect alpha-numeric keys. However i am not able to detect arrow keys
         /// ProcessCmdKey save my life
@@ -3893,7 +3889,7 @@ namespace Karaboss.Mp3
                 time += m_MillisecondsOffset;
                 dgView.Rows[Row].Cells[COL_MS].Value = time;
 
-                tsp = Mp3LyricsMgmtHelper.MsToTime(time, _LrcMillisecondsDigits);
+                tsp = LyricsUtilities.MsToTime(time, _LrcMillisecondsDigits);
                 dgView.Rows[Row].Cells[COL_TIME].Value = tsp;
 
                 localSyncLyrics = LoadModifiedLyrics();
@@ -3918,7 +3914,7 @@ namespace Karaboss.Mp3
                     time += m_MillisecondsOffset;
                     dgView.Rows[i].Cells[COL_MS].Value = time;
 
-                    tsp = Mp3LyricsMgmtHelper.MsToTime(time, _LrcMillisecondsDigits);
+                    tsp = LyricsUtilities.MsToTime(time, _LrcMillisecondsDigits);
                     dgView.Rows[i].Cells[COL_TIME].Value = tsp;
                 }
             }
@@ -3972,7 +3968,7 @@ namespace Karaboss.Mp3
                 time -= m_MillisecondsOffset;
                 dgView.Rows[Row].Cells[COL_MS].Value = time;
 
-                tsp = Mp3LyricsMgmtHelper.MsToTime(time, _LrcMillisecondsDigits);
+                tsp = LyricsUtilities.MsToTime(time, _LrcMillisecondsDigits);
                 dgView.Rows[Row].Cells[COL_TIME].Value = tsp;
 
                 localSyncLyrics = LoadModifiedLyrics();
@@ -3998,7 +3994,7 @@ namespace Karaboss.Mp3
                     time -= m_MillisecondsOffset;
                     dgView.Rows[i].Cells[COL_MS].Value = time;
 
-                    tsp = Mp3LyricsMgmtHelper.MsToTime(time, _LrcMillisecondsDigits);
+                    tsp = LyricsUtilities.MsToTime(time, _LrcMillisecondsDigits);
                     dgView.Rows[i].Cells[COL_TIME].Value = tsp;
                 }
             }
@@ -4101,7 +4097,7 @@ namespace Karaboss.Mp3
                     text = text.Replace(" ", "_");
 
                     time = SynchedLyrics.Text[i].Time;
-                    sTime = Mp3LyricsMgmtHelper.MsToTime(time, _LrcMillisecondsDigits);
+                    sTime = LyricsUtilities.MsToTime(time, _LrcMillisecondsDigits);
 
                     dgView.Rows.Add(time, sTime, text);
                 }
@@ -4119,7 +4115,7 @@ namespace Karaboss.Mp3
                     for (int j = 0; j < SyncLine.Count; j++)
                     {
                         time = SyncLine[j].Time;
-                        sTime = Mp3LyricsMgmtHelper.MsToTime(time, _LrcMillisecondsDigits);
+                        sTime = LyricsUtilities.MsToTime(time, _LrcMillisecondsDigits);
                         text = SyncLine[j].Text;
                         if (i > 0 && j == 0)
                         {
@@ -4200,7 +4196,7 @@ namespace Karaboss.Mp3
                 for (int j = 0; j < SyncLine.Count; j++)
                 {
                     time = SyncLine[j].Time;
-                    sTime = Mp3LyricsMgmtHelper.MsToTime(time, _LrcMillisecondsDigits);
+                    sTime = LyricsUtilities.MsToTime(time, _LrcMillisecondsDigits);
 
                     text = SyncLine[j].Text;
                     if (i > 0 && j == 0)
@@ -4286,7 +4282,8 @@ namespace Karaboss.Mp3
                 if (IsNumeric(sTime))
                 {
                     time = double.Parse(sTime);
-                    tsp = Mp3LyricsMgmtHelper.MsToTime(time, _LrcMillisecondsDigits);
+                    //tsp = Mp3LyricsMgmtHelper.MsToTime(time, _LrcMillisecondsDigits);
+                    tsp = LyricsUtilities.MsToTime(time, _LrcMillisecondsDigits);
                     dgView.CurrentRow.Cells[COL_TIME].Value = tsp;
                 }
             }
@@ -4295,7 +4292,8 @@ namespace Karaboss.Mp3
             {
                 otime = dgView.CurrentRow.Cells[COL_TIME].Value;
                 sTime = otime.ToString();
-                time = Mp3LyricsMgmtHelper.TimeToMs(sTime);
+                //time = Mp3LyricsMgmtHelper.TimeToMs(sTime);
+                time = LyricsUtilities.TimeToMs(sTime);
                 dgView.CurrentRow.Cells[COL_MS].Value = time;
 
             }
@@ -4645,5 +4643,7 @@ namespace Karaboss.Mp3
 
 
         #endregion aniballs
+
+     
     }
 }

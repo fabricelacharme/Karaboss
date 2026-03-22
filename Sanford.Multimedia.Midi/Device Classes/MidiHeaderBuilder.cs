@@ -44,7 +44,7 @@ namespace Sanford.Multimedia.Midi
     internal class MidiHeaderBuilder
     {
         // The length of the system exclusive buffer.
-        private int bufferLength;
+        private uint bufferLength;
 
         // The system exclusive data.
         private byte[] data;
@@ -75,7 +75,7 @@ namespace Sanford.Multimedia.Midi
             // Initialize the MidiHeader.
             header.bufferLength = BufferLength;
             header.bytesRecorded = BufferLength;
-            header.data = Marshal.AllocHGlobal(BufferLength);
+            header.data = Marshal.AllocHGlobal((IntPtr)BufferLength);
             header.flags = 0;
 
             // Write data to the MidiHeader.
@@ -121,7 +121,7 @@ namespace Sanford.Multimedia.Midi
             // If this is a start system exclusive message.
             if (message.SysExType == SysExType.Start)
             {
-                BufferLength = message.Length;
+                BufferLength = (uint)message.Length;
 
                 // Copy entire message.
                 for (int i = 0; i < BufferLength; i++)
@@ -132,7 +132,7 @@ namespace Sanford.Multimedia.Midi
             // Else this is a continuation message.
             else
             {
-                BufferLength = message.Length - 1;
+                BufferLength = (uint)message.Length - 1;
 
                 // Copy all but the first byte of message.
                 for (int i = 0; i < BufferLength; i++)
@@ -166,7 +166,7 @@ namespace Sanford.Multimedia.Midi
 
             #endregion
 
-            BufferLength = events.Count;
+            BufferLength = (uint)events.Count;
 
             events.CopyTo(data, 0);
         }
@@ -209,7 +209,7 @@ namespace Sanford.Multimedia.Midi
         /// <summary>
         /// The length of the system exclusive buffer.
         /// </summary>
-        public int BufferLength
+        public uint BufferLength
         {
             get
             {

@@ -38,7 +38,9 @@
             this.upButton = new System.Windows.Forms.ToolStripButton();
             this.btnDownloads = new System.Windows.Forms.ToolStripButton();
             this.lvToolbar = new System.Windows.Forms.ToolStrip();
-            this.BtnNewMidiFile = new System.Windows.Forms.ToolStripButton();
+            this.mnuNewFile = new System.Windows.Forms.ToolStripDropDownButton();
+            this.mnuNewMidiFile = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnuNewKfnFile = new System.Windows.Forms.ToolStripMenuItem();
             this.btnPlay = new System.Windows.Forms.ToolStripButton();
             this.btnEdit = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
@@ -138,7 +140,7 @@
             // 
             resources.ApplyResources(this.lvToolbar, "lvToolbar");
             this.lvToolbar.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.BtnNewMidiFile,
+            this.mnuNewFile,
             this.btnPlay,
             this.btnEdit,
             this.toolStripSeparator1,
@@ -149,13 +151,29 @@
             this.replaceButton});
             this.lvToolbar.Name = "lvToolbar";
             // 
-            // BtnNewMidiFile
+            // mnuNewFile
             // 
-            resources.ApplyResources(this.BtnNewMidiFile, "BtnNewMidiFile");
-            this.BtnNewMidiFile.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.BtnNewMidiFile.Image = global::Karaboss.Properties.Resources.Action_New_File_icon;
-            this.BtnNewMidiFile.Name = "BtnNewMidiFile";
-            this.BtnNewMidiFile.Click += new System.EventHandler(this.BtnNewMidiFile_Click);
+            resources.ApplyResources(this.mnuNewFile, "mnuNewFile");
+            this.mnuNewFile.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.mnuNewFile.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.mnuNewMidiFile,
+            this.mnuNewKfnFile});
+            this.mnuNewFile.Image = global::Karaboss.Properties.Resources.Action_New_File_icon;
+            this.mnuNewFile.Name = "mnuNewFile";
+            // 
+            // mnuNewMidiFile
+            // 
+            resources.ApplyResources(this.mnuNewMidiFile, "mnuNewMidiFile");
+            this.mnuNewMidiFile.Image = global::Karaboss.Properties.Resources.music;
+            this.mnuNewMidiFile.Name = "mnuNewMidiFile";
+            this.mnuNewMidiFile.Click += new System.EventHandler(this.MnuNewMidiFile_Click);
+            // 
+            // mnuNewKfnFile
+            // 
+            resources.ApplyResources(this.mnuNewKfnFile, "mnuNewKfnFile");
+            this.mnuNewKfnFile.Image = global::Karaboss.Properties.Resources.karafun24_png;
+            this.mnuNewKfnFile.Name = "mnuNewKfnFile";
+            this.mnuNewKfnFile.Click += new System.EventHandler(this.MnuNewKfnFile_Click);
             // 
             // btnPlay
             // 
@@ -287,9 +305,11 @@
         private System.Windows.Forms.ToolStripButton replaceButton;
         private FlShell.ShellListView shellListView;
         private System.Windows.Forms.ToolStripButton btnDownloads;
-        private System.Windows.Forms.ToolStripButton BtnNewMidiFile;
         private System.Windows.Forms.ToolStripDropDownButton mnuRename;
         private System.Windows.Forms.ToolStripMenuItem mnuRenameFiles;
         private System.Windows.Forms.ToolStripMenuItem mnuInvertAuthorSong;
+        private System.Windows.Forms.ToolStripDropDownButton mnuNewFile;
+        private System.Windows.Forms.ToolStripMenuItem mnuNewMidiFile;
+        private System.Windows.Forms.ToolStripMenuItem mnuNewKfnFile;
     }
 }

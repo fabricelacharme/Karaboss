@@ -118,368 +118,59 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="Media-Controls-Stop-icon" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\Media-Controls-Stop-icon.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="Action_Edit" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\edit.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="Media_Controls_Skip_To_End_icon" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Media-Controls-Skip-To-End-icon.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="btn_red_pause" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\btn_red_pause.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="treble30" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\treble30.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="Media-Controls-Pause-icon" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\Media-Controls-Pause-icon.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="button_black_stop" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\button_black_stop.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="Action_folder241" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\Action_folder24.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="btn_blue_pause" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\btn_blue_pause.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="btn_blue_stop" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\btn_blue_stop.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="Action_folder_open24" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\Folder-Open-icon24.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="button_black_rew" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\button_black_rew.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="Max" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\Max.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="folder_classic_down" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\folder_classic_down.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="pointer" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\pointer.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="Action_New_File_icon" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\Action-New-File-icon.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="note1" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\note1.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="Apps_Pdf_icon" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\Apps-Pdf-icon.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="note16" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\note16.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="Actions_folder_new_icon" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\Actions-folder-new-icon.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="player_play" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\player_play.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="button_black_pause" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\button_black_pause.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="Action_Playlist_icon" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\playlist-icon1.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="script_link" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\pages\abcnotation\resources\silkicons\script_link.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="diese" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\diese.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="Action_folder_delete24" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\folder-delete-icon24.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="Close" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Close.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="triolet30" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\triolet30.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="treble30" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\treble30.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="btn_red_next" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\btn_red_next.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="folder_classic_down" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\folder_classic_down.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="MaxNormal" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\MaxNormal.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="btn_green_next" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\btn_green_next.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="Actions_delete_icon" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\Actions-delete-icon.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="Karaoke_About_Screen_Metro_UI" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\Karaoke About Screen Metro UI.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="btn_blue_prev" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\btn_blue_prev.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="Media_Controls_Skip_To_End_icon" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\Media-Controls-Skip-To-End-icon.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="note64" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\note64.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="btn_black_pause" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\btn_black_pause.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="note2" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\note2.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="Media_Controls_Fast_Forward_icon" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\Media-Controls-Fast-Forward-icon.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="btn_blue_play" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\btn_blue_play.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="Action_Search_icon" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\Search-icon.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="btn_black_prev" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\btn_black_prev.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="button_black_play" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\button_black_play.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="Action_File_Save_icon" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\Action-File-Save-icon.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="innosetupwizzardsmall" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\innosetupwizzardsmall.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="Karaoke_Splash_Screen_Metro_UI_2" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\Karaoke Splash Screen Metro UI-2.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="Action_Play_icon24" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\Play-icon24.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="Action_folder24" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\Folder_icon24.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="bass30" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\bass30.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="becarre" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\becarre.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="BTN_Thumb_Blue" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\BTN_Thumb_Blue.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="Media_Controls_Skip_To_Start_icon" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\Media-Controls-Skip-To-Start-icon.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="button_black_stop" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\button_black_stop.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="Media-Controls-Play-icon" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Media-Controls-Play-icon.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="btn_green_play" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\forwardGreen1.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="btn_black_play" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\btn_black_play.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="btn_red_stop" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\btn_red_stop.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="erase" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\erase.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="Action_playlist_delete24" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\playlist-delete2-icon24.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="note4" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\note4.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="CloseOver" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\CloseOver.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="Close" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\Close.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="btn_green_pause" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\btn_green_pause.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="note32" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\note32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="btn_black_stop" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\btn_black_stop.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="button_black_ffw" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\button_black_ffw.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="pencil" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\pencil.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="bemol" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\bemol.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="Media_Controls_Rewind_icon" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\Media-Controls-Rewind-icon.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="btn_red_prev" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\btn_red_prev.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="btn_blue_next" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\btn_blue_next.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="note8" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\note8.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="button_green_play" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\button_green_play.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="btn_green_prev" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\btn_green_prev.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="btn_black_next" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\btn_black_next.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="Action_Folder_icon" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\Folder-icon.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="ball" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\ball1.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="Bouton_minus_gris_32" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\Bouton-minus-gris-32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="Bouton_minus_vert1_32" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\Bouton-minus-vert1-32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="Bouton_minus_vert2_32" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\Bouton-minus-vert2-32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="Bouton_plus_gris_32" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\Bouton-plus-gris-32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="Bouton_plus_vert1_32" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\Bouton-plus-vert1-32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="Bouton_plus_vert2_32" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\Bouton-plus-vert2-32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="Bouton_minus_palegreen_32" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\Bouton-minus-palegreen-32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="Bouton_plus_palegreen_32" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\Bouton-plus-palegreen-32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="Bouton_Check_PaleGreen_32" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\Bouton-Check-PaleGreen-32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="Bouton_Cross_Red_32" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\Bouton-Cross-Red-32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="Bouton_Check_Gray_32" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\Bouton-Check-Gray-32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="Bouton_Cross_Gray_32" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\Bouton-Cross-Gray-32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="add" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\pages\abcnotation\resources\silkicons\add.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="arrow_branch" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\pages\abcnotation\resources\silkicons\arrow_branch.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="arrow_down" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\pages\abcnotation\resources\silkicons\arrow_down.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="arrow_refresh" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\pages\abcnotation\resources\silkicons\arrow_refresh.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="arrow_up" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\pages\abcnotation\resources\silkicons\arrow_up.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="book_open" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\pages\abcnotation\resources\silkicons\book_open.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="cog_add" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\pages\abcnotation\resources\silkicons\cog_add.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="cog_delete" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\pages\abcnotation\resources\silkicons\cog_delete.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="cog_edit" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\pages\abcnotation\resources\silkicons\cog_edit.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="comment" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\pages\abcnotation\resources\silkicons\comment.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="control_fastforward_blue" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\pages\abcnotation\resources\silkicons\control_fastforward_blue.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="control_pause_blue" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\pages\abcnotation\resources\silkicons\control_pause_blue.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="control_play_blue" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\pages\abcnotation\resources\silkicons\control_play_blue.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="control_stop_blue" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\pages\abcnotation\resources\silkicons\control_stop_blue.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="cut" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\pages\abcnotation\resources\cut.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="cut1" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\pages\abcnotation\resources\silkicons\cut.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="delete" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\pages\abcnotation\resources\silkicons\delete.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="help" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\pages\abcnotation\resources\silkicons\help.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="layers" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\pages\abcnotation\resources\silkicons\layers.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="logo" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\pages\abcnotation\resources\logo.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="LOMM" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\pages\abcnotation\resources\lomm.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="music" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\pages\abcnotation\resources\silkicons\music.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="NewABC" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\pages\abcnotation\resources\newabc.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
-  </data>
-  <data name="page_add" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\pages\abcnotation\resources\silkicons\page_add.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="page_copy" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\pages\abcnotation\resources\page_copy.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="page_copy1" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\pages\abcnotation\resources\silkicons\page_copy.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="page_delete" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\pages\abcnotation\resources\silkicons\page_delete.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="page_edit" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\pages\abcnotation\resources\silkicons\page_edit.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="page_paste" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\pages\abcnotation\resources\page_paste.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="Max" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Max.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="page_paste1" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\pages\abcnotation\resources\silkicons\page_paste.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="page_refresh" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\pages\abcnotation\resources\silkicons\page_refresh.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="magnifyminus24" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\magnifyminus24.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="page_save" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\pages\abcnotation\resources\silkicons\page_save.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="arrow_up" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\pages\abcnotation\resources\silkicons\arrow_up.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="picture_add" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\pages\abcnotation\resources\silkicons\picture_add.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="arrow_down" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\pages\abcnotation\resources\silkicons\arrow_down.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="plugin" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\pages\abcnotation\resources\silkicons\plugin.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="Action_Search_icon" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Search-icon.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="resultset_next" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\pages\abcnotation\resources\resultset_next.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="table_multiple" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\pages\abcnotation\resources\silkicons\table_multiple.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="resultset_next1" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\pages\abcnotation\resources\silkicons\resultset_next.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="Bouton_Cross_Gray_32" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Bouton-Cross-Gray-32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="bemol" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\bemol.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="script_add" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\pages\abcnotation\resources\silkicons\script_add.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
@@ -487,91 +178,412 @@
   <data name="script_delete" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\pages\abcnotation\resources\silkicons\script_delete.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="script_edit" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\pages\abcnotation\resources\silkicons\script_edit.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="script_gear" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\pages\abcnotation\resources\silkicons\script_gear.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="script_lightning" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\pages\abcnotation\resources\script_lightning.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="script_link" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\pages\abcnotation\resources\silkicons\script_link.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="script_save" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\pages\abcnotation\resources\script_save.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="Separator" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\pages\abcnotation\resources\separator.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="table_multiple" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\pages\abcnotation\resources\silkicons\table_multiple.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="textfield_add" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\pages\abcnotation\resources\silkicons\textfield_add.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="wand" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\pages\abcnotation\resources\silkicons\wand.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="wrench" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\pages\abcnotation\resources\silkicons\wrench.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="abc" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\abc.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="mml" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\mml.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="delete_icon" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\delete-icon.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="floppy_icon" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\floppy-icon.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="Play_Music_icon" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\Play-Music-icon.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="cross_icon" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\cross_icon.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="silence" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\Silence.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="magnifyminus24" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\magnifyminus24.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="magnifyplus24" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\magnifyplus24.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="export_pdf32" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\export-pdf32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="export_txt48_2" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\export-txt48-2.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="Action_folder_open24" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Folder-Open-icon24.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="D" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\D.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="checkgreen16" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\checkgreen16.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="btn_red_prev" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\btn_red_prev.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="mp3_logo_200" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\mp3-logo-200.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="cut" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\pages\abcnotation\resources\cut.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="gear" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\gear.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="mp3" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\mp3.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="script_edit" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\pages\abcnotation\resources\silkicons\script_edit.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="text" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\text.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="Media_Controls_Rewind_icon" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Media-Controls-Rewind-icon.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="btn_black_next" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\btn_black_next.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="button_black_play" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\button_black_play.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Apps_Pdf_icon" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Apps-Pdf-icon.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="resultset_next" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\pages\abcnotation\resources\resultset_next.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="cdg" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\cdg.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="btn_red_next" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\btn_red_next.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="plugin" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\pages\abcnotation\resources\silkicons\plugin.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="btn_blue_stop" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\btn_blue_stop.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="export_pdf32" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\export-pdf32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="cog_edit" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\pages\abcnotation\resources\silkicons\cog_edit.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="btn_black_prev" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\btn_black_prev.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="control_fastforward_blue" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\pages\abcnotation\resources\silkicons\control_fastforward_blue.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="btn_green_play" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\forwardGreen1.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="wrench" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\pages\abcnotation\resources\silkicons\wrench.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="triolet30" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\triolet30.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Bouton_minus_palegreen_32" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Bouton-minus-palegreen-32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="note16" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\note16.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="page_copy1" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\pages\abcnotation\resources\silkicons\page_copy.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="bass30" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\bass30.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="magnifyplus24" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\magnifyplus24.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="btn_green_next" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\btn_green_next.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Media_Controls_Skip_To_Start_icon" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Media-Controls-Skip-To-Start-icon.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Action_Playlist_icon" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\playlist-icon1.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="cdg1" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\cdg.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Bouton_minus_vert2_32" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Bouton-minus-vert2-32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="btn_green_prev" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\btn_green_prev.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="CloseOver" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\CloseOver.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="mml" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\mml.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="page_save" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\pages\abcnotation\resources\silkicons\page_save.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="resultset_next1" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\pages\abcnotation\resources\silkicons\resultset_next.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="page_copy" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\pages\abcnotation\resources\page_copy.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Bouton_Check_Gray_32" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Bouton-Check-Gray-32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Media-Controls-Stop-icon" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Media-Controls-Stop-icon.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Action_folder24" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Folder_icon24.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="NewABC" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\pages\abcnotation\resources\newabc.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
+  </data>
+  <data name="script_gear" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\pages\abcnotation\resources\silkicons\script_gear.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="floppy_icon" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\floppy-icon.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Bouton_plus_gris_32" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Bouton-plus-gris-32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="delete" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\pages\abcnotation\resources\silkicons\delete.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="silence" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Silence.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="note64" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\note64.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="note2" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\note2.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="LOMM" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\pages\abcnotation\resources\lomm.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="control_stop_blue" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\pages\abcnotation\resources\silkicons\control_stop_blue.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="delete_icon" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\delete-icon.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Action_New_File_icon" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Action-New-File-icon.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="checkgreen16" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\checkgreen16.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="note32" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\note32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="btn_black_play" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\btn_black_play.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="button_black_rew" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\button_black_rew.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Media-Controls-Pause-icon" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Media-Controls-Pause-icon.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Bouton_plus_vert1_32" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Bouton-plus-vert1-32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="cross_icon" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\cross_icon.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="karafun24.png" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\karafun24.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="gear" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\gear.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="music" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\pages\abcnotation\resources\silkicons\music.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="btn_green_pause" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\btn_green_pause.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Actions_delete_icon" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Actions-delete-icon.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="btn_red_stop" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\btn_red_stop.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="mp3" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\mp3.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Action_Play_icon24" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Play-icon24.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="BTN_Thumb_Blue" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\BTN_Thumb_Blue.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Action_playlist_delete24" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\playlist-delete2-icon24.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="note1" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\note1.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="btn_black_stop" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\btn_black_stop.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="erase" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\erase.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="script_lightning" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\pages\abcnotation\resources\script_lightning.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Action_Edit" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\edit.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="button_black_ffw" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\button_black_ffw.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="mp3_logo_200" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\mp3-logo-200.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="page_add" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\pages\abcnotation\resources\silkicons\page_add.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="btn_blue_next" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\btn_blue_next.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="export_txt48_2" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\export-txt48-2.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="becarre" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\becarre.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="layers" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\pages\abcnotation\resources\silkicons\layers.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="btn_blue_pause" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\btn_blue_pause.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="pointer" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\pointer.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Play_Music_icon" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Play-Music-icon.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Media_Controls_Fast_Forward_icon" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Media-Controls-Fast-Forward-icon.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="button_black_pause" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\button_black_pause.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="page_delete" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\pages\abcnotation\resources\silkicons\page_delete.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Bouton_plus_palegreen_32" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Bouton-plus-palegreen-32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Karaoke_Splash_Screen_Metro_UI_2" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Karaoke Splash Screen Metro UI-2.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Bouton_minus_gris_32" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Bouton-minus-gris-32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="button_green_play" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\button_green_play.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="control_pause_blue" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\pages\abcnotation\resources\silkicons\control_pause_blue.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="comment" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\pages\abcnotation\resources\silkicons\comment.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="add" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\pages\abcnotation\resources\silkicons\add.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="btn_blue_prev" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\btn_blue_prev.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="MaxNormal" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\MaxNormal.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="help" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\pages\abcnotation\resources\silkicons\help.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="innosetupwizzardsmall" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\innosetupwizzardsmall.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Bouton_Check_PaleGreen_32" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Bouton-Check-PaleGreen-32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Separator" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\pages\abcnotation\resources\separator.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Action_folder241" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Action_folder24.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="note8" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\note8.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="note4" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\note4.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="cut1" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\pages\abcnotation\resources\silkicons\cut.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="page_refresh" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\pages\abcnotation\resources\silkicons\page_refresh.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="btn_black_pause" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\btn_black_pause.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Karaoke_About_Screen_Metro_UI" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Karaoke About Screen Metro UI.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="btn_blue_play" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\btn_blue_play.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="cog_add" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\pages\abcnotation\resources\silkicons\cog_add.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="control_play_blue" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\pages\abcnotation\resources\silkicons\control_play_blue.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Action_folder_delete24" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\folder-delete-icon24.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="page_edit" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\pages\abcnotation\resources\silkicons\page_edit.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="player_play" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\player_play.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="wand" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\pages\abcnotation\resources\silkicons\wand.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="karafun" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\karafun.ico;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="arrow_refresh" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\pages\abcnotation\resources\silkicons\arrow_refresh.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Action_File_Save_icon" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Action-File-Save-icon.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="logo" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\pages\abcnotation\resources\logo.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Action_Folder_icon" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Folder-icon.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="cog_delete" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\pages\abcnotation\resources\silkicons\cog_delete.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Actions_folder_new_icon" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Actions-folder-new-icon.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="textfield_add" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\pages\abcnotation\resources\silkicons\textfield_add.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Bouton_plus_vert2_32" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Bouton-plus-vert2-32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="picture_add" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\pages\abcnotation\resources\silkicons\picture_add.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="arrow_branch" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\pages\abcnotation\resources\silkicons\arrow_branch.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="pencil" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\pencil.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="ball" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\ball1.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="page_paste" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\pages\abcnotation\resources\page_paste.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="book_open" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\pages\abcnotation\resources\silkicons\book_open.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Bouton_minus_vert1_32" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Bouton-minus-vert1-32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="script_save" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\pages\abcnotation\resources\script_save.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Bouton_Cross_Red_32" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Bouton-Cross-Red-32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="abc" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\abc.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="color_picker_black18" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\color_picker_black18.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="midi" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Ico\mid.ico;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
 </root>

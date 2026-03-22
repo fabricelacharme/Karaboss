@@ -126,6 +126,9 @@
             this.lblHotkeysOthers = new System.Windows.Forms.Label();
             this.SaveFileDialog = new System.Windows.Forms.SaveFileDialog();
             this.Timer3 = new System.Windows.Forms.Timer(this.components);
+            this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripSeparator();
+            this.mnuHelpForums = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnuHelpDocumentation = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -316,6 +319,9 @@
             // mnuHelp
             // 
             this.mnuHelp.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.mnuHelpForums,
+            this.mnuHelpDocumentation,
+            this.toolStripMenuItem1,
             this.mnuHelpAbout});
             this.mnuHelp.Name = "mnuHelp";
             resources.ApplyResources(this.mnuHelp, "mnuHelp");
@@ -1041,6 +1047,23 @@
             // 
             this.Timer3.Tick += new System.EventHandler(this.Timer3_Tick);
             // 
+            // toolStripMenuItem1
+            // 
+            this.toolStripMenuItem1.Name = "toolStripMenuItem1";
+            resources.ApplyResources(this.toolStripMenuItem1, "toolStripMenuItem1");
+            // 
+            // mnuHelpForums
+            // 
+            this.mnuHelpForums.Name = "mnuHelpForums";
+            resources.ApplyResources(this.mnuHelpForums, "mnuHelpForums");
+            this.mnuHelpForums.Click += new System.EventHandler(this.mnuHelpForums_Click);
+            // 
+            // mnuHelpDocumentation
+            // 
+            this.mnuHelpDocumentation.Name = "mnuHelpDocumentation";
+            resources.ApplyResources(this.mnuHelpDocumentation, "mnuHelpDocumentation");
+            this.mnuHelpDocumentation.Click += new System.EventHandler(this.mnuHelpDocumentation_Click);
+            // 
             // frmMp3Player
             // 
             resources.ApplyResources(this, "$this");
@@ -1181,5 +1204,8 @@
         private System.Windows.Forms.ToolStripMenuItem mnuFileExportLyricsKok;
         private System.Windows.Forms.ToolStripMenuItem mnuExportLyricsTxt;
         private System.Windows.Forms.ToolStripMenuItem mnuExportLyricsKok;
+        private System.Windows.Forms.ToolStripMenuItem mnuHelpForums;
+        private System.Windows.Forms.ToolStripMenuItem mnuHelpDocumentation;
+        private System.Windows.Forms.ToolStripSeparator toolStripMenuItem1;
     }
 }

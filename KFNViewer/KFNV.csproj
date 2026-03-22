@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{3C65AED8-CF22-4533-BBC1-9000683688B8}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <RootNamespace>KFNV</RootNamespace>
+    <AssemblyName>KFNV</AssemblyName>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <Deterministic>true</Deterministic>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.IO.Compression" />
+    <Reference Include="System.IO.Compression.FileSystem" />
+    <Reference Include="System.Windows" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+    <Reference Include="TagLibSharp">
+      <HintPath>Dll\TagLibSharp.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="ID3Tags.cs" />
+    <Compile Include="KFN.cs" />
+    <Compile Include="ParseINI\Exceptions\ParsingException.cs" />
+    <Compile Include="ParseINI\FileIniParser.cs" />
+    <Compile Include="ParseINI\Model\Configuration\ConcatenateDuplicatedKeysIniParserConfiguration.cs" />
+    <Compile Include="ParseINI\Model\Configuration\IniParserConfiguration.cs" />
+    <Compile Include="ParseINI\Model\Formatting\DefaultIniDataFormatter.cs" />
+    <Compile Include="ParseINI\Model\Formatting\IIniDataFormatter.cs" />
+    <Compile Include="ParseINI\Model\IniData.cs" />
+    <Compile Include="ParseINI\Model\IniDataCaseInsensitive.cs" />
+    <Compile Include="ParseINI\Model\KeyData.cs" />
+    <Compile Include="ParseINI\Model\KeyDataCollection.cs" />
+    <Compile Include="ParseINI\Model\SectionData.cs" />
+    <Compile Include="ParseINI\Model\SectionDataCollection.cs" />
+    <Compile Include="ParseINI\Parser\ConcatenateDuplicatedKeysIniDataParser.cs" />
+    <Compile Include="ParseINI\Parser\IniDataParser.cs" />
+    <Compile Include="ParseINI\StreamIniDataParser.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>Settings.settings</DependentUpon>
+    </Compile>
+    <Compile Include="Slogi.cs" />
+    <Compile Include="SongINI.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SongIni\Effs.cs" />
+    <Compile Include="SongIni\KfnHeader.cs" />
+    <Compile Include="SongIni\KfnIni.cs" />
+    <Compile Include="SongIni\Trajectory.cs" />
+    <Compile Include="Utilities\LyricsUtilities.cs" />
+    <Compile Include="Writer.cs" />
+    <Service Include="{94E38DFF-614B-4cbd-B67C-F211BB35CE8B}" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="NinjaToy.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\uchardet\uchardet.csproj">
+      <Project>{2a706af9-3f44-4174-be9b-d4644a532185}</Project>
+      <Name>uchardet</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>

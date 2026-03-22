@@ -12,7 +12,7 @@ namespace Karaboss.Properties {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "17.14.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "18.4.0.0")]
     internal sealed partial class Settings : global::System.Configuration.ApplicationSettingsBase {
         
         private static Settings defaultInstance = ((Settings)(global::System.Configuration.ApplicationSettingsBase.Synchronized(new Settings())));
@@ -1781,6 +1781,162 @@ namespace Karaboss.Properties {
             }
             set {
                 this["DefaultEncoding"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool frmKfnViewMaximized {
+            get {
+                return ((bool)(this["frmKfnViewMaximized"]));
+            }
+            set {
+                this["frmKfnViewMaximized"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0, 0")]
+        public global::System.Drawing.Point frmKfnViewLocation {
+            get {
+                return ((global::System.Drawing.Point)(this["frmKfnViewLocation"]));
+            }
+            set {
+                this["frmKfnViewLocation"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("800, 430")]
+        public global::System.Drawing.Size frmKfnViewSize {
+            get {
+                return ((global::System.Drawing.Size)(this["frmKfnViewSize"]));
+            }
+            set {
+                this["frmKfnViewSize"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string KfnComment {
+            get {
+                return ((string)(this["KfnComment"]));
+            }
+            set {
+                this["KfnComment"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string KfnAuthor {
+            get {
+                return ((string)(this["KfnAuthor"]));
+            }
+            set {
+                this["KfnAuthor"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("#FFFFFF")]
+        public string KfnBgColor {
+            get {
+                return ((string)(this["KfnBgColor"]));
+            }
+            set {
+                this["KfnBgColor"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Arial Black")]
+        public string KfnFontName {
+            get {
+                return ((string)(this["KfnFontName"]));
+            }
+            set {
+                this["KfnFontName"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("18")]
+        public int KfnFontSize {
+            get {
+                return ((int)(this["KfnFontSize"]));
+            }
+            set {
+                this["KfnFontSize"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("#00ACFF")]
+        public string KfnActiveColor {
+            get {
+                return ((string)(this["KfnActiveColor"]));
+            }
+            set {
+                this["KfnActiveColor"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("#000000")]
+        public string KfnInactiveColor {
+            get {
+                return ((string)(this["KfnInactiveColor"]));
+            }
+            set {
+                this["KfnInactiveColor"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("#010101")]
+        public string KfnActiveColorBorder {
+            get {
+                return ((string)(this["KfnActiveColorBorder"]));
+            }
+            set {
+                this["KfnActiveColorBorder"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("#FFFFFF")]
+        public string KfnInactiveColorBorder {
+            get {
+                return ((string)(this["KfnInactiveColorBorder"]));
+            }
+            set {
+                this["KfnInactiveColorBorder"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("2")]
+        public int KfnBorderEffectIndex {
+            get {
+                return ((int)(this["KfnBorderEffectIndex"]));
+            }
+            set {
+                this["KfnBorderEffectIndex"] = value;
             }
         }
     }

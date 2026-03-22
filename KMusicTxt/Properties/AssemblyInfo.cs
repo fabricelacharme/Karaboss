@@ -10,7 +10,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Fabrice Lacharme")]
 [assembly: AssemblyProduct("KMusicTxt")]
-[assembly: AssemblyCopyright("Copyright ©  Fabrice Lacharme 2025")]
+[assembly: AssemblyCopyright("Copyright ©  Fabrice Lacharme 2026")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

@@ -32,14 +32,15 @@
 
 #endregion
 using System;
+using System.Collections.Generic; // DLL import
+using System.ComponentModel;
+using System.Diagnostics;
+using System.Globalization;
 using System.IO;
 using System.Runtime.InteropServices;
-using System.Windows.Forms;
-using System.Globalization;
-using System.Threading;
-using System.ComponentModel;
 using System.Text.RegularExpressions;
-using System.Collections.Generic; // DLL import
+using System.Threading;
+using System.Windows.Forms;
 
 namespace Karaboss
 {
@@ -72,14 +73,34 @@ namespace Karaboss
 
         public static List<(int, int)> lstTempos;
 
+
+        public static string url_forums = "https://karaboss.lacharme.net/Forums";
+        public static string url_documentation = "https://karaboss.lacharme.net/docs/documentation-karaboss/";
+
+
+
+        public static void DisplayUrl(string url)
+        {
+            try
+            {
+                if (Uri.IsWellFormedUriString(url, UriKind.Absolute))
+                {
+                    ProcessStartInfo sInfo = new ProcessStartInfo(new Uri(url).AbsoluteUri);
+                    Process.Start(sInfo);
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+        }
+
         public enum OptionsDisplay
         {
             Top = 0,
             Center = 1,
             Bottom = 2,
         }
-
-        
 
         private static string _m_fileplaylistGroups;
         public static string M_filePlaylistGroups
@@ -212,6 +233,11 @@ namespace Karaboss
         public static bool IsMp3(string filename)
         {
             return Regex.IsMatch(filename, "^.+(\\.mp3)$", RegexOptions.IgnoreCase);
+        }
+
+        public static bool IsKfn(string filename)
+        {
+            return Regex.IsMatch(filename, "^.+(\\.kfn)$", RegexOptions.IgnoreCase);
         }
 
         public static bool IsMidiExtension(string f)

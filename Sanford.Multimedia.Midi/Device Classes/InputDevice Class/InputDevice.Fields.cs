@@ -64,7 +64,7 @@ namespace Sanford.Multimedia.Midi
 
         private volatile bool resetting = false;
 
-        private int sysExBufferSize = 4096;
+        private uint sysExBufferSize = 4096;
 
         private List<byte> sysExData = new List<byte>();
     }

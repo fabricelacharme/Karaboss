@@ -71,6 +71,9 @@ namespace FlShell
     public delegate void PlayTxtEventHandler(object sender, FileInfo fi, bool bplay);
     // Play mp3 file
     public delegate void PlayMp3EventHandler(object sender, FileInfo fi, bool bplay);
+    // Play kfn file
+    public delegate void PlayKfnEventHandler(object sender, FileInfo fi, bool bplay);
+
     // Playlists management
     public delegate void AddToPlaylistByNameHandler(object sender, ShellItem[] fls, string plname, string key = null, bool newPlaylist = false);
     // Display number of directories and files
@@ -103,6 +106,7 @@ namespace FlShell
         public event PlayXmlEventHandler PlayXml;
         public event PlayMxlEventHandler PlayMxl;
         public event PlayMp3EventHandler PlayMp3;
+        public event PlayKfnEventHandler PlayKfn;
 
         public event AddToPlaylistByNameHandler AddToPlaylist;
         
@@ -1846,6 +1850,11 @@ namespace FlShell
                     case ".mp3":
                         {
                             PlayMp3?.Invoke(this, new FileInfo(file), bplay);
+                            break;
+                        }
+                    case ".kfn":
+                        {
+                            PlayKfn?.Invoke(this, new FileInfo(file), bplay);
                             break;
                         }
                     default:

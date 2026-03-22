@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Net;
 using System.Text;
+using System.Text.RegularExpressions;
+using System.Xml;
 
 namespace SongLyrics.Api
 {
@@ -59,9 +61,18 @@ namespace SongLyrics.Api
         }
 
         private string ExtractLyricsFromHtml(string htmlPage)
-        {
+        {           
+            // Keep only text in the paragraph <p </p>
+            htmlPage = htmlPage.Substring(htmlPage.IndexOf("<p "));
+            htmlPage = htmlPage.Substring(0, htmlPage.IndexOf("</p>"));
+            htmlPage = Regex.Replace(htmlPage, @"<p(.|\n)*?>", string.Empty);
+
+            
             //const string find1 = "<!-- AddThis Button END -->";
-            const string find1 = "<p id=\"songLyricsDiv\"  class=\"songLyricsV14 iComment-text\">";
+            //const string find1 = "<p id=\"songLyricsDiv\"  class=\"songLyricsV14 iComment-text\">";
+            //const string find1 = "<p id=\"songLyricsDiv\" class=\"lyrics-body\">";
+            /*
+            const string find1 = "<p ";
             const string find2 = "</p>";
             var idx = htmlPage.IndexOf(find1, StringComparison.Ordinal);
             if (idx > 0)
@@ -77,17 +88,13 @@ namespace SongLyrics.Api
                     htmlPage = WebUtility.HtmlDecode(htmlPage);
                 }
             }
+            */
             return RemoveAllHtmlTags(htmlPage).Trim();
         }
 
         private string RemoveAllHtmlTags(string html)
         {
-            var idx = html.IndexOf("<form id=\"addsong\"");
-            if (idx > 20)
-            {
-                html = html.Substring(0, idx);
-            }
-
+           
             html = StringUtils.RemoveHtmlTags(html);
 
             // fix recursive white-spaces
@@ -96,9 +103,8 @@ namespace SongLyrics.Api
                 html = html.Replace("  ", " ");
             }
 
-            // fix recursive line-break
-            while (html.Contains("\r\n\r\n\r\n"))
-                html = html.Replace("\r\n\r\n\r\n", "\r\n\r\n");
+            html = html.Replace("\n", Environment.NewLine);
+            
             return html;
         }
 

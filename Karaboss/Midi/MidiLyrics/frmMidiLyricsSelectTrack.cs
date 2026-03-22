@@ -46,7 +46,7 @@ namespace Karaboss
         OutputDevice outDevice;
         bool bPlaying = false;
         MiniMidiPlayer player;
-        bool closing = false;
+        //bool closing = false;
 
         private int currentChannel = 0;
 
@@ -155,7 +155,7 @@ namespace Karaboss
 
         protected override void OnClosing(CancelEventArgs e)
         {
-            closing = true;
+            //closing = true;
             base.OnClosing(e);
         }
 

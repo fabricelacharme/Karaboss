@@ -1565,12 +1565,104 @@ namespace Karaboss.Resources.Localization {
             {
                 return ResourceManager.GetString("AllLines", resourceCulture);
             }
-        }
-        internal static string Mp3SaveLRCWarning
+        }        
+        internal static string kfnCreateTb1
         {
             get
             {
-                return ResourceManager.GetString("Mp3SaveLRCWarning", resourceCulture);
+                return ResourceManager.GetString("kfnCreateTb1", resourceCulture);
+            }
+        }
+        internal static string kfnCreateTb2
+        {
+            get
+            {
+                return ResourceManager.GetString("kfnCreateTb2", resourceCulture);
+            }
+        }
+        internal static string kfnCreateTb3
+        {
+            get
+            {
+                return ResourceManager.GetString("kfnCreateTb3", resourceCulture);
+            }
+        }
+        internal static string kfnCreateTb4
+        {
+            get
+            {
+                return ResourceManager.GetString("kfnCreateTb4", resourceCulture);
+            }
+        }        
+        internal static string FileCreatedSucessfully
+        {
+            get
+            {
+                return ResourceManager.GetString("FileCreatedSucessfully", resourceCulture);
+            }
+        }
+        internal static string KfnBorderNoBorder
+        {
+            get
+            {
+                return ResourceManager.GetString("KfnBorderNoBorder", resourceCulture);
+            }
+        }
+
+        internal static string KfnBorderFrameThin
+        {
+            get
+            {
+                return ResourceManager.GetString("KfnBorderFrameThin", resourceCulture);
+            }
+        }
+        internal static string KfnBorderFrame1
+        {
+            get
+            {
+                return ResourceManager.GetString("KfnBorderFrame1", resourceCulture);
+            }
+        }
+        internal static string KfnBorderFrame2
+        {
+            get
+            {
+                return ResourceManager.GetString("KfnBorderFrame2", resourceCulture);
+            }
+        }
+        internal static string KfnBorderFrame3
+        {
+            get
+            {
+                return ResourceManager.GetString("KfnBorderFrame3", resourceCulture);
+            }
+        }
+        internal static string KfnBorderFrame4
+        {
+            get
+            {
+                return ResourceManager.GetString("KfnBorderFrame4", resourceCulture);
+            }
+        }
+        internal static string KfnBorderFrame5
+        {
+            get
+            {
+                return ResourceManager.GetString("KfnBorderFrame5", resourceCulture);
+            }
+        }
+        internal static string KfnBorderShadow
+        {
+            get
+            {
+                return ResourceManager.GetString("KfnBorderShadow", resourceCulture);
+            }
+        }
+        internal static string KfnBorderNeon
+        {
+            get
+            {
+                return ResourceManager.GetString("KfnBorderNeon", resourceCulture);
             }
         }
     }

@@ -1,6 +1,6 @@
 ﻿#region License
 
-/* Copyright (c) 2018 Fabrice Lacharme
+/* Copyright (c) 2026 Fabrice Lacharme
  * 
  * Permission is hereby granted, free of charge, to any person obtaining a copy 
  * of this software and associated documentation files (the "Software"), to 
@@ -56,8 +56,11 @@ namespace Karaboss.xplorer
     public delegate void PlayXmlEventHandler(object sender, FileInfo fi, bool bplay);
     public delegate void PlayMxlEventHandler(object sender, FileInfo fi, bool bplay);
     public delegate void PlayMp3EventHandler(object sender, FileInfo fi, bool bplay);
+    public delegate void PlayKfnEventHandler(object sender, FileInfo fi, bool bplay);
+
     public delegate void ContentChangedEventHandler(object sender, string strContent, string strPath);
     public delegate void CreateNewMidiFileEventHandler(object sender);
+    public delegate void CreateNewKfnFileEventHandler(object sender);
 
 
     public partial class xplorerControl : UserControl
@@ -72,11 +75,15 @@ namespace Karaboss.xplorer
         public event PlayXmlEventHandler PlayXml;
         public event PlayMxlEventHandler PlayMxl;
         public event PlayMp3EventHandler PlayMp3;
+        public event PlayKfnEventHandler PlayKfn;
+
         public event ContentChangedEventHandler LvContentChanged;
         public event CreateNewMidiFileEventHandler CreateNewMidiFile;
+        public event CreateNewKfnFileEventHandler CreateNewKfnFile;
         
 
         #region properties
+
         private int _splitterdistance;
         public int SplitterDistance
         {
@@ -91,13 +98,11 @@ namespace Karaboss.xplorer
             }
         }
 
-
         public FlShell.ShellItem SelectedFolder
         {
             get { return treeView.SelectedFolder; }
 
         }
-
 
         public string CurrentFolder
         {
@@ -117,12 +122,10 @@ namespace Karaboss.xplorer
             }
         }
 
-
         public FlShell.ShellItem[] SelectedItems
         {
             get { return shellListView.SelectedItems; }
         }
-
 
         public string SelectedFile
         {
@@ -132,7 +135,6 @@ namespace Karaboss.xplorer
                     return null; 
                 else
                     return shellListView.SelectedItem.FileSystemPath; 
-
             }
         }
 
@@ -147,11 +149,9 @@ namespace Karaboss.xplorer
 
         #endregion
 
-
         private ObservableCollection<Playlist> allPlaylists = new ObservableCollection<Playlist>();        
         private PlaylistGroup PlGroup = new PlaylistGroup();
         private PlaylistGroupsHelper PlGroupHelper = new PlaylistGroupsHelper();
-
 
         public xplorerControl()
         {
@@ -165,6 +165,7 @@ namespace Karaboss.xplorer
             shellListView.PlayXml += new FlShell.PlayXmlEventHandler(ShellListView_PlayXml);
             shellListView.PlayMxl += new FlShell.PlayMxlEventHandler(ShellListView_PlayMxl);
             shellListView.PlayMp3 += new FlShell.PlayMp3EventHandler(ShellListView_PlayMp3);
+            shellListView.PlayKfn += new FlShell.PlayKfnEventHandler(ShellListView_PlayKfn);
 
             shellListView.lvContentChanged += new FlShell.ContentChangedEvenHandler(ShellListView_ContentChanged);
             shellListView.SelectedIndexChanged += new FlShell.SelectedIndexChangedEventHandler(ShellListView_SelectedIndexChanged);
@@ -173,12 +174,12 @@ namespace Karaboss.xplorer
             shellListView.lvFunctionKeyClicked += new FlShell.lvFunctionKeyEventHandler(ShellListView_lvFunctionKeyClicked);
             shellListView.SenKeyToParent += new FlShell.SenKeyToParentHandler(shellListView_SendKeyToParent);
 
-            treeView.tvFunctionKeyClicked += new FlShell.tvFunctionKeyEventHandler(TreeView_tvFunctionKeyClicked);
+            treeView.tvFunctionKeyClicked += new FlShell.tvFunctionKeyEventHandler(TreeView_tvFunctionKeyClicked);                      
 
             // Load existing playlists
             LoadPlaylists();            
         }
-
+        
 
         #region public functions    
 
@@ -191,7 +192,6 @@ namespace Karaboss.xplorer
             SelectFirstItem();            
             base.Refresh();
         }
-
         
         public void SelectFirstItem()
         {
@@ -279,6 +279,15 @@ namespace Karaboss.xplorer
             Application.DoEvents();
             PlayMp3?.Invoke(this, fi, bplay);
         }
+
+        private void ShellListView_PlayKfn(object sender, FileInfo fi, bool bplay)
+        {
+            Cursor.Current = Cursors.WaitCursor;
+            Application.DoEvents();
+            PlayKfn?.Invoke(this, fi, bplay);
+
+        }
+
 
         private void ShellListView_AddToPlaylist(object sender, FlShell.ShellItem[] fls, string plname, string key, bool bnewPlaylist)
         {
@@ -1213,13 +1222,35 @@ namespace Karaboss.xplorer
         #region buttons
 
         /// <summary>
-        /// Buton create a new Midi file
+        /// Button create a new Midi file
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void BtnNewMidiFile_Click(object sender, EventArgs e)
         {
+            CreateNewMidiFile?.Invoke(this);            
+        }
+
+      
+
+        private void MnuNewKfnFile_Click(object sender, EventArgs e)
+        {
+            CreateNewKfnFile?.Invoke(this);
+        }
+
+        private void MnuNewMidiFile_Click(object sender, EventArgs e)
+        {
             CreateNewMidiFile?.Invoke(this);
+        }
+
+        /// <summary>
+        /// Button create a new kfn file
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void btnNewKfnFile_Click(object sender, EventArgs e)
+        {
+            CreateNewKfnFile?.Invoke(this);
         }
 
         /// <summary>
@@ -1330,6 +1361,11 @@ namespace Karaboss.xplorer
                     case ".mp3":
                         {
                             PlayMp3?.Invoke(this, new FileInfo(file), bplay);
+                            break;
+                        }
+                    case ".kfn":
+                        {
+                            PlayKfn?.Invoke(this, new FileInfo(file), bplay);
                             break;
                         }
                     default:
@@ -1652,8 +1688,12 @@ namespace Karaboss.xplorer
 
 
 
+
+
+
+
         #endregion playlists
 
-       
+      
     }
 }

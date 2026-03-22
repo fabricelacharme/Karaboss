@@ -567,7 +567,47 @@
   <data name="AllLines" xml:space="preserve">
     <value>All lines starting form this line</value>
   </data>
-  <data name="Mp3SaveLRCWarning" xml:space="preserve">
-    <value>Warning: The LRC format does not allow words to be divided into syllables. Words must remain whole.{0}{0}If you have divided words into syllables, Karaboss will reconstruct the words and you will lose the syllables of the words.{0}{0}If you want to keep all the syllables, save the lyrics in the MP3 file.{0}{0}Do you want to continue?</value>
+  <data name="kfnCreateTb1" xml:space="preserve">
+    <value>You must upload at least one audio file (MP3) to audio1.{0}If you want a vocal guide, you must upload two audio files:
+{0}A file with vocals to audio1 and an instrumental files to audio2.</value>
+  </data>
+  <data name="kfnCreateTb2" xml:space="preserve">
+    <value>Required: Upload a lyrics file containing synchronized syllables (LRC format)</value>
+  </data>
+  <data name="kfnCreateTb4" xml:space="preserve">
+    <value>Optional: If you don't have an image for the background, you can choose the background color here.{0}You can also change the font used to display the lyrics.</value>
+  </data>
+  <data name="kfnCreateTb3" xml:space="preserve">
+    <value>Optional: You can upload an image to use as the background. {0}Choose an image that isn't too dark so the lyrics are easy to read, and make sure the width-to-height ratio is 1.33 to prevent distortion.</value>
+  </data>
+  <data name="FileCreatedSucessfully" xml:space="preserve">
+    <value>The file {0}{1}{0}{0}was created successfully in the directory{0}{2}</value>
+  </data>
+  <data name="KfnBorderNoBorder" xml:space="preserve">
+    <value>No border</value>
+  </data>
+  <data name="KfnBorderFrameThin" xml:space="preserve">
+    <value>Thin border</value>
+  </data>
+  <data name="KfnBorderFrame1" xml:space="preserve">
+    <value>1 - pixel border</value>
+  </data>
+  <data name="KfnBorderFrame2" xml:space="preserve">
+    <value>2 - pixel border</value>
+  </data>
+  <data name="KfnBorderFrame3" xml:space="preserve">
+    <value>3 - pixel border</value>
+  </data>
+  <data name="KfnBorderFrame4" xml:space="preserve">
+    <value>4 - pixel border</value>
+  </data>
+  <data name="KfnBorderFrame5" xml:space="preserve">
+    <value>5 - pixel border</value>
+  </data>
+  <data name="KfnBorderShadow" xml:space="preserve">
+    <value>Shaded</value>
+  </data>
+  <data name="KfnBorderNeon" xml:space="preserve">
+    <value>Neon</value>
   </data>
 </root>

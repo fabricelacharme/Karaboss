@@ -1,6 +1,6 @@
 ﻿#region License
 
-/* Copyright (c) 2025 Fabrice Lacharme
+/* Copyright (c) 2026 Fabrice Lacharme
  * 
  * Permission is hereby granted, free of charge, to any person obtaining a copy 
  * of this software and associated documentation files (the "Software"), to 
@@ -51,14 +51,13 @@ using MusicXml;
 using MusicTxt;
 using System.Collections.Generic;
 using Karaboss.Utilities;
+using Karaboss.Kfn;
 
 
 namespace Karaboss
 {
-
     public partial class frmExplorer : Form
     {
-
         MusicXmlReader MXmlReader = new MusicXmlReader();
         MusicTxtReader MTxtReader; 
 
@@ -152,9 +151,11 @@ namespace Karaboss
             xplorerControl.PlayMxl += new xplorer.PlayMxlEventHandler(Global_xPlayMxl);
             xplorerControl.PlayMp3 += new xplorer.PlayMp3EventHandler(Global_xPlayMp3); 
             xplorerControl.PlayTxt += new xplorer.PlayTxtEventHandler(Global_xPlayTxt);
+            xplorerControl.PlayKfn += new xplorer.PlayKfnEventHandler(Global_xPlayKfn);
 
             xplorerControl.LvContentChanged += new xplorer.ContentChangedEventHandler(Xplorer_ContentChanged);
             xplorerControl.CreateNewMidiFile += new xplorer.CreateNewMidiFileEventHandler(Xplorer_CreateNewMidiFile);
+            xplorerControl.CreateNewKfnFile += new xplorer.CreateNewKfnFileEventHandler(xplorer_CreateNewKfnFile);
 
             #endregion          
 
@@ -206,8 +207,7 @@ namespace Karaboss
             }
 
         }
-       
-
+      
         #region Content Changed
         /// <summary>
         /// Manage event songroot changed
@@ -427,7 +427,7 @@ namespace Karaboss
             if (filename != null && filename != "" && File.Exists(filename))                            
                 SelectPlayer(filename, true);            
             else                            
-                MessageBox.Show(Strings.ErrorSelectFile, "Karaboss", MessageBoxButtons.OK,MessageBoxIcon.Error);
+                MessageBox.Show(Strings.ErrorSelectFile, Application.ProductName, MessageBoxButtons.OK,MessageBoxIcon.Error);
             
 
         }
@@ -456,7 +456,7 @@ namespace Karaboss
             if (filename != null && filename != "" && File.Exists(filename))                            
                 SelectPlayer(filename, false);            
             else                            
-                MessageBox.Show(Strings.ErrorSelectFile, "Karaboss", MessageBoxButtons.OK,MessageBoxIcon.Error);
+                MessageBox.Show(Strings.ErrorSelectFile, Application.ProductName, MessageBoxButtons.OK,MessageBoxIcon.Error);
             
 
         }
@@ -487,7 +487,7 @@ namespace Karaboss
             
             if (filename == null || filename == "" || !File.Exists(filename) || (!Karaclass.IsMidiExtension(filename) && !Karaclass.IsXML(filename) && !Karaclass.IsTXT(filename) && !Karaclass.IsMXL(filename) )   )
             {                
-                MessageBox.Show(Strings.ErrorSelectFile, "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(Strings.ErrorSelectFile, Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 
@@ -549,7 +549,7 @@ namespace Karaboss
             
             if (filename == null || filename == "" || !File.Exists(filename) || (!Karaclass.IsMidiExtension(filename) && !Karaclass.IsXML(filename) && !Karaclass.IsTXT(filename) && !Karaclass.IsMXL(filename)))
                 {                
-                MessageBox.Show(Strings.ErrorSelectFile, "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(Strings.ErrorSelectFile, Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 
@@ -607,7 +607,7 @@ namespace Karaboss
 
             if (filename == null || filename == "" || !File.Exists(filename) || (!Karaclass.IsMidiExtension(filename) && !Karaclass.IsXML(filename) && !Karaclass.IsTXT(filename) && !Karaclass.IsMXL(filename) ))
             {
-                MessageBox.Show(Strings.ErrorSelectFile, "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(Strings.ErrorSelectFile, Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 
@@ -673,7 +673,7 @@ namespace Karaboss
                 MyMruList.RemoveFile(FullPath);
 
                 // Tell the user what happened.
-                MessageBox.Show(ex.Message, "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(ex.Message, Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
 
         }
@@ -1397,14 +1397,35 @@ namespace Karaboss
         #endregion midi
 
 
+        #region kfn
+
+        private void xplorer_CreateNewKfnFile(object sender)
+        {
+            NewKfnFile();
+        }
+
+
+        private void NewKfnFile()
+        {
+
+            string path = xplorerControl.CurrentFolder;
+
+            Application.OpenForms["frmKfnCreate"]?.Close();
+            frmKfnCreate frmKfnCreate = new frmKfnCreate(path);
+            frmKfnCreate.Show();
+        }
+
+        #endregion kfn
+
+
         #region Players     
 
         // Specific xplorerControl    
         // Lauch a file from explorer, no playlist
         #region from explorer
-        
+
         /// <summary>
-        /// Launch Midi file from explorer
+        /// Play or edit a Midi file from the explorer
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="fi"></param>
@@ -1416,7 +1437,7 @@ namespace Karaboss
         }
 
         /// <summary>
-        /// Lauch CDG file from explorer
+        /// Play a CDG file from the explorer
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="fi"></param>
@@ -1429,7 +1450,7 @@ namespace Karaboss
 
 
         /// <summary>
-        /// Launch ABC file from explorer
+        /// Play an ABC file from the explorer
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="fi"></param>
@@ -1440,7 +1461,7 @@ namespace Karaboss
         }
 
         /// <summary>
-        /// Launch Xml file from explorer
+        /// Play a Xml file from the explorer
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="fi"></param>
@@ -1453,7 +1474,7 @@ namespace Karaboss
         }
 
         /// <summary>
-        /// Lauch mxl file from explorer
+        /// play a mxl file from the explorer
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="fi"></param>
@@ -1465,7 +1486,7 @@ namespace Karaboss
         }
 
         /// <summary>
-        /// Launch txt file from explorer
+        /// play or edit a txt file (csv) from the explorer
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="fi"></param>
@@ -1478,17 +1499,29 @@ namespace Karaboss
         }
 
         /// <summary>
-        /// Launch mp3 file from explorer
+        /// Paly or edit a mp3 file from the explorer
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="fi"></param>
         /// <param name="bplay"></param>
         private void Global_xPlayMp3(Object sender, FileInfo fi, bool bplay)
         {
-            Karaclass.m_XmlPath = "";
-            Karaclass.m_MxmlPath = "";
+            //Karaclass.m_XmlPath = "";
+            //Karaclass.m_MxmlPath = "";
             DisplayMp3Player(fi.FullName, null, bplay);
         }
+
+        /// <summary>
+        /// Play or edit a kfn file from the explorer
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="fi"></param>
+        /// <param name="bplay"></param>
+        private void Global_xPlayKfn(Object sender, FileInfo fi, bool bplay)
+        {
+            DisplayKfnPlayer(fi.FullName, null, bplay);          
+        }
+
 
         #endregion from explorer
 
@@ -1601,11 +1634,14 @@ namespace Karaboss
         /// <param name="bplay"></param>
         private void DisplayMp3Player(string fpath, Playlist pl, bool bplay)
         {
+            Karaclass.m_XmlPath = "";
+            Karaclass.m_MxmlPath = "";
+
             if (fpath != null)
             {
                 if (File.Exists(fpath) == false)
                 {
-                    MessageBox.Show("The file " + fpath + " doesn not exists!", "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show("The file " + fpath + " doesn not exists!", Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
                 }
             }
@@ -1652,27 +1688,21 @@ namespace Karaboss
             #endregion
 
 
-
             Cursor.Current = Cursors.WaitCursor;
 
-            // Close form frmMidiPlayer
-            if (Application.OpenForms.OfType<frmMidiPlayer>().Count() > 0)
-            {
-                Application.OpenForms["frmMidiPlayer"].Close();
-            }
+            // close frmMp3Player if exists
+            Application.OpenForms["frmMp3Player"]?.Close();
 
-            // Affiche le formulaire frmMp3Player 
-            if (Application.OpenForms["frmMp3Player"] == null)
+            // Display frmMp3Player
+            try
             {
                 Form frmMp3Player = new frmMp3Player(fpath, pl, bplay);
                 frmMp3Player.Show();
             }
-            else
+            catch (Exception ex)
             {
-                Application.OpenForms["frmMp3Player"].Close();
-                Form frmMp3Player = new frmMp3Player(fpath, pl, bplay);
-                frmMp3Player.Show();
-            }
+                MessageBox.Show(ex.Message, Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);                
+            }           
         }
 
         /// <summary>
@@ -1687,13 +1717,12 @@ namespace Karaboss
             {
                 if (File.Exists(fpath) == false)
                 {
-                    MessageBox.Show("The file " + fpath + " doesn not exists!", "Karaboss", MessageBoxButtons.OK,MessageBoxIcon.Error);                    
+                    MessageBox.Show("The file " + fpath + " doesn not exists!", Application.ProductName, MessageBoxButtons.OK,MessageBoxIcon.Error);                    
                     return;
                 }
             }
 
             #region Close Windows                        
-
 
             // ferme le formulaire frmPianoTraining
             if (Application.OpenForms.OfType<frmPianoTraining>().Count() > 0)
@@ -1741,14 +1770,12 @@ namespace Karaboss
 
             try
             {
-
                 Form frmCDGPlayer = new frmCDGPlayer(fpath, pl, bPlayNow);
                 frmCDGPlayer.Show();
-
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);
+                MessageBox.Show(ex.Message, Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
 
         }
@@ -1769,7 +1796,7 @@ namespace Karaboss
                 // Launch an existing file                    
                 if (File.Exists(fpath) == false)
                 {
-                    MessageBox.Show("The file " + fpath + " doesn not exists!", "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show("The file " + fpath + " doesn not exists!", Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
                 }
             }
@@ -1809,15 +1836,21 @@ namespace Karaboss
 
             #endregion
 
-            // Affiche le formulaire frmPlay             
-            Application.OpenForms["FrmTextPlayer"]?.Close();
+            try
+            {
+                // Affiche le formulaire frmPlay             
+                Application.OpenForms["FrmTextPlayer"]?.Close();
 
-            ResetOutPutDevice();
-           
-            Form frmTextPlayer = new Karaboss.Pages.ABCnotation.FrmTextPlayer(outDevice, fpath, bPlayNow);
-            frmTextPlayer.Show();
-            frmTextPlayer.Activate();
+                ResetOutPutDevice();
 
+                Form frmTextPlayer = new Karaboss.Pages.ABCnotation.FrmTextPlayer(outDevice, fpath, bPlayNow);
+                frmTextPlayer.Show();
+                frmTextPlayer.Activate();
+            }
+            catch (Exception ex) 
+            {
+                MessageBox.Show(ex.Message, Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         /// <summary>
@@ -1840,7 +1873,7 @@ namespace Karaboss
                     // Launch an existing file                    
                     if (File.Exists(fpath) == false)
                     {
-                        MessageBox.Show("The file " + fpath + " doesn not exists!", "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        MessageBox.Show("The file " + fpath + " doesn not exists!", Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
                         return;
                     }                  
                 }
@@ -1857,7 +1890,7 @@ namespace Karaboss
                 // Launch an existing file                    
                 if (File.Exists(fpath) == false)
                 {
-                    MessageBox.Show("The file " + fpath + " doesn not exists!", "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show("The file " + fpath + " doesn not exists!", Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
                 }
 
@@ -1908,18 +1941,23 @@ namespace Karaboss
 
             #endregion
 
-            // Affiche le formulaire frmPlay             
-            Application.OpenForms["frmMidiPlayer"]?.Close();
-            ResetOutPutDevice();
+            try
+            {
+                // Affiche le formulaire frmPlay             
+                Application.OpenForms["frmMidiPlayer"]?.Close();
+                ResetOutPutDevice();
 
-            // Add the file to the MRU list.
-            MyMruList.AddFile(fpath);
+                // Add the file to the MRU list.
+                MyMruList.AddFile(fpath);
 
-            Form frmMidiPlayer = new frmMidiPlayer(NumInstance, fpath, pl, bPlayNow, outDevice);
-            frmMidiPlayer.Show();
-            frmMidiPlayer.Activate();
-
-
+                Form frmMidiPlayer = new frmMidiPlayer(NumInstance, fpath, pl, bPlayNow, outDevice);
+                frmMidiPlayer.Show();
+                frmMidiPlayer.Activate();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }        
 
         /// <summary>
@@ -1934,7 +1972,7 @@ namespace Karaboss
                 return;
             if (File.Exists(fpath) == false)
             {
-                MessageBox.Show("The file " + fpath + " doesn not exists!", "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("The file " + fpath + " doesn not exists!", Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 
@@ -1943,11 +1981,11 @@ namespace Karaboss
             {
                 try
                 {
-                    System.Diagnostics.Process.Start(fpath);
+                    System.Diagnostics.Process.Start(@fpath);
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show(ex.Message, "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show(ex.Message, Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 } 
                 return;
             }
@@ -1996,18 +2034,25 @@ namespace Karaboss
 
             #endregion
 
-            // Close form frmPlay             
-            Application.OpenForms["frmMidiPlayer"]?.Close();
-            ResetOutPutDevice();
+            try
+            {
+                // Close form frmPlay             
+                Application.OpenForms["frmMidiPlayer"]?.Close();
+                ResetOutPutDevice();
 
-            // Add the file to the MRU list.
-            MyMruList.AddFile(fpath);
+                // Add the file to the MRU list.
+                MyMruList.AddFile(fpath);
 
-            Form frmMidiPlayer = new frmMidiPlayer(NumInstance, fpath, pl, bPlayNow, outDevice);
-            frmMidiPlayer.Show();
-            frmMidiPlayer.Activate();
+                Form frmMidiPlayer = new frmMidiPlayer(NumInstance, fpath, pl, bPlayNow, outDevice);
+                frmMidiPlayer.Show();
+                frmMidiPlayer.Activate();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
 
-        }
+            }
 
         /// <summary>
         /// Display compressed musicxml file (*.mxl)
@@ -2021,7 +2066,7 @@ namespace Karaboss
                 return;
             if (File.Exists(fpath) == false)
             {
-                MessageBox.Show("The file " + fpath + " doesn not exists!", "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("The file " + fpath + " doesn not exists!", Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
             
@@ -2046,7 +2091,7 @@ namespace Karaboss
                 return;
             if (File.Exists(fpath) == false)
             {
-                MessageBox.Show("The file " + fpath + " doesn not exists!", "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("The file " + fpath + " doesn not exists!", Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 
@@ -2062,7 +2107,7 @@ namespace Karaboss
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show(ex.Message, "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show(ex.Message, Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
                 return;
             }
@@ -2103,18 +2148,108 @@ namespace Karaboss
             }
             #endregion
 
-            // Close form frmPlay 
-            Application.OpenForms["frmMidiPlayer"]?.Close();
+            try
+            {
+                // Close form frmPlay 
+                Application.OpenForms["frmMidiPlayer"]?.Close();
 
-            ResetOutPutDevice();
+                ResetOutPutDevice();
 
-            // Add the file to the MRU list.
-            MyMruList.AddFile(fpath);
+                // Add the file to the MRU list.
+                MyMruList.AddFile(fpath);
 
-            Form frmMidiPlayer = new frmMidiPlayer(NumInstance, fpath, pl, bPlayNow, outDevice);
-            frmMidiPlayer.Show();
-            frmMidiPlayer.Activate();
+                Form frmMidiPlayer = new frmMidiPlayer(NumInstance, fpath, pl, bPlayNow, outDevice);
+                frmMidiPlayer.Show();
+                frmMidiPlayer.Activate();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
 
+
+        private void DisplayKfnPlayer(string fPath, Playlist pl, bool bPlayNow)
+        {
+            Karaclass.m_XmlPath = "";
+            Karaclass.m_MxmlPath = "";
+            
+            if (bPlayNow)
+            {
+                // Lauch default player for .kfn files
+                try
+                {
+                    System.Diagnostics.Process.Start(@fPath);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message, Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
+            else
+            {
+                #region Close Windows                                    
+
+                // ferme le formulaire frmPianoTraining
+                if (Application.OpenForms.OfType<frmPianoTraining>().Count() > 0)
+                {
+                    Application.OpenForms["frmPianoTraining"].Close();
+                }
+
+                // ferme le formulaire frmGuitarTraining
+                if (Application.OpenForms.OfType<frmGuitarTraining>().Count() > 0)
+                {
+                    Application.OpenForms["frmGuitarTraining"].Close();
+                }
+
+                // Ferme le formulaire frmChords
+                if (Application.OpenForms.OfType<frmChords>().Count() > 0)
+                {
+                    Application.OpenForms["frmChords"].Close();
+                }
+
+
+                // Ferme le formulaire FrmTextPlayer
+                if (Application.OpenForms.OfType<FrmTextPlayer>().Count() > 0)
+                {
+                    Application.OpenForms["FrmTextPlayer"].Close();
+                }
+
+                // Close form frmMidiPlayer
+                if (Application.OpenForms.OfType<frmMidiPlayer>().Count() > 0)
+                {
+                    Application.OpenForms["frmMidiPlayer"].Close();
+                }
+
+                // Close form frmCDGPlayer
+                if (Application.OpenForms.OfType<frmCDGPlayer>().Count() > 0)
+                {
+                    Application.OpenForms["frmCDGPlayer"].Close();
+                }
+
+                // Close form frmMp3Player
+                if (Application.OpenForms.OfType<frmMp3Player>().Count() > 0)
+                {
+                    Application.OpenForms["frmMp3Player"].Close();
+                }
+                #endregion
+
+                Cursor.Current = Cursors.WaitCursor;
+
+                // close frmKfnView if exists
+                Application.OpenForms["frmKfnView"]?.Close();
+
+                // Display frmKfnView 
+                try
+                {
+                    Form frmKfnView = new frmKfnView(fPath);
+                    frmKfnView.Show();
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message, Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
         }
 
         #endregion Players
@@ -2317,7 +2452,10 @@ namespace Karaboss
                     Karaclass.m_MxmlPath = "";
                     DisplayMp3Player(cmdpath, null, bPlayNow);
                     break;
-
+                case ".kfn":                    
+                    Karaclass.m_MxmlPath = "";
+                    DisplayKfnPlayer(cmdpath, null, bPlayNow);
+                    break;
                 default:
                     try
                     {
@@ -2325,7 +2463,7 @@ namespace Karaboss
                     }
                     catch (Exception ex)
                     {
-                        MessageBox.Show(ex.Message, "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        MessageBox.Show(ex.Message, Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
                     break;
             }
@@ -2597,7 +2735,7 @@ namespace Karaboss
                 SelectPlayer(filename, true);
             }
             else                            
-                MessageBox.Show(Strings.ErrorSelectFile, "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(Strings.ErrorSelectFile, Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
             
         }
 
@@ -2629,18 +2767,18 @@ namespace Karaboss
             if (filename != null && filename != "")                   
                 SelectPlayer(filename, false);
             else
-                MessageBox.Show(Strings.ErrorSelectFile, "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(Strings.ErrorSelectFile, Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
             
         }
 
-        /// <summary>
-        /// Open empty midi file
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void MnuFileNew_Click(object sender, EventArgs e)
+        private void mnuFileNewMidiFile_Click(object sender, EventArgs e)
         {
-           NewMidiFile();
+            NewMidiFile();
+        }
+
+        private void mnuFileNewKfnFile_Click(object sender, EventArgs e)
+        {
+            NewKfnFile();
         }
 
         /// <summary>
@@ -2797,7 +2935,7 @@ namespace Karaboss
         {
             if (InputDevice.DeviceCount == 0)
             {
-                MessageBox.Show("No Midi Input Device connected", "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("No Midi Input Device connected", Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
@@ -2853,7 +2991,7 @@ namespace Karaboss
         {
             if (InputDevice.DeviceCount == 0)
             {
-                MessageBox.Show("No Midi Input Device connected", "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("No Midi Input Device connected", Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
             if (Application.OpenForms.OfType<frmExternalMidiPlay>().Count() == 0)
@@ -2865,7 +3003,7 @@ namespace Karaboss
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show(ex.Message, "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show(ex.Message, Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
         }
@@ -2879,7 +3017,7 @@ namespace Karaboss
         {
             if (InputDevice.DeviceCount == 0)
             {
-                MessageBox.Show("No Midi Input Device connected", "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("No Midi Input Device connected", Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
             if (Application.OpenForms.OfType<frmExternalMidiRecord>().Count() == 0)
@@ -2891,7 +3029,7 @@ namespace Karaboss
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show(ex.Message, "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show(ex.Message, Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
         }
@@ -2899,6 +3037,16 @@ namespace Karaboss
 
 
         #region menu help
+
+        private void mnuHelpForums_Click(object sender, EventArgs e)
+        {
+            Karaclass.DisplayUrl(Karaclass.url_forums);
+        }
+
+        private void mnuHelpDocumentation_Click(object sender, EventArgs e)
+        {
+            Karaclass.DisplayUrl(Karaclass.url_documentation);
+        }
 
         /// <summary>
         /// Menu: About
@@ -2944,28 +3092,28 @@ namespace Karaboss
             }
             catch (WebException exp)
             {
-                MessageBox.Show("Can not find the specified resource. " + exp.Message, "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Can not find the specified resource. " + exp.Message, Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 bHasError = true;
             }
             catch (XmlException exp)
             {
                 bHasError = true;
-                MessageBox.Show("Download the upgrade file error. " + exp.Message, "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Download the upgrade file error. " + exp.Message, Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             catch (NotSupportedException exp)
             {
                 bHasError = true;
-                MessageBox.Show("Upgrade address configuration error. " + exp.Message, "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Upgrade address configuration error. " + exp.Message, Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             catch (ArgumentException exp)
             {
                 bHasError = true;
-                MessageBox.Show("Download the upgrade file error. " + exp.Message, "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Download the upgrade file error. " + exp.Message, Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             catch (Exception exp)
             {
                 bHasError = true;
-                MessageBox.Show("An error occurred during the upgrade process. " + exp.Message, "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("An error occurred during the upgrade process. " + exp.Message, Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             finally
             {
@@ -3134,7 +3282,7 @@ namespace Karaboss
 
         private void OnApplyClicked(object sender, EventArgs e)
         {
-            MessageBox.Show("New settings applied sucessful", "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            MessageBox.Show("New settings applied sucessful", Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
 
@@ -3196,7 +3344,7 @@ namespace Karaboss
 
                 tx = "Delete of Empty directories done.\n";
                 tx += iNbDelete + " directories deleted.";
-                MessageBox.Show(tx, "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show(tx, Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Information);
 
             }
             
@@ -3487,6 +3635,9 @@ namespace Karaboss
 
 
 
+
         #endregion
+
+       
     }
 }

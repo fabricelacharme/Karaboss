@@ -5392,6 +5392,17 @@ namespace Karaboss
 
         #region Menu Help
 
+        private void mnuHelpForums_Click(object sender, EventArgs e)
+        {
+            Karaclass.DisplayUrl(Karaclass.url_forums);
+        }
+
+        private void mnuHelpDocumentation_Click(object sender, EventArgs e)
+        {
+            Karaclass.DisplayUrl(Karaclass.url_documentation);
+        }
+
+
         /// <summary>
         /// Menu About
         /// </summary>
@@ -9013,6 +9024,7 @@ namespace Karaboss
             sequence1.SaveCompleted += HandleSaveCompleted;
             SaveFile(fileName);
         }
+
 
 
         #endregion Save File

@@ -1,6 +1,6 @@
 ﻿#region License
 
-/* Copyright (c) 2018 Fabrice Lacharme
+/* Copyright (c) 2026 Fabrice Lacharme
  * 
  * Permission is hereby granted, free of charge, to any person obtaining a copy 
  * of this software and associated documentation files (the "Software"), to 
@@ -178,8 +178,7 @@ namespace Karaboss.Search
             {
                 m_View = value;
                 listView.AllowDrop = (m_View == SearchViewStyle.Author ? true : false);
-                RecreateSearchView();
-               
+                RecreateSearchView();               
             }
         }
 
@@ -196,9 +195,7 @@ namespace Karaboss.Search
         private int W_filename = 260;
         private int W_size = 60;
         private int W_modified = 120;
-        private int W_type = 200;
-
-       
+        private int W_type = 200;       
 
         #endregion
 
@@ -276,11 +273,8 @@ namespace Karaboss.Search
                     components.Dispose();
                 }
             }
-
             base.Dispose(disposing);
         }
-
-
 
         #endregion
 
@@ -327,15 +321,11 @@ namespace Karaboss.Search
                         break;
                     }
                 }
-
-                // Upadate allFiles
+                // Update allFiles
                 allFiles[idx].Path = newPath;
                 allFiles[idx].Song = Path.GetFileName(newPath);                
                 SaveScanFiles(ScanfileName);
-                bChanged = false;
-
-
-              
+                bChanged = false;              
             }
         }
       
@@ -461,13 +451,8 @@ namespace Karaboss.Search
                         MessageBox.Show(ed.Message);
                     }
                 }
-
-            }
-
-           
+            }           
         }
-
-
 
         #endregion
 
@@ -1189,8 +1174,6 @@ namespace Karaboss.Search
             this.txtSearch.Clear();
             txtSearch.Focus();
         }
-
-
 
         /// <summary>
         /// Button: scan
