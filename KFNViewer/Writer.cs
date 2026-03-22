@@ -152,6 +152,7 @@ namespace KFNV
 
             try
             {
+                
                 using (FileStream fs = new FileStream(fullFileName, FileMode.Create, FileAccess.ReadWrite))
                 {
                     // Write bytes properties
@@ -162,7 +163,15 @@ namespace KFNV
 
                     // Write files contents
                     WriteFilesContents(fs);
-                }                
+                }       
+                
+
+                /*
+                using (StreamWriter fs = new StreamWriter(fullFileName, false, Encoding.ASCII))
+                {
+
+                }
+                */
                 //string tx = string.Format("The File\n{0} \n\nwas created successfully in the directory\n {1}", Path.GetFileName(fullFileName), Path.GetDirectoryName(fullFileName));
                 //MessageBox.Show(tx, Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Information);
                 return fullFileName;
@@ -415,7 +424,9 @@ namespace KFNV
             }
 
             // Last, write Song.ini
-            fileBytes = Encoding.UTF8.GetBytes(SongIniFile);
+            //fileBytes = Encoding.UTF8.GetBytes(SongIniFile);
+            // FAB 22/03/2026
+            fileBytes = Encoding.GetEncoding("Windows-1252").GetBytes(SongIniFile);
             fs.Write(fileBytes, 0, fileBytes.Length);
         }
 
