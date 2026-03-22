@@ -2771,14 +2771,14 @@ namespace Karaboss
             
         }
 
-        /// <summary>
-        /// Open empty midi file
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void MnuFileNew_Click(object sender, EventArgs e)
+        private void mnuFileNewMidiFile_Click(object sender, EventArgs e)
         {
-           NewMidiFile();
+            NewMidiFile();
+        }
+
+        private void mnuFileNewKfnFile_Click(object sender, EventArgs e)
+        {
+            NewKfnFile();
         }
 
         /// <summary>
@@ -3635,8 +3635,9 @@ namespace Karaboss
 
 
 
+
         #endregion
 
-    
+       
     }
 }

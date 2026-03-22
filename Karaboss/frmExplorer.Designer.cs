@@ -36,6 +36,8 @@
             this.mnuExplorer = new System.Windows.Forms.MenuStrip();
             this.mnuFile = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuFileNew = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnuFileNewMidiFile = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnuFileNewKfnFile = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuFileOpen = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuFileEdit = new System.Windows.Forms.ToolStripMenuItem();
             this.MnuFileSep1 = new System.Windows.Forms.ToolStripSeparator();
@@ -77,6 +79,9 @@
             this.MnuMidiExternalPlay = new System.Windows.Forms.ToolStripMenuItem();
             this.MnuMidiExternalRecord = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuHelp = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnuHelpForums = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnuHelpDocumentation = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItem3 = new System.Windows.Forms.ToolStripSeparator();
             this.MnuHelpCheckNewVersion = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuHelpAbout = new System.Windows.Forms.ToolStripMenuItem();
             this.sequence1 = new Sanford.Multimedia.Midi.Sequence();
@@ -96,9 +101,6 @@
             this.xplorerControl = new Karaboss.xplorer.xplorerControl();
             this.playlistsControl = new Karaboss.playlists.PlaylistsControl();
             this.searchControl = new Karaboss.Search.SearchControl();
-            this.toolStripMenuItem3 = new System.Windows.Forms.ToolStripSeparator();
-            this.mnuHelpForums = new System.Windows.Forms.ToolStripMenuItem();
-            this.mnuHelpDocumentation = new System.Windows.Forms.ToolStripMenuItem();
             this.statusBar.SuspendLayout();
             this.mnuExplorer.SuspendLayout();
             this.pnlFileInfos.SuspendLayout();
@@ -159,9 +161,23 @@
             // 
             // mnuFileNew
             // 
+            this.mnuFileNew.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.mnuFileNewMidiFile,
+            this.mnuFileNewKfnFile});
             this.mnuFileNew.Name = "mnuFileNew";
             resources.ApplyResources(this.mnuFileNew, "mnuFileNew");
-            this.mnuFileNew.Click += new System.EventHandler(this.MnuFileNew_Click);
+            // 
+            // mnuFileNewMidiFile
+            // 
+            this.mnuFileNewMidiFile.Name = "mnuFileNewMidiFile";
+            resources.ApplyResources(this.mnuFileNewMidiFile, "mnuFileNewMidiFile");
+            this.mnuFileNewMidiFile.Click += new System.EventHandler(this.mnuFileNewMidiFile_Click);
+            // 
+            // mnuFileNewKfnFile
+            // 
+            this.mnuFileNewKfnFile.Name = "mnuFileNewKfnFile";
+            resources.ApplyResources(this.mnuFileNewKfnFile, "mnuFileNewKfnFile");
+            this.mnuFileNewKfnFile.Click += new System.EventHandler(this.mnuFileNewKfnFile_Click);
             // 
             // mnuFileOpen
             // 
@@ -435,6 +451,23 @@
             this.mnuHelp.Name = "mnuHelp";
             resources.ApplyResources(this.mnuHelp, "mnuHelp");
             // 
+            // mnuHelpForums
+            // 
+            this.mnuHelpForums.Name = "mnuHelpForums";
+            resources.ApplyResources(this.mnuHelpForums, "mnuHelpForums");
+            this.mnuHelpForums.Click += new System.EventHandler(this.mnuHelpForums_Click);
+            // 
+            // mnuHelpDocumentation
+            // 
+            this.mnuHelpDocumentation.Name = "mnuHelpDocumentation";
+            resources.ApplyResources(this.mnuHelpDocumentation, "mnuHelpDocumentation");
+            this.mnuHelpDocumentation.Click += new System.EventHandler(this.mnuHelpDocumentation_Click);
+            // 
+            // toolStripMenuItem3
+            // 
+            this.toolStripMenuItem3.Name = "toolStripMenuItem3";
+            resources.ApplyResources(this.toolStripMenuItem3, "toolStripMenuItem3");
+            // 
             // MnuHelpCheckNewVersion
             // 
             this.MnuHelpCheckNewVersion.Name = "MnuHelpCheckNewVersion";
@@ -576,23 +609,6 @@
             this.searchControl.SongRoot = "C:\\Users\\Fabrice\\OneDrive\\Music";
             this.searchControl.SView = Karaboss.Search.SearchViewStyle.Author;
             // 
-            // toolStripMenuItem3
-            // 
-            this.toolStripMenuItem3.Name = "toolStripMenuItem3";
-            resources.ApplyResources(this.toolStripMenuItem3, "toolStripMenuItem3");
-            // 
-            // mnuHelpForums
-            // 
-            this.mnuHelpForums.Name = "mnuHelpForums";
-            resources.ApplyResources(this.mnuHelpForums, "mnuHelpForums");
-            this.mnuHelpForums.Click += new System.EventHandler(this.mnuHelpForums_Click);
-            // 
-            // mnuHelpDocumentation
-            // 
-            this.mnuHelpDocumentation.Name = "mnuHelpDocumentation";
-            resources.ApplyResources(this.mnuHelpDocumentation, "mnuHelpDocumentation");
-            this.mnuHelpDocumentation.Click += new System.EventHandler(this.mnuHelpDocumentation_Click);
-            // 
             // frmExplorer
             // 
             resources.ApplyResources(this, "$this");
@@ -697,5 +713,7 @@
         private System.Windows.Forms.ToolStripSeparator toolStripMenuItem3;
         private System.Windows.Forms.ToolStripMenuItem mnuHelpForums;
         private System.Windows.Forms.ToolStripMenuItem mnuHelpDocumentation;
+        private System.Windows.Forms.ToolStripMenuItem mnuFileNewMidiFile;
+        private System.Windows.Forms.ToolStripMenuItem mnuFileNewKfnFile;
     }
 }
