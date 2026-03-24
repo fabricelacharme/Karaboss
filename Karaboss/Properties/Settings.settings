@@ -56,14 +56,14 @@
     <Setting Name="TxtBackColor" Type="System.Drawing.Color" Scope="User">
       <Value Profile="(Default)">Black</Value>
     </Setting>
-    <Setting Name="TxtNextColor" Type="System.Drawing.Color" Scope="User">
-      <Value Profile="(Default)">White</Value>
+    <Setting Name="InactiveColor" Type="System.String" Scope="User">
+      <Value Profile="(Default)">#000000</Value>
     </Setting>
-    <Setting Name="TxtHighlightColor" Type="System.Drawing.Color" Scope="User">
-      <Value Profile="(Default)">Red</Value>
+    <Setting Name="HighlightColor" Type="System.String" Scope="User">
+      <Value Profile="(Default)">#FF0000</Value>
     </Setting>
-    <Setting Name="TxtBeforeColor" Type="System.Drawing.Color" Scope="User">
-      <Value Profile="(Default)">YellowGreen</Value>
+    <Setting Name="ActiveColor" Type="System.String" Scope="User">
+      <Value Profile="(Default)">#9ACD32</Value>
     </Setting>
     <Setting Name="frmMidiLyricsEditMaximized" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
@@ -80,8 +80,8 @@
     <Setting Name="dirSlideShow" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
-    <Setting Name="TxtContourColor" Type="System.Drawing.Color" Scope="User">
-      <Value Profile="(Default)">Black</Value>
+    <Setting Name="ActiveBorderColor" Type="System.String" Scope="User">
+      <Value Profile="(Default)">#010101</Value>
     </Setting>
     <Setting Name="freqSlideShow" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">10</Value>
@@ -242,7 +242,7 @@
     <Setting Name="PianoRollZoomY" Type="System.Single" Scope="User">
       <Value Profile="(Default)">1</Value>
     </Setting>
-    <Setting Name="bColorContour" Type="System.Boolean" Scope="User">
+    <Setting Name="bActiveBorder" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>
     </Setting>
     <Setting Name="KaraokeFont" Type="System.Drawing.Font" Scope="User">
@@ -320,11 +320,11 @@
     <Setting Name="LyricsEditFont" Type="System.Drawing.Font" Scope="User">
       <Value Profile="(Default)">Segoe UI, 9pt</Value>
     </Setting>
-    <Setting Name="ChordNextColor" Type="System.Drawing.Color" Scope="User">
-      <Value Profile="(Default)">255, 196, 13</Value>
+    <Setting Name="InactiveChordColor" Type="System.String" Scope="User">
+      <Value Profile="(Default)">#FF8C00</Value>
     </Setting>
-    <Setting Name="ChordHighlightColor" Type="System.Drawing.Color" Scope="User">
-      <Value Profile="(Default)">Red</Value>
+    <Setting Name="HighlightChordColor" Type="System.String" Scope="User">
+      <Value Profile="(Default)">#8B0000</Value>
     </Setting>
     <Setting Name="bShowChords" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
@@ -481,6 +481,9 @@
     </Setting>
     <Setting Name="KfnBorderEffectIndex" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">2</Value>
+    </Setting>
+    <Setting Name="InactiveBorderColor" Type="System.String" Scope="User">
+      <Value Profile="(Default)">#8000FF</Value>
     </Setting>
   </Settings>
 </SettingsFile>

@@ -216,7 +216,7 @@
             // 
             // pBox
             // 
-            this.pBox.bColorContour = true;
+            this.pBox.bActiveBorder = true;
             this.pBox.bDemo = false;
             this.pBox.Beat = 200;
             this.pBox.BeatDuration = 0;
@@ -225,8 +225,8 @@
             this.pBox.bShowParagraphs = true;
             this.pBox.bTextBackGround = true;
             this.pBox.ChordFont = new System.Drawing.Font("Comic Sans MS", 8.25F);
-            this.pBox.ChordHighlightColor = System.Drawing.Color.FromArgb(((int)(((byte)(238)))), ((int)(((byte)(17)))), ((int)(((byte)(17)))));
-            this.pBox.ChordNextColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(196)))), ((int)(((byte)(13)))));
+            this.pBox.HighlightChordColor = System.Drawing.Color.FromArgb(((int)(((byte)(238)))), ((int)(((byte)(17)))), ((int)(((byte)(17)))));
+            this.pBox.InactiveChordColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(196)))), ((int)(((byte)(13)))));
             this.pBox.CurrentTextPos = 2;
             this.pBox.CurrentTime = 3;
             this.pBox.DirSlideShow = null;
@@ -252,13 +252,14 @@
             this.pBox.TransparencyKey = System.Drawing.Color.Lime;
             this.pBox.Txt = "";
             this.pBox.TxtBackColor = System.Drawing.Color.White;
-            this.pBox.TxtBeforeColor = System.Drawing.Color.YellowGreen;
-            this.pBox.TxtContourColor = System.Drawing.Color.DarkTurquoise;
+            this.pBox.ActiveColor = System.Drawing.Color.YellowGreen;
+            this.pBox.ActiveBorderColor = System.Drawing.Color.DarkTurquoise;
+            this.pBox.InactiveBorderColor = System.Drawing.Color.DarkTurquoise;
             this.pBox.TxtGrad0Color = System.Drawing.Color.Empty;
             this.pBox.TxtGrad1Color = System.Drawing.Color.Empty;
-            this.pBox.TxtHighlightColor = System.Drawing.Color.Red;
+            this.pBox.HighlightColor = System.Drawing.Color.Red;
             this.pBox.TxtNbLines = 3;
-            this.pBox.TxtNextColor = System.Drawing.Color.White;
+            this.pBox.InactiveColor = System.Drawing.Color.White;
             this.pBox.TxtRhythm0Color = System.Drawing.Color.Empty;
             this.pBox.TxtRhythm1Color = System.Drawing.Color.Empty;
             // 

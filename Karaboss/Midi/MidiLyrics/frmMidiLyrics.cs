@@ -1,6 +1,6 @@
 ﻿#region License
 
-/* Copyright (c) 2024 Fabrice Lacharme
+/* Copyright (c) 2026 Fabrice Lacharme
  * 
  * Permission is hereby granted, free of charge, to any person obtaining a copy 
  * of this software and associated documentation files (the "Software"), to 
@@ -32,17 +32,19 @@
 
 #endregion
 
+using Karaboss.Kfn;
+using Karaboss.MidiLyrics;
+using PicControl;
 using System;
 using System.Collections.Generic;
-using System.Drawing;
-using System.Windows.Forms;
-using System.IO;
-using PicControl;
-using System.Runtime.InteropServices;
-using System.Linq;
-using Karaboss.MidiLyrics;
 using System.ComponentModel;
+using System.Drawing;
+using System.IO;
+using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
+using System.Windows.Forms;
+using TagLib.Id3v2;
 
 namespace Karaboss
 {
@@ -64,13 +66,13 @@ namespace Karaboss
 
         #region private
 
-        public MidiLyricsMgmt myLyricsMgmt {  get; set; }
+        public MidiLyricsMgmt myLyricsMgmt { get; set; }
 
-        private Font _karaokeFont;        
+        private Font _karaokeFont;
         private int currentTextPos = 0;
-        private Point Mouselocation;    
+        private Point Mouselocation;
 
-        private frmLyrOptions frmLyrOptions;
+        //private frmLyrOptions frmLyrOptions;
         private List<int> LyricsTimes;
 
         #endregion private
@@ -80,7 +82,7 @@ namespace Karaboss
 
         #region Internal lyrics separators
 
-        private readonly string _InternalSepLines = "¼";        
+        private readonly string _InternalSepLines = "¼";
         private readonly string _InternalSepParagraphs = "½";
 
         #endregion
@@ -92,7 +94,9 @@ namespace Karaboss
         public bool bShowBalls
         {
             get { return _bShowBalls; }
-            set { _bShowBalls = value;
+            set
+            {
+                _bShowBalls = value;
                 pnlBalls.Visible = _bShowBalls;
             }
         }
@@ -110,7 +114,7 @@ namespace Karaboss
             set
             {
                 _chordNextColor = value;
-                pBox.ChordNextColor = _chordNextColor;
+                pBox.InactiveChordColor = _chordNextColor;
             }
         }
         // Chord highlight color
@@ -121,20 +125,21 @@ namespace Karaboss
             set
             {
                 _chordHighlightColor = value;
-                pBox.ChordHighlightColor = _chordHighlightColor;
+                pBox.HighlightChordColor = _chordHighlightColor;
             }
         }
-               
+
         public bool bShowChords
-        {            
-            set {
+        {
+            set
+            {
                 if (value != Karaclass.m_ShowChords)
-                {                    
-                    chkChords.Checked = value;                                                                            
+                {
+                    chkChords.Checked = value;
                 }
             }
         }
-        
+
 
         #endregion chords
 
@@ -148,7 +153,8 @@ namespace Karaboss
         public bool bForceUppercase
         {
             get { return _bForceUppercase; }
-            set {
+            set
+            {
 
                 if (value != _bForceUppercase)
                 {
@@ -158,7 +164,6 @@ namespace Karaboss
                 }
             }
         }
-
 
         public Font KaraokeFont
         {
@@ -171,10 +176,22 @@ namespace Karaboss
                     // Redraw
                     pBox.KaraokeFont = _karaokeFont;
                 }
-                catch (Exception e) 
+                catch (Exception e)
                 {
                     Console.Write("Error: " + e.Message);
                 }
+            }
+        }
+
+        private int _frametypeindex = 1;
+        private string _frametype = "";
+        public string FrameType
+        {
+            get { return _frametype; }
+            set { 
+                _frametype = value; 
+                pBox.FrameType = _frametype;
+                
             }
         }
 
@@ -185,7 +202,9 @@ namespace Karaboss
         public Karaclass.OptionsDisplay OptionDisplay
         {
             get { return _OptionDisplay; }
-            set { _OptionDisplay = value;
+            set
+            {
+                _OptionDisplay = value;
                 pBox.OptionDisplay = (PicControl.pictureBoxControl.OptionsDisplay)_OptionDisplay;
             }
         }
@@ -214,56 +233,91 @@ namespace Karaboss
         public bool bTextBackGround
         {
             get { return _bTextBackGround; }
-            set { _bTextBackGround = value;
+            set
+            {
+                _bTextBackGround = value;
                 pBox.bTextBackGround = _bTextBackGround;
             }
         }
 
 
         // Text color
-        private Color _txtHighlightColor;
-        public Color TxtHighlightColor {
-            get { return _txtHighlightColor; }
-            set { _txtHighlightColor = value;
-                pBox.TxtHighlightColor = _txtHighlightColor;
+        private Color _HighlightColor;
+        public Color HighlightColor
+        {
+            get { return _HighlightColor; }
+            set
+            {
+                _HighlightColor = value;
+                pBox.HighlightColor = _HighlightColor;
             }
         }
-    
+
         // Text to sing color
-        private Color _txtNextColor;
-        public Color TxtNextColor { get { return _txtNextColor; } set {_txtNextColor = value;
-                pBox.TxtNextColor = _txtNextColor;
+        private Color _InactiveColor;
+        public Color InactiveColor
+        {
+            get { return _InactiveColor; }
+            set
+            {
+                _InactiveColor = value;
+                pBox.InactiveColor = _InactiveColor;
             }
         }
         // Text sung color
-        private Color _txtBeforeColor;
-        public Color TxtBeforeColor { get {return _txtBeforeColor; } set {_txtBeforeColor = value;
-                pBox.TxtBeforeColor = _txtBeforeColor;
+        private Color _ActiveColor;
+        public Color ActiveColor
+        {
+            get { return _ActiveColor; }
+            set
+            {
+                _ActiveColor = value;
+                pBox.ActiveColor = _ActiveColor;
             }
         }
         // Contour
-        private bool _bColorContour = true;
-        public bool bColorContour
+        private bool _bActiveBorder = true;
+        public bool bActiveBorder
         {
             get
-            { return _bColorContour; }
+            { return _bActiveBorder; }
             set
             {
-                _bColorContour = value;
-                pBox.bColorContour = _bColorContour;
+                _bActiveBorder = value;
+                pBox.bActiveBorder = _bActiveBorder;
             }
         }
-        // Text contour
-        private Color _txtContourColor;
-        public Color TxtContourColor { get {return _txtContourColor; } set { _txtContourColor = value;
-                pBox.TxtContourColor = _txtContourColor;
+        // Text border
+        private Color _ActiveBorderColor;
+        public Color ActiveBorderColor
+        {
+            get { return _ActiveBorderColor; }
+            set
+            {
+                _ActiveBorderColor = value;
+                pBox.ActiveBorderColor = _ActiveBorderColor;
             }
         }
-        
+
+        private Color _InactiveBorderColor;
+        public Color InactiveBorderColor
+        {
+            get { return _InactiveBorderColor; }
+            set
+            {
+                _InactiveBorderColor = value;
+                pBox.InactiveBorderColor = _InactiveBorderColor;
+            }
+        }
+
         // Background color
         private Color _txtBackColor;
-        public Color TxtBackColor { get { return _txtBackColor; }
-            set {_txtBackColor = value;
+        public Color TxtBackColor
+        {
+            get { return _txtBackColor; }
+            set
+            {
+                _txtBackColor = value;
                 pBox.TxtBackColor = _txtBackColor;
             }
         }
@@ -328,7 +382,8 @@ namespace Karaboss
         public string DirSlideShow
         {
             get { return _dirSlideShow; }
-            set {
+            set
+            {
 
                 // Change only if not in playlist mode
                 //if (_bplaylist)
@@ -339,27 +394,32 @@ namespace Karaboss
 
                 if (Directory.Exists(value))
                     _dirSlideShow = value;
-                else                         
-                    _dirSlideShow = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), Application.ProductName);                    
-                
+                else
+                    _dirSlideShow = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), Application.ProductName);
+
                 pBox.SetBackground(_dirSlideShow);
             }
         }
-        
+
         // SlideShow frequency
         private int _freqSlideShow;
-        public int FreqSlideShow {
+        public int FreqSlideShow
+        {
             get { return _freqSlideShow; }
-            set { _freqSlideShow = value;
+            set
+            {
+                _freqSlideShow = value;
                 pBox.FreqDirSlideShow = _freqSlideShow;
             }
         }
 
 
         private PictureBoxSizeMode _sizeMode;
-        public PictureBoxSizeMode SizeMode {
-            get {return _sizeMode; }
-            set {
+        public PictureBoxSizeMode SizeMode
+        {
+            get { return _sizeMode; }
+            set
+            {
                 _sizeMode = value;
                 pBox.SizeMode = _sizeMode;
             }
@@ -412,8 +472,9 @@ namespace Karaboss
         public bool bTopMost
         {
             get { return _bTopMost; }
-            set { 
-                _bTopMost = value; 
+            set
+            {
+                _bTopMost = value;
                 this.TopMost = _bTopMost;
             }
         }
@@ -424,7 +485,8 @@ namespace Karaboss
         public int BeatDuration
         {
             get { return _beatDuration; }
-            set {
+            set
+            {
                 _beatDuration = value;
                 pBox.BeatDuration = _beatDuration;
             }
@@ -434,7 +496,7 @@ namespace Karaboss
 
 
         public List<pictureBoxControl.plLyric> plLyrics;
-                       
+
         /// <summary>
         /// Constructor
         /// </summary>
@@ -461,14 +523,14 @@ namespace Karaboss
             // UserControls picball & pBox manage themselves this move.            
             controlsToMove.Add(this.pnlTittle);
             controlsToMove.Add(this.lblTittle);
-            
+
             #endregion
-           
+
 
             // colours for text, chords, number of lines etc...
             LoadKarOptions();
-           
-            AddMouseMoveHandler(this);           
+
+            AddMouseMoveHandler(this);
         }
 
 
@@ -530,7 +592,7 @@ namespace Karaboss
         /// <param name="text"></param>
         public void DisplaySinger(string text)
         {
-            lblTittle.Text = text;  
+            lblTittle.Text = text;
         }
 
         /// <summary>
@@ -538,10 +600,10 @@ namespace Karaboss
         /// </summary>
         /// <param name="sec"></param>
         public void LoadWaitSong(int sec)
-        {                       
+        {
             pBox.LoadWaitSong(sec);
         }
-        
+
         public void EndWaitSong()
         {
             pBox.endDemoText();
@@ -558,10 +620,10 @@ namespace Karaboss
         /// </summary>
         /// <param name="dirSlideShow"></param>
         public void SetSlideShow(string dirSlideShow)
-        {            
-            DirSlideShow = dirSlideShow;         
+        {
+            DirSlideShow = dirSlideShow;
         }
-   
+
 
         /// <summary>
         /// Load song in picturebox control
@@ -572,16 +634,17 @@ namespace Karaboss
         {
             string lyric;
             string chord;
-                                                
-            currentTextPos = 0;                        
+
+            currentTextPos = 0;
 
             List<pictureBoxControl.plLyric> pcLyrics = new List<pictureBoxControl.plLyric>();
 
-            for (int i = 0; i < plLs.Count; i++)           
-            {                
+            for (int i = 0; i < plLs.Count; i++)
+            {
                 plLyric plL = plLs[i];
 
-                pictureBoxControl.plLyric pcL = new pictureBoxControl.plLyric() {
+                pictureBoxControl.plLyric pcL = new pictureBoxControl.plLyric()
+                {
                     Type = (pictureBoxControl.plLyric.Types)plL.CharType,
                 };
 
@@ -594,10 +657,10 @@ namespace Karaboss
                     // if bShowChords, the chords will be displayed above the lyrics, so clean chords included in lyrics
                     if (myLyricsMgmt != null && myLyricsMgmt.ChordsOriginatedFrom == MidiLyricsMgmt.ChordsOrigins.Lyrics)
                     {
-                        
-                        if ( myLyricsMgmt.RemoveChordPattern == null )
+
+                        if (myLyricsMgmt.RemoveChordPattern == null)
                         {
-                            MessageBox.Show("RemoveChordsPattern is null", "Karaboss",MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            MessageBox.Show("RemoveChordsPattern is null", "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
                             return;
                         }
                         lyric = Regex.Replace(lyric, myLyricsMgmt.RemoveChordPattern, @"");
@@ -608,7 +671,7 @@ namespace Karaboss
                 pcL.Element = (chord, lyric);
                 pcL.TicksOn = plL.TicksOn;
                 pcL.TicksOff = plL.TicksOff;
-                pcLyrics.Add(pcL);                               
+                pcLyrics.Add(pcL);
             }
 
             // Load song
@@ -624,14 +687,13 @@ namespace Karaboss
                 LoadBallsTimes(plLs);
         }
 
-     
 
         /// <summary>
         /// Color the syllabe according to song position
         /// </summary>
         /// <param name="songposition"></param>
         public void ColorLyric(int songposition)
-        {            
+        {
             // déclencheur : timer_2
             // IMPERATIF : calculer ici la position de la syllabe, utilisée pour l'animation des balles
             // drivé par timer_2 de frmMidiPplayer            
@@ -653,8 +715,6 @@ namespace Karaboss
             pBox.Terminate();
         }
 
-
-       
         /// <summary>
         /// Load options (text color, 
         /// </summary>
@@ -662,6 +722,45 @@ namespace Karaboss
         {
             try
             {
+
+                // Lyrics border effect (int)
+                _frametypeindex = Properties.Settings.Default.KfnBorderEffectIndex;
+                switch (_frametypeindex)
+                {
+                    case 0:
+                        _frametype = "NoBorder";
+                        break;
+                    case 1:
+                        _frametype = "FrameThin";
+                        break;
+                    case 2:
+                        _frametype = "Frame1";
+                        break;
+                    case 3:
+                        _frametype = "Frame2";
+                        break;
+                    case 4:
+                        _frametype = "Frame3";
+                        break;
+                    case 5:
+                        _frametype = "Frame4";
+                        break;
+                    case 6:
+                        _frametype = "Frame5";
+                        break;
+                    case 7:
+                        _frametype = "Shadow";
+                        break;
+                    case 8:
+                        _frametype = "Neon";
+                        break;
+                    default:
+                        _frametype = "Frame1";
+                        break;
+                }
+                pBox.FrameType = _frametype;
+
+
                 _karaokeFont = Properties.Settings.Default.KaraokeFont;
                 pBox.KaraokeFont = _karaokeFont;
                 pBox.bShowParagraphs = Karaclass.m_ShowParagraph;
@@ -730,16 +829,17 @@ namespace Karaboss
                 TxtRhythm1Color = Properties.Settings.Default.TxtRhythm1Color;
 
                 // Text colors
-                TxtNextColor = Properties.Settings.Default.TxtNextColor;
-                TxtHighlightColor = Properties.Settings.Default.TxtHighlightColor;
-                TxtBeforeColor = Properties.Settings.Default.TxtBeforeColor;
-                bColorContour = Properties.Settings.Default.bColorContour;
-                TxtContourColor = Properties.Settings.Default.TxtContourColor;
+                InactiveColor = Parse(Properties.Settings.Default.InactiveColor);
+                HighlightColor = Parse(Properties.Settings.Default.HighlightColor);
+                ActiveColor = Parse(Properties.Settings.Default.ActiveColor);
+                bActiveBorder = Properties.Settings.Default.bActiveBorder;
+                ActiveBorderColor = Parse(Properties.Settings.Default.ActiveBorderColor);
+                InactiveBorderColor = Parse(Properties.Settings.Default.InactiveBorderColor);
 
                 // Chords
-                _chordNextColor = Properties.Settings.Default.ChordNextColor;
-                _chordHighlightColor = Properties.Settings.Default.ChordHighlightColor;                
-                chkChords.Checked = Karaclass.m_ShowChords;                
+                _chordNextColor = Parse(Properties.Settings.Default.InactiveChordColor);
+                _chordHighlightColor = Parse(Properties.Settings.Default.HighlightChordColor);
+                chkChords.Checked = Karaclass.m_ShowChords;
 
 
                 // Number of Lines to display
@@ -755,7 +855,7 @@ namespace Karaboss
             }
             catch (Exception e)
             {
-                MessageBox.Show(e.Message, "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);                
+                MessageBox.Show(e.Message, "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -773,7 +873,7 @@ namespace Karaboss
             if (!bShowBalls || plLyrics.Count == 0)
             { return; }
 
-            LyricsTimes = new List<int>();            
+            LyricsTimes = new List<int>();
 
             for (int i = 0; i < plLyrics.Count; i++)
             {
@@ -806,12 +906,12 @@ namespace Karaboss
             if (Karaclass.m_DisplayBalls)
                 picBalls.MoveBallsToLyrics(songposition, currentTextPos);
         }
-        
+
         public void UnlightFixedBall()
         {
             picBalls.UnlightFixedBall();
         }
-        
+
         public void StartTimerBalls()
         {
             picBalls.BallsNumber = 22;
@@ -824,7 +924,7 @@ namespace Karaboss
         }
 
         #endregion
-        
+
 
         #region form load close resize
 
@@ -843,15 +943,19 @@ namespace Karaboss
             timer1.Dispose();
 
             _karaokeFont?.Dispose();
-            
+
             pBox.Terminate();
 
             // FAB 05/09/2024
             pBox.Dispose();
             picBalls.Stop();
             picBalls.Dispose();
-            frmLyrOptions? .Dispose();
-            
+
+            if (Application.OpenForms.OfType<frmLyrOptions>().Count() > 0)
+            {
+                frmLyrOptions frmLyrOptions = Utilities.FormUtilities.GetForm<frmLyrOptions>();
+                frmLyrOptions?.Dispose();
+            }
 
             base.OnClosed(e);
         }
@@ -862,10 +966,10 @@ namespace Karaboss
             // Set window location
             if (Properties.Settings.Default.frmMidiLyricsMaximized)
             {
-                
+
                 Location = Properties.Settings.Default.frmMidiLyricsLocation;
                 WindowState = FormWindowState.Maximized;
-                
+
             }
             else
             {
@@ -885,14 +989,14 @@ namespace Karaboss
         }
 
         private void frmMidiLyrics_FormClosing(object sender, FormClosingEventArgs e)
-        {            
+        {
             // enregistre la taille et la position de la forme
             // Copy window location to app settings                
             if (WindowState != FormWindowState.Minimized)
             {
                 if (WindowState == FormWindowState.Maximized)
                 {
-                    Properties.Settings.Default.frmMidiLyricsLocation = RestoreBounds.Location;                       
+                    Properties.Settings.Default.frmMidiLyricsLocation = RestoreBounds.Location;
                     Properties.Settings.Default.frmMidiLyricsMaximized = true;
 
                 }
@@ -900,20 +1004,20 @@ namespace Karaboss
                 {
                     Properties.Settings.Default.frmMidiLyricsLocation = Location;
                     Properties.Settings.Default.frmMidiLyricsSize = Size;
-                    Properties.Settings.Default.frmMidiLyricsMaximized = false;                   
+                    Properties.Settings.Default.frmMidiLyricsMaximized = false;
 
                 }
                 // Save settings
                 Properties.Settings.Default.Save();
-            }            
+            }
 
             Dispose();
-            
+
         }
 
         private void frmMidiLyrics_Resize(object sender, EventArgs e)
         {
-            if (WindowState == FormWindowState.Maximized )
+            if (WindowState == FormWindowState.Maximized)
             {
                 btnFrmMax.Image = Properties.Resources.MaxNormal;
             }
@@ -950,9 +1054,9 @@ namespace Karaboss
         private void btnEditLyrics_Click(object sender, EventArgs e)
         {
             if (Application.OpenForms.OfType<frmMidiPlayer>().Count() > 0)
-            {                
+            {
                 frmMidiPlayer frmMidiPlayer = Utilities.FormUtilities.GetForm<frmMidiPlayer>();
-                frmMidiPlayer.DisplayEditLyricsForm();                
+                frmMidiPlayer.DisplayEditLyricsForm();
             }
         }
 
@@ -972,10 +1076,10 @@ namespace Karaboss
             string tx;
             string path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), Application.ProductName);
             string file = path + "\\lyrics.txt";
-            
+
             // Lyrics not modified
             tx = myLyricsMgmt.Lyrics;
-                                   
+
             tx = tx.Replace(_InternalSepParagraphs, "\r\n\r\n");
             tx = tx.Replace(_InternalSepLines, "\r\n");
             tx = tx.Replace("[]", "");                                  // Why are these characters exists ?
@@ -1000,10 +1104,10 @@ namespace Karaboss
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void chkChords_CheckedChanged(object sender, EventArgs e)
-        {                                    
+        {
             // Hide or Show the button for displaying lyrics + chords
             btnExportLyricsChords.Visible = chkChords.Checked;
-            btnEditLyricsChords.Visible= chkChords.Checked;
+            btnEditLyricsChords.Visible = chkChords.Checked;
 
             // User has manually changed the display of chords
             if (chkChords.Checked != Karaclass.m_ShowChords)
@@ -1020,7 +1124,7 @@ namespace Karaboss
 
                 // Reload lyrics with choosen options
                 myLyricsMgmt.ResetDisplayChordsOptions(chkChords.Checked);
-                                               
+
                 // Load modified lyrics into the picturebox
                 LoadSong(myLyricsMgmt.plLyrics);
 
@@ -1130,8 +1234,13 @@ namespace Karaboss
         private void BtnFrmOptions_Click(object sender, EventArgs e)
         {
             Cursor.Current = Cursors.WaitCursor;
-            frmLyrOptions = new frmLyrOptions();
-            frmLyrOptions.ShowDialog();
+
+            if (Application.OpenForms.OfType<frmLyrOptions>().Count() == 0)
+            {
+                frmLyrOptions frmLyrOptions = new frmLyrOptions();
+                //frmLyrOptions.ShowDialog();
+                frmLyrOptions.Show();
+            }
         }
 
 
@@ -1229,8 +1338,33 @@ namespace Karaboss
 
         #endregion pnlWindow        
 
-      
+
+
+
+        /// <summary>
+        /// Check text representing a color
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentException"></exception>
+        public static Color Parse(string input)
+        {
+            input = input.Trim();
+            string strColorRegex = @"^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$";
+            Regex re = new Regex(strColorRegex);
+            if (re.IsMatch(input))
+            {
+                return ColorTranslator.FromHtml(input);
+            }
+
+            Color named = Color.FromName(input);
+            if (named.IsKnownColor || named.IsNamedColor)
+            {
+                return named;
+            }
+            throw new ArgumentException($"Unsupported color value: {input}", nameof(input));
+        }
+
+
     }
-
-
 }

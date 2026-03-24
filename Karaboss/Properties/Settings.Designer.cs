@@ -245,37 +245,37 @@ namespace Karaboss.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("White")]
-        public global::System.Drawing.Color TxtNextColor {
+        [global::System.Configuration.DefaultSettingValueAttribute("#000000")]
+        public string InactiveColor {
             get {
-                return ((global::System.Drawing.Color)(this["TxtNextColor"]));
+                return ((string)(this["InactiveColor"]));
             }
             set {
-                this["TxtNextColor"] = value;
+                this["InactiveColor"] = value;
             }
         }
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("Red")]
-        public global::System.Drawing.Color TxtHighlightColor {
+        [global::System.Configuration.DefaultSettingValueAttribute("#FF0000")]
+        public string HighlightColor {
             get {
-                return ((global::System.Drawing.Color)(this["TxtHighlightColor"]));
+                return ((string)(this["HighlightColor"]));
             }
             set {
-                this["TxtHighlightColor"] = value;
+                this["HighlightColor"] = value;
             }
         }
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("YellowGreen")]
-        public global::System.Drawing.Color TxtBeforeColor {
+        [global::System.Configuration.DefaultSettingValueAttribute("#9ACD32")]
+        public string ActiveColor {
             get {
-                return ((global::System.Drawing.Color)(this["TxtBeforeColor"]));
+                return ((string)(this["ActiveColor"]));
             }
             set {
-                this["TxtBeforeColor"] = value;
+                this["ActiveColor"] = value;
             }
         }
         
@@ -341,13 +341,13 @@ namespace Karaboss.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("Black")]
-        public global::System.Drawing.Color TxtContourColor {
+        [global::System.Configuration.DefaultSettingValueAttribute("#010101")]
+        public string ActiveBorderColor {
             get {
-                return ((global::System.Drawing.Color)(this["TxtContourColor"]));
+                return ((string)(this["ActiveBorderColor"]));
             }
             set {
-                this["TxtContourColor"] = value;
+                this["ActiveBorderColor"] = value;
             }
         }
         
@@ -989,12 +989,12 @@ namespace Karaboss.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("True")]
-        public bool bColorContour {
+        public bool bActiveBorder {
             get {
-                return ((bool)(this["bColorContour"]));
+                return ((bool)(this["bActiveBorder"]));
             }
             set {
-                this["bColorContour"] = value;
+                this["bActiveBorder"] = value;
             }
         }
         
@@ -1300,25 +1300,25 @@ namespace Karaboss.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("255, 196, 13")]
-        public global::System.Drawing.Color ChordNextColor {
+        [global::System.Configuration.DefaultSettingValueAttribute("#FF8C00")]
+        public string InactiveChordColor {
             get {
-                return ((global::System.Drawing.Color)(this["ChordNextColor"]));
+                return ((string)(this["InactiveChordColor"]));
             }
             set {
-                this["ChordNextColor"] = value;
+                this["InactiveChordColor"] = value;
             }
         }
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("Red")]
-        public global::System.Drawing.Color ChordHighlightColor {
+        [global::System.Configuration.DefaultSettingValueAttribute("#8B0000")]
+        public string HighlightChordColor {
             get {
-                return ((global::System.Drawing.Color)(this["ChordHighlightColor"]));
+                return ((string)(this["HighlightChordColor"]));
             }
             set {
-                this["ChordHighlightColor"] = value;
+                this["HighlightChordColor"] = value;
             }
         }
         
@@ -1937,6 +1937,18 @@ namespace Karaboss.Properties {
             }
             set {
                 this["KfnBorderEffectIndex"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("#8000FF")]
+        public string InactiveBorderColor {
+            get {
+                return ((string)(this["InactiveBorderColor"]));
+            }
+            set {
+                this["InactiveBorderColor"] = value;
             }
         }
     }

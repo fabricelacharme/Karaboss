@@ -23,7 +23,7 @@ namespace Karaboss.Kfn
         [return: MarshalAs(UnmanagedType.Bool)]
         public static extern bool GetIconInfo(IntPtr hIcon, ref IconInfo pIconInfo);
 
-        private TextBox _sender = null;
+        private TextBox _sender = null;        
 
         public struct IconInfo
         {
@@ -39,7 +39,7 @@ namespace Karaboss.Kfn
             InitializeComponent();            
 
             _sender = sender;
-
+            
             ShowInTaskbar = false;
             FormBorderStyle = FormBorderStyle.None;
             WindowState = FormWindowState.Maximized;
@@ -105,6 +105,11 @@ namespace Karaboss.Kfn
                         frmKfnCreate frmKfnCreate = Utilities.FormUtilities.GetForm<frmKfnCreate>();
                         frmKfnCreate.GetColorFromPicker(c, _sender);
                     }
+                    else if (Application.OpenForms.OfType<frmLyrOptions>().Count() > 0)
+                    {
+                        frmLyrOptions frmLyrOptions = Utilities.FormUtilities.GetForm<frmLyrOptions>();
+                        frmLyrOptions.GetColorFromPicker(c, _sender);
+                    }
                 }
                 Close();
             }
@@ -135,6 +140,12 @@ namespace Karaboss.Kfn
                 frmKfnCreate frmKfnCreate = Utilities.FormUtilities.GetForm<frmKfnCreate>();
                 frmKfnCreate.Show();
             }
+            else if (Application.OpenForms.OfType<frmLyrOptions>().Count() > 0)
+            {
+                frmLyrOptions frmLyrOptions = Utilities.FormUtilities.GetForm<frmLyrOptions>();
+                frmLyrOptions.Show();
+            }
+           
         }
     }
 }

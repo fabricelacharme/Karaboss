@@ -10,7 +10,6 @@ using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
-using TagLib.Mpeg4;
 
 namespace Karaboss.Kfn
 {
@@ -19,8 +18,10 @@ namespace Karaboss.Kfn
         private string fPath;      
         private readonly string strColorRegex = @"^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$";
         Regex regexColor;
-        string ftName;
-        uint ftSize;
+        
+        // Font
+        private string ftName;
+        private uint ftSize;
 
         List<string> LstTextPreview = new List<string>();
 

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Windows.Forms;
 
 namespace Karaboss.Mp3
@@ -213,13 +214,13 @@ namespace Karaboss.Mp3
                 bTextBackGround =  bTextBackGround = Properties.Settings.Default.bLyricsBackGround;
 
                 // Lyrics Colors
-                TxtNextColor = Properties.Settings.Default.TxtNextColor;
-                TxtHighlightColor = Properties.Settings.Default.TxtHighlightColor;
+                TxtNextColor = Parse(Properties.Settings.Default.InactiveColor);
+                TxtHighlightColor = Parse(Properties.Settings.Default.HighlightColor);
                 bProgressiveHighlight = Properties.Settings.Default.bProgressiveHighlight;  // Progressive Highlight 
-                TxtBeforeColor = Properties.Settings.Default.TxtBeforeColor;
+                TxtBeforeColor = Parse(Properties.Settings.Default.ActiveColor);
 
-                bColorContour = Properties.Settings.Default.bColorContour;
-                TxtContourColor = Properties.Settings.Default.TxtContourColor;
+                bColorContour = Properties.Settings.Default.bActiveBorder;
+                TxtContourColor = Parse(Properties.Settings.Default.ActiveBorderColor);
                 chkContour.Checked = bColorContour;
 
                 // Backgroud color beside lyrics to help to read when an image is displayed
@@ -326,6 +327,30 @@ namespace Karaboss.Mp3
             }
         }
 
+
+        /// <summary>
+        /// Check text representing a color
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentException"></exception>
+        public static Color Parse(string input)
+        {
+            input = input.Trim();
+            string strColorRegex = @"^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$";
+            Regex re = new Regex(strColorRegex);
+            if (re.IsMatch(input))
+            {
+                return ColorTranslator.FromHtml(input);
+            }
+
+            Color named = Color.FromName(input);
+            if (named.IsKnownColor || named.IsNamedColor)
+            {
+                return named;
+            }
+            throw new ArgumentException($"Unsupported color value: {input}", nameof(input));
+        }
 
         /// <summary>
         /// Appply options to option form
@@ -461,15 +486,15 @@ namespace Karaboss.Mp3
 
                 Properties.Settings.Default.TxtBackColor = TxtBackColor;
 
-                Properties.Settings.Default.TxtNextColor = TxtNextColor;
-                Properties.Settings.Default.TxtHighlightColor = TxtHighlightColor;
+                Properties.Settings.Default.InactiveColor = ToHex(TxtNextColor);
+                Properties.Settings.Default.HighlightColor = ToHex(TxtHighlightColor);
                 Properties.Settings.Default.bProgressiveHighlight = bProgressiveHighlight;  // Progressive highlight
-                Properties.Settings.Default.TxtBeforeColor = TxtBeforeColor;
+                Properties.Settings.Default.ActiveColor = ToHex(TxtBeforeColor);
 
                
                 // Contour
-                Properties.Settings.Default.bColorContour = bColorContour;
-                Properties.Settings.Default.TxtContourColor = TxtContourColor;
+                Properties.Settings.Default.bActiveBorder = bColorContour;
+                Properties.Settings.Default.ActiveBorderColor = ToHex(TxtContourColor);
 
                 // Force Uppercase
                 Properties.Settings.Default.bForceUppercase = bForceUppercase;
@@ -513,6 +538,15 @@ namespace Karaboss.Mp3
                 MessageBox.Show(e.Message, "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
+
+
+
+        /// <summary>
+        /// Translate color to hexa
+        /// </summary>
+        /// <param name="c"></param>
+        /// <returns></returns>
+        private static String ToHex(System.Drawing.Color c) => $"#{c.R:X2}{c.G:X2}{c.B:X2}";
 
         #endregion Apply changes
 

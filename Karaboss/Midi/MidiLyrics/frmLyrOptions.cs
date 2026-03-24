@@ -31,13 +31,16 @@
  */
 
 #endregion
-using System;
-using System.Drawing;
-using System.Linq;
-using System.Windows.Forms;
-using System.IO;
-using System.Drawing.Text;
 using GradientApp;
+using Karaboss.Resources.Localization;
+using System;
+using System.Collections.Generic;
+using System.Drawing;
+using System.Drawing.Text;
+using System.IO;
+using System.Linq;
+using System.Text.RegularExpressions;
+using System.Windows.Forms;
 
 namespace Karaboss
 {
@@ -49,15 +52,28 @@ namespace Karaboss
         private Karaclass.OptionsDisplay OptionDisplay;        
 
         private string bgOption = "Diaporama";
+        
         // Font
         private Font _karaokeFont;
+        private string ftName = "Arial Black";
+        private uint ftSize = 20;
+
+        // Frame
+        private string FrameType;
+        private int _frametypeindex = 1;
 
         // Text color
-        private Color TxtNextColor;
+        private Color InactiveColor;
         // Text to sing color
-        private Color TxtHighlightColor;
+        private Color HighlightColor;
         // Text sung color
-        private Color TxtBeforeColor;
+        private Color ActiveColor;
+
+        // Border color
+        private bool bActiveBorder = true;
+        private Color ActiveBorderColor;
+        private Color InactiveBorderColor;
+
 
         #region background colors
         // Background colors
@@ -69,8 +85,8 @@ namespace Karaboss
         #endregion background colors
 
         // Chord color
-        private Color _chordNextColor;
-        private Color _chordHighlightColor;
+        private Color InactiveChordColor;
+        private Color HighlightChordColor;
         private bool _bShowChords = false;
 
         // Lyrics TopMost
@@ -79,9 +95,6 @@ namespace Karaboss
         // Force Uppercase
         private bool bForceUppercase = false;
 
-        // Contour color
-        private bool bColorContour = true;
-        private Color TxtContourColor;
 
         // Number of lines to display
         private int NbLines;
@@ -99,7 +112,11 @@ namespace Karaboss
 
         public frmLyrOptions()
         {
-            InitializeComponent();            
+            InitializeComponent();  
+            
+
+            TopMost = true;
+
             LoadOptions();     
             SetOptions();
 
@@ -118,10 +135,31 @@ namespace Karaboss
         private void LoadOptions()
         {
             try
-            {
-                _karaokeFont = Properties.Settings.Default.KaraokeFont;
+            {               
+                // Fonts
+                PopulateFonts();
+                                                
+                string f = Properties.Settings.Default.KfnFontName;
+                for (int i = 0; i < cbFontName.Items.Count; i++)
+                {
+                    if (cbFontName.Items[i].ToString() == f)
+                    {
+                        cbFontName.SelectedIndex = i;
+                        break;
+                    }
+                }
+                _karaokeFont = new Font(ftName, ftSize, FontStyle.Regular);                
                 pBox.KaraokeFont = _karaokeFont;
-                txtFont.Text = _karaokeFont.Name;
+
+
+                // Frames
+                PopulateLyricBorders();
+
+                // Lyrics border effect (int)
+                _frametypeindex = Properties.Settings.Default.KfnBorderEffectIndex;
+                if (cbFrame.Items.Count > _frametypeindex)
+                    cbFrame.SelectedIndex = _frametypeindex;
+
 
                 // Force Uppercase
                 bForceUppercase = Karaclass.m_ForceUppercase;
@@ -137,19 +175,41 @@ namespace Karaboss
                 TxtRhythm0Color = Properties.Settings.Default.TxtRhythm0Color;
                 TxtRhythm1Color = Properties.Settings.Default.TxtRhythm1Color;
 
-                // Colors
-                TxtNextColor = Properties.Settings.Default.TxtNextColor;
-                TxtHighlightColor = Properties.Settings.Default.TxtHighlightColor;
-                TxtBeforeColor = Properties.Settings.Default.TxtBeforeColor;
+                // Colors                
+                txtActiveColor.Text = Properties.Settings.Default.ActiveColor;
+                txtHighlightColor.Text = Properties.Settings.Default.HighlightColor;
+                txtInactiveColor.Text = Properties.Settings.Default.InactiveColor;
+                txtActiveBorderColor.Text = Properties.Settings.Default.ActiveBorderColor;
+                txtInactiveBorderColor.Text = Properties.Settings.Default.InactiveBorderColor;
+
+                txtInactiveChordColor.Text = Properties.Settings.Default.InactiveChordColor;
+                txtHighlightChordColor.Text = Properties.Settings.Default.HighlightChordColor;
+
+
+                picActiveColor.BackColor = Parse(txtActiveColor.Text);
+                picHighlightColor.BackColor = Parse(txtHighlightColor.Text);
+                picInactiveColor.BackColor = Parse(txtInactiveColor.Text);
+                picActiveBorderColor.BackColor = Parse(txtActiveBorderColor.Text);
+                picInactiveBorderColor.BackColor = Parse(txtInactiveBorderColor.Text);
+                
+                picInactiveChordColor.BackColor = Parse(txtInactiveChordColor.Text);
+                picHighlightChordColor.BackColor = Parse(txtHighlightChordColor.Text);
+
+
+                ActiveColor = picActiveColor.BackColor;
+                HighlightColor = picHighlightColor.BackColor;
+                InactiveColor = picInactiveColor.BackColor;
 
                 // Chords
-                _chordNextColor = Properties.Settings.Default.ChordNextColor;
-                _chordHighlightColor = Properties.Settings.Default.ChordHighlightColor;
+                InactiveChordColor = picInactiveChordColor.BackColor;
+                HighlightChordColor = picHighlightChordColor.BackColor;
                 _bShowChords = Properties.Settings.Default.bShowChords;
 
-                bColorContour = Properties.Settings.Default.bColorContour;
-                TxtContourColor = Properties.Settings.Default.TxtContourColor;
-                chkContour.Checked = bColorContour;
+                bActiveBorder = Properties.Settings.Default.bActiveBorder;
+                ActiveBorderColor = picActiveBorderColor.BackColor;
+                InactiveBorderColor = picInactiveBorderColor.BackColor;
+                
+                chkActiveBorder.Checked = bActiveBorder;
 
                 // Window lyris topmost
                 _bTopMost = Properties.Settings.Default.frmMidiLyricsTopMost;
@@ -255,18 +315,69 @@ namespace Karaboss
                 TxtRhythm0Color = Color.Blue;
                 TxtRhythm1Color = Color.Green;
 
-                TxtNextColor = Color.Black;
-                TxtHighlightColor = Color.Red;
-                TxtBeforeColor = Color.YellowGreen;
-                TxtContourColor = Color.Black;
+                ActiveColor = Color.Black;
+                HighlightColor = Color.Red;
+                InactiveColor = Color.YellowGreen;
+                ActiveBorderColor = Color.Black;
                 NbLines = 3;
-                bColorContour = true;
+                bActiveBorder = true;
                 
                 dirSlideShow = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), Application.ProductName) + "\\slideshow";
 
                 freqSlideShow = 10;
                 SizeMode = PictureBoxSizeMode.Zoom;
             }
+        }
+
+
+        private void PopulateFonts()
+        {
+            // Karafun seems to support only a few fonts
+            foreach (System.Drawing.FontFamily fnt in System.Drawing.FontFamily.Families)
+            {
+                cbFontName.Items.Add(fnt.Name);
+            }
+            
+            for (int i = 0; i < cbFontName.Items.Count; i++)
+            {
+                if (cbFontName.Items[i].ToString() == "Arial Black")
+                {
+                    cbFontName.SelectedIndex = i;
+                    break;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Frames
+        /// </summary>
+        private void PopulateLyricBorders()
+        {
+
+            Dictionary<string, string> Frames = new Dictionary<string, string>();
+            Frames.Add("NoBorder", Strings.KfnBorderNoBorder);
+            Frames.Add("FrameThin", Strings.KfnBorderFrameThin);
+            Frames.Add("Frame1", Strings.KfnBorderFrame1);
+            Frames.Add("Frame2", Strings.KfnBorderFrame2);
+            Frames.Add("Frame3", Strings.KfnBorderFrame3);
+            Frames.Add("Frame4", Strings.KfnBorderFrame4);
+            Frames.Add("Frame5", Strings.KfnBorderFrame5);
+            Frames.Add("Shadow", Strings.KfnBorderShadow);
+            Frames.Add("Neon", Strings.KfnBorderNeon);
+
+            /*
+            //List<string> lstBorders = new List<string>() { "Aucune bordure", "Fine bordure", "Bordure 1 pixel", "Bordure 2 pixel", "Bordure 3 pixel", "Bordure 4 pixel", "Bordure 5 pixel", "Ombré", "Neon" };
+            List<string> lstBorders = new List<string>() { "NoBorder", "FrameThin", "Frame1", "Frame2", "Frame3", "Frame4", "Frame5", "Shadow", "Neon" };
+            //List<string> lstBorders = new List<string>() { "No border", "Thin border", "1 - pixel border", "2 - pixel border", "3 - pixel border", "4 - pixel border", "5 - pixel border", "Shaded", "Neon" };
+            cbFrame.DataSource = lstBorders;
+            */
+
+            cbFrame.DataSource = new BindingSource(Frames, null);
+            cbFrame.ValueMember = "Key";
+            cbFrame.DisplayMember = "Value";
+
+            if (cbFrame.Items.Count > 2)
+                cbFrame.SelectedIndex = 2; // 1 pixel
         }
 
         /// <summary>
@@ -292,18 +403,19 @@ namespace Karaboss
                 Properties.Settings.Default.TxtRhythm1Color = TxtRhythm1Color;
 
 
-                Properties.Settings.Default.TxtNextColor = TxtNextColor;
-                Properties.Settings.Default.TxtHighlightColor = TxtHighlightColor;
-                Properties.Settings.Default.TxtBeforeColor = TxtBeforeColor;
+                Properties.Settings.Default.ActiveColor = ToHex(ActiveColor);
+                Properties.Settings.Default.HighlightColor = ToHex(HighlightColor);
+                Properties.Settings.Default.InactiveColor = ToHex(InactiveColor);
 
                 // chords
-                Properties.Settings.Default.ChordNextColor = _chordNextColor;
-                Properties.Settings.Default.ChordHighlightColor = _chordHighlightColor;
+                Properties.Settings.Default.InactiveChordColor = ToHex(InactiveChordColor);
+                Properties.Settings.Default.HighlightChordColor = ToHex(HighlightChordColor);
                 Properties.Settings.Default.bShowChords = _bShowChords;
 
                 // Contour
-                Properties.Settings.Default.bColorContour = bColorContour;
-                Properties.Settings.Default.TxtContourColor = TxtContourColor;
+                Properties.Settings.Default.bActiveBorder = bActiveBorder;
+                Properties.Settings.Default.ActiveBorderColor = ToHex(ActiveBorderColor);
+                Properties.Settings.Default.InactiveBorderColor = ToHex(InactiveBorderColor);
 
                 // window lyrics topmost
                 Properties.Settings.Default.frmMidiLyricsTopMost = _bTopMost;
@@ -342,6 +454,11 @@ namespace Karaboss
 
                 Properties.Settings.Default.bLyricsBackGround = chkTextBackground.Checked;
 
+
+                // Lyrics border effect
+                Properties.Settings.Default.KfnBorderEffectIndex = cbFrame.SelectedIndex;
+
+
                 // Save all
                 Properties.Settings.Default.Save();
 
@@ -371,18 +488,22 @@ namespace Karaboss
                 txtSlideShowFreq.Text = freqSlideShow.ToString();
 
                 // Background buttons
-                pictBackColor.BackColor = TxtBackColor;
-                pictBefore.BackColor = TxtBeforeColor;
+                picBgColor.BackColor = TxtBackColor;
+                
 
-                chkContour.Checked = bColorContour;
-                pictContour.BackColor = TxtContourColor;
+                chkActiveBorder.Checked = bActiveBorder;
+                
 
-                pictHighlight.BackColor = TxtHighlightColor;
-                pictNext.BackColor = TxtNextColor;
+                picActiveColor.BackColor = ActiveColor;
+                picHighlightColor.BackColor = HighlightColor;
+                picInactiveColor.BackColor = InactiveColor;
+
+                picActiveBorderColor.BackColor = ActiveBorderColor;
+                picInactiveBorderColor.BackColor = InactiveBorderColor;
 
                 // Chords
-                picChordBefore.BackColor = _chordNextColor;
-                picChordHighlight.BackColor = _chordHighlightColor;
+                picInactiveChordColor.BackColor = InactiveChordColor;
+                picHighlightChordColor.BackColor = HighlightChordColor;
                 pBox.bShowChords = _bShowChords;
 
                 // Window Lyrics TopMost
@@ -405,16 +526,17 @@ namespace Karaboss
                 pBox.TxtRhythm1Color = TxtRhythm1Color;
 
 
-                pBox.bColorContour = bColorContour;
-                pBox.TxtContourColor = TxtContourColor;
+                pBox.bActiveBorder = bActiveBorder;
+                pBox.ActiveBorderColor = ActiveBorderColor;
+                pBox.InactiveBorderColor = InactiveBorderColor;
 
-                pBox.TxtNextColor = TxtNextColor;
-                pBox.TxtHighlightColor = TxtHighlightColor;
-                pBox.TxtBeforeColor = TxtBeforeColor;
+                pBox.ActiveColor = ActiveColor;
+                pBox.HighlightColor = HighlightColor;
+                pBox.InactiveColor = InactiveColor;
 
                 // Chords
-                pBox.ChordNextColor = _chordNextColor;
-                pBox.ChordHighlightColor = _chordHighlightColor;
+                pBox.InactiveChordColor = InactiveChordColor;
+                pBox.HighlightChordColor = HighlightChordColor;
                 chkForceShowChords.Checked = _bShowChords;
 
                 cbSizeMode.SelectedText = SizeMode.ToString();
@@ -443,27 +565,36 @@ namespace Karaboss
             pBox.TxtRhythm1Color = TxtRhythm1Color;
 
 
-            pBox.bColorContour = bColorContour;
-            pBox.TxtContourColor = TxtContourColor;
-            pBox.TxtNextColor = TxtNextColor;
-            pBox.TxtHighlightColor = TxtHighlightColor;
-            pBox.TxtBeforeColor = TxtBeforeColor;
+            pBox.bActiveBorder = bActiveBorder;
+
+            pBox.ActiveColor = ActiveColor;
+            pBox.HighlightColor = HighlightColor;
+            pBox.InactiveColor = InactiveColor;
+
+            pBox.ActiveBorderColor = ActiveBorderColor;
+            pBox.InactiveBorderColor = InactiveBorderColor;                      
 
             // Top, center, bottom
             pBox.OptionDisplay = (PicControl.pictureBoxControl.OptionsDisplay)OptionDisplay;
 
             // Chords
-            pBox.ChordNextColor = _chordNextColor;
-            pBox.ChordHighlightColor= _chordHighlightColor;
+            pBox.InactiveChordColor = InactiveChordColor;
+            pBox.HighlightChordColor= HighlightChordColor;
 
 
             //Color of buttons
-            pictBackColor.BackColor = TxtBackColor;
+            picBgColor.BackColor = TxtBackColor;
 
-            pictBefore.BackColor = TxtBeforeColor;
-            pictContour.BackColor = TxtContourColor;
-            pictHighlight.BackColor = TxtHighlightColor;
-            pictNext.BackColor = TxtNextColor;           
+            picActiveColor.BackColor = ActiveColor;
+            picInactiveColor.BackColor = InactiveColor;
+            picHighlightColor.BackColor = HighlightColor;
+
+            picActiveBorderColor.BackColor = ActiveBorderColor;
+            picInactiveBorderColor.BackColor = InactiveBorderColor;
+
+            picInactiveChordColor.BackColor = InactiveChordColor;
+            picHighlightChordColor.BackColor = HighlightChordColor;
+               
         }
 
 
@@ -529,69 +660,11 @@ namespace Karaboss
             if (clr == TxtBackColor)
                 return;
             TxtBackColor = clr;
-            pictBackColor.BackColor = clr;
+            picBgColor.BackColor = clr;
             ApplyNewColors();
         }
 
-        /// <summary>
-        /// Text color: before
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void BtnSungColor_Click(object sender, EventArgs e)
-        {
-            Color clr = DlgGetColor(TxtBeforeColor);
-            if (clr == TxtBeforeColor)
-                return;
-            TxtBeforeColor = clr;
-            pictBefore.BackColor = clr;
-            ApplyNewColors();
-        }
-
-        /// <summary>
-        /// Text color: highlight
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void BtnSingColor_Click(object sender, EventArgs e)
-        {
-            Color clr = DlgGetColor(TxtHighlightColor);
-            if (clr == TxtHighlightColor)
-                return;
-            TxtHighlightColor = clr;
-            pictHighlight.BackColor = clr;
-            ApplyNewColors();                        
-        }
-
-        /// <summary>
-        /// Text color: after
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void BtnForeColor_Click(object sender, EventArgs e)
-        {
-            Color clr = DlgGetColor(TxtNextColor);
-            if (clr == TxtNextColor)
-                return;
-            TxtNextColor = clr;
-            pictNext.BackColor = clr;
-            ApplyNewColors();            
-        }
-
-        /// <summary>
-        /// Text color: contour
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void BtnContourColor_Click(object sender, EventArgs e)
-        {
-            Color clr = DlgGetColor(TxtContourColor);
-            if (clr == TxtContourColor)
-                return;
-            TxtContourColor = clr;
-            pictContour.BackColor = clr;
-            ApplyNewColors();            
-        }
+        
 
         /// <summary>
         /// Draw contour or not
@@ -600,7 +673,7 @@ namespace Karaboss
         /// <param name="e"></param>
         private void chkContour_CheckedChanged(object sender, EventArgs e)
         {
-            bColorContour = chkContour.Checked;
+            bActiveBorder = chkActiveBorder.Checked;
             ApplyNewColors();
         }
 
@@ -675,6 +748,9 @@ namespace Karaboss
 
                 frmMidiLyrics.KaraokeFont = _karaokeFont;
 
+                // Borders
+                frmMidiLyrics.FrameType = FrameType;
+                
                 // Text colors                
                 frmMidiLyrics.TxtBackColor = TxtBackColor;
                 frmMidiLyrics.TxtGrad0Color = TxtGrad0Color;
@@ -683,16 +759,16 @@ namespace Karaboss
                 frmMidiLyrics.TxtRhythm1Color = TxtRhythm1Color;
 
 
-                frmMidiLyrics.TxtNextColor = TxtNextColor;
-                frmMidiLyrics.TxtHighlightColor = TxtHighlightColor;
-                frmMidiLyrics.TxtBeforeColor = TxtBeforeColor;
+                frmMidiLyrics.InactiveColor = InactiveColor;
+                frmMidiLyrics.HighlightColor = HighlightColor;
+                frmMidiLyrics.ActiveColor = ActiveColor;
 
-                frmMidiLyrics.bColorContour = bColorContour;
-                frmMidiLyrics.TxtContourColor = TxtContourColor;
+                frmMidiLyrics.bActiveBorder = bActiveBorder;
+                frmMidiLyrics.ActiveBorderColor = ActiveBorderColor;
 
                 // Chords
-                frmMidiLyrics.ChordNextColor = _chordNextColor;
-                frmMidiLyrics.ChordHighlightColor = _chordHighlightColor;
+                frmMidiLyrics.ChordNextColor = InactiveChordColor;
+                frmMidiLyrics.ChordHighlightColor = HighlightChordColor;
                 frmMidiLyrics.bShowChords = _bShowChords;                
 
                 // force uppercase
@@ -810,7 +886,7 @@ namespace Karaboss
             if (radioDiaporama.Checked)
             {
                 btnBackColor.Visible = false;
-                pictBackColor.Visible = false;
+                picBgColor.Visible = false;
 
 
                 pBox.OptionBackground = "Diaporama";
@@ -824,7 +900,7 @@ namespace Karaboss
             if (radioSolidColor.Checked)
             {
                 btnBackColor.Visible = true;
-                pictBackColor.Visible = true;
+                picBgColor.Visible = true;
 
 
                 pBox.OptionBackground = "SolidColor";
@@ -859,7 +935,7 @@ namespace Karaboss
             if (radioTransparent.Checked)
             {
                 btnBackColor.Visible = false;
-                pictBackColor.Visible = false;
+                picBgColor.Visible = false;
 
 
                 pBox.OptionBackground = "Transparent";
@@ -1002,32 +1078,7 @@ namespace Karaboss
         {            
             pBox.bTextBackGround = chkTextBackground.Checked;
         }
-             
-
-        private void BtnFonts_Click(object sender, EventArgs e)
-        {
-            try
-            {
-                // Show the dialog.
-                fontDialog1.Font = _karaokeFont;
-
-                if (fontDialog1.ShowDialog() == DialogResult.OK)
-                {
-                    txtFont.Text = fontDialog1.Font.Name;
-                    _karaokeFont = fontDialog1.Font;
-                    pBox.KaraokeFont = _karaokeFont;
-
-
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message);
-                _karaokeFont = new Font("Arial", this.Font.Size);
-
-            }
-        
-        }
+              
 
         /// <summary>
         /// Forece Uppercase
@@ -1054,27 +1105,20 @@ namespace Karaboss
 
         private void btnChordNormalColor_Click(object sender, EventArgs e)
         {
-            Color clr = DlgGetColor(_chordNextColor);
-            if (clr == _chordNextColor)
-                return;
-            _chordNextColor = clr;            
-            picChordBefore.BackColor = clr;
+            Color clr = SelectColorFromButton(picInactiveChordColor, txtInactiveChordColor);
+            InactiveChordColor = clr;
             ApplyNewColors();
         }
 
         private void btnChordHighlightColor_Click(object sender, EventArgs e)
         {
-            Color clr = DlgGetColor(_chordHighlightColor);
-            if (clr == _chordHighlightColor)
-                return;
-            _chordHighlightColor = clr;
-            picChordHighlight.BackColor = clr;
+            Color clr = SelectColorFromButton(picHighlightChordColor, txtHighlightChordColor);
+            HighlightChordColor = clr;
             ApplyNewColors();
         }
 
-
-
         #endregion chords
+
 
         private void cbGrad0_SelectedIndexChanged(object sender, EventArgs e)
         {
@@ -1115,5 +1159,263 @@ namespace Karaboss
                 pBox.TxtRhythm1Color = TxtRhythm1Color; // Update the gradient panel color
             }
         }
+
+        private void chkInactiveBorder_CheckedChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void cbFrame_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            // "NoBorder":
+            // "FrameThin":
+            // "Frame1":
+            // "Frame2":
+            // "Frame3":
+            // "Frame4":
+            // "Frame5":
+            // "Shadow":
+            // "Neon":
+
+            FrameType = ((KeyValuePair<string, string>)cbFrame.SelectedItem).Key;
+            pBox.FrameType = FrameType;
+        }
+
+
+        #region font
+
+        private void cbFontName_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            ftName = cbFontName.SelectedItem.ToString();
+
+            _karaokeFont = new Font(ftName, ftSize, FontStyle.Regular);
+            pBox.KaraokeFont = _karaokeFont;
+        }
+
+        #endregion font
+
+        #region Lyrics decoration 
+
+        #region text events
+
+        private void txtActiveColor_TextChanged(object sender, EventArgs e)
+        {
+            ActiveColor = Parse(txtActiveColor.Text);
+            ApplyNewColors();
+        }
+
+        private void txtHighlightColor_TextChanged(object sender, EventArgs e)
+        {
+            HighlightColor = Parse(txtHighlightColor.Text);
+            ApplyNewColors();
+        }
+
+        private void txtInactiveColor_TextChanged(object sender, EventArgs e)
+        {
+            InactiveColor = Parse(txtInactiveColor.Text);
+            ApplyNewColors();
+        }
+
+        private void txtActiveBorderColor_TextChanged(object sender, EventArgs e)
+        {
+            ActiveBorderColor = Parse(txtActiveBorderColor.Text);
+            ApplyNewColors();
+        }
+
+        private void txtInactiveBorderColor_TextChanged(object sender, EventArgs e)
+        {
+            InactiveBorderColor = Parse(txtInactiveBorderColor.Text);
+            ApplyNewColors();
+        }
+
+        private void txtInactiveChordColor_TextChanged(object sender, EventArgs e)
+        {
+            InactiveChordColor = Parse(txtInactiveChordColor.Text);
+            ApplyNewColors();
+        }
+
+        private void txtHighlightChordColor_TextChanged(object sender, EventArgs e)
+        {            
+            HighlightChordColor = Parse(txtHighlightChordColor.Text); ;
+            ApplyNewColors();
+        }
+
+        #endregion text events
+
+
+        #region select color with button
+
+        /// <summary>
+        /// Text color: before
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>      
+        private void btnActiveColor_Click(object sender, EventArgs e)
+        {
+            Color clr = SelectColorFromButton(picActiveColor, txtActiveColor);
+            ActiveColor = clr;
+            ApplyNewColors();
+        }
+
+        /// <summary>
+        /// Text color: highlight
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>       
+        private void btnHighlightColor_Click(object sender, EventArgs e)
+        {
+            Color clr = SelectColorFromButton(picHighlightColor, txtHighlightColor);
+            HighlightColor = clr;
+            ApplyNewColors();            
+        }
+
+        /// <summary>
+        /// Text color: after
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void btnInactiveColor_Click(object sender, EventArgs e)
+        {
+            Color clr = SelectColorFromButton(picInactiveColor, txtInactiveColor);
+            InactiveColor = clr;
+            ApplyNewColors();
+        }
+
+        /// <summary>
+        /// Text color: contour
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void btnActiveBorderColor_Click(object sender, EventArgs e)
+        {
+            Color clr = SelectColorFromButton(picActiveBorderColor, txtActiveBorderColor);
+            ActiveBorderColor = clr;
+            ApplyNewColors();
+        }
+
+        private void btnInactiveBorderColor_Click(object sender, EventArgs e)
+        {
+            Color clr = SelectColorFromButton(picInactiveBorderColor, txtInactiveBorderColor);
+            InactiveBorderColor = clr;
+            ApplyNewColors();
+        }
+
+        #endregion select color with button
+
+
+        #region select color with picker
+
+        private void btnActiveColorPicker_Click(object sender, EventArgs e)
+        {
+            SelectColorFromPicker(txtActiveColor);
+        }
+
+        private void btnHighlightColorPicker_Click(object sender, EventArgs e)
+        {
+            SelectColorFromPicker(txtHighlightColor);
+        }
+
+        private void btnInactiveColorPicker_Click(object sender, EventArgs e)
+        {
+            SelectColorFromPicker(txtInactiveColor);
+        }
+
+        private void btnActiveColorBorderPicker_Click(object sender, EventArgs e)
+        {
+            SelectColorFromPicker(txtActiveBorderColor);
+        }
+
+        private void btnInactiveBoderColorPicker_Click(object sender, EventArgs e)
+        {
+            SelectColorFromPicker(txtInactiveBorderColor);
+        }
+
+        private void btnInactiveChordColorPicker_Click(object sender, EventArgs e)
+        {
+            SelectColorFromPicker(txtInactiveChordColor);
+        }
+
+        private void btnHighlightChordColorPicker_Click(object sender, EventArgs e)
+        {
+            SelectColorFromPicker(txtHighlightChordColor);
+        }
+
+
+        #endregion select color with picker
+
+
+        #endregion Lyrics decoration
+
+
+        #region functions
+
+        /// <summary>
+        /// Check text representing a color
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentException"></exception>
+        public static Color Parse(string input)
+        {
+            input = input.Trim();
+            string strColorRegex = @"^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$";
+            Regex re = new Regex(strColorRegex);
+            if (re.IsMatch(input))
+            {
+                return ColorTranslator.FromHtml(input);
+            }
+
+            Color named = Color.FromName(input);
+            if (named.IsKnownColor || named.IsNamedColor)
+            {
+                return named;
+            }
+            throw new ArgumentException($"Unsupported color value: {input}", nameof(input));
+        }
+
+        /// <summary>
+        /// Select a color with the ColorDialog box and update colors for picBox and textBox
+        /// </summary>
+        /// <param name="picBox"></param>
+        /// <param name="textBox"></param>
+        private Color SelectColorFromButton(PictureBox picBox, TextBox textBox)
+        {
+            ColorDialog dlg = new ColorDialog();
+            dlg.FullOpen = true;
+            dlg.ShowHelp = true;
+            // Sets the initial color select to the current text color.
+            dlg.Color = picBox.BackColor;
+
+            if (dlg.ShowDialog() != DialogResult.OK) return picBox.BackColor;
+
+            picBox.BackColor = dlg.Color;
+            textBox.Text = ToHex(dlg.Color);
+
+            return dlg.Color;
+
+        }
+
+        /// <summary>
+        /// Translate color to hexa
+        /// </summary>
+        /// <param name="c"></param>
+        /// <returns></returns>
+        private static String ToHex(System.Drawing.Color c) => $"#{c.R:X2}{c.G:X2}{c.B:X2}";
+
+        private void SelectColorFromPicker(TextBox textBox)
+        {
+            this.Hide();
+            Karaboss.Kfn.frmFullScreen frmFullScreen = new Karaboss.Kfn.frmFullScreen(textBox);
+            frmFullScreen.Show();
+        }
+      
+        public void GetColorFromPicker(Color c, TextBox txb)
+        {
+            txb.Text = ToHex(c);            
+            this.Show();
+        }
+
+        #endregion functions
+
     }
 }

@@ -39,6 +39,7 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
+using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using static keffect.KaraokeEffect;
 
@@ -449,11 +450,11 @@ namespace Karaboss.Mp3
                 TxtBackColor = Properties.Settings.Default.TxtBackColor;
 
                 // Text colors
-                TxtNextColor = Properties.Settings.Default.TxtNextColor;
-                TxtHighlightColor = Properties.Settings.Default.TxtHighlightColor;
-                TxtBeforeColor = Properties.Settings.Default.TxtBeforeColor;
-                bColorContour = Properties.Settings.Default.bColorContour;
-                TxtContourColor = Properties.Settings.Default.TxtContourColor;               
+                TxtNextColor = Parse(Properties.Settings.Default.InactiveColor);
+                TxtHighlightColor = Parse(Properties.Settings.Default.HighlightColor);
+                TxtBeforeColor = Parse(Properties.Settings.Default.ActiveColor);
+                bColorContour = Properties.Settings.Default.bActiveBorder;
+                TxtContourColor = Parse(Properties.Settings.Default.ActiveBorderColor);               
 
 
                 // Number of Lines to display
@@ -472,6 +473,31 @@ namespace Karaboss.Mp3
                 MessageBox.Show(e.Message, "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
+
+        /// <summary>
+        /// Check text representing a color
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentException"></exception>
+        public static Color Parse(string input)
+        {
+            input = input.Trim();
+            string strColorRegex = @"^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$";
+            Regex re = new Regex(strColorRegex);
+            if (re.IsMatch(input))
+            {
+                return ColorTranslator.FromHtml(input);
+            }
+
+            Color named = Color.FromName(input);
+            if (named.IsKnownColor || named.IsNamedColor)
+            {
+                return named;
+            }
+            throw new ArgumentException($"Unsupported color value: {input}", nameof(input));
+        }
+
 
         private void SetOptions()
         {

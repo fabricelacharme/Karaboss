@@ -275,14 +275,14 @@ namespace PicControl
         /// <summary>
         /// Text color
         /// </summary>
-        private Color txtHighlightColor;
-        public Color TxtHighlightColor
+        private Color _HighlightColor;
+        public Color HighlightColor
         {
             get
-            { return txtHighlightColor; }
+            { return _HighlightColor; }
             set
             {
-                txtHighlightColor = value;
+                _HighlightColor = value;
                 pboxWnd.Invalidate();
             }
         }
@@ -290,13 +290,13 @@ namespace PicControl
         /// <summary>
         /// Text to sing color
         /// </summary>
-        private Color txtNextColor;
-        public Color TxtNextColor {
+        private Color _InactiveColor;
+        public Color InactiveColor {
             get
-            { return txtNextColor; }
+            { return _InactiveColor; }
             set
             {
-                txtNextColor = value;
+                _InactiveColor = value;
                 pboxWnd.Invalidate();
             }
         }
@@ -306,14 +306,14 @@ namespace PicControl
         /// <summary>
         /// Text to sing color
         /// </summary>
-        private Color _chordNextColor;
-        public Color ChordNextColor
+        private Color _InactiveChordColor;
+        public Color InactiveChordColor
         {
             get
-            { return _chordNextColor; }
+            { return _InactiveChordColor; }
             set
             {
-                _chordNextColor = value;
+                _InactiveChordColor = value;
                 pboxWnd.Invalidate();
             }
         }
@@ -321,14 +321,14 @@ namespace PicControl
         /// <summary>
         /// Chord Highligt color
         /// </summary>
-        private Color _chordHighlightColor;
-        public Color ChordHighlightColor
+        private Color _HighlightChordColor;
+        public Color HighlightChordColor
         {
             get
-            { return _chordHighlightColor; }
+            { return _HighlightChordColor; }
             set
             {
-                _chordHighlightColor = value;
+                _HighlightChordColor = value;
                 pboxWnd.Invalidate();
             }
         }
@@ -351,37 +351,49 @@ namespace PicControl
         /// <summary>
         /// Text sung color
         /// </summary>
-        private Color txtBeforeColor;
-        public Color TxtBeforeColor {
+        private Color _ActiveColor;
+        public Color ActiveColor {
             get
-            { return txtBeforeColor; }
+            { return _ActiveColor; }
             set
             {
-                txtBeforeColor = value;
+                _ActiveColor = value;
                 pboxWnd.Invalidate();
             }
         }
 
-        private bool _bColorContour = true;
-        public bool bColorContour
+        private bool _bActiveBorder = true;
+        public bool bActiveBorder
         {
             get
-            { return _bColorContour; }
+            { return _bActiveBorder; }
             set
             {
-                _bColorContour = value;
+                _bActiveBorder = value;
                 pboxWnd.Invalidate();
             }
         }
 
-        // Text contour
-        private Color txtContourColor;
-        public Color TxtContourColor {
+        // Border Color
+        private Color _ActiveBorderColor;
+        public Color ActiveBorderColor {
             get
-            { return txtContourColor; }
+            { return _ActiveBorderColor; }
             set
             {
-                txtContourColor = value;
+                _ActiveBorderColor = value;
+                pboxWnd.Invalidate();
+            }
+        }
+
+        private Color _InactiveBorderColor;
+        public Color InactiveBorderColor
+        {
+            get
+            { return _InactiveBorderColor; }
+            set
+            {
+                _InactiveBorderColor = value;
                 pboxWnd.Invalidate();
             }
         }
@@ -443,6 +455,77 @@ namespace PicControl
             }
         }
 
+        // "NoBorder":
+        // "FrameThin":
+        // "Frame1":
+        // "Frame2":
+        // "Frame3":
+        // "Frame4":
+        // "Frame5":
+        // "Shadow":
+        // "Neon":
+        private string _frametype = "NoBorder";
+        public string FrameType
+        {
+            get { return _frametype; }
+            set { 
+                _frametype = value; 
+            
+                switch (_frametype)
+                {
+                    case "NoBorder":
+                        _borderthick = 0;
+                        break;
+                    case "FrameThin":
+                        _borderthick = 1;
+                        break;
+                    case "Frame1":
+                        _borderthick = 1;
+                        break;
+                    case "Frame2":
+                        _borderthick = 2;
+                        break;
+                    case "Frame3":
+                        _borderthick = 3;
+                        break;
+                    case "Frame4":
+                        _borderthick = 4;
+                        break;
+                    case "Frame5":
+                        _borderthick = 5;
+                        break;
+                    case "Shadow":
+                        _borderthick = 1;
+                        break;
+                    case "Neon":
+                        _borderthick = 1;
+                        break;
+                    default:
+                        _borderthick = 1;
+                        break;
+                }
+                pboxWnd?.Invalidate();
+            }
+        }
+
+        private int _borderthick = 1;
+        public int BorderThick
+        {
+            get { return _borderthick; }
+            set 
+            {
+                try
+                {
+                    _borderthick = value;
+                    pboxWnd?.Invalidate();
+                }
+                catch (Exception e)
+                {
+                    Console.Write("Error: " + e.Message);
+                }
+
+            }
+        }
 
         // Background color
 
@@ -1127,13 +1210,13 @@ namespace PicControl
         private void SetDefaultValues()
         {           
             txtBackColor = Color.Black;     
-            txtContourColor = Color.Black;
-            txtNextColor = Color.White;
-            txtBeforeColor = Color.FromArgb(153, 180, 51);      // modern ui light green
-            txtHighlightColor = Color.FromArgb(238, 17, 17);    // modern ui dark Red;
+            _ActiveBorderColor = Color.Black;
+            _InactiveColor = Color.White;
+            _ActiveColor = Color.FromArgb(153, 180, 51);      // modern ui light green
+            _HighlightColor = Color.FromArgb(238, 17, 17);    // modern ui dark Red;
 
-            _chordNextColor = Color.FromArgb(255, 196, 13);         // modern ui Orange
-            _chordHighlightColor = Color.FromArgb(238, 17, 17);    // modern ui dark Red
+            _InactiveChordColor = Color.FromArgb(255, 196, 13);         // modern ui Orange
+            _HighlightChordColor = Color.FromArgb(238, 17, 17);    // modern ui dark Red
             //_chordFont = new Font(Comic)
             
             _txtNbLines = 3;         
@@ -2009,9 +2092,9 @@ namespace PicControl
 
         /// <summary>
         /// Draw current line, syllabe by syllabe
-        /// already sung: TxtBeforeColor
-        /// Currently sung: TxtHighlightColor
-        /// Not yet sung: txtNextColor
+        /// already sung: _ActiveColor
+        /// Currently sung: _HighlightColor
+        /// Not yet sung: _InactiveColor
         /// </summary>
         /// <param name="clr"></param>
         /// <param name="syl"></param>
@@ -2022,6 +2105,9 @@ namespace PicControl
         {
             var path = new GraphicsPath();
             string tx = syl.text;
+            
+            // outline            
+            Pen penContour = new Pen(_ActiveBorderColor, _borderthick);
                         
             try
             {                
@@ -2039,9 +2125,9 @@ namespace PicControl
                 #region Draw text of syllabe
                 path.AddString(tx, m_font.FontFamily, (int)m_font.Style, emSize, new Point((int)x0, y0), sf);
                 e.Graphics.FillPath(new SolidBrush(clr), path);
-                
-                if (_bColorContour)
-                    e.Graphics.DrawPath(new Pen(txtContourColor), path); 
+
+                if (_bActiveBorder)
+                    e.Graphics.DrawPath(penContour, path);//e.Graphics.DrawPath(new Pen(_ActiveBorderColor), path); 
 
                 path.Dispose();
                 #endregion
@@ -2094,7 +2180,11 @@ namespace PicControl
         private void drawSyllabeNextLines(Color clr, syllabe syl, int x0, int y0, int W, int H, PaintEventArgs e)
         {
             var path = new GraphicsPath();
-            string tx = syl.text;            
+            string tx = syl.text;
+
+            // outline            
+            Pen penContour = new Pen(_ActiveBorderColor, _borderthick);
+
 
             try
             {                
@@ -2117,8 +2207,8 @@ namespace PicControl
                 path.AddString(tx, m_font.FontFamily, (int)m_font.Style, emSize, new Point((int)x0, y0), sf);
                 e.Graphics.FillPath(new SolidBrush(clr), path);
                 
-                if (_bColorContour)
-                    e.Graphics.DrawPath(new Pen(txtContourColor), path);
+                if (_bActiveBorder)
+                    e.Graphics.DrawPath(penContour, path);//e.Graphics.DrawPath(new Pen(_ActiveBorderColor), path);
 
                 path.Dispose();
                 
@@ -2192,7 +2282,7 @@ namespace PicControl
                 e.Graphics.FillRegion(new SolidBrush(singclr), rb);
 
                 // Entourage
-                e.Graphics.DrawPath(new Pen(txtContourColor), path);
+                e.Graphics.DrawPath(new Pen(_ActiveBorderColor), path);
 
                 rb.Dispose();        
                 
@@ -2255,13 +2345,13 @@ namespace PicControl
                         if (_bShowChords)
                         {
                             if (syllab.chord != "")
-                                drawChord(_chordNextColor, syllab, (int)x1, y0, e);
+                                drawChord(_InactiveChordColor, syllab, (int)x1, y0, e);
                             
-                            drawSyllabe(txtBeforeColor, syllab, (int)x1, y0 + 2 * offset / 3, W, H, e);                            // déjà chanté
+                            drawSyllabe(_ActiveColor, syllab, (int)x1, y0 + 2 * offset / 3, W, H, e);                            // déjà chanté
                         }
                         else
                         {
-                            drawSyllabe(txtBeforeColor, syllab, (int)x1, y0, W, H, e);                                            // déjà chanté
+                            drawSyllabe(_ActiveColor, syllab, (int)x1, y0, W, H, e);                                            // déjà chanté
                         }
                     }
                     else if (syllab.pos == _currentTextPos)
@@ -2273,13 +2363,13 @@ namespace PicControl
                             if (_bShowChords)
                             {
                                 if (syllab.chord != "")
-                                    drawChord(_chordHighlightColor, syllab, (int)x1, y0, e);
+                                    drawChord(_HighlightChordColor, syllab, (int)x1, y0, e);
                                 
-                                drawSyllabe(txtHighlightColor, syllab, (int)x1, y0 + 2 * offset / 3, W, H, e);                       // surbrillance
+                                drawSyllabe(_HighlightColor, syllab, (int)x1, y0 + 2 * offset / 3, W, H, e);                       // surbrillance
                             }
                             else
                             {
-                                drawSyllabe(txtHighlightColor, syllab, (int)x1, y0, W, H, e);                                         // surbrillance     
+                                drawSyllabe(_HighlightColor, syllab, (int)x1, y0, W, H, e);                                         // surbrillance     
                             }
                         }
                         else
@@ -2287,13 +2377,13 @@ namespace PicControl
                             if (_bShowChords)
                             {
                                 if (syllab.chord != "")
-                                    drawChord(_chordNextColor, syllab, (int)x1, y0, e);
+                                    drawChord(_InactiveChordColor, syllab, (int)x1, y0, e);
                                 
-                                drawSyllabe(txtNextColor, syllab, (int)x1, y0 + 2 * offset / 3, W, H, e);
+                                drawSyllabe(_InactiveColor, syllab, (int)x1, y0 + 2 * offset / 3, W, H, e);
                             }
                             else
                             {
-                                drawSyllabe(txtNextColor, syllab, (int)x1, y0, W, H, e);
+                                drawSyllabe(_InactiveColor, syllab, (int)x1, y0, W, H, e);
                             }
                         }
 
@@ -2346,13 +2436,13 @@ namespace PicControl
                         if (_bShowChords)
                         {
                             if (syllab.chord != "")
-                                drawChord(_chordNextColor, syllab, (int)x1, (int)y0, e);
+                                drawChord(_InactiveChordColor, syllab, (int)x1, (int)y0, e);
                             
-                            drawSyllabe(txtNextColor, syllab, (int)x1, y0 + 2 * offset / 3, W, H, e);                           // pas encore chanté
+                            drawSyllabe(_InactiveColor, syllab, (int)x1, y0 + 2 * offset / 3, W, H, e);                           // pas encore chanté
                         }
                         else
                         {
-                            drawSyllabe(txtNextColor, syllab, (int)x1, y0, W, H, e);                                      // pas encore chanté
+                            drawSyllabe(_InactiveColor, syllab, (int)x1, y0, W, H, e);                                      // pas encore chanté
                         }
                     }
                 }
@@ -2365,7 +2455,7 @@ namespace PicControl
         }
 
         /// <summary>
-        /// Draw next full lines with color txtNextColor
+        /// Draw next full lines with color _InactiveColor
         /// </summary>
         /// <param name="e"></param>
         private void DrawNextLines(int y0, PaintEventArgs e)
@@ -2433,16 +2523,16 @@ namespace PicControl
                                 
                                 // Draw chord above
                                 if (syllabes[i].chord != "")
-                                    drawChordNextLines(_chordNextColor, syllabes[i], (int)x1, (int)y1, e);
+                                    drawChordNextLines(_InactiveChordColor, syllabes[i], (int)x1, (int)y1, e);
 
                                 // Draw syllabe below at 2*ChordOffset/3
-                                drawSyllabeNextLines(txtNextColor, syllabes[i], (int)x1, (int)y1 + 2 * ChordOffset / 3, W, H, e);
+                                drawSyllabeNextLines(_InactiveColor, syllabes[i], (int)x1, (int)y1 + 2 * ChordOffset / 3, W, H, e);
                             }
                             else
                             {
                                 // No chords
                                 y1 = y0 + (k + 1) * offset;
-                                drawSyllabeNextLines(txtNextColor, syllabes[i], (int)x1, (int)y1, W, H, e);
+                                drawSyllabeNextLines(_InactiveColor, syllabes[i], (int)x1, (int)y1, W, H, e);
                             }
                                                                                         
                         }
