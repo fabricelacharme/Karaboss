@@ -162,42 +162,6 @@ namespace Karaboss.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("False")]
-        public bool frmMidiLyricMaximized {
-            get {
-                return ((bool)(this["frmMidiLyricMaximized"]));
-            }
-            set {
-                this["frmMidiLyricMaximized"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("0, 200")]
-        public global::System.Drawing.Point frmMidiLyricLocation {
-            get {
-                return ((global::System.Drawing.Point)(this["frmMidiLyricLocation"]));
-            }
-            set {
-                this["frmMidiLyricLocation"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("800, 600")]
-        public global::System.Drawing.Size frmMidiLyricSize {
-            get {
-                return ((global::System.Drawing.Size)(this["frmMidiLyricSize"]));
-            }
-            set {
-                this["frmMidiLyricSize"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("False")]
         public bool frmMidiLyricsMaximized {
             get {
                 return ((bool)(this["frmMidiLyricsMaximized"]));
@@ -234,12 +198,12 @@ namespace Karaboss.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("Black")]
-        public global::System.Drawing.Color TxtBackColor {
+        public global::System.Drawing.Color BgColor {
             get {
-                return ((global::System.Drawing.Color)(this["TxtBackColor"]));
+                return ((global::System.Drawing.Color)(this["BgColor"]));
             }
             set {
-                this["TxtBackColor"] = value;
+                this["BgColor"] = value;
             }
         }
         
@@ -988,18 +952,6 @@ namespace Karaboss.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("True")]
-        public bool bActiveBorder {
-            get {
-                return ((bool)(this["bActiveBorder"]));
-            }
-            set {
-                this["bActiveBorder"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("Comic Sans MS, 8.25pt")]
         public global::System.Drawing.Font KaraokeFont {
             get {
@@ -1727,48 +1679,48 @@ namespace Karaboss.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("MediumTurquoise")]
-        public global::System.Drawing.Color TxtGrad0Color {
+        public global::System.Drawing.Color Grad0Color {
             get {
-                return ((global::System.Drawing.Color)(this["TxtGrad0Color"]));
+                return ((global::System.Drawing.Color)(this["Grad0Color"]));
             }
             set {
-                this["TxtGrad0Color"] = value;
+                this["Grad0Color"] = value;
             }
         }
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("GreenYellow")]
-        public global::System.Drawing.Color TxtGrad1Color {
+        public global::System.Drawing.Color Grad1Color {
             get {
-                return ((global::System.Drawing.Color)(this["TxtGrad1Color"]));
+                return ((global::System.Drawing.Color)(this["Grad1Color"]));
             }
             set {
-                this["TxtGrad1Color"] = value;
+                this["Grad1Color"] = value;
             }
         }
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("Black")]
-        public global::System.Drawing.Color TxtRhythm0Color {
+        public global::System.Drawing.Color Rhythm0Color {
             get {
-                return ((global::System.Drawing.Color)(this["TxtRhythm0Color"]));
+                return ((global::System.Drawing.Color)(this["Rhythm0Color"]));
             }
             set {
-                this["TxtRhythm0Color"] = value;
+                this["Rhythm0Color"] = value;
             }
         }
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("DodgerBlue")]
-        public global::System.Drawing.Color TxtRhythm1Color {
+        public global::System.Drawing.Color Rhythm1Color {
             get {
-                return ((global::System.Drawing.Color)(this["TxtRhythm1Color"]));
+                return ((global::System.Drawing.Color)(this["Rhythm1Color"]));
             }
             set {
-                this["TxtRhythm1Color"] = value;
+                this["Rhythm1Color"] = value;
             }
         }
         
@@ -1949,6 +1901,54 @@ namespace Karaboss.Properties {
             }
             set {
                 this["InactiveBorderColor"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Frame1")]
+        public string FrameType {
+            get {
+                return ((string)(this["FrameType"]));
+            }
+            set {
+                this["FrameType"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool frmMidiLyricMaximized {
+            get {
+                return ((bool)(this["frmMidiLyricMaximized"]));
+            }
+            set {
+                this["frmMidiLyricMaximized"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0, 200")]
+        public global::System.Drawing.Point frmMidiLyricLocation {
+            get {
+                return ((global::System.Drawing.Point)(this["frmMidiLyricLocation"]));
+            }
+            set {
+                this["frmMidiLyricLocation"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool bActiveBorder {
+            get {
+                return ((bool)(this["bActiveBorder"]));
+            }
+            set {
+                this["bActiveBorder"] = value;
             }
         }
     }

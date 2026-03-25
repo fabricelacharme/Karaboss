@@ -447,7 +447,7 @@ namespace Karaboss.Mp3
 
                 bTextBackGround = Properties.Settings.Default.bLyricsBackGround;
 
-                TxtBackColor = Properties.Settings.Default.TxtBackColor;
+                TxtBackColor = Properties.Settings.Default.BgColor;
 
                 // Text colors
                 TxtNextColor = Parse(Properties.Settings.Default.InactiveColor);

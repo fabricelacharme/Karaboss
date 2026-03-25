@@ -209,7 +209,7 @@ namespace Karaboss.Mp3
                 // Display balls on lyrics
                 chkDisplayBalls.Checked = Karaclass.m_DisplayBalls;
 
-                TxtBackColor = Properties.Settings.Default.TxtBackColor;
+                TxtBackColor = Properties.Settings.Default.BgColor;
 
                 bTextBackGround =  bTextBackGround = Properties.Settings.Default.bLyricsBackGround;
 
@@ -219,7 +219,7 @@ namespace Karaboss.Mp3
                 bProgressiveHighlight = Properties.Settings.Default.bProgressiveHighlight;  // Progressive Highlight 
                 TxtBeforeColor = Parse(Properties.Settings.Default.ActiveColor);
 
-                bColorContour = Properties.Settings.Default.bActiveBorder;
+                
                 TxtContourColor = Parse(Properties.Settings.Default.ActiveBorderColor);
                 chkContour.Checked = bColorContour;
 
@@ -484,7 +484,7 @@ namespace Karaboss.Mp3
 
                 Properties.Settings.Default.KaraokeFont = _karaokeFont;
 
-                Properties.Settings.Default.TxtBackColor = TxtBackColor;
+                Properties.Settings.Default.BgColor = TxtBackColor;
 
                 Properties.Settings.Default.InactiveColor = ToHex(TxtNextColor);
                 Properties.Settings.Default.HighlightColor = ToHex(TxtHighlightColor);

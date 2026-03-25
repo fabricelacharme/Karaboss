@@ -77,11 +77,11 @@ namespace Karaboss
 
         #region background colors
         // Background colors
-        private Color TxtBackColor;        
-        private Color TxtGrad0Color;
-        private Color TxtGrad1Color;
-        private Color TxtRhythm0Color;
-        private Color TxtRhythm1Color;
+        private Color BgColor;        
+        private Color Grad0Color;
+        private Color Grad1Color;
+        private Color Rhythm0Color;
+        private Color Rhythm1Color;
         #endregion background colors
 
         // Chord color
@@ -154,13 +154,22 @@ namespace Karaboss
 
                 // Frames
                 PopulateLyricBorders();
-
-                // Lyrics border effect (int)
-                _frametypeindex = Properties.Settings.Default.KfnBorderEffectIndex;
-                if (cbFrame.Items.Count > _frametypeindex)
-                    cbFrame.SelectedIndex = _frametypeindex;
-
-
+                
+                // Lyrics border effect 
+                FrameType = Properties.Settings.Default.FrameType;                                         
+                foreach (KeyValuePair<string, string> valuePair in cbFrameType.Items)
+                {
+                    if (!string.IsNullOrEmpty(valuePair.Key))
+                    {
+                        if (valuePair.Key == FrameType)
+                        {
+                            cbFrameType.SelectedItem = valuePair;
+                            break;
+                        }
+                    }
+                }
+               
+               
                 // Force Uppercase
                 bForceUppercase = Karaclass.m_ForceUppercase;
               
@@ -169,11 +178,11 @@ namespace Karaboss
                 chkDisplayBalls.Checked = Karaclass.m_DisplayBalls;
 
                 // Background type (Diaporama, Solidcolor, Transparent)
-                TxtBackColor = Properties.Settings.Default.TxtBackColor;
-                TxtGrad0Color = Properties.Settings.Default.TxtGrad0Color;
-                TxtGrad1Color = Properties.Settings.Default.TxtGrad1Color;
-                TxtRhythm0Color = Properties.Settings.Default.TxtRhythm0Color;
-                TxtRhythm1Color = Properties.Settings.Default.TxtRhythm1Color;
+                BgColor = Properties.Settings.Default.BgColor;
+                Grad0Color = Properties.Settings.Default.Grad0Color;
+                Grad1Color = Properties.Settings.Default.Grad1Color;
+                Rhythm0Color = Properties.Settings.Default.Rhythm0Color;
+                Rhythm1Color = Properties.Settings.Default.Rhythm1Color;
 
                 // Colors                
                 txtActiveColor.Text = Properties.Settings.Default.ActiveColor;
@@ -204,12 +213,9 @@ namespace Karaboss
                 InactiveChordColor = picInactiveChordColor.BackColor;
                 HighlightChordColor = picHighlightChordColor.BackColor;
                 _bShowChords = Properties.Settings.Default.bShowChords;
-
-                bActiveBorder = Properties.Settings.Default.bActiveBorder;
-                ActiveBorderColor = picActiveBorderColor.BackColor;
-                InactiveBorderColor = picInactiveBorderColor.BackColor;
                 
-                chkActiveBorder.Checked = bActiveBorder;
+                ActiveBorderColor = picActiveBorderColor.BackColor;
+                InactiveBorderColor = picInactiveBorderColor.BackColor;                               
 
                 // Window lyris topmost
                 _bTopMost = Properties.Settings.Default.frmMidiLyricsTopMost;
@@ -309,11 +315,11 @@ namespace Karaboss
             catch (Exception e)
             {
                 Console.Write("Error: " + e.Message);
-                TxtBackColor = Color.White;
-                TxtGrad0Color = Color.Blue;
-                TxtGrad1Color = Color.Green;
-                TxtRhythm0Color = Color.Blue;
-                TxtRhythm1Color = Color.Green;
+                BgColor = Color.White;
+                Grad0Color = Color.Blue;
+                Grad1Color = Color.Green;
+                Rhythm0Color = Color.Blue;
+                Rhythm1Color = Color.Green;
 
                 ActiveColor = Color.Black;
                 HighlightColor = Color.Red;
@@ -353,7 +359,6 @@ namespace Karaboss
         /// </summary>
         private void PopulateLyricBorders()
         {
-
             Dictionary<string, string> Frames = new Dictionary<string, string>();
             Frames.Add("NoBorder", Strings.KfnBorderNoBorder);
             Frames.Add("FrameThin", Strings.KfnBorderFrameThin);
@@ -372,12 +377,12 @@ namespace Karaboss
             cbFrame.DataSource = lstBorders;
             */
 
-            cbFrame.DataSource = new BindingSource(Frames, null);
-            cbFrame.ValueMember = "Key";
-            cbFrame.DisplayMember = "Value";
+            cbFrameType.DataSource = new BindingSource(Frames, null);
+            cbFrameType.ValueMember = "Key";
+            cbFrameType.DisplayMember = "Value";
 
-            if (cbFrame.Items.Count > 2)
-                cbFrame.SelectedIndex = 2; // 1 pixel
+            if (cbFrameType.Items.Count > 2)
+                cbFrameType.SelectedIndex = 2; // 1 pixel
         }
 
         /// <summary>
@@ -396,11 +401,11 @@ namespace Karaboss
                 Properties.Settings.Default.KaraokeFont = _karaokeFont;
 
                 // Background colors
-                Properties.Settings.Default.TxtBackColor = TxtBackColor;
-                Properties.Settings.Default.TxtGrad0Color = TxtGrad0Color;
-                Properties.Settings.Default.TxtGrad1Color = TxtGrad1Color;
-                Properties.Settings.Default.TxtRhythm0Color = TxtRhythm0Color;
-                Properties.Settings.Default.TxtRhythm1Color = TxtRhythm1Color;
+                Properties.Settings.Default.BgColor = BgColor;
+                Properties.Settings.Default.Grad0Color = Grad0Color;
+                Properties.Settings.Default.Grad1Color = Grad1Color;
+                Properties.Settings.Default.Rhythm0Color = Rhythm0Color;
+                Properties.Settings.Default.Rhythm1Color = Rhythm1Color;
 
 
                 Properties.Settings.Default.ActiveColor = ToHex(ActiveColor);
@@ -412,10 +417,14 @@ namespace Karaboss
                 Properties.Settings.Default.HighlightChordColor = ToHex(HighlightChordColor);
                 Properties.Settings.Default.bShowChords = _bShowChords;
 
-                // Contour
-                Properties.Settings.Default.bActiveBorder = bActiveBorder;
+                // Contour                
                 Properties.Settings.Default.ActiveBorderColor = ToHex(ActiveBorderColor);
                 Properties.Settings.Default.InactiveBorderColor = ToHex(InactiveBorderColor);
+
+                
+                // FrameType
+                Properties.Settings.Default.FrameType = FrameType;
+
 
                 // window lyrics topmost
                 Properties.Settings.Default.frmMidiLyricsTopMost = _bTopMost;
@@ -455,10 +464,6 @@ namespace Karaboss
                 Properties.Settings.Default.bLyricsBackGround = chkTextBackground.Checked;
 
 
-                // Lyrics border effect
-                Properties.Settings.Default.KfnBorderEffectIndex = cbFrame.SelectedIndex;
-
-
                 // Save all
                 Properties.Settings.Default.Save();
 
@@ -488,11 +493,8 @@ namespace Karaboss
                 txtSlideShowFreq.Text = freqSlideShow.ToString();
 
                 // Background buttons
-                picBgColor.BackColor = TxtBackColor;
-                
-
-                chkActiveBorder.Checked = bActiveBorder;
-                
+                picBgColor.BackColor = BgColor;
+                                       
 
                 picActiveColor.BackColor = ActiveColor;
                 picHighlightColor.BackColor = HighlightColor;
@@ -519,14 +521,12 @@ namespace Karaboss
                 pBox.CurrentTime = 30;
 
                 // Backgrounds
-                pBox.TxtBackColor = TxtBackColor;
-                pBox.TxtGrad0Color = TxtGrad0Color;
-                pBox.TxtGrad1Color = TxtGrad1Color;
-                pBox.TxtRhythm0Color = TxtRhythm0Color;
-                pBox.TxtRhythm1Color = TxtRhythm1Color;
-
-
-                pBox.bActiveBorder = bActiveBorder;
+                pBox.BgColor = BgColor;
+                pBox.Grad0Color = Grad0Color;
+                pBox.Grad1Color = Grad1Color;
+                pBox.Rhythm0Color = Rhythm0Color;
+                pBox.Rhythm1Color = Rhythm1Color;
+                
                 pBox.ActiveBorderColor = ActiveBorderColor;
                 pBox.InactiveBorderColor = InactiveBorderColor;
 
@@ -538,6 +538,8 @@ namespace Karaboss
                 pBox.InactiveChordColor = InactiveChordColor;
                 pBox.HighlightChordColor = HighlightChordColor;
                 chkForceShowChords.Checked = _bShowChords;
+
+                pBox.FrameType = FrameType;
 
                 cbSizeMode.SelectedText = SizeMode.ToString();
 
@@ -558,14 +560,11 @@ namespace Karaboss
             // picturebox
             
             // Backgrounds
-            pBox.TxtBackColor = TxtBackColor;
-            pBox.TxtGrad0Color = TxtGrad0Color;
-            pBox.TxtGrad1Color = TxtGrad1Color;
-            pBox.TxtRhythm0Color = TxtRhythm0Color;
-            pBox.TxtRhythm1Color = TxtRhythm1Color;
-
-
-            pBox.bActiveBorder = bActiveBorder;
+            pBox.BgColor = BgColor;
+            pBox.Grad0Color = Grad0Color;
+            pBox.Grad1Color = Grad1Color;
+            pBox.Rhythm0Color = Rhythm0Color;
+            pBox.Rhythm1Color = Rhythm1Color;            
 
             pBox.ActiveColor = ActiveColor;
             pBox.HighlightColor = HighlightColor;
@@ -583,7 +582,7 @@ namespace Karaboss
 
 
             //Color of buttons
-            picBgColor.BackColor = TxtBackColor;
+            picBgColor.BackColor = BgColor;
 
             picActiveColor.BackColor = ActiveColor;
             picInactiveColor.BackColor = InactiveColor;
@@ -656,26 +655,14 @@ namespace Karaboss
         private void BtnBackColor_Click(object sender, EventArgs e)
         {
             
-            Color clr = DlgGetColor(TxtBackColor);
-            if (clr == TxtBackColor)
+            Color clr = DlgGetColor(BgColor);
+            if (clr == BgColor)
                 return;
-            TxtBackColor = clr;
+            BgColor = clr;
             picBgColor.BackColor = clr;
             ApplyNewColors();
         }
-
-        
-
-        /// <summary>
-        /// Draw contour or not
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void chkContour_CheckedChanged(object sender, EventArgs e)
-        {
-            bActiveBorder = chkActiveBorder.Checked;
-            ApplyNewColors();
-        }
+            
 
         #endregion select colors
 
@@ -752,19 +739,19 @@ namespace Karaboss
                 frmMidiLyrics.FrameType = FrameType;
                 
                 // Text colors                
-                frmMidiLyrics.TxtBackColor = TxtBackColor;
-                frmMidiLyrics.TxtGrad0Color = TxtGrad0Color;
-                frmMidiLyrics.TxtGrad1Color = TxtGrad1Color;
-                frmMidiLyrics.TxtRhythm0Color = TxtRhythm0Color;
-                frmMidiLyrics.TxtRhythm1Color = TxtRhythm1Color;
+                frmMidiLyrics.BgColor = BgColor;
+                frmMidiLyrics.Grad0Color = Grad0Color;
+                frmMidiLyrics.Grad1Color = Grad1Color;
+                frmMidiLyrics.Rhythm0Color = Rhythm0Color;
+                frmMidiLyrics.Rhythm1Color = Rhythm1Color;
 
 
                 frmMidiLyrics.InactiveColor = InactiveColor;
                 frmMidiLyrics.HighlightColor = HighlightColor;
                 frmMidiLyrics.ActiveColor = ActiveColor;
-
-                frmMidiLyrics.bActiveBorder = bActiveBorder;
+                
                 frmMidiLyrics.ActiveBorderColor = ActiveBorderColor;
+                frmMidiLyrics.InactiveBorderColor = InactiveBorderColor;
 
                 // Chords
                 frmMidiLyrics.ChordNextColor = InactiveChordColor;
@@ -828,10 +815,10 @@ namespace Karaboss
             cboColor.DisplayKnownColors(cbRhythm1);
 
             // Select the selected color in the ComboBox
-            cbGrad0.SelectedIndex = cbGrad0.Items.IndexOf(TxtGrad0Color);
-            cbGrad1.SelectedIndex = cbGrad1.Items.IndexOf(TxtGrad1Color);
-            cbRhythm0.SelectedIndex = cbRhythm0.Items.IndexOf(TxtRhythm0Color);
-            cbRhythm1.SelectedIndex = cbRhythm1.Items.IndexOf(TxtRhythm1Color);
+            cbGrad0.SelectedIndex = cbGrad0.Items.IndexOf(Grad0Color);
+            cbGrad1.SelectedIndex = cbGrad1.Items.IndexOf(Grad1Color);
+            cbRhythm0.SelectedIndex = cbRhythm0.Items.IndexOf(Rhythm0Color);
+            cbRhythm1.SelectedIndex = cbRhythm1.Items.IndexOf(Rhythm1Color);
 
         }
 
@@ -1125,38 +1112,38 @@ namespace Karaboss
             // Apply the selected color from the ComboBox to Color0 of the gradient panel
             if (cbGrad0.SelectedItem is Color selectedColor)
             {                               
-                TxtGrad0Color = selectedColor; // Update the TxtGrad0Color variable
-                pBox.TxtGrad0Color = TxtGrad0Color; // Update the gradient panel color
+                Grad0Color = selectedColor; // Update the Grad0Color variable
+                pBox.Grad0Color = Grad0Color; // Update the gradient panel color
             }
         }
 
         private void cbGrad1_SelectedIndexChanged(object sender, EventArgs e)
         {
-            // Apply the selected color from the ComboBox to TxtGrad1Color
+            // Apply the selected color from the ComboBox to Grad1Color
             if (cbGrad1.SelectedItem is Color selectedColor)
             {                
-                TxtGrad1Color = selectedColor; // Update the TxtGrad1Color variable
-                pBox.TxtGrad1Color = TxtGrad1Color; // Update the gradient panel color
+                Grad1Color = selectedColor; // Update the Grad1Color variable
+                pBox.Grad1Color = Grad1Color; // Update the gradient panel color
             }
         }
 
         private void cbRhythm0_SelectedIndexChanged(object sender, EventArgs e)
         {
-            // Apply the selected color from the ComboBox to TxtRhythm0Color
+            // Apply the selected color from the ComboBox to Rhythm0Color
             if (cbRhythm0.SelectedItem is Color selectedColor)
             {
-                TxtRhythm0Color = selectedColor; // Update the TxtRhythm0Color variable
-                pBox.TxtRhythm0Color = TxtRhythm0Color; // Update the gradient panel color
+                Rhythm0Color = selectedColor; // Update the Rhythm0Color variable
+                pBox.Rhythm0Color = Rhythm0Color; // Update the gradient panel color
             }
         }
 
         private void cbRhythm1_SelectedIndexChanged(object sender, EventArgs e)
         {
-            // Apply the selected color from the ComboBox to TxtRhythm1Color of the gradient panel
+            // Apply the selected color from the ComboBox to Rhythm1Color of the gradient panel
             if (cbRhythm1.SelectedItem is Color selectedColor)
             {
-                TxtRhythm1Color = selectedColor; // Update the TxtRhythm1Color variable
-                pBox.TxtRhythm1Color = TxtRhythm1Color; // Update the gradient panel color
+                Rhythm1Color = selectedColor; // Update the Rhythm1Color variable
+                pBox.Rhythm1Color = Rhythm1Color; // Update the gradient panel color
             }
         }
 
@@ -1165,7 +1152,7 @@ namespace Karaboss
 
         }
 
-        private void cbFrame_SelectedIndexChanged(object sender, EventArgs e)
+        private void cbFrameType_SelectedIndexChanged(object sender, EventArgs e)
         {
             // "NoBorder":
             // "FrameThin":
@@ -1177,7 +1164,7 @@ namespace Karaboss
             // "Shadow":
             // "Neon":
 
-            FrameType = ((KeyValuePair<string, string>)cbFrame.SelectedItem).Key;
+            FrameType = ((KeyValuePair<string, string>)cbFrameType.SelectedItem).Key;
             pBox.FrameType = FrameType;
         }
 

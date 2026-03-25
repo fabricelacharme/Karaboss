@@ -34,13 +34,15 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Drawing;
+using System.Drawing.Drawing2D;
+using System.Drawing.Imaging;
+using System.IO;
+using System.Runtime.InteropServices;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Windows.Forms;
-using System.Drawing.Drawing2D;
-using System.IO;
-using System.Text.RegularExpressions;
-using System.Runtime.InteropServices;
 
 namespace PicControl
 {
@@ -98,6 +100,37 @@ namespace PicControl
         }
 
         #endregion classes
+
+
+        #region Slideshow
+
+        System.Timers.Timer  timerTransition; 
+        System.Timers.Timer timerChangeImage;
+
+        private float mBlend;
+        private int mDir = 1;
+        private int count = 0;
+
+        private Image mImg1;
+        private Image mImg2;
+        private Image Image1
+        {
+            get { return mImg1; }
+            set { mImg1 = value; Invalidate(); }
+        }
+        private Image Image2
+        {
+            get { return mImg2; }
+            set { mImg2 = value; Invalidate(); }
+        }
+        private float m_Blend
+        {
+            get { return mBlend; }
+            set { mBlend = value; Invalidate(); }
+        }
+        private Bitmap[] pictures;
+
+        #endregion slideshow
 
 
         #region properties
@@ -222,7 +255,7 @@ namespace PicControl
 
                 switch (_optionbackground)
                 {
-                    case "Diaporama":
+                    case "Diaporama":                       
                         break;
                     case "SolidColor":
                         m_Cancel = true;
@@ -230,7 +263,7 @@ namespace PicControl
                         _timerGradient.Stop();
                         pboxWnd.Image = null;
                         m_CurrentImage = null;
-                        pboxWnd.BackColor = txtBackColor;
+                        pboxWnd.BackColor = _BgColor;
                         pboxWnd.Invalidate();
                         break;
                     
@@ -250,7 +283,7 @@ namespace PicControl
                         pboxWnd.Image = null;
                         m_CurrentImage = null;
                         ResetSize();
-                        pboxWnd.BackColor = txtRhythm0Color;
+                        pboxWnd.BackColor = _Rhythm0Color;
                         pboxWnd.Invalidate();
                         break;
 
@@ -266,9 +299,9 @@ namespace PicControl
                     default:
                         break;
                 }
-
             }
         }
+
 
         #region TextColor
 
@@ -361,19 +394,7 @@ namespace PicControl
                 pboxWnd.Invalidate();
             }
         }
-
-        private bool _bActiveBorder = true;
-        public bool bActiveBorder
-        {
-            get
-            { return _bActiveBorder; }
-            set
-            {
-                _bActiveBorder = value;
-                pboxWnd.Invalidate();
-            }
-        }
-
+       
         // Border Color
         private Color _ActiveBorderColor;
         public Color ActiveBorderColor {
@@ -464,7 +485,7 @@ namespace PicControl
         // "Frame5":
         // "Shadow":
         // "Neon":
-        private string _frametype = "NoBorder";
+        private string _frametype = "Frame1";
         public string FrameType
         {
             get { return _frametype; }
@@ -477,7 +498,7 @@ namespace PicControl
                         _borderthick = 0;
                         break;
                     case "FrameThin":
-                        _borderthick = 1;
+                        _borderthick = 0;
                         break;
                     case "Frame1":
                         _borderthick = 1;
@@ -523,7 +544,6 @@ namespace PicControl
                 {
                     Console.Write("Error: " + e.Message);
                 }
-
             }
         }
 
@@ -531,60 +551,60 @@ namespace PicControl
 
         private int _bpm;
 
-        private Color txtBackColor;
-        public Color TxtBackColor {
+        private Color _BgColor;
+        public Color BgColor {
             get
-            { return txtBackColor; }
+            { return _BgColor; }
             set
             {
-                txtBackColor = value;
+                _BgColor = value;
                 if (_optionbackground == "SolidColor")
                 {
-                    pboxWnd.BackColor = txtBackColor;
+                    pboxWnd.BackColor = _BgColor;
                     pboxWnd.Invalidate();
                 }
             }
         }
 
-        private Color txtGrad0Color;
-        public Color TxtGrad0Color
+        private Color _Grad0Color;
+        public Color Grad0Color
         {
-            get { return txtGrad0Color; }
+            get { return _Grad0Color; }
             set
             {
-                txtGrad0Color = value;
+                _Grad0Color = value;
                 pboxWnd.Invalidate();
             }
         }
-        private Color txtGrad1Color;
-        public Color TxtGrad1Color
+        private Color _Grad1Color;
+        public Color Grad1Color
         {
-            get { return txtGrad1Color; }
+            get { return _Grad1Color; }
             set
             {
-                txtGrad1Color = value;
+                _Grad1Color = value;
                 pboxWnd.Invalidate();
             }
         }
-        private Color txtRhythm0Color;
-        public Color TxtRhythm0Color
+        private Color _Rhythm0Color;
+        public Color Rhythm0Color
         {
-            get { return txtRhythm0Color; }
+            get { return _Rhythm0Color; }
             set
             {
-                txtRhythm0Color = value;
-                pboxWnd.BackColor = txtRhythm0Color;
+                _Rhythm0Color = value;
+                pboxWnd.BackColor = _Rhythm0Color;
                 ResetSize();
                 pboxWnd.Invalidate();
             }
         }
-        private Color txtRhythm1Color;
-        public Color TxtRhythm1Color
+        private Color _Rhythm1Color;
+        public Color Rhythm1Color
         {
-            get { return txtRhythm1Color; }
+            get { return _Rhythm1Color; }
             set
             {
-                txtRhythm1Color = value;
+                _Rhythm1Color = value;
                 ResetSize();
                 pboxWnd.Invalidate();
             }
@@ -592,6 +612,7 @@ namespace PicControl
 
 
         #region Gradient & Rhythm
+
         readonly System.Windows.Forms.Timer _timerGradient = new System.Windows.Forms.Timer();        
 
         // Default angle for the gradient
@@ -735,16 +756,14 @@ namespace PicControl
         private List<string> m_ImageFilePaths;
         private MemoryStream m_ImageStream = null;        
 
-        //private AutoResetEvent m_FinishEvent = new AutoResetEvent(false);
         private ManualResetEvent m_FinishEvent = new ManualResetEvent(false);
 
         private bool m_Cancel = false;
         private bool m_Restart = false;       
 
-        //private int m_step = 51;          // 0 à 255 par step de 3, 5, 15, 17, 51
-        //private bool m_wait = false;
         
         delegate void UpdateTimerEnableCallback(bool enabled);
+
         #endregion SlideShow
 
 
@@ -817,24 +836,25 @@ namespace PicControl
             m_Alpha = 255;
             imgLayout = ImageLayout.Stretch;
 
-            //W = ClientSize.Width; // Reset width to the current width
-            //H = ClientSize.Height; // Reset height to the current height   
             Beat = 200; // Default speed for rhythm animation
 
             _timerGradient.Interval = 60; // 60 ms
             _timerGradient.Tick += new EventHandler(_timerGradient_Tick);
 
+            /*
             this.SetStyle(
                   System.Windows.Forms.ControlStyles.UserPaint |
                   System.Windows.Forms.ControlStyles.AllPaintingInWmPaint |
                   System.Windows.Forms.ControlStyles.OptimizedDoubleBuffer,
-                  true);       
-            
+                  true);
+            */
+            SetStyle(ControlStyles.AllPaintingInWmPaint | ControlStyles.UserPaint | ControlStyles.OptimizedDoubleBuffer, true);
+
             SetDefaultValues();
         }
 
 
-        #region Timer
+        #region Timer gradient
         private void _timerGradient_Tick(object sender, EventArgs e)
         {
             switch (_optionbackground)
@@ -860,13 +880,10 @@ namespace PicControl
         {
             // Reset the width and height to the current client rectangle size
             W = ClientRectangle.Width/2;
-            H = ClientRectangle.Height/2;
-            //W = Width; // Reset width to the current width
-            //H = Height; // Reset height to the current height            
-            
+            H = ClientRectangle.Height/2;            
         }
 
-        #endregion Timer
+        #endregion Timer gradient
 
 
         #region methods
@@ -901,7 +918,7 @@ namespace PicControl
         {
             try
             {
-                UpdateTimerEnable(false);
+                //UpdateTimerEnable(false);
 
                 m_Cancel = true;
                 m_Restart = true;
@@ -925,7 +942,8 @@ namespace PicControl
                     if (_optionbackground == "Diaporama")
                     {
                         LoadImageList(dirImages);
-                        C = m_ImageFilePaths.Count;
+                        //C = m_ImageFilePaths.Count;
+                        C = pictures.Length;
                     }
 
                     switch (C)
@@ -937,18 +955,24 @@ namespace PicControl
                         case 1:
                             // Single image
                             m_Cancel = true;
-                            pboxWnd.Image = Image.FromFile(m_ImageFilePaths[0]);
+
+                            m_CurrentImage = Image.FromFile(m_ImageFilePaths[0]);
+                            pboxWnd.Image = m_CurrentImage; // Image.FromFile(m_ImageFilePaths[0]);
+                            //pboxWnd.Image = pictures[0];
                             break;
                         default:
-                            // Slideshow => backgroundworker
 
-                            //m_Cancel = true;
+                            /*                            
+                            // Slideshow => backgroundworker                            
                             m_Cancel = false;
-
                             // Initialize backgroundworker
                             InitBackGroundWorker();
                             random = new Random();
                             StartBgW();
+                            */
+
+                            InitSlideShow();
+
                             break;
                     }
                 }
@@ -957,17 +981,77 @@ namespace PicControl
             {
                 Console.Write("Error: " + e.Message);
             }
-
         }
 
-        private void InitBackGroundWorker()
+
+        #region SlideShow with timer
+
+
+        Stopwatch stopwatch = new Stopwatch();
+        
+        // New Slideshow
+        private void InitSlideShow()
         {
-            backgroundWorkerSlideShow = new System.ComponentModel.BackgroundWorker();
-            backgroundWorkerSlideShow.WorkerSupportsCancellation = true;
-            backgroundWorkerSlideShow.WorkerReportsProgress = true;            
-            backgroundWorkerSlideShow.DoWork += new System.ComponentModel.DoWorkEventHandler(this.backgroundWorkerSlideShow_DoWork);
-            backgroundWorkerSlideShow.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.backgroundWorkerSlideShow_RunWorkerCompleted);
+            mBlend = 0;
+            count = 0;
+
+            timerChangeImage?.Dispose();
+            timerChangeImage = new System.Timers.Timer();            
+            timerChangeImage.Interval = freqSlideShow * 1000;
+            timerChangeImage.Elapsed += (sender, e) => OnTimerChangeImage();            
+
+            timerTransition?.Dispose();
+            timerTransition = new System.Timers.Timer();
+            timerTransition.Interval = 50;
+            timerTransition.Elapsed += (sender, e) => OnTimerTransition();            
+
+            try
+            {
+                Image1 = pictures[count];
+                Image2 = pictures[++count];
+            }
+            catch
+            {
+
+            }
+            timerTransition.Enabled = false;
+            timerChangeImage.Enabled = true;                                             
         }
+
+        private void OnTimerTransition()
+        {
+            mBlend += mDir * 0.02F;
+
+            if (mBlend > 1)
+            {
+                // When mBlend is greater than 1, we change the images
+                // and stop the timer "timerTransition" to prevent a new change before time elapse of "timerChangeImage"
+                mBlend = 0.0F;
+
+                if ((count + 1) < pictures.Length)
+                {
+                    Image1 = pictures[count];
+                    Image2 = pictures[++count];
+                }
+                else
+                {
+                    Image1 = pictures[count];
+                    Image2 = pictures[0];
+                    count = 0;
+                }
+                
+                timerTransition.Enabled = false;                                                  
+            }
+
+            m_Blend = mBlend;
+        }
+
+        private void OnTimerChangeImage()
+        {
+            timerTransition.Enabled = true;
+        }       
+
+        #endregion SlideShow with timer      
 
         /// <summary>
         /// Color the syllabe according to song position
@@ -1081,8 +1165,13 @@ namespace PicControl
 
         #region SlideShow functions
 
+        /// <summary>
+        /// Load all images into a list
+        /// </summary>
+        /// <param name="dir"></param>
         private void LoadImageList(string dir)
         {
+            
             bgFiles = Directory.GetFiles(@dir, "*.jpg");
             m_ImageFilePaths.Clear();
             for (int i = 0; i < bgFiles.Length; ++i)
@@ -1090,6 +1179,18 @@ namespace PicControl
                 string file = bgFiles[i];
                 m_ImageFilePaths.Add(file);
             }
+            
+
+            // new slideshow
+            
+            count = 0;
+            //mBlend = 0.0F;
+            pictures = new Bitmap[bgFiles.Length];
+            for (int i = 0; i < bgFiles.Length; ++i)
+            {
+                pictures[i] = new Bitmap(bgFiles[i]);
+            }
+
         }
 
         #endregion SlideShow functions
@@ -1209,15 +1310,18 @@ namespace PicControl
         /// </summary>
         private void SetDefaultValues()
         {           
-            txtBackColor = Color.Black;     
-            _ActiveBorderColor = Color.Black;
-            _InactiveColor = Color.White;
+            _BgColor = Color.Black;     
+                        
             _ActiveColor = Color.FromArgb(153, 180, 51);      // modern ui light green
             _HighlightColor = Color.FromArgb(238, 17, 17);    // modern ui dark Red;
+            _InactiveColor = Color.White;
+
+            _ActiveBorderColor = Color.Black;
+            _InactiveBorderColor = Color.Black;
 
             _InactiveChordColor = Color.FromArgb(255, 196, 13);         // modern ui Orange
             _HighlightChordColor = Color.FromArgb(238, 17, 17);    // modern ui dark Red
-            //_chordFont = new Font(Comic)
+            
             
             _txtNbLines = 3;         
 
@@ -2101,13 +2205,25 @@ namespace PicControl
         /// <param name="x"></param>
         /// <param name="y"></param>
         /// <param name="e"></param>
-        private void drawSyllabe(Color clr, syllabe syl, int x0, int y0, int W, int H, PaintEventArgs e)
+        private void drawSyllabe(string kind, Color clr, syllabe syl, int x0, int y0, int W, int H, PaintEventArgs e)
         {
             var path = new GraphicsPath();
             string tx = syl.text;
-            
-            // outline            
+
             Pen penContour = new Pen(_ActiveBorderColor, _borderthick);
+
+            switch (kind) 
+            {
+                case "Active":
+                case "Highlight":
+                    // outline            
+                    penContour = new Pen(_ActiveBorderColor, _borderthick);
+                    break;
+                case "Inactive":
+                    // outline            
+                    penContour = new Pen(_InactiveBorderColor, _borderthick);
+                    break;
+            }            
                         
             try
             {                
@@ -2126,8 +2242,8 @@ namespace PicControl
                 path.AddString(tx, m_font.FontFamily, (int)m_font.Style, emSize, new Point((int)x0, y0), sf);
                 e.Graphics.FillPath(new SolidBrush(clr), path);
 
-                if (_bActiveBorder)
-                    e.Graphics.DrawPath(penContour, path);//e.Graphics.DrawPath(new Pen(_ActiveBorderColor), path); 
+                if (_borderthick > 0)
+                    e.Graphics.DrawPath(penContour, path);
 
                 path.Dispose();
                 #endregion
@@ -2167,6 +2283,7 @@ namespace PicControl
             }
         }
 
+
         /// <summary>
         /// Draw syllabes on next lines
         /// </summary>
@@ -2183,8 +2300,7 @@ namespace PicControl
             string tx = syl.text;
 
             // outline            
-            Pen penContour = new Pen(_ActiveBorderColor, _borderthick);
-
+            Pen penContour = new Pen(_InactiveBorderColor, _borderthick);
 
             try
             {                
@@ -2207,8 +2323,8 @@ namespace PicControl
                 path.AddString(tx, m_font.FontFamily, (int)m_font.Style, emSize, new Point((int)x0, y0), sf);
                 e.Graphics.FillPath(new SolidBrush(clr), path);
                 
-                if (_bActiveBorder)
-                    e.Graphics.DrawPath(penContour, path);//e.Graphics.DrawPath(new Pen(_ActiveBorderColor), path);
+                if (_borderthick > 0)
+                    e.Graphics.DrawPath(penContour, path);
 
                 path.Dispose();
                 
@@ -2248,55 +2364,7 @@ namespace PicControl
                 Console.Write("Error: " + ed.Message);
             }
         }
-
-        /*
-        /// <summary>
-        /// Pas utilisé
-        /// </summary>
-        /// <param name="singclr"></param>
-        /// <param name="nextclr"></param>
-        /// <param name="syl"></param>
-        /// <param name="y0"></param>
-        /// <param name="e"></param>
-        private void drawFilledSyllabe(Color singclr, Color nextclr ,syllabe syl, int y0, PaintEventArgs e)
-        {
-            var path = new GraphicsPath();
-            string tx = syl.text;
-
-            try
-            {
-                float x0 = rRect[syl.posline].X;
-               
-                
-                // Not filled = nextclr
-                path.AddString(tx, m_font.FontFamily, (int)m_font.Style, emSize, new Point((int)x0, y0), sf);
-                e.Graphics.FillPath(new SolidBrush(nextclr), path);
-
-                // Filled
-                Region rb = new Region(path);
-                RectangleF rectb = rb.GetBounds(e.Graphics);
-                float W = rectb.Width * (percent / steps);
-
-                RectangleF intersectRectb = new RectangleF(rectb.X, rectb.Y, W, rectb.Height);
-                rb.Intersect(intersectRectb);
-                e.Graphics.FillRegion(new SolidBrush(singclr), rb);
-
-                // Entourage
-                e.Graphics.DrawPath(new Pen(_ActiveBorderColor), path);
-
-                rb.Dispose();        
-                
-                path.Dispose();
-
-            }
-            catch (Exception edf)
-            {
-                Console.Write("Error: " + edf.Message);
-            }
-
-        }
-        */
-
+    
 
         /// <summary>
         /// Draw syllabes of the current line according to its position
@@ -2347,11 +2415,11 @@ namespace PicControl
                             if (syllab.chord != "")
                                 drawChord(_InactiveChordColor, syllab, (int)x1, y0, e);
                             
-                            drawSyllabe(_ActiveColor, syllab, (int)x1, y0 + 2 * offset / 3, W, H, e);                            // déjà chanté
+                            drawSyllabe("Active", _ActiveColor, syllab, (int)x1, y0 + 2 * offset / 3, W, H, e);                            // déjà chanté
                         }
                         else
                         {
-                            drawSyllabe(_ActiveColor, syllab, (int)x1, y0, W, H, e);                                            // déjà chanté
+                            drawSyllabe("Active", _ActiveColor, syllab, (int)x1, y0, W, H, e);                                            // déjà chanté
                         }
                     }
                     else if (syllab.pos == _currentTextPos)
@@ -2365,11 +2433,11 @@ namespace PicControl
                                 if (syllab.chord != "")
                                     drawChord(_HighlightChordColor, syllab, (int)x1, y0, e);
                                 
-                                drawSyllabe(_HighlightColor, syllab, (int)x1, y0 + 2 * offset / 3, W, H, e);                       // surbrillance
+                                drawSyllabe("Highlight", _HighlightColor, syllab, (int)x1, y0 + 2 * offset / 3, W, H, e);                       // surbrillance
                             }
                             else
                             {
-                                drawSyllabe(_HighlightColor, syllab, (int)x1, y0, W, H, e);                                         // surbrillance     
+                                drawSyllabe("Highlignt", _HighlightColor, syllab, (int)x1, y0, W, H, e);                                         // surbrillance     
                             }
                         }
                         else
@@ -2379,11 +2447,11 @@ namespace PicControl
                                 if (syllab.chord != "")
                                     drawChord(_InactiveChordColor, syllab, (int)x1, y0, e);
                                 
-                                drawSyllabe(_InactiveColor, syllab, (int)x1, y0 + 2 * offset / 3, W, H, e);
+                                drawSyllabe("Inactive", _InactiveColor, syllab, (int)x1, y0 + 2 * offset / 3, W, H, e);
                             }
                             else
                             {
-                                drawSyllabe(_InactiveColor, syllab, (int)x1, y0, W, H, e);
+                                drawSyllabe("Inactive", _InactiveColor, syllab, (int)x1, y0, W, H, e);
                             }
                         }
 
@@ -2438,11 +2506,11 @@ namespace PicControl
                             if (syllab.chord != "")
                                 drawChord(_InactiveChordColor, syllab, (int)x1, (int)y0, e);
                             
-                            drawSyllabe(_InactiveColor, syllab, (int)x1, y0 + 2 * offset / 3, W, H, e);                           // pas encore chanté
+                            drawSyllabe("Inactive", _InactiveColor, syllab, (int)x1, y0 + 2 * offset / 3, W, H, e);                           // pas encore chanté
                         }
                         else
                         {
-                            drawSyllabe(_InactiveColor, syllab, (int)x1, y0, W, H, e);                                      // pas encore chanté
+                            drawSyllabe("Inactive", _InactiveColor, syllab, (int)x1, y0, W, H, e);                                      // pas encore chanté
                         }
                     }
                 }
@@ -2543,17 +2611,24 @@ namespace PicControl
                         break;
                     }
                 }
-
             }
-
             #endregion draw lyrics               
-
         }
 
         #endregion draw lyrics chords
 
 
         #region backgroundworker
+
+
+        private void InitBackGroundWorker()
+        {
+            backgroundWorkerSlideShow = new System.ComponentModel.BackgroundWorker();
+            backgroundWorkerSlideShow.WorkerSupportsCancellation = true;
+            backgroundWorkerSlideShow.WorkerReportsProgress = true;
+            backgroundWorkerSlideShow.DoWork += new System.ComponentModel.DoWorkEventHandler(this.backgroundWorkerSlideShow_DoWork);
+            backgroundWorkerSlideShow.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.backgroundWorkerSlideShow_RunWorkerCompleted);
+        }
 
         private string SelectRndFile(List<string> files)
         {            
@@ -2607,17 +2682,14 @@ namespace PicControl
 
         private void backgroundWorkerSlideShow_DoWork(object sender, DoWorkEventArgs e)
         {
-            List<string> files = (List<string>)e.Argument;
-            
+            List<string> files = (List<string>)e.Argument;            
             do
             {
                 if (m_Cancel == true)
                 {
                     break;
-                }
-                
+                }                
                 string file = SelectRndFile(files);
-
               
                 UpdateTimerEnable(true);              
                 m_FinishEvent.Reset();
@@ -2675,7 +2747,7 @@ namespace PicControl
                 try
                 {
                     UpdateTimerEnableCallback d = new UpdateTimerEnableCallback(UpdateTimerEnable);
-                    pboxWnd.Invoke(d, new object[] { enabled });
+                    pboxWnd?.Invoke(d, new object[] { enabled });
                 }
                 catch (Exception u)
                 {
@@ -2702,8 +2774,7 @@ namespace PicControl
                 }
             }
             catch (Exception est)
-            {
-                //m_Restart = true;
+            {                
                 Console.Write("Error starting backgroundworker: " + est.Message);
             }
         }
@@ -2720,7 +2791,7 @@ namespace PicControl
 
 
         /// <summary>
-        /// Terminate
+        /// Terminate backgroundworker
         /// </summary>
         public void Terminate()
         {
@@ -2728,6 +2799,10 @@ namespace PicControl
             m_Restart = false;
 
             m_ImageFilePaths = new List<string>();
+            
+            timerChangeImage?.Stop();
+            timerTransition?.Stop();
+            
             if (m_ImageStream != null)
             {
                 m_ImageStream.Dispose();
@@ -2813,46 +2888,71 @@ namespace PicControl
 
             switch (_optionbackground) {                
             
-                case "Diaporama":                
-                    if (m_CurrentImage != null)
+                case "Diaporama":
+                    
+                    if (pictures.Length == 1)
                     {
-                        #region sizemode
-                        switch (_sizemode)
+                        
+                        if (m_CurrentImage != null)
                         {
-                            case PictureBoxSizeMode.AutoSize:
-                                x = (this.ClientSize.Width - m_CurrentImage.Width) / 2;
-                                y = (this.ClientSize.Height - m_CurrentImage.Height) / 2;
-                                m_DisplayRectangle = new Rectangle(x, y, m_CurrentImage.Width, m_CurrentImage.Height);
-                                break;
-                            case PictureBoxSizeMode.CenterImage:
-                                x = (this.ClientSize.Width - m_CurrentImage.Width) / 2;
-                                y = (this.ClientSize.Height - m_CurrentImage.Height) / 2;
-                                m_DisplayRectangle = new Rectangle(x, y, m_CurrentImage.Width, m_CurrentImage.Height);
-                                break;
-                            case PictureBoxSizeMode.Normal:
-                                // coin superieur gauche
-                                m_DisplayRectangle = new Rectangle(0, 0, this.ClientSize.Width, this.ClientSize.Height);
-                                break;
-                            case PictureBoxSizeMode.StretchImage:
-                                //  l'image est étirée ou réduite pour s'ajuster à PictureBox.
-                                m_DisplayRectangle = new Rectangle(0, 0, this.ClientSize.Width, this.ClientSize.Height);
-                                break;
-                            case PictureBoxSizeMode.Zoom:
-                                m_DisplayRectangle = new Rectangle(0, 0, this.ClientSize.Width, this.ClientSize.Height);
-                                break;
-                        }
-                        #endregion
+                            #region sizemode
+                            switch (_sizemode)
+                            {
+                                case PictureBoxSizeMode.AutoSize:
+                                    x = (this.ClientSize.Width - m_CurrentImage.Width) / 2;
+                                    y = (this.ClientSize.Height - m_CurrentImage.Height) / 2;
+                                    m_DisplayRectangle = new Rectangle(x, y, m_CurrentImage.Width, m_CurrentImage.Height);
+                                    break;
+                                case PictureBoxSizeMode.CenterImage:
+                                    x = (this.ClientSize.Width - m_CurrentImage.Width) / 2;
+                                    y = (this.ClientSize.Height - m_CurrentImage.Height) / 2;
+                                    m_DisplayRectangle = new Rectangle(x, y, m_CurrentImage.Width, m_CurrentImage.Height);
+                                    break;
+                                case PictureBoxSizeMode.Normal:
+                                    // coin superieur gauche
+                                    m_DisplayRectangle = new Rectangle(0, 0, this.ClientSize.Width, this.ClientSize.Height);
+                                    break;
+                                case PictureBoxSizeMode.StretchImage:
+                                    //  l'image est étirée ou réduite pour s'ajuster à PictureBox.
+                                    m_DisplayRectangle = new Rectangle(0, 0, this.ClientSize.Width, this.ClientSize.Height);
+                                    break;
+                                case PictureBoxSizeMode.Zoom:
+                                    m_DisplayRectangle = new Rectangle(0, 0, this.ClientSize.Width, this.ClientSize.Height);
+                                    break;
+                            }
+                            #endregion
 
-                        try
-                        {
-                            e.Graphics.DrawImage(m_CurrentImage, m_DisplayRectangle, 0, 0, m_CurrentImage.Width, m_CurrentImage.Height, GraphicsUnit.Pixel);
+                            try
+                            {
+                                e.Graphics.DrawImage(m_CurrentImage, m_DisplayRectangle, 0, 0, m_CurrentImage.Width, m_CurrentImage.Height, GraphicsUnit.Pixel);
 
+                            }
+                            catch (Exception dr)
+                            {
+                                Console.Write("Error drawing image: " + dr.Message);
+                            }
                         }
-                        catch (Exception dr)
+                    
+                    }
+                    else 
+                    {
+
+                        if (mImg1 == null || mImg2 == null)
+                            e.Graphics.FillRectangle(new SolidBrush(this.BackColor), new Rectangle(0, 0, this.Width, this.Height));
+                        else
                         {
-                            Console.Write("Error drawing image: " + dr.Message);
+                            Rectangle rc = new Rectangle(0, 0, this.Width, this.Height);
+                            ColorMatrix cm = new ColorMatrix();
+                            ImageAttributes ia = new ImageAttributes();
+                            cm.Matrix33 = mBlend;
+                            ia.SetColorMatrix(cm);
+                            e.Graphics.DrawImage(mImg2, rc, 0, 0, mImg2.Width, mImg2.Height, GraphicsUnit.Pixel, ia);
+                            cm.Matrix33 = 1F - mBlend;
+                            ia.SetColorMatrix(cm);
+                            e.Graphics.DrawImage(mImg1, rc, 0, 0, mImg1.Width, mImg1.Height, GraphicsUnit.Pixel, ia);
                         }
                     }
+                    
                     break;
 
                 case "Gradient":
@@ -2861,7 +2961,7 @@ namespace PicControl
                     gp = new GraphicsPath();
                     gp.AddRectangle(ClientRectangle);
                     e.Graphics.SmoothingMode = SmoothingMode.HighQuality;
-                    e.Graphics.FillPath(new LinearGradientBrush(ClientRectangle, txtGrad0Color, txtGrad1Color, _angle), gp);      
+                    e.Graphics.FillPath(new LinearGradientBrush(ClientRectangle, _Grad0Color, _Grad1Color, _angle), gp);      
                     gp.Dispose(); // Dispose the GraphicsPath to free resources
                     break;
 
@@ -2881,8 +2981,8 @@ namespace PicControl
                         gp.AddEllipse(rect);
                         using (PathGradientBrush pgb = new PathGradientBrush(gp))
                         {
-                            pgb.CenterColor = txtRhythm1Color; // Center color of the radial gradient
-                            pgb.SurroundColors = new Color[] { txtRhythm0Color }; // Surrounding color of the radial gradient
+                            pgb.CenterColor = _Rhythm1Color; // Center color of the radial gradient
+                            pgb.SurroundColors = new Color[] { _Rhythm0Color }; // Surrounding color of the radial gradient
                             e.Graphics.FillPath(pgb, gp); // Fill the path with the radial gradient
                             pgb.Dispose(); // Dispose the PathGradientBrush to free resources                        
                         }
@@ -2899,8 +2999,8 @@ namespace PicControl
                         gp.AddEllipse(rect1);
                         using (PathGradientBrush pgb = new PathGradientBrush(gp))
                         {
-                            pgb.CenterColor = txtRhythm1Color; // Center color of the radial gradient
-                            pgb.SurroundColors = new Color[] { txtRhythm0Color }; // Surrounding color of the radial gradient
+                            pgb.CenterColor = _Rhythm1Color; // Center color of the radial gradient
+                            pgb.SurroundColors = new Color[] { _Rhythm0Color }; // Surrounding color of the radial gradient
                             e.Graphics.FillPath(pgb, gp); // Fill the path with the radial gradient
                             pgb.Dispose(); // Dispose the PathGradientBrush to free resources                        
                         }
@@ -2910,8 +3010,8 @@ namespace PicControl
                         gp.AddEllipse(rect2);
                         using (PathGradientBrush pgb = new PathGradientBrush(gp))
                         {
-                            pgb.CenterColor = txtRhythm1Color; // Center color of the radial gradient
-                            pgb.SurroundColors = new Color[] { txtRhythm0Color }; // Surrounding color of the radial gradient
+                            pgb.CenterColor = _Rhythm1Color; // Center color of the radial gradient
+                            pgb.SurroundColors = new Color[] { _Rhythm0Color }; // Surrounding color of the radial gradient
                             e.Graphics.FillPath(pgb, gp); // Fill the path with the radial gradient
                             pgb.Dispose(); // Dispose the PathGradientBrush to free resources                        
                         }
@@ -2921,8 +3021,8 @@ namespace PicControl
                         gp.AddEllipse(rect3);
                         using (PathGradientBrush pgb = new PathGradientBrush(gp))
                         {
-                            pgb.CenterColor = txtRhythm1Color; // Center color of the radial gradient
-                            pgb.SurroundColors = new Color[] { txtRhythm0Color }; // Surrounding color of the radial gradient
+                            pgb.CenterColor = _Rhythm1Color; // Center color of the radial gradient
+                            pgb.SurroundColors = new Color[] { _Rhythm0Color }; // Surrounding color of the radial gradient
                             e.Graphics.FillPath(pgb, gp); // Fill the path with the radial gradient
                             pgb.Dispose(); // Dispose the PathGradientBrush to free resources                        
                         }
@@ -2932,8 +3032,8 @@ namespace PicControl
                         gp.AddEllipse(rect4);
                         using (PathGradientBrush pgb = new PathGradientBrush(gp))
                         {
-                            pgb.CenterColor = txtRhythm1Color; // Center color of the radial gradient
-                            pgb.SurroundColors = new Color[] { txtRhythm0Color }; // Surrounding color of the radial gradient
+                            pgb.CenterColor = _Rhythm1Color; // Center color of the radial gradient
+                            pgb.SurroundColors = new Color[] { _Rhythm0Color }; // Surrounding color of the radial gradient
                             e.Graphics.FillPath(pgb, gp); // Fill the path with the radial gradient
                             pgb.Dispose(); // Dispose the PathGradientBrush to free resources                        
                         }
@@ -2943,6 +3043,8 @@ namespace PicControl
             }
 
             //gp.Dispose(); // Dispose the GraphicsPath to free resources
+
+            base.OnPaint(e);
 
             #endregion
 
@@ -3181,7 +3283,11 @@ namespace PicControl
                 m_font?.Dispose(); 
                 m_CurrentImage? .Dispose();
                 pboxWnd? .Dispose ();
-
+                
+                timerChangeImage?.Stop();
+                timerTransition?.Stop();
+                timerChangeImage?.Dispose();
+                timerTransition?.Dispose();
 
                 disposed = true;
             }

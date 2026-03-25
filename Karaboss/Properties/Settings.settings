@@ -35,15 +35,6 @@
     <Setting Name="frmScoreSize" Type="System.Drawing.Size" Scope="User">
       <Value Profile="(Default)">400, 800</Value>
     </Setting>
-    <Setting Name="frmMidiLyricMaximized" Type="System.Boolean" Scope="User">
-      <Value Profile="(Default)">False</Value>
-    </Setting>
-    <Setting Name="frmMidiLyricLocation" Type="System.Drawing.Point" Scope="User">
-      <Value Profile="(Default)">0, 200</Value>
-    </Setting>
-    <Setting Name="frmMidiLyricSize" Type="System.Drawing.Size" Scope="User">
-      <Value Profile="(Default)">800, 600</Value>
-    </Setting>
     <Setting Name="frmMidiLyricsMaximized" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
     </Setting>
@@ -53,7 +44,7 @@
     <Setting Name="frmMidiLyricsSize" Type="System.Drawing.Size" Scope="User">
       <Value Profile="(Default)">400, 600</Value>
     </Setting>
-    <Setting Name="TxtBackColor" Type="System.Drawing.Color" Scope="User">
+    <Setting Name="BgColor" Type="System.Drawing.Color" Scope="User">
       <Value Profile="(Default)">Black</Value>
     </Setting>
     <Setting Name="InactiveColor" Type="System.String" Scope="User">
@@ -242,9 +233,6 @@
     <Setting Name="PianoRollZoomY" Type="System.Single" Scope="User">
       <Value Profile="(Default)">1</Value>
     </Setting>
-    <Setting Name="bActiveBorder" Type="System.Boolean" Scope="User">
-      <Value Profile="(Default)">True</Value>
-    </Setting>
     <Setting Name="KaraokeFont" Type="System.Drawing.Font" Scope="User">
       <Value Profile="(Default)">Comic Sans MS, 8.25pt</Value>
     </Setting>
@@ -428,16 +416,16 @@
     <Setting Name="frmMidiLyricsTopMost" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
     </Setting>
-    <Setting Name="TxtGrad0Color" Type="System.Drawing.Color" Scope="User">
+    <Setting Name="Grad0Color" Type="System.Drawing.Color" Scope="User">
       <Value Profile="(Default)">MediumTurquoise</Value>
     </Setting>
-    <Setting Name="TxtGrad1Color" Type="System.Drawing.Color" Scope="User">
+    <Setting Name="Grad1Color" Type="System.Drawing.Color" Scope="User">
       <Value Profile="(Default)">GreenYellow</Value>
     </Setting>
-    <Setting Name="TxtRhythm0Color" Type="System.Drawing.Color" Scope="User">
+    <Setting Name="Rhythm0Color" Type="System.Drawing.Color" Scope="User">
       <Value Profile="(Default)">Black</Value>
     </Setting>
-    <Setting Name="TxtRhythm1Color" Type="System.Drawing.Color" Scope="User">
+    <Setting Name="Rhythm1Color" Type="System.Drawing.Color" Scope="User">
       <Value Profile="(Default)">DodgerBlue</Value>
     </Setting>
     <Setting Name="DefaultEncoding" Type="System.String" Scope="User">
@@ -484,6 +472,18 @@
     </Setting>
     <Setting Name="InactiveBorderColor" Type="System.String" Scope="User">
       <Value Profile="(Default)">#8000FF</Value>
+    </Setting>
+    <Setting Name="FrameType" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Frame1</Value>
+    </Setting>
+    <Setting Name="frmMidiLyricMaximized" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="frmMidiLyricLocation" Type="System.Drawing.Point" Scope="User">
+      <Value Profile="(Default)">0, 200</Value>
+    </Setting>
+    <Setting Name="bActiveBorder" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
     </Setting>
   </Settings>
 </SettingsFile>

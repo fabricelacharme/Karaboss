@@ -45,7 +45,6 @@
             this.label3 = new System.Windows.Forms.Label();
             this.txtSlideShowFreq = new System.Windows.Forms.TextBox();
             this.label4 = new System.Windows.Forms.Label();
-            this.label5 = new System.Windows.Forms.Label();
             this.cbSizeMode = new System.Windows.Forms.ComboBox();
             this.label6 = new System.Windows.Forms.Label();
             this.btnResetDir = new System.Windows.Forms.Button();
@@ -65,7 +64,6 @@
             this.picActiveColor = new System.Windows.Forms.PictureBox();
             this.cbOptionsTextDisplay = new System.Windows.Forms.ComboBox();
             this.chkTextBackground = new System.Windows.Forms.CheckBox();
-            this.chkActiveBorder = new System.Windows.Forms.CheckBox();
             this.lblFont = new System.Windows.Forms.Label();
             this.fontDialog1 = new System.Windows.Forms.FontDialog();
             this.chkTextUppercase = new System.Windows.Forms.CheckBox();
@@ -102,7 +100,7 @@
             this.btnInactiveColorPicker = new System.Windows.Forms.Button();
             this.btnHighlightColorPicker = new System.Windows.Forms.Button();
             this.btnActiveColorPicker = new System.Windows.Forms.Button();
-            this.cbFrame = new System.Windows.Forms.ComboBox();
+            this.cbFrameType = new System.Windows.Forms.ComboBox();
             this.lblBorder = new System.Windows.Forms.Label();
             this.label8 = new System.Windows.Forms.Label();
             this.label11 = new System.Windows.Forms.Label();
@@ -111,6 +109,8 @@
             this.btnHighlightChordColorPicker = new System.Windows.Forms.Button();
             this.btnInactiveChordColorPicker = new System.Windows.Forms.Button();
             this.label12 = new System.Windows.Forms.Label();
+            this.grpBoxTextColor = new System.Windows.Forms.GroupBox();
+            this.groupBox2 = new System.Windows.Forms.GroupBox();
             ((System.ComponentModel.ISupportInitialize)(this.UpDownNbLines)).BeginInit();
             this.pnlBalls.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
@@ -124,6 +124,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.picInactiveChordColor)).BeginInit();
             this.grpBoxBackGround.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.picInactiveBorderColor)).BeginInit();
+            this.grpBoxTextColor.SuspendLayout();
+            this.groupBox2.SuspendLayout();
             this.SuspendLayout();
             // 
             // btnBackColor
@@ -221,11 +223,6 @@
             // 
             resources.ApplyResources(this.label4, "label4");
             this.label4.Name = "label4";
-            // 
-            // label5
-            // 
-            resources.ApplyResources(this.label5, "label5");
-            this.label5.Name = "label5";
             // 
             // cbSizeMode
             // 
@@ -380,15 +377,6 @@
             this.chkTextBackground.UseVisualStyleBackColor = true;
             this.chkTextBackground.CheckedChanged += new System.EventHandler(this.chkTextBackground_CheckedChanged);
             // 
-            // chkActiveBorder
-            // 
-            resources.ApplyResources(this.chkActiveBorder, "chkActiveBorder");
-            this.chkActiveBorder.Checked = true;
-            this.chkActiveBorder.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.chkActiveBorder.Name = "chkActiveBorder";
-            this.chkActiveBorder.UseVisualStyleBackColor = true;
-            this.chkActiveBorder.CheckedChanged += new System.EventHandler(this.chkContour_CheckedChanged);
-            // 
             // lblFont
             // 
             resources.ApplyResources(this.lblFont, "lblFont");
@@ -516,11 +504,12 @@
             this.pBox.ActiveBorderColor = System.Drawing.Color.White;
             this.pBox.ActiveColor = System.Drawing.Color.Red;
             this.pBox.BackColor = System.Drawing.Color.Black;
-            this.pBox.bActiveBorder = true;
             this.pBox.bDemo = false;
             this.pBox.Beat = 200;
             this.pBox.BeatDuration = 0;
             this.pBox.bforceUppercase = false;
+            this.pBox.BgColor = System.Drawing.Color.Black;
+            this.pBox.BorderThick = 1;
             this.pBox.bShowChords = false;
             this.pBox.bShowParagraphs = true;
             this.pBox.bTextBackGround = true;
@@ -528,7 +517,10 @@
             this.pBox.CurrentTextPos = 2;
             this.pBox.CurrentTime = 30;
             this.pBox.DirSlideShow = null;
+            this.pBox.FrameType = "Frame1";
             this.pBox.FreqDirSlideShow = 0;
+            this.pBox.Grad0Color = System.Drawing.Color.Empty;
+            this.pBox.Grad1Color = System.Drawing.Color.Empty;
             this.pBox.GradientAngle = 45F;
             this.pBox.GradientColor0 = System.Drawing.Color.Empty;
             this.pBox.GradientColor1 = System.Drawing.Color.Empty;
@@ -549,18 +541,15 @@
             this.pBox.OptionBackground = null;
             this.pBox.OptionDisplay = PicControl.pictureBoxControl.OptionsDisplay.Bottom;
             this.pBox.OptionShowChords = true;
+            this.pBox.Rhythm0Color = System.Drawing.Color.Empty;
+            this.pBox.Rhythm1Color = System.Drawing.Color.Empty;
             this.pBox.RhythmColor0 = System.Drawing.Color.Empty;
             this.pBox.RhythmColor1 = System.Drawing.Color.Empty;
             this.pBox.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Normal;
             this.pBox.TransparencyKey = System.Drawing.Color.Lime;
             this.pBox.Txt = "Lorem ipsum dolor sit amet,\rconsectetur adipisicing elit,\rsed do eiusmod tempor i" +
     "ncididunt\rut labore et dolore magna aliqua.\rUt enim ad minim veniam,";
-            this.pBox.TxtBackColor = System.Drawing.Color.Black;
-            this.pBox.TxtGrad0Color = System.Drawing.Color.Empty;
-            this.pBox.TxtGrad1Color = System.Drawing.Color.Empty;
             this.pBox.TxtNbLines = 3;
-            this.pBox.TxtRhythm0Color = System.Drawing.Color.Empty;
-            this.pBox.TxtRhythm1Color = System.Drawing.Color.Empty;
             // 
             // label9
             // 
@@ -673,12 +662,12 @@
             this.btnActiveColorPicker.UseVisualStyleBackColor = true;
             this.btnActiveColorPicker.Click += new System.EventHandler(this.btnActiveColorPicker_Click);
             // 
-            // cbFrame
+            // cbFrameType
             // 
-            resources.ApplyResources(this.cbFrame, "cbFrame");
-            this.cbFrame.FormattingEnabled = true;
-            this.cbFrame.Name = "cbFrame";
-            this.cbFrame.SelectedIndexChanged += new System.EventHandler(this.cbFrame_SelectedIndexChanged);
+            resources.ApplyResources(this.cbFrameType, "cbFrameType");
+            this.cbFrameType.FormattingEnabled = true;
+            this.cbFrameType.Name = "cbFrameType";
+            this.cbFrameType.SelectedIndexChanged += new System.EventHandler(this.cbFrameType_SelectedIndexChanged);
             // 
             // lblBorder
             // 
@@ -728,77 +717,89 @@
             this.label12.ForeColor = System.Drawing.SystemColors.ControlText;
             this.label12.Name = "label12";
             // 
+            // grpBoxTextColor
+            // 
+            this.grpBoxTextColor.Controls.Add(this.lblVerticalText);
+            this.grpBoxTextColor.Controls.Add(this.btnHighlightChordColorPicker);
+            this.grpBoxTextColor.Controls.Add(this.label12);
+            this.grpBoxTextColor.Controls.Add(this.btnInactiveChordColorPicker);
+            this.grpBoxTextColor.Controls.Add(this.btnActiveColor);
+            this.grpBoxTextColor.Controls.Add(this.txtInactiveChordColor);
+            this.grpBoxTextColor.Controls.Add(this.btnHighlightColor);
+            this.grpBoxTextColor.Controls.Add(this.txtHighlightChordColor);
+            this.grpBoxTextColor.Controls.Add(this.btnInactiveColor);
+            this.grpBoxTextColor.Controls.Add(this.label11);
+            this.grpBoxTextColor.Controls.Add(this.label1);
+            this.grpBoxTextColor.Controls.Add(this.label8);
+            this.grpBoxTextColor.Controls.Add(this.btnActiveBorderColor);
+            this.grpBoxTextColor.Controls.Add(this.picActiveColor);
+            this.grpBoxTextColor.Controls.Add(this.picHighlightColor);
+            this.grpBoxTextColor.Controls.Add(this.chkForceShowChords);
+            this.grpBoxTextColor.Controls.Add(this.cbFrameType);
+            this.grpBoxTextColor.Controls.Add(this.label10);
+            this.grpBoxTextColor.Controls.Add(this.picHighlightChordColor);
+            this.grpBoxTextColor.Controls.Add(this.picInactiveColor);
+            this.grpBoxTextColor.Controls.Add(this.picInactiveChordColor);
+            this.grpBoxTextColor.Controls.Add(this.lblBorder);
+            this.grpBoxTextColor.Controls.Add(this.btnHighlightChordColor);
+            this.grpBoxTextColor.Controls.Add(this.picActiveBorderColor);
+            this.grpBoxTextColor.Controls.Add(this.btnInactiveChordColor);
+            this.grpBoxTextColor.Controls.Add(this.btnInactiveBoderColorPicker);
+            this.grpBoxTextColor.Controls.Add(this.UpDownNbLines);
+            this.grpBoxTextColor.Controls.Add(this.btnActiveColorBorderPicker);
+            this.grpBoxTextColor.Controls.Add(this.cbOptionsTextDisplay);
+            this.grpBoxTextColor.Controls.Add(this.btnInactiveColorPicker);
+            this.grpBoxTextColor.Controls.Add(this.chkTextBackground);
+            this.grpBoxTextColor.Controls.Add(this.btnHighlightColorPicker);
+            this.grpBoxTextColor.Controls.Add(this.lblFont);
+            this.grpBoxTextColor.Controls.Add(this.btnActiveColorPicker);
+            this.grpBoxTextColor.Controls.Add(this.chkTextUppercase);
+            this.grpBoxTextColor.Controls.Add(this.txtInactiveBorderColor);
+            this.grpBoxTextColor.Controls.Add(this.label9);
+            this.grpBoxTextColor.Controls.Add(this.txtActiveBorderColor);
+            this.grpBoxTextColor.Controls.Add(this.btnInactiveBorderColor);
+            this.grpBoxTextColor.Controls.Add(this.label7);
+            this.grpBoxTextColor.Controls.Add(this.picInactiveBorderColor);
+            this.grpBoxTextColor.Controls.Add(this.txtInactiveColor);
+            this.grpBoxTextColor.Controls.Add(this.lblActiveColor);
+            this.grpBoxTextColor.Controls.Add(this.lblInactiveColor);
+            this.grpBoxTextColor.Controls.Add(this.txtActiveColor);
+            this.grpBoxTextColor.Controls.Add(this.txtHighlightColor);
+            this.grpBoxTextColor.Controls.Add(this.cbFontName);
+            this.grpBoxTextColor.Controls.Add(this.lblHighlightColor);
+            resources.ApplyResources(this.grpBoxTextColor, "grpBoxTextColor");
+            this.grpBoxTextColor.Name = "grpBoxTextColor";
+            this.grpBoxTextColor.TabStop = false;
+            // 
+            // groupBox2
+            // 
+            this.groupBox2.Controls.Add(this.txtSlideShow);
+            this.groupBox2.Controls.Add(this.label2);
+            this.groupBox2.Controls.Add(this.btnDirSlideShow);
+            this.groupBox2.Controls.Add(this.txtSlideShowFreq);
+            this.groupBox2.Controls.Add(this.label3);
+            this.groupBox2.Controls.Add(this.btnResetDir);
+            this.groupBox2.Controls.Add(this.label4);
+            this.groupBox2.Controls.Add(this.label6);
+            this.groupBox2.Controls.Add(this.cbSizeMode);
+            resources.ApplyResources(this.groupBox2, "groupBox2");
+            this.groupBox2.Name = "groupBox2";
+            this.groupBox2.TabStop = false;
+            // 
             // frmLyrOptions
             // 
             resources.ApplyResources(this, "$this");
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.Controls.Add(this.label12);
-            this.Controls.Add(this.btnHighlightChordColorPicker);
-            this.Controls.Add(this.btnInactiveChordColorPicker);
-            this.Controls.Add(this.txtInactiveChordColor);
-            this.Controls.Add(this.txtHighlightChordColor);
-            this.Controls.Add(this.label11);
-            this.Controls.Add(this.label8);
-            this.Controls.Add(this.cbFrame);
-            this.Controls.Add(this.lblBorder);
-            this.Controls.Add(this.btnInactiveBoderColorPicker);
-            this.Controls.Add(this.btnActiveColorBorderPicker);
-            this.Controls.Add(this.btnInactiveColorPicker);
-            this.Controls.Add(this.btnHighlightColorPicker);
-            this.Controls.Add(this.btnActiveColorPicker);
-            this.Controls.Add(this.txtInactiveBorderColor);
-            this.Controls.Add(this.txtActiveBorderColor);
-            this.Controls.Add(this.label7);
-            this.Controls.Add(this.txtInactiveColor);
-            this.Controls.Add(this.lblInactiveColor);
-            this.Controls.Add(this.txtHighlightColor);
-            this.Controls.Add(this.lblHighlightColor);
-            this.Controls.Add(this.cbFontName);
-            this.Controls.Add(this.txtActiveColor);
-            this.Controls.Add(this.lblActiveColor);
-            this.Controls.Add(this.picInactiveBorderColor);
-            this.Controls.Add(this.btnInactiveBorderColor);
-            this.Controls.Add(this.label9);
+            this.Controls.Add(this.groupBox2);
+            this.Controls.Add(this.grpBoxTextColor);
             this.Controls.Add(this.grpBoxBackGround);
             this.Controls.Add(this.chkTopMost);
-            this.Controls.Add(this.chkForceShowChords);
-            this.Controls.Add(this.label10);
-            this.Controls.Add(this.picHighlightChordColor);
-            this.Controls.Add(this.picInactiveChordColor);
-            this.Controls.Add(this.btnHighlightChordColor);
-            this.Controls.Add(this.btnInactiveChordColor);
-            this.Controls.Add(this.chkTextUppercase);
-            this.Controls.Add(this.lblFont);
-            this.Controls.Add(this.chkActiveBorder);
-            this.Controls.Add(this.chkTextBackground);
-            this.Controls.Add(this.cbOptionsTextDisplay);
             this.Controls.Add(this.pnlBalls);
             this.Controls.Add(this.chkDisplayBalls);
-            this.Controls.Add(this.UpDownNbLines);
-            this.Controls.Add(this.lblVerticalText);
-            this.Controls.Add(this.picActiveBorderColor);
-            this.Controls.Add(this.picInactiveColor);
-            this.Controls.Add(this.picHighlightColor);
-            this.Controls.Add(this.picActiveColor);
-            this.Controls.Add(this.btnResetDir);
-            this.Controls.Add(this.label6);
-            this.Controls.Add(this.cbSizeMode);
-            this.Controls.Add(this.label5);
-            this.Controls.Add(this.label4);
-            this.Controls.Add(this.label3);
-            this.Controls.Add(this.txtSlideShowFreq);
             this.Controls.Add(this.pBox);
-            this.Controls.Add(this.btnActiveBorderColor);
-            this.Controls.Add(this.btnDirSlideShow);
-            this.Controls.Add(this.label2);
-            this.Controls.Add(this.txtSlideShow);
-            this.Controls.Add(this.label1);
             this.Controls.Add(this.btnCancel);
             this.Controls.Add(this.btnOk);
             this.Controls.Add(this.btnApply);
-            this.Controls.Add(this.btnInactiveColor);
-            this.Controls.Add(this.btnHighlightColor);
-            this.Controls.Add(this.btnActiveColor);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
@@ -819,6 +820,10 @@
             this.grpBoxBackGround.ResumeLayout(false);
             this.grpBoxBackGround.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.picInactiveBorderColor)).EndInit();
+            this.grpBoxTextColor.ResumeLayout(false);
+            this.grpBoxTextColor.PerformLayout();
+            this.groupBox2.ResumeLayout(false);
+            this.groupBox2.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -843,7 +848,6 @@
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.TextBox txtSlideShowFreq;
         private System.Windows.Forms.Label label4;
-        private System.Windows.Forms.Label label5;
         private System.Windows.Forms.ComboBox cbSizeMode;
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.Button btnResetDir;
@@ -863,7 +867,6 @@
         private System.Windows.Forms.PictureBox pictureBox2;
         private System.Windows.Forms.ComboBox cbOptionsTextDisplay;
         private System.Windows.Forms.CheckBox chkTextBackground;
-        private System.Windows.Forms.CheckBox chkActiveBorder;
         private System.Windows.Forms.Label lblFont;
         private System.Windows.Forms.FontDialog fontDialog1;
         private System.Windows.Forms.CheckBox chkTextUppercase;
@@ -899,7 +902,7 @@
         private System.Windows.Forms.Button btnInactiveColorPicker;
         private System.Windows.Forms.Button btnHighlightColorPicker;
         private System.Windows.Forms.Button btnActiveColorPicker;
-        private System.Windows.Forms.ComboBox cbFrame;
+        private System.Windows.Forms.ComboBox cbFrameType;
         private System.Windows.Forms.Label lblBorder;
         private System.Windows.Forms.Label label8;
         private System.Windows.Forms.Label label11;
@@ -908,5 +911,7 @@
         private System.Windows.Forms.Button btnHighlightChordColorPicker;
         private System.Windows.Forms.Button btnInactiveChordColorPicker;
         private System.Windows.Forms.Label label12;
+        private System.Windows.Forms.GroupBox grpBoxTextColor;
+        private System.Windows.Forms.GroupBox groupBox2;
     }
 }
