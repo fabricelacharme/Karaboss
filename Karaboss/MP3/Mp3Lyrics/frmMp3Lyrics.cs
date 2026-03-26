@@ -447,7 +447,8 @@ namespace Karaboss.Mp3
 
                 bTextBackGround = Properties.Settings.Default.bLyricsBackGround;
 
-                TxtBackColor = Properties.Settings.Default.BgColor;
+                // Background
+                TxtBackColor = Parse(Properties.Settings.Default.BgColor);
 
                 // Text colors
                 TxtNextColor = Parse(Properties.Settings.Default.InactiveColor);
@@ -947,7 +948,8 @@ namespace Karaboss.Mp3
         {
             Cursor.Current = Cursors.WaitCursor;
             frmMp3LyrOptions = new frmMp3LyrOptions();
-            frmMp3LyrOptions.ShowDialog();
+            //frmMp3LyrOptions.ShowDialog();
+            frmMp3LyrOptions.Show();
         }
       
 

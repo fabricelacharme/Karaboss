@@ -29,14 +29,14 @@
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmLyrOptions));
-            this.btnBackColor = new System.Windows.Forms.Button();
+            this.btnBgColor = new System.Windows.Forms.Button();
             this.btnActiveColor = new System.Windows.Forms.Button();
             this.btnHighlightColor = new System.Windows.Forms.Button();
             this.btnInactiveColor = new System.Windows.Forms.Button();
             this.btnApply = new System.Windows.Forms.Button();
             this.btnOk = new System.Windows.Forms.Button();
             this.btnCancel = new System.Windows.Forms.Button();
-            this.label1 = new System.Windows.Forms.Label();
+            this.lblNumberOfLines = new System.Windows.Forms.Label();
             this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
             this.txtSlideShow = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
@@ -75,6 +75,8 @@
             this.btnInactiveChordColor = new System.Windows.Forms.Button();
             this.chkTopMost = new System.Windows.Forms.CheckBox();
             this.grpBoxBackGround = new System.Windows.Forms.GroupBox();
+            this.btnBgColorPicker = new System.Windows.Forms.Button();
+            this.txtBgColor = new System.Windows.Forms.TextBox();
             this.cbRhythm1 = new System.Windows.Forms.ComboBox();
             this.cbRhythm0 = new System.Windows.Forms.ComboBox();
             this.cbGrad1 = new System.Windows.Forms.ComboBox();
@@ -110,7 +112,7 @@
             this.btnInactiveChordColorPicker = new System.Windows.Forms.Button();
             this.label12 = new System.Windows.Forms.Label();
             this.grpBoxTextColor = new System.Windows.Forms.GroupBox();
-            this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.grpBoxSlideShow = new System.Windows.Forms.GroupBox();
             ((System.ComponentModel.ISupportInitialize)(this.UpDownNbLines)).BeginInit();
             this.pnlBalls.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
@@ -125,15 +127,15 @@
             this.grpBoxBackGround.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.picInactiveBorderColor)).BeginInit();
             this.grpBoxTextColor.SuspendLayout();
-            this.groupBox2.SuspendLayout();
+            this.grpBoxSlideShow.SuspendLayout();
             this.SuspendLayout();
             // 
-            // btnBackColor
+            // btnBgColor
             // 
-            resources.ApplyResources(this.btnBackColor, "btnBackColor");
-            this.btnBackColor.Name = "btnBackColor";
-            this.btnBackColor.UseVisualStyleBackColor = true;
-            this.btnBackColor.Click += new System.EventHandler(this.BtnBackColor_Click);
+            resources.ApplyResources(this.btnBgColor, "btnBgColor");
+            this.btnBgColor.Name = "btnBgColor";
+            this.btnBgColor.UseVisualStyleBackColor = true;
+            this.btnBgColor.Click += new System.EventHandler(this.btnBgColor_Click);
             // 
             // btnActiveColor
             // 
@@ -177,10 +179,10 @@
             this.btnCancel.UseVisualStyleBackColor = true;
             this.btnCancel.Click += new System.EventHandler(this.BtnCancel_Click);
             // 
-            // label1
+            // lblNumberOfLines
             // 
-            resources.ApplyResources(this.label1, "label1");
-            this.label1.Name = "label1";
+            resources.ApplyResources(this.lblNumberOfLines, "lblNumberOfLines");
+            this.lblNumberOfLines.Name = "lblNumberOfLines";
             // 
             // txtSlideShow
             // 
@@ -442,6 +444,8 @@
             // 
             // grpBoxBackGround
             // 
+            this.grpBoxBackGround.Controls.Add(this.btnBgColorPicker);
+            this.grpBoxBackGround.Controls.Add(this.txtBgColor);
             this.grpBoxBackGround.Controls.Add(this.cbRhythm1);
             this.grpBoxBackGround.Controls.Add(this.cbRhythm0);
             this.grpBoxBackGround.Controls.Add(this.cbGrad1);
@@ -450,12 +454,25 @@
             this.grpBoxBackGround.Controls.Add(this.radioGradient);
             this.grpBoxBackGround.Controls.Add(this.radioDiaporama);
             this.grpBoxBackGround.Controls.Add(this.radioSolidColor);
-            this.grpBoxBackGround.Controls.Add(this.btnBackColor);
+            this.grpBoxBackGround.Controls.Add(this.btnBgColor);
             this.grpBoxBackGround.Controls.Add(this.picBgColor);
             this.grpBoxBackGround.Controls.Add(this.radioTransparent);
             resources.ApplyResources(this.grpBoxBackGround, "grpBoxBackGround");
             this.grpBoxBackGround.Name = "grpBoxBackGround";
             this.grpBoxBackGround.TabStop = false;
+            // 
+            // btnBgColorPicker
+            // 
+            resources.ApplyResources(this.btnBgColorPicker, "btnBgColorPicker");
+            this.btnBgColorPicker.Name = "btnBgColorPicker";
+            this.btnBgColorPicker.UseVisualStyleBackColor = true;
+            this.btnBgColorPicker.Click += new System.EventHandler(this.btnBgColorPicker_Click);
+            // 
+            // txtBgColor
+            // 
+            resources.ApplyResources(this.txtBgColor, "txtBgColor");
+            this.txtBgColor.Name = "txtBgColor";
+            this.txtBgColor.TextChanged += new System.EventHandler(this.txtBgColor_TextChanged);
             // 
             // cbRhythm1
             // 
@@ -729,7 +746,7 @@
             this.grpBoxTextColor.Controls.Add(this.txtHighlightChordColor);
             this.grpBoxTextColor.Controls.Add(this.btnInactiveColor);
             this.grpBoxTextColor.Controls.Add(this.label11);
-            this.grpBoxTextColor.Controls.Add(this.label1);
+            this.grpBoxTextColor.Controls.Add(this.lblNumberOfLines);
             this.grpBoxTextColor.Controls.Add(this.label8);
             this.grpBoxTextColor.Controls.Add(this.btnActiveBorderColor);
             this.grpBoxTextColor.Controls.Add(this.picActiveColor);
@@ -771,26 +788,26 @@
             this.grpBoxTextColor.Name = "grpBoxTextColor";
             this.grpBoxTextColor.TabStop = false;
             // 
-            // groupBox2
+            // grpBoxSlideShow
             // 
-            this.groupBox2.Controls.Add(this.txtSlideShow);
-            this.groupBox2.Controls.Add(this.label2);
-            this.groupBox2.Controls.Add(this.btnDirSlideShow);
-            this.groupBox2.Controls.Add(this.txtSlideShowFreq);
-            this.groupBox2.Controls.Add(this.label3);
-            this.groupBox2.Controls.Add(this.btnResetDir);
-            this.groupBox2.Controls.Add(this.label4);
-            this.groupBox2.Controls.Add(this.label6);
-            this.groupBox2.Controls.Add(this.cbSizeMode);
-            resources.ApplyResources(this.groupBox2, "groupBox2");
-            this.groupBox2.Name = "groupBox2";
-            this.groupBox2.TabStop = false;
+            this.grpBoxSlideShow.Controls.Add(this.txtSlideShow);
+            this.grpBoxSlideShow.Controls.Add(this.label2);
+            this.grpBoxSlideShow.Controls.Add(this.btnDirSlideShow);
+            this.grpBoxSlideShow.Controls.Add(this.txtSlideShowFreq);
+            this.grpBoxSlideShow.Controls.Add(this.label3);
+            this.grpBoxSlideShow.Controls.Add(this.btnResetDir);
+            this.grpBoxSlideShow.Controls.Add(this.label4);
+            this.grpBoxSlideShow.Controls.Add(this.label6);
+            this.grpBoxSlideShow.Controls.Add(this.cbSizeMode);
+            resources.ApplyResources(this.grpBoxSlideShow, "grpBoxSlideShow");
+            this.grpBoxSlideShow.Name = "grpBoxSlideShow";
+            this.grpBoxSlideShow.TabStop = false;
             // 
             // frmLyrOptions
             // 
             resources.ApplyResources(this, "$this");
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.Controls.Add(this.groupBox2);
+            this.Controls.Add(this.grpBoxSlideShow);
             this.Controls.Add(this.grpBoxTextColor);
             this.Controls.Add(this.grpBoxBackGround);
             this.Controls.Add(this.chkTopMost);
@@ -822,8 +839,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.picInactiveBorderColor)).EndInit();
             this.grpBoxTextColor.ResumeLayout(false);
             this.grpBoxTextColor.PerformLayout();
-            this.groupBox2.ResumeLayout(false);
-            this.groupBox2.PerformLayout();
+            this.grpBoxSlideShow.ResumeLayout(false);
+            this.grpBoxSlideShow.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -831,14 +848,14 @@
 
         #endregion
 
-        private System.Windows.Forms.Button btnBackColor;
+        private System.Windows.Forms.Button btnBgColor;
         private System.Windows.Forms.Button btnActiveColor;
         private System.Windows.Forms.Button btnHighlightColor;
         private System.Windows.Forms.Button btnInactiveColor;
         private System.Windows.Forms.Button btnApply;
         private System.Windows.Forms.Button btnOk;
         private System.Windows.Forms.Button btnCancel;
-        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Label lblNumberOfLines;
         private System.Windows.Forms.FolderBrowserDialog folderBrowserDialog1;
         private System.Windows.Forms.TextBox txtSlideShow;
         private System.Windows.Forms.Label label2;
@@ -912,6 +929,8 @@
         private System.Windows.Forms.Button btnInactiveChordColorPicker;
         private System.Windows.Forms.Label label12;
         private System.Windows.Forms.GroupBox grpBoxTextColor;
-        private System.Windows.Forms.GroupBox groupBox2;
+        private System.Windows.Forms.GroupBox grpBoxSlideShow;
+        private System.Windows.Forms.Button btnBgColorPicker;
+        private System.Windows.Forms.TextBox txtBgColor;
     }
 }

@@ -44,8 +44,8 @@
     <Setting Name="frmMidiLyricsSize" Type="System.Drawing.Size" Scope="User">
       <Value Profile="(Default)">400, 600</Value>
     </Setting>
-    <Setting Name="BgColor" Type="System.Drawing.Color" Scope="User">
-      <Value Profile="(Default)">Black</Value>
+    <Setting Name="BgColor" Type="System.String" Scope="User">
+      <Value Profile="(Default)">#000000</Value>
     </Setting>
     <Setting Name="InactiveColor" Type="System.String" Scope="User">
       <Value Profile="(Default)">#000000</Value>

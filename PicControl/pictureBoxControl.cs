@@ -548,9 +548,7 @@ namespace PicControl
         }
 
         // Background color
-
         private int _bpm;
-
         private Color _BgColor;
         public Color BgColor {
             get

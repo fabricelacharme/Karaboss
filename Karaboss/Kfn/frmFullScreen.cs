@@ -1,14 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.Linq;
 using System.Runtime.InteropServices;
-using System.Text;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace Karaboss.Kfn
@@ -110,6 +104,11 @@ namespace Karaboss.Kfn
                         frmLyrOptions frmLyrOptions = Utilities.FormUtilities.GetForm<frmLyrOptions>();
                         frmLyrOptions.GetColorFromPicker(c, _sender);
                     }
+                    else if (Application.OpenForms.OfType<Karaboss.Mp3.frmMp3LyrOptions>().Count() > 0)
+                    {
+                        Karaboss.Mp3.frmMp3LyrOptions frmMp3LyrOptions = Utilities.FormUtilities.GetForm<Karaboss.Mp3.frmMp3LyrOptions>();
+                        frmMp3LyrOptions.GetColorFromPicker(c, _sender);
+                    }
                 }
                 Close();
             }
@@ -145,7 +144,12 @@ namespace Karaboss.Kfn
                 frmLyrOptions frmLyrOptions = Utilities.FormUtilities.GetForm<frmLyrOptions>();
                 frmLyrOptions.Show();
             }
-           
+            else if (Application.OpenForms.OfType<Karaboss.Mp3.frmMp3LyrOptions>().Count() > 0)
+            {
+                Karaboss.Mp3.frmMp3LyrOptions frmMp3LyrOptions = Utilities.FormUtilities.GetForm<Karaboss.Mp3.frmMp3LyrOptions>();
+                frmMp3LyrOptions.Show();
+            }
+
         }
     }
 }

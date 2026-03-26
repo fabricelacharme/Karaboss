@@ -599,12 +599,15 @@ namespace Karaboss
                 bTextBackGround = Properties.Settings.Default.bLyricsBackGround;
 
                 // Background colors
-                BgColor = Properties.Settings.Default.BgColor;
+                BgColor = Parse(Properties.Settings.Default.BgColor);
+
                 Grad0Color = Properties.Settings.Default.Grad0Color;
                 Grad1Color = Properties.Settings.Default.Grad1Color;
                 Rhythm0Color = Properties.Settings.Default.Rhythm0Color;
                 Rhythm1Color = Properties.Settings.Default.Rhythm1Color;
 
+                
+                
                 // Text colors
                 InactiveColor = Parse(Properties.Settings.Default.InactiveColor);
                 HighlightColor = Parse(Properties.Settings.Default.HighlightColor);

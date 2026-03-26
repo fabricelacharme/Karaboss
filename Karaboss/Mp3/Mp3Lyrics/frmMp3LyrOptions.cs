@@ -1,10 +1,13 @@
-﻿using System;
+﻿using GradientApp;
+using Karaboss.Resources.Localization;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
+using TagLib.Mpeg4;
 
 namespace Karaboss.Mp3
 {
@@ -15,27 +18,58 @@ namespace Karaboss.Mp3
 
         #region options
 
-        // Text color
-        private Color TxtNextColor;
-        // Text to sing color
-        private Color TxtHighlightColor;
-        // Text sung color
-        private Color TxtBeforeColor;
-        // Background color
-        private Color TxtBackColor;
-
-        private bool bProgressiveHighlight = false;
-
         private Karaclass.OptionsDisplay OptionDisplay;
         private string bgOption = "Diaporama";
 
+        // Font
+        private Font _karaokeFont;
+        private string ftName = "Arial Black";
+        private uint ftSize = 20;
+
+
+        // Frame
+        private string FrameType;
+
+        // Text color        
+        private Color InactiveColor;
+        // Text to sing color        
+        private Color HighlightColor;
+        // Text sung color        
+        private Color ActiveColor;
+
+        // Border color        
+        private Color ActiveBorderColor;
+        private Color InactiveBorderColor;
+
+        #region background colors
+        // Background colors
+        private Color BgColor;
+        private Color Grad0Color;
+        private Color Grad1Color;
+        private Color Rhythm0Color;
+        private Color Rhythm1Color;
+        #endregion background colors
+
+        // Background color
+        private Color TxtBackColor;
+
+
+        // Lyrics TopMost
+        private bool _bTopMost = false;
+
+        // Force Uppercase
+        private bool bForceUppercase = false;
+
+        private bool bProgressiveHighlight = false;
+
+        // Number of lines to display
+        private int NbLines;
         //Slideshow
         private string dirSlideShow;
         // Frequency
         private int freqSlideShow;
 
         // Size mode of the picture background
-
         private PictureBoxSizeMode _sizeMode;
         public PictureBoxSizeMode SizeMode
         {
@@ -50,8 +84,6 @@ namespace Karaboss.Mp3
         // Number of lines to display
         private int _nbLyricsLines;
 
-        // Font
-        private Font _karaokeFont;
 
         // Contour color
         private bool bColorContour = true;
@@ -61,8 +93,6 @@ namespace Karaboss.Mp3
         // Background
         private bool bTextBackGround = false;
 
-        // Force Uppercase
-        private bool bForceUppercase = false;
 
         private frmMp3Lyrics frmMp3Lyrics;
         
@@ -75,6 +105,9 @@ namespace Karaboss.Mp3
         public frmMp3LyrOptions()
         {
             InitializeComponent();
+
+            TopMost = true;
+
             LoadDefaultOptions();
 
             LoadOptions();
@@ -122,12 +155,7 @@ namespace Karaboss.Mp3
 
         }
 
-        private void UpDownNbLines_ValueChanged(object sender, EventArgs e)
-        {
-            _nbLyricsLines = (int)UpDownNbLines.Value;
-            karaokeEffect1.nbLyricsLines = _nbLyricsLines;
-        }
-
+        
 
         #region apply changes
         /// <summary>
@@ -170,27 +198,17 @@ namespace Karaboss.Mp3
 
             karaokeEffect1.bColorContour = bColorContour;
             karaokeEffect1.TxtContourColor = TxtContourColor;
-            karaokeEffect1.TxtNotYetPlayedColor = TxtNextColor;
-            karaokeEffect1.TxtBeingPlayedColor = TxtHighlightColor;
-            karaokeEffect1.TxtAlreadyPlayedColor = TxtBeforeColor;
+            karaokeEffect1.TxtNotYetPlayedColor = InactiveColor;
+            karaokeEffect1.TxtBeingPlayedColor = HighlightColor;
+            karaokeEffect1.TxtAlreadyPlayedColor = ActiveColor;
 
             karaokeEffect1.OptionDisplay = (keffect.KaraokeEffect.OptionsDisplay)OptionDisplay;
            
 
             //Color of buttons
-            pictBackColor.BackColor = TxtBackColor;
-            pictBefore.BackColor = TxtBeforeColor;
-            pictContour.BackColor = TxtContourColor;
-            pictHighlight.BackColor = TxtHighlightColor;
-            pictNext.BackColor = TxtNextColor;
+            picBgColor.BackColor = TxtBackColor;
         }
 
-
-        private bool IsNumeric(string s)
-        {
-            float output;
-            return float.TryParse(s, out output);
-        }
 
         /// <summary>
         /// Load options stored in properties
@@ -199,9 +217,38 @@ namespace Karaboss.Mp3
         {
             try
             {
-                _karaokeFont = Properties.Settings.Default.KaraokeFont;
+                // Fonts
+                PopulateFonts();
+
+                string f = Properties.Settings.Default.KfnFontName;
+                for (int i = 0; i < cbFontName.Items.Count; i++)
+                {
+                    if (cbFontName.Items[i].ToString() == f)
+                    {
+                        cbFontName.SelectedIndex = i;
+                        break;
+                    }
+                }
+                _karaokeFont = new Font(ftName, ftSize, FontStyle.Regular);                               
                 karaokeEffect1.KaraokeFont = _karaokeFont;
-                txtFont.Text = _karaokeFont.Name;
+
+
+                // Frames
+                PopulateLyricBorders();
+
+                // Lyrics border effect 
+                FrameType = Properties.Settings.Default.FrameType;
+                foreach (KeyValuePair<string, string> valuePair in cbFrameType.Items)
+                {
+                    if (!string.IsNullOrEmpty(valuePair.Key))
+                    {
+                        if (valuePair.Key == FrameType)
+                        {
+                            cbFrameType.SelectedItem = valuePair;
+                            break;
+                        }
+                    }
+                }
 
                 // Force Uppercase
                 bForceUppercase = Karaclass.m_ForceUppercase;
@@ -209,19 +256,44 @@ namespace Karaboss.Mp3
                 // Display balls on lyrics
                 chkDisplayBalls.Checked = Karaclass.m_DisplayBalls;
 
-                TxtBackColor = Properties.Settings.Default.BgColor;
 
-                bTextBackGround =  bTextBackGround = Properties.Settings.Default.bLyricsBackGround;
 
-                // Lyrics Colors
-                TxtNextColor = Parse(Properties.Settings.Default.InactiveColor);
-                TxtHighlightColor = Parse(Properties.Settings.Default.HighlightColor);
-                bProgressiveHighlight = Properties.Settings.Default.bProgressiveHighlight;  // Progressive Highlight 
-                TxtBeforeColor = Parse(Properties.Settings.Default.ActiveColor);
+                // Background type (Diaporama, Solidcolor, Transparent)                
+                Grad0Color = Properties.Settings.Default.Grad0Color;
+                Grad1Color = Properties.Settings.Default.Grad1Color;
+                Rhythm0Color = Properties.Settings.Default.Rhythm0Color;
+                Rhythm1Color = Properties.Settings.Default.Rhythm1Color;
 
-                
-                TxtContourColor = Parse(Properties.Settings.Default.ActiveBorderColor);
-                chkContour.Checked = bColorContour;
+                // Colors: Properties => textBox                
+                txtBgColor.Text = Properties.Settings.Default.BgColor;
+                txtActiveColor.Text = Properties.Settings.Default.ActiveColor;
+                txtHighlightColor.Text = Properties.Settings.Default.HighlightColor;
+                txtInactiveColor.Text = Properties.Settings.Default.InactiveColor;
+                txtActiveBorderColor.Text = Properties.Settings.Default.ActiveBorderColor;
+                txtInactiveBorderColor.Text = Properties.Settings.Default.InactiveBorderColor;
+
+                // textBox => pic 
+                picBgColor.BackColor = Parse(txtBgColor.Text);
+
+                picActiveColor.BackColor = Parse(txtActiveColor.Text);
+                picHighlightColor.BackColor = Parse(txtHighlightColor.Text);
+                picInactiveColor.BackColor = Parse(txtInactiveColor.Text);
+                picActiveBorderColor.BackColor = Parse(txtActiveBorderColor.Text);
+                picInactiveBorderColor.BackColor = Parse(txtInactiveBorderColor.Text);
+
+                // pic => variables
+                BgColor = picBgColor.BackColor;
+
+                ActiveColor = picActiveColor.BackColor;
+                HighlightColor = picHighlightColor.BackColor;
+                InactiveColor = picInactiveColor.BackColor;
+
+                ActiveBorderColor = picActiveBorderColor.BackColor;
+                InactiveBorderColor = picInactiveBorderColor.BackColor;
+
+                // Window lyris topmost
+                _bTopMost = Properties.Settings.Default.frmMidiLyricsTopMost;
+                chkTopMost.Checked = _bTopMost;
 
                 // Backgroud color beside lyrics to help to read when an image is displayed
                 chkTextBackground.Checked = Properties.Settings.Default.bLyricsBackGround;
@@ -311,15 +383,18 @@ namespace Karaboss.Mp3
             catch (Exception e)
             {
                 Console.Write("Error: " + e.Message);
-                TxtBackColor = Color.White;
-                TxtNextColor = Color.Black;
-                TxtHighlightColor = Color.Red;
-                TxtBeforeColor = Color.YellowGreen;
-                TxtContourColor = Color.Black;
-                _nbLyricsLines = 3;
-                bColorContour = true;
-                bTextBackGround = false;
+                BgColor = Color.White;
+                Grad0Color = Color.Blue;
+                Grad1Color = Color.Green;
+                Rhythm0Color = Color.Blue;
+                Rhythm1Color = Color.Green;
 
+                ActiveColor = Color.Black;
+                HighlightColor = Color.Red;
+                InactiveColor = Color.YellowGreen;
+                ActiveBorderColor = Color.Black;
+                _nbLyricsLines = 3;
+               
                 dirSlideShow = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), Application.ProductName) + "\\slideshow";
 
                 freqSlideShow = 10;
@@ -328,29 +403,55 @@ namespace Karaboss.Mp3
         }
 
 
-        /// <summary>
-        /// Check text representing a color
-        /// </summary>
-        /// <param name="input"></param>
-        /// <returns></returns>
-        /// <exception cref="ArgumentException"></exception>
-        public static Color Parse(string input)
+        private void PopulateFonts()
         {
-            input = input.Trim();
-            string strColorRegex = @"^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$";
-            Regex re = new Regex(strColorRegex);
-            if (re.IsMatch(input))
+            // Karafun seems to support only a few fonts
+            foreach (System.Drawing.FontFamily fnt in System.Drawing.FontFamily.Families)
             {
-                return ColorTranslator.FromHtml(input);
+                cbFontName.Items.Add(fnt.Name);
             }
 
-            Color named = Color.FromName(input);
-            if (named.IsKnownColor || named.IsNamedColor)
+            for (int i = 0; i < cbFontName.Items.Count; i++)
             {
-                return named;
+                if (cbFontName.Items[i].ToString() == "Arial Black")
+                {
+                    cbFontName.SelectedIndex = i;
+                    break;
+                }
             }
-            throw new ArgumentException($"Unsupported color value: {input}", nameof(input));
         }
+
+        /// <summary>
+        /// Frames
+        /// </summary>
+        private void PopulateLyricBorders()
+        {
+            Dictionary<string, string> Frames = new Dictionary<string, string>();
+            Frames.Add("NoBorder", Strings.KfnBorderNoBorder);
+            Frames.Add("FrameThin", Strings.KfnBorderFrameThin);
+            Frames.Add("Frame1", Strings.KfnBorderFrame1);
+            Frames.Add("Frame2", Strings.KfnBorderFrame2);
+            Frames.Add("Frame3", Strings.KfnBorderFrame3);
+            Frames.Add("Frame4", Strings.KfnBorderFrame4);
+            Frames.Add("Frame5", Strings.KfnBorderFrame5);
+            Frames.Add("Shadow", Strings.KfnBorderShadow);
+            Frames.Add("Neon", Strings.KfnBorderNeon);
+
+            /*
+            //List<string> lstBorders = new List<string>() { "Aucune bordure", "Fine bordure", "Bordure 1 pixel", "Bordure 2 pixel", "Bordure 3 pixel", "Bordure 4 pixel", "Bordure 5 pixel", "Ombré", "Neon" };
+            List<string> lstBorders = new List<string>() { "NoBorder", "FrameThin", "Frame1", "Frame2", "Frame3", "Frame4", "Frame5", "Shadow", "Neon" };
+            //List<string> lstBorders = new List<string>() { "No border", "Thin border", "1 - pixel border", "2 - pixel border", "3 - pixel border", "4 - pixel border", "5 - pixel border", "Shaded", "Neon" };
+            cbFrame.DataSource = lstBorders;
+            */
+
+            cbFrameType.DataSource = new BindingSource(Frames, null);
+            cbFrameType.ValueMember = "Key";
+            cbFrameType.DisplayMember = "Value";
+
+            if (cbFrameType.Items.Count > 2)
+                cbFrameType.SelectedIndex = 2; // 1 pixel
+        }
+
 
         /// <summary>
         /// Appply options to option form
@@ -369,15 +470,7 @@ namespace Karaboss.Mp3
                 txtSlideShowFreq.Text = freqSlideShow.ToString();
 
                 // buttons
-                pictBackColor.BackColor = TxtBackColor;
-                pictBefore.BackColor = TxtBeforeColor;
-
-                chkContour.Checked = bColorContour;
-                pictContour.BackColor = TxtContourColor;
-                
-
-                pictHighlight.BackColor = TxtHighlightColor;
-                pictNext.BackColor = TxtNextColor;
+                picBgColor.BackColor = TxtBackColor;
 
 
                 // Force uppercase
@@ -401,9 +494,9 @@ namespace Karaboss.Mp3
                 karaokeEffect1.bColorContour = bColorContour;
                 karaokeEffect1.TxtContourColor = TxtContourColor;
 
-                karaokeEffect1.TxtNotYetPlayedColor = TxtNextColor; 
-                karaokeEffect1.TxtBeingPlayedColor = TxtHighlightColor;
-                karaokeEffect1.TxtAlreadyPlayedColor = TxtBeforeColor;
+                karaokeEffect1.TxtNotYetPlayedColor = InactiveColor; 
+                karaokeEffect1.TxtBeingPlayedColor = HighlightColor;
+                karaokeEffect1.TxtAlreadyPlayedColor = ActiveColor;
 
 
                 cbSizeMode.SelectedText = SizeMode.ToString();
@@ -440,10 +533,10 @@ namespace Karaboss.Mp3
                 // Text colors                
                 frmMp3Lyrics.TxtBackColor = TxtBackColor;
 
-                frmMp3Lyrics.TxtNextColor = TxtNextColor;
-                frmMp3Lyrics.TxtHighlightColor = TxtHighlightColor;
+                frmMp3Lyrics.TxtNextColor = InactiveColor;
+                frmMp3Lyrics.TxtHighlightColor = HighlightColor;
                 frmMp3Lyrics.bProgressiveHighlight = bProgressiveHighlight;     // Progressive highlight
-                frmMp3Lyrics.TxtBeforeColor = TxtBeforeColor;
+                frmMp3Lyrics.TxtBeforeColor = ActiveColor;
 
                 frmMp3Lyrics.bColorContour = bColorContour;
                 frmMp3Lyrics.TxtContourColor = TxtContourColor;
@@ -484,12 +577,13 @@ namespace Karaboss.Mp3
 
                 Properties.Settings.Default.KaraokeFont = _karaokeFont;
 
-                Properties.Settings.Default.BgColor = TxtBackColor;
+                // Background color
+                Properties.Settings.Default.BgColor = ToHex(TxtBackColor);
 
-                Properties.Settings.Default.InactiveColor = ToHex(TxtNextColor);
-                Properties.Settings.Default.HighlightColor = ToHex(TxtHighlightColor);
+                Properties.Settings.Default.InactiveColor = ToHex(InactiveColor);
+                Properties.Settings.Default.HighlightColor = ToHex(HighlightColor);
                 Properties.Settings.Default.bProgressiveHighlight = bProgressiveHighlight;  // Progressive highlight
-                Properties.Settings.Default.ActiveColor = ToHex(TxtBeforeColor);
+                Properties.Settings.Default.ActiveColor = ToHex(ActiveColor);
 
                
                 // Contour
@@ -540,14 +634,6 @@ namespace Karaboss.Mp3
         }
 
 
-
-        /// <summary>
-        /// Translate color to hexa
-        /// </summary>
-        /// <param name="c"></param>
-        /// <returns></returns>
-        private static String ToHex(System.Drawing.Color c) => $"#{c.R:X2}{c.G:X2}{c.B:X2}";
-
         #endregion Apply changes
 
 
@@ -593,123 +679,91 @@ namespace Karaboss.Mp3
                 return MyDialog.Color;
             else
                 return defColor;
-        }        
-
-        private void btnFonts_Click(object sender, EventArgs e)
-        {
-            try
-            {
-                // Show the dialog.
-                fontDialog1.Font = _karaokeFont;
-
-                if (fontDialog1.ShowDialog() == DialogResult.OK)
-                {
-                    txtFont.Text = fontDialog1.Font.Name;
-                    _karaokeFont = fontDialog1.Font;
-                    karaokeEffect1.KaraokeFont = _karaokeFont;
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message);
-                _karaokeFont = new Font("Arial", this.Font.Size);
-            }
         }
 
-        private void btnSungColor_Click(object sender, EventArgs e)
-        {
-            Color clr = DlgGetColor(TxtBeforeColor);
-            if (clr == TxtBeforeColor)
-                return;
-            TxtBeforeColor = clr;
-            pictBefore.BackColor = clr;
-            ApplyNewColors();
-        }
-
-        private void btnSingColor_Click(object sender, EventArgs e)
-        {
-
-            Color clr = DlgGetColor(TxtHighlightColor);
-            if (clr == TxtHighlightColor)
-                return;
-            TxtHighlightColor = clr;
-            pictHighlight.BackColor = clr;
-            ApplyNewColors();
-        }
-
-        private void btnForeColor_Click(object sender, EventArgs e)
-        {
-            Color clr = DlgGetColor(TxtNextColor);
-            if (clr == TxtNextColor)
-                return;
-            TxtNextColor = clr;
-            pictNext.BackColor = clr;
-            ApplyNewColors();
-        }
-
-
-        /// <summary>
-        /// Set color of text contour
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void btnContourColor_Click(object sender, EventArgs e)
-        {
-            Color clr = DlgGetColor(TxtContourColor);
-            if (clr == TxtContourColor)
-                return;
-            TxtContourColor = clr;
-            pictContour.BackColor = clr;
-            ApplyNewColors();
-        }
 
         #endregion select colors
 
 
-        private void chkContour_CheckedChanged(object sender, EventArgs e)
+        #region form load close
+
+
+        /// <summary>
+        /// Form load event
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void frmMp3LyrOptions_Load(object sender, EventArgs e)
         {
-            bColorContour = chkContour.Checked;
-            ApplyNewColors();
+            this.TopMost = true;
+            cboColor.DisplayKnownColors(cbGrad0);
+            cboColor.DisplayKnownColors(cbGrad1);
+            cboColor.DisplayKnownColors(cbRhythm0);
+            cboColor.DisplayKnownColors(cbRhythm1);
+
+            // Select the selected color in the ComboBox
+            cbGrad0.SelectedIndex = cbGrad0.Items.IndexOf(Grad0Color);
+            cbGrad1.SelectedIndex = cbGrad1.Items.IndexOf(Grad1Color);
+            cbRhythm0.SelectedIndex = cbRhythm0.Items.IndexOf(Rhythm0Color);
+            cbRhythm1.SelectedIndex = cbRhythm1.Items.IndexOf(Rhythm1Color);
+
         }
 
-        private void cbOptionsTextDisplay_SelectedIndexChanged(object sender, EventArgs e)
+        /// <summary>
+        /// Form closing event
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void frmMp3LyrOptions_FormClosing(object sender, FormClosingEventArgs e)
         {
-            switch (cbOptionsTextDisplay.SelectedIndex)
+            karaokeEffect1.Terminate();
+
+            // Active le formulaire frmMp3Player
+            if (Application.OpenForms.OfType<frmMp3Player>().Count() > 0)
             {
-                case 0:
-                    OptionDisplay = Karaclass.OptionsDisplay.Top;
-                    karaokeEffect1.OptionDisplay = keffect.KaraokeEffect.OptionsDisplay.Top;
-                    break;
-                case 1:
-                    OptionDisplay = Karaclass.OptionsDisplay.Center;
-                    karaokeEffect1.OptionDisplay = keffect.KaraokeEffect.OptionsDisplay.Center;
-                    break;
-                case 2:
-                    OptionDisplay = Karaclass.OptionsDisplay.Bottom;
-                    karaokeEffect1.OptionDisplay = keffect.KaraokeEffect.OptionsDisplay.Bottom;
-                    break;
+                // Restore form
+                if (Application.OpenForms["frmMp3Player"].WindowState != FormWindowState.Minimized)
+                {
+                    Application.OpenForms["frmMp3Player"].Restore();
+                    Application.OpenForms["frmMp3Player"].Activate();
+                }
             }
+
+            // Active le formulaire frmMp3Lyrics
+            if (Application.OpenForms.OfType<frmMp3Lyrics>().Count() > 0)
+            {
+                // Restore form
+                Application.OpenForms["frmMp3Lyrics"].Restore();
+                Application.OpenForms["frmMp3Lyrics"].Activate();
+            }
+
+            Dispose();
         }
 
-        private void chkTextBackground_CheckedChanged(object sender, EventArgs e)
-        {
-            karaokeEffect1.bTextBackGround = chkTextBackground.Checked;
-        }
 
-        private void chkTextUppercase_CheckedChanged(object sender, EventArgs e)
-        {
-            bForceUppercase = chkTextUppercase.Checked;
-            karaokeEffect1.bforceUppercase = bForceUppercase;
-            Karaclass.m_ForceUppercase = bForceUppercase;
-        }
 
-        #region back ground
+        #endregion form load close
+
+
+
+        #region Background selection
+
+        /// <summary>
+        /// Background selection:
+        /// 1 - Diaporama
+        /// 2 - Solid Color
+        /// 3 - Transparent
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void radioDiaporama_CheckedChanged(object sender, EventArgs e)
         {
             if (radioDiaporama.Checked)
             {
-                btnBackColor.Visible = false;
-                pictBackColor.Visible = false;
+                btnBgColor.Visible = false;
+                btnBgColorPicker.Visible = false;
+                picBgColor.Visible = false;
+                txtBgColor.Visible = false;
 
                 karaokeEffect1.OptionBackground = "Diaporama";
                 bgOption = "Diaporama";
@@ -721,11 +775,42 @@ namespace Karaboss.Mp3
         {
             if (radioSolidColor.Checked)
             {
-                btnBackColor.Visible = true;
-                pictBackColor.Visible = true;
+                btnBgColor.Visible = true;
+                btnBgColorPicker.Visible = true;
+                picBgColor.Visible = true;
+                txtBgColor.Visible = true;
 
                 karaokeEffect1.OptionBackground = "SolidColor";
                 bgOption = "SolidColor";
+            }
+        }
+
+        private void radioGradient_CheckedChanged(object sender, EventArgs e)
+        {
+            if (radioGradient.Checked)
+            {
+                btnBgColor.Visible = false;
+                btnBgColorPicker.Visible = false;
+                picBgColor.Visible = false;
+                txtBgColor.Visible = false;
+
+                karaokeEffect1.OptionBackground = "Gradient";
+                bgOption = "Gradient";
+            }
+        }
+
+
+        private void radioRhythm_CheckedChanged(object sender, EventArgs e)
+        {
+            if (radioRhythm.Checked)
+            {
+                btnBgColor.Visible = false;
+                btnBgColorPicker.Visible = false;
+                picBgColor.Visible = false;
+                txtBgColor.Visible = false;
+
+                karaokeEffect1.OptionBackground = "Rhythm";
+                bgOption = "Rhythm";
             }
         }
 
@@ -733,8 +818,10 @@ namespace Karaboss.Mp3
         {
             if (radioTransparent.Checked)
             {
-                btnBackColor.Visible = false;
-                pictBackColor.Visible = false;
+                btnBgColor.Visible = false;
+                btnBgColorPicker.Visible = false;
+                picBgColor.Visible = false;
+                txtBgColor.Visible = false;
 
                 karaokeEffect1.OptionBackground = "Transparent";
                 bgOption = "Transparent";
@@ -742,40 +829,44 @@ namespace Karaboss.Mp3
         }
 
 
-        #endregion back ground
+        #endregion Background selection
 
 
-        private void btnBackColor_Click(object sender, EventArgs e)
+        #region events
+
+        /// <summary>
+        /// Textbox only accept numbers
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void txtSlideShowFreq_KeyPress(object sender, KeyPressEventArgs e)
         {
-
-            Color clr = DlgGetColor(TxtBackColor);
-            if (clr == TxtBackColor)
-                return;
-            TxtBackColor = clr;
-            pictBackColor.BackColor = clr;
-            ApplyNewColors();
-        }
-
-        private void btnDirSlideShow_Click(object sender, EventArgs e)
-        {
-            folderBrowserDialog1.SelectedPath = dirSlideShow;
-            if (folderBrowserDialog1.ShowDialog() == DialogResult.OK)
+            if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar))
             {
-                dirSlideShow = folderBrowserDialog1.SelectedPath;
-
-                Cursor.Current = Cursors.WaitCursor;
-                txtSlideShow.Text = dirSlideShow;
-                karaokeEffect1.SetBackground(dirSlideShow);
+                e.Handled = true;
             }
         }
 
-        private void btnResetDir_Click(object sender, EventArgs e)
+        private void txtSlideShowFreq_TextChanged(object sender, EventArgs e)     
         {
+            string f = txtSlideShowFreq.Text;
+            f = f.Trim();
+            if (f != "" && IsNumeric(f))
+            {
+                try
+                {
+                    int freq = Convert.ToInt32(f);
 
-            dirSlideShow = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), Application.ProductName);
-            txtSlideShow.Text = dirSlideShow;
-            karaokeEffect1.SetBackground(dirSlideShow);
+                    freqSlideShow = freq;
+                    karaokeEffect1.FreqDirSlideShow = freqSlideShow;
+                }
+                catch (Exception eee)
+                {
+                    Console.Write(eee.Message);
+                }
+            }
         }
+
 
         private void cbSizeMode_SelectedIndexChanged(object sender, EventArgs e)
         {
@@ -803,29 +894,33 @@ namespace Karaboss.Mp3
             karaokeEffect1.SizeMode = SizeMode;
         }
 
-        private void txtSlideShowFreq_TextChanged(object sender, EventArgs e)
-        {
-            string f = txtSlideShowFreq.Text;
-            f = f.Trim();
-            if (f != "" && IsNumeric(f))
-            {
-                try
-                {
-                    int freq = Convert.ToInt32(f);
 
-                    freqSlideShow = freq;
-                    karaokeEffect1.FreqDirSlideShow = freqSlideShow;
-                }
-                catch (Exception eee)
-                {
-                    Console.Write(eee.Message);
-                }
-            }
+        private void chkTopMost_CheckedChanged(object sender, EventArgs e)
+        {
+            _bTopMost = chkTopMost.Checked;
         }
 
-        private void chkHighLightProgressive_CheckedChanged(object sender, EventArgs e)
+
+        private void UpDownNbLines_ValueChanged(object sender, EventArgs e)
         {
-            bProgressiveHighlight = chkHighLightProgressive.Checked;
+            _nbLyricsLines = (int)UpDownNbLines.Value;
+            karaokeEffect1.nbLyricsLines = _nbLyricsLines;
+        }
+
+
+        private void txtSlideShow_TextChanged(object sender, EventArgs e)
+        {
+            string tx = txtSlideShow.Text;
+            tx = tx.Trim();
+            dirSlideShow = tx;
+            //karaokeEffect1.DirSlideShow = dirSlideShow;
+            karaokeEffect1.SetBackground(dirSlideShow);
+        }
+
+        private bool IsNumeric(string s)
+        {
+            float output;
+            return float.TryParse(s, out output);
         }
 
         private void chkDisplayBalls_CheckedChanged(object sender, EventArgs e)
@@ -833,5 +928,381 @@ namespace Karaboss.Mp3
             Karaclass.m_DisplayBalls = chkDisplayBalls.Checked;
             pnlBalls.Visible = chkDisplayBalls.Checked;
         }
+
+        private void cbOptionsTextDisplay_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            switch (cbOptionsTextDisplay.SelectedIndex)
+            {
+                case 0:
+                    OptionDisplay = Karaclass.OptionsDisplay.Top;
+                    karaokeEffect1.OptionDisplay = keffect.KaraokeEffect.OptionsDisplay.Top;
+                    break;
+                case 1:
+                    OptionDisplay = Karaclass.OptionsDisplay.Center;
+                    karaokeEffect1.OptionDisplay = keffect.KaraokeEffect.OptionsDisplay.Center;
+                    break;
+                case 2:
+                    OptionDisplay = Karaclass.OptionsDisplay.Bottom;
+                    karaokeEffect1.OptionDisplay = keffect.KaraokeEffect.OptionsDisplay.Bottom;
+                    break;
+            }
+        }
+
+
+        private void chkTextBackground_CheckedChanged(object sender, EventArgs e)
+        {
+            karaokeEffect1.bTextBackGround = chkTextBackground.Checked;
+        }
+
+        private void chkTextUppercase_CheckedChanged(object sender, EventArgs e)
+        {
+            bForceUppercase = chkTextUppercase.Checked;
+            karaokeEffect1.bforceUppercase = bForceUppercase;
+            Karaclass.m_ForceUppercase = bForceUppercase;
+        }
+
+
+        private void btnDirSlideShow_Click(object sender, EventArgs e)
+        {
+            folderBrowserDialog1.SelectedPath = dirSlideShow;
+            if (folderBrowserDialog1.ShowDialog() == DialogResult.OK)
+            {
+                dirSlideShow = folderBrowserDialog1.SelectedPath;
+
+                Cursor.Current = Cursors.WaitCursor;
+                txtSlideShow.Text = dirSlideShow;
+                karaokeEffect1.SetBackground(dirSlideShow);
+            }
+        }
+
+        private void btnResetDir_Click(object sender, EventArgs e)
+        {
+            dirSlideShow = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), Application.ProductName);
+            txtSlideShow.Text = dirSlideShow;
+            karaokeEffect1.SetBackground(dirSlideShow);
+        }
+
+       
+
+     
+
+        private void chkHighLightProgressive_CheckedChanged(object sender, EventArgs e)
+        {
+            bProgressiveHighlight = chkHighLightProgressive.Checked;
+        }
+
+      
+
+      
+           
+     
+
+        #endregion events
+
+
+        #region gradient
+        private void cbGrad0_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            // Apply the selected color from the ComboBox to Color0 of the gradient panel
+            if (cbGrad0.SelectedItem is Color selectedColor)
+            {
+                Grad0Color = selectedColor; // Update the Grad0Color variable
+                karaokeEffect1.Grad0Color = Grad0Color; // Update the gradient panel color
+            }
+        }
+
+        private void cbGrad1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            // Apply the selected color from the ComboBox to Grad1Color
+            if (cbGrad1.SelectedItem is Color selectedColor)
+            {
+                Grad1Color = selectedColor; // Update the Grad1Color variable
+                karaokeEffect1.Grad1Color = Grad1Color; // Update the gradient panel color
+            }
+        }
+
+        private void cbRhythm0_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            // Apply the selected color from the ComboBox to Rhythm0Color
+            if (cbRhythm0.SelectedItem is Color selectedColor)
+            {
+                Rhythm0Color = selectedColor; // Update the Rhythm0Color variable
+                karaokeEffect1.Rhythm0Color = Rhythm0Color; // Update the gradient panel color
+            }
+        }
+
+        private void cbRhythm1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            // Apply the selected color from the ComboBox to Rhythm1Color of the gradient panel
+            if (cbRhythm1.SelectedItem is Color selectedColor)
+            {
+                Rhythm1Color = selectedColor; // Update the Rhythm1Color variable
+                karaokeEffect1.Rhythm1Color = Rhythm1Color; // Update the gradient panel color
+            }
+        }
+
+        #endregion gradient
+
+
+        #region FrameType
+        private void cbFrameType_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            // "NoBorder":
+            // "FrameThin":
+            // "Frame1":
+            // "Frame2":
+            // "Frame3":
+            // "Frame4":
+            // "Frame5":
+            // "Shadow":
+            // "Neon":
+
+            FrameType = ((KeyValuePair<string, string>)cbFrameType.SelectedItem).Key;
+            karaokeEffect1.FrameType = FrameType;
+
+        }
+
+        #endregion FrameType
+
+
+        #region font
+        private void cbFontName_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            ftName = cbFontName.SelectedItem.ToString();
+
+            _karaokeFont = new Font(ftName, ftSize, FontStyle.Regular);
+            karaokeEffect1.KaraokeFont = _karaokeFont;
+        }
+
+        #endregion font
+
+
+        #region Lyrics decoration 
+
+        #region text events
+
+        private void txtBgColor_TextChanged(object sender, EventArgs e)
+        {
+            BgColor = Parse(txtBgColor.Text);
+            ApplyNewColors();
+        }
+
+        private void txtActiveColor_TextChanged(object sender, EventArgs e)
+        {
+            ActiveColor = Parse(txtActiveColor.Text);
+            ApplyNewColors();
+        }
+
+        private void txtHighlightColor_TextChanged(object sender, EventArgs e)
+        {
+            HighlightColor = Parse(txtHighlightColor.Text);
+            ApplyNewColors();
+        }
+
+        private void txtInactiveColor_TextChanged(object sender, EventArgs e)
+        {
+            InactiveColor = Parse(txtInactiveColor.Text);
+            ApplyNewColors();
+        }
+
+        private void txtActiveBorderColor_TextChanged(object sender, EventArgs e)
+        {
+            ActiveBorderColor = Parse(txtActiveBorderColor.Text);
+            ApplyNewColors();
+        }
+
+        private void txtInactiveBorderColor_TextChanged(object sender, EventArgs e)
+        {
+            InactiveBorderColor = Parse(txtInactiveBorderColor.Text);
+            ApplyNewColors();
+        }
+
+
+        #endregion text events
+
+
+        #region select color with button
+
+        /// <summary>
+        /// Backcolor
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void btnBgColor_Click(object sender, EventArgs e)
+        {
+            Color clr = SelectColorFromButton(picBgColor, txtBgColor);
+            BgColor = clr;
+            ApplyNewColors();
+        }
+
+
+        /// <summary>
+        /// Text color: before
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>      
+        private void btnActiveColor_Click(object sender, EventArgs e)
+        {
+            Color clr = SelectColorFromButton(picActiveColor, txtActiveColor);
+            ActiveColor = clr;
+            ApplyNewColors();
+        }
+
+        /// <summary>
+        /// Text color: highlight
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>       
+        private void btnHighlightColor_Click(object sender, EventArgs e)
+        {
+            Color clr = SelectColorFromButton(picHighlightColor, txtHighlightColor);
+            HighlightColor = clr;
+            ApplyNewColors();
+        }
+
+        /// <summary>
+        /// Text color: after
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void btnInactiveColor_Click(object sender, EventArgs e)
+        {
+            Color clr = SelectColorFromButton(picInactiveColor, txtInactiveColor);
+            InactiveColor = clr;
+            ApplyNewColors();
+        }
+
+        /// <summary>
+        /// Text color: contour
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void btnActiveBorderColor_Click(object sender, EventArgs e)
+        {
+            Color clr = SelectColorFromButton(picActiveBorderColor, txtActiveBorderColor);
+            ActiveBorderColor = clr;
+            ApplyNewColors();
+        }
+
+        private void btnInactiveBorderColor_Click(object sender, EventArgs e)
+        {
+            Color clr = SelectColorFromButton(picInactiveBorderColor, txtInactiveBorderColor);
+            InactiveBorderColor = clr;
+            ApplyNewColors();
+        }
+
+        #endregion select color with button
+
+
+        #region select color with picker
+
+        private void btnActiveColorPicker_Click(object sender, EventArgs e)
+        {
+            SelectColorFromPicker(txtActiveColor);
+        }
+
+        private void btnHighlightColorPicker_Click(object sender, EventArgs e)
+        {
+            SelectColorFromPicker(txtHighlightColor);
+        }
+
+        private void btnInactiveColorPicker_Click(object sender, EventArgs e)
+        {
+            SelectColorFromPicker(txtInactiveColor);
+        }
+
+        private void btnActiveColorBorderPicker_Click(object sender, EventArgs e)
+        {
+            SelectColorFromPicker(txtActiveBorderColor);
+        }
+
+        private void btnInactiveBoderColorPicker_Click(object sender, EventArgs e)
+        {
+            SelectColorFromPicker(txtInactiveBorderColor);
+        }       
+
+        private void btnBgColorPicker_Click(object sender, EventArgs e)
+        {
+            SelectColorFromPicker(txtBgColor);
+        }
+
+        #endregion select color with picker
+
+
+        #endregion Lyrics decoration 
+   
+
+        #region functions
+
+        /// <summary>
+        /// Check text representing a color
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentException"></exception>
+        public static Color Parse(string input)
+        {
+            input = input.Trim();
+            string strColorRegex = @"^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$";
+            Regex re = new Regex(strColorRegex);
+            if (re.IsMatch(input))
+            {
+                return ColorTranslator.FromHtml(input);
+            }
+
+            Color named = Color.FromName(input);
+            if (named.IsKnownColor || named.IsNamedColor)
+            {
+                return named;
+            }
+            throw new ArgumentException($"Unsupported color value: {input}", nameof(input));
+        }
+
+        /// <summary>
+        /// Select a color with the ColorDialog box and update colors for picBox and textBox
+        /// </summary>
+        /// <param name="picBox"></param>
+        /// <param name="textBox"></param>
+        private Color SelectColorFromButton(PictureBox picBox, TextBox textBox)
+        {
+            ColorDialog dlg = new ColorDialog();
+            dlg.FullOpen = true;
+            dlg.ShowHelp = true;
+            // Sets the initial color select to the current text color.
+            dlg.Color = picBox.BackColor;
+
+            if (dlg.ShowDialog() != DialogResult.OK) return picBox.BackColor;
+
+            picBox.BackColor = dlg.Color;
+            textBox.Text = ToHex(dlg.Color);
+
+            return dlg.Color;
+
+        }
+
+        /// <summary>
+        /// Translate color to hexa
+        /// </summary>
+        /// <param name="c"></param>
+        /// <returns></returns>
+        private static String ToHex(System.Drawing.Color c) => $"#{c.R:X2}{c.G:X2}{c.B:X2}";
+
+        private void SelectColorFromPicker(TextBox textBox)
+        {
+            this.Hide();
+            Karaboss.Kfn.frmFullScreen frmFullScreen = new Karaboss.Kfn.frmFullScreen(textBox);
+            frmFullScreen.Show();
+        }
+
+        public void GetColorFromPicker(Color c, TextBox txb)
+        {
+            txb.Text = ToHex(c);
+            this.Show();
+        }
+
+
+        #endregion functions
+
+       
     }
 }

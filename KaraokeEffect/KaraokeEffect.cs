@@ -105,8 +105,74 @@ namespace keffect
         private int _linesHeight = 0;
         private string _biggestLine =string.Empty;
 
+        
+        #region Gradient & Rhythm
+
+        readonly System.Windows.Forms.Timer _timerGradient = new System.Windows.Forms.Timer();
+
+        // Default angle for the gradient
+        private float _angle = 45.0f;
+        private int W;
+        private int H;
+        private int speed;
+        private int _beat;
+        public int Beat
+        {
+            get { return _beat; }
+            set
+            {
+                _beat = value;
+                speed = (int)(_beat / 12.0);
+            }
+        }
+        public float GradientAngle { get { return _angle; } set { _angle = value; pBox.Invalidate(); } }
+
+        private Color _gradientColor0;
+        public Color GradientColor0
+        {
+            get { return _gradientColor0; }
+            set
+            {
+                _gradientColor0 = value;
+                pBox.Invalidate();
+            }
+        }
+        private Color _gradientColor1;
+        public Color GradientColor1
+        {
+            get { return _gradientColor1; }
+            set
+            {
+                _gradientColor1 = value;
+                pBox.Invalidate();
+            }
+        }
+
+        private Color _rhythmColor0;
+        public Color RhythmColor0
+        {
+            get { return _rhythmColor0; }
+            set
+            {
+                _rhythmColor0 = value;
+                pBox.Invalidate();
+            }
+        }
+
+        private Color _rhythmColor1;
+        public Color RhythmColor1
+        {
+            get { return _rhythmColor1; }
+            set
+            {
+                _rhythmColor1 = value;
+                pBox.Invalidate();
+            }
+        }
+        #endregion Gradient & Rhythm
+
         #endregion decl
-     
+
 
         [Serializable()]
         public struct kSyncText
@@ -208,6 +274,142 @@ namespace keffect
                 }            
             }
         }
+
+        // "NoBorder":
+        // "FrameThin":
+        // "Frame1":
+        // "Frame2":
+        // "Frame3":
+        // "Frame4":
+        // "Frame5":
+        // "Shadow":
+        // "Neon":
+        private string _frametype = "Frame1";
+        public string FrameType
+        {
+            get { return _frametype; }
+            set
+            {
+                _frametype = value;
+
+                switch (_frametype)
+                {
+                    case "NoBorder":
+                        _borderthick = 0;
+                        break;
+                    case "FrameThin":
+                        _borderthick = 0;
+                        break;
+                    case "Frame1":
+                        _borderthick = 1;
+                        break;
+                    case "Frame2":
+                        _borderthick = 2;
+                        break;
+                    case "Frame3":
+                        _borderthick = 3;
+                        break;
+                    case "Frame4":
+                        _borderthick = 4;
+                        break;
+                    case "Frame5":
+                        _borderthick = 5;
+                        break;
+                    case "Shadow":
+                        _borderthick = 1;
+                        break;
+                    case "Neon":
+                        _borderthick = 1;
+                        break;
+                    default:
+                        _borderthick = 1;
+                        break;
+                }
+                pBox?.Invalidate();
+            }
+        }
+
+        private int _borderthick = 1;
+        public int BorderThick
+        {
+            get { return _borderthick; }
+            set
+            {
+                try
+                {
+                    _borderthick = value;
+                    pBox?.Invalidate();
+                }
+                catch (Exception e)
+                {
+                    Console.Write("Error: " + e.Message);
+                }
+            }
+        }
+
+
+        // Background color
+        private int _bpm;
+        private Color _BgColor;
+        public Color BgColor
+        {
+            get
+            { return _BgColor; }
+            set
+            {
+                _BgColor = value;
+                if (_optionbackground == "SolidColor")
+                {
+                    pBox.BackColor = _BgColor;
+                    pBox.Invalidate();
+                }
+            }
+        }
+
+        private Color _Grad0Color;
+        public Color Grad0Color
+        {
+            get { return _Grad0Color; }
+            set
+            {
+                _Grad0Color = value;
+                pBox.Invalidate();
+            }
+        }
+        private Color _Grad1Color;
+        public Color Grad1Color
+        {
+            get { return _Grad1Color; }
+            set
+            {
+                _Grad1Color = value;
+                pBox.Invalidate();
+            }
+        }
+        private Color _Rhythm0Color;
+        public Color Rhythm0Color
+        {
+            get { return _Rhythm0Color; }
+            set
+            {
+                _Rhythm0Color = value;
+                pBox.BackColor = _Rhythm0Color;
+                ResetSize();
+                pBox.Invalidate();
+            }
+        }
+        private Color _Rhythm1Color;
+        public Color Rhythm1Color
+        {
+            get { return _Rhythm1Color; }
+            set
+            {
+                _Rhythm1Color = value;
+                ResetSize();
+                pBox.Invalidate();
+            }
+        }
+
 
         private bool _bTextBackGround = false;
         public bool bTextBackGround
@@ -473,6 +675,38 @@ namespace keffect
             SetDefaultValues();
             Init();                       
         }
+
+
+        #region Timer gradient
+        private void _timerGradient_Tick(object sender, EventArgs e)
+        {
+            switch (_optionbackground)
+            {
+                case "Gradient":
+                    // For diagonal gradients, we can use the angle property to set the gradient direction
+                    _angle = (_angle + 1) % 360; // Increment the angle by 1 degree, wrapping around if it exceeds 360 degrees
+                    pBox.Invalidate(); // Force the panel to redraw with the new gradient
+                    break;
+
+                case "Rhythm":
+                    // For radial gradients, we don't use the angle, but we can still animate the size of the ellipse
+                    if (W > speed) W -= speed; // Minor the width of the client rectangle at each tick with the speed value
+                    if (H > speed) H -= speed; // Minor the height of the client rectangle at each tick with the speed value 
+
+
+                    break;
+            }
+            Invalidate(); // Force the panel to redraw with the new gradient
+        }
+
+        private void ResetSize()
+        {
+            // Reset the width and height to the current client rectangle size
+            W = ClientRectangle.Width / 2;
+            H = ClientRectangle.Height / 2;
+        }
+
+        #endregion Timer gradient
 
 
         #region Move Window

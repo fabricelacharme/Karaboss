@@ -50,7 +50,6 @@ namespace Karaboss
         #region private properties
 
         private Karaclass.OptionsDisplay OptionDisplay;        
-
         private string bgOption = "Diaporama";
         
         // Font
@@ -59,8 +58,7 @@ namespace Karaboss
         private uint ftSize = 20;
 
         // Frame
-        private string FrameType;
-        private int _frametypeindex = 1;
+        private string FrameType;        
 
         // Text color
         private Color InactiveColor;
@@ -69,8 +67,7 @@ namespace Karaboss
         // Text sung color
         private Color ActiveColor;
 
-        // Border color
-        private bool bActiveBorder = true;
+        // Border color        
         private Color ActiveBorderColor;
         private Color InactiveBorderColor;
 
@@ -94,7 +91,6 @@ namespace Karaboss
 
         // Force Uppercase
         private bool bForceUppercase = false;
-
 
         // Number of lines to display
         private int NbLines;
@@ -173,18 +169,17 @@ namespace Karaboss
                 // Force Uppercase
                 bForceUppercase = Karaclass.m_ForceUppercase;
               
-
                 // Display balls on lyrics
                 chkDisplayBalls.Checked = Karaclass.m_DisplayBalls;
 
-                // Background type (Diaporama, Solidcolor, Transparent)
-                BgColor = Properties.Settings.Default.BgColor;
+                // Background type (Diaporama, Solidcolor, Transparent)                
                 Grad0Color = Properties.Settings.Default.Grad0Color;
                 Grad1Color = Properties.Settings.Default.Grad1Color;
                 Rhythm0Color = Properties.Settings.Default.Rhythm0Color;
                 Rhythm1Color = Properties.Settings.Default.Rhythm1Color;
 
-                // Colors                
+                // Colors: Properties => textBox                
+                txtBgColor.Text = Properties.Settings.Default.BgColor;
                 txtActiveColor.Text = Properties.Settings.Default.ActiveColor;
                 txtHighlightColor.Text = Properties.Settings.Default.HighlightColor;
                 txtInactiveColor.Text = Properties.Settings.Default.InactiveColor;
@@ -195,6 +190,9 @@ namespace Karaboss
                 txtHighlightChordColor.Text = Properties.Settings.Default.HighlightChordColor;
 
 
+                // textBox => pic 
+                picBgColor.BackColor = Parse(txtBgColor.Text);
+
                 picActiveColor.BackColor = Parse(txtActiveColor.Text);
                 picHighlightColor.BackColor = Parse(txtHighlightColor.Text);
                 picInactiveColor.BackColor = Parse(txtInactiveColor.Text);
@@ -204,6 +202,8 @@ namespace Karaboss
                 picInactiveChordColor.BackColor = Parse(txtInactiveChordColor.Text);
                 picHighlightChordColor.BackColor = Parse(txtHighlightChordColor.Text);
 
+                // pic => variables
+                BgColor = picBgColor.BackColor;
 
                 ActiveColor = picActiveColor.BackColor;
                 HighlightColor = picHighlightColor.BackColor;
@@ -325,8 +325,7 @@ namespace Karaboss
                 HighlightColor = Color.Red;
                 InactiveColor = Color.YellowGreen;
                 ActiveBorderColor = Color.Black;
-                NbLines = 3;
-                bActiveBorder = true;
+                NbLines = 3;                
                 
                 dirSlideShow = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), Application.ProductName) + "\\slideshow";
 
@@ -401,7 +400,7 @@ namespace Karaboss
                 Properties.Settings.Default.KaraokeFont = _karaokeFont;
 
                 // Background colors
-                Properties.Settings.Default.BgColor = BgColor;
+                Properties.Settings.Default.BgColor = ToHex(BgColor);
                 Properties.Settings.Default.Grad0Color = Grad0Color;
                 Properties.Settings.Default.Grad1Color = Grad1Color;
                 Properties.Settings.Default.Rhythm0Color = Rhythm0Color;
@@ -647,21 +646,7 @@ namespace Karaboss
                 return defColor;
         }
 
-        /// <summary>
-        /// Backcolor
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void BtnBackColor_Click(object sender, EventArgs e)
-        {
-            
-            Color clr = DlgGetColor(BgColor);
-            if (clr == BgColor)
-                return;
-            BgColor = clr;
-            picBgColor.BackColor = clr;
-            ApplyNewColors();
-        }
+      
             
 
         #endregion select colors
@@ -858,6 +843,8 @@ namespace Karaboss
         #endregion form load close
     
 
+
+
         #region Background selection
 
         /// <summary>
@@ -872,9 +859,10 @@ namespace Karaboss
         {
             if (radioDiaporama.Checked)
             {
-                btnBackColor.Visible = false;
+                btnBgColor.Visible = false;
+                btnBgColorPicker.Visible = false;
                 picBgColor.Visible = false;
-
+                txtBgColor.Visible = false;
 
                 pBox.OptionBackground = "Diaporama";
                 bgOption = "Diaporama";
@@ -886,9 +874,11 @@ namespace Karaboss
         {
             if (radioSolidColor.Checked)
             {
-                btnBackColor.Visible = true;
+                btnBgColor.Visible = true;
+                btnBgColorPicker.Visible = true;
                 picBgColor.Visible = true;
-
+                txtBgColor.Visible = true;
+                
 
                 pBox.OptionBackground = "SolidColor";
                 bgOption = "SolidColor";
@@ -898,8 +888,12 @@ namespace Karaboss
         private void radioGradient_CheckedChanged(object sender, EventArgs e)
         {
             if(radioGradient.Checked)
-            {                
-              
+            {
+                btnBgColor.Visible = false;
+                btnBgColorPicker.Visible = false;
+                picBgColor.Visible = false;
+                txtBgColor.Visible = false;
+
                 pBox.OptionBackground = "Gradient";
                 bgOption = "Gradient";
             }
@@ -910,7 +904,10 @@ namespace Karaboss
         {
             if (radioRhythm.Checked)
             {
-               
+                btnBgColor.Visible = false;
+                btnBgColorPicker.Visible = false;
+                picBgColor.Visible = false;
+                txtBgColor.Visible = false;
 
                 pBox.OptionBackground = "Rhythm";
                 bgOption = "Rhythm";
@@ -921,9 +918,10 @@ namespace Karaboss
         {
             if (radioTransparent.Checked)
             {
-                btnBackColor.Visible = false;
+                btnBgColor.Visible = false;
+                btnBgColorPicker.Visible = false;
                 picBgColor.Visible = false;
-
+                txtBgColor.Visible = false;
 
                 pBox.OptionBackground = "Transparent";
                 bgOption = "Transparent";
@@ -948,7 +946,6 @@ namespace Karaboss
                 e.Handled = true;
             }           
         }       
-
 
         private void TxtSlideShowFreq_TextChanged(object sender, EventArgs e)
         {
@@ -1034,7 +1031,6 @@ namespace Karaboss
             return float.TryParse(s, out output);
         }
 
-
         private void chkDisplayBalls_CheckedChanged(object sender, EventArgs e)
         {
             Karaclass.m_DisplayBalls = chkDisplayBalls.Checked;
@@ -1079,7 +1075,7 @@ namespace Karaboss
             Karaclass.m_ForceUppercase = bForceUppercase;
         }
 
-        #endregion
+        #endregion events
 
 
         #region chords
@@ -1107,6 +1103,7 @@ namespace Karaboss
         #endregion chords
 
 
+        #region gradient
         private void cbGrad0_SelectedIndexChanged(object sender, EventArgs e)
         {
             // Apply the selected color from the ComboBox to Color0 of the gradient panel
@@ -1147,11 +1144,10 @@ namespace Karaboss
             }
         }
 
-        private void chkInactiveBorder_CheckedChanged(object sender, EventArgs e)
-        {
+        #endregion gradient
 
-        }
 
+        #region FrameType
         private void cbFrameType_SelectedIndexChanged(object sender, EventArgs e)
         {
             // "NoBorder":
@@ -1168,6 +1164,8 @@ namespace Karaboss
             pBox.FrameType = FrameType;
         }
 
+        #endregion FrameType
+
 
         #region font
 
@@ -1181,9 +1179,16 @@ namespace Karaboss
 
         #endregion font
 
+
         #region Lyrics decoration 
 
         #region text events
+
+        private void txtBgColor_TextChanged(object sender, EventArgs e)
+        {
+            BgColor = Parse(txtBgColor.Text);
+            ApplyNewColors();
+        }
 
         private void txtActiveColor_TextChanged(object sender, EventArgs e)
         {
@@ -1231,6 +1236,19 @@ namespace Karaboss
 
 
         #region select color with button
+
+        /// <summary>
+        /// Backcolor
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void btnBgColor_Click(object sender, EventArgs e)
+        {
+            Color clr = SelectColorFromButton(picBgColor, txtBgColor);
+            BgColor = clr;
+            ApplyNewColors();
+        }
+
 
         /// <summary>
         /// Text color: before
@@ -1327,6 +1345,11 @@ namespace Karaboss
             SelectColorFromPicker(txtHighlightChordColor);
         }
 
+        private void btnBgColorPicker_Click(object sender, EventArgs e)
+        {
+            SelectColorFromPicker(txtBgColor);
+        }
+
 
         #endregion select color with picker
 
@@ -1402,7 +1425,9 @@ namespace Karaboss
             this.Show();
         }
 
+
         #endregion functions
 
+       
     }
 }

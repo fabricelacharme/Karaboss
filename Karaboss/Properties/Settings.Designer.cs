@@ -197,10 +197,10 @@ namespace Karaboss.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("Black")]
-        public global::System.Drawing.Color BgColor {
+        [global::System.Configuration.DefaultSettingValueAttribute("#000000")]
+        public string BgColor {
             get {
-                return ((global::System.Drawing.Color)(this["BgColor"]));
+                return ((string)(this["BgColor"]));
             }
             set {
                 this["BgColor"] = value;
