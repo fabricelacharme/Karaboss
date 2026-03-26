@@ -1,6 +1,6 @@
 ﻿#region License
 
-/* Copyright (c) 2025 Fabrice Lacharme
+/* Copyright (c) 2026 Fabrice Lacharme
  * 
  * Permission is hereby granted, free of charge, to any person obtaining a copy 
  * of this software and associated documentation files (the "Software"), to 
@@ -36,6 +36,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
 using System.Drawing.Drawing2D;
+using System.Drawing.Imaging;
 using System.Drawing.Text;
 using System.IO;
 using System.Linq;
@@ -60,6 +61,105 @@ namespace keffect
         public static extern bool ReleaseCapture();
         private HashSet<Control> controlsToMove = new HashSet<Control>();
         #endregion
+
+
+        #region Slideshow
+
+        System.Timers.Timer timerTransition;
+        System.Timers.Timer timerChangeImage;
+
+        private float mBlend;
+        private int mDir = 1;
+        private int count = 0;
+
+        private Image mImg1;
+        private Image mImg2;
+        private Image Image1
+        {
+            get { return mImg1; }
+            set { mImg1 = value; Invalidate(); }
+        }
+        private Image Image2
+        {
+            get { return mImg2; }
+            set { mImg2 = value; Invalidate(); }
+        }
+        private float m_Blend
+        {
+            get { return mBlend; }
+            set { mBlend = value; Invalidate(); }
+        }
+        private Bitmap[] pictures;
+
+        #endregion slideshow
+
+
+        #region SlideShow old
+        public Rectangle m_DisplayRectangle { get; set; }
+
+        private BackgroundWorker backgroundWorkerSlideShow;
+
+        private Random random;
+        private string[] bgFiles;
+        private string DefaultDirSlideShow;
+
+        private List<string> m_ImageFilePaths;
+        private MemoryStream m_ImageStream = null;
+
+        private ManualResetEvent m_FinishEvent = new ManualResetEvent(false);
+
+        private bool m_Cancel = false;
+        private bool m_Restart = false;
+
+        delegate void UpdateTimerEnableCallback(bool enabled);
+
+        public bool IsBusy
+        {
+            get
+            {
+
+                if (backgroundWorkerSlideShow != null)
+                    return backgroundWorkerSlideShow.IsBusy;
+                else
+                    return false;
+            }
+        }
+
+        /// <summary>
+        /// SlideShow frequency
+        /// </summary>
+        private int _freqdirslideshow = 10;
+        public int FreqDirSlideShow
+        {
+            get { return _freqdirslideshow; }
+            set { _freqdirslideshow = value; }
+        }
+
+        /// <summary>
+        /// Size mode of picturebox
+        /// </summary>
+        private PictureBoxSizeMode _sizemode;
+        public PictureBoxSizeMode SizeMode
+        {
+            get { return _sizemode; }
+            set
+            {
+                _sizemode = value;
+                pBox.SizeMode = _sizemode;
+
+            }
+        }
+
+        private int PAUSE_TIME;
+        private int rndIter = 0;
+        private string strCurrentImage; // current image to insure that random will provide a different one
+
+        public ImageLayout imgLayout { get; set; }
+        public Image m_CurrentImage { get; set; }
+        public int m_Alpha { get; set; }
+
+
+        #endregion SlideShow old
 
 
         #region decl
@@ -105,7 +205,9 @@ namespace keffect
         private int _linesHeight = 0;
         private string _biggestLine =string.Empty;
 
-        
+
+        private string current_fragment = string.Empty;
+
         #region Gradient & Rhythm
 
         readonly System.Windows.Forms.Timer _timerGradient = new System.Windows.Forms.Timer();
@@ -171,6 +273,9 @@ namespace keffect
         }
         #endregion Gradient & Rhythm
 
+
+        private int _beatNumber = 1;
+
         #endregion decl
 
 
@@ -189,82 +294,14 @@ namespace keffect
 
 
         #region properties
-
-
-        #region SlideShow
-        public Rectangle m_DisplayRectangle { get; set; }
-
-        private BackgroundWorker backgroundWorkerSlideShow;
-
-        private Random random;
-        private string[] bgFiles;
-        private string DefaultDirSlideShow;
-
-        private List<string> m_ImageFilePaths;
-        private MemoryStream m_ImageStream = null;
-        
-        private ManualResetEvent m_FinishEvent = new ManualResetEvent(false);
-
-        private bool m_Cancel = false;
-        private bool m_Restart = false;
-
-        delegate void UpdateTimerEnableCallback(bool enabled);
-
-        public bool IsBusy
-        {
-            get
-            {
-
-                if (backgroundWorkerSlideShow != null)
-                    return backgroundWorkerSlideShow.IsBusy;
-                else
-                    return false;
-            }
-        }
-
-        /// <summary>
-        /// SlideShow frequency
-        /// </summary>
-        private int _freqdirslideshow = 10;
-        public int FreqDirSlideShow
-        {
-            get { return _freqdirslideshow; }
-            set { _freqdirslideshow = value; }
-        }
-
-        /// <summary>
-        /// Size mode of picturebox
-        /// </summary>
-        private PictureBoxSizeMode _sizemode;
-        public PictureBoxSizeMode SizeMode
-        {
-            get { return _sizemode; }
-            set
-            {
-                _sizemode = value;
-                pBox.SizeMode = _sizemode;
-                
-            }
-        }
-
-        private int PAUSE_TIME;
-        private int rndIter = 0;
-        private string strCurrentImage; // current image to insure that random will provide a different one
-
-        public ImageLayout imgLayout { get; set; }
-        public Image m_CurrentImage { get; set; }
-        public int m_Alpha { get; set; }
-
-
-        #endregion SlideShow
-
-
+      
         #region text color
 
         /// <summary>
         /// Text sung color
         /// </summary>
-        private Color _ActiveColor;
+        private Color _ActiveColor = Color.FromArgb(153, 180, 51);
+        [Description("text color for lyrics that have already been sung")]
         public Color ActiveColor
         {
             get
@@ -280,6 +317,7 @@ namespace keffect
         /// Text color
         /// </summary>
         private Color _HighlightColor;
+        [Description("the color of the lyrics currently being sung")]
         public Color HighlightColor
         {
             get
@@ -295,6 +333,7 @@ namespace keffect
         /// Text to sing color
         /// </summary>
         private Color _InactiveColor;
+        [Description("text color for the remaining lyrics")]
         public Color InactiveColor
         {
             get
@@ -350,6 +389,9 @@ namespace keffect
                 }            
             }
         }
+
+
+        #region Frame type
 
         // "NoBorder":
         // "FrameThin":
@@ -423,6 +465,8 @@ namespace keffect
             }
         }
 
+        #endregion Frame type
+
 
         // Background color
         private int _bpm;
@@ -441,6 +485,9 @@ namespace keffect
                 }
             }
         }
+
+
+        #region gradient
 
         private Color _Grad0Color;
         public Color Grad0Color
@@ -487,6 +534,16 @@ namespace keffect
         }
 
 
+        private int _beatDuration = 0;
+        public int BeatDuration
+        {
+            get { return _beatDuration; }
+            set { _beatDuration = value; }
+        }
+
+        #endregion gradient
+
+
         private bool _bTextBackGround = false;
         public bool bTextBackGround
         {
@@ -521,25 +578,45 @@ namespace keffect
                 {
                     case "Diaporama":
                         break;
-
                     case "SolidColor":
                         m_Cancel = true;
                         Terminate();
-                        pBox.Image = null;                        
+                        _timerGradient.Stop();
+                        pBox.Image = null;
                         m_CurrentImage = null;
-                        pBox.BackColor = _txtbackcolor;
-                        pBox.Invalidate();                        
+                        pBox.BackColor = _BgColor;
+                        pBox.Invalidate();
+                        break;
+
+                    case "Gradient":
+                        m_Cancel = true;
+                        Terminate();
+                        pBox.Image = null;
+                        m_CurrentImage = null;
+                        _timerGradient.Start();
+                        pBox.Invalidate();
+                        break;
+
+                    case "Rhythm":
+                        m_Cancel = true;
+                        Terminate();
+                        _timerGradient.Start();
+                        pBox.Image = null;
+                        m_CurrentImage = null;
+                        ResetSize();
+                        pBox.BackColor = _Rhythm0Color;
+                        pBox.Invalidate();
                         break;
 
                     case "Transparent":
                         m_Cancel = true;
                         Terminate();
+                        _timerGradient.Stop();
                         pBox.Image = null;
                         m_CurrentImage = null;
                         pBox.BackColor = _transparencykey;
                         pBox.Invalidate();
                         break;
-
                     default:
                         break;
                 }
@@ -604,6 +681,7 @@ namespace keffect
         }
                 
         private int _position = 0;
+
         /// <summary>
         /// Player position => highlight lyrics at this position
         /// </summary>
@@ -633,99 +711,25 @@ namespace keffect
                 pBox.Invalidate();                
             }
         }
-               
+
+
+        #region Font
+
         private Font _karaokeFont;
         [Description("The font of the component")]
         public Font KaraokeFont
         {
             get { return _karaokeFont; }
-            set { _karaokeFont = value; }
-        }
-
-
-        private Color _backcolor = Color.Black;
-        [Description("The background color of the component")]
-        public override Color BackColor
-        {
-            get { return _backcolor; }
             set { 
-                _backcolor = value; 
-                pBox.BackColor = value;                
-                pBox.Invalidate();                
-            }
-        }
-
-        
-        private Color _AlreadyPlayedColor = Color.FromArgb(153, 180, 51);  // Green
-        [Description("Colour of text already played")]
-        public Color TxtAlreadyPlayedColor
-        {
-            get { return _AlreadyPlayedColor; }
-            set 
-            { 
-                _AlreadyPlayedColor = value; 
-                pBox.Invalidate();                
-            }
-        }
-
-        private Color _BeingPlayedColor = Color.FromArgb(238, 17, 17); // Red
-        [Description("Colour of text being played")]
-        public Color TxtBeingPlayedColor
-        {
-            get { return _BeingPlayedColor; }
-            set {                
-                _BeingPlayedColor = value;
-                pBox.Invalidate();                
-            }
-        }
-
-        private Color _NotYetPlayedColor = Color.White;
-        [Description("Colour of text not yet played")]
-        public Color TxtNotYetPlayedColor
-        {
-            get { return _NotYetPlayedColor; }
-            set 
-            { 
-                _NotYetPlayedColor = value;
-                pBox.Invalidate();                
-            }
-        }
-
-        private Color _txtbackcolor;
-        public Color TxtBackColor
-        {
-            get { return _txtbackcolor; }
-            set { 
-                _txtbackcolor = value;
-                pBox.BackColor = _txtbackcolor;
+                _karaokeFont = value; 
                 pBox.Invalidate();
             }
         }
 
-
-        private Color _txtcontourcolor;
-        public Color TxtContourColor
-        {
-            get { return _txtcontourcolor; }
-            set { _txtcontourcolor = value; }
-        }
-
-        private bool _bColorContour = false;
-        public bool bColorContour
-        {
-            get { return _bColorContour; }
-            set 
-            {
-                if (value != _bColorContour)
-                {
-                    _bColorContour = value;
-                    pBox.Invalidate();                    
-                }
-            }
-        }
-
+        #endregion Font
+      
+     
         #endregion properties
-
 
         /// <summary>
         /// Constructor
@@ -739,14 +743,25 @@ namespace keffect
             Application.AddMessageFilter(this);
             controlsToMove.Add(this);
             controlsToMove.Add(this.pBox);
-            
+
             #endregion
 
+            Beat = 200; // Default speed for rhythm animation
+            
+            _timerGradient.Interval = 60; // 60 ms
+            _timerGradient.Tick += new EventHandler(_timerGradient_Tick);
+
+
+
+            /*
             this.SetStyle(
                  System.Windows.Forms.ControlStyles.UserPaint |
                  System.Windows.Forms.ControlStyles.AllPaintingInWmPaint |
                  System.Windows.Forms.ControlStyles.OptimizedDoubleBuffer,
                  true);                        
+            */
+            SetStyle(ControlStyles.AllPaintingInWmPaint | ControlStyles.UserPaint | ControlStyles.OptimizedDoubleBuffer, true);
+
 
             SetDefaultValues();
             Init();                       
@@ -809,7 +824,6 @@ namespace keffect
 
         private void SetDefaultValues()
         {
-
             m_ImageFilePaths = new List<string>();
             m_Alpha = 255;
             imgLayout = ImageLayout.Stretch;
@@ -925,10 +939,10 @@ namespace keffect
         /// <param name="line"></param>
         /// <param name="fSize"></param>
         /// <returns></returns>
-        private float MeasureString(string line, float femSize)
+        private float MeasureString(string fragment, float femSize)
         {
             float ret = 0;
-            if (line != "")
+            if (fragment != "")
             {
                 using (Graphics g = pBox.CreateGraphics())
                 {
@@ -936,7 +950,7 @@ namespace keffect
                     g.PageUnit = GraphicsUnit.Pixel;
 
                     m_font = new Font(_karaokeFont.FontFamily, femSize, FontStyle.Regular, GraphicsUnit.Pixel);
-                    SizeF sz = g.MeasureString(line, m_font, new Point(0, 0), sf);
+                    SizeF sz = g.MeasureString(fragment, m_font, new Point(0, 0), sf);
                     ret = sz.Width;
                     g.Dispose();
                 }
@@ -972,13 +986,15 @@ namespace keffect
         }
 
         /// <summary>
-        /// Measure all lines
+        /// Measure the length of line "curline"
         /// </summary>
         /// <param name="curline"></param>
         /// <returns></returns>
         private float MeasureLine(int curline)
         {
             float Sum = 0;
+            
+            // Calculate the lengh of a line
             for (int i = 0; i < Lines[curline].Length; i++)
             {                
                 Sum += MeasureString(Lines[curline][i], _karaokeFont.Size);
@@ -1010,70 +1026,201 @@ namespace keffect
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void pBox_Paint(object sender, PaintEventArgs e)
-        {           
+        {
             // Antialiasing      
             e.Graphics.TextRenderingHint = TextRenderingHint.ClearTypeGridFit;
             e.Graphics.SmoothingMode = SmoothingMode.AntiAlias;
 
-            SolidBrush colorBrush;
-
             #region draw background image
-            int x;
-            int y;
 
-            if (m_CurrentImage != null)
+            // Create a GraphicsPath to define the area to fill
+            GraphicsPath gp;
+
+            switch (_optionbackground)
             {
-                #region sizemode
-                switch (_sizemode)
-                {
-                    case PictureBoxSizeMode.AutoSize:
-                        x = (this.ClientSize.Width - m_CurrentImage.Width) / 2;
-                        y = (this.ClientSize.Height - m_CurrentImage.Height) / 2;
-                        m_DisplayRectangle = new Rectangle(x, y, m_CurrentImage.Width, m_CurrentImage.Height);
-                        break;
-                    case PictureBoxSizeMode.CenterImage:
-                        x = (this.ClientSize.Width - m_CurrentImage.Width) / 2;
-                        y = (this.ClientSize.Height - m_CurrentImage.Height) / 2;
-                        m_DisplayRectangle = new Rectangle(x, y, m_CurrentImage.Width, m_CurrentImage.Height);
-                        break;
-                    case PictureBoxSizeMode.Normal:
-                        // coin superieur gauche
-                        m_DisplayRectangle = new Rectangle(0, 0, this.ClientSize.Width, this.ClientSize.Height);
-                        break;
-                    case PictureBoxSizeMode.StretchImage:
-                        //  l'image est étirée ou réduite pour s'ajuster à PictureBox.
-                        m_DisplayRectangle = new Rectangle(0, 0, this.ClientSize.Width, this.ClientSize.Height);
-                        break;
-                    case PictureBoxSizeMode.Zoom:
-                        m_DisplayRectangle = new Rectangle(0, 0, this.ClientSize.Width, this.ClientSize.Height);
-                        break;
-                }
-                #endregion
 
-                try
-                {
-                    e.Graphics.DrawImage(m_CurrentImage, m_DisplayRectangle, 0, 0, m_CurrentImage.Width, m_CurrentImage.Height, GraphicsUnit.Pixel);
+                case "Diaporama":
+                   
+                    if (pictures.Length == 1)
+                    {
+                        if (m_CurrentImage != null)
+                        {
+                            #region sizemode
+                            int x;
+                            int y;
 
-                }
-                catch (Exception dr)
-                {
-                    Console.Write("Error drawing image: " + dr.Message);
-                }
+                            switch (_sizemode)
+                            {
+                                case PictureBoxSizeMode.AutoSize:
+                                    x = (this.ClientSize.Width - m_CurrentImage.Width) / 2;
+                                    y = (this.ClientSize.Height - m_CurrentImage.Height) / 2;
+                                    m_DisplayRectangle = new Rectangle(x, y, m_CurrentImage.Width, m_CurrentImage.Height);
+                                    break;
+                                case PictureBoxSizeMode.CenterImage:
+                                    x = (this.ClientSize.Width - m_CurrentImage.Width) / 2;
+                                    y = (this.ClientSize.Height - m_CurrentImage.Height) / 2;
+                                    m_DisplayRectangle = new Rectangle(x, y, m_CurrentImage.Width, m_CurrentImage.Height);
+                                    break;
+                                case PictureBoxSizeMode.Normal:
+                                    // coin superieur gauche
+                                    m_DisplayRectangle = new Rectangle(0, 0, this.ClientSize.Width, this.ClientSize.Height);
+                                    break;
+                                case PictureBoxSizeMode.StretchImage:
+                                    //  l'image est étirée ou réduite pour s'ajuster à PictureBox.
+                                    m_DisplayRectangle = new Rectangle(0, 0, this.ClientSize.Width, this.ClientSize.Height);
+                                    break;
+                                case PictureBoxSizeMode.Zoom:
+                                    m_DisplayRectangle = new Rectangle(0, 0, this.ClientSize.Width, this.ClientSize.Height);
+                                    break;
+                            }
+                            #endregion
 
+                            try
+                            {
+                                e.Graphics.DrawImage(m_CurrentImage, m_DisplayRectangle, 0, 0, m_CurrentImage.Width, m_CurrentImage.Height, GraphicsUnit.Pixel);
+
+                            }
+                            catch (Exception dr)
+                            {
+                                Console.Write("Error drawing image: " + dr.Message);
+                            }
+                        }
+                    }
+                    else
+                    {
+                        if (mImg1 == null || mImg2 == null)
+                            e.Graphics.FillRectangle(new SolidBrush(this.BackColor), new Rectangle(0, 0, this.Width, this.Height));
+                        else
+                        {
+                            Rectangle rc = new Rectangle(0, 0, this.Width, this.Height);
+                            ColorMatrix cm = new ColorMatrix();
+                            ImageAttributes ia = new ImageAttributes();
+                            cm.Matrix33 = mBlend;
+                            ia.SetColorMatrix(cm);
+                            e.Graphics.DrawImage(mImg2, rc, 0, 0, mImg2.Width, mImg2.Height, GraphicsUnit.Pixel, ia);
+                            cm.Matrix33 = 1F - mBlend;
+                            ia.SetColorMatrix(cm);
+                            e.Graphics.DrawImage(mImg1, rc, 0, 0, mImg1.Width, mImg1.Height, GraphicsUnit.Pixel, ia);
+                        }
+                    }
+                    break;
+
+                case "Gradient":
+                    // Draw gradient background
+                    // Create a GraphicsPath to define the area to fill
+                    gp = new GraphicsPath();
+                    gp.AddRectangle(ClientRectangle);
+                    e.Graphics.SmoothingMode = SmoothingMode.HighQuality;
+                    e.Graphics.FillPath(new LinearGradientBrush(ClientRectangle, _Grad0Color, _Grad1Color, _angle), gp);
+                    gp.Dispose(); // Dispose the GraphicsPath to free resources
+                    break;
+
+                case "Rhythm":
+                    int w = ClientRectangle.Width / 2;
+                    int h = ClientRectangle.Height / 2;
+                    int d = Math.Min(2 * W, 2 * H);
+
+                    e.Graphics.SmoothingMode = SmoothingMode.AntiAlias;
+
+                    // Radial gradients are handled differently, so we won't set an angle here                    
+                    if (_beatNumber != 1)
+                    {
+                        //RectangleF rect = new RectangleF((ClientRectangle.Width - W) / 2, (ClientRectangle.Height - H) / 2, W, H);
+                        RectangleF rect = new RectangleF((ClientRectangle.Width - d) / 2, (ClientRectangle.Height - d) / 2, d, d);
+                        gp = new GraphicsPath();
+                        gp.AddEllipse(rect);
+                        using (PathGradientBrush pgb = new PathGradientBrush(gp))
+                        {
+                            pgb.CenterColor = _Rhythm1Color; // Center color of the radial gradient
+                            pgb.SurroundColors = new Color[] { _Rhythm0Color }; // Surrounding color of the radial gradient
+                            e.Graphics.FillPath(pgb, gp); // Fill the path with the radial gradient
+                            pgb.Dispose(); // Dispose the PathGradientBrush to free resources                        
+                        }
+                        gp.Dispose(); // Dispose the GraphicsPath to free resources
+                    }
+                    else
+                    {
+                        RectangleF rect1 = new RectangleF((w - W) / 2, (h - H) / 2, W, H); // Top-left corner
+                        RectangleF rect2 = new RectangleF(w + (w - W) / 2, (h - H) / 2, W, H); // Top-right corner                            
+                        RectangleF rect3 = new RectangleF((w - W) / 2, h + (h - H) / 2, W, H); // Bottom-left corner                                                                                    
+                        RectangleF rect4 = new RectangleF(w + (w - W) / 2, h + (h - H) / 2, W, H); // Bottom-right corner   
+
+                        gp = new GraphicsPath();
+                        gp.AddEllipse(rect1);
+                        using (PathGradientBrush pgb = new PathGradientBrush(gp))
+                        {
+                            pgb.CenterColor = _Rhythm1Color; // Center color of the radial gradient
+                            pgb.SurroundColors = new Color[] { _Rhythm0Color }; // Surrounding color of the radial gradient
+                            e.Graphics.FillPath(pgb, gp); // Fill the path with the radial gradient
+                            pgb.Dispose(); // Dispose the PathGradientBrush to free resources                        
+                        }
+                        gp.Dispose(); // Dispose the GraphicsPath to free resources
+
+                        gp = new GraphicsPath();
+                        gp.AddEllipse(rect2);
+                        using (PathGradientBrush pgb = new PathGradientBrush(gp))
+                        {
+                            pgb.CenterColor = _Rhythm1Color; // Center color of the radial gradient
+                            pgb.SurroundColors = new Color[] { _Rhythm0Color }; // Surrounding color of the radial gradient
+                            e.Graphics.FillPath(pgb, gp); // Fill the path with the radial gradient
+                            pgb.Dispose(); // Dispose the PathGradientBrush to free resources                        
+                        }
+                        gp.Dispose(); // Dispose the GraphicsPath to free resources
+
+                        gp = new GraphicsPath();
+                        gp.AddEllipse(rect3);
+                        using (PathGradientBrush pgb = new PathGradientBrush(gp))
+                        {
+                            pgb.CenterColor = _Rhythm1Color; // Center color of the radial gradient
+                            pgb.SurroundColors = new Color[] { _Rhythm0Color }; // Surrounding color of the radial gradient
+                            e.Graphics.FillPath(pgb, gp); // Fill the path with the radial gradient
+                            pgb.Dispose(); // Dispose the PathGradientBrush to free resources                        
+                        }
+                        gp.Dispose(); // Dispose the GraphicsPath to free resources
+
+                        gp = new GraphicsPath();
+                        gp.AddEllipse(rect4);
+                        using (PathGradientBrush pgb = new PathGradientBrush(gp))
+                        {
+                            pgb.CenterColor = _Rhythm1Color; // Center color of the radial gradient
+                            pgb.SurroundColors = new Color[] { _Rhythm0Color }; // Surrounding color of the radial gradient
+                            e.Graphics.FillPath(pgb, gp); // Fill the path with the radial gradient
+                            pgb.Dispose(); // Dispose the PathGradientBrush to free resources                        
+                        }
+                        gp.Dispose(); // Dispose the GraphicsPath to free resources                                       
+                    }
+                    break;
             }
-
-
             #endregion draw background image
 
 
             #region draw text
 
+            DrawLyrics(e);
+           
+            #endregion draw text
+        }
+
+        /// <summary>
+        /// Draw lyrics
+        /// </summary>
+        /// <param name="e"></param>
+        private void DrawLyrics(PaintEventArgs e)
+        {
+            
+            // path made for the portion of a line of lyrics
+            // in order to draw the ActiveBorder color only on it
+            var pathFragment = new GraphicsPath();            
+            SolidBrush colorBrush;
+            Pen penActiveBorder = new Pen(_ActiveBorderColor, _borderthick);    // pen for active border color
+            Pen penInactiveBorder = new Pen(_InactiveBorderColor, _borderthick); // pen for inactive border color
+
             // Center text vertically
             int y0 = VCenterText();
             int x0 = 0;
 
-            int Wbg;            
-            RectangleF Rbg;        
+            int Wbg;
+            RectangleF Rbg;
 
             // =============================================
             // WHITE
@@ -1083,7 +1230,6 @@ namespace keffect
             // Create a graphical path
             var path = new GraphicsPath();
 
-            
             // Add the full text line to the graphical path            
             if (_FirstLineToShow < Texts.Count())
             {
@@ -1092,27 +1238,30 @@ namespace keffect
                 #region background of syllabe                              
                 if (_bTextBackGround)
                 {
-                    Wbg = (int)(1.04*LinesLengths[_FirstLineToShow]);
+                    Wbg = (int)(1.04 * LinesLengths[_FirstLineToShow]);
                     // Black background to make text more visible
-                    Rbg = new RectangleF((int)(0.94*x0), (int)(1.04*y0), Wbg, _lineHeight);
+                    Rbg = new RectangleF((int)(0.94 * x0), (int)(1.04 * y0), Wbg, _lineHeight);
                     // background
                     e.Graphics.FillRectangle(new SolidBrush(Color.Black), Rbg);
                 }
                 #endregion
 
                 path.AddString(Texts[_FirstLineToShow], _karaokeFont.FontFamily, (int)_karaokeFont.Style, _karaokeFont.Size, new Point(x0, y0), sf);
+                
+                // tutu
+                pathFragment.AddString(current_fragment, _karaokeFont.FontFamily, (int)_karaokeFont.Style, _karaokeFont.Size, new Point(x0, y0), sf);
             }
 
             // Color first in black
-            using (SolidBrush outlineBrush = new SolidBrush(Color.Black))
-            {
-                e.Graphics.FillPath(outlineBrush, path);
-            }
+            //using (SolidBrush outlineBrush = new SolidBrush(Color.Black))
+            //{
+                //e.Graphics.FillPath(outlineBrush, path);
+            //}
 
             // Fill graphical path in white => full text is white
-            colorBrush = new SolidBrush(_NotYetPlayedColor);
+            colorBrush = new SolidBrush(_InactiveColor);
             e.Graphics.FillPath(colorBrush, path);
-            
+
 
             // ======================================================
             // GREEN
@@ -1128,8 +1277,8 @@ namespace keffect
             // update region on the intersection between region and 2nd rectangle
             r.Intersect(intersectRectBefore);
 
-            colorBrush = new SolidBrush(_AlreadyPlayedColor);
-            e.Graphics.FillRegion(colorBrush, r);            
+            colorBrush = new SolidBrush(_ActiveColor);
+            e.Graphics.FillRegion(colorBrush, r);
 
 
             // ======================================================
@@ -1145,13 +1294,17 @@ namespace keffect
             r.Intersect(intersectRect);
 
             // Fill updated region in red => percent portion of text is red
-            colorBrush = new SolidBrush(_BeingPlayedColor);            
+            colorBrush = new SolidBrush(_HighlightColor);
             e.Graphics.FillRegion(colorBrush, r);
-            
-            // Borders of text
-            if (_bColorContour)
-                e.Graphics.DrawPath(new Pen(_txtcontourcolor, 1), path);
-                                                
+
+
+            // text outline
+            if (_borderthick > 0)
+            {
+                e.Graphics.DrawPath(penInactiveBorder, path);                       // Draw the entire line using the inactive border color
+                e.Graphics.DrawPath(penActiveBorder, pathFragment);                 // Next, draw the current fragment of line on top using the active border color
+            }
+
             path.Dispose();
 
 
@@ -1161,7 +1314,8 @@ namespace keffect
             // We want to display only a few number of lines (variable _nbLyricsLines = number of lines to display)  
             // linedeb which is the current line is displayed in the previous paragraph
             // ======================================================================================================
-            path = new GraphicsPath();
+            path = new GraphicsPath();            
+            
 
             for (int i = _FirstLineToShow + 1; i <= _LastLineToShow; i++)
             {
@@ -1172,9 +1326,9 @@ namespace keffect
                     #region background of syllabe                              
                     if (_bTextBackGround)
                     {
-                        Wbg = (int)(1.04*LinesLengths[i]);
+                        Wbg = (int)(1.04 * LinesLengths[i]);
                         // Black background to make text more visible
-                        Rbg = new RectangleF((int)(0.94*x0), (int)(1.04 * y0) + (i - _FirstLineToShow) * _lineHeight, Wbg, _lineHeight);
+                        Rbg = new RectangleF((int)(0.94 * x0), (int)(1.04 * y0) + (i - _FirstLineToShow) * _lineHeight, Wbg, _lineHeight);
                         // background
                         e.Graphics.FillRectangle(new SolidBrush(Color.Black), Rbg);
                     }
@@ -1182,27 +1336,90 @@ namespace keffect
 
                     // Draw lines of lyrics
                     path.AddString(Texts[i], _karaokeFont.FontFamily, (int)_karaokeFont.Style, _karaokeFont.Size, new Point(x0, y0 + (i - _FirstLineToShow) * _lineHeight), sf);
-
                 }
             }
 
-            // _NotYetPlayedColor is the color for text not played (typically white)
-            colorBrush = new SolidBrush(_NotYetPlayedColor);
+            // _InactiveColor is the color for text not yet sung (typically white)
+            colorBrush = new SolidBrush(_InactiveColor);
             e.Graphics.FillPath(colorBrush, path);
 
-            // Borders of text
-            if (_bColorContour)
-                e.Graphics.DrawPath(new Pen(_txtcontourcolor, 1), path);
-            
+            // text outline
+            if (_borderthick > 0)
+                e.Graphics.DrawPath(penInactiveBorder, path);
 
+
+            // Clean all
             colorBrush.Dispose();
+            penActiveBorder.Dispose();
+            penInactiveBorder.Dispose();
             r.Dispose();
-            path.Dispose();
+            path.Dispose();            
+            pathFragment.Dispose();
 
-            #endregion draw text
-        }       
+        }
 
-        #endregion Control Load Resize
+
+        /// <summary>
+        /// Apply the beat effect.
+        /// </summary>
+        public void OnBeat(int beat, int bpm)
+        {
+            if (bpm > 0 && bpm != _bpm)
+            {
+                _bpm = bpm;
+                AdjustSpeed();
+            }
+
+            _beatNumber = beat;
+
+            BeatEffect(beat);
+        }
+
+
+        /// <summary>
+        /// Applies a visual effect in response to a beat event.
+        /// </summary>
+        /// <remarks>This method is a placeholder for implementing beat-based visual effects.  Depending
+        /// on the gradient style, different effects can be applied, such as  resetting dimensions or altering colors.
+        /// Currently, it resets the width and  height for radial gradients and provides a framework for future
+        /// extensions.</remarks>
+        private void BeatEffect(int beat)
+        {
+            switch (_optionbackground)
+            {
+                case "Gradient":
+                    // For diagonal gradients, you can implement a different effect if needed
+                    // For example, you could change the angle or colors on each beat
+                    // Change the colors of the radial gradient on each beat
+                    //Color temp = _color0;
+                    //_color0 = _color1;
+                    //_color1 = temp;
+                    break;
+                case "Rhythm":
+                    // Radial gradients can have a different effect, such as changing colors or sizes
+                    // For diagonal gradients, you can implement a different effect if needed
+                    // W & H are reset to their maximum at each beat
+                    //if (beat == 1) ResetSize(); // Reset the width and height to the original size
+                    ResetSize(); // Reset the width and height to the original size
+                    break;
+            }
+        }
+
+        private void AdjustSpeed()
+        {
+            if (_bpm > 0)
+            {
+                double hypo = Math.Sqrt(ClientSize.Width * ClientSize.Width + ClientSize.Height * ClientSize.Height);
+                if (hypo <= 0) return;
+                //2600.0F                
+                //speed = (int)(_bpm * hypo / 5200.0F); // Speed depends on the BPM and the size of the screen
+                speed = (int)(_bpm * hypo / 7000.0F); // Speed depends on the BPM and the size of the screen
+                //speed = (int)(_bpm * hypo / 10400.0F); // Speed depends on the BPM and the size of the screen
+                Console.WriteLine("BPM changed to: " + _bpm + " - Speed: " + speed);
+            }
+        }
+
+        #endregion Control Load Resize paint
 
 
         #region Get infos
@@ -1259,10 +1476,16 @@ namespace keffect
         private float GetCurLength(int idx)
         {
             float res = 0;
+
+            current_fragment = string.Empty;
+
             for (int i = 0; i < idx; i++)
-            {                
-                if (i < Lines[_line].Count())                
+            {
+                if (i < Lines[_line].Count())
+                {
                     res += MeasureString(Lines[_line][i], _karaokeFont.Size);
+                    current_fragment += Lines[_line][i];
+                }
             }
             return res;
         }
@@ -1454,7 +1677,7 @@ namespace keffect
             CurLength = GetCurLength(nextindex);
 
             // New word to highlight
-            // Warning: in cas of full lines, nextindex is always the same and not different than lastIndex
+            // Warning: in case of full lines, nextindex is allways the same and not different than lastIndex
             if (nextindex != lastindex || _line != _lastLine)
             {                                
                 // Line changed
@@ -1553,7 +1776,6 @@ namespace keffect
 
         #region SlideShow
 
-
         private void LoadImageList(string dir)
         {
             bgFiles = Directory.GetFiles(@dir, "*.jpg");
@@ -1563,6 +1785,17 @@ namespace keffect
                 string file = bgFiles[i];
                 m_ImageFilePaths.Add(file);
             }
+
+            // new slideshow
+
+            count = 0;
+            //mBlend = 0.0F;
+            pictures = new Bitmap[bgFiles.Length];
+            for (int i = 0; i < bgFiles.Length; ++i)
+            {
+                pictures[i] = new Bitmap(bgFiles[i]);
+            }
+
         }
 
         /// <summary>
@@ -1573,7 +1806,7 @@ namespace keffect
         {
             try
             {
-                UpdateTimerEnable(false);
+                //UpdateTimerEnable(false);
 
                 m_Cancel = true;
                 m_Restart = true;
@@ -1597,7 +1830,8 @@ namespace keffect
                     if (_optionbackground == "Diaporama")
                     {
                         LoadImageList(dirImages);
-                        C = m_ImageFilePaths.Count;
+                        //C = m_ImageFilePaths.Count;
+                        C = pictures.Length;
                     }
 
                     switch (C)
@@ -1612,15 +1846,17 @@ namespace keffect
                             pBox.Image = Image.FromFile(m_ImageFilePaths[0]);
                             break;
                         default:
-                            // Slideshow => backgroundworker
-
-                            //m_Cancel = true;
+                            /*                            
+                            // Slideshow => backgroundworker                            
                             m_Cancel = false;
-
                             // Initialize backgroundworker
                             InitBackGroundWorker();
                             random = new Random();
                             StartBgW();
+                            */
+
+                            InitSlideShow();
+
                             break;
                     }
                 }
@@ -1631,6 +1867,76 @@ namespace keffect
             }
 
         }
+
+        #region SlideShow with timer 
+
+        // New Slideshow
+        private void InitSlideShow()
+        {
+            mBlend = 0;
+            count = 0;
+
+            timerChangeImage?.Dispose();
+            timerChangeImage = new System.Timers.Timer();
+            timerChangeImage.Interval = _freqdirslideshow * 1000;
+            timerChangeImage.Elapsed += (sender, e) => OnTimerChangeImage();
+
+            timerTransition?.Dispose();
+            timerTransition = new System.Timers.Timer();
+            timerTransition.Interval = 50;
+            timerTransition.Elapsed += (sender, e) => OnTimerTransition();
+
+            try
+            {
+                Image1 = pictures[count];
+                Image2 = pictures[++count];
+            }
+            catch
+            {
+
+            }
+            timerTransition.Enabled = false;
+            timerChangeImage.Enabled = true;
+        }
+
+        private void OnTimerTransition()
+        {
+            mBlend += mDir * 0.02F;
+
+            if (mBlend > 1)
+            {
+                // When mBlend is greater than 1, we change the images
+                // and stop the timer "timerTransition" to prevent a new change before time elapse of "timerChangeImage"
+                mBlend = 0.0F;
+
+                if ((count + 1) < pictures.Length)
+                {
+                    Image1 = pictures[count];
+                    Image2 = pictures[++count];
+                }
+                else
+                {
+                    Image1 = pictures[count];
+                    Image2 = pictures[0];
+                    count = 0;
+                }
+
+                timerTransition.Enabled = false;
+            }
+
+            m_Blend = mBlend;
+        }
+
+        private void OnTimerChangeImage()
+        {
+            timerTransition.Enabled = true;
+        }
+
+
+        #endregion SlideShow with timer 
+
+
+        /*
 
         private void InitBackGroundWorker()
         {
@@ -1803,6 +2109,9 @@ namespace keffect
                 m_Cancel = true;
             }
         }
+      
+        */
+
 
         /// <summary>
         /// Terminate
@@ -1812,22 +2121,25 @@ namespace keffect
             m_Cancel = true;
             m_Restart = false;
 
-            m_ImageFilePaths = new List<string>();
+            m_ImageFilePaths = new List<string>();            
             if (m_ImageStream != null)
             {
                 m_ImageStream.Dispose();
                 m_ImageStream = null;
             }
 
-            if (backgroundWorkerSlideShow != null)
-            {
-                backgroundWorkerSlideShow.CancelAsync();
-            }
+            timerChangeImage?.Stop();
+            timerTransition?.Stop();
 
+            //if (backgroundWorkerSlideShow != null)
+            //{
+            //    backgroundWorkerSlideShow.CancelAsync();
+            //}
         }
+
 
         #endregion SlideShow
 
-       
+
     }
 }

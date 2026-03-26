@@ -1963,5 +1963,29 @@ namespace Karaboss.Properties {
                 this["frmMp3LyricsTopMost"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Arial Black")]
+        public string KaraokeFontName {
+            get {
+                return ((string)(this["KaraokeFontName"]));
+            }
+            set {
+                this["KaraokeFontName"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("18")]
+        public int KaraokeFontSize {
+            get {
+                return ((int)(this["KaraokeFontSize"]));
+            }
+            set {
+                this["KaraokeFontSize"] = value;
+            }
+        }
     }
 }

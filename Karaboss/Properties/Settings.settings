@@ -488,5 +488,11 @@
     <Setting Name="frmMp3LyricsTopMost" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
     </Setting>
+    <Setting Name="KaraokeFontName" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Arial Black</Value>
+    </Setting>
+    <Setting Name="KaraokeFontSize" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">18</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

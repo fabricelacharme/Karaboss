@@ -34,6 +34,7 @@
 
 using Karaboss.Kfn;
 using Karaboss.MidiLyrics;
+using keffect;
 using PicControl;
 using System;
 using System.Collections.Generic;
@@ -66,9 +67,9 @@ namespace Karaboss
 
         #region private declarations
 
-        public MidiLyricsMgmt myLyricsMgmt { get; set; }
+        public MidiLyricsMgmt myLyricsMgmt { get; set; }               
 
-        private Font _karaokeFont;
+
         private int currentTextPos = 0;
         private Point Mouselocation;
 
@@ -165,6 +166,12 @@ namespace Karaboss
             }
         }
 
+
+        #region Font
+        private string ftName = "Arial Black";
+        private uint ftSize = 20;
+
+        private Font _karaokeFont;
         public Font KaraokeFont
         {
             get { return _karaokeFont; }
@@ -183,16 +190,17 @@ namespace Karaboss
             }
         }
 
-        private int _frametypeindex = 1;
-        
+        #endregion Font
+      
+
+        // Frame type
         private string _frametype = "Frame1";
         public string FrameType
         {
             get { return _frametype; }
             set { 
                 _frametype = value; 
-                pBox.FrameType = _frametype;
-                
+                pBox.FrameType = _frametype;                
             }
         }
 
@@ -210,7 +218,7 @@ namespace Karaboss
             }
         }
 
-        private int _NbLines = 1;
+        private int _NbLines = 3;
         // number of lines to display
         public int TxtNbLines
         {
@@ -242,7 +250,21 @@ namespace Karaboss
         }
 
 
-        // Text color
+        #region Text color
+
+
+        // Text sung color
+        private Color _ActiveColor;
+        public Color ActiveColor
+        {
+            get { return _ActiveColor; }
+            set
+            {
+                _ActiveColor = value;
+                pBox.ActiveColor = _ActiveColor;
+            }
+        }
+
         private Color _HighlightColor;
         public Color HighlightColor
         {
@@ -265,17 +287,7 @@ namespace Karaboss
                 pBox.InactiveColor = _InactiveColor;
             }
         }
-        // Text sung color
-        private Color _ActiveColor;
-        public Color ActiveColor
-        {
-            get { return _ActiveColor; }
-            set
-            {
-                _ActiveColor = value;
-                pBox.ActiveColor = _ActiveColor;
-            }
-        }
+        
         
         // Text border
         private Color _ActiveBorderColor;
@@ -300,6 +312,8 @@ namespace Karaboss
             }
         }
 
+        #endregion text color
+
         // Background color
         private Color _BgColor;
         public Color BgColor
@@ -312,6 +326,8 @@ namespace Karaboss
             }
         }
 
+
+        #region gradient
         private Color _grad0Color;
         public Color Grad0Color
         {
@@ -364,6 +380,8 @@ namespace Karaboss
                 pBox.BeatDuration = _beatDuration;
             }
         }
+
+        #endregion gradient
 
 
         #endregion
@@ -539,7 +557,8 @@ namespace Karaboss
                 pBox.FrameType = _frametype;               
 
                 // Font
-                _karaokeFont = Properties.Settings.Default.KaraokeFont;
+                ftName = Properties.Settings.Default.KaraokeFontName;
+                _karaokeFont = new Font(ftName, ftSize, FontStyle.Regular, GraphicsUnit.Pixel);                
                 pBox.KaraokeFont = _karaokeFont;
 
                 pBox.bShowParagraphs = Karaclass.m_ShowParagraph;
@@ -605,9 +624,7 @@ namespace Karaboss
                 Grad1Color = Properties.Settings.Default.Grad1Color;
                 Rhythm0Color = Properties.Settings.Default.Rhythm0Color;
                 Rhythm1Color = Properties.Settings.Default.Rhythm1Color;
-
-                
-                
+                               
                 // Text colors
                 InactiveColor = Parse(Properties.Settings.Default.InactiveColor);
                 HighlightColor = Parse(Properties.Settings.Default.HighlightColor);
@@ -629,8 +646,6 @@ namespace Karaboss
                 SizeMode = Properties.Settings.Default.SizeMode;
 
                 bTopMost = Properties.Settings.Default.frmMidiLyricsTopMost;
-
-
             }
             catch (Exception e)
             {

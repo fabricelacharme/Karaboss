@@ -236,8 +236,7 @@
             this.btnApply.Click += new System.EventHandler(this.btnApply_Click);
             // 
             // karaokeEffect1
-            // 
-            this.karaokeEffect1.bColorContour = false;
+            //             
             this.karaokeEffect1.bforceUppercase = false;
             this.karaokeEffect1.bTextBackGround = false;
             this.karaokeEffect1.FreqDirSlideShow = 10;
@@ -259,11 +258,9 @@
             this.karaokeEffect1.timerIntervall = ((long)(50));
             this.karaokeEffect1.TransitionEffect = keffect.KaraokeEffect.TransitionEffects.Progressive;
             this.karaokeEffect1.TransparencyKey = System.Drawing.Color.Lime;
-            this.karaokeEffect1.TxtAlreadyPlayedColor = System.Drawing.Color.FromArgb(((int)(((byte)(153)))), ((int)(((byte)(180)))), ((int)(((byte)(51)))));
-            this.karaokeEffect1.TxtBackColor = System.Drawing.Color.Empty;
-            this.karaokeEffect1.TxtBeingPlayedColor = System.Drawing.Color.FromArgb(((int)(((byte)(238)))), ((int)(((byte)(17)))), ((int)(((byte)(17)))));
-            this.karaokeEffect1.TxtContourColor = System.Drawing.Color.Empty;
-            this.karaokeEffect1.TxtNotYetPlayedColor = System.Drawing.Color.White;
+            this.karaokeEffect1.ActiveColor = System.Drawing.Color.FromArgb(((int)(((byte)(153)))), ((int)(((byte)(180)))), ((int)(((byte)(51)))));            
+            this.karaokeEffect1.HighlightColor = System.Drawing.Color.FromArgb(((int)(((byte)(238)))), ((int)(((byte)(17)))), ((int)(((byte)(17)))));            
+            this.karaokeEffect1.InactiveColor = System.Drawing.Color.White;
             // 
             // chkHighLightProgressive
             // 

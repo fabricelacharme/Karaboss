@@ -141,7 +141,7 @@ namespace Karaboss
                 // Fonts
                 PopulateFonts();
                                                 
-                string f = Properties.Settings.Default.KfnFontName;
+                string f = Properties.Settings.Default.KaraokeFontName;
                 for (int i = 0; i < cbFontName.Items.Count; i++)
                 {
                     if (cbFontName.Items[i].ToString() == f)
@@ -405,7 +405,9 @@ namespace Karaboss
                 // Background type (Diaporama, Solidcolor, Transparent
                 Properties.Settings.Default.BackGroundOption = bgOption;
 
-                Properties.Settings.Default.KaraokeFont = _karaokeFont;
+                // Font                
+                Properties.Settings.Default.KaraokeFontName = ftName;                
+
 
                 // Background colors
                 Properties.Settings.Default.BgColor = ToHex(BgColor);
@@ -684,10 +686,10 @@ namespace Karaboss
                 frmMidiLyrics.Rhythm1Color = Rhythm1Color;
 
 
-                frmMidiLyrics.InactiveColor = InactiveColor;
-                frmMidiLyrics.HighlightColor = HighlightColor;
                 frmMidiLyrics.ActiveColor = ActiveColor;
-                
+                frmMidiLyrics.HighlightColor = HighlightColor;
+                frmMidiLyrics.InactiveColor = InactiveColor;
+                                                
                 frmMidiLyrics.ActiveBorderColor = ActiveBorderColor;
                 frmMidiLyrics.InactiveBorderColor = InactiveBorderColor;
 

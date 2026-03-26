@@ -173,7 +173,7 @@ namespace Karaboss.Mp3
                 // Fonts
                 PopulateFonts();
 
-                string f = Properties.Settings.Default.KfnFontName;
+                string f = Properties.Settings.Default.KaraokeFontName;
                 for (int i = 0; i < cbFontName.Items.Count; i++)
                 {
                     if (cbFontName.Items[i].ToString() == f)
@@ -423,7 +423,8 @@ namespace Karaboss.Mp3
                 // Background type (Diaporama, Solidcolor, Transparent
                 Properties.Settings.Default.BackGroundOption = bgOption;
 
-                Properties.Settings.Default.KaraokeFont = _karaokeFont;
+                // Font                
+                Properties.Settings.Default.KaraokeFontName = ftName;
 
                 // Background color
                 Properties.Settings.Default.BgColor = ToHex(BgColor);
@@ -550,25 +551,12 @@ namespace Karaboss.Mp3
                 karaokeEffect1.InactiveColor = InactiveColor;
 
                 // Frame type
-                karaokeEffect1.FrameType = FrameType;
-
-                // Lyrics background
-                //karaokeEffect1.bTextBackGround = bTextBackGround;
-
-                karaokeEffect1.TxtBackColor = TxtBackColor;
-
-                karaokeEffect1.bColorContour = bColorContour;
-                karaokeEffect1.TxtContourColor = TxtContourColor;
-
-                karaokeEffect1.TxtNotYetPlayedColor = InactiveColor;
-                karaokeEffect1.TxtBeingPlayedColor = HighlightColor;
-                karaokeEffect1.TxtAlreadyPlayedColor = ActiveColor;
-
+                karaokeEffect1.FrameType = FrameType;                                       
 
                 cbSizeMode.SelectedText = SizeMode.ToString();
-
+                
                 karaokeEffect1.OptionBackground = bgOption;
-
+                
                 karaokeEffect1.SetBackground(dirSlideShow);
 
             }
@@ -597,18 +585,9 @@ namespace Karaboss.Mp3
             karaokeEffect1.InactiveColor = InactiveColor;
 
             karaokeEffect1.ActiveBorderColor = ActiveBorderColor;
-            karaokeEffect1.InactiveBorderColor = InactiveBorderColor;
-
-
-            karaokeEffect1.TxtBackColor = TxtBackColor;
-            karaokeEffect1.bColorContour = bColorContour;
-            karaokeEffect1.TxtContourColor = TxtContourColor;
-            karaokeEffect1.TxtNotYetPlayedColor = InactiveColor;
-            karaokeEffect1.TxtBeingPlayedColor = HighlightColor;
-            karaokeEffect1.TxtAlreadyPlayedColor = ActiveColor;
-
+            karaokeEffect1.InactiveBorderColor = InactiveBorderColor;                              
+            
             karaokeEffect1.OptionDisplay = (keffect.KaraokeEffect.OptionsDisplay)OptionDisplay;
-
             
             //Color of buttons
             picBgColor.BackColor = BgColor;
@@ -691,16 +670,26 @@ namespace Karaboss.Mp3
 
                 frmMp3Lyrics.KaraokeFont = _karaokeFont;
 
+                
+                // Borders
+                frmMp3Lyrics.FrameType = FrameType;
+
                 // Text colors                
-                frmMp3Lyrics.TxtBackColor = TxtBackColor;
+                frmMp3Lyrics.BgColor = BgColor;
+                frmMp3Lyrics.Grad0Color = Grad0Color;
+                frmMp3Lyrics.Grad1Color = Grad1Color;
+                frmMp3Lyrics.Rhythm0Color = Rhythm0Color;
+                frmMp3Lyrics.Rhythm1Color = Rhythm1Color;
 
-                frmMp3Lyrics.TxtNextColor = InactiveColor;
-                frmMp3Lyrics.TxtHighlightColor = HighlightColor;
+                frmMp3Lyrics.ActiveColor = ActiveColor;
+                frmMp3Lyrics.HighlightColor = HighlightColor;
+                frmMp3Lyrics.InactiveColor = InactiveColor;
+                
                 frmMp3Lyrics.bProgressiveHighlight = bProgressiveHighlight;     // Progressive highlight
-                frmMp3Lyrics.TxtBeforeColor = ActiveColor;
-
-                frmMp3Lyrics.bColorContour = bColorContour;
-                frmMp3Lyrics.TxtContourColor = TxtContourColor;
+                
+                frmMp3Lyrics.ActiveBorderColor = ActiveBorderColor;
+                frmMp3Lyrics.InactiveBorderColor = InactiveBorderColor;
+                               
 
                 // force uppercase
                 frmMp3Lyrics.bForceUppercase = bForceUppercase;

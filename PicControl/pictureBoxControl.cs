@@ -1,6 +1,6 @@
 ﻿#region License
 
-/* Copyright (c) 2025 Fabrice Lacharme
+/* Copyright (c) 2026 Fabrice Lacharme
  * 
  * Permission is hereby granted, free of charge, to any person obtaining a copy 
  * of this software and associated documentation files (the "Software"), to 
@@ -445,6 +445,8 @@ namespace PicControl
             }        
         }
 
+
+        #region Font
         public Font KaraokeFont
         {
             get { return _karaokeFont; }
@@ -479,6 +481,12 @@ namespace PicControl
                 }
             }
         }
+
+
+        #endregion Font
+
+
+        #region Frame type
 
         // "NoBorder":
         // "FrameThin":
@@ -550,6 +558,9 @@ namespace PicControl
                 }
             }
         }
+
+        #endregion Frame type
+
 
         // Background color
         private int _bpm;
@@ -819,8 +830,7 @@ namespace PicControl
         {
             InitializeComponent();
 
-            // Dipslay chords or not
-            //OptionShowChords = false;
+            // Dipslay chords or not            
             OptionShowChords = true;
 
             _karaokeFont = new Font("Arial", this.Font.Size);
@@ -986,10 +996,7 @@ namespace PicControl
         }
 
 
-        #region SlideShow with timer
-
-
-        Stopwatch stopwatch = new Stopwatch();
+        #region SlideShow with timer       
         
         // New Slideshow
         private void InitSlideShow()
@@ -2622,7 +2629,7 @@ namespace PicControl
 
         #region backgroundworker
 
-
+        /*
         private void InitBackGroundWorker()
         {
             backgroundWorkerSlideShow = new System.ComponentModel.BackgroundWorker();
@@ -2790,6 +2797,7 @@ namespace PicControl
                 m_Cancel = true;
             }
         }
+        */
 
 
         /// <summary>
@@ -2800,21 +2808,20 @@ namespace PicControl
             m_Cancel = true;
             m_Restart = false;
 
-            m_ImageFilePaths = new List<string>();
-            
-            timerChangeImage?.Stop();
-            timerTransition?.Stop();
-            
+            m_ImageFilePaths = new List<string>();                                   
             if (m_ImageStream != null)
             {
                 m_ImageStream.Dispose();
                 m_ImageStream = null;
             }
 
-            if (backgroundWorkerSlideShow != null)
-            {
-                backgroundWorkerSlideShow.CancelAsync();
-            }
+            timerChangeImage?.Stop();
+            timerTransition?.Stop();
+
+            //if (backgroundWorkerSlideShow != null)
+            //{
+            //    backgroundWorkerSlideShow.CancelAsync();
+            //}
 
         }
 
@@ -2879,8 +2886,7 @@ namespace PicControl
         /// <param name="e"></param>
         private void pboxWnd_Paint(object sender, PaintEventArgs e)
         {
-            int x;
-            int y;
+            
 
             // Create a GraphicsPath to define the area to fill
             GraphicsPath gp;
@@ -2888,7 +2894,8 @@ namespace PicControl
             // Draw background image
             #region draw background image or gradient
 
-            switch (_optionbackground) {                
+            switch (_optionbackground) 
+            {                
             
                 case "Diaporama":
                     
@@ -2898,6 +2905,10 @@ namespace PicControl
                         if (m_CurrentImage != null)
                         {
                             #region sizemode
+
+                            int x;
+                            int y;
+
                             switch (_sizemode)
                             {
                                 case PictureBoxSizeMode.AutoSize:
@@ -2953,8 +2964,7 @@ namespace PicControl
                             ia.SetColorMatrix(cm);
                             e.Graphics.DrawImage(mImg1, rc, 0, 0, mImg1.Width, mImg1.Height, GraphicsUnit.Pixel, ia);
                         }
-                    }
-                    
+                    }                    
                     break;
 
                 case "Gradient":
@@ -3043,10 +3053,9 @@ namespace PicControl
                     }
                     break;
             }
+            
 
-            //gp.Dispose(); // Dispose the GraphicsPath to free resources
-
-            base.OnPaint(e);
+            //base.OnPaint(e);
 
             #endregion
 
@@ -3102,6 +3111,10 @@ namespace PicControl
             // Call the base class OnPaint method to ensure proper rendering            
             base.OnPaint(e);
         }
+
+
+
+
 
 
         /// <summary>
