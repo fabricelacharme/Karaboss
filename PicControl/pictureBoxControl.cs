@@ -969,7 +969,7 @@ namespace PicControl
                             m_Cancel = true;
 
                             m_CurrentImage = Image.FromFile(m_ImageFilePaths[0]);
-                            pboxWnd.Image = m_CurrentImage; // Image.FromFile(m_ImageFilePaths[0]);
+                            //pboxWnd.Image = m_CurrentImage; // Image.FromFile(m_ImageFilePaths[0]);
                             //pboxWnd.Image = pictures[0];
                             break;
                         default:
@@ -1042,7 +1042,7 @@ namespace PicControl
                     Image1 = pictures[count];
                     Image2 = pictures[++count];
                 }
-                else
+                else if (count < pictures.Length) 
                 {
                     Image1 = pictures[count];
                     Image2 = pictures[0];
@@ -2885,9 +2885,8 @@ namespace PicControl
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void pboxWnd_Paint(object sender, PaintEventArgs e)
-        {
+        {                        
             
-
             // Create a GraphicsPath to define the area to fill
             GraphicsPath gp;
 
@@ -2897,76 +2896,47 @@ namespace PicControl
             switch (_optionbackground) 
             {                
             
-                case "Diaporama":
-                    
+                case "Diaporama":                                      
                     if (pictures.Length == 1)
-                    {
-                        
+                    {                        
                         if (m_CurrentImage != null)
-                        {
-                            #region sizemode
-
-                            int x;
-                            int y;
-
-                            switch (_sizemode)
-                            {
-                                case PictureBoxSizeMode.AutoSize:
-                                    x = (this.ClientSize.Width - m_CurrentImage.Width) / 2;
-                                    y = (this.ClientSize.Height - m_CurrentImage.Height) / 2;
-                                    m_DisplayRectangle = new Rectangle(x, y, m_CurrentImage.Width, m_CurrentImage.Height);
-                                    break;
-                                case PictureBoxSizeMode.CenterImage:
-                                    x = (this.ClientSize.Width - m_CurrentImage.Width) / 2;
-                                    y = (this.ClientSize.Height - m_CurrentImage.Height) / 2;
-                                    m_DisplayRectangle = new Rectangle(x, y, m_CurrentImage.Width, m_CurrentImage.Height);
-                                    break;
-                                case PictureBoxSizeMode.Normal:
-                                    // coin superieur gauche
-                                    m_DisplayRectangle = new Rectangle(0, 0, this.ClientSize.Width, this.ClientSize.Height);
-                                    break;
-                                case PictureBoxSizeMode.StretchImage:
-                                    //  l'image est étirée ou réduite pour s'ajuster à PictureBox.
-                                    m_DisplayRectangle = new Rectangle(0, 0, this.ClientSize.Width, this.ClientSize.Height);
-                                    break;
-                                case PictureBoxSizeMode.Zoom:
-                                    m_DisplayRectangle = new Rectangle(0, 0, this.ClientSize.Width, this.ClientSize.Height);
-                                    break;
-                            }
-                            #endregion
-
+                        {                            
                             try
                             {
+                                m_DisplayRectangle = GetRectangleForSizeMode(m_CurrentImage.Width, m_CurrentImage.Height);                                
                                 e.Graphics.DrawImage(m_CurrentImage, m_DisplayRectangle, 0, 0, m_CurrentImage.Width, m_CurrentImage.Height, GraphicsUnit.Pixel);
-
                             }
                             catch (Exception dr)
                             {
                                 Console.Write("Error drawing image: " + dr.Message);
                             }
-                        }
-                    
+                        }                    
                     }
                     else 
                     {
-
                         if (mImg1 == null || mImg2 == null)
                             e.Graphics.FillRectangle(new SolidBrush(this.BackColor), new Rectangle(0, 0, this.Width, this.Height));
                         else
-                        {
-                            Rectangle rc = new Rectangle(0, 0, this.Width, this.Height);
+                        {                            
+                            
                             ColorMatrix cm = new ColorMatrix();
                             ImageAttributes ia = new ImageAttributes();
+                            
                             cm.Matrix33 = mBlend;
                             ia.SetColorMatrix(cm);
+
+                            Rectangle rc = GetRectangleForSizeMode(mImg2.Width, mImg2.Height);
                             e.Graphics.DrawImage(mImg2, rc, 0, 0, mImg2.Width, mImg2.Height, GraphicsUnit.Pixel, ia);
+                            
                             cm.Matrix33 = 1F - mBlend;
                             ia.SetColorMatrix(cm);
+                            
+                            rc = GetRectangleForSizeMode(mImg1.Width, mImg1.Height);
                             e.Graphics.DrawImage(mImg1, rc, 0, 0, mImg1.Width, mImg1.Height, GraphicsUnit.Pixel, ia);
                         }
                     }                    
                     break;
-
+                                                    
                 case "Gradient":
                     // Draw gradient background
                     // Create a GraphicsPath to define the area to fill
@@ -3051,16 +3021,11 @@ namespace PicControl
                         }
                         gp.Dispose(); // Dispose the GraphicsPath to free resources                                       
                     }
-                    break;
-            }
+                    break;                           
+            }                        
             
-
-            //base.OnPaint(e);
-
             #endregion
-
-
-            // draw text
+            
             #region draw text           
 
             if (lstLyricsLines is null || lstLyricsLines.Count == 0)
@@ -3107,12 +3072,53 @@ namespace PicControl
             }
             #endregion
 
-
             // Call the base class OnPaint method to ensure proper rendering            
             base.OnPaint(e);
         }
 
+        /// <summary>
+        /// Return rectangle for image
+        /// </summary>
+        /// <param name="imgWidth"></param>
+        /// <param name="imgHeight"></param>
+        /// <returns></returns>
+        private Rectangle GetRectangleForSizeMode(int imgWidth, int imgHeight)
+        {            
+            int x;
+            int y;            
 
+            switch (_sizemode)
+            {
+                case PictureBoxSizeMode.Normal:
+                    // coin superieur gauche
+                    return new Rectangle(0, 0, imgWidth, imgHeight);
+
+                case PictureBoxSizeMode.StretchImage:
+                    //  l'image est étirée ou réduite pour s'ajuster à PictureBox.
+                    return new Rectangle(0, 0, this.ClientSize.Width, this.ClientSize.Height);
+
+                                    
+                case PictureBoxSizeMode.CenterImage:
+                    x = (this.ClientSize.Width - imgWidth) / 2;
+                    y = (this.ClientSize.Height - imgHeight) / 2;
+                    return new Rectangle(x, y, imgWidth, imgHeight);
+
+
+                case PictureBoxSizeMode.AutoSize:
+                    x = (this.ClientSize.Width - imgWidth) / 2;
+                    y = (this.ClientSize.Height - imgHeight) / 2;
+                    return new Rectangle(x, y, imgWidth, imgHeight);
+
+                case PictureBoxSizeMode.Zoom:
+                    float zoomFactor = (float)ClientSize.Height / (float)imgHeight;
+                    x = (this.ClientSize.Width - (int)(imgWidth * zoomFactor)) / 2;
+                    y = 0;
+                    return new Rectangle(x, 0, (int)(imgWidth * zoomFactor), this.ClientSize.Height);
+                   
+                default:
+                    return new Rectangle(0, 0, this.ClientSize.Width, this.ClientSize.Height); 
+            }            
+        }
 
 
 
@@ -3228,6 +3234,10 @@ namespace PicControl
             #region redraw image
             if (m_CurrentImage != null)
             {
+
+                //m_DisplayRectangle = GetRectangleForSizeMode(m_CurrentImage.Width, m_CurrentImage.Height);
+
+                /*
                 int x;
                 int y;
 
@@ -3255,6 +3265,7 @@ namespace PicControl
                         m_DisplayRectangle = new Rectangle(0, 0, this.ClientSize.Width, this.ClientSize.Height);
                         break;
                 }
+                */
             }
             #endregion
 
