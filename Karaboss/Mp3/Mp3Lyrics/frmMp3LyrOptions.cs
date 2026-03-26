@@ -16,7 +16,7 @@ namespace Karaboss.Mp3
         List<keffect.KaraokeEffect.kSyncText> SyncLine = new List<keffect.KaraokeEffect.kSyncText>();
         List<List<keffect.KaraokeEffect.kSyncText>> SyncLyrics = new List<List<keffect.KaraokeEffect.kSyncText>>();
 
-        #region options
+        #region private declarations
 
         private Karaclass.OptionsDisplay OptionDisplay;
         private string bgOption = "Diaporama";
@@ -41,15 +41,19 @@ namespace Karaboss.Mp3
         private Color ActiveBorderColor;
         private Color InactiveBorderColor;
 
+
         #region background colors
+        
         // Background colors
         private Color BgColor;
         private Color Grad0Color;
         private Color Grad1Color;
         private Color Rhythm0Color;
         private Color Rhythm1Color;
+
         #endregion background colors
 
+        
         // Background color
         private Color TxtBackColor;
 
@@ -96,7 +100,7 @@ namespace Karaboss.Mp3
 
         private frmMp3Lyrics frmMp3Lyrics;
         
-        #endregion options
+        #endregion private declarations
 
 
         /// <summary>
@@ -114,10 +118,13 @@ namespace Karaboss.Mp3
             SetOptions();
         }
 
-        private void LoadDefaultOptions ()
+
+        #region option form settings
+
+        private void LoadDefaultOptions()
         {
             // Nb lines to display
-            karaokeEffect1.nbLyricsLines = Properties.Settings.Default.TxtNbLines;            
+            karaokeEffect1.nbLyricsLines = Properties.Settings.Default.TxtNbLines;
 
             SyncLine = new List<keffect.KaraokeEffect.kSyncText> { new keffect.KaraokeEffect.kSyncText(0, "Lorem"), new keffect.KaraokeEffect.kSyncText(500, " ipsum"), new keffect.KaraokeEffect.kSyncText(1000, " dolor"), new keffect.KaraokeEffect.kSyncText(1500, " sit"), new keffect.KaraokeEffect.kSyncText(2000, " amet") };
             SyncLyrics.Add(SyncLine);
@@ -125,7 +132,7 @@ namespace Karaboss.Mp3
             SyncLyrics.Add(SyncLine);
             SyncLine = new List<keffect.KaraokeEffect.kSyncText> { new keffect.KaraokeEffect.kSyncText(4000, "sed"), new keffect.KaraokeEffect.kSyncText(4500, " do"), new keffect.KaraokeEffect.kSyncText(5000, " eiusmod"), new keffect.KaraokeEffect.kSyncText(5500, " tempor"), new keffect.KaraokeEffect.kSyncText(6000, " incididunt") };
             SyncLyrics.Add(SyncLine);
-            SyncLine = new List<keffect.KaraokeEffect.kSyncText> { new keffect.KaraokeEffect.kSyncText(6500, "ut"), new keffect.KaraokeEffect.kSyncText(7000, " labore"), new keffect.KaraokeEffect.kSyncText(7500, "et"), new keffect.KaraokeEffect.kSyncText(8000, " dolore"), new keffect.KaraokeEffect.kSyncText(8500, " magna"), new keffect.KaraokeEffect.kSyncText(9000, " aliqua.") } ;
+            SyncLine = new List<keffect.KaraokeEffect.kSyncText> { new keffect.KaraokeEffect.kSyncText(6500, "ut"), new keffect.KaraokeEffect.kSyncText(7000, " labore"), new keffect.KaraokeEffect.kSyncText(7500, "et"), new keffect.KaraokeEffect.kSyncText(8000, " dolore"), new keffect.KaraokeEffect.kSyncText(8500, " magna"), new keffect.KaraokeEffect.kSyncText(9000, " aliqua.") };
             SyncLyrics.Add(SyncLine);
             SyncLine = new List<keffect.KaraokeEffect.kSyncText> { new keffect.KaraokeEffect.kSyncText(9200, "Ut"), new keffect.KaraokeEffect.kSyncText(9500, " enim"), new keffect.KaraokeEffect.kSyncText(10000, " ad"), new keffect.KaraokeEffect.kSyncText(10500, " minim"), new keffect.KaraokeEffect.kSyncText(11000, " veniam") };
             SyncLyrics.Add(SyncLine);
@@ -147,66 +154,12 @@ namespace Karaboss.Mp3
             // Needed to put exactly these 4 positions in order to have "Lorem ipsum" in red and "dolor" in green
             // I don't even understand how my creation works            
             karaokeEffect1.TransitionEffect = keffect.KaraokeEffect.TransitionEffects.None;
-            
+
             karaokeEffect1.SetPos(10);   // index, _line, _lastline put to 0
             karaokeEffect1.SetPos(510);  // after Lorem
             karaokeEffect1.SetPos(1010); // after ipsum
             karaokeEffect1.SetPos(1510); // after dolor
 
-        }
-
-        
-
-        #region apply changes
-        /// <summary>
-        /// Apply changes
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void btnApply_Click(object sender, EventArgs e)
-        {
-            ApplyChanges();
-            
-
-        }
-
-        /// <summary>
-        /// Apply changes and exit
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void btnOk_Click(object sender, EventArgs e)
-        {
-            ApplyChanges();
-            Close();
-        }
-
-        private void btnCancel_Click(object sender, EventArgs e)
-        {
-            Close();
-        }
-
-      
-        /// <summary>
-        /// Apply colors to option form
-        /// </summary>
-        private void ApplyNewColors()
-        {
-            // picturebox
-
-            karaokeEffect1.TxtBackColor = TxtBackColor;
-
-            karaokeEffect1.bColorContour = bColorContour;
-            karaokeEffect1.TxtContourColor = TxtContourColor;
-            karaokeEffect1.TxtNotYetPlayedColor = InactiveColor;
-            karaokeEffect1.TxtBeingPlayedColor = HighlightColor;
-            karaokeEffect1.TxtAlreadyPlayedColor = ActiveColor;
-
-            karaokeEffect1.OptionDisplay = (keffect.KaraokeEffect.OptionsDisplay)OptionDisplay;
-           
-
-            //Color of buttons
-            picBgColor.BackColor = TxtBackColor;
         }
 
 
@@ -256,8 +209,6 @@ namespace Karaboss.Mp3
                 // Display balls on lyrics
                 chkDisplayBalls.Checked = Karaclass.m_DisplayBalls;
 
-
-
                 // Background type (Diaporama, Solidcolor, Transparent)                
                 Grad0Color = Properties.Settings.Default.Grad0Color;
                 Grad1Color = Properties.Settings.Default.Grad1Color;
@@ -278,6 +229,7 @@ namespace Karaboss.Mp3
                 picActiveColor.BackColor = Parse(txtActiveColor.Text);
                 picHighlightColor.BackColor = Parse(txtHighlightColor.Text);
                 picInactiveColor.BackColor = Parse(txtInactiveColor.Text);
+
                 picActiveBorderColor.BackColor = Parse(txtActiveBorderColor.Text);
                 picInactiveBorderColor.BackColor = Parse(txtInactiveBorderColor.Text);
 
@@ -332,6 +284,12 @@ namespace Karaboss.Mp3
                         break;
                     case "SolidColor":
                         radioSolidColor.Checked = true;
+                        break;
+                    case "Gradient":
+                        radioGradient.Checked = true;
+                        break;
+                    case "Rhythm":
+                        radioRhythm.Checked = true;
                         break;
                     case "Transparent":
                         radioTransparent.Checked = true;
@@ -452,14 +410,96 @@ namespace Karaboss.Mp3
                 cbFrameType.SelectedIndex = 2; // 1 pixel
         }
 
+        /// <summary>
+        /// Save options in properties
+        /// </summary>
+        private void SaveOptions ()
+        {
+            try
+            {
+                // Display balls
+                Properties.Settings.Default.DisplayBalls = Karaclass.m_DisplayBalls;
+
+                // Background type (Diaporama, Solidcolor, Transparent
+                Properties.Settings.Default.BackGroundOption = bgOption;
+
+                Properties.Settings.Default.KaraokeFont = _karaokeFont;
+
+                // Background color
+                Properties.Settings.Default.BgColor = ToHex(BgColor);
+                Properties.Settings.Default.Grad0Color = Grad0Color;
+                Properties.Settings.Default.Grad1Color = Grad1Color;
+                Properties.Settings.Default.Rhythm0Color = Rhythm0Color;
+                Properties.Settings.Default.Rhythm1Color = Rhythm1Color;
+
+                Properties.Settings.Default.ActiveColor = ToHex(ActiveColor);                
+                Properties.Settings.Default.HighlightColor = ToHex(HighlightColor);
+                Properties.Settings.Default.InactiveColor = ToHex(InactiveColor);
+
+                Properties.Settings.Default.bProgressiveHighlight = bProgressiveHighlight;  // Progressive highlight                
+               
+                // Contour                
+                Properties.Settings.Default.ActiveBorderColor = ToHex(ActiveBorderColor);
+                Properties.Settings.Default.InactiveBorderColor = ToHex(InactiveBorderColor);
+
+                // FrameType
+                Properties.Settings.Default.FrameType = FrameType;
+
+                // window lyrics topmost
+                Properties.Settings.Default.frmMp3LyricsTopMost = _bTopMost;
+
+                // Force Uppercase
+                Properties.Settings.Default.bForceUppercase = bForceUppercase;
+
+                // Number of lines to display
+                Properties.Settings.Default.TxtNbLines = _nbLyricsLines;
+
+                // SlideShow
+                dirSlideShow = txtSlideShow.Text.Trim();
+                if (Directory.Exists(dirSlideShow) == false)
+                    dirSlideShow = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), Application.ProductName);
+                Properties.Settings.Default.dirSlideShow = dirSlideShow;
+
+                Properties.Settings.Default.freqSlideShow = freqSlideShow;
+                Properties.Settings.Default.SizeMode = SizeMode;
+
+                switch (OptionDisplay)
+                {
+                    case Karaclass.OptionsDisplay.Top:
+                        Properties.Settings.Default.LyricsOptionDisplay = "Top";
+                        break;
+                    case Karaclass.OptionsDisplay.Center:
+                        Properties.Settings.Default.LyricsOptionDisplay = "Center";
+                        break;
+                    case Karaclass.OptionsDisplay.Bottom:
+                        Properties.Settings.Default.LyricsOptionDisplay = "Bottom";
+                        break;
+                    default:
+                        Properties.Settings.Default.LyricsOptionDisplay = "Center";
+                        break;
+                }
+
+                // Lyrics background
+                Properties.Settings.Default.bLyricsBackGround = chkTextBackground.Checked;
+
+                // Save all
+                Properties.Settings.Default.Save();
+
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show(e.Message, Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
 
         /// <summary>
         /// Appply options to option form
         /// </summary>
         private void SetOptions()
         {
-           try
-           {
+            try
+            {
                 pnlBalls.Visible = chkDisplayBalls.Checked;
 
                 // Nombre de lignes à afficher
@@ -470,8 +510,17 @@ namespace Karaboss.Mp3
                 txtSlideShowFreq.Text = freqSlideShow.ToString();
 
                 // buttons
-                picBgColor.BackColor = TxtBackColor;
+                picBgColor.BackColor = BgColor;
 
+                picActiveColor.BackColor = ActiveColor;
+                picHighlightColor.BackColor = HighlightColor;
+                picInactiveColor.BackColor = InactiveColor;
+
+                picActiveBorderColor.BackColor = ActiveBorderColor;
+                picInactiveBorderColor.BackColor = InactiveBorderColor;
+
+                // Window Lyrics TopMost
+                chkTopMost.Checked = _bTopMost;
 
                 // Force uppercase
                 chkTextUppercase.Checked = bForceUppercase;
@@ -484,17 +533,34 @@ namespace Karaboss.Mp3
 
                 // picturebox            
                 karaokeEffect1.FreqDirSlideShow = freqSlideShow;
-                karaokeEffect1.nbLyricsLines = _nbLyricsLines;                
+                karaokeEffect1.nbLyricsLines = _nbLyricsLines;
+
+                // Backgrounds
+                karaokeEffect1.BgColor = BgColor;
+                karaokeEffect1.Grad0Color = Grad0Color;
+                karaokeEffect1.Grad1Color = Grad1Color;
+                karaokeEffect1.Rhythm0Color = Rhythm0Color;
+                karaokeEffect1.Rhythm1Color = Rhythm1Color;
+
+                karaokeEffect1.ActiveBorderColor = ActiveBorderColor;
+                karaokeEffect1.InactiveBorderColor = InactiveBorderColor;
+
+                karaokeEffect1.ActiveColor = ActiveColor;
+                karaokeEffect1.HighlightColor = HighlightColor;
+                karaokeEffect1.InactiveColor = InactiveColor;
+
+                // Frame type
+                karaokeEffect1.FrameType = FrameType;
 
                 // Lyrics background
-                karaokeEffect1.bTextBackGround = bTextBackGround;
+                //karaokeEffect1.bTextBackGround = bTextBackGround;
 
                 karaokeEffect1.TxtBackColor = TxtBackColor;
 
                 karaokeEffect1.bColorContour = bColorContour;
                 karaokeEffect1.TxtContourColor = TxtContourColor;
 
-                karaokeEffect1.TxtNotYetPlayedColor = InactiveColor; 
+                karaokeEffect1.TxtNotYetPlayedColor = InactiveColor;
                 karaokeEffect1.TxtBeingPlayedColor = HighlightColor;
                 karaokeEffect1.TxtAlreadyPlayedColor = ActiveColor;
 
@@ -512,6 +578,101 @@ namespace Karaboss.Mp3
 
             }
         }
+
+
+        /// <summary>
+        /// Apply colors to option form
+        /// </summary>
+        private void ApplyNewColors()
+        {
+            // Backgrounds
+            karaokeEffect1.BgColor = BgColor;
+            karaokeEffect1.Grad0Color = Grad0Color;
+            karaokeEffect1.Grad1Color = Grad1Color;
+            karaokeEffect1.Rhythm0Color = Rhythm0Color;
+            karaokeEffect1.Rhythm1Color = Rhythm1Color;
+
+            karaokeEffect1.ActiveColor = ActiveColor;
+            karaokeEffect1.HighlightColor = HighlightColor;
+            karaokeEffect1.InactiveColor = InactiveColor;
+
+            karaokeEffect1.ActiveBorderColor = ActiveBorderColor;
+            karaokeEffect1.InactiveBorderColor = InactiveBorderColor;
+
+
+            karaokeEffect1.TxtBackColor = TxtBackColor;
+            karaokeEffect1.bColorContour = bColorContour;
+            karaokeEffect1.TxtContourColor = TxtContourColor;
+            karaokeEffect1.TxtNotYetPlayedColor = InactiveColor;
+            karaokeEffect1.TxtBeingPlayedColor = HighlightColor;
+            karaokeEffect1.TxtAlreadyPlayedColor = ActiveColor;
+
+            karaokeEffect1.OptionDisplay = (keffect.KaraokeEffect.OptionsDisplay)OptionDisplay;
+
+            
+            //Color of buttons
+            picBgColor.BackColor = BgColor;
+
+            picActiveColor.BackColor = ActiveColor;
+            picInactiveColor.BackColor = InactiveColor;
+            picHighlightColor.BackColor = HighlightColor;
+
+            picActiveBorderColor.BackColor = ActiveBorderColor;
+            picInactiveBorderColor.BackColor = InactiveBorderColor;
+
+        }
+
+
+        #endregion option form settings
+
+
+
+        #region buttons
+
+        private void btnDirSlideShow_Click(object sender, EventArgs e)
+        {
+            folderBrowserDialog1.SelectedPath = dirSlideShow;
+            if (folderBrowserDialog1.ShowDialog() == DialogResult.OK)
+            {
+                dirSlideShow = folderBrowserDialog1.SelectedPath;
+
+                Cursor.Current = Cursors.WaitCursor;
+                txtSlideShow.Text = dirSlideShow;
+                karaokeEffect1.SetBackground(dirSlideShow);
+            }
+        }
+
+
+        private void btnResetDir_Click(object sender, EventArgs e)
+        {
+            dirSlideShow = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), Application.ProductName);
+            txtSlideShow.Text = dirSlideShow;
+            karaokeEffect1.SetBackground(dirSlideShow);
+        }
+
+
+        /// <summary>
+        /// Apply changes
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void btnApply_Click(object sender, EventArgs e)
+        {
+            ApplyChanges();
+        }
+
+
+        /// <summary>
+        /// Apply changes and exit
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void btnOk_Click(object sender, EventArgs e)
+        {
+            ApplyChanges();
+            Close();
+        }
+
 
 
         /// <summary>
@@ -540,7 +701,7 @@ namespace Karaboss.Mp3
 
                 frmMp3Lyrics.bColorContour = bColorContour;
                 frmMp3Lyrics.TxtContourColor = TxtContourColor;
-           
+
                 // force uppercase
                 frmMp3Lyrics.bForceUppercase = bForceUppercase;
 
@@ -565,124 +726,13 @@ namespace Karaboss.Mp3
             }
         }
 
-        private void SaveOptions ()
+        private void btnCancel_Click(object sender, EventArgs e)
         {
-            try
-            {
-                // Display balls
-                Properties.Settings.Default.DisplayBalls = Karaclass.m_DisplayBalls;
-
-                // Background type (Diaporama, Solidcolor, Transparent
-                Properties.Settings.Default.BackGroundOption = bgOption;
-
-                Properties.Settings.Default.KaraokeFont = _karaokeFont;
-
-                // Background color
-                Properties.Settings.Default.BgColor = ToHex(TxtBackColor);
-
-                Properties.Settings.Default.InactiveColor = ToHex(InactiveColor);
-                Properties.Settings.Default.HighlightColor = ToHex(HighlightColor);
-                Properties.Settings.Default.bProgressiveHighlight = bProgressiveHighlight;  // Progressive highlight
-                Properties.Settings.Default.ActiveColor = ToHex(ActiveColor);
-
-               
-                // Contour
-                Properties.Settings.Default.bActiveBorder = bColorContour;
-                Properties.Settings.Default.ActiveBorderColor = ToHex(TxtContourColor);
-
-                // Force Uppercase
-                Properties.Settings.Default.bForceUppercase = bForceUppercase;
-
-                Properties.Settings.Default.TxtNbLines = _nbLyricsLines;
-
-                dirSlideShow = txtSlideShow.Text.Trim();
-                if (Directory.Exists(dirSlideShow) == false)
-                    dirSlideShow = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), Application.ProductName);
-                Properties.Settings.Default.dirSlideShow = dirSlideShow;
-
-
-
-                Properties.Settings.Default.freqSlideShow = freqSlideShow;
-                Properties.Settings.Default.SizeMode = SizeMode;
-
-                switch (OptionDisplay)
-                {
-                    case Karaclass.OptionsDisplay.Top:
-                        Properties.Settings.Default.LyricsOptionDisplay = "Top";
-                        break;
-                    case Karaclass.OptionsDisplay.Center:
-                        Properties.Settings.Default.LyricsOptionDisplay = "Center";
-                        break;
-                    case Karaclass.OptionsDisplay.Bottom:
-                        Properties.Settings.Default.LyricsOptionDisplay = "Bottom";
-                        break;
-                    default:
-                        Properties.Settings.Default.LyricsOptionDisplay = "Center";
-                        break;
-                }
-
-                Properties.Settings.Default.bLyricsBackGround = chkTextBackground.Checked;
-
-                // Save all
-                Properties.Settings.Default.Save();
-
-            }
-            catch (Exception e)
-            {
-                MessageBox.Show(e.Message, "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
+            Close();
         }
 
 
-        #endregion Apply changes
-
-
-        #region select colors
-
-        /// <summary>
-        /// Dialog get color (+ custom colors 27/02/2025)
-        /// </summary>
-        /// <param name="defColor"></param>
-        /// <returns></returns>
-        private Color DlgGetColor(Color defColor)
-        {
-            ColorDialog MyDialog;
-
-            // Custom color (BGR instead of RGB !!!!!)
-            Int32 key = defColor.B << 16 | defColor.G << 8 | defColor.R;
-            int[] bg_colors = { key };
-
-
-            if (defColor.IsKnownColor)
-            {
-                MyDialog = new ColorDialog()
-                {
-                    AllowFullOpen = true,
-                    ShowHelp = true,
-                    Color = defColor,
-                };
-            }
-            else
-            {
-                MyDialog = new ColorDialog()
-                {
-                    AllowFullOpen = true,
-                    ShowHelp = true,
-                    Color = defColor,
-                    CustomColors = bg_colors,
-                   
-                };
-            }
-
-
-            if (MyDialog.ShowDialog() == DialogResult.OK)
-                return MyDialog.Color;
-            else
-                return defColor;
-        }
-
-
-        #endregion select colors
+        #endregion buttons
 
 
         #region form load close
@@ -743,7 +793,6 @@ namespace Karaboss.Mp3
 
 
         #endregion form load close
-
 
 
         #region Background selection
@@ -961,40 +1010,12 @@ namespace Karaboss.Mp3
             Karaclass.m_ForceUppercase = bForceUppercase;
         }
 
-
-        private void btnDirSlideShow_Click(object sender, EventArgs e)
-        {
-            folderBrowserDialog1.SelectedPath = dirSlideShow;
-            if (folderBrowserDialog1.ShowDialog() == DialogResult.OK)
-            {
-                dirSlideShow = folderBrowserDialog1.SelectedPath;
-
-                Cursor.Current = Cursors.WaitCursor;
-                txtSlideShow.Text = dirSlideShow;
-                karaokeEffect1.SetBackground(dirSlideShow);
-            }
-        }
-
-        private void btnResetDir_Click(object sender, EventArgs e)
-        {
-            dirSlideShow = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), Application.ProductName);
-            txtSlideShow.Text = dirSlideShow;
-            karaokeEffect1.SetBackground(dirSlideShow);
-        }
-
-       
-
-     
-
+          
         private void chkHighLightProgressive_CheckedChanged(object sender, EventArgs e)
         {
             bProgressiveHighlight = chkHighLightProgressive.Checked;
         }
-
-      
-
-      
-           
+                       
      
 
         #endregion events

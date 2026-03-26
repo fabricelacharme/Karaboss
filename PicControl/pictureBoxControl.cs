@@ -306,6 +306,21 @@ namespace PicControl
         #region TextColor
 
         /// <summary>
+        /// Text sung color
+        /// </summary>
+        private Color _ActiveColor;
+        public Color ActiveColor
+        {
+            get
+            { return _ActiveColor; }
+            set
+            {
+                _ActiveColor = value;
+                pboxWnd.Invalidate();
+            }
+        }
+
+        /// <summary>
         /// Text color
         /// </summary>
         private Color _HighlightColor;
@@ -333,8 +348,35 @@ namespace PicControl
                 pboxWnd.Invalidate();
             }
         }
+                    
+        // Border Color
+        private Color _ActiveBorderColor;
+        public Color ActiveBorderColor {
+            get
+            { return _ActiveBorderColor; }
+            set
+            {
+                _ActiveBorderColor = value;
+                pboxWnd.Invalidate();
+            }
+        }
 
-        #region chords
+        private Color _InactiveBorderColor;
+        public Color InactiveBorderColor
+        {
+            get
+            { return _InactiveBorderColor; }
+            set
+            {
+                _InactiveBorderColor = value;
+                pboxWnd.Invalidate();
+            }
+        }
+
+        #endregion Textcolor       
+
+
+        #region chord color
 
         /// <summary>
         /// Text to sing color
@@ -370,56 +412,18 @@ namespace PicControl
         public bool bShowChords
         {
             get { return _bShowChords; }
-            set {
+            set
+            {
                 if (value != _bShowChords)
                 {
                     _bShowChords = value;
                     pboxWnd?.Invalidate();
                 }
             }
-         }
-
-        #endregion chords
-
-        /// <summary>
-        /// Text sung color
-        /// </summary>
-        private Color _ActiveColor;
-        public Color ActiveColor {
-            get
-            { return _ActiveColor; }
-            set
-            {
-                _ActiveColor = value;
-                pboxWnd.Invalidate();
-            }
-        }
-       
-        // Border Color
-        private Color _ActiveBorderColor;
-        public Color ActiveBorderColor {
-            get
-            { return _ActiveBorderColor; }
-            set
-            {
-                _ActiveBorderColor = value;
-                pboxWnd.Invalidate();
-            }
         }
 
-        private Color _InactiveBorderColor;
-        public Color InactiveBorderColor
-        {
-            get
-            { return _InactiveBorderColor; }
-            set
-            {
-                _InactiveBorderColor = value;
-                pboxWnd.Invalidate();
-            }
-        }
+        #endregion chord color
 
-        #endregion Textcolor       
 
         #region Text others
 

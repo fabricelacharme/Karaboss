@@ -258,7 +258,83 @@ namespace keffect
 
         #endregion SlideShow
 
-      
+
+        #region text color
+
+        /// <summary>
+        /// Text sung color
+        /// </summary>
+        private Color _ActiveColor;
+        public Color ActiveColor
+        {
+            get
+            { return _ActiveColor; }
+            set
+            {
+                _ActiveColor = value;
+                pBox.Invalidate();
+            }
+        }
+
+        /// <summary>
+        /// Text color
+        /// </summary>
+        private Color _HighlightColor;
+        public Color HighlightColor
+        {
+            get
+            { return _HighlightColor; }
+            set
+            {
+                _HighlightColor = value;
+                pBox.Invalidate();
+            }
+        }
+
+        /// <summary>
+        /// Text to sing color
+        /// </summary>
+        private Color _InactiveColor;
+        public Color InactiveColor
+        {
+            get
+            { return _InactiveColor; }
+            set
+            {
+                _InactiveColor = value;
+                pBox.Invalidate();
+            }
+        }
+
+        // Border Color
+        private Color _ActiveBorderColor;
+        public Color ActiveBorderColor
+        {
+            get
+            { return _ActiveBorderColor; }
+            set
+            {
+                _ActiveBorderColor = value;
+                pBox.Invalidate();
+            }
+        }
+
+        private Color _InactiveBorderColor;
+        public Color InactiveBorderColor
+        {
+            get
+            { return _InactiveBorderColor; }
+            set
+            {
+                _InactiveBorderColor = value;
+                pBox.Invalidate();
+            }
+        }
+
+
+        #endregion text color
+
+
         // Text To Upper
         private bool _bforceUppercase = false;
         public bool bforceUppercase

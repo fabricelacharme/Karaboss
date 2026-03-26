@@ -1951,5 +1951,17 @@ namespace Karaboss.Properties {
                 this["bActiveBorder"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool frmMp3LyricsTopMost {
+            get {
+                return ((bool)(this["frmMp3LyricsTopMost"]));
+            }
+            set {
+                this["frmMp3LyricsTopMost"] = value;
+            }
+        }
     }
 }

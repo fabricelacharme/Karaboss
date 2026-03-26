@@ -33,6 +33,7 @@
 #endregion
 using GradientApp;
 using Karaboss.Resources.Localization;
+using keffect;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -47,7 +48,7 @@ namespace Karaboss
     public partial class frmLyrOptions : Form
     {
 
-        #region private properties
+        #region private declarations
 
         private Karaclass.OptionsDisplay OptionDisplay;        
         private string bgOption = "Diaporama";
@@ -73,13 +74,16 @@ namespace Karaboss
 
 
         #region background colors
+
         // Background colors
         private Color BgColor;        
         private Color Grad0Color;
         private Color Grad1Color;
         private Color Rhythm0Color;
         private Color Rhythm1Color;
+        
         #endregion background colors
+
 
         // Chord color
         private Color InactiveChordColor;
@@ -102,9 +106,12 @@ namespace Karaboss
         // Size mode of the picture background
         private PictureBoxSizeMode SizeMode;
 
+
+
+
         private frmMidiLyrics frmMidiLyrics;
         
-        #endregion private properties
+        #endregion private declarations
 
         public frmLyrOptions()
         {
@@ -124,7 +131,6 @@ namespace Karaboss
 
         #region option form settings
        
-
         /// <summary>
         /// Load options stored in properties
         /// </summary>
@@ -209,13 +215,15 @@ namespace Karaboss
                 HighlightColor = picHighlightColor.BackColor;
                 InactiveColor = picInactiveColor.BackColor;
 
+                ActiveBorderColor = picActiveBorderColor.BackColor;
+                InactiveBorderColor = picInactiveBorderColor.BackColor;
+
+
                 // Chords
                 InactiveChordColor = picInactiveChordColor.BackColor;
                 HighlightChordColor = picHighlightChordColor.BackColor;
                 _bShowChords = Properties.Settings.Default.bShowChords;
                 
-                ActiveBorderColor = picActiveBorderColor.BackColor;
-                InactiveBorderColor = picInactiveBorderColor.BackColor;                               
 
                 // Window lyris topmost
                 _bTopMost = Properties.Settings.Default.frmMidiLyricsTopMost;
@@ -424,7 +432,6 @@ namespace Karaboss
                 // FrameType
                 Properties.Settings.Default.FrameType = FrameType;
 
-
                 // window lyrics topmost
                 Properties.Settings.Default.frmMidiLyricsTopMost = _bTopMost;
 
@@ -432,14 +439,14 @@ namespace Karaboss
                 // Force Uppercase
                 Properties.Settings.Default.bForceUppercase = bForceUppercase;
 
+                // Number of lines to display
                 Properties.Settings.Default.TxtNbLines = NbLines;
 
+                // SlideShow
                 dirSlideShow = txtSlideShow.Text.Trim();
                 if (Directory.Exists(dirSlideShow) == false)
                     dirSlideShow = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), Application.ProductName);
                 Properties.Settings.Default.dirSlideShow = dirSlideShow;
-
-
 
                 Properties.Settings.Default.freqSlideShow = freqSlideShow;
                 Properties.Settings.Default.SizeMode = SizeMode;
@@ -460,6 +467,7 @@ namespace Karaboss
                         break;
                 }
 
+                // Lyrics background
                 Properties.Settings.Default.bLyricsBackGround = chkTextBackground.Checked;
 
 
@@ -469,10 +477,9 @@ namespace Karaboss
             }
             catch (Exception e)
             {
-                MessageBox.Show(e.Message, "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);                
+                MessageBox.Show(e.Message, Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);                
             }
         }
-
 
 
         /// <summary>
@@ -538,8 +545,10 @@ namespace Karaboss
                 pBox.HighlightChordColor = HighlightChordColor;
                 chkForceShowChords.Checked = _bShowChords;
 
+                // Frame type
                 pBox.FrameType = FrameType;
 
+               
                 cbSizeMode.SelectedText = SizeMode.ToString();
 
                 pBox.OptionBackground = bgOption;
@@ -555,9 +564,7 @@ namespace Karaboss
         /// Apply colors to option form
         /// </summary>
         private void ApplyNewColors()
-        {
-            // picturebox
-            
+        {                       
             // Backgrounds
             pBox.BgColor = BgColor;
             pBox.Grad0Color = Grad0Color;
@@ -591,66 +598,12 @@ namespace Karaboss
             picInactiveBorderColor.BackColor = InactiveBorderColor;
 
             picInactiveChordColor.BackColor = InactiveChordColor;
-            picHighlightChordColor.BackColor = HighlightChordColor;
-               
+            picHighlightChordColor.BackColor = HighlightChordColor;               
         }
 
 
         #endregion option form settings
-
-
-        #region select colors
-
-        /// <summary>
-        /// Dialog get color
-        /// </summary>
-        /// <param name="defColor"></param>
-        /// <returns></returns>
-        private Color DlgGetColor(Color defColor)
-        {
-            ColorDialog MyDialog;
-
-            // Custom color (BGR instead of RGB !!!!!)
-            Int32 key = defColor.B << 16 | defColor.G << 8 | defColor.R;
-            int[] bg_colors = { key };
-
-
-            if (defColor.IsKnownColor)
-            {
-                MyDialog = new ColorDialog()
-                {
-                    AnyColor = true,
-                    FullOpen = true,
-                    AllowFullOpen = true,
-                    ShowHelp = true,
-
-                    Color = defColor,
-                };
-            }
-            else
-            {
-                MyDialog = new ColorDialog()
-                {
-                    AnyColor = true,
-                    FullOpen = true,
-                    AllowFullOpen = true,
-                    ShowHelp = true,
-                    Color = defColor,
-                    CustomColors = bg_colors,
-                };
-            }
-
-            if (MyDialog.ShowDialog() == DialogResult.OK)
-                return MyDialog.Color;
-            else
-                return defColor;
-        }
-
-      
-            
-
-        #endregion select colors
-
+     
 
         #region buttons
         /// <summary>
@@ -842,8 +795,6 @@ namespace Karaboss
 
         #endregion form load close
     
-
-
 
         #region Background selection
 
