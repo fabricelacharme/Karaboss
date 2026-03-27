@@ -1,5 +1,6 @@
 ﻿using Karaboss.Mp3;
 using Karaboss.Resources.Localization;
+using Karaboss.Utilities;
 using KFNV;
 using System;
 using System.Collections.Generic;
@@ -10,6 +11,7 @@ using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
+using TagLib.Mpeg4;
 
 namespace Karaboss.Kfn
 {
@@ -976,14 +978,20 @@ namespace Karaboss.Kfn
 
         private void DrawTextWithShadow(PaintEventArgs e)
         {
-            string tx;
+            string line;
             Brush brush;
             Pen pen;
             Color ColorShadow;
-            
+
+            // Vertical distance between lines                    
+            int _lineHeight = (int)(1.2 * ftSize);
+
             for (int i = 0; i < LstTextPreview.Count; i++)
             {
                 #region select active/inactive
+                
+                // Lines 0 to 2 are "actives "
+                // others are inactives
                 if (i < 3)
                 {
                     brush = new SolidBrush(picActiveColor.BackColor);
@@ -997,8 +1005,14 @@ namespace Karaboss.Kfn
                     ColorShadow = pen.Color;
                 }
                 #endregion
+               
+                line = LstTextPreview[i];
 
-                tx = LstTextPreview[i];
+                // Center text horizontally and vertically
+                int x0 = HCenterText(line);
+                int y0 = VCenterText(LstTextPreview.Count, _lineHeight);
+
+
                 Font myFont = new Font(ftName, ftSize);
                 Bitmap bm = new Bitmap(picPreview.ClientSize.Width / 4, picPreview.ClientSize.Height / 4);
 
@@ -1013,23 +1027,16 @@ namespace Karaboss.Kfn
                 // must use an antialiased rendering hint
                 g.TextRenderingHint = TextRenderingHint.AntiAlias;
 
-                //this matrix zooms the text out to 1/4 size and offsets it by a little right and down
-                //Matrix mx = new Matrix(0.25f, 0, 0, 0.25f, 3, 3);
+                //this matrix zooms the text out to 1/4 size and offsets it by a little right and down                
                 Matrix mx = new Matrix(0.25f, 0, 0, 0.25f, 1.3f, 1.3f);
-                //Matrix mx = new Matrix(0.25f, 0, 0, 0.25f, 1, 1);
-                //Matrix mx = new Matrix(0.255f, 0, 0, 0.25f, 1, 1);
 
                 g.Transform = mx;
-                //pth.Transform(mx);                                                      // FAB
                 float emSize = ge.DpiY * ftSize / 72f;
 
                 //The shadow is drawn
-                //g.DrawString(tx, myFont, new SolidBrush(Color.FromArgb(128, Color.Black)), 10, 10 + i * emSize, StringFormat.GenericTypographic);
-                g.DrawString(tx, myFont, new SolidBrush(ColorShadow), 10, 10 + i * emSize, StringFormat.GenericTypographic);               // FAB
-
-                //pth.AddString(tx, new FontFamily(ftName), (int)FontStyle.Regular, emSize, new Point(10, (int)(i * emSize)), StringFormat.GenericTypographic);  // FAB
-                //ge.FillPath(new SolidBrush(Color.FromArgb(128, Color.Black)), pth);                                                                            // FAB
-
+                //g.DrawString(line, myFont, new SolidBrush(ColorShadow), 10, 10 + i * emSize, StringFormat.GenericTypographic);
+                //g.DrawString(line, myFont, new SolidBrush(ColorShadow), x0, 10 + i * emSize, StringFormat.GenericTypographic);
+                g.DrawString(line, myFont, new SolidBrush(ColorShadow), x0, 10 + i * _lineHeight, StringFormat.GenericTypographic);
 
                 //Don't need this anymore
                 g.Dispose();
@@ -1043,18 +1050,34 @@ namespace Karaboss.Kfn
                 //The small image is blown up to fill the main client rectangle
                 ge.DrawImage(bm, picPreview.ClientRectangle, 0, 0, bm.Width, bm.Height, GraphicsUnit.Pixel);
 
-                //finally, the text is drawn on top
-                //ge.DrawString(tx, myFont, brush, 10, 10 + i * emSize, StringFormat.GenericTypographic);
-                pth.AddString(tx, new FontFamily(ftName), (int)FontStyle.Regular, emSize, new Point(10, 10 + (int)(i * emSize)), StringFormat.GenericTypographic);   // FAB
+                // finally, the text is drawn on top
+                //pth.AddString(line, new FontFamily(ftName), (int)FontStyle.Regular, emSize, new Point(10, 10 + (int)(i * emSize)), StringFormat.GenericTypographic);   
+                //pth.AddString(line, new FontFamily(ftName), (int)FontStyle.Regular, emSize, new Point(x0, 10 + (int)(i * emSize)), StringFormat.GenericTypographic);
+                pth.AddString(line, new FontFamily(ftName), (int)FontStyle.Regular, emSize, new Point(x0, 10 + (int)(i * _lineHeight)), StringFormat.GenericTypographic);
+                
+
                 ge.FillPath(brush, pth);                                                                                                                        // FAB
                                                                                                                                                                 // FAB outline
                 ge.DrawPath(pen, pth);
-
-
+                
+                // Clean all
                 bm.Dispose();
                 pth.Dispose();
-
             }
+        }
+
+
+        /// <summary>
+        /// Center text vertically, according to number of lines to display and line height
+        /// </summary>
+        /// <returns></returns>
+        private int VCenterText(int _nbLyricsLines, int _lineHeight)
+        {
+
+            // Height of control minus height of lines to show            
+            int y = (picPreview.ClientSize.Height - (_nbLyricsLines) * _lineHeight) / 2;
+            
+            return y > 0 ? y : 0;
         }
 
         /// <summary>

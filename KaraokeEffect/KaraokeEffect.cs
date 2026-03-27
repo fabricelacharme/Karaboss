@@ -1058,7 +1058,6 @@ namespace keffect
 
             switch (_optionbackground)
             {
-
                 case "Diaporama":
                    
                     if (pictures.Length == 1)
@@ -1069,7 +1068,6 @@ namespace keffect
                             {
                                 m_DisplayRectangle = GetRectangleForSizeMode(m_CurrentImage.Width, m_CurrentImage.Height);
                                 e.Graphics.DrawImage(m_CurrentImage, m_DisplayRectangle, 0, 0, m_CurrentImage.Width, m_CurrentImage.Height, GraphicsUnit.Pixel);
-
                             }
                             catch (Exception dr)
                             {
@@ -1262,7 +1260,7 @@ namespace keffect
 
             int Wbg;
             RectangleF Rbg;
-
+                                   
             // =============================================
             // WHITE
             // 1. Color the current line in whithe
@@ -1287,26 +1285,20 @@ namespace keffect
                 }
                 #endregion
 
+                // full line in GraphicsPath path
                 path.AddString(Texts[_FirstLineToShow], _karaokeFont.FontFamily, (int)_karaokeFont.Style, _karaokeFont.Size, new Point(x0, y0), sf);
-                
-                // tutu
+
+                // part of line (sung part) in GraphicsPath pathFragment  
                 pathFragment.AddString(current_fragment, _karaokeFont.FontFamily, (int)_karaokeFont.Style, _karaokeFont.Size, new Point(x0, y0), sf);
             }
-
-            // Color first in black
-            //using (SolidBrush outlineBrush = new SolidBrush(Color.Black))
-            //{
-                //e.Graphics.FillPath(outlineBrush, path);
-            //}
-
-            // Fill graphical path in white => full text is white
+           
+            // Fill GraphicsPath path in white => full text is white
             colorBrush = new SolidBrush(_InactiveColor);
             e.Graphics.FillPath(colorBrush, path);
 
-
             // ======================================================
             // GREEN
-            // 2. Color in GREEN the syllabes before current syllabe
+            // 2. Color in GREEN (ActiveColor) the syllabes before current syllabe
             // ======================================================
             // Create a region from the graphical path
             Region r = new Region(path);
@@ -1324,7 +1316,7 @@ namespace keffect
 
             // ======================================================
             // RED
-            // 3. Color in RED the  current syllabe
+            // 3. Color in RED (HighlightColor) the current syllabe
             // ======================================================
             r = new Region(path);
 
@@ -1346,12 +1338,18 @@ namespace keffect
                 e.Graphics.DrawPath(penActiveBorder, pathFragment);                 // Next, draw the current fragment of line on top using the active border color
             }
 
+
+            // Rest of line in white
+           
+
+
+
             path.Dispose();
 
 
             // ======================================================================================================
             // NEXT LINES
-            // 4. Draw and color all lines from _linedeb + 1 to _linefin in white
+            // 4. Draw and color (InactiveColor) all lines from _linedeb + 1 to _linefin in white
             // We want to display only a few number of lines (variable _nbLyricsLines = number of lines to display)  
             // linedeb which is the current line is displayed in the previous paragraph
             // ======================================================================================================
@@ -1386,7 +1384,7 @@ namespace keffect
 
             // text outline
             if (_borderthick > 0)
-                e.Graphics.DrawPath(penInactiveBorder, path);
+                e.Graphics.DrawPath(penInactiveBorder, path);            
 
 
             // Clean all
@@ -1625,7 +1623,7 @@ namespace keffect
         }
 
         /// <summary>
-        /// Center text vertically
+        /// Center text vertically, according to number of lines to display and line height
         /// </summary>
         /// <returns></returns>
         private int VCenterText()
@@ -1646,10 +1644,7 @@ namespace keffect
                 case OptionsDisplay.Bottom:
                     y = pBox.ClientSize.Height - (_nbLyricsLines * (_lineHeight + 1));
                     break;
-            }
-
-
-            
+            }            
             return y > 0 ? y : 0;
         }
 
