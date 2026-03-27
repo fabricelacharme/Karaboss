@@ -792,7 +792,7 @@ namespace Karaboss.Kfn
         }
 
 
-        private void DrawTextWithBorder(float thick, PaintEventArgs e)
+        private void DrawTextWithBorder2(float thick, PaintEventArgs e)
         {           
             Pen pen;
             Brush brush;
@@ -820,8 +820,9 @@ namespace Karaboss.Kfn
                     StringFormat sf = new StringFormat();
                     sf.Alignment = StringAlignment.Center;
                     sf.LineAlignment = StringAlignment.Center;
-
+                    
                     float emSize = g.DpiY * ftSize / 72f;
+
 
                     for (int i = 0; i < LstTextPreview.Count; i++)
                     {
@@ -862,7 +863,7 @@ namespace Karaboss.Kfn
                     ActiveBorderPen.Dispose();
                     InactiveBorderPen.Dispose();
                     pth.Dispose();
-                    //g.Dispose();
+                    
                 }
                 catch (Exception ex)
                 {
@@ -872,8 +873,101 @@ namespace Karaboss.Kfn
         }
 
 
+        private void DrawTextWithBorder(float thick, PaintEventArgs e)
+        {
+            Pen pen;
+            Brush brush;
+
+            // Create brush
+            Brush ActiveColorBrush = new SolidBrush(picActiveColor.BackColor);
+            Brush InactiveColorBrush = new SolidBrush(picInactiveColor.BackColor);
+            Brush ActiveColorBorderBrush = new SolidBrush(picActiveColorBorder.BackColor);
+            Brush InactiveColorBorderBrush = new SolidBrush(picInactiveColorBorder.BackColor);
+
+            // Create pens                 
+            Pen ActiveBorderPen = new Pen(ActiveColorBorderBrush, thick);
+            Pen InactiveBorderPen = new Pen(InactiveColorBorderBrush, thick);
+
+            string line;
+
+            // Vertical distance between lines                    
+            int x0;
+            int _lineHeight = (int)(1.2 * ftSize);
+            int y0 = VCenterText(LstTextPreview.Count, _lineHeight);
+
+            using (Font myFont = new Font(ftName, ftSize))
+            {
+                try
+                {
+                    Graphics g = e.Graphics;
+                    g.SmoothingMode = SmoothingMode.AntiAlias;
+                    //create a path
+                    GraphicsPath pth = new GraphicsPath();
+
+                    StringFormat sf = new StringFormat(StringFormat.GenericTypographic) { FormatFlags = StringFormatFlags.MeasureTrailingSpaces };
+
+                    float emSize = g.DpiY * ftSize / 72f;
+
+
+                    for (int i = 0; i < LstTextPreview.Count; i++)
+                    {
+                        #region select active/inactive
+                        if (i < 3)
+                        {
+                            pen = ActiveBorderPen;
+                            brush = ActiveColorBrush;
+                        }
+                        else
+                        {
+                            pen = InactiveBorderPen;
+                            brush = InactiveColorBrush;
+                        }
+                        #endregion
+
+                        line = LstTextPreview[i];
+                        // Center text horizontally and vertically
+                        x0 = HCenterText(line);
+
+                        // Active line
+                        pth.AddString(
+                            line,
+                            new FontFamily(ftName),
+                            0,
+                            emSize,
+                            new Point(x0, y0 + i * _lineHeight),
+                            sf);
+
+                        // Fill
+                        g.FillPath(brush, pth);
+
+                        //outline it
+                        if (thick > 0.0f)
+                            g.DrawPath(pen, pth);
+
+                        // Reset for next
+                        pth.Reset();
+                    }
+
+                    //tidy up.
+                    ActiveBorderPen.Dispose();
+                    InactiveBorderPen.Dispose();
+                    pth.Dispose();
+
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.Message);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Neon effect on lyrics
+        /// </summary>
+        /// <param name="e"></param>
         private void DrawTextWithNeon(PaintEventArgs e)
         {
+            string line;
             float thick = 2.0f;
 
             Color HaloColor;
@@ -888,10 +982,14 @@ namespace Karaboss.Kfn
             Pen ActiveBorderPen = new Pen(ActiveColorBorderBrush, thick);
             Pen InactiveBorderPen = new Pen(InactiveColorBorderBrush, thick);
 
+            // Vertical distance between lines
+            int x0;
+            int _lineHeight = (int)(1.2 * ftSize);
+            int y0 = VCenterText(LstTextPreview.Count, _lineHeight);
+
 
             for (int i = 0; i < LstTextPreview.Count; i++)
             {
-
                 #region select active/inactive
                 if (i < 3)
                 {
@@ -911,22 +1009,25 @@ namespace Karaboss.Kfn
 
                 //Create a bitmap in a fixed ratio to the original drawing area.
                 Bitmap bm = new Bitmap(picPreview.ClientSize.Width / 5, picPreview.ClientSize.Height / 5);
-
-                //Create a GraphicsPath object. 
-                GraphicsPath pth = new GraphicsPath();
-
                 //Get the graphics object for the image. 
                 Graphics g = Graphics.FromImage(bm);
+                float emSize = g.DpiY * ftSize / 72f;
+
+                //Create a GraphicsPath object. 
+                GraphicsPath pth = new GraphicsPath();                
+
+                // Create a Graphics object from e
                 Graphics ge = e.Graphics;
 
-
                 //Add the string in the chosen style.
-                string tx = LstTextPreview[i];
-                //int x0 = HCenterText(tx);      // Center horizontally
-                float emSize = g.DpiY * ftSize / 72f;
-                pth.AddString(tx, new FontFamily(ftName), (int)FontStyle.Regular, emSize, new Point(10, (int)(i * emSize)), StringFormat.GenericTypographic);
+                line = LstTextPreview[i];
+                x0 = HCenterText(line);      // Center horizontally                                
+
+                //pth.AddString(line, new FontFamily(ftName), (int)FontStyle.Regular, emSize, new Point(10, (int)(i * emSize)), StringFormat.GenericTypographic);
+                pth.AddString(line, new FontFamily(ftName), (int)FontStyle.Regular, emSize, new Point(x0, y0 + (int)(i * _lineHeight)), StringFormat.GenericTypographic);
 
 
+                #region GraphicsFromImage
                 //Create a matrix that shrinks the drawing output by the fixed ratio. 
                 Matrix mx = new Matrix(1.0f / 5, 0, 0, 1.0f / 5, -(1.0f / 5), -(1.0f / 5));
 
@@ -937,10 +1038,10 @@ namespace Karaboss.Kfn
                 g.Transform = mx;
 
                 //Using a suitable pen...
-                Pen p = new Pen(HaloColor, 3);
+                Pen penHaloColor = new Pen(HaloColor, 3);
 
                 //Draw around the outline of the path
-                g.DrawPath(p, pth);
+                g.DrawPath(penHaloColor, pth);
 
                 //and then fill in for good measure. 
                 g.FillPath(HaloBrush, pth);
@@ -948,34 +1049,41 @@ namespace Karaboss.Kfn
                 //We no longer need this graphics object
                 g.Dispose();
 
+                #endregion GraphicsFromImage
+
+
+                // FAB: destroy everything  => not kept
                 //this just shifts the effect a little bit so that the edge isn't cut off in the demonstration
-                ge.Transform = new Matrix(1, 0, 0, 1, 50, 50);
+                //ge.Transform = new Matrix(1, 0, 0, 1, 50, 50);
 
                 //setup the smoothing mode for path drawing
                 ge.SmoothingMode = SmoothingMode.AntiAlias;
-
+                
                 //and the interpolation mode for the expansion of the halo bitmap
                 ge.InterpolationMode = InterpolationMode.HighQualityBicubic;
 
                 //expand the halo making the edges nice and fuzzy. 
                 ge.DrawImage(bm, picPreview.ClientRectangle, 0, 0, bm.Width, bm.Height, GraphicsUnit.Pixel);
 
+
+
                 //Redraw the original text
                 ge.FillPath(brush, pth);
 
-                // FAB outline
+                
+                // outline text
                 ge.DrawPath(pen, pth);
-
-
+                
+                // Clean all
                 pth.Dispose();
             }
 
-
-            //and you're done. 
-            //pth.Dispose();
         }
 
-
+        /// <summary>
+        /// Shadow effect on lyrics
+        /// </summary>
+        /// <param name="e"></param>
         private void DrawTextWithShadow(PaintEventArgs e)
         {
             string line;
@@ -983,8 +1091,14 @@ namespace Karaboss.Kfn
             Pen pen;
             Color ColorShadow;
 
-            // Vertical distance between lines                    
+            // Vertical distance between lines
+            int x0;
             int _lineHeight = (int)(1.2 * ftSize);
+            int y0 = VCenterText(LstTextPreview.Count, _lineHeight);
+
+            Font myFont = new Font(ftName, ftSize);
+
+            StringFormat sf = new StringFormat(StringFormat.GenericTypographic) { FormatFlags = StringFormatFlags.MeasureTrailingSpaces };
 
             for (int i = 0; i < LstTextPreview.Count; i++)
             {
@@ -1005,15 +1119,12 @@ namespace Karaboss.Kfn
                     ColorShadow = pen.Color;
                 }
                 #endregion
-               
+                
                 line = LstTextPreview[i];
 
                 // Center text horizontally and vertically
-                int x0 = HCenterText(line);
-                int y0 = VCenterText(LstTextPreview.Count, _lineHeight);
+                x0 = HCenterText(line);
 
-
-                Font myFont = new Font(ftName, ftSize);
                 Bitmap bm = new Bitmap(picPreview.ClientSize.Width / 4, picPreview.ClientSize.Height / 4);
 
                 //Get a graphics object for it
@@ -1023,6 +1134,8 @@ namespace Karaboss.Kfn
                 //Create a GraphicsPath object. 
                 GraphicsPath pth = new GraphicsPath();
 
+                float emSize = ge.DpiY * ftSize / 72f;
+
 
                 // must use an antialiased rendering hint
                 g.TextRenderingHint = TextRenderingHint.AntiAlias;
@@ -1031,12 +1144,14 @@ namespace Karaboss.Kfn
                 Matrix mx = new Matrix(0.25f, 0, 0, 0.25f, 1.3f, 1.3f);
 
                 g.Transform = mx;
-                float emSize = ge.DpiY * ftSize / 72f;
+
 
                 //The shadow is drawn
                 //g.DrawString(line, myFont, new SolidBrush(ColorShadow), 10, 10 + i * emSize, StringFormat.GenericTypographic);
                 //g.DrawString(line, myFont, new SolidBrush(ColorShadow), x0, 10 + i * emSize, StringFormat.GenericTypographic);
-                g.DrawString(line, myFont, new SolidBrush(ColorShadow), x0, 10 + i * _lineHeight, StringFormat.GenericTypographic);
+                //g.DrawString(line, myFont, new SolidBrush(ColorShadow), x0, 10 + i * _lineHeight, StringFormat.GenericTypographic);
+                //g.DrawString(line, myFont, new SolidBrush(ColorShadow), x0, y0 + i * _lineHeight, StringFormat.GenericTypographic);
+                g.DrawString(line, myFont, new SolidBrush(ColorShadow), x0, y0 + i * _lineHeight, sf);
 
                 //Don't need this anymore
                 g.Dispose();
@@ -1053,11 +1168,14 @@ namespace Karaboss.Kfn
                 // finally, the text is drawn on top
                 //pth.AddString(line, new FontFamily(ftName), (int)FontStyle.Regular, emSize, new Point(10, 10 + (int)(i * emSize)), StringFormat.GenericTypographic);   
                 //pth.AddString(line, new FontFamily(ftName), (int)FontStyle.Regular, emSize, new Point(x0, 10 + (int)(i * emSize)), StringFormat.GenericTypographic);
-                pth.AddString(line, new FontFamily(ftName), (int)FontStyle.Regular, emSize, new Point(x0, 10 + (int)(i * _lineHeight)), StringFormat.GenericTypographic);
-                
+                //pth.AddString(line, new FontFamily(ftName), (int)FontStyle.Regular, emSize, new Point(x0, 10 + (int)(i * _lineHeight)), StringFormat.GenericTypographic);
+                //pth.AddString(line, new FontFamily(ftName), (int)FontStyle.Regular, emSize, new Point(x0, y0 + (int)(i * _lineHeight)), StringFormat.GenericTypographic);
+                pth.AddString(line, new FontFamily(ftName), (int)FontStyle.Regular, emSize, new Point(x0, y0 + (int)(i * _lineHeight)), sf);
+
 
                 ge.FillPath(brush, pth);                                                                                                                        // FAB
-                                                                                                                                                                // FAB outline
+                
+                // FAB outline
                 ge.DrawPath(pen, pth);
                 
                 // Clean all
@@ -1087,8 +1205,11 @@ namespace Karaboss.Kfn
         /// <returns></returns>
         private int HCenterText(string s)
         {
-            int res = -(int)ftSize / 2 + (picPreview.ClientSize.Width - (int)MeasureString(s, ftSize)) / 2;                        
-            return res > 0 ? res : 0;
+            int W = picPreview.ClientSize.Width;
+            int L = (int)MeasureString(s, ftSize);            
+            int left = (W - L) / 2;
+                        
+            return left > 0 ? left : 0;
         }
 
         /// <summary>
@@ -1106,17 +1227,23 @@ namespace Karaboss.Kfn
             {
                 using (Graphics g = picPreview.CreateGraphics())
                 {
+                    
+                    // HORRIBLE FIX : multiply by 1.34 to have something acceptable ??????????
+                    Font m_font = new Font(ftName, (1.34f)*femSize, FontStyle.Regular, GraphicsUnit.Pixel);
+                    
                     g.TextRenderingHint = TextRenderingHint.AntiAlias;
-                    g.PageUnit = GraphicsUnit.Pixel;
-
-                    Font m_font = new Font(ftName, femSize, FontStyle.Regular, GraphicsUnit.Pixel);
+                    g.PageUnit = GraphicsUnit.Pixel;                    
                     SizeF sz = g.MeasureString(line, m_font, new Point(0, 0), sf);
-                    ret = sz.Width;
+                    ret = sz.Width;                    
                     g.Dispose();
                 }
             }
             return ret;
         }
+
+
+       
+
 
         private void PopulatePicPreview()
         {            
