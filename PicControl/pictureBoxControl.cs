@@ -38,11 +38,14 @@ using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
+using System.Drawing.Text;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Windows.Forms;
+using System.Xml.Linq;
+using static System.Windows.Forms.LinkLabel;
 
 namespace PicControl
 {
@@ -528,10 +531,10 @@ namespace PicControl
                         _borderthick = 5;
                         break;
                     case "Shadow":
-                        _borderthick = 1;
+                        _borderthick = 2;
                         break;
                     case "Neon":
-                        _borderthick = 1;
+                        _borderthick = 2;
                         break;
                     default:
                         _borderthick = 1;
@@ -2201,7 +2204,7 @@ namespace PicControl
         #endregion measures
 
 
-        #region draw lyrics chords
+        #region draw lyrics & chords
 
         /// <summary>
         /// Draw current line, syllabe by syllabe
@@ -2216,24 +2219,25 @@ namespace PicControl
         /// <param name="e"></param>
         private void drawSyllabe(string kind, Color clr, syllabe syl, int x0, int y0, int W, int H, PaintEventArgs e)
         {
-            var path = new GraphicsPath();
+            var pth = new GraphicsPath();
             string tx = syl.text;
 
-            Pen penContour = new Pen(_ActiveBorderColor, _borderthick);
+            Color BorderColor = _ActiveBorderColor;            
 
             switch (kind) 
             {
                 case "Active":
                 case "Highlight":
                     // outline            
-                    penContour = new Pen(_ActiveBorderColor, _borderthick);
+                    BorderColor = _ActiveBorderColor;                    
                     break;
                 case "Inactive":
                     // outline            
-                    penContour = new Pen(_InactiveBorderColor, _borderthick);
+                    BorderColor = _InactiveBorderColor;                    
                     break;
-            }            
-                        
+            }
+            Pen penContour = new Pen(BorderColor, _borderthick);
+
             try
             {                
 
@@ -2248,13 +2252,27 @@ namespace PicControl
                 #endregion
 
                 #region Draw text of syllabe
-                path.AddString(tx, m_font.FontFamily, (int)m_font.Style, emSize, new Point((int)x0, y0), sf);
-                e.Graphics.FillPath(new SolidBrush(clr), path);
 
+                // Add syllable to the Graphics path
+                pth.AddString(tx, m_font.FontFamily, (int)m_font.Style, emSize, new Point((int)x0, y0), sf);
+
+                #region Apply effects               
+
+                if (FrameType == "Neon")
+                    CreateNeonEffect(BorderColor, e, pth);
+                else if (FrameType == "Shadow")
+                    CreateShadowEffect(tx, BorderColor, x0, y0, m_font, emSize, e, pth);
+
+                #endregion Apply effect
+
+                // Draw text
+                e.Graphics.FillPath(new SolidBrush(clr), pth);
+
+                // Outline the text
                 if (_borderthick > 0)
-                    e.Graphics.DrawPath(penContour, path);
+                    e.Graphics.DrawPath(penContour, pth);
 
-                path.Dispose();
+                pth.Dispose();
                 #endregion
             }
             catch (Exception ed)
@@ -2305,7 +2323,7 @@ namespace PicControl
         /// <param name="e"></param>
         private void drawSyllabeNextLines(Color clr, syllabe syl, int x0, int y0, int W, int H, PaintEventArgs e)
         {
-            var path = new GraphicsPath();
+            GraphicsPath pth = new GraphicsPath();
             string tx = syl.text;
 
             // outline            
@@ -2313,8 +2331,7 @@ namespace PicControl
 
             try
             {                
-
-                #region background of syllabe                              
+                #region background of syllabe      
                 
                 if (_bTextBackGround)
                 {
@@ -2323,19 +2340,34 @@ namespace PicControl
                     // background
                     e.Graphics.FillRectangle(new SolidBrush(Color.Black), R);
                 }
-                
+
                 #endregion
 
-
                 #region Draw text of syllabe
-                
-                path.AddString(tx, m_font.FontFamily, (int)m_font.Style, emSize, new Point((int)x0, y0), sf);
-                e.Graphics.FillPath(new SolidBrush(clr), path);
-                
-                if (_borderthick > 0)
-                    e.Graphics.DrawPath(penContour, path);
 
-                path.Dispose();
+                // Add lines of lyrics to the Graphics path
+                pth.AddString(tx, m_font.FontFamily, (int)m_font.Style, emSize, new Point((int)x0, y0), sf);
+
+
+                #region Apply effects               
+
+                if (FrameType == "Neon")
+                    CreateNeonEffect(_InactiveBorderColor , e, pth);
+                else if (FrameType == "Shadow")
+                    CreateShadowEffect(tx, _InactiveBorderColor, x0, y0, m_font, emSize, e, pth);
+
+                #endregion Apply effect
+
+
+                // Draw text
+                // Color clr is always InactiveColor for "NextLines"
+                e.Graphics.FillPath(new SolidBrush(clr), pth);
+                
+                // Outiline the text
+                if (_borderthick > 0)
+                    e.Graphics.DrawPath(penContour, pth);
+
+                pth.Dispose();
                 
                 #endregion
             }
@@ -2344,6 +2376,105 @@ namespace PicControl
                 Console.Write("Error: " + ed.Message);
             }
         }
+
+
+        #region effects
+
+        /// <summary>
+        /// Create a neon effect
+        /// </summary>
+        /// <param name="e"></param>
+        /// <param name="pth"></param>
+        private void CreateNeonEffect(Color clr, PaintEventArgs e, GraphicsPath pth)
+        {
+            //Create a bitmap in a fixed ratio to the original drawing area.
+            Bitmap bm = new Bitmap(pboxWnd.ClientSize.Width / 5, pboxWnd.ClientSize.Height / 5);
+            //Get the graphics object for the image. 
+            Graphics gimg = Graphics.FromImage(bm);
+
+            //Create a matrix that shrinks the drawing output by the fixed ratio. 
+            Matrix mx = new Matrix(1.0f / 5, 0, 0, 1.0f / 5, -(1.0f / 5), -(1.0f / 5));
+
+            //Choose an appropriate smoothing mode for the halo. 
+            gimg.SmoothingMode = SmoothingMode.AntiAlias;
+
+            //Transform the graphics object so that the same half may be used for both halo and text output. 
+            gimg.Transform = mx;
+
+            //Using a suitable pen...
+            Color HaloColor = clr;
+            Brush HaloBrush = new SolidBrush(HaloColor);
+
+            Pen penHaloColor = new Pen(HaloColor, 3);
+
+            //Draw around the outline of the path
+            gimg.DrawPath(penHaloColor, pth);
+
+            //and then fill in for good measure. 
+            gimg.FillPath(HaloBrush, pth);
+
+            //We no longer need this graphics object
+            //g.Dispose();
+
+            //setup the smoothing mode for path drawing
+            e.Graphics.SmoothingMode = SmoothingMode.AntiAlias;
+
+            //and the interpolation mode for the expansion of the halo bitmap
+            e.Graphics.InterpolationMode = InterpolationMode.HighQualityBicubic;
+
+            //expand the halo making the edges nice and fuzzy. 
+            e.Graphics.DrawImage(bm, pboxWnd.ClientRectangle, 0, 0, bm.Width, bm.Height, GraphicsUnit.Pixel);
+        }
+
+
+        /// <summary>
+        /// Create a Shadow effect
+        /// </summary>
+        /// <param name="line"></param>
+        /// <param name="x0"></param>
+        /// <param name="y0"></param>
+        /// <param name="font"></param>
+        /// <param name="e"></param>
+        /// <param name="pth"></param>
+        private void CreateShadowEffect(string line, Color clr, int x0, int y0, Font font, float emSize, PaintEventArgs e, GraphicsPath pth)
+        {
+            Bitmap bm = new Bitmap(pboxWnd.ClientSize.Width / 4, pboxWnd.ClientSize.Height / 4);
+
+            //Get a graphics object for it
+            Graphics g = Graphics.FromImage(bm);
+            Graphics ge = e.Graphics;            
+
+            // must use an antialiased rendering hint
+            g.TextRenderingHint = TextRenderingHint.AntiAlias;
+
+            //this matrix zooms the text out to 1/4 size and offsets it by a little right and down                
+            Matrix mx = new Matrix(0.25f, 0, 0, 0.25f, 1.3f, 1.3f);
+
+            g.Transform = mx;
+
+
+            //The shadow is drawn
+            g.DrawString(line, font, new SolidBrush(clr), x0, y0, sf);
+
+            //Don't need this anymore
+            g.Dispose();
+
+            //The destination Graphics uses a high quality mode
+            ge.InterpolationMode = InterpolationMode.HighQualityBicubic;
+
+            //and draws antialiased text for accurate fitting
+            ge.TextRenderingHint = TextRenderingHint.AntiAlias;
+
+            //The small image is blown up to fill the main client rectangle
+            ge.DrawImage(bm, pboxWnd.ClientRectangle, 0, 0, bm.Width, bm.Height, GraphicsUnit.Pixel);
+
+            // finally, the text is drawn on top
+            //pth.AddString(line, new FontFamily(font.Name), (int)FontStyle.Regular, emSize, new Point(x0, y0), sf);
+        }
+
+
+        #endregion effects
+
 
         /// <summary>
         /// Draw chord on next lines
@@ -2624,7 +2755,7 @@ namespace PicControl
             #endregion draw lyrics               
         }
 
-        #endregion draw lyrics chords
+        #endregion draw lyrics & chords
 
 
         #region backgroundworker
@@ -2885,13 +3016,12 @@ namespace PicControl
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void pboxWnd_Paint(object sender, PaintEventArgs e)
-        {                        
-            
-            // Create a GraphicsPath to define the area to fill
-            GraphicsPath gp;
-
+        {
             // Draw background image
             #region draw background image or gradient
+
+            // Create a GraphicsPath to define the area to fill
+            GraphicsPath gp;
 
             switch (_optionbackground) 
             {                
@@ -3026,11 +3156,17 @@ namespace PicControl
             
             #endregion
             
+
             #region draw text           
 
             if (lstLyricsLines is null || lstLyricsLines.Count == 0)
                 return;
 
+            DrawText(e);
+            
+            #region deleteme
+
+            /*
             try
             {                               
                 // Create list of rectangles when line changes
@@ -3070,11 +3206,61 @@ namespace PicControl
             {
                 Console.Write("Error drawing text on image: " + ep.Message);
             }
+            
+            
+            */
+
+            #endregion deleteme
+
             #endregion
+
 
             // Call the base class OnPaint method to ensure proper rendering            
             base.OnPaint(e);
         }
+
+
+        private void DrawText(PaintEventArgs e)
+        {                             
+            try
+            {
+                // Create list of rectangles when line changes
+                synchronize(_currentTextPos);
+
+                // Antialiasing
+                e.Graphics.SmoothingMode = SmoothingMode.AntiAlias;
+
+                // Calculate offset to center the text vertically
+                int y0 = getOffsetHeight(emSize);
+
+                if (_txtNbLines > 1)
+                {
+                    // Several lines to display
+                    // progressive offset - vOffset increases, so y0 decreases
+                    y0 = y0 - vOffset;
+
+                    // Draw current line                    
+                    DrawCurrentLine(_currentPosition, y0, e);
+
+                    // Draw next lines                 
+                    DrawNextLines(y0, e);
+                }
+                else
+                {
+                    // A single line to display
+                    // Draw current line until end of line
+                    if (!bEndOfLine)
+                        DrawCurrentLine(_currentPosition, y0, e);
+                    else
+                        DrawNextLines(y0, e);
+                }
+            }
+            catch (Exception ep)
+            {
+                Console.Write("Error drawing text on image: " + ep.Message);
+            }            
+        }
+    
 
         /// <summary>
         /// Return rectangle for image
@@ -3119,8 +3305,6 @@ namespace PicControl
                     return new Rectangle(0, 0, this.ClientSize.Width, this.ClientSize.Height); 
             }            
         }
-
-
 
 
         /// <summary>

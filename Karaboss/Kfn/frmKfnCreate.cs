@@ -1125,6 +1125,8 @@ namespace Karaboss.Kfn
                 // Center text horizontally and vertically
                 x0 = HCenterText(line);
 
+
+                #region Shadow effect
                 Bitmap bm = new Bitmap(picPreview.ClientSize.Width / 4, picPreview.ClientSize.Height / 4);
 
                 //Get a graphics object for it
@@ -1147,10 +1149,6 @@ namespace Karaboss.Kfn
 
 
                 //The shadow is drawn
-                //g.DrawString(line, myFont, new SolidBrush(ColorShadow), 10, 10 + i * emSize, StringFormat.GenericTypographic);
-                //g.DrawString(line, myFont, new SolidBrush(ColorShadow), x0, 10 + i * emSize, StringFormat.GenericTypographic);
-                //g.DrawString(line, myFont, new SolidBrush(ColorShadow), x0, 10 + i * _lineHeight, StringFormat.GenericTypographic);
-                //g.DrawString(line, myFont, new SolidBrush(ColorShadow), x0, y0 + i * _lineHeight, StringFormat.GenericTypographic);
                 g.DrawString(line, myFont, new SolidBrush(ColorShadow), x0, y0 + i * _lineHeight, sf);
 
                 //Don't need this anymore
@@ -1166,16 +1164,14 @@ namespace Karaboss.Kfn
                 ge.DrawImage(bm, picPreview.ClientRectangle, 0, 0, bm.Width, bm.Height, GraphicsUnit.Pixel);
 
                 // finally, the text is drawn on top
-                //pth.AddString(line, new FontFamily(ftName), (int)FontStyle.Regular, emSize, new Point(10, 10 + (int)(i * emSize)), StringFormat.GenericTypographic);   
-                //pth.AddString(line, new FontFamily(ftName), (int)FontStyle.Regular, emSize, new Point(x0, 10 + (int)(i * emSize)), StringFormat.GenericTypographic);
-                //pth.AddString(line, new FontFamily(ftName), (int)FontStyle.Regular, emSize, new Point(x0, 10 + (int)(i * _lineHeight)), StringFormat.GenericTypographic);
-                //pth.AddString(line, new FontFamily(ftName), (int)FontStyle.Regular, emSize, new Point(x0, y0 + (int)(i * _lineHeight)), StringFormat.GenericTypographic);
                 pth.AddString(line, new FontFamily(ftName), (int)FontStyle.Regular, emSize, new Point(x0, y0 + (int)(i * _lineHeight)), sf);
 
+                #endregion Shadow effect
 
+                // Draw text
                 ge.FillPath(brush, pth);                                                                                                                        // FAB
                 
-                // FAB outline
+                // Outline text
                 ge.DrawPath(pen, pth);
                 
                 // Clean all

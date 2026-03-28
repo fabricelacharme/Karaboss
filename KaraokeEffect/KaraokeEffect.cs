@@ -1442,7 +1442,8 @@ namespace keffect
             {
                 x0 = HCenterText(Texts[_FirstLineToShow]);      // Center horizontally
 
-                #region background of syllabe                              
+                #region background of syllabe       
+                
                 if (_bTextBackGround)
                 {
                     Wbg = (int)(1.04 * LinesLengths[_FirstLineToShow]);
@@ -1451,6 +1452,7 @@ namespace keffect
                     // background
                     e.Graphics.FillRectangle(new SolidBrush(Color.Black), Rbg);
                 }
+                
                 #endregion
 
                 // full line in GraphicsPath path
@@ -1506,10 +1508,7 @@ namespace keffect
                 e.Graphics.DrawPath(penActiveBorder, pathFragment);                 // Next, draw the current fragment of line on top using the active border color
             }
 
-
             // Rest of line in white
-
-
 
             path.Dispose();
 
@@ -1529,7 +1528,8 @@ namespace keffect
                 {
                     x0 = HCenterText(Texts[i]);     // Center text horizontally
 
-                    #region background of syllabe                              
+                    #region background of syllabe  
+                    
                     if (_bTextBackGround)
                     {
                         Wbg = (int)(1.04 * LinesLengths[i]);
@@ -1538,6 +1538,7 @@ namespace keffect
                         // background
                         e.Graphics.FillRectangle(new SolidBrush(Color.Black), Rbg);
                     }
+                    
                     #endregion
 
                     // Draw lines of lyrics
@@ -1565,15 +1566,14 @@ namespace keffect
 
         private void DrawTextWithShadow(PaintEventArgs e)
         {
-
+            // TODO            
+            DrawTextWithBorder(e);
         }
 
         private void DrawTextWithNeon(PaintEventArgs e)
         {
-
             #region declarations
-
-            string line;
+            
             float thick = 2.0f;
             Region r;
             Matrix mx;
@@ -1586,8 +1586,7 @@ namespace keffect
             Brush InactiveColorBrush = new SolidBrush(InactiveColor);
             Brush ActiveColorBorderBrush = new SolidBrush(ActiveBorderColor);
             Brush InactiveColorBorderBrush = new SolidBrush(InactiveBorderColor);
-            //Brush brush;
-            //Pen pen;
+
             Pen ActiveBorderPen = new Pen(ActiveColorBorderBrush, thick);
             Pen InactiveBorderPen = new Pen(InactiveColorBorderBrush, thick);
             Pen penHaloColor;
@@ -1645,8 +1644,7 @@ namespace keffect
                 pth.AddString(Texts[_FirstLineToShow], _karaokeFont.FontFamily, (int)_karaokeFont.Style, _karaokeFont.Size, new Point(x0, y0), sf);
 
                 // part of line (sung part) in GraphicsPath pathFragment  
-                pathFragment.AddString(current_fragment, _karaokeFont.FontFamily, (int)_karaokeFont.Style, _karaokeFont.Size, new Point(x0, y0), sf);
-          
+                pathFragment.AddString(current_fragment, _karaokeFont.FontFamily, (int)_karaokeFont.Style, _karaokeFont.Size, new Point(x0, y0), sf);          
             }
                                
 
@@ -1725,11 +1723,11 @@ namespace keffect
                     }
                     #endregion
 
-                    // Draw lines of lyrics
+                    // Add lines of lyrics to the Graphics path
                     pth.AddString(Texts[i], _karaokeFont.FontFamily, (int)_karaokeFont.Style, _karaokeFont.Size, new Point(x0, y0 + (i - _FirstLineToShow) * _lineHeight), sf);
 
-                    #region Neon effect
 
+                    #region Neon effect
                     //Create a matrix that shrinks the drawing output by the fixed ratio. 
                     mx = new Matrix(1.0f / 5, 0, 0, 1.0f / 5, -(1.0f / 5), -(1.0f / 5));
 
