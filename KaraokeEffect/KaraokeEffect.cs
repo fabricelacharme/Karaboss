@@ -117,7 +117,6 @@ namespace keffect
         {
             get
             {
-
                 if (backgroundWorkerSlideShow != null)
                     return backgroundWorkerSlideShow.IsBusy;
                 else
@@ -146,7 +145,6 @@ namespace keffect
             {
                 _sizemode = value;
                 pBox.SizeMode = _sizemode;
-
             }
         }
 
@@ -157,7 +155,6 @@ namespace keffect
         public ImageLayout imgLayout { get; set; }
         public Image m_CurrentImage { get; set; }
         public int m_Alpha { get; set; }
-
 
         #endregion SlideShow old
 
@@ -207,6 +204,9 @@ namespace keffect
 
 
         private string current_fragment = string.Empty;
+        private float current_fragment_length = 0;
+        private string highlight_fragment = string.Empty;
+        //private float highlight_fragment_length = 0;
 
         #region Gradient & Rhythm
 
@@ -434,10 +434,10 @@ namespace keffect
                         _borderthick = 5;
                         break;
                     case "Shadow":
-                        _borderthick = 1;
+                        _borderthick = 2;
                         break;
                     case "Neon":
-                        _borderthick = 1;
+                        _borderthick = 2;
                         break;
                     default:
                         _borderthick = 1;
@@ -931,6 +931,7 @@ namespace keffect
 
 
         #region measures
+
         /// <summary>
         /// Measure the length of a string with a specific size
         /// </summary>
@@ -941,7 +942,8 @@ namespace keffect
         {
             float ret = 0;
             if (fragment != "")
-            {
+            {                
+
                 using (Graphics g = pBox.CreateGraphics())
                 {
                     g.TextRenderingHint = TextRenderingHint.AntiAlias;
@@ -1459,7 +1461,7 @@ namespace keffect
                 path.AddString(Texts[_FirstLineToShow], _karaokeFont.FontFamily, (int)_karaokeFont.Style, _karaokeFont.Size, new Point(x0, y0), sf);
 
                 // part of line (sung part) in GraphicsPath pathFragment  
-                pathFragment.AddString(current_fragment, _karaokeFont.FontFamily, (int)_karaokeFont.Style, _karaokeFont.Size, new Point(x0, y0), sf);
+                pathFragment.AddString(current_fragment + highlight_fragment, _karaokeFont.FontFamily, (int)_karaokeFont.Style, _karaokeFont.Size, new Point(x0, y0), sf);
             }
 
             // Fill GraphicsPath path in white => full text is white
@@ -1564,22 +1566,13 @@ namespace keffect
             pathFragment.Dispose();
         }
 
-        private void DrawTextWithShadow(PaintEventArgs e)
-        {
-            // TODO            
-            DrawTextWithBorder(e);
-        }
-
-        private void DrawTextWithNeon(PaintEventArgs e)
+        private void DrawTextWithShadow2(PaintEventArgs e)
         {
             #region declarations
-            
+
             float thick = 2.0f;
             Region r;
-            Matrix mx;
 
-            Color HaloColor;
-            Brush HaloBrush;
 
             Brush ActiveColorBrush = new SolidBrush(ActiveColor);
             Brush HighlightColorBrush = new SolidBrush(HighlightColor);
@@ -1587,9 +1580,9 @@ namespace keffect
             Brush ActiveColorBorderBrush = new SolidBrush(ActiveBorderColor);
             Brush InactiveColorBorderBrush = new SolidBrush(InactiveBorderColor);
 
-            Pen ActiveBorderPen = new Pen(ActiveColorBorderBrush, thick);
-            Pen InactiveBorderPen = new Pen(InactiveColorBorderBrush, thick);
-            Pen penHaloColor;
+            Pen ActiveBorderPen = new Pen(ActiveColorBorderBrush, _borderthick);
+            Pen InactiveBorderPen = new Pen(InactiveColorBorderBrush, _borderthick);
+
 
             #endregion declarations
 
@@ -1597,8 +1590,8 @@ namespace keffect
             // in order to draw the ActiveBorder color only on it
             var pathFragment = new GraphicsPath();
             //SolidBrush colorBrush;
-            Pen penActiveBorder = new Pen(_ActiveBorderColor, thick);    // pen for active border color
-            Pen penInactiveBorder = new Pen(_InactiveBorderColor, thick); // pen for inactive border color
+            Pen penActiveBorder = new Pen(_ActiveBorderColor, _borderthick);    // pen for active border color
+            Pen penInactiveBorder = new Pen(_InactiveBorderColor, _borderthick); // pen for inactive border color
 
             // Center text vertically
             int y0 = VCenterText();
@@ -1608,9 +1601,9 @@ namespace keffect
             RectangleF Rbg;
 
             //Create a bitmap in a fixed ratio to the original drawing area.
-            Bitmap bm = new Bitmap(pBox.ClientSize.Width / 5, pBox.ClientSize.Height / 5);
+            //Bitmap bm = new Bitmap(pBox.ClientSize.Width / 5, pBox.ClientSize.Height / 5);
             //Get the graphics object for the image. 
-            Graphics gimg = Graphics.FromImage(bm);
+            //Graphics gimg = Graphics.FromImage(bm);
 
             // =============================================
             // WHITE
@@ -1636,7 +1629,7 @@ namespace keffect
                     // Black background to make text more visible
                     Rbg = new RectangleF((int)(0.94 * x0), (int)(1.04 * y0), Wbg, _lineHeight);
                     // background
-                    ge.FillRectangle(new SolidBrush(Color.Black), Rbg);
+                    e.Graphics.FillRectangle(new SolidBrush(Color.Black), Rbg);
                 }
                 #endregion
 
@@ -1644,12 +1637,12 @@ namespace keffect
                 pth.AddString(Texts[_FirstLineToShow], _karaokeFont.FontFamily, (int)_karaokeFont.Style, _karaokeFont.Size, new Point(x0, y0), sf);
 
                 // part of line (sung part) in GraphicsPath pathFragment  
-                pathFragment.AddString(current_fragment, _karaokeFont.FontFamily, (int)_karaokeFont.Style, _karaokeFont.Size, new Point(x0, y0), sf);          
+                pathFragment.AddString(current_fragment, _karaokeFont.FontFamily, (int)_karaokeFont.Style, _karaokeFont.Size, new Point(x0, y0), sf);
             }
-                               
+
 
             // Fill GraphicsPath path in white => full text is white            
-            ge.FillPath(InactiveColorBrush, pth);
+            e.Graphics.FillPath(InactiveColorBrush, pth);
 
 
             // ======================================================
@@ -1660,7 +1653,7 @@ namespace keffect
             // Create a region from the graphical path
             r = new Region(pth);
             // Create a retangle of the graphical path
-            RectangleF rect = r.GetBounds(ge);
+            RectangleF rect = r.GetBounds(e.Graphics);
 
             RectangleF intersectRectBefore = new RectangleF(rect.X, rect.Y, rect.Width * lastpercent, rect.Height);
 
@@ -1668,7 +1661,7 @@ namespace keffect
             r.Intersect(intersectRectBefore);
 
             // Fill updated region in green
-            ge.FillRegion(ActiveColorBrush, r);
+            e.Graphics.FillRegion(ActiveColorBrush, r);
             #endregion green
 
             // ======================================================
@@ -1685,14 +1678,14 @@ namespace keffect
             r.Intersect(intersectRect);
 
             // Fill updated region in red => percent portion of text is red            
-            ge.FillRegion(HighlightColorBrush, r);
+            e.Graphics.FillRegion(HighlightColorBrush, r);
             #endregion red
 
             // Outline text
             if (thick > 0)
             {
-                ge.DrawPath(penInactiveBorder, pth);                       // Draw the entire line using the inactive border color
-                ge.DrawPath(penActiveBorder, pathFragment);                 // Next, draw the current fragment of line on top using the active border color
+                e.Graphics.DrawPath(penInactiveBorder, pth);                       // Draw the entire line using the inactive border color
+                e.Graphics.DrawPath(penActiveBorder, pathFragment);                 // Next, draw the current fragment of line on top using the active border color
             }
 
             pth.Dispose();
@@ -1719,7 +1712,429 @@ namespace keffect
                         // Black background to make text more visible
                         Rbg = new RectangleF((int)(0.94 * x0), (int)(1.04 * y0) + (i - _FirstLineToShow) * _lineHeight, Wbg, _lineHeight);
                         // background
-                        ge.FillRectangle(new SolidBrush(Color.Black), Rbg);
+                        e.Graphics.FillRectangle(new SolidBrush(Color.Black), Rbg);
+                    }
+                    #endregion
+
+                    // Add lines of lyrics to the Graphics path
+                    pth.AddString(Texts[i], _karaokeFont.FontFamily, (int)_karaokeFont.Style, _karaokeFont.Size, new Point(x0, y0 + (i - _FirstLineToShow) * _lineHeight), sf);
+
+
+                    #region Shadow effect
+
+                    CreateShadowEffect(Texts[i], _InactiveBorderColor, x0, y0 + (i - _FirstLineToShow) * _lineHeight, _karaokeFont, _karaokeFont.Size, e, pth);
+
+                    #endregion Shadow effect
+
+
+                    // Draw the text
+                    // _InactiveColor is the color for text not yet sung (typically white)
+                    e.Graphics.FillPath(InactiveColorBrush, pth);
+
+                    // Outline the text
+                    if (thick > 0)
+                        e.Graphics.DrawPath(penInactiveBorder, pth);
+                }
+            }
+
+            // Clean all            
+            ActiveColorBrush.Dispose();
+            HighlightColorBrush.Dispose();
+            InactiveColorBrush.Dispose();
+
+            penActiveBorder.Dispose();
+            penInactiveBorder.Dispose();
+
+            r?.Dispose();
+            pth?.Dispose();
+            pathFragment?.Dispose();
+            //gimg?.Dispose();
+        }
+
+
+        private void DrawTextWithShadow(PaintEventArgs e)
+        {
+            #region declarations
+
+            Region r;
+
+            Brush ActiveColorBrush = new SolidBrush(ActiveColor);
+            Brush HighlightColorBrush = new SolidBrush(HighlightColor);
+            Brush InactiveColorBrush = new SolidBrush(InactiveColor);
+            Brush ActiveColorBorderBrush = new SolidBrush(ActiveBorderColor);
+            Brush InactiveColorBorderBrush = new SolidBrush(InactiveBorderColor);
+
+            Pen ActiveBorderPen = new Pen(ActiveColorBorderBrush, _borderthick);
+            Pen InactiveBorderPen = new Pen(InactiveColorBorderBrush, _borderthick);
+
+
+            #endregion declarations
+
+            // **********************************************************************
+            // A - First line (partially active)
+            // **********************************************************************
+            // Center text vertically
+            int y0 = VCenterText();
+            int x0 = 0;
+            Pen penActiveBorder = new Pen(_ActiveBorderColor, _borderthick);    // pen for active border color
+            Pen penInactiveBorder = new Pen(_InactiveBorderColor, _borderthick); // pen for inactive border color
+
+            RectangleF rect;
+
+            // ------------------------------------------------
+            // 1 - Actives syllables current_fragment
+            // ------------------------------------------------
+            // Create a graphical path
+
+            GraphicsPath pth = new GraphicsPath();
+
+            GraphicsPath pathFragment = new GraphicsPath();
+            GraphicsPath pathHighlight = new GraphicsPath();
+
+            if (_FirstLineToShow < Texts.Count())
+            {
+                x0 = HCenterText(Texts[_FirstLineToShow]);      // Center horizontally
+
+                // full line in GraphicsPath path
+                pth.AddString(Texts[_FirstLineToShow], _karaokeFont.FontFamily, (int)_karaokeFont.Style, _karaokeFont.Size, new Point(x0, y0), sf);
+
+                #region Draw all Inactive text     
+
+                // Create shadow effect
+                CreateShadowEffect(Texts[_FirstLineToShow], _InactiveBorderColor, x0, y0, _karaokeFont, _karaokeFont.Size, e, pth);
+                
+                // Draw all text
+                e.Graphics.FillPath(InactiveColorBrush, pth);
+                // Outline all text
+                e.Graphics.DrawPath(penInactiveBorder, pth);
+
+                #endregion Draw all inactive text 
+
+
+                #region draw active text
+
+                pathFragment.AddString(current_fragment, _karaokeFont.FontFamily, (int)_karaokeFont.Style, _karaokeFont.Size, new Point(x0, y0), sf);
+
+                #region Paint in ActiveColor
+                // Create a region from the full graphical path
+                r = new Region(pth);
+                // Create a retangle of the graphical path
+                rect = r.GetBounds(e.Graphics);
+
+                // Rectangle for text befor highlighted text (rect.Width * lastpercent)
+                RectangleF intersectRectBefore = new RectangleF(rect.X, rect.Y, rect.Width * lastpercent, rect.Height);
+
+                // update region on the intersection between region and 2nd rectangle
+                r.Intersect(intersectRectBefore);
+
+                // Fill updated region in green
+                e.Graphics.FillRegion(ActiveColorBrush, r);
+
+                #endregion Paint in ActiveColor
+
+                #region apply effect
+
+                CreateShadowEffect(current_fragment, _ActiveBorderColor, x0, y0, _karaokeFont, _karaokeFont.Size, e, pth);
+                
+                #endregion apply effect
+
+                // Draw the text               
+                e.Graphics.FillPath(ActiveColorBrush, pathFragment);
+
+                // Outline the text                                
+                e.Graphics.DrawPath(penActiveBorder, pathFragment);
+
+                #endregion Draw active text
+
+
+                #region draw highlight text
+                // HIGHLIGHT 
+
+                pathHighlight.AddString(highlight_fragment, _karaokeFont.FontFamily, (int)_karaokeFont.Style, _karaokeFont.Size, new Point((int)(x0 + current_fragment_length), y0), sf);
+
+                #region Paint in HighlightColor    
+
+                r = new Region(pth);
+
+                // Create a retangle of the graphical path
+                rect = r.GetBounds(e.Graphics);
+
+                // Create another rectangle shorter than the 1st one (percent of the first)
+                RectangleF intersectRect = new RectangleF(rect.X + rect.Width * lastpercent, rect.Y, rect.Width * (percent - lastpercent), rect.Height);
+
+                // update region on the intersection between region and 2nd rectangle
+                r.Intersect(intersectRect);
+
+                // Fill updated region in red => percent portion of text is red            
+                e.Graphics.FillRegion(HighlightColorBrush, r);
+
+                #endregion Paint in HighlightColor
+
+
+                #region apply effect
+
+                CreateShadowEffect(highlight_fragment, _ActiveBorderColor, (int)(x0 + current_fragment_length), y0, _karaokeFont, _karaokeFont.Size, e, pth);                
+
+                #endregion apply effect
+
+                // Draw the text               
+                e.Graphics.FillPath(HighlightColorBrush, pathHighlight);
+
+                // Outline text                
+                e.Graphics.DrawPath(penActiveBorder, pathHighlight);
+
+                // END OF HIGHLIGHT
+                #endregion draw highlight text
+
+                pth.Dispose();
+
+            }
+
+            // **********************************************************************
+            // B - Others lines (Inactives)
+            // **********************************************************************
+
+            // path made for the portion of a line of lyrics
+            // in order to draw the ActiveBorder color only on it
+            int Wbg;
+            RectangleF Rbg;
+
+            pth.Dispose();
+
+            // ======================================================================================================
+            // NEXT LINES
+            // 4. Draw and color (InactiveColor) all lines from _linedeb + 1 to _linefin in white
+            // We want to display only a few number of lines (variable _nbLyricsLines = number of lines to display)  
+            // linedeb which is the current line is displayed in the previous paragraph
+            // ======================================================================================================
+            pth = new GraphicsPath();
+
+            for (int i = _FirstLineToShow + 1; i <= _LastLineToShow; i++)
+            {
+                if (i < Texts.Count())
+                {
+                    x0 = HCenterText(Texts[i]);     // Center text horizontally
+
+                    #region background of syllabe                              
+                    if (_bTextBackGround)
+                    {
+                        Wbg = (int)(1.04 * LinesLengths[i]);
+                        // Black background to make text more visible
+                        Rbg = new RectangleF((int)(0.94 * x0), (int)(1.04 * y0) + (i - _FirstLineToShow) * _lineHeight, Wbg, _lineHeight);
+                        // background
+                        e.Graphics.FillRectangle(new SolidBrush(Color.Black), Rbg);
+                    }
+                    #endregion
+
+                    // Add lines of lyrics to the Graphics path
+                    pth.AddString(Texts[i], _karaokeFont.FontFamily, (int)_karaokeFont.Style, _karaokeFont.Size, new Point(x0, y0 + (i - _FirstLineToShow) * _lineHeight), sf);
+
+
+                    #region Shadow effect
+
+                    CreateShadowEffect(Texts[i], _InactiveBorderColor, x0, y0 + (i - _FirstLineToShow) * _lineHeight, _karaokeFont, _karaokeFont.Size, e, pth);
+
+
+                    #endregion Shadow effect
+
+
+                    // Draw the text
+                    // _InactiveColor is the color for text not yet sung (typically white)
+                    e.Graphics.FillPath(InactiveColorBrush, pth);
+
+                    // Outline the text                    
+                    e.Graphics.DrawPath(penInactiveBorder, pth);
+                }
+            }
+
+            // Clean all            
+            ActiveColorBrush.Dispose();
+            HighlightColorBrush.Dispose();
+            InactiveColorBrush.Dispose();
+
+            penActiveBorder.Dispose();
+            penInactiveBorder.Dispose();
+
+            //r?.Dispose();
+            pth?.Dispose();
+            pathFragment?.Dispose();
+            //gimg?.Dispose();            
+        }
+
+        /// <summary>
+        /// Draw text with neon effect
+        /// </summary>
+        /// <param name="e"></param>
+        private void DrawTextWithNeon(PaintEventArgs e)
+        {
+            #region declarations
+                        
+            Region r;
+            
+            Brush ActiveColorBrush = new SolidBrush(ActiveColor);
+            Brush HighlightColorBrush = new SolidBrush(HighlightColor);
+            Brush InactiveColorBrush = new SolidBrush(InactiveColor);
+            Brush ActiveColorBorderBrush = new SolidBrush(ActiveBorderColor);
+            Brush InactiveColorBorderBrush = new SolidBrush(InactiveBorderColor);
+
+            Pen ActiveBorderPen = new Pen(ActiveColorBorderBrush, _borderthick);
+            Pen InactiveBorderPen = new Pen(InactiveColorBorderBrush, _borderthick);
+            
+
+            #endregion declarations
+
+            // **********************************************************************
+            // A - First line (partially active)
+            // **********************************************************************
+            // Center text vertically
+            int y0 = VCenterText();
+            int x0 = 0;
+            Pen penActiveBorder = new Pen(_ActiveBorderColor, _borderthick);    // pen for active border color
+            Pen penInactiveBorder = new Pen(_InactiveBorderColor, _borderthick); // pen for inactive border color
+
+            RectangleF rect;
+
+            // ------------------------------------------------
+            // 1 - Actives syllables current_fragment
+            // ------------------------------------------------
+            // Create a graphical path
+
+            GraphicsPath pth = new GraphicsPath();
+            
+            GraphicsPath pathFragment = new GraphicsPath();
+            GraphicsPath pathHighlight = new GraphicsPath();            
+
+            if (_FirstLineToShow < Texts.Count())
+            {
+                x0 = HCenterText(Texts[_FirstLineToShow]);      // Center horizontally
+
+                // full line in GraphicsPath path
+                pth.AddString(Texts[_FirstLineToShow], _karaokeFont.FontFamily, (int)_karaokeFont.Style, _karaokeFont.Size, new Point(x0, y0), sf);
+
+                #region Draw all Inactive text     
+
+                // Create neon effect
+                CreateNeonEffect(_InactiveBorderColor, e, pth);
+                // Draw all text
+                e.Graphics.FillPath(InactiveColorBrush, pth);
+                // Outline all text
+                e.Graphics.DrawPath(penInactiveBorder, pth);
+
+                #endregion Draw all inactive text 
+
+
+                #region draw active text
+
+                pathFragment.AddString(current_fragment, _karaokeFont.FontFamily, (int)_karaokeFont.Style, _karaokeFont.Size, new Point(x0, y0), sf);
+                
+                #region Paint in ActiveColor
+                // Create a region from the full graphical path
+                r = new Region(pth);
+                // Create a retangle of the graphical path
+                rect = r.GetBounds(e.Graphics);
+
+                // Rectangle for text befor highlighted text (rect.Width * lastpercent)
+                RectangleF intersectRectBefore = new RectangleF(rect.X, rect.Y, rect.Width * lastpercent, rect.Height);
+
+                // update region on the intersection between region and 2nd rectangle
+                r.Intersect(intersectRectBefore);
+
+                // Fill updated region in green
+                e.Graphics.FillRegion(ActiveColorBrush, r);
+
+                #endregion Paint in ActiveColor
+
+                #region apply effect
+                
+                CreateNeonEffect(_ActiveBorderColor, e, pathFragment);
+
+                #endregion apply effect
+
+                // Draw the text               
+                e.Graphics.FillPath(ActiveColorBrush, pathFragment);
+
+                // Outline the text                                
+                e.Graphics.DrawPath(penActiveBorder, pathFragment);
+
+                #endregion Draw active text
+
+
+                #region draw highlight text
+                // HIGHLIGHT 
+
+                pathHighlight.AddString(highlight_fragment, _karaokeFont.FontFamily, (int)_karaokeFont.Style, _karaokeFont.Size, new Point((int)(x0 + current_fragment_length), y0), sf);
+
+                #region Paint in HighlightColor    
+                
+                r = new Region(pth);
+
+                // Create a retangle of the graphical path
+                rect = r.GetBounds(e.Graphics);
+
+                // Create another rectangle shorter than the 1st one (percent of the first)
+                RectangleF intersectRect = new RectangleF(rect.X + rect.Width * lastpercent, rect.Y, rect.Width * (percent - lastpercent), rect.Height);
+
+                // update region on the intersection between region and 2nd rectangle
+                r.Intersect(intersectRect);
+
+                // Fill updated region in red => percent portion of text is red            
+                e.Graphics.FillRegion(HighlightColorBrush, r);
+                
+                #endregion Paint in HighlightColor
+
+
+                #region apply effect
+
+                CreateNeonEffect(_ActiveBorderColor, e, pathHighlight);
+
+                #endregion apply effect
+
+                // Draw the text               
+                e.Graphics.FillPath(HighlightColorBrush, pathHighlight);
+
+                // Outline text                
+                e.Graphics.DrawPath(penActiveBorder, pathHighlight);
+
+                // END OF HIGHLIGHT
+                #endregion draw highlight text
+              
+                pth.Dispose();
+
+            }
+          
+            // **********************************************************************
+            // B - Others lines (Inactives)
+            // **********************************************************************
+
+            // path made for the portion of a line of lyrics
+            // in order to draw the ActiveBorder color only on it
+            int Wbg;
+            RectangleF Rbg;                          
+
+            pth.Dispose();
+
+            // ======================================================================================================
+            // NEXT LINES
+            // 4. Draw and color (InactiveColor) all lines from _linedeb + 1 to _linefin in white
+            // We want to display only a few number of lines (variable _nbLyricsLines = number of lines to display)  
+            // linedeb which is the current line is displayed in the previous paragraph
+            // ======================================================================================================
+            pth = new GraphicsPath();
+
+            for (int i = _FirstLineToShow + 1; i <= _LastLineToShow; i++)
+            {
+                if (i < Texts.Count())
+                {
+                    x0 = HCenterText(Texts[i]);     // Center text horizontally
+
+                    #region background of syllabe                              
+                    if (_bTextBackGround)
+                    {
+                        Wbg = (int)(1.04 * LinesLengths[i]);
+                        // Black background to make text more visible
+                        Rbg = new RectangleF((int)(0.94 * x0), (int)(1.04 * y0) + (i - _FirstLineToShow) * _lineHeight, Wbg, _lineHeight);
+                        // background
+                        e.Graphics.FillRectangle(new SolidBrush(Color.Black), Rbg);
                     }
                     #endregion
 
@@ -1728,49 +2143,19 @@ namespace keffect
 
 
                     #region Neon effect
-                    //Create a matrix that shrinks the drawing output by the fixed ratio. 
-                    mx = new Matrix(1.0f / 5, 0, 0, 1.0f / 5, -(1.0f / 5), -(1.0f / 5));
 
-                    //Choose an appropriate smoothing mode for the halo. 
-                    gimg.SmoothingMode = SmoothingMode.AntiAlias;
+                    CreateNeonEffect(_InactiveBorderColor,e, pth);
 
-                    //Transform the graphics object so that the same half may be used for both halo and text output. 
-                    gimg.Transform = mx;
-
-                    //Using a suitable pen...
-                    HaloColor = InactiveBorderColor;
-                    HaloBrush = new SolidBrush(HaloColor);                    
-
-                    penHaloColor = new Pen(HaloColor, 3);
-
-                    //Draw around the outline of the path
-                    gimg.DrawPath(penHaloColor, pth);
-
-                    //and then fill in for good measure. 
-                    gimg.FillPath(HaloBrush, pth);
-
-                    //We no longer need this graphics object
-                    //g.Dispose();
-
-                    //setup the smoothing mode for path drawing
-                    ge.SmoothingMode = SmoothingMode.AntiAlias;
-
-                    //and the interpolation mode for the expansion of the halo bitmap
-                    ge.InterpolationMode = InterpolationMode.HighQualityBicubic;
-
-                    //expand the halo making the edges nice and fuzzy. 
-                    ge.DrawImage(bm, pBox.ClientRectangle, 0, 0, bm.Width, bm.Height, GraphicsUnit.Pixel);
-
+                   
                     #endregion Neon effect
 
                     
                     // Draw the text
                     // _InactiveColor is the color for text not yet sung (typically white)
-                    ge.FillPath(InactiveColorBrush, pth);
+                    e.Graphics.FillPath(InactiveColorBrush, pth);
 
-                    // Outline the text
-                    if (thick > 0)
-                        ge.DrawPath(penInactiveBorder, pth);
+                    // Outline the text                    
+                    e.Graphics.DrawPath(penInactiveBorder, pth);
                 }
             }
             
@@ -1782,11 +2167,109 @@ namespace keffect
             penActiveBorder.Dispose();
             penInactiveBorder.Dispose();
             
-            r?.Dispose();
+            //r?.Dispose();
             pth?.Dispose();
             pathFragment?.Dispose();
-            gimg?.Dispose();            
+            //gimg?.Dispose();            
         }
+
+
+        #region Effects
+
+        /// <summary>
+        /// Create a neon effect
+        /// </summary>
+        /// <param name="clr"></param>
+        /// <param name="e"></param>
+        /// <param name="pth"></param>
+        private void CreateNeonEffect(Color clr, PaintEventArgs e, GraphicsPath pth)
+        {
+            //Create a bitmap in a fixed ratio to the original drawing area.
+            Bitmap bm = new Bitmap(pBox.ClientSize.Width / 5, pBox.ClientSize.Height / 5);
+            //Get the graphics object for the image. 
+            Graphics gimg = Graphics.FromImage(bm);
+
+            //Create a matrix that shrinks the drawing output by the fixed ratio. 
+            Matrix mx = new Matrix(1.0f / 5, 0, 0, 1.0f / 5, -(1.0f / 5), -(1.0f / 5));
+
+            //Choose an appropriate smoothing mode for the halo. 
+            gimg.SmoothingMode = SmoothingMode.AntiAlias;
+
+            //Transform the graphics object so that the same half may be used for both halo and text output. 
+            gimg.Transform = mx;
+
+            //Using a suitable pen...
+            Color HaloColor = clr;
+            Brush HaloBrush = new SolidBrush(HaloColor);
+
+            Pen penHaloColor = new Pen(HaloColor, 3);
+
+            //Draw around the outline of the path
+            gimg.DrawPath(penHaloColor, pth);
+
+            //and then fill in for good measure. 
+            gimg.FillPath(HaloBrush, pth);
+
+            //We no longer need this graphics object
+            //g.Dispose();
+
+            //setup the smoothing mode for path drawing
+            e.Graphics.SmoothingMode = SmoothingMode.AntiAlias;
+
+            //and the interpolation mode for the expansion of the halo bitmap
+            e.Graphics.InterpolationMode = InterpolationMode.HighQualityBicubic;
+
+            //expand the halo making the edges nice and fuzzy. 
+            e.Graphics.DrawImage(bm, pBox.ClientRectangle, 0, 0, bm.Width, bm.Height, GraphicsUnit.Pixel);
+        }
+
+        /// <summary>
+        /// Create a shadow effect
+        /// </summary>
+        /// <param name="line"></param>
+        /// <param name="x0"></param>
+        /// <param name="y0"></param>
+        /// <param name="font"></param>
+        /// <param name="e"></param>
+        /// <param name="pth"></param>
+        private void CreateShadowEffect(string line, Color clr, int x0, int y0, Font font, float emSize, PaintEventArgs e, GraphicsPath pth)
+        {
+            Bitmap bm = new Bitmap(pBox.ClientSize.Width / 4, pBox.ClientSize.Height / 4);
+
+            //Get a graphics object for it
+            Graphics g = Graphics.FromImage(bm);
+            //Graphics ge = e.Graphics;
+
+            // must use an antialiased rendering hint
+            g.TextRenderingHint = TextRenderingHint.AntiAlias;
+
+            //this matrix zooms the text out to 1/4 size and offsets it by a little right and down                
+            Matrix mx = new Matrix(0.25f, 0, 0, 0.25f, 1.3f, 1.3f);
+
+            g.Transform = mx;
+
+
+            //The shadow is drawn
+            g.DrawString(line, font, new SolidBrush(clr), x0, y0, sf);
+
+            //Don't need this anymore
+            g.Dispose();
+
+            //The destination Graphics uses a high quality mode
+            e.Graphics.InterpolationMode = InterpolationMode.HighQualityBicubic;
+
+            //and draws antialiased text for accurate fitting
+            e.Graphics.TextRenderingHint = TextRenderingHint.AntiAlias;
+
+            //The small image is blown up to fill the main client rectangle
+            e.Graphics.DrawImage(bm, pBox.ClientRectangle, 0, 0, bm.Width, bm.Height, GraphicsUnit.Pixel);
+
+            // finally, the text is drawn on top
+            //pth.AddString(line, new FontFamily(font.Name), (int)FontStyle.Regular, emSize, new Point(x0, y0), sf);
+        }
+
+        #endregion Effects
+
 
         /// <summary>
         /// Apply the beat effect.
@@ -1907,7 +2390,12 @@ namespace keffect
             float res = 0;
 
             current_fragment = string.Empty;
+            current_fragment_length = 0;
+            highlight_fragment = string.Empty;
+            //highlight_fragment_length = 0;
 
+
+            /*
             for (int i = 0; i < idx; i++)
             {
                 if (i < Lines[_line].Count())
@@ -1916,6 +2404,26 @@ namespace keffect
                     current_fragment += Lines[_line][i];
                 }
             }
+            */
+
+            for (int i = 0; i < Lines[_line].Count(); i++)
+            {
+                if (i < idx)
+                {
+                    res += MeasureString(Lines[_line][i], _karaokeFont.Size);
+
+                    if (idx > 0 && i < idx - 1)
+                    {
+                        current_fragment += Lines[_line][i];
+                        current_fragment_length += MeasureString(Lines[_line][i], _karaokeFont.Size);
+                    }
+                    else if (idx > 0 && i == idx - 1)
+                    {
+                        highlight_fragment = Lines[_line][i];
+                        //highlight_fragment_length = MeasureString(Lines[_line][i], _karaokeFont.Size);
+                    }
+                }                
+            }            
             return res;
         }
 
@@ -2359,184 +2867,7 @@ namespace keffect
         }
 
 
-        #endregion SlideShow with timer 
-
-
-        /*
-
-        private void InitBackGroundWorker()
-        {
-            backgroundWorkerSlideShow = new System.ComponentModel.BackgroundWorker();
-            backgroundWorkerSlideShow.WorkerSupportsCancellation = true;
-            backgroundWorkerSlideShow.WorkerReportsProgress = true;
-            backgroundWorkerSlideShow.DoWork += new System.ComponentModel.DoWorkEventHandler(this.backgroundWorkerSlideShow_DoWork);
-            backgroundWorkerSlideShow.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.backgroundWorkerSlideShow_RunWorkerCompleted);
-        }
-
-        private string SelectRndFile(List<string> files)
-        {            
-            if (files.Count > 0)
-            {
-                int rand = random.Next(0, files.Count);
-                if (files[rand] != strCurrentImage || rndIter > 10)
-                {
-                    rndIter = 0;
-                    strCurrentImage = files[rand];
-                    return files[rand];
-                }
-                else
-                {
-                    rndIter++;
-                    return SelectRndFile(files);
-                }
-            }
-            else
-            {
-                return null;
-            }
-        }
-
-        private void backgroundWorkerSlideShow_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
-        {
-            if (m_Restart == true)
-            {
-                StopBgW();
-
-                int C = m_ImageFilePaths.Count;
-
-                switch (C)
-                {
-                    case 0:
-                        break;
-                    case 1:
-                        pBox.Image = Image.FromFile(m_ImageFilePaths[0]);
-                        break;
-                    default:
-                        StartBgW();
-                        break;
-                }
-            }
-            else
-            {
-                backgroundWorkerSlideShow.Dispose();
-                SetBackground(DefaultDirSlideShow);
-            }
-        }
-
-        private void backgroundWorkerSlideShow_DoWork(object sender, DoWorkEventArgs e)
-        {
-            List<string> files = (List<string>)e.Argument;
-
-            do
-            {
-                if (m_Cancel == true)
-                {
-                    break;
-                }
-
-                string file = SelectRndFile(files);
-
-
-                UpdateTimerEnable(true);
-                m_FinishEvent.Reset();
-
-                if (m_ImageStream != null)
-                {
-                    m_ImageStream.Dispose();
-                    m_ImageStream = null;
-                }
-
-                try
-                {
-                    using (FileStream fs = File.OpenRead(file))
-                    {
-                        byte[] ba = new byte[fs.Length];
-                        fs.Read(ba, 0, ba.Length);
-                        m_ImageStream = new MemoryStream(ba);
-
-                        if (m_CurrentImage != null)
-                        {
-                            m_CurrentImage.Dispose();
-                            m_CurrentImage = null;
-                        }
-
-                        m_CurrentImage = Image.FromStream(m_ImageStream);
-                        fs.Dispose();
-                        pBox.Invalidate();                        
-                    }
-                }
-                catch (Exception op)
-                {
-                    m_CurrentImage = null;
-                    Console.WriteLine("Error opening image " + op.Message);
-                }
-
-
-                // do not launch if new slideshow is required
-                if (m_Restart == false)
-                {
-                    //UpdateTimerEnable(true);
-                    //m_FinishEvent.WaitOne();
-                    m_FinishEvent.Reset();
-
-                    PAUSE_TIME = 1000 * _freqdirslideshow;
-                    Thread.Sleep(PAUSE_TIME);
-                }
-            } while (m_Cancel == false);
-        }
-
-
-        private void UpdateTimerEnable(bool enabled)
-        {
-            if (this.InvokeRequired)
-            {
-                try
-                {
-                    UpdateTimerEnableCallback d = new UpdateTimerEnableCallback(UpdateTimerEnable);
-                    pBox.Invoke(d, new object[] { enabled });                    
-                }
-                catch (Exception u)
-                {
-                    Console.WriteLine("Error UpdateTimerEnable " + u.Message);
-                }
-            }
-        }
-
-
-        private void StartBgW()
-        {
-            if (backgroundWorkerSlideShow.IsBusy)
-            {
-                StopBgW();
-            }
-
-            try
-            {
-                if (!backgroundWorkerSlideShow.IsBusy)
-                {
-                    m_Restart = false;
-                    m_Cancel = false;
-                    backgroundWorkerSlideShow.RunWorkerAsync(m_ImageFilePaths);
-                }
-            }
-            catch (Exception est)
-            {
-                //m_Restart = true;
-                Console.WriteLine("Error starting backgroundworker: " + est.Message);
-            }
-        }
-
-        private void StopBgW()
-        {
-            if (backgroundWorkerSlideShow.IsBusy)
-            {
-                backgroundWorkerSlideShow.CancelAsync();
-
-                m_Cancel = true;
-            }
-        }
-      
-        */
+        #endregion SlideShow with timer   
 
 
         /// <summary>

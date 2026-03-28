@@ -2428,7 +2428,7 @@ namespace PicControl
 
 
         /// <summary>
-        /// Create a Shadow effect
+        /// Create a shadow effect
         /// </summary>
         /// <param name="line"></param>
         /// <param name="x0"></param>
@@ -2667,7 +2667,9 @@ namespace PicControl
         /// </summary>
         /// <param name="e"></param>
         private void DrawNextLines(int y0, PaintEventArgs e)
-        {            
+        {
+            #region declarations
+
             int x0 = 0;
             int i;
             int offset = _lineHeight;
@@ -2679,10 +2681,11 @@ namespace PicControl
             float y1;
 
             int ChordOffset = offset;  // To manage when offset = 0 
+            #endregion declarations
+
 
             if (_txtNbLines == 1)
                 offset = 0;                      
-
 
             // Draw sentence                           
             #region draw lyrics
@@ -2741,8 +2744,7 @@ namespace PicControl
                                 // No chords
                                 y1 = y0 + (k + 1) * offset;
                                 drawSyllabeNextLines(_InactiveColor, syllabes[i], (int)x1, (int)y1, W, H, e);
-                            }
-                                                                                        
+                            }                                                                                        
                         }
                     }
                     else if (syllabes[i].line > line)
