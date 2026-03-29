@@ -89,21 +89,20 @@ namespace keffect
             get { return mBlend; }
             set { mBlend = value; Invalidate(); }
         }
-        private Bitmap[] pictures;
+        
+        // Array of bitmaps (images as backgound image)
+        private Bitmap[] m_BitmapsArray;
 
         #endregion slideshow
 
 
         #region SlideShow old
-        public Rectangle m_DisplayRectangle { get; set; }
 
+        /*
         private BackgroundWorker backgroundWorkerSlideShow;
 
-        private Random random;
-        private string[] bgFiles;
-        private string DefaultDirSlideShow;
-
-        private List<string> m_ImageFilePaths;
+        private Random random;        
+        
         private MemoryStream m_ImageStream = null;
 
         private ManualResetEvent m_FinishEvent = new ManualResetEvent(false);
@@ -123,6 +122,27 @@ namespace keffect
                     return false;
             }
         }
+
+     
+        //private int PAUSE_TIME;
+        private int rndIter = 0;
+        private string strCurrentImage; // current image to insure that random will provide a different one
+
+        public ImageLayout imgLayout { get; set; }
+        
+        public int m_Alpha { get; set; }
+        */
+
+        #endregion SlideShow old
+
+        //private List<string> m_ImageFilePaths;
+        
+        // Paths of images
+        private string[] m_ImageFilePaths;
+
+        private string DefaultDirSlideShow;
+        public Rectangle m_DisplayRectangle { get; set; }
+        public Image m_CurrentImage { get; set; }
 
         /// <summary>
         /// SlideShow frequency
@@ -147,16 +167,6 @@ namespace keffect
                 pBox.SizeMode = _sizemode;
             }
         }
-
-        private int PAUSE_TIME;
-        private int rndIter = 0;
-        private string strCurrentImage; // current image to insure that random will provide a different one
-
-        public ImageLayout imgLayout { get; set; }
-        public Image m_CurrentImage { get; set; }
-        public int m_Alpha { get; set; }
-
-        #endregion SlideShow old
 
 
         #region decl
@@ -579,7 +589,7 @@ namespace keffect
                     case "Diaporama":
                         break;
                     case "SolidColor":
-                        m_Cancel = true;
+                        //m_Cancel = true;
                         Terminate();
                         _timerGradient.Stop();
                         pBox.Image = null;
@@ -589,7 +599,7 @@ namespace keffect
                         break;
 
                     case "Gradient":
-                        m_Cancel = true;
+                        //m_Cancel = true;
                         Terminate();
                         pBox.Image = null;
                         m_CurrentImage = null;
@@ -598,7 +608,7 @@ namespace keffect
                         break;
 
                     case "Rhythm":
-                        m_Cancel = true;
+                        //m_Cancel = true;
                         Terminate();
                         _timerGradient.Start();
                         pBox.Image = null;
@@ -609,7 +619,7 @@ namespace keffect
                         break;
 
                     case "Transparent":
-                        m_Cancel = true;
+                        //m_Cancel = true;
                         Terminate();
                         _timerGradient.Stop();
                         pBox.Image = null;
@@ -822,9 +832,12 @@ namespace keffect
 
         private void SetDefaultValues()
         {
-            m_ImageFilePaths = new List<string>();
-            m_Alpha = 255;
-            imgLayout = ImageLayout.Stretch;
+            //m_ImageFilePaths = new List<string>();            
+            m_ImageFilePaths = new string[] { };
+            m_BitmapsArray = new Bitmap[] { };
+
+            //m_Alpha = 255;
+            //imgLayout = ImageLayout.Stretch;
 
 
             sf = new StringFormat(StringFormat.GenericTypographic) { FormatFlags = StringFormatFlags.MeasureTrailingSpaces };
@@ -1060,7 +1073,7 @@ namespace keffect
             {
                 case "Diaporama":
                    
-                    if (pictures.Length == 1)
+                    if (m_BitmapsArray.Length == 1)
                     {
                         if (m_CurrentImage != null)
                         {                           
@@ -2712,22 +2725,19 @@ namespace keffect
 
         private void LoadImageList(string dir)
         {
-            bgFiles = Directory.GetFiles(@dir, "*.jpg");
-            m_ImageFilePaths.Clear();
-            for (int i = 0; i < bgFiles.Length; ++i)
-            {
-                string file = bgFiles[i];
-                m_ImageFilePaths.Add(file);
-            }
 
-            // new slideshow
+            // Add to m_ImageFilePaths string array the list of paths of images in the directory
+            m_ImageFilePaths = Directory.GetFiles(@dir, "*.jpg");           
 
             count = 0;
             //mBlend = 0.0F;
-            pictures = new Bitmap[bgFiles.Length];
-            for (int i = 0; i < bgFiles.Length; ++i)
+
+            // Add to m_BitmapsArray array the list of images in the directory
+            // Initialize the array of images with the size of the number of images in the directory
+            m_BitmapsArray = new Bitmap[m_ImageFilePaths.Length];
+            for (int i = 0; i < m_ImageFilePaths.Length; ++i)
             {
-                pictures[i] = new Bitmap(bgFiles[i]);
+                m_BitmapsArray[i] = new Bitmap(m_ImageFilePaths[i]);
             }
 
         }
@@ -2742,16 +2752,19 @@ namespace keffect
             {
                 //UpdateTimerEnable(false);
 
-                m_Cancel = true;
-                m_Restart = true;
+                //m_Cancel = true;
+                //m_Restart = true;
 
                 m_CurrentImage = null;
-                strCurrentImage = string.Empty;
-                rndIter = 0;
+                //strCurrentImage = string.Empty;
+                //rndIter = 0;
 
                 pBox.Image = null;
                 pBox.Invalidate();                
-                m_ImageFilePaths.Clear();
+                
+                //m_ImageFilePaths.Clear();
+                m_ImageFilePaths = new string[] { };
+                m_BitmapsArray = new Bitmap[] { };
 
                 if (dirImages == null)
                 {
@@ -2765,19 +2778,19 @@ namespace keffect
                     {
                         LoadImageList(dirImages);
                         //C = m_ImageFilePaths.Count;
-                        C = pictures.Length;
+                        C = m_BitmapsArray.Length;
                     }
 
                     switch (C)
                     {
                         case 0:
                             // No image, just background color
-                            m_Cancel = true;
+                            //m_Cancel = true;
                             break;
                         case 1:
                             // Single image
-                            m_Cancel = true;
-                            pBox.Image = Image.FromFile(m_ImageFilePaths[0]);
+                            //m_Cancel = true;
+                            pBox.Image = m_BitmapsArray[0]; //  Image.FromFile(m_ImageFilePaths[0]);
                             break;
                         default:
                             /*                            
@@ -2822,8 +2835,8 @@ namespace keffect
 
             try
             {
-                Image1 = pictures[count];
-                Image2 = pictures[++count];
+                Image1 = m_BitmapsArray[count];
+                Image2 = m_BitmapsArray[++count];
             }
             catch
             {
@@ -2843,15 +2856,15 @@ namespace keffect
                 // and stop the timer "timerTransition" to prevent a new change before time elapse of "timerChangeImage"
                 mBlend = 0.0F;
 
-                if ((count + 1) < pictures.Length)
+                if ((count + 1) < m_BitmapsArray.Length)
                 {
-                    Image1 = pictures[count];
-                    Image2 = pictures[++count];
+                    Image1 = m_BitmapsArray[count];
+                    Image2 = m_BitmapsArray[++count];
                 }
                 else
                 {
-                    Image1 = pictures[count];
-                    Image2 = pictures[0];
+                    Image1 = m_BitmapsArray[count];
+                    Image2 = m_BitmapsArray[0];
                     count = 0;
                 }
 
@@ -2875,15 +2888,21 @@ namespace keffect
         /// </summary>
         public void Terminate()
         {
-            m_Cancel = true;
-            m_Restart = false;
+            //m_Cancel = true;
+            //m_Restart = false;
 
-            m_ImageFilePaths = new List<string>();            
+            //m_ImageFilePaths = new List<string>();
+            m_ImageFilePaths = new string[] { };
+            m_BitmapsArray = new Bitmap[] { };
+
+
+            /*
             if (m_ImageStream != null)
             {
                 m_ImageStream.Dispose();
                 m_ImageStream = null;
             }
+            */
 
             timerChangeImage?.Stop();
             timerTransition?.Stop();
