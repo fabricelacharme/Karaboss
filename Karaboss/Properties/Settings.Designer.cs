@@ -1798,7 +1798,7 @@ namespace Karaboss.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("#FFFFFF")]
+        [global::System.Configuration.DefaultSettingValueAttribute("#FEB471")]
         public string KfnBgColor {
             get {
                 return ((string)(this["KfnBgColor"]));
@@ -1985,6 +1985,18 @@ namespace Karaboss.Properties {
             }
             set {
                 this["KaraokeFontSize"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("200, 200")]
+        public global::System.Drawing.Point frmKfnCreateLocation {
+            get {
+                return ((global::System.Drawing.Point)(this["frmKfnCreateLocation"]));
+            }
+            set {
+                this["frmKfnCreateLocation"] = value;
             }
         }
     }

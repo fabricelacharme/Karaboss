@@ -117,350 +117,51 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="tbPageAudios.BackgroundImageLayout" type="System.Windows.Forms.ImageLayout, System.Windows.Forms">
-    <value>Center</value>
-  </data>
-  <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
-  <data name="lblHelpTb1.Font" type="System.Drawing.Font, System.Drawing">
-    <value>Calibri, 9pt</value>
-  </data>
-  <data name="lblHelpTb1.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
-    <value>NoControl</value>
-  </data>
-  <data name="lblHelpTb1.Location" type="System.Drawing.Point, System.Drawing">
-    <value>4, 8</value>
-  </data>
-  <data name="lblHelpTb1.Size" type="System.Drawing.Size, System.Drawing">
-    <value>697, 61</value>
-  </data>
-  <assembly alias="mscorlib" name="mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="lblHelpTb1.TabIndex" type="System.Int32, mscorlib">
-    <value>20</value>
-  </data>
-  <data name="lblHelpTb1.Text" xml:space="preserve">
-    <value>Vous devez télécharger au moins un fichier audio (MP3) dans audio1.{0}Si vous souhaitez un guide vocal, vous devez télécharger deux fichiers audio :{0}un fichier avec la voix dans audio1 et un fichier instrumental dans audio2.</value>
-  </data>
-  <data name="&gt;&gt;lblHelpTb1.Name" xml:space="preserve">
-    <value>lblHelpTb1</value>
-  </data>
-  <data name="&gt;&gt;lblHelpTb1.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;lblHelpTb1.Parent" xml:space="preserve">
-    <value>tbPageAudios</value>
-  </data>
-  <data name="&gt;&gt;lblHelpTb1.ZOrder" xml:space="preserve">
-    <value>0</value>
-  </data>
-  <data name="btnPlay.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
-    <value>NoControl</value>
-  </data>
-  <data name="btnPlay.Location" type="System.Drawing.Point, System.Drawing">
-    <value>412, 133</value>
-  </data>
-  <data name="btnPlay.Size" type="System.Drawing.Size, System.Drawing">
-    <value>34, 23</value>
-  </data>
-  <data name="btnPlay.TabIndex" type="System.Int32, mscorlib">
-    <value>19</value>
-  </data>
-  <data name="btnPlay.Visible" type="System.Boolean, mscorlib">
-    <value>False</value>
-  </data>
-  <data name="&gt;&gt;btnPlay.Name" xml:space="preserve">
-    <value>btnPlay</value>
-  </data>
-  <data name="&gt;&gt;btnPlay.Type" xml:space="preserve">
+  <data name="&gt;&gt;btnImportLyrics.Type" xml:space="preserve">
     <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="&gt;&gt;btnPlay.Parent" xml:space="preserve">
-    <value>tbPageAudios</value>
+  <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+  <data name="btnInactiveColorBorderPicker.Location" type="System.Drawing.Point, System.Drawing">
+    <value>316, 241</value>
   </data>
-  <data name="&gt;&gt;btnPlay.ZOrder" xml:space="preserve">
-    <value>1</value>
+  <data name="&gt;&gt;btnActiveColorBorderSelect.Parent" xml:space="preserve">
+    <value>tbPageBackground</value>
   </data>
-  <data name="txtArtist.Location" type="System.Drawing.Point, System.Drawing">
-    <value>125, 219</value>
+  <data name="btnInactiveColorSelect.Size" type="System.Drawing.Size, System.Drawing">
+    <value>44, 26</value>
   </data>
-  <data name="txtArtist.Size" type="System.Drawing.Size, System.Drawing">
-    <value>281, 23</value>
+  <data name="tbPageImages.Text" xml:space="preserve">
+    <value>Images</value>
   </data>
-  <data name="txtArtist.TabIndex" type="System.Int32, mscorlib">
-    <value>11</value>
-  </data>
-  <data name="&gt;&gt;txtArtist.Name" xml:space="preserve">
-    <value>txtArtist</value>
-  </data>
-  <data name="&gt;&gt;txtArtist.Type" xml:space="preserve">
-    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;txtArtist.Parent" xml:space="preserve">
-    <value>tbPageAudios</value>
-  </data>
-  <data name="&gt;&gt;txtArtist.ZOrder" xml:space="preserve">
-    <value>2</value>
-  </data>
-  <data name="lblArtist.AutoSize" type="System.Boolean, mscorlib">
-    <value>True</value>
-  </data>
-  <data name="lblArtist.Font" type="System.Drawing.Font, System.Drawing">
-    <value>Calibri, 9.75pt</value>
-  </data>
-  <data name="lblArtist.Location" type="System.Drawing.Point, System.Drawing">
-    <value>4, 222</value>
-  </data>
-  <data name="lblArtist.Size" type="System.Drawing.Size, System.Drawing">
-    <value>36, 15</value>
-  </data>
-  <data name="lblArtist.TabIndex" type="System.Int32, mscorlib">
-    <value>10</value>
-  </data>
-  <data name="lblArtist.Text" xml:space="preserve">
-    <value>Artist</value>
-  </data>
-  <data name="&gt;&gt;lblArtist.Name" xml:space="preserve">
-    <value>lblArtist</value>
-  </data>
-  <data name="&gt;&gt;lblArtist.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;lblArtist.Parent" xml:space="preserve">
-    <value>tbPageAudios</value>
-  </data>
-  <data name="&gt;&gt;lblArtist.ZOrder" xml:space="preserve">
-    <value>3</value>
-  </data>
-  <data name="txtKfnFileName.Location" type="System.Drawing.Point, System.Drawing">
-    <value>125, 134</value>
-  </data>
-  <data name="txtKfnFileName.Size" type="System.Drawing.Size, System.Drawing">
-    <value>281, 23</value>
-  </data>
-  <data name="txtKfnFileName.TabIndex" type="System.Int32, mscorlib">
-    <value>7</value>
-  </data>
-  <data name="&gt;&gt;txtKfnFileName.Name" xml:space="preserve">
-    <value>txtKfnFileName</value>
-  </data>
-  <data name="&gt;&gt;txtKfnFileName.Type" xml:space="preserve">
-    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;txtKfnFileName.Parent" xml:space="preserve">
-    <value>tbPageAudios</value>
-  </data>
-  <data name="&gt;&gt;txtKfnFileName.ZOrder" xml:space="preserve">
-    <value>4</value>
-  </data>
-  <data name="txtAuthor.Location" type="System.Drawing.Point, System.Drawing">
-    <value>125, 306</value>
-  </data>
-  <data name="txtAuthor.Size" type="System.Drawing.Size, System.Drawing">
-    <value>281, 23</value>
-  </data>
-  <data name="txtAuthor.TabIndex" type="System.Int32, mscorlib">
-    <value>17</value>
-  </data>
-  <data name="&gt;&gt;txtAuthor.Name" xml:space="preserve">
-    <value>txtAuthor</value>
-  </data>
-  <data name="&gt;&gt;txtAuthor.Type" xml:space="preserve">
-    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;txtAuthor.Parent" xml:space="preserve">
-    <value>tbPageAudios</value>
-  </data>
-  <data name="&gt;&gt;txtAuthor.ZOrder" xml:space="preserve">
-    <value>5</value>
-  </data>
-  <data name="lblAuthor.AutoSize" type="System.Boolean, mscorlib">
-    <value>True</value>
-  </data>
-  <data name="lblAuthor.Font" type="System.Drawing.Font, System.Drawing">
-    <value>Calibri, 9.75pt</value>
-  </data>
-  <data name="lblAuthor.Location" type="System.Drawing.Point, System.Drawing">
-    <value>4, 309</value>
-  </data>
-  <data name="lblAuthor.Size" type="System.Drawing.Size, System.Drawing">
-    <value>44, 15</value>
-  </data>
-  <data name="lblAuthor.TabIndex" type="System.Int32, mscorlib">
-    <value>16</value>
-  </data>
-  <data name="lblAuthor.Text" xml:space="preserve">
-    <value>Author</value>
-  </data>
-  <data name="&gt;&gt;lblAuthor.Name" xml:space="preserve">
-    <value>lblAuthor</value>
-  </data>
-  <data name="&gt;&gt;lblAuthor.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;lblAuthor.Parent" xml:space="preserve">
-    <value>tbPageAudios</value>
-  </data>
-  <data name="&gt;&gt;lblAuthor.ZOrder" xml:space="preserve">
-    <value>6</value>
-  </data>
-  <data name="txtYear.Location" type="System.Drawing.Point, System.Drawing">
-    <value>125, 277</value>
-  </data>
-  <data name="txtYear.Size" type="System.Drawing.Size, System.Drawing">
-    <value>281, 23</value>
-  </data>
-  <data name="txtYear.TabIndex" type="System.Int32, mscorlib">
-    <value>15</value>
-  </data>
-  <data name="&gt;&gt;txtYear.Name" xml:space="preserve">
-    <value>txtYear</value>
-  </data>
-  <data name="&gt;&gt;txtYear.Type" xml:space="preserve">
-    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;txtYear.Parent" xml:space="preserve">
-    <value>tbPageAudios</value>
-  </data>
-  <data name="&gt;&gt;txtYear.ZOrder" xml:space="preserve">
-    <value>7</value>
-  </data>
-  <data name="lblYear.AutoSize" type="System.Boolean, mscorlib">
-    <value>True</value>
-  </data>
-  <data name="lblYear.Font" type="System.Drawing.Font, System.Drawing">
-    <value>Calibri, 9.75pt</value>
-  </data>
-  <data name="lblYear.Location" type="System.Drawing.Point, System.Drawing">
-    <value>4, 280</value>
-  </data>
-  <data name="lblYear.Size" type="System.Drawing.Size, System.Drawing">
-    <value>30, 15</value>
-  </data>
-  <data name="lblYear.TabIndex" type="System.Int32, mscorlib">
-    <value>14</value>
-  </data>
-  <data name="lblYear.Text" xml:space="preserve">
-    <value>Year</value>
-  </data>
-  <data name="&gt;&gt;lblYear.Name" xml:space="preserve">
-    <value>lblYear</value>
-  </data>
-  <data name="&gt;&gt;lblYear.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;lblYear.Parent" xml:space="preserve">
-    <value>tbPageAudios</value>
-  </data>
-  <data name="&gt;&gt;lblYear.ZOrder" xml:space="preserve">
-    <value>8</value>
-  </data>
-  <data name="txtAudio2.Location" type="System.Drawing.Point, System.Drawing">
-    <value>125, 102</value>
-  </data>
-  <data name="txtAudio2.Size" type="System.Drawing.Size, System.Drawing">
-    <value>490, 23</value>
-  </data>
-  <data name="txtAudio2.TabIndex" type="System.Int32, mscorlib">
-    <value>4</value>
-  </data>
-  <data name="&gt;&gt;txtAudio2.Name" xml:space="preserve">
-    <value>txtAudio2</value>
-  </data>
-  <data name="&gt;&gt;txtAudio2.Type" xml:space="preserve">
-    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;txtAudio2.Parent" xml:space="preserve">
-    <value>tbPageAudios</value>
-  </data>
-  <data name="&gt;&gt;txtAudio2.ZOrder" xml:space="preserve">
-    <value>9</value>
-  </data>
-  <data name="lblAudio2.Font" type="System.Drawing.Font, System.Drawing">
-    <value>Calibri, 9pt</value>
-  </data>
-  <data name="lblAudio2.Location" type="System.Drawing.Point, System.Drawing">
-    <value>5, 101</value>
+  <data name="&gt;&gt;picPreview.Type" xml:space="preserve">
+    <value>System.Windows.Forms.PictureBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="lblAudio2.Size" type="System.Drawing.Size, System.Drawing">
     <value>114, 32</value>
   </data>
-  <data name="lblAudio2.TabIndex" type="System.Int32, mscorlib">
-    <value>3</value>
+  <data name="btnActiveColorSelect.Location" type="System.Drawing.Point, System.Drawing">
+    <value>266, 154</value>
   </data>
-  <data name="lblAudio2.Text" xml:space="preserve">
-    <value>Audio 2 (instrumental)</value>
-  </data>
-  <data name="&gt;&gt;lblAudio2.Name" xml:space="preserve">
-    <value>lblAudio2</value>
-  </data>
-  <data name="&gt;&gt;lblAudio2.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;lblAudio2.Parent" xml:space="preserve">
+  <data name="&gt;&gt;label1.Parent" xml:space="preserve">
     <value>tbPageAudios</value>
   </data>
-  <data name="&gt;&gt;lblAudio2.ZOrder" xml:space="preserve">
-    <value>10</value>
+  <data name="&gt;&gt;txtBgColor.Parent" xml:space="preserve">
+    <value>tbPageBackground</value>
   </data>
-  <data name="btnImportAudio2.Location" type="System.Drawing.Point, System.Drawing">
-    <value>630, 102</value>
+  <data name="&gt;&gt;btnInactiveColorBorderSelect.ZOrder" xml:space="preserve">
+    <value>4</value>
   </data>
-  <data name="btnImportAudio2.Size" type="System.Drawing.Size, System.Drawing">
-    <value>75, 23</value>
+  <data name="&gt;&gt;txtAudio1.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="btnImportAudio2.TabIndex" type="System.Int32, mscorlib">
-    <value>5</value>
+  <data name="&gt;&gt;txtImageFile.ZOrder" xml:space="preserve">
+    <value>7</value>
   </data>
-  <data name="btnImportAudio2.Text" xml:space="preserve">
-    <value>Import</value>
+  <data name="&gt;&gt;lblImage.Name" xml:space="preserve">
+    <value>lblImage</value>
   </data>
-  <data name="&gt;&gt;btnImportAudio2.Name" xml:space="preserve">
-    <value>btnImportAudio2</value>
-  </data>
-  <data name="&gt;&gt;btnImportAudio2.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;btnImportAudio2.Parent" xml:space="preserve">
-    <value>tbPageAudios</value>
-  </data>
-  <data name="&gt;&gt;btnImportAudio2.ZOrder" xml:space="preserve">
-    <value>11</value>
-  </data>
-  <data name="label5.Font" type="System.Drawing.Font, System.Drawing">
-    <value>Calibri, 9pt</value>
-  </data>
-  <data name="label5.Location" type="System.Drawing.Point, System.Drawing">
-    <value>5, 134</value>
-  </data>
-  <data name="label5.Size" type="System.Drawing.Size, System.Drawing">
-    <value>114, 36</value>
-  </data>
-  <data name="label5.TabIndex" type="System.Int32, mscorlib">
-    <value>6</value>
-  </data>
-  <data name="label5.Text" xml:space="preserve">
-    <value>Name of the KFN file to be created</value>
-  </data>
-  <data name="&gt;&gt;label5.Name" xml:space="preserve">
-    <value>label5</value>
-  </data>
-  <data name="&gt;&gt;label5.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;label5.Parent" xml:space="preserve">
-    <value>tbPageAudios</value>
-  </data>
-  <data name="&gt;&gt;label5.ZOrder" xml:space="preserve">
-    <value>12</value>
-  </data>
-  <data name="btnTb1Next.Location" type="System.Drawing.Point, System.Drawing">
-    <value>630, 340</value>
-  </data>
-  <data name="btnTb1Next.Size" type="System.Drawing.Size, System.Drawing">
-    <value>75, 23</value>
-  </data>
-  <data name="btnTb1Next.TabIndex" type="System.Int32, mscorlib">
-    <value>18</value>
+  <data name="&gt;&gt;btnImportAudio1.ZOrder" xml:space="preserve">
+    <value>20</value>
   </data>
   <data name="btnTb1Next.Text" xml:space="preserve">
     <value>Next</value>
@@ -468,1754 +169,1210 @@
   <data name="&gt;&gt;btnTb1Next.Name" xml:space="preserve">
     <value>btnTb1Next</value>
   </data>
-  <data name="&gt;&gt;btnTb1Next.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;btnTb1Next.Parent" xml:space="preserve">
-    <value>tbPageAudios</value>
-  </data>
-  <data name="&gt;&gt;btnTb1Next.ZOrder" xml:space="preserve">
-    <value>13</value>
-  </data>
-  <data name="txtComment.Location" type="System.Drawing.Point, System.Drawing">
-    <value>125, 248</value>
-  </data>
-  <data name="txtComment.Size" type="System.Drawing.Size, System.Drawing">
-    <value>490, 23</value>
-  </data>
-  <data name="txtComment.TabIndex" type="System.Int32, mscorlib">
-    <value>13</value>
-  </data>
-  <data name="&gt;&gt;txtComment.Name" xml:space="preserve">
-    <value>txtComment</value>
-  </data>
-  <data name="&gt;&gt;txtComment.Type" xml:space="preserve">
-    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;txtComment.Parent" xml:space="preserve">
-    <value>tbPageAudios</value>
-  </data>
-  <data name="&gt;&gt;txtComment.ZOrder" xml:space="preserve">
-    <value>14</value>
-  </data>
-  <data name="label2.AutoSize" type="System.Boolean, mscorlib">
-    <value>True</value>
-  </data>
-  <data name="label2.Font" type="System.Drawing.Font, System.Drawing">
-    <value>Calibri, 9.75pt</value>
-  </data>
-  <data name="label2.Location" type="System.Drawing.Point, System.Drawing">
-    <value>4, 251</value>
-  </data>
-  <data name="label2.Size" type="System.Drawing.Size, System.Drawing">
-    <value>58, 15</value>
-  </data>
-  <data name="label2.TabIndex" type="System.Int32, mscorlib">
-    <value>12</value>
-  </data>
-  <data name="label2.Text" xml:space="preserve">
-    <value>Comment</value>
-  </data>
-  <data name="&gt;&gt;label2.Name" xml:space="preserve">
-    <value>label2</value>
-  </data>
-  <data name="&gt;&gt;label2.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;label2.Parent" xml:space="preserve">
-    <value>tbPageAudios</value>
-  </data>
-  <data name="&gt;&gt;label2.ZOrder" xml:space="preserve">
-    <value>15</value>
-  </data>
-  <data name="txtTitle.Location" type="System.Drawing.Point, System.Drawing">
-    <value>125, 190</value>
-  </data>
-  <data name="txtTitle.Size" type="System.Drawing.Size, System.Drawing">
-    <value>281, 23</value>
-  </data>
-  <data name="txtTitle.TabIndex" type="System.Int32, mscorlib">
-    <value>9</value>
-  </data>
-  <data name="&gt;&gt;txtTitle.Name" xml:space="preserve">
-    <value>txtTitle</value>
-  </data>
-  <data name="&gt;&gt;txtTitle.Type" xml:space="preserve">
-    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;txtTitle.Parent" xml:space="preserve">
-    <value>tbPageAudios</value>
-  </data>
-  <data name="&gt;&gt;txtTitle.ZOrder" xml:space="preserve">
-    <value>16</value>
-  </data>
-  <data name="label1.AutoSize" type="System.Boolean, mscorlib">
-    <value>True</value>
-  </data>
-  <data name="label1.Font" type="System.Drawing.Font, System.Drawing">
-    <value>Calibri, 9.75pt</value>
-  </data>
-  <data name="label1.Location" type="System.Drawing.Point, System.Drawing">
-    <value>4, 193</value>
-  </data>
-  <data name="label1.Size" type="System.Drawing.Size, System.Drawing">
-    <value>31, 15</value>
-  </data>
-  <data name="label1.TabIndex" type="System.Int32, mscorlib">
-    <value>8</value>
-  </data>
-  <data name="label1.Text" xml:space="preserve">
-    <value>Title</value>
-  </data>
-  <data name="&gt;&gt;label1.Name" xml:space="preserve">
-    <value>label1</value>
-  </data>
-  <data name="&gt;&gt;label1.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;label1.Parent" xml:space="preserve">
-    <value>tbPageAudios</value>
-  </data>
-  <data name="&gt;&gt;label1.ZOrder" xml:space="preserve">
-    <value>17</value>
-  </data>
-  <data name="txtAudio1.Location" type="System.Drawing.Point, System.Drawing">
-    <value>125, 70</value>
-  </data>
-  <data name="txtAudio1.Size" type="System.Drawing.Size, System.Drawing">
-    <value>490, 23</value>
-  </data>
-  <data name="txtAudio1.TabIndex" type="System.Int32, mscorlib">
-    <value>1</value>
-  </data>
-  <data name="&gt;&gt;txtAudio1.Name" xml:space="preserve">
-    <value>txtAudio1</value>
-  </data>
-  <data name="&gt;&gt;txtAudio1.Type" xml:space="preserve">
-    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;txtAudio1.Parent" xml:space="preserve">
-    <value>tbPageAudios</value>
-  </data>
-  <data name="&gt;&gt;txtAudio1.ZOrder" xml:space="preserve">
-    <value>18</value>
-  </data>
-  <data name="lblAudio1.Font" type="System.Drawing.Font, System.Drawing">
-    <value>Calibri, 9pt</value>
-  </data>
-  <data name="lblAudio1.Location" type="System.Drawing.Point, System.Drawing">
-    <value>4, 74</value>
-  </data>
-  <data name="lblAudio1.Size" type="System.Drawing.Size, System.Drawing">
-    <value>114, 32</value>
-  </data>
-  <data name="lblAudio1.TabIndex" type="System.Int32, mscorlib">
-    <value>0</value>
-  </data>
-  <data name="lblAudio1.Text" xml:space="preserve">
-    <value>Audio 1 (vocal)</value>
-  </data>
-  <data name="&gt;&gt;lblAudio1.Name" xml:space="preserve">
-    <value>lblAudio1</value>
-  </data>
-  <data name="&gt;&gt;lblAudio1.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;lblAudio1.Parent" xml:space="preserve">
-    <value>tbPageAudios</value>
-  </data>
-  <data name="&gt;&gt;lblAudio1.ZOrder" xml:space="preserve">
-    <value>19</value>
-  </data>
-  <data name="btnImportAudio1.Location" type="System.Drawing.Point, System.Drawing">
-    <value>630, 68</value>
-  </data>
-  <data name="btnImportAudio1.Size" type="System.Drawing.Size, System.Drawing">
-    <value>75, 23</value>
-  </data>
-  <data name="btnImportAudio1.TabIndex" type="System.Int32, mscorlib">
-    <value>2</value>
-  </data>
-  <data name="btnImportAudio1.Text" xml:space="preserve">
-    <value>Import</value>
-  </data>
-  <data name="&gt;&gt;btnImportAudio1.Name" xml:space="preserve">
-    <value>btnImportAudio1</value>
-  </data>
-  <data name="&gt;&gt;btnImportAudio1.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;btnImportAudio1.Parent" xml:space="preserve">
-    <value>tbPageAudios</value>
-  </data>
-  <data name="&gt;&gt;btnImportAudio1.ZOrder" xml:space="preserve">
-    <value>20</value>
-  </data>
-  <data name="tbPageAudios.Location" type="System.Drawing.Point, System.Drawing">
-    <value>4, 27</value>
-  </data>
-  <data name="tbPageAudios.Padding" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>3, 3, 3, 3</value>
-  </data>
-  <data name="tbPageAudios.Size" type="System.Drawing.Size, System.Drawing">
-    <value>713, 370</value>
+  <assembly alias="mscorlib" name="mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="lblAudio2.TabIndex" type="System.Int32, mscorlib">
+    <value>3</value>
   </data>
   <data name="tbPageAudios.TabIndex" type="System.Int32, mscorlib">
     <value>0</value>
   </data>
-  <data name="tbPageAudios.Text" xml:space="preserve">
-    <value>Audios</value>
+  <data name="txtArtist.Location" type="System.Drawing.Point, System.Drawing">
+    <value>125, 219</value>
   </data>
-  <data name="&gt;&gt;tbPageAudios.Name" xml:space="preserve">
+  <data name="&gt;&gt;txtAudio1.Parent" xml:space="preserve">
     <value>tbPageAudios</value>
   </data>
-  <data name="&gt;&gt;tbPageAudios.Type" xml:space="preserve">
-    <value>System.Windows.Forms.TabPage, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  <data name="txtArtist.TabIndex" type="System.Int32, mscorlib">
+    <value>11</value>
   </data>
-  <data name="&gt;&gt;tbPageAudios.Parent" xml:space="preserve">
-    <value>tbControl</value>
+  <data name="lblActiveColor.Size" type="System.Drawing.Size, System.Drawing">
+    <value>71, 15</value>
   </data>
-  <data name="&gt;&gt;tbPageAudios.ZOrder" xml:space="preserve">
-    <value>0</value>
+  <data name="picActiveColor.Size" type="System.Drawing.Size, System.Drawing">
+    <value>39, 23</value>
   </data>
-  <data name="tbPageLyrics.BackgroundImageLayout" type="System.Windows.Forms.ImageLayout, System.Windows.Forms">
-    <value>Center</value>
-  </data>
-  <data name="lblLyricsUpdate.Font" type="System.Drawing.Font, System.Drawing">
-    <value>Calibri, 9pt</value>
-  </data>
-  <data name="lblLyricsUpdate.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="lblHelpTb3.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
-  </data>
-  <data name="lblLyricsUpdate.Location" type="System.Drawing.Point, System.Drawing">
-    <value>3, 150</value>
-  </data>
-  <data name="lblLyricsUpdate.Size" type="System.Drawing.Size, System.Drawing">
-    <value>80, 64</value>
-  </data>
-  <data name="lblLyricsUpdate.TabIndex" type="System.Int32, mscorlib">
-    <value>24</value>
-  </data>
-  <data name="lblLyricsUpdate.Text" xml:space="preserve">
-    <value>Create, edit, and sync your lyrics</value>
   </data>
   <data name="lblLyricsUpdate.Visible" type="System.Boolean, mscorlib">
     <value>False</value>
   </data>
-  <data name="&gt;&gt;lblLyricsUpdate.Name" xml:space="preserve">
-    <value>lblLyricsUpdate</value>
-  </data>
-  <data name="&gt;&gt;lblLyricsUpdate.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  <data name="&gt;&gt;lblImage.Parent" xml:space="preserve">
+    <value>tbPageImages</value>
   </data>
   <data name="&gt;&gt;lblLyricsUpdate.Parent" xml:space="preserve">
     <value>tbPageLyrics</value>
   </data>
-  <data name="&gt;&gt;lblLyricsUpdate.ZOrder" xml:space="preserve">
+  <data name="&gt;&gt;lblHelpTb1.ZOrder" xml:space="preserve">
     <value>0</value>
   </data>
-  <data name="btnLyricsUpdate.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
-    <value>NoControl</value>
-  </data>
-  <data name="btnLyricsUpdate.Location" type="System.Drawing.Point, System.Drawing">
-    <value>90, 150</value>
-  </data>
-  <data name="btnLyricsUpdate.Size" type="System.Drawing.Size, System.Drawing">
-    <value>135, 23</value>
-  </data>
-  <data name="btnLyricsUpdate.TabIndex" type="System.Int32, mscorlib">
-    <value>23</value>
-  </data>
-  <data name="btnLyricsUpdate.Text" xml:space="preserve">
-    <value>Modify Lyrics</value>
-  </data>
-  <data name="btnLyricsUpdate.Visible" type="System.Boolean, mscorlib">
-    <value>False</value>
-  </data>
-  <data name="&gt;&gt;btnLyricsUpdate.Name" xml:space="preserve">
-    <value>btnLyricsUpdate</value>
-  </data>
-  <data name="&gt;&gt;btnLyricsUpdate.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;btnLyricsUpdate.Parent" xml:space="preserve">
-    <value>tbPageLyrics</value>
-  </data>
-  <data name="&gt;&gt;btnLyricsUpdate.ZOrder" xml:space="preserve">
-    <value>1</value>
-  </data>
-  <data name="lblHelpTb2.Font" type="System.Drawing.Font, System.Drawing">
-    <value>Calibri, 9pt</value>
-  </data>
-  <data name="lblHelpTb2.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
-    <value>NoControl</value>
-  </data>
-  <data name="lblHelpTb2.Location" type="System.Drawing.Point, System.Drawing">
-    <value>4, 8</value>
-  </data>
-  <data name="lblHelpTb2.Size" type="System.Drawing.Size, System.Drawing">
-    <value>697, 61</value>
-  </data>
-  <data name="lblHelpTb2.TabIndex" type="System.Int32, mscorlib">
-    <value>22</value>
-  </data>
-  <data name="lblHelpTb2.Text" xml:space="preserve">
-    <value>Obligatoire : charger un fichier de paroles contenant les syllables synchronisées (format LRC)</value>
-  </data>
-  <data name="&gt;&gt;lblHelpTb2.Name" xml:space="preserve">
-    <value>lblHelpTb2</value>
-  </data>
-  <data name="&gt;&gt;lblHelpTb2.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;lblHelpTb2.Parent" xml:space="preserve">
-    <value>tbPageLyrics</value>
-  </data>
-  <data name="&gt;&gt;lblHelpTb2.ZOrder" xml:space="preserve">
-    <value>2</value>
-  </data>
-  <data name="btnTb2Next.Location" type="System.Drawing.Point, System.Drawing">
-    <value>630, 340</value>
-  </data>
-  <data name="btnTb2Next.Size" type="System.Drawing.Size, System.Drawing">
-    <value>75, 23</value>
-  </data>
-  <data name="btnTb2Next.TabIndex" type="System.Int32, mscorlib">
-    <value>21</value>
-  </data>
-  <data name="btnTb2Next.Text" xml:space="preserve">
-    <value>Next</value>
-  </data>
-  <data name="&gt;&gt;btnTb2Next.Name" xml:space="preserve">
-    <value>btnTb2Next</value>
-  </data>
-  <data name="&gt;&gt;btnTb2Next.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;btnTb2Next.Parent" xml:space="preserve">
-    <value>tbPageLyrics</value>
-  </data>
-  <data name="&gt;&gt;btnTb2Next.ZOrder" xml:space="preserve">
-    <value>3</value>
-  </data>
-  <data name="btnTb2Previous.Location" type="System.Drawing.Point, System.Drawing">
-    <value>549, 340</value>
-  </data>
-  <data name="btnTb2Previous.Size" type="System.Drawing.Size, System.Drawing">
-    <value>75, 23</value>
-  </data>
-  <data name="btnTb2Previous.TabIndex" type="System.Int32, mscorlib">
-    <value>20</value>
-  </data>
-  <data name="btnTb2Previous.Text" xml:space="preserve">
-    <value>Previous</value>
-  </data>
-  <data name="&gt;&gt;btnTb2Previous.Name" xml:space="preserve">
-    <value>btnTb2Previous</value>
-  </data>
-  <data name="&gt;&gt;btnTb2Previous.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;btnTb2Previous.Parent" xml:space="preserve">
-    <value>tbPageLyrics</value>
-  </data>
-  <data name="&gt;&gt;btnTb2Previous.ZOrder" xml:space="preserve">
-    <value>4</value>
-  </data>
-  <data name="txtLyrics.Location" type="System.Drawing.Point, System.Drawing">
-    <value>90, 70</value>
-  </data>
-  <data name="txtLyrics.Size" type="System.Drawing.Size, System.Drawing">
-    <value>490, 23</value>
-  </data>
-  <data name="txtLyrics.TabIndex" type="System.Int32, mscorlib">
-    <value>18</value>
-  </data>
-  <data name="&gt;&gt;txtLyrics.Name" xml:space="preserve">
-    <value>txtLyrics</value>
-  </data>
-  <data name="&gt;&gt;txtLyrics.Type" xml:space="preserve">
-    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;txtLyrics.Parent" xml:space="preserve">
-    <value>tbPageLyrics</value>
-  </data>
-  <data name="&gt;&gt;txtLyrics.ZOrder" xml:space="preserve">
-    <value>5</value>
-  </data>
-  <data name="lblLyrics.AutoSize" type="System.Boolean, mscorlib">
-    <value>True</value>
-  </data>
-  <data name="lblLyrics.Font" type="System.Drawing.Font, System.Drawing">
-    <value>Calibri, 9.75pt</value>
-  </data>
-  <data name="lblLyrics.Location" type="System.Drawing.Point, System.Drawing">
-    <value>4, 73</value>
-  </data>
-  <data name="lblLyrics.Size" type="System.Drawing.Size, System.Drawing">
-    <value>38, 15</value>
-  </data>
-  <data name="lblLyrics.TabIndex" type="System.Int32, mscorlib">
-    <value>17</value>
-  </data>
-  <data name="lblLyrics.Text" xml:space="preserve">
-    <value>Lyrics</value>
-  </data>
-  <data name="&gt;&gt;lblLyrics.Name" xml:space="preserve">
-    <value>lblLyrics</value>
-  </data>
-  <data name="&gt;&gt;lblLyrics.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;lblLyrics.Parent" xml:space="preserve">
-    <value>tbPageLyrics</value>
-  </data>
-  <data name="&gt;&gt;lblLyrics.ZOrder" xml:space="preserve">
-    <value>6</value>
-  </data>
-  <data name="btnImportLyrics.Location" type="System.Drawing.Point, System.Drawing">
-    <value>596, 69</value>
-  </data>
-  <data name="btnImportLyrics.Size" type="System.Drawing.Size, System.Drawing">
-    <value>75, 23</value>
-  </data>
-  <data name="btnImportLyrics.TabIndex" type="System.Int32, mscorlib">
-    <value>19</value>
-  </data>
-  <data name="btnImportLyrics.Text" xml:space="preserve">
-    <value>Import</value>
-  </data>
-  <data name="&gt;&gt;btnImportLyrics.Name" xml:space="preserve">
-    <value>btnImportLyrics</value>
-  </data>
-  <data name="&gt;&gt;btnImportLyrics.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;btnImportLyrics.Parent" xml:space="preserve">
-    <value>tbPageLyrics</value>
-  </data>
-  <data name="&gt;&gt;btnImportLyrics.ZOrder" xml:space="preserve">
-    <value>7</value>
-  </data>
-  <data name="tbPageLyrics.Location" type="System.Drawing.Point, System.Drawing">
-    <value>4, 27</value>
-  </data>
-  <data name="tbPageLyrics.Padding" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>3, 3, 3, 3</value>
-  </data>
-  <data name="tbPageLyrics.Size" type="System.Drawing.Size, System.Drawing">
-    <value>713, 370</value>
-  </data>
-  <data name="tbPageLyrics.TabIndex" type="System.Int32, mscorlib">
-    <value>1</value>
-  </data>
-  <data name="tbPageLyrics.Text" xml:space="preserve">
-    <value>Lyrics</value>
-  </data>
-  <data name="&gt;&gt;tbPageLyrics.Name" xml:space="preserve">
-    <value>tbPageLyrics</value>
-  </data>
-  <data name="&gt;&gt;tbPageLyrics.Type" xml:space="preserve">
-    <value>System.Windows.Forms.TabPage, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;tbPageLyrics.Parent" xml:space="preserve">
-    <value>tbControl</value>
-  </data>
-  <data name="&gt;&gt;tbPageLyrics.ZOrder" xml:space="preserve">
-    <value>1</value>
-  </data>
-  <data name="tbPageImages.BackgroundImageLayout" type="System.Windows.Forms.ImageLayout, System.Windows.Forms">
-    <value>Center</value>
-  </data>
-  <data name="lblRatio.AutoSize" type="System.Boolean, mscorlib">
-    <value>True</value>
-  </data>
-  <data name="lblRatio.Font" type="System.Drawing.Font, System.Drawing">
-    <value>Calibri, 9.75pt</value>
-  </data>
-  <data name="lblRatio.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
-    <value>NoControl</value>
-  </data>
-  <data name="lblRatio.Location" type="System.Drawing.Point, System.Drawing">
-    <value>457, 121</value>
-  </data>
-  <data name="lblRatio.Size" type="System.Drawing.Size, System.Drawing">
-    <value>38, 15</value>
-  </data>
-  <data name="lblRatio.TabIndex" type="System.Int32, mscorlib">
-    <value>30</value>
-  </data>
-  <data name="lblRatio.Text" xml:space="preserve">
-    <value>Ratio:</value>
-  </data>
-  <data name="&gt;&gt;lblRatio.Name" xml:space="preserve">
-    <value>lblRatio</value>
-  </data>
-  <data name="&gt;&gt;lblRatio.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;lblRatio.Parent" xml:space="preserve">
-    <value>tbPageImages</value>
-  </data>
-  <data name="&gt;&gt;lblRatio.ZOrder" xml:space="preserve">
-    <value>0</value>
-  </data>
-  <data name="lblSize.AutoSize" type="System.Boolean, mscorlib">
-    <value>True</value>
-  </data>
-  <data name="lblSize.Font" type="System.Drawing.Font, System.Drawing">
-    <value>Calibri, 9.75pt</value>
-  </data>
-  <data name="lblSize.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
-    <value>NoControl</value>
-  </data>
-  <data name="lblSize.Location" type="System.Drawing.Point, System.Drawing">
-    <value>457, 97</value>
-  </data>
-  <data name="lblSize.Size" type="System.Drawing.Size, System.Drawing">
-    <value>31, 15</value>
-  </data>
-  <data name="lblSize.TabIndex" type="System.Int32, mscorlib">
-    <value>29</value>
-  </data>
-  <data name="lblSize.Text" xml:space="preserve">
-    <value>Size:</value>
-  </data>
-  <data name="&gt;&gt;lblSize.Name" xml:space="preserve">
-    <value>lblSize</value>
-  </data>
-  <data name="&gt;&gt;lblSize.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;lblSize.Parent" xml:space="preserve">
-    <value>tbPageImages</value>
-  </data>
-  <data name="&gt;&gt;lblSize.ZOrder" xml:space="preserve">
-    <value>1</value>
-  </data>
-  <data name="lblHelpTb3.Font" type="System.Drawing.Font, System.Drawing">
-    <value>Calibri, 9pt</value>
-  </data>
-  <data name="lblHelpTb3.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
-    <value>NoControl</value>
-  </data>
-  <data name="lblHelpTb3.Location" type="System.Drawing.Point, System.Drawing">
-    <value>4, 8</value>
-  </data>
-  <data name="lblHelpTb3.Size" type="System.Drawing.Size, System.Drawing">
-    <value>697, 61</value>
-  </data>
-  <data name="lblHelpTb3.TabIndex" type="System.Int32, mscorlib">
-    <value>28</value>
-  </data>
-  <data name="lblHelpTb3.Text" xml:space="preserve">
-    <value>Facultatif : vous pouvez charger une image qui sera le fond d'écran de la chanson. Choisissez une image pas trop sombre pour faciliter la lecture des paroles et un ratio largeur / hauteur de 1.33 pour ne pas être déformée.</value>
-  </data>
-  <data name="&gt;&gt;lblHelpTb3.Name" xml:space="preserve">
-    <value>lblHelpTb3</value>
-  </data>
-  <data name="&gt;&gt;lblHelpTb3.Type" xml:space="preserve">
+  <data name="&gt;&gt;lblAuthor.Type" xml:space="preserve">
     <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;lblHelpTb3.Parent" xml:space="preserve">
     <value>tbPageImages</value>
   </data>
-  <data name="&gt;&gt;lblHelpTb3.ZOrder" xml:space="preserve">
-    <value>2</value>
+  <data name="tbControl.TabIndex" type="System.Int32, mscorlib">
+    <value>11</value>
   </data>
-  <data name="picImage.Location" type="System.Drawing.Point, System.Drawing">
-    <value>90, 97</value>
+  <data name="lblHelpTb1.Font" type="System.Drawing.Font, System.Drawing">
+    <value>Calibri, 9pt</value>
   </data>
-  <data name="picImage.Size" type="System.Drawing.Size, System.Drawing">
-    <value>350, 263</value>
+  <data name="&gt;&gt;tbPageAudios.ZOrder" xml:space="preserve">
+    <value>0</value>
   </data>
-  <data name="picImage.TabIndex" type="System.Int32, mscorlib">
-    <value>27</value>
+  <data name="lblBorder.Size" type="System.Drawing.Size, System.Drawing">
+    <value>44, 15</value>
   </data>
-  <data name="&gt;&gt;picImage.Name" xml:space="preserve">
-    <value>picImage</value>
+  <data name="&gt;&gt;txtInactiveColorBorder.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="&gt;&gt;picImage.Type" xml:space="preserve">
-    <value>System.Windows.Forms.PictureBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  <data name="UpDownFontSize.Size" type="System.Drawing.Size, System.Drawing">
+    <value>40, 23</value>
   </data>
-  <data name="&gt;&gt;picImage.Parent" xml:space="preserve">
+  <data name="mnuFileQuit.Text" xml:space="preserve">
+    <value>&amp;Quit</value>
+  </data>
+  <data name="&gt;&gt;tbPageImages.Name" xml:space="preserve">
     <value>tbPageImages</value>
   </data>
-  <data name="&gt;&gt;picImage.ZOrder" xml:space="preserve">
-    <value>3</value>
+  <data name="txtInactiveColor.MaxLength" type="System.Int32, mscorlib">
+    <value>7</value>
   </data>
-  <data name="btnTb3Next.Location" type="System.Drawing.Point, System.Drawing">
-    <value>630, 340</value>
+  <data name="&gt;&gt;txtBgColor.Name" xml:space="preserve">
+    <value>txtBgColor</value>
   </data>
-  <data name="btnTb3Next.Size" type="System.Drawing.Size, System.Drawing">
-    <value>75, 23</value>
+  <data name="&gt;&gt;txtTitle.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="btnTb3Next.TabIndex" type="System.Int32, mscorlib">
-    <value>26</value>
+  <data name="&gt;&gt;lblFont.Parent" xml:space="preserve">
+    <value>tbPageBackground</value>
   </data>
-  <data name="btnTb3Next.Text" xml:space="preserve">
-    <value>Next</value>
+  <data name="&gt;&gt;lblAuthor.Name" xml:space="preserve">
+    <value>lblAuthor</value>
   </data>
-  <data name="&gt;&gt;btnTb3Next.Name" xml:space="preserve">
-    <value>btnTb3Next</value>
+  <data name="tbPageImages.BackgroundImageLayout" type="System.Windows.Forms.ImageLayout, System.Windows.Forms">
+    <value>Center</value>
   </data>
-  <data name="&gt;&gt;btnTb3Next.Type" xml:space="preserve">
+  <data name="txtAudio1.Location" type="System.Drawing.Point, System.Drawing">
+    <value>125, 70</value>
+  </data>
+  <data name="&gt;&gt;txtYear.ZOrder" xml:space="preserve">
+    <value>7</value>
+  </data>
+  <data name="&gt;&gt;btnCreateKfn.Name" xml:space="preserve">
+    <value>btnCreateKfn</value>
+  </data>
+  <data name="&gt;&gt;lblHelpTb4.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="lblAudio1.TabIndex" type="System.Int32, mscorlib">
+    <value>0</value>
+  </data>
+  <data name="&gt;&gt;txtInactiveColor.Parent" xml:space="preserve">
+    <value>tbPageBackground</value>
+  </data>
+  <data name="&gt;&gt;label2.Name" xml:space="preserve">
+    <value>label2</value>
+  </data>
+  <data name="&gt;&gt;btnInactiveColorSelect.Type" xml:space="preserve">
     <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="&gt;&gt;btnTb3Next.Parent" xml:space="preserve">
+  <data name="btnImportLyrics.Text" xml:space="preserve">
+    <value>Import</value>
+  </data>
+  <data name="txtAudio2.Size" type="System.Drawing.Size, System.Drawing">
+    <value>490, 23</value>
+  </data>
+  <data name="btnInactiveColorBorderSelect.Location" type="System.Drawing.Point, System.Drawing">
+    <value>266, 241</value>
+  </data>
+  <data name="btnActiveColorSelect.TabIndex" type="System.Int32, mscorlib">
+    <value>43</value>
+  </data>
+  <data name="lblAudio2.Font" type="System.Drawing.Font, System.Drawing">
+    <value>Calibri, 9pt</value>
+  </data>
+  <data name="&gt;&gt;btnTb3Previous.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="lblColor.TabIndex" type="System.Int32, mscorlib">
+    <value>30</value>
+  </data>
+  <data name="&gt;&gt;lblColor.ZOrder" xml:space="preserve">
+    <value>31</value>
+  </data>
+  <data name="label5.TabIndex" type="System.Int32, mscorlib">
+    <value>6</value>
+  </data>
+  <data name="label2.Font" type="System.Drawing.Font, System.Drawing">
+    <value>Calibri, 9.75pt</value>
+  </data>
+  <data name="&gt;&gt;tbPageImages.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TabPage, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="txtYear.Size" type="System.Drawing.Size, System.Drawing">
+    <value>281, 23</value>
+  </data>
+  <data name="lblInactiveColor.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="&gt;&gt;txtTitle.Parent" xml:space="preserve">
+    <value>tbPageAudios</value>
+  </data>
+  <data name="txtActiveColor.Location" type="System.Drawing.Point, System.Drawing">
+    <value>157, 157</value>
+  </data>
+  <data name="lblFont.TabIndex" type="System.Int32, mscorlib">
+    <value>36</value>
+  </data>
+  <data name="label2.Size" type="System.Drawing.Size, System.Drawing">
+    <value>58, 15</value>
+  </data>
+  <data name="lblLyrics.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="&gt;&gt;btnPlay.Name" xml:space="preserve">
+    <value>btnPlay</value>
+  </data>
+  <data name="&gt;&gt;lblColor.Name" xml:space="preserve">
+    <value>lblColor</value>
+  </data>
+  <data name="&gt;&gt;cbFrame.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="txtKfnFileName.TabIndex" type="System.Int32, mscorlib">
+    <value>7</value>
+  </data>
+  <data name="&gt;&gt;$this.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Form, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="lblHelpTb1.Size" type="System.Drawing.Size, System.Drawing">
+    <value>697, 61</value>
+  </data>
+  <data name="btnBgColorSelect.Location" type="System.Drawing.Point, System.Drawing">
+    <value>266, 74</value>
+  </data>
+  <data name="&gt;&gt;btnTb3Previous.Parent" xml:space="preserve">
     <value>tbPageImages</value>
   </data>
-  <data name="&gt;&gt;btnTb3Next.ZOrder" xml:space="preserve">
-    <value>4</value>
+  <data name="&gt;&gt;mnuFileQuit.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="btnImportImage.Location" type="System.Drawing.Point, System.Drawing">
-    <value>596, 71</value>
+  <data name="&gt;&gt;btnActiveColorSelect.Name" xml:space="preserve">
+    <value>btnActiveColorSelect</value>
   </data>
-  <data name="btnImportImage.Size" type="System.Drawing.Size, System.Drawing">
+  <data name="lblActiveColor.TabIndex" type="System.Int32, mscorlib">
+    <value>41</value>
+  </data>
+  <data name="txtLyrics.Location" type="System.Drawing.Point, System.Drawing">
+    <value>90, 70</value>
+  </data>
+  <data name="btnTb3Previous.Location" type="System.Drawing.Point, System.Drawing">
+    <value>549, 340</value>
+  </data>
+  <data name="lblRatio.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="&gt;&gt;tbPageBackground.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TabPage, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;lblLyricsUpdate.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="btnImportLyrics.Location" type="System.Drawing.Point, System.Drawing">
+    <value>596, 69</value>
+  </data>
+  <data name="btnCreateKfn.Location" type="System.Drawing.Point, System.Drawing">
+    <value>248, 444</value>
+  </data>
+  <data name="btnTb3Previous.Text" xml:space="preserve">
+    <value>Previous</value>
+  </data>
+  <data name="&gt;&gt;lblHelpTb2.Name" xml:space="preserve">
+    <value>lblHelpTb2</value>
+  </data>
+  <data name="&gt;&gt;mnuFileQuit.Name" xml:space="preserve">
+    <value>mnuFileQuit</value>
+  </data>
+  <data name="btnCancel.Text" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  <data name="&gt;&gt;OpenFileDialog.Name" xml:space="preserve">
+    <value>OpenFileDialog</value>
+  </data>
+  <data name="&gt;&gt;tbPageAudios.Name" xml:space="preserve">
+    <value>tbPageAudios</value>
+  </data>
+  <data name="&gt;&gt;btnActiveColorPicker.ZOrder" xml:space="preserve">
+    <value>18</value>
+  </data>
+  <data name="&gt;&gt;btnActiveColorSelect.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="txtTitle.TabIndex" type="System.Int32, mscorlib">
+    <value>9</value>
+  </data>
+  <data name="picActiveColor.TabIndex" type="System.Int32, mscorlib">
+    <value>40</value>
+  </data>
+  <data name="tbPageAudios.Text" xml:space="preserve">
+    <value>Audios</value>
+  </data>
+  <data name="btnLyricsUpdate.Location" type="System.Drawing.Point, System.Drawing">
+    <value>90, 150</value>
+  </data>
+  <data name="&gt;&gt;lblAudio2.Name" xml:space="preserve">
+    <value>lblAudio2</value>
+  </data>
+  <data name="&gt;&gt;mnuHelpDocumentation.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;label5.Parent" xml:space="preserve">
+    <value>tbPageAudios</value>
+  </data>
+  <data name="btnTb2Next.Size" type="System.Drawing.Size, System.Drawing">
     <value>75, 23</value>
   </data>
   <data name="btnImportImage.TabIndex" type="System.Int32, mscorlib">
     <value>24</value>
   </data>
-  <data name="btnImportImage.Text" xml:space="preserve">
+  <data name="lblInactiveColorBorder.Text" xml:space="preserve">
+    <value>Inactive color border</value>
+  </data>
+  <data name="txtAuthor.Location" type="System.Drawing.Point, System.Drawing">
+    <value>125, 306</value>
+  </data>
+  <data name="btnImportAudio2.Text" xml:space="preserve">
     <value>Import</value>
   </data>
-  <data name="&gt;&gt;btnImportImage.Name" xml:space="preserve">
-    <value>btnImportImage</value>
+  <data name="txtAudio2.Location" type="System.Drawing.Point, System.Drawing">
+    <value>125, 102</value>
   </data>
-  <data name="&gt;&gt;btnImportImage.Type" xml:space="preserve">
+  <data name="&gt;&gt;mnuHelp.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;picImage.ZOrder" xml:space="preserve">
+    <value>3</value>
+  </data>
+  <data name="&gt;&gt;UpDownFontSize.Parent" xml:space="preserve">
+    <value>tbPageBackground</value>
+  </data>
+  <data name="label5.Size" type="System.Drawing.Size, System.Drawing">
+    <value>114, 36</value>
+  </data>
+  <data name="&gt;&gt;txtActiveColor.Parent" xml:space="preserve">
+    <value>tbPageBackground</value>
+  </data>
+  <data name="&gt;&gt;btnBgColorPicker.Name" xml:space="preserve">
+    <value>btnBgColorPicker</value>
+  </data>
+  <data name="lblLyricsUpdate.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="lblYear.Text" xml:space="preserve">
+    <value>Year</value>
+  </data>
+  <data name="lblHelpTb3.Size" type="System.Drawing.Size, System.Drawing">
+    <value>697, 61</value>
+  </data>
+  <data name="&gt;&gt;btnTb3Next.Parent" xml:space="preserve">
+    <value>tbPageImages</value>
+  </data>
+  <data name="&gt;&gt;btnImportLyrics.Parent" xml:space="preserve">
+    <value>tbPageLyrics</value>
+  </data>
+  <data name="&gt;&gt;btnTb3Next.Type" xml:space="preserve">
     <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="&gt;&gt;btnImportImage.Parent" xml:space="preserve">
-    <value>tbPageImages</value>
-  </data>
-  <data name="&gt;&gt;btnImportImage.ZOrder" xml:space="preserve">
-    <value>5</value>
-  </data>
-  <data name="lblImage.AutoSize" type="System.Boolean, mscorlib">
-    <value>True</value>
-  </data>
-  <data name="lblImage.Font" type="System.Drawing.Font, System.Drawing">
-    <value>Calibri, 9.75pt</value>
-  </data>
-  <data name="lblImage.Location" type="System.Drawing.Point, System.Drawing">
-    <value>4, 73</value>
-  </data>
-  <data name="lblImage.Size" type="System.Drawing.Size, System.Drawing">
-    <value>40, 15</value>
-  </data>
-  <data name="lblImage.TabIndex" type="System.Int32, mscorlib">
-    <value>22</value>
-  </data>
-  <data name="lblImage.Text" xml:space="preserve">
-    <value>Image</value>
-  </data>
-  <data name="&gt;&gt;lblImage.Name" xml:space="preserve">
-    <value>lblImage</value>
-  </data>
-  <data name="&gt;&gt;lblImage.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;lblImage.Parent" xml:space="preserve">
-    <value>tbPageImages</value>
-  </data>
-  <data name="&gt;&gt;lblImage.ZOrder" xml:space="preserve">
-    <value>6</value>
-  </data>
-  <data name="txtImageFile.Location" type="System.Drawing.Point, System.Drawing">
-    <value>90, 70</value>
-  </data>
-  <data name="txtImageFile.Size" type="System.Drawing.Size, System.Drawing">
-    <value>490, 23</value>
-  </data>
-  <data name="txtImageFile.TabIndex" type="System.Int32, mscorlib">
-    <value>23</value>
-  </data>
-  <data name="&gt;&gt;txtImageFile.Name" xml:space="preserve">
-    <value>txtImageFile</value>
-  </data>
-  <data name="&gt;&gt;txtImageFile.Type" xml:space="preserve">
-    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;txtImageFile.Parent" xml:space="preserve">
-    <value>tbPageImages</value>
-  </data>
-  <data name="&gt;&gt;txtImageFile.ZOrder" xml:space="preserve">
-    <value>7</value>
-  </data>
-  <data name="btnTb3Previous.Location" type="System.Drawing.Point, System.Drawing">
-    <value>549, 340</value>
-  </data>
-  <data name="btnTb3Previous.Size" type="System.Drawing.Size, System.Drawing">
-    <value>75, 23</value>
-  </data>
-  <data name="btnTb3Previous.TabIndex" type="System.Int32, mscorlib">
-    <value>25</value>
-  </data>
-  <data name="btnTb3Previous.Text" xml:space="preserve">
-    <value>Previous</value>
-  </data>
-  <data name="&gt;&gt;btnTb3Previous.Name" xml:space="preserve">
-    <value>btnTb3Previous</value>
-  </data>
-  <data name="&gt;&gt;btnTb3Previous.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;btnTb3Previous.Parent" xml:space="preserve">
-    <value>tbPageImages</value>
-  </data>
-  <data name="&gt;&gt;btnTb3Previous.ZOrder" xml:space="preserve">
-    <value>8</value>
-  </data>
-  <data name="tbPageImages.Location" type="System.Drawing.Point, System.Drawing">
-    <value>4, 27</value>
-  </data>
-  <data name="tbPageImages.Padding" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>3, 3, 3, 3</value>
-  </data>
-  <data name="tbPageImages.Size" type="System.Drawing.Size, System.Drawing">
-    <value>713, 370</value>
-  </data>
-  <data name="tbPageImages.TabIndex" type="System.Int32, mscorlib">
-    <value>2</value>
-  </data>
-  <data name="tbPageImages.Text" xml:space="preserve">
-    <value>Images</value>
-  </data>
-  <data name="&gt;&gt;tbPageImages.Name" xml:space="preserve">
-    <value>tbPageImages</value>
-  </data>
-  <data name="&gt;&gt;tbPageImages.Type" xml:space="preserve">
-    <value>System.Windows.Forms.TabPage, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;tbPageImages.Parent" xml:space="preserve">
-    <value>tbControl</value>
-  </data>
-  <data name="&gt;&gt;tbPageImages.ZOrder" xml:space="preserve">
-    <value>2</value>
-  </data>
-  <metadata name="OpenFileDialog.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>17, 17</value>
-  </metadata>
-  <data name="btnCreateKfn.Location" type="System.Drawing.Point, System.Drawing">
-    <value>237, 444</value>
-  </data>
-  <data name="btnCreateKfn.Size" type="System.Drawing.Size, System.Drawing">
-    <value>110, 23</value>
-  </data>
-  <data name="btnCreateKfn.TabIndex" type="System.Int32, mscorlib">
-    <value>40</value>
-  </data>
-  <data name="btnCreateKfn.Text" xml:space="preserve">
-    <value>Create KFN file</value>
-  </data>
-  <data name="&gt;&gt;btnCreateKfn.Name" xml:space="preserve">
-    <value>btnCreateKfn</value>
+  <data name="&gt;&gt;txtComment.ZOrder" xml:space="preserve">
+    <value>14</value>
   </data>
   <data name="&gt;&gt;btnCreateKfn.Type" xml:space="preserve">
     <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="&gt;&gt;btnCreateKfn.Parent" xml:space="preserve">
-    <value>$this</value>
+  <data name="&gt;&gt;txtLyrics.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="&gt;&gt;btnCreateKfn.ZOrder" xml:space="preserve">
-    <value>2</value>
+  <data name="&gt;&gt;lblFont.ZOrder" xml:space="preserve">
+    <value>25</value>
   </data>
-  <data name="btnCancel.Location" type="System.Drawing.Point, System.Drawing">
-    <value>384, 444</value>
-  </data>
-  <data name="btnCancel.Size" type="System.Drawing.Size, System.Drawing">
-    <value>99, 23</value>
-  </data>
-  <data name="btnCancel.TabIndex" type="System.Int32, mscorlib">
-    <value>41</value>
-  </data>
-  <data name="btnCancel.Text" xml:space="preserve">
-    <value>Quit</value>
-  </data>
-  <data name="&gt;&gt;btnCancel.Name" xml:space="preserve">
-    <value>btnCancel</value>
-  </data>
-  <data name="&gt;&gt;btnCancel.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;btnCancel.Parent" xml:space="preserve">
-    <value>$this</value>
-  </data>
-  <data name="&gt;&gt;btnCancel.ZOrder" xml:space="preserve">
-    <value>1</value>
-  </data>
-  <data name="picPreview.Location" type="System.Drawing.Point, System.Drawing">
-    <value>366, 74</value>
-  </data>
-  <data name="picPreview.Size" type="System.Drawing.Size, System.Drawing">
-    <value>340, 255</value>
-  </data>
-  <data name="picPreview.TabIndex" type="System.Int32, mscorlib">
-    <value>62</value>
-  </data>
-  <data name="&gt;&gt;picPreview.Name" xml:space="preserve">
-    <value>picPreview</value>
-  </data>
-  <data name="&gt;&gt;picPreview.Type" xml:space="preserve">
-    <value>System.Windows.Forms.PictureBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;picPreview.Parent" xml:space="preserve">
-    <value>tbPageBackground</value>
-  </data>
-  <data name="&gt;&gt;picPreview.ZOrder" xml:space="preserve">
-    <value>0</value>
-  </data>
-  <data name="cbFrame.Location" type="System.Drawing.Point, System.Drawing">
-    <value>157, 273</value>
-  </data>
-  <data name="cbFrame.Size" type="System.Drawing.Size, System.Drawing">
-    <value>203, 23</value>
-  </data>
-  <data name="cbFrame.TabIndex" type="System.Int32, mscorlib">
-    <value>61</value>
-  </data>
-  <data name="&gt;&gt;cbFrame.Name" xml:space="preserve">
-    <value>cbFrame</value>
-  </data>
-  <data name="&gt;&gt;cbFrame.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ComboBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;cbFrame.Parent" xml:space="preserve">
-    <value>tbPageBackground</value>
-  </data>
-  <data name="&gt;&gt;cbFrame.ZOrder" xml:space="preserve">
-    <value>1</value>
-  </data>
-  <data name="lblBorder.AutoSize" type="System.Boolean, mscorlib">
+  <data name="lblActiveColorBorder.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
   </data>
-  <data name="lblBorder.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
-    <value>NoControl</value>
+  <data name="&gt;&gt;btnActiveColorBorderPicker.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="lblBorder.Location" type="System.Drawing.Point, System.Drawing">
-    <value>8, 276</value>
+  <data name="lblActiveColorBorder.Location" type="System.Drawing.Point, System.Drawing">
+    <value>8, 218</value>
   </data>
-  <data name="lblBorder.Size" type="System.Drawing.Size, System.Drawing">
-    <value>44, 15</value>
+  <data name="&gt;&gt;lblFont.Name" xml:space="preserve">
+    <value>lblFont</value>
   </data>
-  <data name="lblBorder.TabIndex" type="System.Int32, mscorlib">
-    <value>60</value>
+  <data name="lblColor.Text" xml:space="preserve">
+    <value>Background color</value>
   </data>
-  <data name="lblBorder.Text" xml:space="preserve">
-    <value>Border</value>
+  <data name="btnTb3Next.Location" type="System.Drawing.Point, System.Drawing">
+    <value>630, 340</value>
   </data>
-  <data name="&gt;&gt;lblBorder.Name" xml:space="preserve">
-    <value>lblBorder</value>
+  <data name="&gt;&gt;lblArtist.Parent" xml:space="preserve">
+    <value>tbPageAudios</value>
   </data>
-  <data name="&gt;&gt;lblBorder.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;lblBorder.Parent" xml:space="preserve">
-    <value>tbPageBackground</value>
-  </data>
-  <data name="&gt;&gt;lblBorder.ZOrder" xml:space="preserve">
-    <value>2</value>
-  </data>
-  <data name="btnInactiveColorBorderPicker.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
-    <value>NoControl</value>
-  </data>
-  <data name="btnInactiveColorBorderPicker.Location" type="System.Drawing.Point, System.Drawing">
-    <value>316, 241</value>
+  <data name="btnActiveColorBorderPicker.Size" type="System.Drawing.Size, System.Drawing">
+    <value>44, 26</value>
   </data>
   <data name="btnInactiveColorBorderPicker.Size" type="System.Drawing.Size, System.Drawing">
     <value>44, 26</value>
   </data>
-  <data name="btnInactiveColorBorderPicker.TabIndex" type="System.Int32, mscorlib">
-    <value>59</value>
+  <data name="&gt;&gt;txtBgColor.ZOrder" xml:space="preserve">
+    <value>30</value>
+  </data>
+  <data name="lblFont.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="&gt;&gt;picInactiveColor.Type" xml:space="preserve">
+    <value>System.Windows.Forms.PictureBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="lblYear.Font" type="System.Drawing.Font, System.Drawing">
+    <value>Calibri, 9.75pt</value>
+  </data>
+  <data name="tbControl.Size" type="System.Drawing.Size, System.Drawing">
+    <value>721, 401</value>
+  </data>
+  <data name="lblBorder.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="&gt;&gt;lblAudio1.ZOrder" xml:space="preserve">
+    <value>19</value>
+  </data>
+  <data name="lblHelpTb2.Text" xml:space="preserve">
+    <value>Obligatoire : charger un fichier de paroles contenant les syllables synchronisées (format LRC)</value>
+  </data>
+  <data name="lblActiveColorBorder.Text" xml:space="preserve">
+    <value>Active color border</value>
+  </data>
+  <data name="btnInactiveColorPicker.Size" type="System.Drawing.Size, System.Drawing">
+    <value>44, 26</value>
+  </data>
+  <data name="btnTb2Previous.TabIndex" type="System.Int32, mscorlib">
+    <value>20</value>
+  </data>
+  <data name="&gt;&gt;btnInactiveColorPicker.Parent" xml:space="preserve">
+    <value>tbPageBackground</value>
+  </data>
+  <data name="btnImportAudio1.Location" type="System.Drawing.Point, System.Drawing">
+    <value>630, 68</value>
+  </data>
+  <data name="&gt;&gt;btnCancel.Name" xml:space="preserve">
+    <value>btnCancel</value>
+  </data>
+  <data name="mnuHelp.Size" type="System.Drawing.Size, System.Drawing">
+    <value>44, 20</value>
+  </data>
+  <data name="btnPlay.TabIndex" type="System.Int32, mscorlib">
+    <value>19</value>
+  </data>
+  <data name="btnInactiveColorPicker.TabIndex" type="System.Int32, mscorlib">
+    <value>49</value>
+  </data>
+  <data name="btnTb2Previous.Text" xml:space="preserve">
+    <value>Previous</value>
   </data>
   <data name="&gt;&gt;btnInactiveColorBorderPicker.Name" xml:space="preserve">
     <value>btnInactiveColorBorderPicker</value>
   </data>
-  <data name="&gt;&gt;btnInactiveColorBorderPicker.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  <data name="lblSize.Font" type="System.Drawing.Font, System.Drawing">
+    <value>Calibri, 9.75pt</value>
   </data>
-  <data name="&gt;&gt;btnInactiveColorBorderPicker.Parent" xml:space="preserve">
+  <data name="&gt;&gt;label5.Name" xml:space="preserve">
+    <value>label5</value>
+  </data>
+  <data name="lblArtist.TabIndex" type="System.Int32, mscorlib">
+    <value>10</value>
+  </data>
+  <data name="&gt;&gt;picBgColor.Parent" xml:space="preserve">
     <value>tbPageBackground</value>
   </data>
-  <data name="&gt;&gt;btnInactiveColorBorderPicker.ZOrder" xml:space="preserve">
-    <value>3</value>
+  <data name="&gt;&gt;$this.Name" xml:space="preserve">
+    <value>frmKfnCreate</value>
   </data>
-  <data name="btnInactiveColorBorderSelect.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
-    <value>NoControl</value>
+  <data name="btnTb2Previous.Location" type="System.Drawing.Point, System.Drawing">
+    <value>549, 340</value>
   </data>
-  <data name="btnInactiveColorBorderSelect.Location" type="System.Drawing.Point, System.Drawing">
-    <value>266, 241</value>
+  <data name="&gt;&gt;txtActiveColorBorder.ZOrder" xml:space="preserve">
+    <value>11</value>
   </data>
-  <data name="btnInactiveColorBorderSelect.Size" type="System.Drawing.Size, System.Drawing">
-    <value>44, 26</value>
+  <data name="&gt;&gt;lblInactiveColor.Name" xml:space="preserve">
+    <value>lblInactiveColor</value>
   </data>
-  <data name="btnInactiveColorBorderSelect.TabIndex" type="System.Int32, mscorlib">
-    <value>58</value>
+  <data name="lblAudio1.Text" xml:space="preserve">
+    <value>Audio 1 (vocal)</value>
   </data>
-  <data name="btnInactiveColorBorderSelect.Text" xml:space="preserve">
-    <value>...</value>
-  </data>
-  <data name="&gt;&gt;btnInactiveColorBorderSelect.Name" xml:space="preserve">
-    <value>btnInactiveColorBorderSelect</value>
-  </data>
-  <data name="&gt;&gt;btnInactiveColorBorderSelect.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;btnInactiveColorBorderSelect.Parent" xml:space="preserve">
+  <data name="&gt;&gt;txtActiveColorBorder.Parent" xml:space="preserve">
     <value>tbPageBackground</value>
   </data>
-  <data name="&gt;&gt;btnInactiveColorBorderSelect.ZOrder" xml:space="preserve">
-    <value>4</value>
+  <data name="btnTb3Previous.TabIndex" type="System.Int32, mscorlib">
+    <value>25</value>
   </data>
-  <data name="picInactiveColorBorder.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
-    <value>NoControl</value>
+  <data name="lblImage.TabIndex" type="System.Int32, mscorlib">
+    <value>22</value>
   </data>
-  <data name="picInactiveColorBorder.Location" type="System.Drawing.Point, System.Drawing">
-    <value>221, 244</value>
+  <data name="&gt;&gt;cbFrame.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ComboBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="lblInactiveColorBorder.Location" type="System.Drawing.Point, System.Drawing">
+    <value>8, 247</value>
+  </data>
+  <data name="label1.Text" xml:space="preserve">
+    <value>Title</value>
+  </data>
+  <data name="lblAuthor.TabIndex" type="System.Int32, mscorlib">
+    <value>16</value>
+  </data>
+  <data name="&gt;&gt;btnInactiveColorPicker.Name" xml:space="preserve">
+    <value>btnInactiveColorPicker</value>
+  </data>
+  <data name="mnuHelpDocumentation.Size" type="System.Drawing.Size, System.Drawing">
+    <value>157, 22</value>
+  </data>
+  <data name="menuStrip1.Size" type="System.Drawing.Size, System.Drawing">
+    <value>721, 24</value>
   </data>
   <data name="picInactiveColorBorder.Size" type="System.Drawing.Size, System.Drawing">
     <value>39, 23</value>
   </data>
-  <data name="picInactiveColorBorder.TabIndex" type="System.Int32, mscorlib">
-    <value>55</value>
+  <data name="lblAudio2.Location" type="System.Drawing.Point, System.Drawing">
+    <value>5, 101</value>
   </data>
-  <data name="&gt;&gt;picInactiveColorBorder.Name" xml:space="preserve">
-    <value>picInactiveColorBorder</value>
+  <data name="&gt;&gt;lblRatio.ZOrder" xml:space="preserve">
+    <value>0</value>
   </data>
-  <data name="&gt;&gt;picInactiveColorBorder.Type" xml:space="preserve">
-    <value>System.Windows.Forms.PictureBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  <data name="btnCreateKfn.TabIndex" type="System.Int32, mscorlib">
+    <value>40</value>
+  </data>
+  <data name="&gt;&gt;lblArtist.ZOrder" xml:space="preserve">
+    <value>3</value>
+  </data>
+  <data name="&gt;&gt;picImage.Parent" xml:space="preserve">
+    <value>tbPageImages</value>
+  </data>
+  <data name="&gt;&gt;txtImageFile.Name" xml:space="preserve">
+    <value>txtImageFile</value>
+  </data>
+  <data name="&gt;&gt;tbControl.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TabControl, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="btnTb1Next.Location" type="System.Drawing.Point, System.Drawing">
+    <value>630, 340</value>
+  </data>
+  <data name="btnInactiveColorPicker.Location" type="System.Drawing.Point, System.Drawing">
+    <value>316, 183</value>
+  </data>
+  <data name="btnActiveColorPicker.TabIndex" type="System.Int32, mscorlib">
+    <value>44</value>
+  </data>
+  <data name="lblAuthor.Text" xml:space="preserve">
+    <value>Author</value>
+  </data>
+  <data name="picInactiveColor.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="&gt;&gt;lblHelpTb1.Parent" xml:space="preserve">
+    <value>tbPageAudios</value>
+  </data>
+  <data name="lblLyrics.Text" xml:space="preserve">
+    <value>Lyrics</value>
+  </data>
+  <data name="&gt;&gt;btnTb1Next.Parent" xml:space="preserve">
+    <value>tbPageAudios</value>
+  </data>
+  <data name="picActiveColor.Location" type="System.Drawing.Point, System.Drawing">
+    <value>221, 157</value>
+  </data>
+  <data name="UpDownFontSize.TextAlign" type="System.Windows.Forms.HorizontalAlignment, System.Windows.Forms">
+    <value>Right</value>
+  </data>
+  <data name="&gt;&gt;txtInactiveColor.ZOrder" xml:space="preserve">
+    <value>16</value>
+  </data>
+  <data name="tbPageBackground.Size" type="System.Drawing.Size, System.Drawing">
+    <value>713, 370</value>
+  </data>
+  <data name="txtYear.Location" type="System.Drawing.Point, System.Drawing">
+    <value>125, 277</value>
+  </data>
+  <data name="picInactiveColorBorder.Location" type="System.Drawing.Point, System.Drawing">
+    <value>221, 244</value>
+  </data>
+  <data name="txtActiveColor.Size" type="System.Drawing.Size, System.Drawing">
+    <value>58, 23</value>
   </data>
   <data name="&gt;&gt;picInactiveColorBorder.Parent" xml:space="preserve">
     <value>tbPageBackground</value>
   </data>
+  <data name="&gt;&gt;txtTitle.Name" xml:space="preserve">
+    <value>txtTitle</value>
+  </data>
+  <data name="btnCreateKfn.Text" xml:space="preserve">
+    <value>Create KFN file</value>
+  </data>
+  <data name="&gt;&gt;label2.ZOrder" xml:space="preserve">
+    <value>15</value>
+  </data>
+  <data name="btnTb4Previous.TabIndex" type="System.Int32, mscorlib">
+    <value>34</value>
+  </data>
+  <data name="lblInactiveColor.Text" xml:space="preserve">
+    <value>Inactive color</value>
+  </data>
+  <data name="lblArtist.Text" xml:space="preserve">
+    <value>Artist</value>
+  </data>
+  <data name="&gt;&gt;lblRatio.Parent" xml:space="preserve">
+    <value>tbPageImages</value>
+  </data>
+  <data name="lblHelpTb1.Location" type="System.Drawing.Point, System.Drawing">
+    <value>4, 8</value>
+  </data>
+  <data name="&gt;&gt;btnTb2Next.Name" xml:space="preserve">
+    <value>btnTb2Next</value>
+  </data>
+  <data name="&gt;&gt;btnInactiveColorBorderPicker.Parent" xml:space="preserve">
+    <value>tbPageBackground</value>
+  </data>
+  <data name="lblHelpTb1.TabIndex" type="System.Int32, mscorlib">
+    <value>20</value>
+  </data>
+  <data name="&gt;&gt;lblYear.Name" xml:space="preserve">
+    <value>lblYear</value>
+  </data>
+  <data name="btnImportImage.Location" type="System.Drawing.Point, System.Drawing">
+    <value>596, 71</value>
+  </data>
+  <data name="&gt;&gt;lblAudio2.Parent" xml:space="preserve">
+    <value>tbPageAudios</value>
+  </data>
+  <data name="&gt;&gt;picActiveColorBorder.Name" xml:space="preserve">
+    <value>picActiveColorBorder</value>
+  </data>
+  <data name="picImage.TabIndex" type="System.Int32, mscorlib">
+    <value>27</value>
+  </data>
+  <data name="&gt;&gt;lblActiveColor.Parent" xml:space="preserve">
+    <value>tbPageBackground</value>
+  </data>
+  <data name="picInactiveColorBorder.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="&gt;&gt;lblHelpTb1.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;btnImportLyrics.Name" xml:space="preserve">
+    <value>btnImportLyrics</value>
+  </data>
+  <data name="$this.AutoScaleDimensions" type="System.Drawing.SizeF, System.Drawing">
+    <value>6, 13</value>
+  </data>
+  <data name="&gt;&gt;btnImportImage.Name" xml:space="preserve">
+    <value>btnImportImage</value>
+  </data>
+  <data name="&gt;&gt;txtActiveColor.Name" xml:space="preserve">
+    <value>txtActiveColor</value>
+  </data>
+  <data name="txtActiveColor.TabIndex" type="System.Int32, mscorlib">
+    <value>42</value>
+  </data>
+  <data name="lblYear.TabIndex" type="System.Int32, mscorlib">
+    <value>14</value>
+  </data>
+  <data name="label1.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="picActiveColor.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="&gt;&gt;lblArtist.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;btnCreateKfn.ZOrder" xml:space="preserve">
+    <value>2</value>
+  </data>
+  <data name="lblHelpTb2.Size" type="System.Drawing.Size, System.Drawing">
+    <value>697, 61</value>
+  </data>
+  <data name="txtComment.TabIndex" type="System.Int32, mscorlib">
+    <value>13</value>
+  </data>
+  <data name="label1.Font" type="System.Drawing.Font, System.Drawing">
+    <value>Calibri, 9.75pt</value>
+  </data>
+  <data name="lblLyricsUpdate.Text" xml:space="preserve">
+    <value>Create, edit, and sync your lyrics</value>
+  </data>
+  <data name="&gt;&gt;cbFontName.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ComboBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="lblImage.Location" type="System.Drawing.Point, System.Drawing">
+    <value>4, 73</value>
+  </data>
+  <data name="lblArtist.Font" type="System.Drawing.Font, System.Drawing">
+    <value>Calibri, 9.75pt</value>
+  </data>
+  <data name="UpDownFontSize.TabIndex" type="System.Int32, mscorlib">
+    <value>38</value>
+  </data>
+  <data name="txtActiveColorBorder.TabIndex" type="System.Int32, mscorlib">
+    <value>52</value>
+  </data>
+  <data name="lblColor.Size" type="System.Drawing.Size, System.Drawing">
+    <value>104, 15</value>
+  </data>
+  <data name="picPreview.TabIndex" type="System.Int32, mscorlib">
+    <value>62</value>
+  </data>
+  <data name="&gt;&gt;btnImportAudio2.Name" xml:space="preserve">
+    <value>btnImportAudio2</value>
+  </data>
+  <data name="&gt;&gt;lblBorder.ZOrder" xml:space="preserve">
+    <value>2</value>
+  </data>
+  <data name="&gt;&gt;mnuHelpForums.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
   <data name="&gt;&gt;picInactiveColorBorder.ZOrder" xml:space="preserve">
     <value>5</value>
   </data>
-  <data name="txtInactiveColorBorder.Location" type="System.Drawing.Point, System.Drawing">
-    <value>157, 244</value>
+  <data name="&gt;&gt;txtBgColor.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="btnCreateKfn.Size" type="System.Drawing.Size, System.Drawing">
+    <value>110, 23</value>
   </data>
   <data name="txtInactiveColorBorder.MaxLength" type="System.Int32, mscorlib">
     <value>7</value>
   </data>
-  <data name="txtInactiveColorBorder.Size" type="System.Drawing.Size, System.Drawing">
+  <data name="&gt;&gt;btnImportLyrics.ZOrder" xml:space="preserve">
+    <value>7</value>
+  </data>
+  <data name="btnActiveColorBorderPicker.Location" type="System.Drawing.Point, System.Drawing">
+    <value>316, 212</value>
+  </data>
+  <data name="lblHelpTb4.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="&gt;&gt;mnuFile.Name" xml:space="preserve">
+    <value>mnuFile</value>
+  </data>
+  <data name="&gt;&gt;btnImportImage.ZOrder" xml:space="preserve">
+    <value>5</value>
+  </data>
+  <data name="btnBgColorPicker.Location" type="System.Drawing.Point, System.Drawing">
+    <value>316, 74</value>
+  </data>
+  <data name="picActiveColorBorder.Size" type="System.Drawing.Size, System.Drawing">
+    <value>39, 23</value>
+  </data>
+  <data name="&gt;&gt;btnBgColorSelect.ZOrder" xml:space="preserve">
+    <value>28</value>
+  </data>
+  <data name="txtLyrics.TabIndex" type="System.Int32, mscorlib">
+    <value>18</value>
+  </data>
+  <data name="&gt;&gt;btnTb2Previous.Parent" xml:space="preserve">
+    <value>tbPageLyrics</value>
+  </data>
+  <data name="&gt;&gt;tbControl.Name" xml:space="preserve">
+    <value>tbControl</value>
+  </data>
+  <data name="&gt;&gt;lblActiveColorBorder.Name" xml:space="preserve">
+    <value>lblActiveColorBorder</value>
+  </data>
+  <data name="&gt;&gt;cbFontName.Parent" xml:space="preserve">
+    <value>tbPageBackground</value>
+  </data>
+  <data name="lblHelpTb2.Location" type="System.Drawing.Point, System.Drawing">
+    <value>4, 8</value>
+  </data>
+  <data name="txtBgColor.Size" type="System.Drawing.Size, System.Drawing">
     <value>58, 23</value>
   </data>
-  <data name="txtInactiveColorBorder.TabIndex" type="System.Int32, mscorlib">
-    <value>57</value>
+  <data name="lblLyrics.Size" type="System.Drawing.Size, System.Drawing">
+    <value>38, 15</value>
   </data>
-  <data name="txtInactiveColorBorder.Text" xml:space="preserve">
-    <value>#FFFFFF</value>
+  <data name="lblHelpTb2.TabIndex" type="System.Int32, mscorlib">
+    <value>22</value>
   </data>
-  <data name="&gt;&gt;txtInactiveColorBorder.Name" xml:space="preserve">
-    <value>txtInactiveColorBorder</value>
+  <data name="tbPageBackground.TabIndex" type="System.Int32, mscorlib">
+    <value>3</value>
   </data>
-  <data name="&gt;&gt;txtInactiveColorBorder.Type" xml:space="preserve">
+  <data name="&gt;&gt;btnBgColorPicker.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="lblSize.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="&gt;&gt;lblSize.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="txtActiveColor.MaxLength" type="System.Int32, mscorlib">
+    <value>7</value>
+  </data>
+  <data name="picPreview.Location" type="System.Drawing.Point, System.Drawing">
+    <value>366, 74</value>
+  </data>
+  <data name="lblInactiveColor.Location" type="System.Drawing.Point, System.Drawing">
+    <value>8, 189</value>
+  </data>
+  <data name="&gt;&gt;btnActiveColorBorderPicker.Parent" xml:space="preserve">
+    <value>tbPageBackground</value>
+  </data>
+  <data name="&gt;&gt;btnInactiveColorBorderSelect.Name" xml:space="preserve">
+    <value>btnInactiveColorBorderSelect</value>
+  </data>
+  <data name="&gt;&gt;lblBorder.Parent" xml:space="preserve">
+    <value>tbPageBackground</value>
+  </data>
+  <data name="&gt;&gt;txtArtist.ZOrder" xml:space="preserve">
+    <value>2</value>
+  </data>
+  <data name="tbControl.Font" type="System.Drawing.Font, System.Drawing">
+    <value>Calibri, 9.75pt</value>
+  </data>
+  <data name="&gt;&gt;btnImportAudio1.Parent" xml:space="preserve">
+    <value>tbPageAudios</value>
+  </data>
+  <data name="tbPageImages.Size" type="System.Drawing.Size, System.Drawing">
+    <value>713, 370</value>
+  </data>
+  <data name="&gt;&gt;txtComment.Type" xml:space="preserve">
     <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;txtInactiveColorBorder.Parent" xml:space="preserve">
     <value>tbPageBackground</value>
   </data>
-  <data name="&gt;&gt;txtInactiveColorBorder.ZOrder" xml:space="preserve">
-    <value>6</value>
-  </data>
-  <data name="lblInactiveColorBorder.AutoSize" type="System.Boolean, mscorlib">
-    <value>True</value>
-  </data>
-  <data name="lblInactiveColorBorder.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
-    <value>NoControl</value>
-  </data>
-  <data name="lblInactiveColorBorder.Location" type="System.Drawing.Point, System.Drawing">
-    <value>8, 247</value>
-  </data>
-  <data name="lblInactiveColorBorder.Size" type="System.Drawing.Size, System.Drawing">
-    <value>122, 15</value>
-  </data>
-  <data name="lblInactiveColorBorder.TabIndex" type="System.Int32, mscorlib">
-    <value>56</value>
-  </data>
-  <data name="lblInactiveColorBorder.Text" xml:space="preserve">
-    <value>Inactive color border</value>
-  </data>
-  <data name="&gt;&gt;lblInactiveColorBorder.Name" xml:space="preserve">
-    <value>lblInactiveColorBorder</value>
-  </data>
-  <data name="&gt;&gt;lblInactiveColorBorder.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;lblInactiveColorBorder.Parent" xml:space="preserve">
-    <value>tbPageBackground</value>
-  </data>
-  <data name="&gt;&gt;lblInactiveColorBorder.ZOrder" xml:space="preserve">
-    <value>7</value>
-  </data>
-  <data name="btnActiveColorBorderPicker.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
-    <value>NoControl</value>
-  </data>
-  <data name="btnActiveColorBorderPicker.Location" type="System.Drawing.Point, System.Drawing">
-    <value>316, 212</value>
-  </data>
-  <data name="btnActiveColorBorderPicker.Size" type="System.Drawing.Size, System.Drawing">
-    <value>44, 26</value>
-  </data>
-  <data name="btnActiveColorBorderPicker.TabIndex" type="System.Int32, mscorlib">
-    <value>54</value>
-  </data>
-  <data name="&gt;&gt;btnActiveColorBorderPicker.Name" xml:space="preserve">
-    <value>btnActiveColorBorderPicker</value>
-  </data>
-  <data name="&gt;&gt;btnActiveColorBorderPicker.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;btnActiveColorBorderPicker.Parent" xml:space="preserve">
-    <value>tbPageBackground</value>
-  </data>
-  <data name="&gt;&gt;btnActiveColorBorderPicker.ZOrder" xml:space="preserve">
-    <value>8</value>
-  </data>
-  <data name="btnActiveColorBorderSelect.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
-    <value>NoControl</value>
-  </data>
-  <data name="btnActiveColorBorderSelect.Location" type="System.Drawing.Point, System.Drawing">
-    <value>266, 212</value>
-  </data>
-  <data name="btnActiveColorBorderSelect.Size" type="System.Drawing.Size, System.Drawing">
-    <value>44, 26</value>
-  </data>
-  <data name="btnActiveColorBorderSelect.TabIndex" type="System.Int32, mscorlib">
-    <value>53</value>
-  </data>
-  <data name="btnActiveColorBorderSelect.Text" xml:space="preserve">
-    <value>...</value>
-  </data>
-  <data name="&gt;&gt;btnActiveColorBorderSelect.Name" xml:space="preserve">
-    <value>btnActiveColorBorderSelect</value>
-  </data>
-  <data name="&gt;&gt;btnActiveColorBorderSelect.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;btnActiveColorBorderSelect.Parent" xml:space="preserve">
-    <value>tbPageBackground</value>
-  </data>
-  <data name="&gt;&gt;btnActiveColorBorderSelect.ZOrder" xml:space="preserve">
-    <value>9</value>
-  </data>
-  <data name="picActiveColorBorder.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
-    <value>NoControl</value>
-  </data>
-  <data name="picActiveColorBorder.Location" type="System.Drawing.Point, System.Drawing">
-    <value>221, 215</value>
-  </data>
-  <data name="picActiveColorBorder.Size" type="System.Drawing.Size, System.Drawing">
+  <data name="picBgColor.Size" type="System.Drawing.Size, System.Drawing">
     <value>39, 23</value>
   </data>
-  <data name="picActiveColorBorder.TabIndex" type="System.Int32, mscorlib">
-    <value>50</value>
+  <data name="picInactiveColorBorder.TabIndex" type="System.Int32, mscorlib">
+    <value>55</value>
   </data>
-  <data name="&gt;&gt;picActiveColorBorder.Name" xml:space="preserve">
-    <value>picActiveColorBorder</value>
+  <data name="mnuHelpDocumentation.Text" xml:space="preserve">
+    <value>Documentation</value>
   </data>
-  <data name="&gt;&gt;picActiveColorBorder.Type" xml:space="preserve">
-    <value>System.Windows.Forms.PictureBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;picActiveColorBorder.Parent" xml:space="preserve">
-    <value>tbPageBackground</value>
-  </data>
-  <data name="&gt;&gt;picActiveColorBorder.ZOrder" xml:space="preserve">
-    <value>10</value>
-  </data>
-  <data name="txtActiveColorBorder.Location" type="System.Drawing.Point, System.Drawing">
-    <value>157, 215</value>
-  </data>
-  <data name="txtActiveColorBorder.MaxLength" type="System.Int32, mscorlib">
-    <value>7</value>
-  </data>
-  <data name="txtActiveColorBorder.Size" type="System.Drawing.Size, System.Drawing">
-    <value>58, 23</value>
-  </data>
-  <data name="txtActiveColorBorder.TabIndex" type="System.Int32, mscorlib">
-    <value>52</value>
-  </data>
-  <data name="txtActiveColorBorder.Text" xml:space="preserve">
-    <value>#010101</value>
-  </data>
-  <data name="&gt;&gt;txtActiveColorBorder.Name" xml:space="preserve">
-    <value>txtActiveColorBorder</value>
-  </data>
-  <data name="&gt;&gt;txtActiveColorBorder.Type" xml:space="preserve">
-    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;txtActiveColorBorder.Parent" xml:space="preserve">
-    <value>tbPageBackground</value>
-  </data>
-  <data name="&gt;&gt;txtActiveColorBorder.ZOrder" xml:space="preserve">
-    <value>11</value>
-  </data>
-  <data name="lblActiveColorBorder.AutoSize" type="System.Boolean, mscorlib">
-    <value>True</value>
-  </data>
-  <data name="lblActiveColorBorder.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
-    <value>NoControl</value>
-  </data>
-  <data name="lblActiveColorBorder.Location" type="System.Drawing.Point, System.Drawing">
-    <value>8, 218</value>
-  </data>
-  <data name="lblActiveColorBorder.Size" type="System.Drawing.Size, System.Drawing">
-    <value>111, 15</value>
-  </data>
-  <data name="lblActiveColorBorder.TabIndex" type="System.Int32, mscorlib">
-    <value>51</value>
-  </data>
-  <data name="lblActiveColorBorder.Text" xml:space="preserve">
-    <value>Active color border</value>
-  </data>
-  <data name="&gt;&gt;lblActiveColorBorder.Name" xml:space="preserve">
-    <value>lblActiveColorBorder</value>
-  </data>
-  <data name="&gt;&gt;lblActiveColorBorder.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;lblActiveColorBorder.Parent" xml:space="preserve">
-    <value>tbPageBackground</value>
-  </data>
-  <data name="&gt;&gt;lblActiveColorBorder.ZOrder" xml:space="preserve">
-    <value>12</value>
-  </data>
-  <data name="btnInactiveColorPicker.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
-    <value>NoControl</value>
-  </data>
-  <data name="btnInactiveColorPicker.Location" type="System.Drawing.Point, System.Drawing">
-    <value>316, 183</value>
-  </data>
-  <data name="btnInactiveColorPicker.Size" type="System.Drawing.Size, System.Drawing">
-    <value>44, 26</value>
-  </data>
-  <data name="btnInactiveColorPicker.TabIndex" type="System.Int32, mscorlib">
-    <value>49</value>
-  </data>
-  <data name="&gt;&gt;btnInactiveColorPicker.Name" xml:space="preserve">
-    <value>btnInactiveColorPicker</value>
-  </data>
-  <data name="&gt;&gt;btnInactiveColorPicker.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;btnInactiveColorPicker.Parent" xml:space="preserve">
-    <value>tbPageBackground</value>
-  </data>
-  <data name="&gt;&gt;btnInactiveColorPicker.ZOrder" xml:space="preserve">
-    <value>13</value>
-  </data>
-  <data name="btnInactiveColorSelect.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
-    <value>NoControl</value>
-  </data>
-  <data name="btnInactiveColorSelect.Location" type="System.Drawing.Point, System.Drawing">
-    <value>266, 183</value>
-  </data>
-  <data name="btnInactiveColorSelect.Size" type="System.Drawing.Size, System.Drawing">
-    <value>44, 26</value>
+  <data name="&gt;&gt;btnPlay.Parent" xml:space="preserve">
+    <value>tbPageAudios</value>
   </data>
   <data name="btnInactiveColorSelect.TabIndex" type="System.Int32, mscorlib">
     <value>48</value>
   </data>
-  <data name="btnInactiveColorSelect.Text" xml:space="preserve">
-    <value>...</value>
+  <data name="lblLyrics.Location" type="System.Drawing.Point, System.Drawing">
+    <value>4, 73</value>
   </data>
-  <data name="&gt;&gt;btnInactiveColorSelect.Name" xml:space="preserve">
-    <value>btnInactiveColorSelect</value>
+  <data name="&gt;&gt;mnuFile.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="&gt;&gt;btnInactiveColorSelect.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;btnInactiveColorSelect.Parent" xml:space="preserve">
-    <value>tbPageBackground</value>
-  </data>
-  <data name="&gt;&gt;btnInactiveColorSelect.ZOrder" xml:space="preserve">
-    <value>14</value>
-  </data>
-  <data name="picInactiveColor.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
-    <value>NoControl</value>
-  </data>
-  <data name="picInactiveColor.Location" type="System.Drawing.Point, System.Drawing">
-    <value>221, 186</value>
-  </data>
-  <data name="picInactiveColor.Size" type="System.Drawing.Size, System.Drawing">
-    <value>39, 23</value>
-  </data>
-  <data name="picInactiveColor.TabIndex" type="System.Int32, mscorlib">
-    <value>45</value>
-  </data>
-  <data name="&gt;&gt;picInactiveColor.Name" xml:space="preserve">
-    <value>picInactiveColor</value>
-  </data>
-  <data name="&gt;&gt;picInactiveColor.Type" xml:space="preserve">
-    <value>System.Windows.Forms.PictureBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;picInactiveColor.Parent" xml:space="preserve">
-    <value>tbPageBackground</value>
-  </data>
-  <data name="&gt;&gt;picInactiveColor.ZOrder" xml:space="preserve">
-    <value>15</value>
-  </data>
-  <data name="txtInactiveColor.Location" type="System.Drawing.Point, System.Drawing">
-    <value>157, 186</value>
-  </data>
-  <data name="txtInactiveColor.MaxLength" type="System.Int32, mscorlib">
-    <value>7</value>
-  </data>
-  <data name="txtInactiveColor.Size" type="System.Drawing.Size, System.Drawing">
-    <value>58, 23</value>
-  </data>
-  <data name="txtInactiveColor.TabIndex" type="System.Int32, mscorlib">
-    <value>47</value>
-  </data>
-  <data name="txtInactiveColor.Text" xml:space="preserve">
-    <value>#000000</value>
-  </data>
-  <data name="&gt;&gt;txtInactiveColor.Name" xml:space="preserve">
-    <value>txtInactiveColor</value>
-  </data>
-  <data name="&gt;&gt;txtInactiveColor.Type" xml:space="preserve">
-    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;txtInactiveColor.Parent" xml:space="preserve">
-    <value>tbPageBackground</value>
-  </data>
-  <data name="&gt;&gt;txtInactiveColor.ZOrder" xml:space="preserve">
-    <value>16</value>
-  </data>
-  <data name="lblInactiveColor.AutoSize" type="System.Boolean, mscorlib">
-    <value>True</value>
-  </data>
-  <data name="lblInactiveColor.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
-    <value>NoControl</value>
-  </data>
-  <data name="lblInactiveColor.Location" type="System.Drawing.Point, System.Drawing">
-    <value>8, 189</value>
-  </data>
-  <data name="lblInactiveColor.Size" type="System.Drawing.Size, System.Drawing">
-    <value>82, 15</value>
-  </data>
-  <data name="lblInactiveColor.TabIndex" type="System.Int32, mscorlib">
-    <value>46</value>
-  </data>
-  <data name="lblInactiveColor.Text" xml:space="preserve">
-    <value>Inactive color</value>
-  </data>
-  <data name="&gt;&gt;lblInactiveColor.Name" xml:space="preserve">
-    <value>lblInactiveColor</value>
-  </data>
-  <data name="&gt;&gt;lblInactiveColor.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;lblInactiveColor.Parent" xml:space="preserve">
-    <value>tbPageBackground</value>
-  </data>
-  <data name="&gt;&gt;lblInactiveColor.ZOrder" xml:space="preserve">
-    <value>17</value>
-  </data>
-  <data name="btnActiveColorPicker.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
-    <value>NoControl</value>
-  </data>
-  <data name="btnActiveColorPicker.Location" type="System.Drawing.Point, System.Drawing">
-    <value>316, 154</value>
-  </data>
-  <data name="btnActiveColorPicker.Size" type="System.Drawing.Size, System.Drawing">
-    <value>44, 26</value>
-  </data>
-  <data name="btnActiveColorPicker.TabIndex" type="System.Int32, mscorlib">
-    <value>44</value>
-  </data>
-  <data name="&gt;&gt;btnActiveColorPicker.Name" xml:space="preserve">
-    <value>btnActiveColorPicker</value>
-  </data>
-  <data name="&gt;&gt;btnActiveColorPicker.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;btnActiveColorPicker.Parent" xml:space="preserve">
-    <value>tbPageBackground</value>
-  </data>
-  <data name="&gt;&gt;btnActiveColorPicker.ZOrder" xml:space="preserve">
-    <value>18</value>
-  </data>
-  <data name="btnActiveColorSelect.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
-    <value>NoControl</value>
-  </data>
-  <data name="btnActiveColorSelect.Location" type="System.Drawing.Point, System.Drawing">
-    <value>266, 154</value>
-  </data>
-  <data name="btnActiveColorSelect.Size" type="System.Drawing.Size, System.Drawing">
-    <value>44, 26</value>
-  </data>
-  <data name="btnActiveColorSelect.TabIndex" type="System.Int32, mscorlib">
-    <value>43</value>
-  </data>
-  <data name="btnActiveColorSelect.Text" xml:space="preserve">
-    <value>...</value>
-  </data>
-  <data name="&gt;&gt;btnActiveColorSelect.Name" xml:space="preserve">
-    <value>btnActiveColorSelect</value>
-  </data>
-  <data name="&gt;&gt;btnActiveColorSelect.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;btnActiveColorSelect.Parent" xml:space="preserve">
-    <value>tbPageBackground</value>
-  </data>
-  <data name="&gt;&gt;btnActiveColorSelect.ZOrder" xml:space="preserve">
-    <value>19</value>
-  </data>
-  <data name="picActiveColor.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
-    <value>NoControl</value>
-  </data>
-  <data name="picActiveColor.Location" type="System.Drawing.Point, System.Drawing">
-    <value>221, 157</value>
-  </data>
-  <data name="picActiveColor.Size" type="System.Drawing.Size, System.Drawing">
-    <value>39, 23</value>
-  </data>
-  <data name="picActiveColor.TabIndex" type="System.Int32, mscorlib">
-    <value>40</value>
-  </data>
-  <data name="&gt;&gt;picActiveColor.Name" xml:space="preserve">
-    <value>picActiveColor</value>
-  </data>
-  <data name="&gt;&gt;picActiveColor.Type" xml:space="preserve">
-    <value>System.Windows.Forms.PictureBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;picActiveColor.Parent" xml:space="preserve">
-    <value>tbPageBackground</value>
-  </data>
-  <data name="&gt;&gt;picActiveColor.ZOrder" xml:space="preserve">
-    <value>20</value>
-  </data>
-  <data name="txtActiveColor.Location" type="System.Drawing.Point, System.Drawing">
-    <value>157, 157</value>
-  </data>
-  <data name="txtActiveColor.MaxLength" type="System.Int32, mscorlib">
-    <value>7</value>
-  </data>
-  <data name="txtActiveColor.Size" type="System.Drawing.Size, System.Drawing">
-    <value>58, 23</value>
-  </data>
-  <data name="txtActiveColor.TabIndex" type="System.Int32, mscorlib">
-    <value>42</value>
-  </data>
-  <data name="txtActiveColor.Text" xml:space="preserve">
-    <value>#00ACFF</value>
-  </data>
-  <data name="&gt;&gt;txtActiveColor.Name" xml:space="preserve">
-    <value>txtActiveColor</value>
-  </data>
-  <data name="&gt;&gt;txtActiveColor.Type" xml:space="preserve">
-    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;txtActiveColor.Parent" xml:space="preserve">
-    <value>tbPageBackground</value>
-  </data>
-  <data name="&gt;&gt;txtActiveColor.ZOrder" xml:space="preserve">
-    <value>21</value>
-  </data>
-  <data name="lblActiveColor.AutoSize" type="System.Boolean, mscorlib">
-    <value>True</value>
-  </data>
-  <data name="lblActiveColor.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
-    <value>NoControl</value>
-  </data>
-  <data name="lblActiveColor.Location" type="System.Drawing.Point, System.Drawing">
-    <value>8, 160</value>
-  </data>
-  <data name="lblActiveColor.Size" type="System.Drawing.Size, System.Drawing">
-    <value>71, 15</value>
-  </data>
-  <data name="lblActiveColor.TabIndex" type="System.Int32, mscorlib">
-    <value>41</value>
-  </data>
-  <data name="lblActiveColor.Text" xml:space="preserve">
-    <value>Active color</value>
-  </data>
-  <data name="&gt;&gt;lblActiveColor.Name" xml:space="preserve">
-    <value>lblActiveColor</value>
-  </data>
-  <data name="&gt;&gt;lblActiveColor.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;lblActiveColor.Parent" xml:space="preserve">
-    <value>tbPageBackground</value>
-  </data>
-  <data name="&gt;&gt;lblActiveColor.ZOrder" xml:space="preserve">
-    <value>22</value>
-  </data>
-  <data name="lblHelpTb4.Font" type="System.Drawing.Font, System.Drawing">
-    <value>Calibri, 9pt</value>
-  </data>
-  <data name="lblHelpTb4.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
-    <value>NoControl</value>
-  </data>
-  <data name="lblHelpTb4.Location" type="System.Drawing.Point, System.Drawing">
-    <value>4, 8</value>
-  </data>
-  <data name="lblHelpTb4.Size" type="System.Drawing.Size, System.Drawing">
-    <value>697, 61</value>
-  </data>
-  <data name="lblHelpTb4.TabIndex" type="System.Int32, mscorlib">
-    <value>39</value>
-  </data>
-  <data name="lblHelpTb4.Text" xml:space="preserve">
-    <value>Facultatif : si vous n'avez pas d'image pour le fond, vous pouvez choisir ici la couleur de l'arrière plan.{0}Vous pouvez également modifier la fonte pour l'affichage des paroles.</value>
-  </data>
-  <data name="&gt;&gt;lblHelpTb4.Name" xml:space="preserve">
-    <value>lblHelpTb4</value>
-  </data>
-  <data name="&gt;&gt;lblHelpTb4.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;lblHelpTb4.Parent" xml:space="preserve">
-    <value>tbPageBackground</value>
-  </data>
-  <data name="&gt;&gt;lblHelpTb4.ZOrder" xml:space="preserve">
-    <value>23</value>
-  </data>
-  <data name="UpDownFontSize.Location" type="System.Drawing.Point, System.Drawing">
-    <value>320, 106</value>
-  </data>
-  <data name="UpDownFontSize.Size" type="System.Drawing.Size, System.Drawing">
-    <value>40, 23</value>
-  </data>
-  <data name="UpDownFontSize.TabIndex" type="System.Int32, mscorlib">
-    <value>38</value>
-  </data>
-  <data name="UpDownFontSize.TextAlign" type="System.Windows.Forms.HorizontalAlignment, System.Windows.Forms">
-    <value>Right</value>
-  </data>
-  <data name="&gt;&gt;UpDownFontSize.Name" xml:space="preserve">
-    <value>UpDownFontSize</value>
-  </data>
-  <data name="&gt;&gt;UpDownFontSize.Type" xml:space="preserve">
-    <value>System.Windows.Forms.NumericUpDown, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;UpDownFontSize.Parent" xml:space="preserve">
-    <value>tbPageBackground</value>
-  </data>
-  <data name="&gt;&gt;UpDownFontSize.ZOrder" xml:space="preserve">
-    <value>24</value>
-  </data>
-  <data name="lblFont.AutoSize" type="System.Boolean, mscorlib">
-    <value>True</value>
-  </data>
-  <data name="lblFont.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
-    <value>NoControl</value>
-  </data>
-  <data name="lblFont.Location" type="System.Drawing.Point, System.Drawing">
-    <value>8, 109</value>
-  </data>
-  <data name="lblFont.Size" type="System.Drawing.Size, System.Drawing">
-    <value>31, 15</value>
-  </data>
-  <data name="lblFont.TabIndex" type="System.Int32, mscorlib">
-    <value>36</value>
-  </data>
-  <data name="lblFont.Text" xml:space="preserve">
-    <value>Font</value>
-  </data>
-  <data name="&gt;&gt;lblFont.Name" xml:space="preserve">
-    <value>lblFont</value>
-  </data>
-  <data name="&gt;&gt;lblFont.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;lblFont.Parent" xml:space="preserve">
-    <value>tbPageBackground</value>
-  </data>
-  <data name="&gt;&gt;lblFont.ZOrder" xml:space="preserve">
-    <value>25</value>
-  </data>
-  <data name="cbFontName.Location" type="System.Drawing.Point, System.Drawing">
-    <value>153, 106</value>
+  <data name="&gt;&gt;txtAudio2.Parent" xml:space="preserve">
+    <value>tbPageAudios</value>
   </data>
   <data name="cbFontName.Size" type="System.Drawing.Size, System.Drawing">
     <value>137, 23</value>
   </data>
-  <data name="cbFontName.TabIndex" type="System.Int32, mscorlib">
-    <value>35</value>
+  <data name="&gt;&gt;txtYear.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="&gt;&gt;cbFontName.Name" xml:space="preserve">
-    <value>cbFontName</value>
+  <data name="lblActiveColorBorder.TabIndex" type="System.Int32, mscorlib">
+    <value>51</value>
   </data>
-  <data name="&gt;&gt;cbFontName.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ComboBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  <data name="&gt;&gt;txtKfnFileName.Name" xml:space="preserve">
+    <value>txtKfnFileName</value>
   </data>
-  <data name="&gt;&gt;cbFontName.Parent" xml:space="preserve">
-    <value>tbPageBackground</value>
+  <data name="txtInactiveColorBorder.TabIndex" type="System.Int32, mscorlib">
+    <value>57</value>
   </data>
-  <data name="&gt;&gt;cbFontName.ZOrder" xml:space="preserve">
-    <value>26</value>
-  </data>
-  <data name="btnBgColorPicker.Location" type="System.Drawing.Point, System.Drawing">
-    <value>316, 74</value>
-  </data>
-  <data name="btnBgColorPicker.Size" type="System.Drawing.Size, System.Drawing">
-    <value>44, 26</value>
-  </data>
-  <data name="btnBgColorPicker.TabIndex" type="System.Int32, mscorlib">
-    <value>33</value>
-  </data>
-  <data name="&gt;&gt;btnBgColorPicker.Name" xml:space="preserve">
-    <value>btnBgColorPicker</value>
-  </data>
-  <data name="&gt;&gt;btnBgColorPicker.Type" xml:space="preserve">
+  <data name="&gt;&gt;btnTb2Next.Type" xml:space="preserve">
     <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="&gt;&gt;btnBgColorPicker.Parent" xml:space="preserve">
-    <value>tbPageBackground</value>
+  <data name="&gt;&gt;btnTb3Previous.ZOrder" xml:space="preserve">
+    <value>8</value>
   </data>
-  <data name="&gt;&gt;btnBgColorPicker.ZOrder" xml:space="preserve">
-    <value>27</value>
+  <data name="btnLyricsUpdate.Visible" type="System.Boolean, mscorlib">
+    <value>False</value>
   </data>
-  <data name="btnBgColorSelect.Location" type="System.Drawing.Point, System.Drawing">
-    <value>266, 74</value>
+  <data name="&gt;&gt;txtInactiveColorBorder.Name" xml:space="preserve">
+    <value>txtInactiveColorBorder</value>
   </data>
-  <data name="btnBgColorSelect.Size" type="System.Drawing.Size, System.Drawing">
-    <value>44, 26</value>
+  <data name="lblBorder.Location" type="System.Drawing.Point, System.Drawing">
+    <value>8, 276</value>
   </data>
-  <data name="btnBgColorSelect.TabIndex" type="System.Int32, mscorlib">
-    <value>32</value>
+  <data name="lblHelpTb1.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
   </data>
-  <data name="btnBgColorSelect.Text" xml:space="preserve">
-    <value>...</value>
+  <data name="label2.Text" xml:space="preserve">
+    <value>Comment</value>
   </data>
-  <data name="&gt;&gt;btnBgColorSelect.Name" xml:space="preserve">
-    <value>btnBgColorSelect</value>
-  </data>
-  <data name="&gt;&gt;btnBgColorSelect.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;btnBgColorSelect.Parent" xml:space="preserve">
-    <value>tbPageBackground</value>
-  </data>
-  <data name="&gt;&gt;btnBgColorSelect.ZOrder" xml:space="preserve">
-    <value>28</value>
+  <data name="&gt;&gt;tbPageLyrics.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TabPage, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="picBgColor.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
   </data>
-  <data name="picBgColor.Location" type="System.Drawing.Point, System.Drawing">
-    <value>221, 77</value>
+  <data name="lblBorder.Text" xml:space="preserve">
+    <value>Border</value>
   </data>
-  <data name="picBgColor.Size" type="System.Drawing.Size, System.Drawing">
-    <value>39, 23</value>
+  <data name="lblRatio.Size" type="System.Drawing.Size, System.Drawing">
+    <value>38, 15</value>
   </data>
-  <data name="picBgColor.TabIndex" type="System.Int32, mscorlib">
-    <value>16</value>
-  </data>
-  <data name="&gt;&gt;picBgColor.Name" xml:space="preserve">
-    <value>picBgColor</value>
-  </data>
-  <data name="&gt;&gt;picBgColor.Type" xml:space="preserve">
-    <value>System.Windows.Forms.PictureBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;picBgColor.Parent" xml:space="preserve">
-    <value>tbPageBackground</value>
-  </data>
-  <data name="&gt;&gt;picBgColor.ZOrder" xml:space="preserve">
-    <value>29</value>
-  </data>
-  <data name="txtBgColor.Location" type="System.Drawing.Point, System.Drawing">
-    <value>153, 77</value>
-  </data>
-  <data name="txtBgColor.MaxLength" type="System.Int32, mscorlib">
-    <value>7</value>
-  </data>
-  <data name="txtBgColor.Size" type="System.Drawing.Size, System.Drawing">
-    <value>58, 23</value>
-  </data>
-  <data name="txtBgColor.TabIndex" type="System.Int32, mscorlib">
-    <value>31</value>
-  </data>
-  <data name="txtBgColor.Text" xml:space="preserve">
-    <value>#FFFFFF</value>
-  </data>
-  <data name="&gt;&gt;txtBgColor.Name" xml:space="preserve">
-    <value>txtBgColor</value>
-  </data>
-  <data name="&gt;&gt;txtBgColor.Type" xml:space="preserve">
-    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;txtBgColor.Parent" xml:space="preserve">
-    <value>tbPageBackground</value>
-  </data>
-  <data name="&gt;&gt;txtBgColor.ZOrder" xml:space="preserve">
-    <value>30</value>
-  </data>
-  <data name="lblColor.AutoSize" type="System.Boolean, mscorlib">
-    <value>True</value>
-  </data>
-  <data name="lblColor.Location" type="System.Drawing.Point, System.Drawing">
-    <value>8, 80</value>
-  </data>
-  <data name="lblColor.Size" type="System.Drawing.Size, System.Drawing">
-    <value>104, 15</value>
-  </data>
-  <data name="lblColor.TabIndex" type="System.Int32, mscorlib">
-    <value>30</value>
-  </data>
-  <data name="lblColor.Text" xml:space="preserve">
-    <value>Background color</value>
-  </data>
-  <data name="&gt;&gt;lblColor.Name" xml:space="preserve">
-    <value>lblColor</value>
-  </data>
-  <data name="&gt;&gt;lblColor.Type" xml:space="preserve">
+  <data name="&gt;&gt;lblHelpTb2.Type" xml:space="preserve">
     <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="&gt;&gt;lblColor.Parent" xml:space="preserve">
-    <value>tbPageBackground</value>
+  <data name="lblSize.TabIndex" type="System.Int32, mscorlib">
+    <value>29</value>
   </data>
-  <data name="&gt;&gt;lblColor.ZOrder" xml:space="preserve">
-    <value>31</value>
+  <data name="btnActiveColorBorderSelect.Location" type="System.Drawing.Point, System.Drawing">
+    <value>266, 212</value>
   </data>
-  <data name="btnTb4Previous.Location" type="System.Drawing.Point, System.Drawing">
-    <value>549, 340</value>
+  <data name="&gt;&gt;btnInactiveColorBorderSelect.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="btnTb4Previous.Size" type="System.Drawing.Size, System.Drawing">
-    <value>75, 23</value>
+  <data name="tbPageAudios.Location" type="System.Drawing.Point, System.Drawing">
+    <value>4, 27</value>
   </data>
-  <data name="btnTb4Previous.TabIndex" type="System.Int32, mscorlib">
-    <value>34</value>
-  </data>
-  <data name="btnTb4Previous.Text" xml:space="preserve">
-    <value>Previous</value>
-  </data>
-  <data name="&gt;&gt;btnTb4Previous.Name" xml:space="preserve">
-    <value>btnTb4Previous</value>
-  </data>
-  <data name="&gt;&gt;btnTb4Previous.Type" xml:space="preserve">
+  <data name="&gt;&gt;btnLyricsUpdate.Type" xml:space="preserve">
     <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;btnTb4Previous.Parent" xml:space="preserve">
     <value>tbPageBackground</value>
   </data>
-  <data name="&gt;&gt;btnTb4Previous.ZOrder" xml:space="preserve">
-    <value>32</value>
-  </data>
-  <data name="tbPageBackground.Location" type="System.Drawing.Point, System.Drawing">
-    <value>4, 27</value>
-  </data>
-  <data name="tbPageBackground.Size" type="System.Drawing.Size, System.Drawing">
-    <value>713, 370</value>
-  </data>
-  <data name="tbPageBackground.TabIndex" type="System.Int32, mscorlib">
-    <value>3</value>
-  </data>
-  <data name="tbPageBackground.Text" xml:space="preserve">
-    <value>Background</value>
-  </data>
-  <data name="&gt;&gt;tbPageBackground.Name" xml:space="preserve">
+  <data name="&gt;&gt;picInactiveColor.Parent" xml:space="preserve">
     <value>tbPageBackground</value>
   </data>
-  <data name="&gt;&gt;tbPageBackground.Type" xml:space="preserve">
-    <value>System.Windows.Forms.TabPage, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;tbPageBackground.Parent" xml:space="preserve">
-    <value>tbControl</value>
-  </data>
-  <data name="&gt;&gt;tbPageBackground.ZOrder" xml:space="preserve">
-    <value>3</value>
-  </data>
-  <data name="tbControl.Font" type="System.Drawing.Font, System.Drawing">
-    <value>Calibri, 9.75pt</value>
+  <data name="$this.StartPosition" type="System.Windows.Forms.FormStartPosition, System.Windows.Forms">
+    <value>CenterScreen</value>
   </data>
   <data name="tbControl.ItemSize" type="System.Drawing.Size, System.Drawing">
     <value>60, 23</value>
   </data>
-  <data name="tbControl.Location" type="System.Drawing.Point, System.Drawing">
-    <value>0, 23</value>
+  <data name="$this.ClientSize" type="System.Drawing.Size, System.Drawing">
+    <value>721, 476</value>
   </data>
-  <data name="tbControl.Size" type="System.Drawing.Size, System.Drawing">
-    <value>721, 401</value>
-  </data>
-  <data name="tbControl.TabIndex" type="System.Int32, mscorlib">
-    <value>11</value>
-  </data>
-  <data name="&gt;&gt;tbControl.Name" xml:space="preserve">
-    <value>tbControl</value>
-  </data>
-  <data name="&gt;&gt;tbControl.Type" xml:space="preserve">
-    <value>System.Windows.Forms.TabControl, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;tbControl.Parent" xml:space="preserve">
-    <value>$this</value>
-  </data>
-  <data name="&gt;&gt;tbControl.ZOrder" xml:space="preserve">
-    <value>0</value>
-  </data>
-  <metadata name="ColorDialog.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>152, 17</value>
-  </metadata>
-  <metadata name="menuStrip1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>269, 17</value>
-  </metadata>
-  <data name="mnuFileQuit.Size" type="System.Drawing.Size, System.Drawing">
-    <value>97, 22</value>
-  </data>
-  <data name="mnuFileQuit.Text" xml:space="preserve">
-    <value>&amp;Quit</value>
-  </data>
-  <data name="mnuFile.Size" type="System.Drawing.Size, System.Drawing">
-    <value>37, 20</value>
-  </data>
-  <data name="mnuFile.Text" xml:space="preserve">
-    <value>&amp;File</value>
-  </data>
-  <data name="mnuHelpForums.Size" type="System.Drawing.Size, System.Drawing">
-    <value>157, 22</value>
-  </data>
-  <data name="mnuHelpForums.Text" xml:space="preserve">
-    <value>Forums</value>
-  </data>
-  <data name="mnuHelpDocumentation.Size" type="System.Drawing.Size, System.Drawing">
-    <value>157, 22</value>
-  </data>
-  <data name="mnuHelpDocumentation.Text" xml:space="preserve">
-    <value>Documentation</value>
-  </data>
-  <data name="mnuHelp.Size" type="System.Drawing.Size, System.Drawing">
-    <value>44, 20</value>
-  </data>
-  <data name="mnuHelp.Text" xml:space="preserve">
-    <value>&amp;Help</value>
-  </data>
-  <data name="menuStrip1.Location" type="System.Drawing.Point, System.Drawing">
-    <value>0, 0</value>
-  </data>
-  <data name="menuStrip1.Size" type="System.Drawing.Size, System.Drawing">
-    <value>721, 24</value>
-  </data>
-  <data name="menuStrip1.TabIndex" type="System.Int32, mscorlib">
-    <value>42</value>
-  </data>
-  <data name="menuStrip1.Text" xml:space="preserve">
-    <value>menuStrip1</value>
-  </data>
-  <data name="&gt;&gt;menuStrip1.Name" xml:space="preserve">
-    <value>menuStrip1</value>
+  <data name="btnActiveColorSelect.Text" xml:space="preserve">
+    <value>...</value>
   </data>
   <data name="&gt;&gt;menuStrip1.Type" xml:space="preserve">
     <value>System.Windows.Forms.MenuStrip, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="&gt;&gt;menuStrip1.Parent" xml:space="preserve">
-    <value>$this</value>
+  <data name="&gt;&gt;lblLyricsUpdate.Name" xml:space="preserve">
+    <value>lblLyricsUpdate</value>
   </data>
-  <data name="&gt;&gt;menuStrip1.ZOrder" xml:space="preserve">
+  <data name="&gt;&gt;lblAudio2.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="btnTb3Next.Size" type="System.Drawing.Size, System.Drawing">
+    <value>75, 23</value>
+  </data>
+  <data name="cbFrame.TabIndex" type="System.Int32, mscorlib">
+    <value>61</value>
+  </data>
+  <data name="btnActiveColorBorderSelect.Size" type="System.Drawing.Size, System.Drawing">
+    <value>44, 26</value>
+  </data>
+  <data name="&gt;&gt;tbPageLyrics.Parent" xml:space="preserve">
+    <value>tbControl</value>
+  </data>
+  <data name="btnCancel.TabIndex" type="System.Int32, mscorlib">
+    <value>41</value>
+  </data>
+  <data name="btnCancel.Size" type="System.Drawing.Size, System.Drawing">
+    <value>99, 23</value>
+  </data>
+  <data name="lblHelpTb4.Location" type="System.Drawing.Point, System.Drawing">
+    <value>4, 8</value>
+  </data>
+  <data name="lblInactiveColor.Size" type="System.Drawing.Size, System.Drawing">
+    <value>82, 15</value>
+  </data>
+  <data name="&gt;&gt;btnImportAudio1.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;tbPageAudios.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TabPage, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="lblAuthor.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="UpDownFontSize.Location" type="System.Drawing.Point, System.Drawing">
+    <value>320, 106</value>
+  </data>
+  <data name="btnLyricsUpdate.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="&gt;&gt;lblLyrics.Parent" xml:space="preserve">
+    <value>tbPageLyrics</value>
+  </data>
+  <data name="&gt;&gt;btnBgColorSelect.Name" xml:space="preserve">
+    <value>btnBgColorSelect</value>
+  </data>
+  <data name="&gt;&gt;lblHelpTb1.Name" xml:space="preserve">
+    <value>lblHelpTb1</value>
+  </data>
+  <data name="lblRatio.Text" xml:space="preserve">
+    <value>Ratio:</value>
+  </data>
+  <data name="&gt;&gt;cbFrame.Parent" xml:space="preserve">
+    <value>tbPageBackground</value>
+  </data>
+  <data name="lblInactiveColorBorder.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="&gt;&gt;lblImage.ZOrder" xml:space="preserve">
+    <value>6</value>
+  </data>
+  <data name="&gt;&gt;lblActiveColorBorder.ZOrder" xml:space="preserve">
+    <value>12</value>
+  </data>
+  <data name="lblImage.Text" xml:space="preserve">
+    <value>Image</value>
+  </data>
+  <data name="btnTb2Previous.Size" type="System.Drawing.Size, System.Drawing">
+    <value>75, 23</value>
+  </data>
+  <data name="&gt;&gt;txtAudio2.ZOrder" xml:space="preserve">
+    <value>9</value>
+  </data>
+  <data name="&gt;&gt;lblAuthor.ZOrder" xml:space="preserve">
+    <value>6</value>
+  </data>
+  <data name="&gt;&gt;txtAudio2.Name" xml:space="preserve">
+    <value>txtAudio2</value>
+  </data>
+  <data name="tbPageBackground.Location" type="System.Drawing.Point, System.Drawing">
+    <value>4, 27</value>
+  </data>
+  <data name="&gt;&gt;lblLyricsUpdate.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="lblLyricsUpdate.Location" type="System.Drawing.Point, System.Drawing">
+    <value>3, 150</value>
+  </data>
+  <data name="menuStrip1.Text" xml:space="preserve">
+    <value>menuStrip1</value>
+  </data>
+  <data name="&gt;&gt;btnBgColorPicker.Parent" xml:space="preserve">
+    <value>tbPageBackground</value>
+  </data>
+  <data name="picInactiveColor.Size" type="System.Drawing.Size, System.Drawing">
+    <value>39, 23</value>
+  </data>
+  <data name="btnImportAudio2.Location" type="System.Drawing.Point, System.Drawing">
+    <value>630, 102</value>
+  </data>
+  <data name="btnBgColorSelect.Text" xml:space="preserve">
+    <value>...</value>
+  </data>
+  <data name="&gt;&gt;lblYear.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;btnInactiveColorSelect.Name" xml:space="preserve">
+    <value>btnInactiveColorSelect</value>
+  </data>
+  <data name="&gt;&gt;lblHelpTb3.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;btnImportImage.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="btnBgColorSelect.Size" type="System.Drawing.Size, System.Drawing">
+    <value>44, 26</value>
+  </data>
+  <data name="&gt;&gt;btnPlay.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="lblHelpTb4.Text" xml:space="preserve">
+    <value>Facultatif : si vous n'avez pas d'image pour le fond, vous pouvez choisir ici la couleur de l'arrière plan.{0}Vous pouvez également modifier la fonte pour l'affichage des paroles.</value>
+  </data>
+  <data name="btnImportImage.Text" xml:space="preserve">
+    <value>Import</value>
+  </data>
+  <data name="&gt;&gt;mnuHelp.Name" xml:space="preserve">
+    <value>mnuHelp</value>
+  </data>
+  <data name="&gt;&gt;txtAudio2.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;lblActiveColor.ZOrder" xml:space="preserve">
+    <value>22</value>
+  </data>
+  <data name="&gt;&gt;btnTb2Next.ZOrder" xml:space="preserve">
     <value>3</value>
   </data>
-  <metadata name="$this.Localizable" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>True</value>
-  </metadata>
-  <data name="$this.AutoScaleDimensions" type="System.Drawing.SizeF, System.Drawing">
-    <value>6, 13</value>
+  <data name="btnInactiveColorBorderPicker.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
   </data>
-  <data name="$this.ClientSize" type="System.Drawing.Size, System.Drawing">
-    <value>721, 476</value>
+  <data name="cbFontName.TabIndex" type="System.Int32, mscorlib">
+    <value>35</value>
+  </data>
+  <data name="btnImportAudio1.Size" type="System.Drawing.Size, System.Drawing">
+    <value>75, 23</value>
+  </data>
+  <data name="lblRatio.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="&gt;&gt;lblHelpTb3.Name" xml:space="preserve">
+    <value>lblHelpTb3</value>
+  </data>
+  <data name="&gt;&gt;picInactiveColorBorder.Type" xml:space="preserve">
+    <value>System.Windows.Forms.PictureBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;lblColor.Parent" xml:space="preserve">
+    <value>tbPageBackground</value>
+  </data>
+  <data name="&gt;&gt;lblInactiveColorBorder.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;lblRatio.Name" xml:space="preserve">
+    <value>lblRatio</value>
+  </data>
+  <data name="&gt;&gt;UpDownFontSize.ZOrder" xml:space="preserve">
+    <value>24</value>
+  </data>
+  <data name="txtLyrics.Size" type="System.Drawing.Size, System.Drawing">
+    <value>490, 23</value>
+  </data>
+  <data name="&gt;&gt;lblLyrics.Name" xml:space="preserve">
+    <value>lblLyrics</value>
+  </data>
+  <data name="picBgColor.Location" type="System.Drawing.Point, System.Drawing">
+    <value>221, 77</value>
+  </data>
+  <data name="&gt;&gt;btnLyricsUpdate.Name" xml:space="preserve">
+    <value>btnLyricsUpdate</value>
+  </data>
+  <data name="txtImageFile.Size" type="System.Drawing.Size, System.Drawing">
+    <value>490, 23</value>
+  </data>
+  <data name="&gt;&gt;btnCancel.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;btnImportAudio2.Parent" xml:space="preserve">
+    <value>tbPageAudios</value>
+  </data>
+  <data name="btnTb3Next.Text" xml:space="preserve">
+    <value>Next</value>
+  </data>
+  <data name="tbPageLyrics.BackgroundImageLayout" type="System.Windows.Forms.ImageLayout, System.Windows.Forms">
+    <value>Center</value>
+  </data>
+  <data name="&gt;&gt;btnActiveColorPicker.Parent" xml:space="preserve">
+    <value>tbPageBackground</value>
+  </data>
+  <data name="&gt;&gt;txtYear.Name" xml:space="preserve">
+    <value>txtYear</value>
+  </data>
+  <data name="&gt;&gt;btnTb3Next.ZOrder" xml:space="preserve">
+    <value>4</value>
+  </data>
+  <data name="mnuFile.Text" xml:space="preserve">
+    <value>&amp;File</value>
+  </data>
+  <data name="&gt;&gt;btnActiveColorBorderSelect.Name" xml:space="preserve">
+    <value>btnActiveColorBorderSelect</value>
+  </data>
+  <data name="btnInactiveColorSelect.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="picActiveColorBorder.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="&gt;&gt;txtInactiveColorBorder.ZOrder" xml:space="preserve">
+    <value>6</value>
+  </data>
+  <data name="&gt;&gt;lblHelpTb4.Parent" xml:space="preserve">
+    <value>tbPageBackground</value>
+  </data>
+  <data name="label5.Font" type="System.Drawing.Font, System.Drawing">
+    <value>Calibri, 9pt</value>
+  </data>
+  <data name="&gt;&gt;picActiveColor.ZOrder" xml:space="preserve">
+    <value>20</value>
+  </data>
+  <data name="&gt;&gt;btnInactiveColorBorderPicker.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;picPreview.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="lblBorder.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="&gt;&gt;txtKfnFileName.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="lblArtist.Location" type="System.Drawing.Point, System.Drawing">
+    <value>4, 222</value>
+  </data>
+  <data name="&gt;&gt;cbFontName.Name" xml:space="preserve">
+    <value>cbFontName</value>
+  </data>
+  <data name="btnLyricsUpdate.TabIndex" type="System.Int32, mscorlib">
+    <value>23</value>
+  </data>
+  <data name="&gt;&gt;txtLyrics.Name" xml:space="preserve">
+    <value>txtLyrics</value>
+  </data>
+  <data name="&gt;&gt;tbPageImages.ZOrder" xml:space="preserve">
+    <value>2</value>
+  </data>
+  <data name="&gt;&gt;picBgColor.Name" xml:space="preserve">
+    <value>picBgColor</value>
+  </data>
+  <data name="&gt;&gt;txtYear.Parent" xml:space="preserve">
+    <value>tbPageAudios</value>
+  </data>
+  <data name="&gt;&gt;tbPageBackground.Name" xml:space="preserve">
+    <value>tbPageBackground</value>
+  </data>
+  <data name="&gt;&gt;lblYear.Parent" xml:space="preserve">
+    <value>tbPageAudios</value>
+  </data>
+  <data name="&gt;&gt;txtArtist.Parent" xml:space="preserve">
+    <value>tbPageAudios</value>
+  </data>
+  <data name="label5.Location" type="System.Drawing.Point, System.Drawing">
+    <value>5, 134</value>
+  </data>
+  <data name="&gt;&gt;lblHelpTb4.Name" xml:space="preserve">
+    <value>lblHelpTb4</value>
+  </data>
+  <data name="btnInactiveColorBorderSelect.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="&gt;&gt;lblAudio1.Name" xml:space="preserve">
+    <value>lblAudio1</value>
+  </data>
+  <data name="btnActiveColorBorderSelect.Text" xml:space="preserve">
+    <value>...</value>
+  </data>
+  <data name="&gt;&gt;btnInactiveColorPicker.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;lblInactiveColor.Parent" xml:space="preserve">
+    <value>tbPageBackground</value>
+  </data>
+  <data name="mnuFile.Size" type="System.Drawing.Size, System.Drawing">
+    <value>37, 20</value>
+  </data>
+  <data name="&gt;&gt;lblInactiveColor.ZOrder" xml:space="preserve">
+    <value>17</value>
+  </data>
+  <data name="label1.TabIndex" type="System.Int32, mscorlib">
+    <value>8</value>
+  </data>
+  <data name="&gt;&gt;txtImageFile.Parent" xml:space="preserve">
+    <value>tbPageImages</value>
+  </data>
+  <data name="menuStrip1.TabIndex" type="System.Int32, mscorlib">
+    <value>42</value>
   </data>
   <data name="$this.Icon" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
@@ -2344,58 +1501,901 @@
         AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=
 </value>
   </data>
-  <data name="$this.StartPosition" type="System.Windows.Forms.FormStartPosition, System.Windows.Forms">
-    <value>CenterScreen</value>
+  <data name="btnPlay.Size" type="System.Drawing.Size, System.Drawing">
+    <value>34, 23</value>
   </data>
-  <data name="$this.Text" xml:space="preserve">
-    <value>Karaboss - Create a new KFN file</value>
+  <data name="&gt;&gt;txtAuthor.Name" xml:space="preserve">
+    <value>txtAuthor</value>
   </data>
-  <data name="&gt;&gt;OpenFileDialog.Name" xml:space="preserve">
-    <value>OpenFileDialog</value>
+  <data name="&gt;&gt;btnInactiveColorBorderPicker.ZOrder" xml:space="preserve">
+    <value>3</value>
   </data>
-  <data name="&gt;&gt;OpenFileDialog.Type" xml:space="preserve">
-    <value>System.Windows.Forms.OpenFileDialog, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  <data name="txtComment.Size" type="System.Drawing.Size, System.Drawing">
+    <value>490, 23</value>
   </data>
-  <data name="&gt;&gt;ColorDialog.Name" xml:space="preserve">
-    <value>ColorDialog</value>
+  <data name="&gt;&gt;picActiveColorBorder.Type" xml:space="preserve">
+    <value>System.Windows.Forms.PictureBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="&gt;&gt;ColorDialog.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ColorDialog, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  <data name="btnTb1Next.Size" type="System.Drawing.Size, System.Drawing">
+    <value>75, 23</value>
   </data>
-  <data name="&gt;&gt;mnuFile.Name" xml:space="preserve">
-    <value>mnuFile</value>
+  <data name="lblAudio1.Size" type="System.Drawing.Size, System.Drawing">
+    <value>114, 32</value>
   </data>
-  <data name="&gt;&gt;mnuFile.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  <data name="&gt;&gt;txtImageFile.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="&gt;&gt;mnuFileQuit.Name" xml:space="preserve">
-    <value>mnuFileQuit</value>
+  <data name="txtInactiveColorBorder.Text" xml:space="preserve">
+    <value>#FFFFFF</value>
   </data>
-  <data name="&gt;&gt;mnuFileQuit.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  <data name="&gt;&gt;btnTb4Previous.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="&gt;&gt;mnuHelp.Name" xml:space="preserve">
-    <value>mnuHelp</value>
+  <data name="btnInactiveColorBorderSelect.TabIndex" type="System.Int32, mscorlib">
+    <value>58</value>
   </data>
-  <data name="&gt;&gt;mnuHelp.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  <data name="&gt;&gt;picInactiveColor.Name" xml:space="preserve">
+    <value>picInactiveColor</value>
   </data>
-  <data name="&gt;&gt;mnuHelpForums.Name" xml:space="preserve">
-    <value>mnuHelpForums</value>
+  <data name="txtInactiveColor.Location" type="System.Drawing.Point, System.Drawing">
+    <value>157, 186</value>
   </data>
-  <data name="&gt;&gt;mnuHelpForums.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  <data name="lblLyrics.TabIndex" type="System.Int32, mscorlib">
+    <value>17</value>
+  </data>
+  <data name="lblAudio2.Text" xml:space="preserve">
+    <value>Audio 2 (instrumental)</value>
+  </data>
+  <data name="lblInactiveColor.TabIndex" type="System.Int32, mscorlib">
+    <value>46</value>
+  </data>
+  <data name="txtActiveColorBorder.Text" xml:space="preserve">
+    <value>#010101</value>
+  </data>
+  <data name="&gt;&gt;btnTb1Next.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="mnuFileQuit.Size" type="System.Drawing.Size, System.Drawing">
+    <value>97, 22</value>
+  </data>
+  <data name="&gt;&gt;btnActiveColorBorderPicker.ZOrder" xml:space="preserve">
+    <value>8</value>
+  </data>
+  <data name="label1.Location" type="System.Drawing.Point, System.Drawing">
+    <value>4, 193</value>
   </data>
   <data name="&gt;&gt;mnuHelpDocumentation.Name" xml:space="preserve">
     <value>mnuHelpDocumentation</value>
   </data>
-  <data name="&gt;&gt;mnuHelpDocumentation.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  <data name="&gt;&gt;label1.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="&gt;&gt;$this.Name" xml:space="preserve">
-    <value>frmKfnCreate</value>
+  <data name="lblLyrics.Font" type="System.Drawing.Font, System.Drawing">
+    <value>Calibri, 9.75pt</value>
   </data>
-  <data name="&gt;&gt;$this.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Form, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  <data name="btnTb2Next.Location" type="System.Drawing.Point, System.Drawing">
+    <value>630, 340</value>
   </data>
+  <data name="lblSize.Location" type="System.Drawing.Point, System.Drawing">
+    <value>457, 97</value>
+  </data>
+  <data name="&gt;&gt;lblHelpTb3.ZOrder" xml:space="preserve">
+    <value>2</value>
+  </data>
+  <data name="&gt;&gt;btnInactiveColorSelect.Parent" xml:space="preserve">
+    <value>tbPageBackground</value>
+  </data>
+  <data name="picInactiveColor.TabIndex" type="System.Int32, mscorlib">
+    <value>45</value>
+  </data>
+  <data name="lblYear.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="&gt;&gt;btnLyricsUpdate.Parent" xml:space="preserve">
+    <value>tbPageLyrics</value>
+  </data>
+  <data name="lblHelpTb2.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="&gt;&gt;btnBgColorPicker.ZOrder" xml:space="preserve">
+    <value>27</value>
+  </data>
+  <data name="txtYear.TabIndex" type="System.Int32, mscorlib">
+    <value>15</value>
+  </data>
+  <data name="btnInactiveColorBorderSelect.Size" type="System.Drawing.Size, System.Drawing">
+    <value>44, 26</value>
+  </data>
+  <data name="lblActiveColor.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="txtComment.Location" type="System.Drawing.Point, System.Drawing">
+    <value>125, 248</value>
+  </data>
+  <data name="&gt;&gt;lblLyrics.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="lblHelpTb4.TabIndex" type="System.Int32, mscorlib">
+    <value>39</value>
+  </data>
+  <data name="&gt;&gt;lblFont.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="btnActiveColorSelect.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="btnBgColorPicker.Size" type="System.Drawing.Size, System.Drawing">
+    <value>44, 26</value>
+  </data>
+  <data name="lblImage.Size" type="System.Drawing.Size, System.Drawing">
+    <value>40, 15</value>
+  </data>
+  <data name="&gt;&gt;txtAuthor.ZOrder" xml:space="preserve">
+    <value>5</value>
+  </data>
+  <data name="&gt;&gt;picActiveColorBorder.ZOrder" xml:space="preserve">
+    <value>10</value>
+  </data>
+  <data name="&gt;&gt;picImage.Name" xml:space="preserve">
+    <value>picImage</value>
+  </data>
+  <data name="&gt;&gt;btnImportAudio2.ZOrder" xml:space="preserve">
+    <value>11</value>
+  </data>
+  <data name="&gt;&gt;lblInactiveColorBorder.Name" xml:space="preserve">
+    <value>lblInactiveColorBorder</value>
+  </data>
+  <data name="lblActiveColor.Text" xml:space="preserve">
+    <value>Active color</value>
+  </data>
+  <data name="btnPlay.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="btnTb4Previous.Size" type="System.Drawing.Size, System.Drawing">
+    <value>75, 23</value>
+  </data>
+  <data name="picBgColor.TabIndex" type="System.Int32, mscorlib">
+    <value>16</value>
+  </data>
+  <data name="&gt;&gt;lblSize.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="lblFont.Size" type="System.Drawing.Size, System.Drawing">
+    <value>31, 15</value>
+  </data>
+  <data name="mnuHelp.Text" xml:space="preserve">
+    <value>&amp;Help</value>
+  </data>
+  <data name="&gt;&gt;btnInactiveColorSelect.ZOrder" xml:space="preserve">
+    <value>14</value>
+  </data>
+  <data name="&gt;&gt;mnuHelpForums.Name" xml:space="preserve">
+    <value>mnuHelpForums</value>
+  </data>
+  <data name="&gt;&gt;picPreview.Parent" xml:space="preserve">
+    <value>tbPageBackground</value>
+  </data>
+  <data name="picInactiveColor.Location" type="System.Drawing.Point, System.Drawing">
+    <value>221, 186</value>
+  </data>
+  <data name="lblHelpTb3.Location" type="System.Drawing.Point, System.Drawing">
+    <value>4, 8</value>
+  </data>
+  <data name="lblHelpTb4.Size" type="System.Drawing.Size, System.Drawing">
+    <value>697, 61</value>
+  </data>
+  <data name="picActiveColorBorder.Location" type="System.Drawing.Point, System.Drawing">
+    <value>221, 215</value>
+  </data>
+  <data name="txtAudio1.Size" type="System.Drawing.Size, System.Drawing">
+    <value>490, 23</value>
+  </data>
+  <data name="txtImageFile.TabIndex" type="System.Int32, mscorlib">
+    <value>23</value>
+  </data>
+  <data name="&gt;&gt;tbPageLyrics.Name" xml:space="preserve">
+    <value>tbPageLyrics</value>
+  </data>
+  <data name="tbPageLyrics.Text" xml:space="preserve">
+    <value>Lyrics</value>
+  </data>
+  <data name="lblSize.Size" type="System.Drawing.Size, System.Drawing">
+    <value>31, 15</value>
+  </data>
+  <data name="&gt;&gt;ColorDialog.Name" xml:space="preserve">
+    <value>ColorDialog</value>
+  </data>
+  <data name="&gt;&gt;btnActiveColorSelect.Parent" xml:space="preserve">
+    <value>tbPageBackground</value>
+  </data>
+  <data name="&gt;&gt;btnActiveColorPicker.Name" xml:space="preserve">
+    <value>btnActiveColorPicker</value>
+  </data>
+  <data name="&gt;&gt;menuStrip1.ZOrder" xml:space="preserve">
+    <value>3</value>
+  </data>
+  <data name="btnTb2Next.TabIndex" type="System.Int32, mscorlib">
+    <value>21</value>
+  </data>
+  <data name="lblLyricsUpdate.Size" type="System.Drawing.Size, System.Drawing">
+    <value>80, 64</value>
+  </data>
+  <data name="tbControl.Location" type="System.Drawing.Point, System.Drawing">
+    <value>0, 23</value>
+  </data>
+  <data name="lblImage.Font" type="System.Drawing.Font, System.Drawing">
+    <value>Calibri, 9.75pt</value>
+  </data>
+  <data name="&gt;&gt;picActiveColor.Parent" xml:space="preserve">
+    <value>tbPageBackground</value>
+  </data>
+  <data name="&gt;&gt;label2.Parent" xml:space="preserve">
+    <value>tbPageAudios</value>
+  </data>
+  <data name="txtBgColor.Text" xml:space="preserve">
+    <value>#FFFFFF</value>
+  </data>
+  <data name="btnInactiveColorSelect.Location" type="System.Drawing.Point, System.Drawing">
+    <value>266, 183</value>
+  </data>
+  <data name="lblActiveColorBorder.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="&gt;&gt;picInactiveColorBorder.Name" xml:space="preserve">
+    <value>picInactiveColorBorder</value>
+  </data>
+  <data name="&gt;&gt;btnTb3Next.Name" xml:space="preserve">
+    <value>btnTb3Next</value>
+  </data>
+  <data name="&gt;&gt;btnBgColorSelect.Parent" xml:space="preserve">
+    <value>tbPageBackground</value>
+  </data>
+  <data name="&gt;&gt;txtInactiveColor.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;txtArtist.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="btnPlay.Visible" type="System.Boolean, mscorlib">
+    <value>False</value>
+  </data>
+  <data name="&gt;&gt;lblSize.Name" xml:space="preserve">
+    <value>lblSize</value>
+  </data>
+  <data name="&gt;&gt;lblRatio.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="btnImportAudio2.TabIndex" type="System.Int32, mscorlib">
+    <value>5</value>
+  </data>
+  <data name="&gt;&gt;btnImportAudio1.Name" xml:space="preserve">
+    <value>btnImportAudio1</value>
+  </data>
+  <data name="lblHelpTb3.TabIndex" type="System.Int32, mscorlib">
+    <value>28</value>
+  </data>
+  <data name="&gt;&gt;UpDownFontSize.Type" xml:space="preserve">
+    <value>System.Windows.Forms.NumericUpDown, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;txtKfnFileName.Parent" xml:space="preserve">
+    <value>tbPageAudios</value>
+  </data>
+  <data name="txtKfnFileName.Location" type="System.Drawing.Point, System.Drawing">
+    <value>125, 134</value>
+  </data>
+  <data name="btnBgColorPicker.TabIndex" type="System.Int32, mscorlib">
+    <value>33</value>
+  </data>
+  <data name="&gt;&gt;lblAuthor.Parent" xml:space="preserve">
+    <value>tbPageAudios</value>
+  </data>
+  <data name="label2.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="lblFont.Location" type="System.Drawing.Point, System.Drawing">
+    <value>8, 109</value>
+  </data>
+  <data name="&gt;&gt;btnActiveColorBorderSelect.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="lblAudio1.Location" type="System.Drawing.Point, System.Drawing">
+    <value>4, 74</value>
+  </data>
+  <data name="&gt;&gt;txtArtist.Name" xml:space="preserve">
+    <value>txtArtist</value>
+  </data>
+  <data name="lblRatio.Location" type="System.Drawing.Point, System.Drawing">
+    <value>457, 121</value>
+  </data>
+  <data name="&gt;&gt;btnLyricsUpdate.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="&gt;&gt;lblActiveColor.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;tbControl.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="btnTb1Next.TabIndex" type="System.Int32, mscorlib">
+    <value>18</value>
+  </data>
+  <data name="btnTb4Previous.Location" type="System.Drawing.Point, System.Drawing">
+    <value>549, 340</value>
+  </data>
+  <data name="&gt;&gt;txtLyrics.ZOrder" xml:space="preserve">
+    <value>5</value>
+  </data>
+  <data name="&gt;&gt;picActiveColorBorder.Parent" xml:space="preserve">
+    <value>tbPageBackground</value>
+  </data>
+  <data name="lblBorder.TabIndex" type="System.Int32, mscorlib">
+    <value>60</value>
+  </data>
+  <data name="&gt;&gt;lblInactiveColor.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;picActiveColor.Name" xml:space="preserve">
+    <value>picActiveColor</value>
+  </data>
+  <data name="txtInactiveColor.TabIndex" type="System.Int32, mscorlib">
+    <value>47</value>
+  </data>
+  <data name="&gt;&gt;txtLyrics.Parent" xml:space="preserve">
+    <value>tbPageLyrics</value>
+  </data>
+  <data name="btnImportLyrics.TabIndex" type="System.Int32, mscorlib">
+    <value>19</value>
+  </data>
+  <data name="lblLyricsUpdate.Font" type="System.Drawing.Font, System.Drawing">
+    <value>Calibri, 9pt</value>
+  </data>
+  <data name="&gt;&gt;lblLyrics.ZOrder" xml:space="preserve">
+    <value>6</value>
+  </data>
+  <data name="&gt;&gt;lblActiveColorBorder.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="lblActiveColor.Location" type="System.Drawing.Point, System.Drawing">
+    <value>8, 160</value>
+  </data>
+  <data name="btnActiveColorBorderPicker.TabIndex" type="System.Int32, mscorlib">
+    <value>54</value>
+  </data>
+  <data name="cbFontName.Location" type="System.Drawing.Point, System.Drawing">
+    <value>153, 106</value>
+  </data>
+  <data name="lblFont.Text" xml:space="preserve">
+    <value>Font</value>
+  </data>
+  <data name="&gt;&gt;btnTb2Previous.Name" xml:space="preserve">
+    <value>btnTb2Previous</value>
+  </data>
+  <data name="txtInactiveColorBorder.Size" type="System.Drawing.Size, System.Drawing">
+    <value>58, 23</value>
+  </data>
+  <data name="&gt;&gt;btnTb3Previous.Name" xml:space="preserve">
+    <value>btnTb3Previous</value>
+  </data>
+  <data name="&gt;&gt;btnActiveColorPicker.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;txtInactiveColor.Name" xml:space="preserve">
+    <value>txtInactiveColor</value>
+  </data>
+  <data name="&gt;&gt;lblSize.Parent" xml:space="preserve">
+    <value>tbPageImages</value>
+  </data>
+  <data name="lblHelpTb2.Font" type="System.Drawing.Font, System.Drawing">
+    <value>Calibri, 9pt</value>
+  </data>
+  <data name="&gt;&gt;txtComment.Name" xml:space="preserve">
+    <value>txtComment</value>
+  </data>
+  <data name="tbPageAudios.Size" type="System.Drawing.Size, System.Drawing">
+    <value>713, 370</value>
+  </data>
+  <data name="&gt;&gt;label1.ZOrder" xml:space="preserve">
+    <value>17</value>
+  </data>
+  <data name="lblFont.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="lblAudio1.Font" type="System.Drawing.Font, System.Drawing">
+    <value>Calibri, 9pt</value>
+  </data>
+  <data name="&gt;&gt;btnActiveColorBorderSelect.ZOrder" xml:space="preserve">
+    <value>9</value>
+  </data>
+  <data name="&gt;&gt;btnPlay.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;lblColor.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;picPreview.Name" xml:space="preserve">
+    <value>picPreview</value>
+  </data>
+  <data name="&gt;&gt;OpenFileDialog.Type" xml:space="preserve">
+    <value>System.Windows.Forms.OpenFileDialog, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="btnActiveColorPicker.Size" type="System.Drawing.Size, System.Drawing">
+    <value>44, 26</value>
+  </data>
+  <data name="lblInactiveColorBorder.Size" type="System.Drawing.Size, System.Drawing">
+    <value>122, 15</value>
+  </data>
+  <data name="lblArtist.Size" type="System.Drawing.Size, System.Drawing">
+    <value>36, 15</value>
+  </data>
+  <data name="txtActiveColor.Text" xml:space="preserve">
+    <value>#00ACFF</value>
+  </data>
+  <data name="menuStrip1.Location" type="System.Drawing.Point, System.Drawing">
+    <value>0, 0</value>
+  </data>
+  <data name="&gt;&gt;btnActiveColorBorderPicker.Name" xml:space="preserve">
+    <value>btnActiveColorBorderPicker</value>
+  </data>
+  <data name="&gt;&gt;txtActiveColor.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="btnBgColorSelect.TabIndex" type="System.Int32, mscorlib">
+    <value>32</value>
+  </data>
+  <data name="&gt;&gt;btnTb2Previous.ZOrder" xml:space="preserve">
+    <value>4</value>
+  </data>
+  <data name="&gt;&gt;lblInactiveColorBorder.Parent" xml:space="preserve">
+    <value>tbPageBackground</value>
+  </data>
+  <data name="txtInactiveColor.Size" type="System.Drawing.Size, System.Drawing">
+    <value>58, 23</value>
+  </data>
+  <data name="txtAudio2.TabIndex" type="System.Int32, mscorlib">
+    <value>4</value>
+  </data>
+  <data name="$this.Text" xml:space="preserve">
+    <value>Karaboss - Create a new KFN file</value>
+  </data>
+  <data name="&gt;&gt;btnTb2Next.Parent" xml:space="preserve">
+    <value>tbPageLyrics</value>
+  </data>
+  <data name="btnTb2Next.Text" xml:space="preserve">
+    <value>Next</value>
+  </data>
+  <data name="btnTb4Previous.Text" xml:space="preserve">
+    <value>Previous</value>
+  </data>
+  <data name="lblColor.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="&gt;&gt;tbPageAudios.Parent" xml:space="preserve">
+    <value>tbControl</value>
+  </data>
+  <data name="mnuHelpForums.Text" xml:space="preserve">
+    <value>Forums</value>
+  </data>
+  <data name="txtActiveColorBorder.MaxLength" type="System.Int32, mscorlib">
+    <value>7</value>
+  </data>
+  <data name="&gt;&gt;btnTb2Previous.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="lblHelpTb3.Font" type="System.Drawing.Font, System.Drawing">
+    <value>Calibri, 9pt</value>
+  </data>
+  <data name="txtImageFile.Location" type="System.Drawing.Point, System.Drawing">
+    <value>90, 70</value>
+  </data>
+  <data name="picActiveColorBorder.TabIndex" type="System.Int32, mscorlib">
+    <value>50</value>
+  </data>
+  <data name="&gt;&gt;label5.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="tbPageLyrics.Padding" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>3, 3, 3, 3</value>
+  </data>
+  <data name="btnActiveColorPicker.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="tbPageLyrics.TabIndex" type="System.Int32, mscorlib">
+    <value>1</value>
+  </data>
+  <data name="&gt;&gt;btnInactiveColorBorderSelect.Parent" xml:space="preserve">
+    <value>tbPageBackground</value>
+  </data>
+  <data name="lblSize.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="&gt;&gt;lblBorder.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;cbFontName.ZOrder" xml:space="preserve">
+    <value>26</value>
+  </data>
+  <data name="&gt;&gt;picBgColor.ZOrder" xml:space="preserve">
+    <value>29</value>
+  </data>
+  <data name="lblImage.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="&gt;&gt;txtTitle.ZOrder" xml:space="preserve">
+    <value>16</value>
+  </data>
+  <data name="&gt;&gt;lblHelpTb2.Parent" xml:space="preserve">
+    <value>tbPageLyrics</value>
+  </data>
+  <data name="&gt;&gt;txtAudio1.ZOrder" xml:space="preserve">
+    <value>18</value>
+  </data>
+  <data name="&gt;&gt;lblImage.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="txtAuthor.TabIndex" type="System.Int32, mscorlib">
+    <value>17</value>
+  </data>
+  <data name="btnLyricsUpdate.Size" type="System.Drawing.Size, System.Drawing">
+    <value>135, 23</value>
+  </data>
+  <data name="label2.TabIndex" type="System.Int32, mscorlib">
+    <value>12</value>
+  </data>
+  <data name="btnImportAudio1.Text" xml:space="preserve">
+    <value>Import</value>
+  </data>
+  <data name="txtAudio1.TabIndex" type="System.Int32, mscorlib">
+    <value>1</value>
+  </data>
+  <data name="&gt;&gt;txtComment.Parent" xml:space="preserve">
+    <value>tbPageAudios</value>
+  </data>
+  <data name="txtTitle.Size" type="System.Drawing.Size, System.Drawing">
+    <value>281, 23</value>
+  </data>
+  <data name="lblHelpTb4.Font" type="System.Drawing.Font, System.Drawing">
+    <value>Calibri, 9pt</value>
+  </data>
+  <data name="&gt;&gt;lblAudio2.ZOrder" xml:space="preserve">
+    <value>10</value>
+  </data>
+  <data name="&gt;&gt;lblHelpTb4.ZOrder" xml:space="preserve">
+    <value>23</value>
+  </data>
+  <data name="&gt;&gt;lblInactiveColorBorder.ZOrder" xml:space="preserve">
+    <value>7</value>
+  </data>
+  <data name="mnuHelpForums.Size" type="System.Drawing.Size, System.Drawing">
+    <value>157, 22</value>
+  </data>
+  <data name="&gt;&gt;btnCreateKfn.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="tbPageLyrics.Location" type="System.Drawing.Point, System.Drawing">
+    <value>4, 27</value>
+  </data>
+  <data name="&gt;&gt;label1.Name" xml:space="preserve">
+    <value>label1</value>
+  </data>
+  <data name="&gt;&gt;txtActiveColorBorder.Name" xml:space="preserve">
+    <value>txtActiveColorBorder</value>
+  </data>
+  <data name="btnImportAudio2.Size" type="System.Drawing.Size, System.Drawing">
+    <value>75, 23</value>
+  </data>
+  <data name="btnImportLyrics.Size" type="System.Drawing.Size, System.Drawing">
+    <value>75, 23</value>
+  </data>
+  <data name="btnInactiveColorSelect.Text" xml:space="preserve">
+    <value>...</value>
+  </data>
+  <data name="&gt;&gt;btnCancel.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;label2.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;ColorDialog.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ColorDialog, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="lblHelpTb1.Text" xml:space="preserve">
+    <value>Vous devez télécharger au moins un fichier audio (MP3) dans audio1.{0}Si vous souhaitez un guide vocal, vous devez télécharger deux fichiers audio :{0}un fichier avec la voix dans audio1 et un fichier instrumental dans audio2.</value>
+  </data>
+  <data name="picImage.Size" type="System.Drawing.Size, System.Drawing">
+    <value>350, 263</value>
+  </data>
+  <data name="btnInactiveColorBorderSelect.Text" xml:space="preserve">
+    <value>...</value>
+  </data>
+  <data name="&gt;&gt;lblYear.ZOrder" xml:space="preserve">
+    <value>8</value>
+  </data>
+  <data name="btnActiveColorBorderSelect.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="label5.Text" xml:space="preserve">
+    <value>Name of the KFN file to be created</value>
+  </data>
+  <data name="&gt;&gt;picBgColor.Type" xml:space="preserve">
+    <value>System.Windows.Forms.PictureBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="txtActiveColorBorder.Location" type="System.Drawing.Point, System.Drawing">
+    <value>157, 215</value>
+  </data>
+  <data name="btnPlay.Location" type="System.Drawing.Point, System.Drawing">
+    <value>412, 133</value>
+  </data>
+  <data name="btnTb3Next.TabIndex" type="System.Int32, mscorlib">
+    <value>26</value>
+  </data>
+  <data name="btnTb3Previous.Size" type="System.Drawing.Size, System.Drawing">
+    <value>75, 23</value>
+  </data>
+  <data name="lblYear.Location" type="System.Drawing.Point, System.Drawing">
+    <value>4, 280</value>
+  </data>
+  <data name="&gt;&gt;btnImportImage.Parent" xml:space="preserve">
+    <value>tbPageImages</value>
+  </data>
+  <data name="&gt;&gt;lblHelpTb2.ZOrder" xml:space="preserve">
+    <value>2</value>
+  </data>
+  <data name="label1.Size" type="System.Drawing.Size, System.Drawing">
+    <value>31, 15</value>
+  </data>
+  <data name="btnImportImage.Size" type="System.Drawing.Size, System.Drawing">
+    <value>75, 23</value>
+  </data>
+  <data name="&gt;&gt;lblBorder.Name" xml:space="preserve">
+    <value>lblBorder</value>
+  </data>
+  <data name="label2.Location" type="System.Drawing.Point, System.Drawing">
+    <value>4, 251</value>
+  </data>
+  <data name="&gt;&gt;menuStrip1.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;tbPageBackground.ZOrder" xml:space="preserve">
+    <value>3</value>
+  </data>
+  <data name="txtTitle.Location" type="System.Drawing.Point, System.Drawing">
+    <value>125, 190</value>
+  </data>
+  <data name="tbPageLyrics.Size" type="System.Drawing.Size, System.Drawing">
+    <value>713, 370</value>
+  </data>
+  <data name="&gt;&gt;btnActiveColorSelect.ZOrder" xml:space="preserve">
+    <value>19</value>
+  </data>
+  <data name="&gt;&gt;txtActiveColor.ZOrder" xml:space="preserve">
+    <value>21</value>
+  </data>
+  <data name="cbFrame.Size" type="System.Drawing.Size, System.Drawing">
+    <value>203, 23</value>
+  </data>
+  <data name="&gt;&gt;btnImportAudio2.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;label5.ZOrder" xml:space="preserve">
+    <value>12</value>
+  </data>
+  <data name="&gt;&gt;picImage.Type" xml:space="preserve">
+    <value>System.Windows.Forms.PictureBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="tbPageAudios.Padding" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>3, 3, 3, 3</value>
+  </data>
+  <data name="lblColor.Location" type="System.Drawing.Point, System.Drawing">
+    <value>8, 80</value>
+  </data>
+  <data name="lblHelpTb3.Text" xml:space="preserve">
+    <value>Facultatif : vous pouvez charger une image qui sera le fond d'écran de la chanson. Choisissez une image pas trop sombre pour faciliter la lecture des paroles et un ratio largeur / hauteur de 1.33 pour ne pas être déformée.</value>
+  </data>
+  <data name="lblAuthor.Size" type="System.Drawing.Size, System.Drawing">
+    <value>44, 15</value>
+  </data>
+  <data name="&gt;&gt;txtKfnFileName.ZOrder" xml:space="preserve">
+    <value>4</value>
+  </data>
+  <data name="&gt;&gt;picInactiveColor.ZOrder" xml:space="preserve">
+    <value>15</value>
+  </data>
+  <data name="&gt;&gt;lblArtist.Name" xml:space="preserve">
+    <value>lblArtist</value>
+  </data>
+  <data name="lblYear.Size" type="System.Drawing.Size, System.Drawing">
+    <value>30, 15</value>
+  </data>
+  <data name="btnInactiveColorBorderPicker.TabIndex" type="System.Int32, mscorlib">
+    <value>59</value>
+  </data>
+  <data name="lblAuthor.Location" type="System.Drawing.Point, System.Drawing">
+    <value>4, 309</value>
+  </data>
+  <data name="tbPageAudios.BackgroundImageLayout" type="System.Windows.Forms.ImageLayout, System.Windows.Forms">
+    <value>Center</value>
+  </data>
+  <data name="&gt;&gt;lblAudio1.Parent" xml:space="preserve">
+    <value>tbPageAudios</value>
+  </data>
+  <data name="txtArtist.Size" type="System.Drawing.Size, System.Drawing">
+    <value>281, 23</value>
+  </data>
+  <data name="&gt;&gt;UpDownFontSize.Name" xml:space="preserve">
+    <value>UpDownFontSize</value>
+  </data>
+  <data name="btnLyricsUpdate.Text" xml:space="preserve">
+    <value>Modify Lyrics</value>
+  </data>
+  <data name="lblAuthor.Font" type="System.Drawing.Font, System.Drawing">
+    <value>Calibri, 9.75pt</value>
+  </data>
+  <data name="&gt;&gt;txtAudio1.Name" xml:space="preserve">
+    <value>txtAudio1</value>
+  </data>
+  <data name="btnImportAudio1.TabIndex" type="System.Int32, mscorlib">
+    <value>2</value>
+  </data>
+  <data name="lblInactiveColorBorder.TabIndex" type="System.Int32, mscorlib">
+    <value>56</value>
+  </data>
+  <data name="&gt;&gt;txtAuthor.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;btnTb4Previous.Name" xml:space="preserve">
+    <value>btnTb4Previous</value>
+  </data>
+  <data name="btnActiveColorBorderPicker.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="lblSize.Text" xml:space="preserve">
+    <value>Size:</value>
+  </data>
+  <data name="&gt;&gt;menuStrip1.Name" xml:space="preserve">
+    <value>menuStrip1</value>
+  </data>
+  <data name="txtBgColor.Location" type="System.Drawing.Point, System.Drawing">
+    <value>153, 77</value>
+  </data>
+  <data name="picImage.Location" type="System.Drawing.Point, System.Drawing">
+    <value>90, 97</value>
+  </data>
+  <data name="lblArtist.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="&gt;&gt;btnBgColorSelect.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;lblActiveColorBorder.Parent" xml:space="preserve">
+    <value>tbPageBackground</value>
+  </data>
+  <data name="btnActiveColorSelect.Size" type="System.Drawing.Size, System.Drawing">
+    <value>44, 26</value>
+  </data>
+  <data name="txtActiveColorBorder.Size" type="System.Drawing.Size, System.Drawing">
+    <value>58, 23</value>
+  </data>
+  <data name="&gt;&gt;picActiveColor.Type" xml:space="preserve">
+    <value>System.Windows.Forms.PictureBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="btnActiveColorBorderSelect.TabIndex" type="System.Int32, mscorlib">
+    <value>53</value>
+  </data>
+  <data name="lblActiveColorBorder.Size" type="System.Drawing.Size, System.Drawing">
+    <value>111, 15</value>
+  </data>
+  <data name="lblRatio.Font" type="System.Drawing.Font, System.Drawing">
+    <value>Calibri, 9.75pt</value>
+  </data>
+  <data name="tbPageBackground.Text" xml:space="preserve">
+    <value>Background</value>
+  </data>
+  <data name="tbPageImages.Location" type="System.Drawing.Point, System.Drawing">
+    <value>4, 27</value>
+  </data>
+  <data name="txtBgColor.MaxLength" type="System.Int32, mscorlib">
+    <value>7</value>
+  </data>
+  <data name="txtBgColor.TabIndex" type="System.Int32, mscorlib">
+    <value>31</value>
+  </data>
+  <data name="&gt;&gt;txtAuthor.Parent" xml:space="preserve">
+    <value>tbPageAudios</value>
+  </data>
+  <data name="lblActiveColor.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="&gt;&gt;txtActiveColorBorder.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;tbPageImages.Parent" xml:space="preserve">
+    <value>tbControl</value>
+  </data>
+  <data name="&gt;&gt;lblAudio1.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="cbFrame.Location" type="System.Drawing.Point, System.Drawing">
+    <value>157, 273</value>
+  </data>
+  <data name="btnActiveColorPicker.Location" type="System.Drawing.Point, System.Drawing">
+    <value>316, 154</value>
+  </data>
+  <data name="&gt;&gt;tbPageBackground.Parent" xml:space="preserve">
+    <value>tbControl</value>
+  </data>
+  <data name="&gt;&gt;lblActiveColor.Name" xml:space="preserve">
+    <value>lblActiveColor</value>
+  </data>
+  <data name="btnCancel.Location" type="System.Drawing.Point, System.Drawing">
+    <value>374, 444</value>
+  </data>
+  <data name="&gt;&gt;tbPageLyrics.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="lblLyricsUpdate.TabIndex" type="System.Int32, mscorlib">
+    <value>24</value>
+  </data>
+  <data name="&gt;&gt;tbControl.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="txtAuthor.Size" type="System.Drawing.Size, System.Drawing">
+    <value>281, 23</value>
+  </data>
+  <data name="lblInactiveColorBorder.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="&gt;&gt;btnInactiveColorPicker.ZOrder" xml:space="preserve">
+    <value>13</value>
+  </data>
+  <data name="tbPageImages.TabIndex" type="System.Int32, mscorlib">
+    <value>2</value>
+  </data>
+  <data name="tbPageImages.Padding" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>3, 3, 3, 3</value>
+  </data>
+  <data name="txtInactiveColor.Text" xml:space="preserve">
+    <value>#000000</value>
+  </data>
+  <data name="&gt;&gt;btnCancel.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="&gt;&gt;btnTb1Next.ZOrder" xml:space="preserve">
+    <value>13</value>
+  </data>
+  <data name="btnInactiveColorPicker.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="txtInactiveColorBorder.Location" type="System.Drawing.Point, System.Drawing">
+    <value>157, 244</value>
+  </data>
+  <data name="lblInactiveColor.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="lblRatio.TabIndex" type="System.Int32, mscorlib">
+    <value>30</value>
+  </data>
+  <data name="txtKfnFileName.Size" type="System.Drawing.Size, System.Drawing">
+    <value>281, 23</value>
+  </data>
+  <data name="&gt;&gt;btnTb4Previous.ZOrder" xml:space="preserve">
+    <value>32</value>
+  </data>
+  <data name="&gt;&gt;cbFrame.Name" xml:space="preserve">
+    <value>cbFrame</value>
+  </data>
+  <data name="picPreview.Size" type="System.Drawing.Size, System.Drawing">
+    <value>340, 255</value>
+  </data>
+  <metadata name="ColorDialog.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>152, 17</value>
+  </metadata>
+  <metadata name="menuStrip1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>269, 17</value>
+  </metadata>
+  <metadata name="$this.Localizable" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
+  </metadata>
+  <metadata name="OpenFileDialog.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>17, 17</value>
+  </metadata>
 </root>

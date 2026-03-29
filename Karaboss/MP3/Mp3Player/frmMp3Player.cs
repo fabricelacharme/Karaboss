@@ -115,8 +115,7 @@ namespace Karaboss.Mp3
         private int _LrcMillisecondsDigits = 2;
 
         private int m_MillisecondsOffset = 100; // Default offset in milliseconds to display lyrics
-
-        //private Mp3LyricsTypes Mp3LyricsType;
+        
         public bool bfilemodified = false;
 
         // SlideShow directory
@@ -3485,7 +3484,6 @@ namespace Karaboss.Mp3
         /// </summary>
         private void FileModified()
         {
-
             bfilemodified = true;
             string fName = Path.GetFileName(Mp3FullPath);
             if (fName != null && fName != "")

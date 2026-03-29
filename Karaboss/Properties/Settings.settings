@@ -447,7 +447,7 @@
       <Value Profile="(Default)" />
     </Setting>
     <Setting Name="KfnBgColor" Type="System.String" Scope="User">
-      <Value Profile="(Default)">#FFFFFF</Value>
+      <Value Profile="(Default)">#FEB471</Value>
     </Setting>
     <Setting Name="KfnFontName" Type="System.String" Scope="User">
       <Value Profile="(Default)">Arial Black</Value>
@@ -493,6 +493,9 @@
     </Setting>
     <Setting Name="KaraokeFontSize" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">18</Value>
+    </Setting>
+    <Setting Name="frmKfnCreateLocation" Type="System.Drawing.Point" Scope="User">
+      <Value Profile="(Default)">200, 200</Value>
     </Setting>
   </Settings>
 </SettingsFile>

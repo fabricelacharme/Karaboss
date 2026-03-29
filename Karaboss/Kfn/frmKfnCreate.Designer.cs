@@ -133,8 +133,8 @@
             // 
             // tbPageAudios
             // 
-            this.tbPageAudios.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(58)))), ((int)(((byte)(58)))), ((int)(((byte)(58)))));
             resources.ApplyResources(this.tbPageAudios, "tbPageAudios");
+            this.tbPageAudios.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(58)))), ((int)(((byte)(58)))), ((int)(((byte)(58)))));
             this.tbPageAudios.Controls.Add(this.lblHelpTb1);
             this.tbPageAudios.Controls.Add(this.btnPlay);
             this.tbPageAudios.Controls.Add(this.txtArtist);
@@ -166,8 +166,8 @@
             // 
             // btnPlay
             // 
-            this.btnPlay.Image = global::Karaboss.Properties.Resources.Media_Controls_Play_icon;
             resources.ApplyResources(this.btnPlay, "btnPlay");
+            this.btnPlay.Image = global::Karaboss.Properties.Resources.Media_Controls_Play_icon;
             this.btnPlay.Name = "btnPlay";
             this.btnPlay.UseVisualStyleBackColor = true;
             this.btnPlay.Click += new System.EventHandler(this.btnPlay_Click);
@@ -236,8 +236,8 @@
             // 
             // btnTb1Next
             // 
-            this.btnTb1Next.DialogResult = System.Windows.Forms.DialogResult.OK;
             resources.ApplyResources(this.btnTb1Next, "btnTb1Next");
+            this.btnTb1Next.DialogResult = System.Windows.Forms.DialogResult.OK;
             this.btnTb1Next.Name = "btnTb1Next";
             this.btnTb1Next.UseVisualStyleBackColor = true;
             this.btnTb1Next.Click += new System.EventHandler(this.btnTb1Next_Click);
@@ -284,8 +284,8 @@
             // 
             // tbPageLyrics
             // 
-            this.tbPageLyrics.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(58)))), ((int)(((byte)(58)))), ((int)(((byte)(58)))));
             resources.ApplyResources(this.tbPageLyrics, "tbPageLyrics");
+            this.tbPageLyrics.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(58)))), ((int)(((byte)(58)))), ((int)(((byte)(58)))));
             this.tbPageLyrics.Controls.Add(this.lblLyricsUpdate);
             this.tbPageLyrics.Controls.Add(this.btnLyricsUpdate);
             this.tbPageLyrics.Controls.Add(this.lblHelpTb2);
@@ -317,16 +317,16 @@
             // 
             // btnTb2Next
             // 
-            this.btnTb2Next.DialogResult = System.Windows.Forms.DialogResult.OK;
             resources.ApplyResources(this.btnTb2Next, "btnTb2Next");
+            this.btnTb2Next.DialogResult = System.Windows.Forms.DialogResult.OK;
             this.btnTb2Next.Name = "btnTb2Next";
             this.btnTb2Next.UseVisualStyleBackColor = true;
             this.btnTb2Next.Click += new System.EventHandler(this.btnTb2Next_Click);
             // 
             // btnTb2Previous
             // 
-            this.btnTb2Previous.DialogResult = System.Windows.Forms.DialogResult.OK;
             resources.ApplyResources(this.btnTb2Previous, "btnTb2Previous");
+            this.btnTb2Previous.DialogResult = System.Windows.Forms.DialogResult.OK;
             this.btnTb2Previous.Name = "btnTb2Previous";
             this.btnTb2Previous.UseVisualStyleBackColor = true;
             this.btnTb2Previous.Click += new System.EventHandler(this.btnTb2Previous_Click);
@@ -351,8 +351,8 @@
             // 
             // tbPageImages
             // 
-            this.tbPageImages.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(58)))), ((int)(((byte)(58)))), ((int)(((byte)(58)))));
             resources.ApplyResources(this.tbPageImages, "tbPageImages");
+            this.tbPageImages.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(58)))), ((int)(((byte)(58)))), ((int)(((byte)(58)))));
             this.tbPageImages.Controls.Add(this.lblRatio);
             this.tbPageImages.Controls.Add(this.lblSize);
             this.tbPageImages.Controls.Add(this.lblHelpTb3);
@@ -390,8 +390,8 @@
             // 
             // btnTb3Next
             // 
-            this.btnTb3Next.DialogResult = System.Windows.Forms.DialogResult.OK;
             resources.ApplyResources(this.btnTb3Next, "btnTb3Next");
+            this.btnTb3Next.DialogResult = System.Windows.Forms.DialogResult.OK;
             this.btnTb3Next.Name = "btnTb3Next";
             this.btnTb3Next.UseVisualStyleBackColor = true;
             this.btnTb3Next.Click += new System.EventHandler(this.btnTb3Next_Click);
@@ -416,8 +416,8 @@
             // 
             // btnTb3Previous
             // 
-            this.btnTb3Previous.DialogResult = System.Windows.Forms.DialogResult.OK;
             resources.ApplyResources(this.btnTb3Previous, "btnTb3Previous");
+            this.btnTb3Previous.DialogResult = System.Windows.Forms.DialogResult.OK;
             this.btnTb3Previous.Name = "btnTb3Previous";
             this.btnTb3Previous.UseVisualStyleBackColor = true;
             this.btnTb3Previous.Click += new System.EventHandler(this.btnTb3Previous_Click);
@@ -425,37 +425,39 @@
             // OpenFileDialog
             // 
             this.OpenFileDialog.FileName = "openFileDialog1";
+            resources.ApplyResources(this.OpenFileDialog, "OpenFileDialog");
             // 
             // btnCreateKfn
             // 
-            this.btnCreateKfn.DialogResult = System.Windows.Forms.DialogResult.OK;
             resources.ApplyResources(this.btnCreateKfn, "btnCreateKfn");
+            this.btnCreateKfn.DialogResult = System.Windows.Forms.DialogResult.OK;
             this.btnCreateKfn.Name = "btnCreateKfn";
             this.btnCreateKfn.UseVisualStyleBackColor = true;
             this.btnCreateKfn.Click += new System.EventHandler(this.btnCreateKfn_Click);
             // 
             // btnCancel
             // 
-            this.btnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             resources.ApplyResources(this.btnCancel, "btnCancel");
+            this.btnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.UseVisualStyleBackColor = true;
             this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
             // 
             // tbControl
             // 
+            resources.ApplyResources(this.tbControl, "tbControl");
             this.tbControl.Controls.Add(this.tbPageAudios);
             this.tbControl.Controls.Add(this.tbPageLyrics);
             this.tbControl.Controls.Add(this.tbPageImages);
             this.tbControl.Controls.Add(this.tbPageBackground);
             this.tbControl.DrawMode = System.Windows.Forms.TabDrawMode.OwnerDrawFixed;
-            resources.ApplyResources(this.tbControl, "tbControl");
             this.tbControl.Name = "tbControl";
             this.tbControl.SelectedIndex = 0;
             this.tbControl.DrawItem += new System.Windows.Forms.DrawItemEventHandler(this.tbControl_DrawItem);
             // 
             // tbPageBackground
             // 
+            resources.ApplyResources(this.tbPageBackground, "tbPageBackground");
             this.tbPageBackground.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(58)))), ((int)(((byte)(58)))), ((int)(((byte)(58)))));
             this.tbPageBackground.Controls.Add(this.picPreview);
             this.tbPageBackground.Controls.Add(this.cbFrame);
@@ -490,21 +492,20 @@
             this.tbPageBackground.Controls.Add(this.txtBgColor);
             this.tbPageBackground.Controls.Add(this.lblColor);
             this.tbPageBackground.Controls.Add(this.btnTb4Previous);
-            resources.ApplyResources(this.tbPageBackground, "tbPageBackground");
             this.tbPageBackground.Name = "tbPageBackground";
             // 
             // picPreview
             // 
-            this.picPreview.BackColor = System.Drawing.Color.White;
             resources.ApplyResources(this.picPreview, "picPreview");
+            this.picPreview.BackColor = System.Drawing.Color.White;
             this.picPreview.Name = "picPreview";
             this.picPreview.TabStop = false;
             this.picPreview.Paint += new System.Windows.Forms.PaintEventHandler(this.picPreview_Paint);
             // 
             // cbFrame
             // 
-            this.cbFrame.FormattingEnabled = true;
             resources.ApplyResources(this.cbFrame, "cbFrame");
+            this.cbFrame.FormattingEnabled = true;
             this.cbFrame.Name = "cbFrame";
             this.cbFrame.SelectedIndexChanged += new System.EventHandler(this.cbBorderEffectSelect_SelectedIndexChanged);
             // 
@@ -516,8 +517,8 @@
             // 
             // btnInactiveColorBorderPicker
             // 
-            this.btnInactiveColorBorderPicker.Image = global::Karaboss.Properties.Resources.color_picker_black18;
             resources.ApplyResources(this.btnInactiveColorBorderPicker, "btnInactiveColorBorderPicker");
+            this.btnInactiveColorBorderPicker.Image = global::Karaboss.Properties.Resources.color_picker_black18;
             this.btnInactiveColorBorderPicker.Name = "btnInactiveColorBorderPicker";
             this.btnInactiveColorBorderPicker.UseVisualStyleBackColor = true;
             this.btnInactiveColorBorderPicker.Click += new System.EventHandler(this.btnInactiveColorBorderPicker_Click);
@@ -531,11 +532,12 @@
             // 
             // picInactiveColorBorder
             // 
+            resources.ApplyResources(this.picInactiveColorBorder, "picInactiveColorBorder");
             this.picInactiveColorBorder.BackColor = System.Drawing.Color.Black;
             this.picInactiveColorBorder.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            resources.ApplyResources(this.picInactiveColorBorder, "picInactiveColorBorder");
             this.picInactiveColorBorder.Name = "picInactiveColorBorder";
             this.picInactiveColorBorder.TabStop = false;
+            this.picInactiveColorBorder.BackColorChanged += new System.EventHandler(this.picInactiveColorBorder_BackColorChanged);
             // 
             // txtInactiveColorBorder
             // 
@@ -551,8 +553,8 @@
             // 
             // btnActiveColorBorderPicker
             // 
-            this.btnActiveColorBorderPicker.Image = global::Karaboss.Properties.Resources.color_picker_black18;
             resources.ApplyResources(this.btnActiveColorBorderPicker, "btnActiveColorBorderPicker");
+            this.btnActiveColorBorderPicker.Image = global::Karaboss.Properties.Resources.color_picker_black18;
             this.btnActiveColorBorderPicker.Name = "btnActiveColorBorderPicker";
             this.btnActiveColorBorderPicker.UseVisualStyleBackColor = true;
             this.btnActiveColorBorderPicker.Click += new System.EventHandler(this.btnActiveColorBorderPicker_Click);
@@ -566,11 +568,12 @@
             // 
             // picActiveColorBorder
             // 
+            resources.ApplyResources(this.picActiveColorBorder, "picActiveColorBorder");
             this.picActiveColorBorder.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(1)))), ((int)(((byte)(1)))), ((int)(((byte)(1)))));
             this.picActiveColorBorder.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            resources.ApplyResources(this.picActiveColorBorder, "picActiveColorBorder");
             this.picActiveColorBorder.Name = "picActiveColorBorder";
             this.picActiveColorBorder.TabStop = false;
+            this.picActiveColorBorder.BackColorChanged += new System.EventHandler(this.picActiveColorBorder_BackColorChanged);
             // 
             // txtActiveColorBorder
             // 
@@ -586,8 +589,8 @@
             // 
             // btnInactiveColorPicker
             // 
-            this.btnInactiveColorPicker.Image = global::Karaboss.Properties.Resources.color_picker_black18;
             resources.ApplyResources(this.btnInactiveColorPicker, "btnInactiveColorPicker");
+            this.btnInactiveColorPicker.Image = global::Karaboss.Properties.Resources.color_picker_black18;
             this.btnInactiveColorPicker.Name = "btnInactiveColorPicker";
             this.btnInactiveColorPicker.UseVisualStyleBackColor = true;
             this.btnInactiveColorPicker.Click += new System.EventHandler(this.btnInactiveColorPicker_Click);
@@ -601,11 +604,12 @@
             // 
             // picInactiveColor
             // 
+            resources.ApplyResources(this.picInactiveColor, "picInactiveColor");
             this.picInactiveColor.BackColor = System.Drawing.Color.White;
             this.picInactiveColor.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            resources.ApplyResources(this.picInactiveColor, "picInactiveColor");
             this.picInactiveColor.Name = "picInactiveColor";
             this.picInactiveColor.TabStop = false;
+            this.picInactiveColor.BackColorChanged += new System.EventHandler(this.picInactiveColor_BackColorChanged);
             // 
             // txtInactiveColor
             // 
@@ -621,8 +625,8 @@
             // 
             // btnActiveColorPicker
             // 
-            this.btnActiveColorPicker.Image = global::Karaboss.Properties.Resources.color_picker_black18;
             resources.ApplyResources(this.btnActiveColorPicker, "btnActiveColorPicker");
+            this.btnActiveColorPicker.Image = global::Karaboss.Properties.Resources.color_picker_black18;
             this.btnActiveColorPicker.Name = "btnActiveColorPicker";
             this.btnActiveColorPicker.UseVisualStyleBackColor = true;
             this.btnActiveColorPicker.Click += new System.EventHandler(this.btnActiveColorPicker_Click);
@@ -636,11 +640,12 @@
             // 
             // picActiveColor
             // 
+            resources.ApplyResources(this.picActiveColor, "picActiveColor");
             this.picActiveColor.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(172)))), ((int)(((byte)(255)))));
             this.picActiveColor.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            resources.ApplyResources(this.picActiveColor, "picActiveColor");
             this.picActiveColor.Name = "picActiveColor";
             this.picActiveColor.TabStop = false;
+            this.picActiveColor.BackColorChanged += new System.EventHandler(this.picActiveColor_BackColorChanged);
             // 
             // txtActiveColor
             // 
@@ -685,15 +690,15 @@
             // 
             // cbFontName
             // 
-            this.cbFontName.FormattingEnabled = true;
             resources.ApplyResources(this.cbFontName, "cbFontName");
+            this.cbFontName.FormattingEnabled = true;
             this.cbFontName.Name = "cbFontName";
             this.cbFontName.SelectedIndexChanged += new System.EventHandler(this.cbFontName_SelectedIndexChanged);
             // 
             // btnBgColorPicker
             // 
-            this.btnBgColorPicker.Image = global::Karaboss.Properties.Resources.color_picker_black18;
             resources.ApplyResources(this.btnBgColorPicker, "btnBgColorPicker");
+            this.btnBgColorPicker.Image = global::Karaboss.Properties.Resources.color_picker_black18;
             this.btnBgColorPicker.Name = "btnBgColorPicker";
             this.btnBgColorPicker.UseVisualStyleBackColor = true;
             this.btnBgColorPicker.Click += new System.EventHandler(this.btnBgColorPicker_Click);
@@ -707,11 +712,12 @@
             // 
             // picBgColor
             // 
+            resources.ApplyResources(this.picBgColor, "picBgColor");
             this.picBgColor.BackColor = System.Drawing.Color.Black;
             this.picBgColor.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            resources.ApplyResources(this.picBgColor, "picBgColor");
             this.picBgColor.Name = "picBgColor";
             this.picBgColor.TabStop = false;
+            this.picBgColor.BackColorChanged += new System.EventHandler(this.picBgColor_BackColorChanged);
             // 
             // txtBgColor
             // 
@@ -727,51 +733,51 @@
             // 
             // btnTb4Previous
             // 
-            this.btnTb4Previous.DialogResult = System.Windows.Forms.DialogResult.OK;
             resources.ApplyResources(this.btnTb4Previous, "btnTb4Previous");
+            this.btnTb4Previous.DialogResult = System.Windows.Forms.DialogResult.OK;
             this.btnTb4Previous.Name = "btnTb4Previous";
             this.btnTb4Previous.UseVisualStyleBackColor = true;
             this.btnTb4Previous.Click += new System.EventHandler(this.btnTb4Previous_Click);
             // 
             // menuStrip1
             // 
+            resources.ApplyResources(this.menuStrip1, "menuStrip1");
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.mnuFile,
             this.mnuHelp});
-            resources.ApplyResources(this.menuStrip1, "menuStrip1");
             this.menuStrip1.Name = "menuStrip1";
             // 
             // mnuFile
             // 
+            resources.ApplyResources(this.mnuFile, "mnuFile");
             this.mnuFile.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.mnuFileQuit});
             this.mnuFile.Name = "mnuFile";
-            resources.ApplyResources(this.mnuFile, "mnuFile");
             // 
             // mnuFileQuit
             // 
-            this.mnuFileQuit.Name = "mnuFileQuit";
             resources.ApplyResources(this.mnuFileQuit, "mnuFileQuit");
+            this.mnuFileQuit.Name = "mnuFileQuit";
             this.mnuFileQuit.Click += new System.EventHandler(this.mnuFileQuit_Click);
             // 
             // mnuHelp
             // 
+            resources.ApplyResources(this.mnuHelp, "mnuHelp");
             this.mnuHelp.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.mnuHelpForums,
             this.mnuHelpDocumentation});
             this.mnuHelp.Name = "mnuHelp";
-            resources.ApplyResources(this.mnuHelp, "mnuHelp");
             // 
             // mnuHelpForums
             // 
-            this.mnuHelpForums.Name = "mnuHelpForums";
             resources.ApplyResources(this.mnuHelpForums, "mnuHelpForums");
+            this.mnuHelpForums.Name = "mnuHelpForums";
             this.mnuHelpForums.Click += new System.EventHandler(this.mnuHelpForums_Click);
             // 
             // mnuHelpDocumentation
             // 
-            this.mnuHelpDocumentation.Name = "mnuHelpDocumentation";
             resources.ApplyResources(this.mnuHelpDocumentation, "mnuHelpDocumentation");
+            this.mnuHelpDocumentation.Name = "mnuHelpDocumentation";
             this.mnuHelpDocumentation.Click += new System.EventHandler(this.mnuHelpDocumentation_Click);
             // 
             // frmKfnCreate
