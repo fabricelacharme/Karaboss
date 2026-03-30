@@ -46,7 +46,6 @@ using static keffect.KaraokeEffect;
 
 namespace Karaboss.Mp3
 {    
-
     public partial class frmMp3Lyrics : Form, IMessageFilter
     {
         #region Move form without title bar
@@ -902,7 +901,10 @@ namespace Karaboss.Mp3
 
             int idx = 0;
 
+            if (Mp3LyricsMgmtHelper.SyncLyrics == null) return 0;
+            
             List<kSyncText> syncline = new List<kSyncText>();
+            
             for (i = 0; i < Mp3LyricsMgmtHelper.SyncLyrics.Count; i++)
             {
                 syncline = Mp3LyricsMgmtHelper.SyncLyrics[i];

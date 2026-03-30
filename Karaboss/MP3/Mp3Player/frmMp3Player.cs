@@ -1332,7 +1332,7 @@ namespace Karaboss.Mp3
         }
 
         /// <summary>
-        /// Display lyrics
+        /// Extract lyrics from any source found
         /// </summary>
         /// <param name="FileName"></param>
         private void ExtractMp3Lyrics(string FileName)

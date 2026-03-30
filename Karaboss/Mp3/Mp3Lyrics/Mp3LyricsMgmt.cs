@@ -459,7 +459,7 @@ namespace Karaboss.Mp3.Mp3Lyrics
 
         private static string GetTagFromLrc(string[] lines, string tag)
         {
-            string pattern = @"\[" + tag + @":(.*?)\]";
+            string pattern = @"\[(?i)" + tag + @":(.*?)\]";
             foreach (string line in lines)
             {
                 Match match = Regex.Match(line, pattern);
