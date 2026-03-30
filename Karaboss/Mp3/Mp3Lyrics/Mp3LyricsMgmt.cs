@@ -429,27 +429,27 @@ namespace Karaboss.Mp3.Mp3Lyrics
      
         private static string GetArtistFromLrc(string[] lines)
         {
-            return GetTagFromLrc(lines, "ar");
+            return LyricsUtilities.GetTagFromLrc(lines, "ar");
         }
 
         private static string GetTitleFromLrc(string[] lines)
         {
-            return GetTagFromLrc(lines, "ti");
+            return LyricsUtilities.GetTagFromLrc(lines, "ti");
         }
 
         private static string GetAlbumFromLrc(string[] lines)
         {
-            return GetTagFromLrc(lines, "al");
+            return LyricsUtilities.GetTagFromLrc(lines, "al");
         }
 
         private static string GetToolFromLrc(string[] lines)
         {
-            return GetTagFromLrc(lines, "tool");
+            return LyricsUtilities.GetTagFromLrc(lines, "tool");
         }
 
         private static uint GetYearFromLrc(string[] lines)
         {
-            string yearStr = GetTagFromLrc(lines, "by");
+            string yearStr = LyricsUtilities.GetTagFromLrc(lines, "by");
             uint year;
             if (uint.TryParse(yearStr, out year))
                 return year;
@@ -457,19 +457,7 @@ namespace Karaboss.Mp3.Mp3Lyrics
                 return 0;
         }
 
-        private static string GetTagFromLrc(string[] lines, string tag)
-        {
-            string pattern = @"\[(?i)" + tag + @":(.*?)\]";
-            foreach (string line in lines)
-            {
-                Match match = Regex.Match(line, pattern);
-                if (match.Success)
-                {
-                    return match.Groups[1].Value.Trim();
-                }
-            }
-            return null;
-        }
+       
 
 
         /// <summary>

@@ -45,6 +45,7 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
+using static System.Windows.Forms.LinkLabel;
 
 namespace Karaboss.Utilities
 {
@@ -555,6 +556,21 @@ namespace Karaboss.Utilities
         }
 
 
+        public static string GetTagFromLrc(string[] lines, string tag)
+        {
+            // (?i) case-insensitive mode ON
+            string pattern = @"\[(?i)" + tag + @":(.*?)\]";
+            foreach (string line in lines)
+            {
+                Match match = Regex.Match(line, pattern);
+                if (match.Success)
+                {
+                    return match.Groups[1].Value.Trim();
+                }
+            }
+            return null;
+        }
+
         #endregion commun functions
 
 
@@ -837,14 +853,14 @@ namespace Karaboss.Utilities
 
                 var regextime = new Regex(patterntime);
 
-                string patternline = GetPatternLRC(lines);
-                if (patternline == null)
-                {
-                    MessageBox.Show("Invalid LRC file", Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    return null;
-                }
+                // Search for eLRC patterns [00:00.00] bla <00:00.00>bla <00:00.00> bla
+                string patternline = GetPatternELRC(lines);
 
+                // If patternline is null, it means that there is no line with several timestamps and text,
+                // so we will consider that it is an old LRC file with only one timestamp per line.
+                // So we will search for timestamps with patterntime and not with patternline
 
+                
                 List<(string, string)> result = new List<(string, string)>();
 
                 List<keffect.KaraokeEffect.kSyncText> SyncLine = new List<keffect.KaraokeEffect.kSyncText>();
@@ -885,21 +901,21 @@ namespace Karaboss.Utilities
                             // Result is 2 lines "02:16.09]Qui vont danser le chachacha " and "x4]"                           
 
                             for (int j = 0; j < paragraphs.Length; j++)
-                            {                                                                
+                            {
                                 timestamp = paragraphs[j];
                                 lyric = timestamp;
 
                                 if (timestamp.Length == 0) continue;
                                 if (!timestamp.Contains("]")) continue;
-                                timestamp = timestamp.Substring(0, timestamp.IndexOf("]"));                               
+                                timestamp = timestamp.Substring(0, timestamp.IndexOf("]"));
                                 // Timestamp must look like a timestamp (so unfortunately, it eliminates lyrics like "[x4]"
                                 if (!Regex.IsMatch(timestamp, @"(?:^\d{2}:\d{2}.\d{2})") && !Regex.IsMatch(timestamp, @"(?:^\d{2}:\d{2}.\d{3})")) continue;
 
                                 lyric = lyric.Substring(lyric.IndexOf("]") + 1);
 
-                                result.Add((timestamp,lyric));
+                                result.Add((timestamp, lyric));
                             }
-                            
+
                         }
                         else
                         {
@@ -908,16 +924,31 @@ namespace Karaboss.Utilities
                     }
                     else
                     {
-                        // Lines with one or several timestamps and text
-                        var matchline = Regex.Match(line, patternline);
-                        if (!matchline.Success) continue;
-
-                        // Search for all timestamps                        
-
-                        foreach (var match in regexCrotchets.Matches(line))
+                        if (patternline != null)
                         {
-                            timestamp = match.ToString();
-                            result.Add((timestamp, lyric));
+                            // eLRC style with several timestamps per line like "[00:01.03]La <00:01.15>petite <00:01.48>maison"
+                            // Lines with one or several timestamps and text
+                            var matchline = Regex.Match(line, patternline);
+                            if (!matchline.Success) continue;
+
+                            // Search for all timestamps                        
+
+                            foreach (var match in regexCrotchets.Matches(line))
+                            {
+                                timestamp = match.ToString();
+                                result.Add((timestamp, lyric));
+                            }
+                        } 
+                        else 
+                        {
+                            // old LRC style with only one timestamp per line like [00:33.84] bla
+                            var matchtime = Regex.Match(line, patterntime);
+                            if (matchtime.Success)
+                            {
+                                timestamp = line.Substring(1, line.IndexOf("]") - 1);
+                                lyric = lyric.Substring(lyric.IndexOf("]") + 1);
+                                result.Add((timestamp, lyric));
+                            }
                         }
                     }
                 }
@@ -962,7 +993,7 @@ namespace Karaboss.Utilities
 
                             // Search for all pairs of <00:00.00>text
                             string[] elements = restline.Split('<');
-                            
+
                             for (int j = 0; j < elements.Count(); j++)
                             {
                                 element = elements[j];
@@ -981,7 +1012,7 @@ namespace Karaboss.Utilities
                         }
                     }
                     else
-                    {                        
+                    {
                         // LRC with only lines
                         // Example: [00:01.03] La petite
 
@@ -992,6 +1023,11 @@ namespace Karaboss.Utilities
                 }
 
                 return SyncLyrics;
+
+                    
+                //}
+
+
             }
             catch (Exception e)
             {
@@ -1000,6 +1036,162 @@ namespace Karaboss.Utilities
             }
         }
 
+        /*
+        private static List<List<keffect.KaraokeEffect.kSyncText>> GetELRCLyrics(string[] lines, string patterntime)
+        {
+            #region eLRC format
+            List<(string, string)> result = new List<(string, string)>();
+
+            List<keffect.KaraokeEffect.kSyncText> SyncLine = new List<keffect.KaraokeEffect.kSyncText>();
+            List<List<keffect.KaraokeEffect.kSyncText>> SyncLyrics = new List<List<keffect.KaraokeEffect.kSyncText>>();
+            long time;
+            string lyric;
+            string timestamp;
+            string element;
+
+            var regexCrotchets = new Regex(@"(?<=\[).*?(?=\])");
+
+            string line;
+            for (int i = 0; i < lines.Count(); i++)
+            {
+                line = lines[i];
+                // Eliminate empty lines
+                if (line.Trim() == string.Empty) continue;
+
+                var matchcrotchets = regexCrotchets.Match(line);
+                if (!matchcrotchets.Success) continue;
+
+                // Lyric is after the last crotchet "]" 
+                lyric = line.Split(']').Last();
+
+                if (lyric.Length == 0)
+                {
+
+                    var matchtime = Regex.Match(line, patterntime);
+                    if (matchtime.Success)
+                    {
+                        // Case 1: single timestamp [00:33.84]
+                        // Case 2: numerous timestamps [00:33.84][00:55.47][01:08.41][01:29.12][01:42.06][01:53.08][02:15.08]
+
+                        string[] paragraphs = line.Split('[').Where(s => !string.IsNullOrEmpty(s)).ToArray();
+
+                        // Bug in [02:16.09]Qui vont danser le chachacha [x4] 
+                        // This is like [02:16.09][03:22.00]
+                        // Result is 2 lines "02:16.09]Qui vont danser le chachacha " and "x4]"                           
+
+                        for (int j = 0; j < paragraphs.Length; j++)
+                        {
+                            timestamp = paragraphs[j];
+                            lyric = timestamp;
+
+                            if (timestamp.Length == 0) continue;
+                            if (!timestamp.Contains("]")) continue;
+                            timestamp = timestamp.Substring(0, timestamp.IndexOf("]"));
+                            // Timestamp must look like a timestamp (so unfortunately, it eliminates lyrics like "[x4]"
+                            if (!Regex.IsMatch(timestamp, @"(?:^\d{2}:\d{2}.\d{2})") && !Regex.IsMatch(timestamp, @"(?:^\d{2}:\d{2}.\d{3})")) continue;
+
+                            lyric = lyric.Substring(lyric.IndexOf("]") + 1);
+
+                            result.Add((timestamp, lyric));
+                        }
+
+                    }
+                    else
+                    {
+                        // Else metadata: do nothing
+                    }
+                }
+                else
+                {
+                    // Lines with one or several timestamps and text
+                    var matchline = Regex.Match(line, patternline);
+                    if (!matchline.Success) continue;
+
+                    // Search for all timestamps                        
+
+                    foreach (var match in regexCrotchets.Matches(line))
+                    {
+                        timestamp = match.ToString();
+                        result.Add((timestamp, lyric));
+                    }
+                }
+            }
+
+            // Sort SyncLyrics by time
+            // In case of repetead lines like: [00:16.42][00:44.90][01:13.21][01:41.51]Comme dans un film de la Metro,"
+            // We have to sort the result by the first item
+            List<(string, string)> sortedList = new List<(string, string)>();
+            sortedList = result.OrderBy(o => o.Item1).ToList();
+
+
+            // Now we have to separate the syllables                                               
+            for (int i = 0; i < sortedList.Count; i++)
+            {
+                time = (long)TimeToMs(sortedList[i].Item1);
+
+                lyric = (string)sortedList[i].Item2;
+                int s = lyric.IndexOf("<");
+
+                // This is enhanced LRC like "[00:01.03]La <00:01.15>petite <00:01.48>maison"
+                if (s > -1)
+                {
+                    // firstsyllabe is "La"
+                    string firstsyllabe = lyric.Substring(0, s);
+
+                    // Case use of "<" character in the lyrics without timestamp like "<00:01.04>"
+                    // Example: [00:00.09]<º))))><.·´¯`·..Lugosh..·´¯`·.><((((º>
+                    if (firstsyllabe.Length == 0)
+                    {
+                        SyncLine = new List<keffect.KaraokeEffect.kSyncText>();
+                        SyncLine.Add(new keffect.KaraokeEffect.kSyncText(time, lyric));
+                        SyncLyrics.Add(SyncLine);
+                    }
+                    else
+                    {
+                        // This is enhanced LRC like "[00:01.03]La <00:01.15>petite <00:01.48>maison"
+                        // restline is <00:01.15>petite <00:01.48>maison
+                        string restline = lyric.Substring(s);
+
+                        SyncLine = new List<keffect.KaraokeEffect.kSyncText>();
+                        SyncLine.Add(new keffect.KaraokeEffect.kSyncText(time, firstsyllabe));
+
+                        // Search for all pairs of <00:00.00>text
+                        string[] elements = restline.Split('<');
+
+                        for (int j = 0; j < elements.Count(); j++)
+                        {
+                            element = elements[j];
+                            if (element.Length > 0)
+                            {
+                                lyric = element.Split('>').Last();
+                                if (lyric.Length > 0)
+                                {
+                                    timestamp = element.Substring(0, element.IndexOf(">"));
+                                    time = (long)TimeToMs(timestamp);
+                                    SyncLine.Add(new keffect.KaraokeEffect.kSyncText(time, lyric));
+                                }
+                            }
+                        }
+                        SyncLyrics.Add(SyncLine);
+                    }
+                }
+                else
+                {
+                    // LRC with only lines
+                    // Example: [00:01.03] La petite
+
+                    SyncLine = new List<keffect.KaraokeEffect.kSyncText>();
+                    SyncLine.Add(new keffect.KaraokeEffect.kSyncText(time, lyric));
+                    SyncLyrics.Add(SyncLine);
+                }
+            }
+
+            return SyncLyrics;
+
+            #endregion eLRC format
+        }
+
+        */
 
         /// <summary>
         /// Formate SyncLyrics to meet Midi editor needs (line separators and paragraphs on dedicated lines)
@@ -1096,7 +1288,7 @@ namespace Karaboss.Utilities
         /// </summary>
         /// <param name="lines"></param>
         /// <returns></returns>
-        private static string GetPatternLRC(string[] lines)
+        private static string GetPatternELRC(string[] lines)
         {
             string line;
             string pattern3digits = @"(?:\[(\d{2}:\d{2}\.\d{3})\]|<(\d{2}:\d{2}\.\d{3})>)(\S+)";
