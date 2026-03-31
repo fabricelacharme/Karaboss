@@ -2152,7 +2152,7 @@ namespace Karaboss
 
 
                 // NEW
-                List<List<keffect.KaraokeEffect.kSyncText>> SyncLyrics = LyricsUtilities.ReadKokFromFile(fileName, _duration);
+                keffect.KaraokeLyrics SyncLyrics = LyricsUtilities.ReadKokFromFile(fileName, _duration);
                 // Formate SyncLyrics to meet Midi editor needs (line separators and paragraphs on dedicated lines)
                 SyncLyrics = LyricsUtilities.FormateSyncLyricsForMidi(SyncLyrics);
 
@@ -2467,7 +2467,7 @@ namespace Karaboss
             Cursor.Current = Cursors.WaitCursor;
          
             // Load LRC file without any separators
-            List<List<keffect.KaraokeEffect.kSyncText>> SyncLyrics = LyricsUtilities.ReadLrcFromFile(FileName);
+            keffect.KaraokeLyrics SyncLyrics = LyricsUtilities.ReadLrcFromFile2(FileName);
 
             // Formate SyncLyrics to meet Midi editor needs (line separators and paragraphs on dedicated lines)
             SyncLyrics = LyricsUtilities.FormateSyncLyricsForMidi(SyncLyrics);
@@ -2480,10 +2480,10 @@ namespace Karaboss
             Cursor.Current = Cursors.Default;
         }
 
-        private void PopulateDataGridView(List<List<keffect.KaraokeEffect.kSyncText>> SyncLyrics)
+        private void PopulateDataGridView(keffect.KaraokeLyrics SyncLyrics)
         {
             string sTimeStamp;
-            long time;
+            double time;
             string text;
             double ms;
 
@@ -2491,13 +2491,13 @@ namespace Karaboss
             InitGridView();
 
 
-            foreach (List<keffect.KaraokeEffect.kSyncText> SyncLine in SyncLyrics)
+            foreach (keffect.KaraokeLine SyncLine in SyncLyrics)
             {
 
-                for (int i = 0; i < SyncLine.Count; i++)
+                for (int i = 0; i < SyncLine.Syllables.Count; i++)
                 {
-                    time = SyncLine[i].Time;
-                    text = SyncLine[i].Text;
+                    time = SyncLine.Syllables[i].StartTime;
+                    text = SyncLine.Syllables[i].Text;
 
                     // In the second column, the time is in format mm:ss:ms
                     // Convert timestamp to mm:ss:ms
@@ -2529,19 +2529,19 @@ namespace Karaboss
 
         }
 
-        private void LrcPopulateDgView(List<List<keffect.KaraokeEffect.kSyncText>> SyncLyrics)
+        private void LrcPopulateDgView(keffect.KaraokeLyrics SyncLyrics)
         {
             string sTimeStamp;
             
             if (SyncLyrics == null) return;
             
-            foreach (List < keffect.KaraokeEffect.kSyncText > SyncLine in SyncLyrics)
+            foreach (keffect.KaraokeLine SyncLine in SyncLyrics)
             {
                 
-                for (int i = 0; i < SyncLine.Count; i++)
+                for (int i = 0; i < SyncLine.Syllables.Count; i++)
                 {
-                    long time = SyncLine[i].Time;
-                    string text = SyncLine[i].Text;
+                    double time = SyncLine.Syllables[i].StartTime;
+                    string text = SyncLine.Syllables[i].Text;
 
                     // In the second column, the time is in format mm:ss:ms
                     // Convert timestamp to mm:ss:ms

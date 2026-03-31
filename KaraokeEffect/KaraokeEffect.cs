@@ -32,6 +32,7 @@
 
 #endregion
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
@@ -46,7 +47,143 @@ using System.Windows.Forms;
 
 
 namespace keffect
-{   
+{
+    
+    public class Syllable
+    {
+        public string Text { get; set; }
+        public double StartTime { get; set; }
+        public double Duration { get; set; }    // syllable duration
+
+        public Syllable(string text, double startTime, double duration)
+        {
+            Text = text;
+            StartTime = startTime;
+            Duration = duration;
+        }
+
+        public Syllable(string text, double startTime)
+        {
+            Text = text;
+            StartTime = startTime;
+            Duration = 45;
+        }
+
+    }
+
+    public class KaraokeLine
+    {
+        public List<Syllable> Syllables { get; set; } 
+        public double StartTime => Syllables.First().StartTime;
+        public double EndTime => Syllables.Last().StartTime + Syllables.Last().Duration;
+
+        public KaraokeLine(List<Syllable> syllables)
+        {
+            Syllables = syllables;
+        }
+        public KaraokeLine()
+        {
+            Syllables = new List<Syllable>();
+        }
+        public void Add(Syllable syllable)
+        {
+            Syllables.Add(syllable);
+        }
+    }
+
+
+    public class KaraokeLyrics : IEnumerable
+    {
+        public List<KaraokeLine> Lines { get; set; } 
+
+
+        public double StartTime => Lines.First().StartTime;
+        public double EndTime => Lines.Last().EndTime;
+
+        public KaraokeLyrics(List<KaraokeLine> lines)
+        {
+            Lines = lines;
+        }
+
+        public KaraokeLyrics()
+        {
+            Lines = new List<KaraokeLine>();
+        }
+
+        public void Add(KaraokeLine line)
+        {
+            Lines.Add(line);
+        }
+
+
+        public int IndexOf(KaraokeLine line)
+        {
+            return Lines.IndexOf(line);
+        }
+
+        // Implementation for the GetEnumerator method.
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return (IEnumerator)GetEnumerator();
+        }
+
+        public LineEnum GetEnumerator()
+        {
+            return new LineEnum(Lines);
+        }
+
+    }
+
+    public class LineEnum : IEnumerator
+    {
+        public List<KaraokeLine> Lines;
+
+        // Enumerators are positioned before the first element
+        // until the first MoveNext() call.
+        int position = -1;
+
+        public LineEnum(List<KaraokeLine> list)
+        {
+            Lines = list;
+        }
+
+        public bool MoveNext()
+        {
+            position++;
+            return (position < Lines.Count);
+        }
+
+        public void Reset()
+        {
+            position = -1;
+        }
+
+        object IEnumerator.Current
+        {
+            get
+            {
+                return Current;
+            }
+        }
+
+        public KaraokeLine Current
+        {
+            get
+            {
+                try
+                {
+                    return Lines[position];
+                }
+                catch (IndexOutOfRangeException)
+                {
+                    throw new InvalidOperationException();
+                }
+            }
+        }
+    }
+
+
+
     public partial class KaraokeEffect : UserControl, IMessageFilter
     {
 
@@ -93,50 +230,10 @@ namespace keffect
         // Array of bitmaps (images as backgound image)
         private Bitmap[] m_BitmapsArray;
 
-        #endregion Transition effect
+        #endregion Transition effect       
 
 
-        #region SlideShow old
-
-        /*
-        private BackgroundWorker backgroundWorkerSlideShow;
-
-        private Random random;        
-        
-        private MemoryStream m_ImageStream = null;
-
-        private ManualResetEvent m_FinishEvent = new ManualResetEvent(false);
-
-        private bool m_Cancel = false;
-        private bool m_Restart = false;
-
-        delegate void UpdateTimerEnableCallback(bool enabled);
-
-        public bool IsBusy
-        {
-            get
-            {
-                if (backgroundWorkerSlideShow != null)
-                    return backgroundWorkerSlideShow.IsBusy;
-                else
-                    return false;
-            }
-        }
-
-     
-        //private int PAUSE_TIME;
-        private int rndIter = 0;
-        private string strCurrentImage; // current image to insure that random will provide a different one
-
-        public ImageLayout imgLayout { get; set; }
-        
-        public int m_Alpha { get; set; }
-        */
-
-        #endregion SlideShow old
-
-
-        #region SlideShow<
+        #region SlideShow
         // Paths of images
         private string[] m_ImageFilePaths;
 
@@ -292,7 +389,7 @@ namespace keffect
 
         #endregion decl
 
-
+        /*
         [Serializable()]
         public struct kSyncText
         {
@@ -305,7 +402,7 @@ namespace keffect
                 this.Text = text;
             }
         }
-
+        */
 
         #region properties
       
@@ -480,26 +577,7 @@ namespace keffect
         }
 
         #endregion Frame type
-
-
-        // Background color
-        private int _bpm;
-        private Color _BgColor;
-        public Color BgColor
-        {
-            get
-            { return _BgColor; }
-            set
-            {
-                _BgColor = value;
-                if (_optionbackground == "SolidColor")
-                {
-                    pBox.BackColor = _BgColor;
-                    pBox.Invalidate();
-                }
-            }
-        }
-
+     
 
         #region gradient
 
@@ -556,6 +634,27 @@ namespace keffect
         }
 
         #endregion gradient
+
+
+        #region Background
+
+        // Background color
+        private int _bpm;
+        private Color _BgColor;
+        public Color BgColor
+        {
+            get
+            { return _BgColor; }
+            set
+            {
+                _BgColor = value;
+                if (_optionbackground == "SolidColor")
+                {
+                    pBox.BackColor = _BgColor;
+                    pBox.Invalidate();
+                }
+            }
+        }
 
 
         private bool _bTextBackGround = false;
@@ -661,6 +760,9 @@ namespace keffect
             }
         }
 
+        #endregion Background
+
+        /*
         private List<kSyncText> _SyncLine;
         public List<kSyncText> SyncLine
         {
@@ -677,9 +779,53 @@ namespace keffect
                 if (value == null) return;
 
                 _SyncLyrics = value;
+                //Init();
+            }
+        }
+        
+        
+        public KaraokeLyrics Lyrics
+        {
+            get
+            {
+                List<KaraokeLine> lines = _SyncLyrics.Select(syncline => new KaraokeLine(syncline.Select(s => new Syllable(s.Text, s.Time, 0)).ToList())).ToList();
+                return new KaraokeLyrics(lines);
+            }
+            set
+            {
+                if (value == null) return;
+                _SyncLyrics = value.Lines.Select(line => line.Syllables.Select(s => new kSyncText((long)s.StartTime, s.Text)).ToList()).ToList();
                 Init();
             }
         }
+        */
+
+        // new
+        private KaraokeLine _karaokeLine;
+        public KaraokeLine mp3KaraokeLine
+        {
+            get { return _karaokeLine; }
+            set
+            {
+                if (value == null) return;
+                _karaokeLine = value;             
+            }
+        }
+
+        private KaraokeLyrics _karaokeLyrics;
+        public KaraokeLyrics mp3KaraokeLyrics
+        {
+            get { return _karaokeLyrics; }
+            set
+            {
+                if (value == null) return;
+
+                _karaokeLyrics = value;
+                Init();
+            }
+        }
+
+        #region effects
 
         public enum TransitionEffects
         {
@@ -726,6 +872,8 @@ namespace keffect
             }
         }
 
+        #endregion effects
+
 
         #region Font
 
@@ -744,6 +892,7 @@ namespace keffect
       
      
         #endregion properties
+
 
         /// <summary>
         /// Constructor
@@ -853,14 +1002,17 @@ namespace keffect
             _steppercent = 0.01F;
 
             // Add new line "Hello World"
-            SyncLyrics = new List<List<kSyncText>>();
-            SyncLine = new List<kSyncText> { new kSyncText(0, "Hello"), new kSyncText(500, " World") };                        
-            SyncLyrics.Add(SyncLine);
+            //SyncLyrics = new List<List<kSyncText>>();
+            //SyncLine = new List<kSyncText> { new kSyncText(0, "Hello"), new kSyncText(500, " World") };                        
+            //SyncLyrics.Add(SyncLine);
+            
+            mp3KaraokeLine = new KaraokeLine(new List<Syllable> { new Syllable("Hello", 0, 500), new Syllable(" World", 500, 500) });            
+            mp3KaraokeLyrics = new KaraokeLyrics();
+            mp3KaraokeLyrics.Add(mp3KaraokeLine);
 
             _nbLyricsLines = 1;
 
             _transitionEffect = TransitionEffects.Progressive;
-
          }
 
 
@@ -869,12 +1021,14 @@ namespace keffect
             Lines = new List<string[]>();
             Times = new List<long[]>();
             
-            List<kSyncText> syncline = new List<kSyncText>();
+            //List<kSyncText> syncline = new List<kSyncText>();
+            KaraokeLine karaokeline; // = new KaraokeLine();
+
             string[] s;
             long[] t;
             string tx;
 
-
+            /*
             for (int i = 0; i < _SyncLyrics.Count; i++)
             {
                 syncline = _SyncLyrics[i];
@@ -896,8 +1050,34 @@ namespace keffect
                 Times.Add(t);
                 Lines.Add(s);                
             }
-                          
+            */
+
+            if (_karaokeLyrics == null || _karaokeLyrics.Lines == null) return;
+
             
+            for (int i = 0; i < _karaokeLyrics.Lines.Count; i++)
+            {
+                karaokeline = _karaokeLyrics.Lines[i];
+                t = new long[karaokeline.Syllables.Count];
+                s = new string[karaokeline.Syllables.Count];
+
+                for (int j = 0; j < karaokeline.Syllables.Count; j++)
+                {
+                    t[j] = (long)karaokeline.Syllables[j].StartTime;
+
+                    // Clean text
+                    tx = karaokeline.Syllables[j].Text;
+                    tx = tx.Replace(Environment.NewLine, "");
+                    if (_bforceUppercase)
+                        tx = tx.ToUpper();
+
+                    s[j] = tx;
+                }
+                Times.Add(t);
+                Lines.Add(s);
+            }
+            
+
             _lines = Lines.Count;           
             
             string[] line;

@@ -24,6 +24,8 @@
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmMp3Lyrics));
+            keffect.KaraokeLine karaokeLine3 = new keffect.KaraokeLine();
+            keffect.KaraokeLyrics karaokeLyrics3 = new keffect.KaraokeLyrics();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.btnEditLyrics = new System.Windows.Forms.Button();
             this.btnExportLyricsToText = new System.Windows.Forms.Button();
@@ -141,31 +143,45 @@
             this.picBalls.Name = "picBalls";
             // 
             // karaokeEffect1
-            //             
+            // 
+            this.karaokeEffect1.ActiveBorderColor = System.Drawing.Color.Empty;
+            this.karaokeEffect1.ActiveColor = System.Drawing.Color.FromArgb(((int)(((byte)(153)))), ((int)(((byte)(180)))), ((int)(((byte)(51)))));
+            this.karaokeEffect1.Beat = 200;
+            this.karaokeEffect1.BeatDuration = 0;
             this.karaokeEffect1.bforceUppercase = false;
+            this.karaokeEffect1.BgColor = System.Drawing.Color.Empty;
+            this.karaokeEffect1.BorderThick = 1;
             this.karaokeEffect1.bTextBackGround = false;
             resources.ApplyResources(this.karaokeEffect1, "karaokeEffect1");
+            this.karaokeEffect1.FrameType = "Frame1";
             this.karaokeEffect1.FreqDirSlideShow = 10;
-            //this.karaokeEffect1.imgLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.karaokeEffect1.Grad0Color = System.Drawing.Color.Empty;
+            this.karaokeEffect1.Grad1Color = System.Drawing.Color.Empty;
+            this.karaokeEffect1.GradientAngle = 45F;
+            this.karaokeEffect1.GradientColor0 = System.Drawing.Color.Empty;
+            this.karaokeEffect1.GradientColor1 = System.Drawing.Color.Empty;
+            this.karaokeEffect1.HighlightColor = System.Drawing.Color.FromArgb(((int)(((byte)(238)))), ((int)(((byte)(17)))), ((int)(((byte)(17)))));
+            this.karaokeEffect1.InactiveBorderColor = System.Drawing.Color.Empty;
+            this.karaokeEffect1.InactiveColor = System.Drawing.Color.White;
             this.karaokeEffect1.KaraokeFont = new System.Drawing.Font("Comic Sans MS", 61.33333F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel);
-            //this.karaokeEffect1.m_Alpha = 255;
             this.karaokeEffect1.m_CurrentImage = null;
             this.karaokeEffect1.m_DisplayRectangle = new System.Drawing.Rectangle(0, 0, 0, 0);
+            this.karaokeEffect1.mp3KaraokeLine = karaokeLine3;
+            this.karaokeEffect1.mp3KaraokeLyrics = karaokeLyrics3;
             this.karaokeEffect1.Name = "karaokeEffect1";
             this.karaokeEffect1.nbLyricsLines = 1;
             this.karaokeEffect1.OptionBackground = null;
             this.karaokeEffect1.OptionDisplay = keffect.KaraokeEffect.OptionsDisplay.Top;
             this.karaokeEffect1.Position = 0;
+            this.karaokeEffect1.Rhythm0Color = System.Drawing.Color.Empty;
+            this.karaokeEffect1.Rhythm1Color = System.Drawing.Color.Empty;
+            this.karaokeEffect1.RhythmColor0 = System.Drawing.Color.Empty;
+            this.karaokeEffect1.RhythmColor1 = System.Drawing.Color.Empty;
             this.karaokeEffect1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Normal;
             this.karaokeEffect1.StepPercent = 0.01F;
-            this.karaokeEffect1.SyncLine = ((System.Collections.Generic.List<keffect.KaraokeEffect.kSyncText>)(resources.GetObject("karaokeEffect1.SyncLine")));
-            this.karaokeEffect1.SyncLyrics = ((System.Collections.Generic.List<System.Collections.Generic.List<keffect.KaraokeEffect.kSyncText>>)(resources.GetObject("karaokeEffect1.SyncLyrics")));
             this.karaokeEffect1.timerIntervall = ((long)(50));
             this.karaokeEffect1.TransitionEffect = keffect.KaraokeEffect.TransitionEffects.Progressive;
             this.karaokeEffect1.TransparencyKey = System.Drawing.Color.Lime;
-            this.karaokeEffect1.ActiveColor = System.Drawing.Color.FromArgb(((int)(((byte)(153)))), ((int)(((byte)(180)))), ((int)(((byte)(51)))));            
-            this.karaokeEffect1.HighlightColor = System.Drawing.Color.FromArgb(((int)(((byte)(238)))), ((int)(((byte)(17)))), ((int)(((byte)(17)))));            
-            this.karaokeEffect1.InactiveColor = System.Drawing.Color.White;
             // 
             // pnlWindow
             // 

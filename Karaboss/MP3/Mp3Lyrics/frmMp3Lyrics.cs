@@ -1,6 +1,6 @@
 ﻿#region License
 
-/* Copyright (c) 2025 Fabrice Lacharme
+/* Copyright (c) 2026 Fabrice Lacharme
  * 
  * Permission is hereby granted, free of charge, to any person obtaining a copy 
  * of this software and associated documentation files (the "Software"), to 
@@ -41,7 +41,6 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
-using TagLib.Mpeg4;
 using static keffect.KaraokeEffect;
 
 namespace Karaboss.Mp3
@@ -791,7 +790,7 @@ namespace Karaboss.Mp3
 
             // Load balls times
             if (_bShowBalls)
-                LoadBallsTimes(Mp3LyricsMgmtHelper.SyncLyrics);
+                LoadBallsTimes(Mp3LyricsMgmtHelper.mp3KaraokeLyrics);
         }
 
 
@@ -805,11 +804,12 @@ namespace Karaboss.Mp3
         /// </summary>
         private void LoadLyrics()
         {           
-            if (Mp3LyricsMgmtHelper.SyncLyrics == null) return;
+            if (Mp3LyricsMgmtHelper.mp3KaraokeLyrics == null) return;
 
             // Karaoke Effect
             karaokeEffect1.TransitionEffect = TransitionEffects.None;                        
-            karaokeEffect1.SyncLyrics = Mp3LyricsMgmtHelper.SyncLyrics;                        
+            //karaokeEffect1.SyncLyrics = Mp3LyricsMgmtHelper.SyncLyrics;                        
+            karaokeEffect1.mp3KaraokeLyrics = Mp3LyricsMgmtHelper.mp3KaraokeLyrics;
 
             karaokeEffect1.nbLyricsLines = 3;
         }
@@ -818,13 +818,22 @@ namespace Karaboss.Mp3
         /// Send lyrics to KaraokeEffect
         /// </summary>
         /// <param name="lyrics"></param>
-        public void SetLyrics(List<List<kSyncText>> lyrics)
+        //public void SetLyrics(List<List<kSyncText>> lyrics)
+        //{
+        //    karaokeEffect1.SyncLyrics = lyrics;
+        //}
+
+        public void SetLyrics2(keffect.KaraokeLyrics lyrics)
         {
-            karaokeEffect1.SyncLyrics = lyrics;
+            //karaokeEffect1.Lyrics = lyrics;
+            karaokeEffect1.mp3KaraokeLyrics = lyrics;
+
+
         }
+
         #endregion lyrics
 
-                                           
+
         #region diaporama
 
         /// <summary>
@@ -845,25 +854,25 @@ namespace Karaboss.Mp3
         /// Load balls times
         /// </summary>
         /// <param name="SyncLyrics"></param>
-        public void LoadBallsTimes(List<List<kSyncText>> SyncLyrics)
+        public void LoadBallsTimes(keffect.KaraokeLyrics SyncLyrics)
         {
             #region guard
-            if (!_bShowBalls || SyncLyrics.Count == 0) return;
+            if (!_bShowBalls || SyncLyrics.Lines.Count == 0) return;
             #endregion guard
 
 
-            List<kSyncText> syncline = new List<kSyncText>();
+            keffect.KaraokeLine syncline = new keffect.KaraokeLine();
             List<int> LyricsTimes = new List<int>();
 
             currentTextPos = 0;
 
-            for (int i = 0; i < SyncLyrics.Count; i++)
+            for (int i = 0; i < SyncLyrics.Lines.Count; i++)
             {
-                syncline = SyncLyrics[i];
+                syncline = SyncLyrics.Lines[i];
 
-                for (int j = 0; j < syncline.Count; j++)
+                for (int j = 0; j < syncline.Syllables.Count; j++)
                 {
-                    LyricsTimes.Add((int)syncline[j].Time);
+                    LyricsTimes.Add((int)syncline.Syllables[j].StartTime);
                 }
             }
 
@@ -901,16 +910,17 @@ namespace Karaboss.Mp3
 
             int idx = 0;
 
-            if (Mp3LyricsMgmtHelper.SyncLyrics == null) return 0;
+            //if (Mp3LyricsMgmtHelper.SyncLyrics == null) return 0;
+            if (Mp3LyricsMgmtHelper.mp3KaraokeLyrics == null) return 0;
             
-            List<kSyncText> syncline = new List<kSyncText>();
+            keffect.KaraokeLine syncline = new keffect.KaraokeLine();
             
-            for (i = 0; i < Mp3LyricsMgmtHelper.SyncLyrics.Count; i++)
+            for (i = 0; i < Mp3LyricsMgmtHelper.mp3KaraokeLyrics.Lines.Count; i++)
             {
-                syncline = Mp3LyricsMgmtHelper.SyncLyrics[i];
-                for (j = 0; j < syncline.Count; j++)
+                syncline = Mp3LyricsMgmtHelper.mp3KaraokeLyrics.Lines[i];
+                for (j = 0; j < syncline.Syllables.Count; j++)
                 {
-                    if (songposition < syncline[j].Time)
+                    if (songposition < syncline.Syllables[j].StartTime)
                     {
                         return idx;
                         

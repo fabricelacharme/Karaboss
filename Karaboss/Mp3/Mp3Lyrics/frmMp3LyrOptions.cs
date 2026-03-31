@@ -7,14 +7,13 @@ using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
-using TagLib.Mpeg4;
 
 namespace Karaboss.Mp3
 {
     public partial class frmMp3LyrOptions : Form
     {
-        List<keffect.KaraokeEffect.kSyncText> SyncLine = new List<keffect.KaraokeEffect.kSyncText>();
-        List<List<keffect.KaraokeEffect.kSyncText>> SyncLyrics = new List<List<keffect.KaraokeEffect.kSyncText>>();
+        keffect.KaraokeLine mp3KaraokeLine = new keffect.KaraokeLine();
+        keffect.KaraokeLyrics mp3KaraokeLyrics = new keffect.KaraokeLyrics();
 
         #region private declarations
 
@@ -126,30 +125,119 @@ namespace Karaboss.Mp3
             // Nb lines to display
             karaokeEffect1.nbLyricsLines = Properties.Settings.Default.TxtNbLines;
 
-            SyncLine = new List<keffect.KaraokeEffect.kSyncText> { new keffect.KaraokeEffect.kSyncText(0, "Lorem"), new keffect.KaraokeEffect.kSyncText(500, " ipsum"), new keffect.KaraokeEffect.kSyncText(1000, " dolor"), new keffect.KaraokeEffect.kSyncText(1500, " sit"), new keffect.KaraokeEffect.kSyncText(2000, " amet") };
-            SyncLyrics.Add(SyncLine);
-            SyncLine = new List<keffect.KaraokeEffect.kSyncText> { new keffect.KaraokeEffect.kSyncText(2500, "consectetur"), new keffect.KaraokeEffect.kSyncText(3000, " adipisicing"), new keffect.KaraokeEffect.kSyncText(3500, " elit") };
-            SyncLyrics.Add(SyncLine);
-            SyncLine = new List<keffect.KaraokeEffect.kSyncText> { new keffect.KaraokeEffect.kSyncText(4000, "sed"), new keffect.KaraokeEffect.kSyncText(4500, " do"), new keffect.KaraokeEffect.kSyncText(5000, " eiusmod"), new keffect.KaraokeEffect.kSyncText(5500, " tempor"), new keffect.KaraokeEffect.kSyncText(6000, " incididunt") };
-            SyncLyrics.Add(SyncLine);
-            SyncLine = new List<keffect.KaraokeEffect.kSyncText> { new keffect.KaraokeEffect.kSyncText(6500, "ut"), new keffect.KaraokeEffect.kSyncText(7000, " labore"), new keffect.KaraokeEffect.kSyncText(7500, "et"), new keffect.KaraokeEffect.kSyncText(8000, " dolore"), new keffect.KaraokeEffect.kSyncText(8500, " magna"), new keffect.KaraokeEffect.kSyncText(9000, " aliqua.") };
-            SyncLyrics.Add(SyncLine);
-            SyncLine = new List<keffect.KaraokeEffect.kSyncText> { new keffect.KaraokeEffect.kSyncText(9200, "Ut"), new keffect.KaraokeEffect.kSyncText(9500, " enim"), new keffect.KaraokeEffect.kSyncText(10000, " ad"), new keffect.KaraokeEffect.kSyncText(10500, " minim"), new keffect.KaraokeEffect.kSyncText(11000, " veniam") };
-            SyncLyrics.Add(SyncLine);
-            SyncLine = new List<keffect.KaraokeEffect.kSyncText> { new keffect.KaraokeEffect.kSyncText(11500, "quis"), new keffect.KaraokeEffect.kSyncText(12000, " nostrud"), new keffect.KaraokeEffect.kSyncText(12500, " exercitation"), new keffect.KaraokeEffect.kSyncText(13000, " ullamco") };
-            SyncLyrics.Add(SyncLine);
-            SyncLine = new List<keffect.KaraokeEffect.kSyncText> { new keffect.KaraokeEffect.kSyncText(14000, "laboris"), new keffect.KaraokeEffect.kSyncText(14500, " nisi"), new keffect.KaraokeEffect.kSyncText(15000, " ut"), new keffect.KaraokeEffect.kSyncText(15500, " aliquip") };
-            SyncLyrics.Add(SyncLine);
-            SyncLine = new List<keffect.KaraokeEffect.kSyncText> { new keffect.KaraokeEffect.kSyncText(16000, "ex"), new keffect.KaraokeEffect.kSyncText(16500, " ea"), new keffect.KaraokeEffect.kSyncText(17000, " commodo"), new keffect.KaraokeEffect.kSyncText(17500, " consequat.") };
-            SyncLyrics.Add(SyncLine);
-            SyncLine = new List<keffect.KaraokeEffect.kSyncText> { new keffect.KaraokeEffect.kSyncText(18000, "Duis"), new keffect.KaraokeEffect.kSyncText(18500, " aute"), new keffect.KaraokeEffect.kSyncText(19000, " irure"), new keffect.KaraokeEffect.kSyncText(19500, " dolor"), new keffect.KaraokeEffect.kSyncText(20000, " in"), new keffect.KaraokeEffect.kSyncText(20500, " reprehenderit") };
-            SyncLyrics.Add(SyncLine);
-            SyncLine = new List<keffect.KaraokeEffect.kSyncText> { new keffect.KaraokeEffect.kSyncText(20600, "in"), new keffect.KaraokeEffect.kSyncText(21000, "voluptate"), new keffect.KaraokeEffect.kSyncText(21500, " velit"), new keffect.KaraokeEffect.kSyncText(22000, " esse"), new keffect.KaraokeEffect.kSyncText(22500, " cillum"), new keffect.KaraokeEffect.kSyncText(23000, " dolore") };
-            SyncLyrics.Add(SyncLine);
-            SyncLine = new List<keffect.KaraokeEffect.kSyncText> { new keffect.KaraokeEffect.kSyncText(23500, "eu"), new keffect.KaraokeEffect.kSyncText(24000, " fugiat"), new keffect.KaraokeEffect.kSyncText(24500, " nulla"), new keffect.KaraokeEffect.kSyncText(25000, " pariatur.") };
-            SyncLyrics.Add(SyncLine);
 
-            karaokeEffect1.SyncLyrics = SyncLyrics;
+            mp3KaraokeLine = new keffect.KaraokeLine();
+            mp3KaraokeLine.Add(new keffect.Syllable("Lorem", 0));
+            mp3KaraokeLine.Add(new keffect.Syllable(" ipsum", 500));
+            mp3KaraokeLine.Add(new keffect.Syllable(" dolor", 1000));
+            mp3KaraokeLine.Add(new keffect.Syllable(" sit", 1500));
+            mp3KaraokeLine.Add(new keffect.Syllable(" amet", 2000));
+            mp3KaraokeLyrics.Add(mp3KaraokeLine);
+
+            mp3KaraokeLine = new keffect.KaraokeLine();
+            mp3KaraokeLine.Add(new keffect.Syllable("consectetur", 2500));
+            mp3KaraokeLine.Add(new keffect.Syllable(" adipisicing", 3000));
+            mp3KaraokeLine.Add(new keffect.Syllable(" elit", 3500));
+            mp3KaraokeLyrics.Add(mp3KaraokeLine);
+
+            mp3KaraokeLine = new keffect.KaraokeLine();
+            mp3KaraokeLine.Add(new keffect.Syllable("sed", 4000));
+            mp3KaraokeLine.Add(new keffect.Syllable(" do", 4500));
+            mp3KaraokeLine.Add(new keffect.Syllable(" eiusmod", 5000));
+            mp3KaraokeLine.Add(new keffect.Syllable(" tempor", 5500));
+            mp3KaraokeLine.Add(new keffect.Syllable(" incididunt", 6000));
+            mp3KaraokeLyrics.Add(mp3KaraokeLine);
+
+            mp3KaraokeLine = new keffect.KaraokeLine();
+            mp3KaraokeLine.Add(new keffect.Syllable("ut", 6500));
+            mp3KaraokeLine.Add(new keffect.Syllable(" labore", 7000));
+            mp3KaraokeLine.Add(new keffect.Syllable("et", 7500));
+            mp3KaraokeLine.Add(new keffect.Syllable(" dolore", 8000));
+            mp3KaraokeLine.Add(new keffect.Syllable(" magna", 8500));
+            mp3KaraokeLine.Add(new keffect.Syllable(" aliqua.", 9000));
+            mp3KaraokeLyrics.Add(mp3KaraokeLine);
+
+            mp3KaraokeLine = new keffect.KaraokeLine();
+            mp3KaraokeLine.Add(new keffect.Syllable("Ut", 9200));
+            mp3KaraokeLine.Add(new keffect.Syllable(" enim", 9500));
+            mp3KaraokeLine.Add(new keffect.Syllable(" ad", 10000));
+            mp3KaraokeLine.Add(new keffect.Syllable(" minim", 10500));
+            mp3KaraokeLine.Add(new keffect.Syllable(" veniam", 11000));
+            mp3KaraokeLyrics.Add(mp3KaraokeLine);
+
+            mp3KaraokeLine = new keffect.KaraokeLine();
+            mp3KaraokeLine.Add(new keffect.Syllable("quis", 11500));
+            mp3KaraokeLine.Add(new keffect.Syllable(" nostrud", 12000));
+            mp3KaraokeLine.Add(new keffect.Syllable(" exercitation", 12500));
+            mp3KaraokeLine.Add(new keffect.Syllable(" ullamco", 13000));
+            mp3KaraokeLyrics.Add(mp3KaraokeLine);
+
+            mp3KaraokeLine = new keffect.KaraokeLine();
+            mp3KaraokeLine.Add(new keffect.Syllable("laboris", 14000));
+            mp3KaraokeLine.Add(new keffect.Syllable(" nisi", 14500));
+            mp3KaraokeLine.Add(new keffect.Syllable(" ut", 15000));
+            mp3KaraokeLine.Add(new keffect.Syllable(" aliquip", 15500));
+            mp3KaraokeLyrics.Add(mp3KaraokeLine);
+
+            mp3KaraokeLine = new keffect.KaraokeLine();
+            mp3KaraokeLine.Add(new keffect.Syllable("ex", 16000));
+            mp3KaraokeLine.Add(new keffect.Syllable(" ea", 16500));
+            mp3KaraokeLine.Add(new keffect.Syllable(" commodo", 17000));
+            mp3KaraokeLine.Add(new keffect.Syllable(" consequat.", 17500));
+            mp3KaraokeLyrics.Add(mp3KaraokeLine);
+
+            mp3KaraokeLine = new keffect.KaraokeLine();
+            mp3KaraokeLine.Add(new keffect.Syllable("Duis", 18000));
+            mp3KaraokeLine.Add(new keffect.Syllable(" aute", 18500));
+            mp3KaraokeLine.Add(new keffect.Syllable(" irure", 19000));
+            mp3KaraokeLine.Add(new keffect.Syllable(" dolor", 19500));
+            mp3KaraokeLine.Add(new keffect.Syllable(" in", 20000));
+            mp3KaraokeLine.Add(new keffect.Syllable(" reprehenderit", 20500));
+            mp3KaraokeLyrics.Add(mp3KaraokeLine);
+
+            mp3KaraokeLine = new keffect.KaraokeLine();
+            mp3KaraokeLine.Add(new keffect.Syllable("in", 20600));
+            mp3KaraokeLine.Add(new keffect.Syllable("voluptate", 21000));
+            mp3KaraokeLine.Add(new keffect.Syllable(" velit", 21500));
+            mp3KaraokeLine.Add(new keffect.Syllable(" esse", 22000));
+            mp3KaraokeLine.Add(new keffect.Syllable(" cillum", 22500));
+            mp3KaraokeLine.Add(new keffect.Syllable(" dolore", 23000));
+            mp3KaraokeLyrics.Add(mp3KaraokeLine);
+
+            mp3KaraokeLine = new keffect.KaraokeLine();
+            mp3KaraokeLine.Add(new keffect.Syllable("eu", 23500));
+            mp3KaraokeLine.Add(new keffect.Syllable(" fugiat", 24000));
+            mp3KaraokeLine.Add(new keffect.Syllable(" nulla", 24500));
+            mp3KaraokeLine.Add(new keffect.Syllable(" pariatur.", 25000));
+            mp3KaraokeLyrics.Add(mp3KaraokeLine);
+
+            karaokeEffect1.mp3KaraokeLyrics = mp3KaraokeLyrics;
+
+            //SyncLine = new List<keffect.KaraokeEffect.kSyncText> { new keffect.KaraokeEffect.kSyncText(0, "Lorem"), new keffect.KaraokeEffect.kSyncText(500, " ipsum"), new keffect.KaraokeEffect.kSyncText(1000, " dolor"), new keffect.KaraokeEffect.kSyncText(1500, " sit"), new keffect.KaraokeEffect.kSyncText(2000, " amet") };
+            //SyncLyrics.Add(SyncLine);
+            //SyncLine = new List<keffect.KaraokeEffect.kSyncText> { new keffect.KaraokeEffect.kSyncText(2500, "consectetur"), new keffect.KaraokeEffect.kSyncText(3000, " adipisicing"), new keffect.KaraokeEffect.kSyncText(3500, " elit") };
+            //SyncLyrics.Add(SyncLine);
+            //SyncLine = new List<keffect.KaraokeEffect.kSyncText> { new keffect.KaraokeEffect.kSyncText(4000, "sed"), new keffect.KaraokeEffect.kSyncText(4500, " do"), new keffect.KaraokeEffect.kSyncText(5000, " eiusmod"), new keffect.KaraokeEffect.kSyncText(5500, " tempor"), new keffect.KaraokeEffect.kSyncText(6000, " incididunt") };
+            //SyncLyrics.Add(SyncLine);
+            //SyncLine = new List<keffect.KaraokeEffect.kSyncText> { new keffect.KaraokeEffect.kSyncText(6500, "ut"), new keffect.KaraokeEffect.kSyncText(7000, " labore"), new keffect.KaraokeEffect.kSyncText(7500, "et"), new keffect.KaraokeEffect.kSyncText(8000, " dolore"), new keffect.KaraokeEffect.kSyncText(8500, " magna"), new keffect.KaraokeEffect.kSyncText(9000, " aliqua.") };
+            //SyncLyrics.Add(SyncLine);
+            //SyncLine = new List<keffect.KaraokeEffect.kSyncText> { new keffect.KaraokeEffect.kSyncText(9200, "Ut"), new keffect.KaraokeEffect.kSyncText(9500, " enim"), new keffect.KaraokeEffect.kSyncText(10000, " ad"), new keffect.KaraokeEffect.kSyncText(10500, " minim"), new keffect.KaraokeEffect.kSyncText(11000, " veniam") };
+            //SyncLyrics.Add(SyncLine);
+            //SyncLine = new List<keffect.KaraokeEffect.kSyncText> { new keffect.KaraokeEffect.kSyncText(11500, "quis"), new keffect.KaraokeEffect.kSyncText(12000, " nostrud"), new keffect.KaraokeEffect.kSyncText(12500, " exercitation"), new keffect.KaraokeEffect.kSyncText(13000, " ullamco") };
+            //SyncLyrics.Add(SyncLine);
+            //SyncLine = new List<keffect.KaraokeEffect.kSyncText> { new keffect.KaraokeEffect.kSyncText(14000, "laboris"), new keffect.KaraokeEffect.kSyncText(14500, " nisi"), new keffect.KaraokeEffect.kSyncText(15000, " ut"), new keffect.KaraokeEffect.kSyncText(15500, " aliquip") };
+            //SyncLyrics.Add(SyncLine);
+            //SyncLine = new List<keffect.KaraokeEffect.kSyncText> { new keffect.KaraokeEffect.kSyncText(16000, "ex"), new keffect.KaraokeEffect.kSyncText(16500, " ea"), new keffect.KaraokeEffect.kSyncText(17000, " commodo"), new keffect.KaraokeEffect.kSyncText(17500, " consequat.") };
+            //SyncLyrics.Add(SyncLine);
+            //SyncLine = new List<keffect.KaraokeEffect.kSyncText> { new keffect.KaraokeEffect.kSyncText(18000, "Duis"), new keffect.KaraokeEffect.kSyncText(18500, " aute"), new keffect.KaraokeEffect.kSyncText(19000, " irure"), new keffect.KaraokeEffect.kSyncText(19500, " dolor"), new keffect.KaraokeEffect.kSyncText(20000, " in"), new keffect.KaraokeEffect.kSyncText(20500, " reprehenderit") };
+            //SyncLyrics.Add(SyncLine);
+            //SyncLine = new List<keffect.KaraokeEffect.kSyncText> { new keffect.KaraokeEffect.kSyncText(20600, "in"), new keffect.KaraokeEffect.kSyncText(21000, "voluptate"), new keffect.KaraokeEffect.kSyncText(21500, " velit"), new keffect.KaraokeEffect.kSyncText(22000, " esse"), new keffect.KaraokeEffect.kSyncText(22500, " cillum"), new keffect.KaraokeEffect.kSyncText(23000, " dolore") };
+            //SyncLyrics.Add(SyncLine);
+            //SyncLine = new List<keffect.KaraokeEffect.kSyncText> { new keffect.KaraokeEffect.kSyncText(23500, "eu"), new keffect.KaraokeEffect.kSyncText(24000, " fugiat"), new keffect.KaraokeEffect.kSyncText(24500, " nulla"), new keffect.KaraokeEffect.kSyncText(25000, " pariatur.") };
+            //SyncLyrics.Add(SyncLine);
+
+            //karaokeEffect1.SyncLyrics = SyncLyrics;
+           
 
             // Needed to put exactly these 4 positions in order to have "Lorem ipsum" in red and "dolor" in green
             // I don't even understand how my creation works            
