@@ -51,11 +51,7 @@ namespace Karaboss.Mp3
         private Color Rhythm1Color;
 
         #endregion background colors
-
-        
-        // Background color
-        private Color TxtBackColor;
-
+       
 
         // Lyrics TopMost
         private bool _bTopMost = false;
@@ -65,8 +61,6 @@ namespace Karaboss.Mp3
 
         private bool bProgressiveHighlight = false;
 
-        // Number of lines to display
-        private int NbLines;
         //Slideshow
         private string dirSlideShow;
         // Frequency
@@ -87,14 +81,6 @@ namespace Karaboss.Mp3
         // Number of lines to display
         private int _nbLyricsLines;
 
-
-        // Contour color
-        private bool bColorContour = true;
-        private Color TxtContourColor;
-
-
-        // Background
-        private bool bTextBackGround = false;
 
 
         private frmMp3Lyrics frmMp3Lyrics;

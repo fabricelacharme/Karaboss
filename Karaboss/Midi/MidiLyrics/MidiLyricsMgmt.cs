@@ -36,20 +36,20 @@ using MusicXml;
 using Sanford.Multimedia.Midi;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
-using static System.Windows.Forms.LinkLabel;
+using kar;
 
 namespace Karaboss.MidiLyrics
-{
-     
-    
+{         
     public partial class MidiLyricsMgmt
     {
 
         #region private
+
+        private static string m_SepLine = "/";
+        private static string m_SepParagraph = "\\";
 
         private Dictionary<int, string> LyricsLines = new Dictionary<int, string>();
         private Dictionary<int, int> LyricsTimes = new Dictionary<int, int>();
@@ -83,6 +83,34 @@ namespace Karaboss.MidiLyrics
 
 
         #region public
+
+
+        #region new formats for karaoke lines and lyrics
+
+        private kLine _kLine;
+        public kLine kLine
+        {
+            get { return _kLine; }
+            set
+            {
+                if (value == null) return;
+                _kLine = value;
+            }
+        }
+        private kLyrics _kLyrics;
+        public kLyrics kLyrics
+        {
+            get { return _kLyrics; }
+            set
+            {
+                if (value == null) return;
+
+                _kLyrics = value;         
+            }
+        }
+        #endregion
+
+
         // Default List of lyrics
         public List<plLyric> plLyrics { get; set; }
 
@@ -631,10 +659,10 @@ namespace Karaboss.MidiLyrics
         private List<plLyric> ExtractLyrics()
         {
             double l_text = 1;
-            double l_lyric = 1;
-            //string lyrics = string.Empty;
+            double l_lyric = 1;            
 
             List<plLyric> lst = new List<plLyric>();            
+            kLyrics = new kLyrics();
 
             // ----------------------------------------------------------------------
             // Objectif : comparer texte et lyriques et choisir la meilleure solution
@@ -663,9 +691,15 @@ namespace Karaboss.MidiLyrics
 
 
             if (trklyric >= 0)
+            {
                 lstpllyrics[0] = LoadLyricsLyric(sequence1.tracks[trklyric]);
+                
+            }
             if (trktext >= 0)
-                lstpllyrics[1] = LoadLyricsText(sequence1.tracks[trktext]);     
+            {
+                lstpllyrics[1] = LoadLyricsText(sequence1.tracks[trktext]);
+                kLyrics test = LoadLyricsText2(sequence1.tracks[trktext]);
+            }
 
 
             // If both types: lyric & text
@@ -715,6 +749,11 @@ namespace Karaboss.MidiLyrics
             return lst;
         }
 
+        /// <summary>
+        /// Load lyrics type "text"
+        /// </summary>
+        /// <param name="track"></param>
+        /// <returns></returns>
         private List<plLyric> LoadLyricsText(Sanford.Multimedia.Midi.Track track)
         {                                    
             List<plLyric> pll = new List<plLyric>();
@@ -741,6 +780,61 @@ namespace Karaboss.MidiLyrics
             return pll;
         }
 
+
+        /// <summary>
+        /// Load lyrics type "text"
+        /// </summary>
+        /// <param name="track"></param>
+        /// <returns></returns>
+        private kLyrics LoadLyricsText2(Sanford.Multimedia.Midi.Track track)
+        {
+            kLyrics l = new kLyrics();
+
+            int plTicksOn; 
+            int plTicksOff;
+            string plText;
+            Syllable.CharTypes lType;
+
+            kLine line = new kLine();
+
+            for (int k = 0; k < track.LyricsText.Count; k++)
+            {                
+                plText = track.LyricsText[k].Element;                
+                lType = (Syllable.CharTypes)track.LyricsText[k].Type;
+                plTicksOn = track.LyricsText[k].TicksOn;
+                plTicksOff = plTicksOn + _measurelen;
+                
+                switch (lType)
+                {
+                    case Syllable.CharTypes.Text:
+                        kLine.Add(new Syllable() { CharType = lType, Text = plText, Chord = string.Empty, TicksOn = plTicksOn, TicksOff = plTicksOff });
+                        break;
+                    case Syllable.CharTypes.LineFeed:
+                        if (kLine != null && kLine.Syllables.Count > 0)
+                            l.Add(kLine);
+                        kLine = new kLine();
+                        break;
+                    case Syllable.CharTypes.ParagraphSep:
+                        if (kLine != null && kLine.Syllables.Count > 0)
+                            l.Add(kLine);
+                        kLine = new kLine();
+                        kLine.Add(new Syllable() { CharType = lType, Text = m_SepParagraph, Chord = string.Empty, TicksOn = plTicksOn, TicksOff = plTicksOff });
+                        l.Add(kLine);
+                        kLine = new kLine();
+                        break;
+                    default:
+                        break;
+                }                                
+            }
+            return l;
+        }
+
+
+        /// <summary>
+        /// Load lyrics type "lyric"
+        /// </summary>
+        /// <param name="track"></param>
+        /// <returns></returns>
         private List<plLyric> LoadLyricsLyric(Sanford.Multimedia.Midi.Track track)
         {
             List<plLyric> pll = new List<plLyric>();            
@@ -757,8 +851,8 @@ namespace Karaboss.MidiLyrics
                 }
             }
 
-            int plTicksOn; // = 0;
-            int plTicksOff; // = 0;            
+            int plTicksOn; 
+            int plTicksOff;             
             for (int k = 0; k < track.Lyrics.Count; k++)
             {
                 if (track.Lyrics[k].Element != "[]")
@@ -773,8 +867,7 @@ namespace Karaboss.MidiLyrics
                     // Stop time for the lyric                    
                     plTicksOff = plTicksOn + _measurelen;
 
-                    // Check if this is a chord (IsChord)
-                    //Console.WriteLine("");
+                    // Check if this is a chord (IsChord)                    
                     if (plElement.Contains("--"))
                         pll.Add(new plLyric() { CharType = plType, Element = ("", plElement), TicksOn = plTicksOn, TicksOff = plTicksOff, IsChord = true });
                     else

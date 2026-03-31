@@ -433,7 +433,7 @@ namespace Karaboss.Mp3.Mp3Lyrics
         }
         */
 
-        public static keffect.KaraokeLyrics GetLyricsFromLrcFile2(string FileName)
+        public static keffect.KaraokeLyrics GetLyricsFromLrcFile(string FileName)
         {
             // Search for existing LRC file
             string lrcFile = Path.ChangeExtension(FileName, ".lrc");
@@ -462,7 +462,7 @@ namespace Karaboss.Mp3.Mp3Lyrics
             Tool = GetToolFromLrc(lines);
 
 
-            return LyricsUtilities.ReadLrcFromFile2(lrcFile);
+            return LyricsUtilities.ReadLrcFromFile(lrcFile);
         }
 
         private static string GetArtistFromLrc(string[] lines)

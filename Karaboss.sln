@@ -66,6 +66,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KFNV", "KFNViewer\KFNV.cspr
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "uchardet", "uchardet\uchardet.csproj", "{2A706AF9-3F44-4174-BE9B-D4644A532185}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KaraokeLyrics", "KaraokeLyrics\KaraokeLyrics.csproj", "{3E48776D-7AAA-4F08-896A-CCE5239353F0}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -253,6 +255,12 @@ Global
 		{2A706AF9-3F44-4174-BE9B-D4644A532185}.Release|Any CPU.Build.0 = Release|Any CPU
 		{2A706AF9-3F44-4174-BE9B-D4644A532185}.Travis|Any CPU.ActiveCfg = Debug|Any CPU
 		{2A706AF9-3F44-4174-BE9B-D4644A532185}.Travis|Any CPU.Build.0 = Debug|Any CPU
+		{3E48776D-7AAA-4F08-896A-CCE5239353F0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3E48776D-7AAA-4F08-896A-CCE5239353F0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3E48776D-7AAA-4F08-896A-CCE5239353F0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3E48776D-7AAA-4F08-896A-CCE5239353F0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3E48776D-7AAA-4F08-896A-CCE5239353F0}.Travis|Any CPU.ActiveCfg = Debug|Any CPU
+		{3E48776D-7AAA-4F08-896A-CCE5239353F0}.Travis|Any CPU.Build.0 = Debug|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

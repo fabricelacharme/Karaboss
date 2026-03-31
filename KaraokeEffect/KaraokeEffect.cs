@@ -44,6 +44,7 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading;
 using System.Windows.Forms;
+using kar;
 
 
 namespace keffect
@@ -485,6 +486,8 @@ namespace keffect
         #endregion text color
 
 
+        #region Text transform
+
         // Text To Upper
         private bool _bforceUppercase = false;
         public bool bforceUppercase
@@ -500,6 +503,9 @@ namespace keffect
                 }            
             }
         }
+
+
+        #endregion Text transform
 
 
         #region Frame type
@@ -799,6 +805,9 @@ namespace keffect
             }
         }
         */
+
+        
+
 
         // new
         private KaraokeLine _karaokeLine;

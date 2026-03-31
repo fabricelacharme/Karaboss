@@ -32,9 +32,7 @@
 
 #endregion
 
-using FlShell.Interop;
 using Karaboss.MidiLyrics;
-using Karaboss.Mp3.Mp3Lyrics;
 using Karaboss.SRT;
 using Mozilla.NUniversalCharDet;
 using System;
@@ -45,7 +43,7 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
-using static System.Windows.Forms.LinkLabel;
+using kar;
 
 namespace Karaboss.Utilities
 {
@@ -55,7 +53,7 @@ namespace Karaboss.Utilities
         Syllabes = 1,
     }
 
-
+    /*
     public class Syllable
     {
         public string Text { get; set; }
@@ -116,7 +114,7 @@ namespace Karaboss.Utilities
         }
 
     }
-
+    */
 
     public static class LyricsUtilities
     {
@@ -870,7 +868,7 @@ namespace Karaboss.Utilities
       
         
         
-        public static keffect.KaraokeLyrics ReadLrcFromFile2(string fullPath)
+        public static keffect.KaraokeLyrics ReadLrcFromFile(string fullPath)
         {
             // Cases 
             // A line with a single timestamp like "[00:44.22]" is a paragraph                                                      => OK
@@ -2581,6 +2579,8 @@ namespace Karaboss.Utilities
 
         }
 
+
+        /*
         public static keffect.KaraokeLyrics ReadKokFromFile2(string FileName, double duration)
         {
             string sLyric;                               // Syllabe or line separator (first word of the line is prefixed with a line separator ('/'), except if it is the first line of the file)
@@ -2666,7 +2666,7 @@ namespace Karaboss.Utilities
             return SyncLyrics;
 
         }
-
+        */
 
         /// <summary>
         /// Reads a file containing pairs of words and timestamps, and returns a list of tuples representing each word

@@ -2467,7 +2467,7 @@ namespace Karaboss
             Cursor.Current = Cursors.WaitCursor;
          
             // Load LRC file without any separators
-            keffect.KaraokeLyrics SyncLyrics = LyricsUtilities.ReadLrcFromFile2(FileName);
+            keffect.KaraokeLyrics SyncLyrics = LyricsUtilities.ReadLrcFromFile(FileName);
 
             // Formate SyncLyrics to meet Midi editor needs (line separators and paragraphs on dedicated lines)
             SyncLyrics = LyricsUtilities.FormateSyncLyricsForMidi(SyncLyrics);

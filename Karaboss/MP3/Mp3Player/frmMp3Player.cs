@@ -1388,7 +1388,7 @@ namespace Karaboss.Mp3
                     // TODO: return lyrics without separators as previous case
                     //Mp3LyricsMgmtHelper.SyncLyrics = Mp3LyricsMgmtHelper.GetKEffectLrcLyrics(FileName);
                     //Mp3LyricsMgmtHelper.SyncLyrics = Mp3LyricsMgmtHelper.GetLyricsFromLrcFile(FileName);
-                    Mp3LyricsMgmtHelper.mp3KaraokeLyrics = Mp3LyricsMgmtHelper.GetLyricsFromLrcFile2(FileName);                    
+                    Mp3LyricsMgmtHelper.mp3KaraokeLyrics = Mp3LyricsMgmtHelper.GetLyricsFromLrcFile(FileName);                    
 
                     DisplayFrmMp3Lyrics();
                     break;
@@ -2178,7 +2178,7 @@ namespace Karaboss.Mp3
             {              
                 // NEW                
                 //List <List<keffect.KaraokeEffect.kSyncText>> SyncLyrics = LyricsUtilities.ReadKokFromFile(fileName, _duration);
-                keffect.KaraokeLyrics karaokeLyrics = LyricsUtilities.ReadKokFromFile2(fileName, _duration);
+                keffect.KaraokeLyrics karaokeLyrics = LyricsUtilities.ReadKokFromFile(fileName, _duration);
 
                 // Populate DataGridView
                 //PopulateDataGridView(SyncLyrics);
@@ -2508,7 +2508,7 @@ namespace Karaboss.Mp3
             //Mp3LyricsMgmtHelper.SyncLyrics = LyricsUtilities.ReadLrcFromFile(FileName);
 
             // TEST load LRC with new KaraokeLyrics class
-            keffect.KaraokeLyrics SyncLyrics = LyricsUtilities.ReadLrcFromFile2(FileName);
+            keffect.KaraokeLyrics SyncLyrics = LyricsUtilities.ReadLrcFromFile(FileName);
 
 
             PopulateMetadataTags();
