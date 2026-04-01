@@ -3946,7 +3946,7 @@ namespace Karaboss
 
                 // Window closed
                 DisplayLyricsForm();
-                frmMidiLyric.LoadSong(myLyricsMgmt.plLyrics);
+                frmMidiLyric.LoadSong(myLyricsMgmt.plLyrics, myLyricsMgmt.KLyrics);
             }
 
             // Refresh display of lyrics
@@ -4248,6 +4248,12 @@ namespace Karaboss
             if (currentPlaylistItem == null && !Karaclass.m_ShowChords && myLyricsMgmt.OrgplLyrics.Count == 0)
             { return; }
 
+            if (currentPlaylistItem == null && !Karaclass.m_ShowChords && myLyricsMgmt.OrgKLyrics.Lines.Count == 0)
+            {
+                return;
+            }
+
+
 
             myLyricsMgmt.ResetDisplayChordsOptions(Karaclass.m_ShowChords);
 
@@ -4280,7 +4286,7 @@ namespace Karaboss
                     frmMidiLyric.TxtNbLines = Properties.Settings.Default.TxtNbLines;
                 }
 
-                frmMidiLyric.LoadSong(myLyricsMgmt.plLyrics);
+                frmMidiLyric.LoadSong(myLyricsMgmt.plLyrics, myLyricsMgmt.KLyrics);
             }
         }
 

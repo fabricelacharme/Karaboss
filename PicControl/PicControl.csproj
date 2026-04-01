@@ -57,6 +57,10 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\KaraokeLyrics\KaraokeLyrics.csproj">
+      <Project>{3e48776d-7aaa-4f08-896a-cce5239353f0}</Project>
+      <Name>KaraokeLyrics</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Sanford.Multimedia.Timers\Sanford.Multimedia.Timers.csproj">
       <Project>{14d9362a-7f0b-4e3c-b219-12fea0a0b61f}</Project>
       <Name>Sanford.Multimedia.Timers</Name>

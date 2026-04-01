@@ -34,7 +34,6 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
@@ -44,8 +43,7 @@ using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Windows.Forms;
-using System.Xml.Linq;
-using static System.Windows.Forms.LinkLabel;
+using kar;
 
 namespace PicControl
 {
@@ -103,6 +101,13 @@ namespace PicControl
         }
 
         #endregion classes
+
+
+        #region KaraokeLyrics
+
+        public kLyrics KLyrics { get; set; }
+
+        #endregion KaraokeLyrics
 
 
         #region Slideshow

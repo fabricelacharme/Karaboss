@@ -279,14 +279,19 @@ namespace Karaboss.MidiLyrics
                         // 1. If chords are  already included in lyrics
                         // Add false lyrics in chords alone (instrumental) ???
                         FullExtractLyrics(ShowChords);
+                        FullExtractLyrics2(ShowChords);
                         break;
                     case ChordsOrigins.XmlEmbedded:
                         // Chords are provided by the Xml score
                         if (plLyrics.Count == 0)
                             FullExtractLyrics(ShowChords);
+                        if (KLyrics.Lines.Count == 0)
+                            FullExtractLyrics2(ShowChords);
+
                         // include xml chords in plLyrics
                         PopulateXmlChords(lstXmlChords);
                         CleanLyrics();
+                        
                         break;
                     
                     /* FUTURE USE
@@ -301,7 +306,11 @@ namespace Karaboss.MidiLyrics
                         if (plLyrics.Count == 0)
                             FullExtractLyrics(ShowChords);
 
+                        if (KLyrics.Lines.Count == 0)
+                            FullExtractLyrics2(ShowChords);
+
                         PopulateDetectedChords();
+                        
                         // Clean lyrics HERE !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
                         CleanLyrics();
                         break;
@@ -325,8 +334,9 @@ namespace Karaboss.MidiLyrics
                 
                 // All could be replaced by FullExtractLyrics();
                 FullExtractLyrics(false);
+                FullExtractLyrics2(false);
 
-                
+
             }
         }
 
@@ -1353,6 +1363,10 @@ namespace Karaboss.MidiLyrics
                     #endregion Add syllable without chord in lyric
                 }
             }
+
+            if (kline != null && kline.Syllables.Count > 0)
+                l.Add(kline);
+
             return l;
         }
 

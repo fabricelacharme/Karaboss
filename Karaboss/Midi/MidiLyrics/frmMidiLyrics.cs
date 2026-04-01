@@ -32,9 +32,7 @@
 
 #endregion
 
-using Karaboss.Kfn;
 using Karaboss.MidiLyrics;
-using keffect;
 using PicControl;
 using System;
 using System.Collections.Generic;
@@ -45,7 +43,7 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
-using TagLib.Id3v2;
+using kar;
 
 namespace Karaboss
 {
@@ -66,6 +64,7 @@ namespace Karaboss
 
 
         #region private declarations
+        
 
         public MidiLyricsMgmt myLyricsMgmt { get; set; }               
 
@@ -161,7 +160,7 @@ namespace Karaboss
                 {
                     _bForceUppercase = value;
                     pBox.bforceUppercase = _bForceUppercase;
-                    LoadSong(myLyricsMgmt.plLyrics);
+                    LoadSong(myLyricsMgmt.plLyrics, myLyricsMgmt.KLyrics);
                 }
             }
         }
@@ -752,20 +751,23 @@ namespace Karaboss
         ///  1/4 = LineFeed
         ///  1/2 = Paragraph
         /// </summary>
-        public void LoadSong(List<plLyric> plLs)
+        public void LoadSong(List<plLyric> plLs, kLyrics _kLyrics)
         {
             string lyric;
             string chord;
 
             currentTextPos = 0;
 
+            #region Load lyrics and chords in picturebox control with plLyrics
             List<pictureBoxControl.plLyric> pcLyrics = new List<pictureBoxControl.plLyric>();
+            pictureBoxControl.plLyric pcL;
+
 
             for (int i = 0; i < plLs.Count; i++)
             {
                 plLyric plL = plLs[i];
 
-                pictureBoxControl.plLyric pcL = new pictureBoxControl.plLyric()
+                pcL = new pictureBoxControl.plLyric()
                 {
                     Type = (pictureBoxControl.plLyric.Types)plL.CharType,
                 };
@@ -796,11 +798,73 @@ namespace Karaboss
                 pcLyrics.Add(pcL);
             }
 
-            // Load song
-            // Force Uppercase
+
+            #region transform kLyrics in plLyrics to load song in picturebox control with plLyrics
+
+            
+            List<pictureBoxControl.plLyric> pcLyrics2 = new List<pictureBoxControl.plLyric>();
+            
+            for (int i = 0; i < _kLyrics.Lines.Count; i++) 
+            { 
+                for (int j = 0; j < _kLyrics.Lines[i].Syllables.Count; j++)
+                {
+                    Syllable syll = _kLyrics.Lines[i].Syllables[j];
+                    pcL = new pictureBoxControl.plLyric()
+                    {
+                        Type = (pictureBoxControl.plLyric.Types)syll.CharType,                                                
+                        TicksOn = syll.TicksOn,
+                        TicksOff = syll.TicksOff
+                    };
+                    lyric = syll.Text;
+                    if (Karaclass.m_ShowChords)
+                    {
+                        // if bShowChords, the chords will be displayed above the lyrics, so clean chords included in lyrics
+                        if (myLyricsMgmt != null && myLyricsMgmt.ChordsOriginatedFrom == MidiLyricsMgmt.ChordsOrigins.Lyrics)
+                        {
+                            if (myLyricsMgmt.RemoveChordPattern == null)
+                            {
+                                MessageBox.Show("RemoveChordsPattern is null", Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                                return;
+                            }
+                            lyric = Regex.Replace(lyric, myLyricsMgmt.RemoveChordPattern, @"");
+                        }
+                    }
+                    pcL.Element = (syll.Chord, lyric);
+
+                    pcLyrics2.Add(pcL);
+                }
+
+                // Add LineFeed at the end of each line with last syllable TicksOff and next line first syllable TicksOn
+                int ticksOn = _kLyrics.Lines[i].Syllables.Last().TicksOff;
+                int ticksOff = (i < _kLyrics.Lines.Count - 1) ? _kLyrics.Lines[i + 1].Syllables.First().TicksOn : ticksOn + 1000; // if last line, add 1s
+                pcL = new pictureBoxControl.plLyric() 
+                { 
+                    Type = pictureBoxControl.plLyric.Types.LineFeed, 
+                    Element = ("", _InternalSepLines),
+                    TicksOn = ticksOn, 
+                    TicksOff = ticksOff 
+                };
+                pcLyrics2.Add(pcL);
+
+            }
+            #endregion transform kLyrics in plLyrics to load song in picturebox control with plLyrics
+
+
+            // Load song            
+            pBox.LoadSong(pcLyrics);
+            #endregion load lyrics and chords in picturebox control with plLyrics
+
+
+            #region load lyrics and chords in picturebox control with kLyrics
+            
+            pBox.KLyrics = _kLyrics;
+
+            #endregion load lyrics and chords in picturebox control with kLyrics
+
+
+            // Force Uppercase         
             pBox.bforceUppercase = _bForceUppercase;
             pBox.bShowChords = Karaclass.m_ShowChords;
-            pBox.LoadSong(pcLyrics);
 
             //Initial position
             pBox.CurrentTextPos = -1;
@@ -1103,7 +1167,7 @@ namespace Karaboss
                 myLyricsMgmt.ResetDisplayChordsOptions(chkChords.Checked);
 
                 // Load modified lyrics into the picturebox
-                LoadSong(myLyricsMgmt.plLyrics);
+                LoadSong(myLyricsMgmt.plLyrics, myLyricsMgmt.KLyrics);
 
                 // Refresh score with or without chords
                 frmMidiPlayer frmMidiPlayer = Utilities.FormUtilities.GetForm<frmMidiPlayer>();
