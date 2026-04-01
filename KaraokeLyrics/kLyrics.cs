@@ -32,11 +32,14 @@ namespace kar
         public int TicksOn {  get; set; }
         public int TicksOff { get; set; }
 
+        public int Beat { get; set; }
+
 
         public Syllable(string text, double startTime, double duration)
         {
             CharType = CharTypes.Text;
             Text = text;
+            Beat = 0;
             Chord = string.Empty;
             IsChord = false;
             StartTime = startTime;
@@ -49,6 +52,7 @@ namespace kar
         {
             CharType = CharTypes.Text;
             Text = text;
+            Beat = 0;
             Chord = string.Empty;
             IsChord= false;
             StartTime = startTime;
@@ -61,6 +65,7 @@ namespace kar
         {
             CharType = CharTypes.Text;
             Text = string.Empty;
+            Beat = 0;
             Chord = string.Empty;
             IsChord = false;
             StartTime = 0;
