@@ -24,6 +24,7 @@ namespace kar
         public string Text { get; set; }
 
         public string Chord { get; set; }
+        public bool IsChord = false;
 
         public double StartTime { get; set; }
         public double Duration { get; set; }    // syllable duration
@@ -37,6 +38,7 @@ namespace kar
             CharType = CharTypes.Text;
             Text = text;
             Chord = string.Empty;
+            IsChord = false;
             StartTime = startTime;
             Duration = duration;
             TicksOn = 0;
@@ -48,6 +50,7 @@ namespace kar
             CharType = CharTypes.Text;
             Text = text;
             Chord = string.Empty;
+            IsChord= false;
             StartTime = startTime;
             Duration = 45;                // Default duration of 45 milliseconds if not specified
             TicksOn = 0;
@@ -59,6 +62,7 @@ namespace kar
             CharType = CharTypes.Text;
             Text = string.Empty;
             Chord = string.Empty;
+            IsChord = false;
             StartTime = 0;
             Duration = 45;                // Default duration of 45 milliseconds if not specified
             TicksOn = 0;
