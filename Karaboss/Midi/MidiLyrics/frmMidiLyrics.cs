@@ -762,7 +762,6 @@ namespace Karaboss
             List<pictureBoxControl.plLyric> pcLyrics = new List<pictureBoxControl.plLyric>();
             pictureBoxControl.plLyric pcL;
 
-
             for (int i = 0; i < plLs.Count; i++)
             {
                 plLyric plL = plLs[i];
@@ -801,62 +800,56 @@ namespace Karaboss
 
             #region transform kLyrics in plLyrics to load song in picturebox control with plLyrics
 
-            
-            List<pictureBoxControl.plLyric> pcLyrics2 = new List<pictureBoxControl.plLyric>();
-            
-            for (int i = 0; i < _kLyrics.Lines.Count; i++) 
-            { 
-                for (int j = 0; j < _kLyrics.Lines[i].Syllables.Count; j++)
+            List<plLyric> plLsNew = myLyricsMgmt.ConvertToPlLyric(_kLyrics);
+
+            List<pictureBoxControl.plLyric> pcLyricsNew = new List<pictureBoxControl.plLyric>();
+            pictureBoxControl.plLyric pcLNew;
+
+            for (int i = 0; i < plLsNew.Count; i++)
+            {
+                plLyric plLNew = plLsNew[i];
+
+                pcLNew = new pictureBoxControl.plLyric()
                 {
-                    Syllable syll = _kLyrics.Lines[i].Syllables[j];
-                    pcL = new pictureBoxControl.plLyric()
-                    {
-                        Type = (pictureBoxControl.plLyric.Types)syll.CharType,                                                
-                        TicksOn = syll.TicksOn,
-                        TicksOff = syll.TicksOff
-                    };
-                    lyric = syll.Text;
-                    if (Karaclass.m_ShowChords)
-                    {
-                        // if bShowChords, the chords will be displayed above the lyrics, so clean chords included in lyrics
-                        if (myLyricsMgmt != null && myLyricsMgmt.ChordsOriginatedFrom == MidiLyricsMgmt.ChordsOrigins.Lyrics)
-                        {
-                            if (myLyricsMgmt.RemoveChordPattern == null)
-                            {
-                                MessageBox.Show("RemoveChordsPattern is null", Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
-                                return;
-                            }
-                            lyric = Regex.Replace(lyric, myLyricsMgmt.RemoveChordPattern, @"");
-                        }
-                    }
-                    pcL.Element = (syll.Chord, lyric);
-
-                    pcLyrics2.Add(pcL);
-                }
-
-                // Add LineFeed at the end of each line with last syllable TicksOff and next line first syllable TicksOn
-                int ticksOn = _kLyrics.Lines[i].Syllables.Last().TicksOff;
-                int ticksOff = (i < _kLyrics.Lines.Count - 1) ? _kLyrics.Lines[i + 1].Syllables.First().TicksOn : ticksOn + 1000; // if last line, add 1s
-                pcL = new pictureBoxControl.plLyric() 
-                { 
-                    Type = pictureBoxControl.plLyric.Types.LineFeed, 
-                    Element = ("", _InternalSepLines),
-                    TicksOn = ticksOn, 
-                    TicksOff = ticksOff 
+                    Type = (pictureBoxControl.plLyric.Types)plLNew.CharType,
                 };
-                pcLyrics2.Add(pcL);
 
+                // Chord, lyric
+                chord = plLNew.Element.Item1;
+                lyric = plLNew.Element.Item2;
+
+                if (Karaclass.m_ShowChords)
+                {
+                    // if bShowChords, the chords will be displayed above the lyrics, so clean chords included in lyrics
+                    if (myLyricsMgmt != null && myLyricsMgmt.ChordsOriginatedFrom == MidiLyricsMgmt.ChordsOrigins.Lyrics)
+                    {
+                        if (myLyricsMgmt.RemoveChordPattern == null)
+                        {
+                            MessageBox.Show("RemoveChordsPattern is null", Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            return;
+                        }
+                        lyric = Regex.Replace(lyric, myLyricsMgmt.RemoveChordPattern, @"");
+                    }
+                }
+                // Add element
+                pcLNew.Element = (chord, lyric);
+                pcLNew.TicksOn = plLNew.TicksOn;
+                pcLNew.TicksOff = plLNew.TicksOff;
+                pcLyricsNew.Add(pcLNew);
             }
+
+
             #endregion transform kLyrics in plLyrics to load song in picturebox control with plLyrics
 
 
             // Load song            
             pBox.LoadSong(pcLyrics);
+            //pBox.LoadSong(pcLyricsNew);
             #endregion load lyrics and chords in picturebox control with plLyrics
 
 
             #region load lyrics and chords in picturebox control with kLyrics
-            
+
             pBox.KLyrics = _kLyrics;
 
             #endregion load lyrics and chords in picturebox control with kLyrics
