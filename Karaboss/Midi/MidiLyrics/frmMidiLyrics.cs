@@ -50,6 +50,7 @@ namespace Karaboss
     public partial class frmMidiLyrics : Form, IMessageFilter
     {
         #region Move form without title bar
+
         public const int WM_NCLBUTTONDOWN = 0xA1;
         public const int HT_CAPTION = 0x2;
         public const int WM_LBUTTONDOWN = 0x0201;
@@ -798,6 +799,9 @@ namespace Karaboss
             }
 
 
+            #endregion transform kLyrics in plLyrics to load song in picturebox control with plLyrics
+
+
             #region transform kLyrics in plLyrics to load song in picturebox control with plLyrics
 
             List<plLyric> plLsNew = myLyricsMgmt.ConvertToPlLyric(_kLyrics);
@@ -841,18 +845,25 @@ namespace Karaboss
 
             #endregion transform kLyrics in plLyrics to load song in picturebox control with plLyrics
 
+            #region compare plLyrics and plLyricsNew
 
-            // Load song            
+            // Compare the two types of lyrics 
+            myLyricsMgmt.CompareLyrics(plLs, _kLyrics);
+
+
+            #endregion compare plLyrics and plLyricsNew
+
+
+            #region load lyrics and chords in picturebox control
+
+            // Load lyrics with plLyrics            
             pBox.LoadSong(pcLyrics);
             //pBox.LoadSong(pcLyricsNew);
-            #endregion load lyrics and chords in picturebox control with plLyrics
 
-
-            #region load lyrics and chords in picturebox control with kLyrics
-
+            // Load kLyrics with kLyrics to have all the information for chords and lyrics positions, used for balls animation
             pBox.KLyrics = _kLyrics;
 
-            #endregion load lyrics and chords in picturebox control with kLyrics
+            #endregion load lyrics and chords in picturebox control
 
 
             // Force Uppercase         
@@ -893,7 +904,6 @@ namespace Karaboss
         {
             pBox.Terminate();
         }
-
      
 
         #endregion public methods

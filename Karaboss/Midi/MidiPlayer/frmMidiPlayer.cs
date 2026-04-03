@@ -1059,8 +1059,15 @@ namespace Karaboss
 
                     track = sequence1.tracks[myLyricsMgmt.MelodyTrackNum];
                     if (myLyricsMgmt.plLyrics.Count == 0)
+                    {
                         myLyricsMgmt.FullExtractLyrics(true);
+                        myLyricsMgmt.FullExtractLyrics2(true);
+                    }
+                    
                     myLyricsMgmt.PopulateDetectedChords();
+                    myLyricsMgmt.PopulateDetectedChords2();
+
+
                     myLyricsMgmt.CleanLyrics();
                     track.ClearChordNameSymbols();
                     for (int i = 0; i < myLyricsMgmt.plLyrics.Count; i++)

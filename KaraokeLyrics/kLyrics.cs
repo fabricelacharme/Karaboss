@@ -87,8 +87,8 @@ namespace kar
     public class kLine
     {
         public List<Syllable> Syllables { get; set; }
-        public double StartTime => Syllables.First().StartTime;
-        public double EndTime => Syllables.Last().StartTime + Syllables.Last().Duration;
+        //public double StartTime => Syllables.First().StartTime;
+        //public double EndTime => Syllables.Last().StartTime + Syllables.Last().Duration;
 
         public kLine(List<Syllable> syllables)
         {
