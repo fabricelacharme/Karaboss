@@ -1063,8 +1063,8 @@ namespace Karaboss
                         myLyricsMgmt.FullExtractLyrics(true);
                         myLyricsMgmt.FullExtractLyrics2(true);
                     }
-                    
-                    myLyricsMgmt.PopulateDetectedChords();
+
+                    myLyricsMgmt.plLyrics = myLyricsMgmt.PopulateDetectedChords(myLyricsMgmt.plLyrics);
                     myLyricsMgmt.PopulateDetectedChords2();
 
 

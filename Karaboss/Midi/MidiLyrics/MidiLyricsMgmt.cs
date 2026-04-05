@@ -33,6 +33,7 @@
 #endregion
 
 using kar;
+using Karaboss.GuitarTraining;
 using MusicXml;
 using PicControl;
 using Sanford.Multimedia.Midi;
@@ -281,12 +282,12 @@ namespace Karaboss.MidiLyrics
             for (int i = 0;i < lstpl.Count;i++) 
             {
                 //Console.WriteLine(lstpl[i].Element.Item2 + " - " + _lstpl[i].Element.Item2);
-                
+                /*
                 if (lstpl[i].CharType != _lstpl[i].CharType || lstpl[i].TicksOn != _lstpl[i].TicksOn || lstpl[i].TicksOff != _lstpl[i].TicksOff || lstpl[i].Element.Item1 != _lstpl[i].Element.Item1 || lstpl[i].Element.Item2 != _lstpl[i].Element.Item2)
                 {
                     Console.WriteLine("************** Error in lyrics comparison at index " + i + " - " + lstpl[i].Element.Item2 + " : " + _lstpl[i].Element.Item2);
                 }
-                
+                */
             }
             
         }
@@ -482,7 +483,7 @@ namespace Karaboss.MidiLyrics
 
                         CompareLyrics(plLyrics, KLyrics);
 
-                        PopulateDetectedChords();
+                        plLyrics = PopulateDetectedChords(plLyrics);
                         PopulateDetectedChords2();
 
                         // Clean lyrics HERE !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -2688,7 +2689,9 @@ namespace Karaboss.MidiLyrics
                         {
                             kline.Add(tmpline.Syllables[k]);
                         }
-                        lstKl.Add(kline);
+
+                        if (kline.Syllables.Count > 0)                                                 
+                            lstKl.Add(kline);
 
                         // New line with chords
                         kline = new kLine();
@@ -2696,11 +2699,14 @@ namespace Karaboss.MidiLyrics
                         {
                             kline.Add(tmpline.Syllables[k]);
                         }
-                        lstKl.Add(kline);
+
+                        if (kline.Syllables.Count > 0)                            
+                            lstKl.Add(kline);
                     }
                     else
                     {
-                        lstKl.Add(l.Lines[i]);
+                        if (l.Lines[i].Syllables.Count > 0)                            
+                            lstKl.Add(l.Lines[i]);
                     }
                 }
             }
@@ -3452,7 +3458,7 @@ namespace Karaboss.MidiLyrics
         /// <summary>
         /// Include detected chords into the list plLyrics
         /// </summary>
-        public void PopulateDetectedChords()
+        public void PopulateDetectedChordsold()
         {            
             int nbBeatsPerMeasure = sequence1.Numerator;
             int beatDuration = _measurelen / nbBeatsPerMeasure;
@@ -3613,6 +3619,184 @@ namespace Karaboss.MidiLyrics
             //TestCheckTimes();
             // Add tickoff to new elements chord ?
             //CheckTimes();
+        }
+
+
+        public List<plLyric> PopulateDetectedChords(List<plLyric> pll)
+        {
+            int nbBeatsPerMeasure = sequence1.Numerator;
+            int beatDuration = _measurelen / nbBeatsPerMeasure;
+
+            int ticks;            
+            string chordName;
+            string lyric;
+            string lastChordName = "<>";
+            
+            
+            plLyric pl;
+            List<plLyric> result = new List<plLyric>();
+
+            // Launch chords discovery
+            ChordsAnalyser.ChordAnalyser Analyser = new ChordsAnalyser.ChordAnalyser(sequence1);
+
+            GridBeatChords = Analyser.GridBeatChords;
+
+            for (int beat = 1; beat <= GridBeatChords.Count; beat++)
+            {
+                if (GridBeatChords.ContainsKey(beat))
+                {
+                    chordName = GridBeatChords[beat].Item1;
+
+                    if (chordName != string.Empty && chordName != EmptyChord && chordName != ChordNotFound && chordName != lastChordName)
+                    {
+                        lastChordName = chordName;
+
+                        // With Analyser, the ticks precision is a beat
+                        ticks = (beat - 1) * beatDuration;
+
+                        lyric = formateLyricOfChord(chordName, "");
+                         pl = new plLyric() {
+                            CharType = plLyric.CharTypes.Text,
+                            Element = (chordName, lyric),
+                            TicksOn = ticks,
+                            TicksOff = ticks,
+                            Beat = beat,
+                            IsChord = true                        
+                        };
+                        result.Add(pl);
+                    }
+                }
+            }
+
+            
+            // Search if chord already exists in pll
+            
+            // Add pll to result
+            for (int i =  0; i < pll.Count; i++)
+            {                
+                result.Add(pll[i]);
+            }
+
+            // Sort result by TicksOn            
+            result = result.OrderBy(o => o.TicksOn).ToList();
+
+            // Search for doubles
+            bool bFound = false;
+            do
+            {
+                bFound = false;
+                for (int i = 0; i < result.Count - 1; i++)
+                {
+                    if (result[i].CharType == plLyric.CharTypes.Text && result[i + 1].CharType == plLyric.CharTypes.Text)
+                    {
+                        if (result[i].TicksOn == result[i + 1].TicksOn && result[i].Element == result[i + 1].Element)
+                        {
+                            bFound = true;
+                            result.RemoveAt(i);
+                            break;
+                        }
+                    }
+                }
+            }
+            while (bFound);
+
+
+            
+           // Move chords that are last items of a line to the next line
+           do
+           {
+               bFound = false;
+               // If chord is the last item of the line, it should be moved to the first item of the next line
+               for (int i = 0; i < result.Count - 2; i++)
+               {
+                   if ((result[i].CharType == plLyric.CharTypes.Text && result[i].Element.Item1 != string.Empty && result[i].Element.Item2.IndexOf("--") == 0 && result[i + 1].CharType != plLyric.CharTypes.Text))
+                   {
+                       if (result[i + 2].CharType == plLyric.CharTypes.Text)
+                       {                                                        
+                           result.Insert(i + 2, result[i]);
+                           result.RemoveAt(i);
+                           bFound = true;
+                           break;
+                       }
+                   }
+
+               }
+           } while(bFound);
+           
+
+
+
+            // Merge some chords and lyrics by testing down
+            // ie chords placed after the lyric
+            do
+            {
+                bFound = false;
+                for (int i = result.Count - 1; i >= 1; i--)
+                {
+                    if (result[i].CharType == plLyric.CharTypes.Text && result[i - 1].CharType == plLyric.CharTypes.Text)
+                    {
+                        // Check if a chord is inside a lyric (ie its TicksOn is greater than the Tickson of the lyrics and is lower than the TicksOff of the lyric
+                        if (result[i].Element.Item1 != string.Empty && result[i].Element.Item2.IndexOf("--") == 0 && result[i].TicksOn < result[i - 1].TicksOff)
+                        {
+                            // Include the chord at i into the lyric at i - 1                        
+                            result[i - 1].Element = (result[i].Element.Item1, result[i - 1].Element.Item2);
+                            result[i - 1].IsChord = false;
+                            result.RemoveAt(i);
+                            bFound = true;
+                            break;
+                        }
+                    }
+                }
+            } while (bFound);
+
+            // Merge by testing up
+            // ie chords placed before the lyric having the same tickson
+            do
+            {
+                bFound = false;
+                for (int i = 0; i < result.Count - 1; i++)
+                {
+                    if (result[i].CharType == plLyric.CharTypes.Text && result[i + 1].CharType == plLyric.CharTypes.Text)
+                    {
+                        // Check if a chord is inside a lyric (ie its TicksOn is greater than the Tickson of the lyrics and is lower than the TicksOff of the lyric
+                        if (result[i].Element.Item1 != string.Empty && result[i].Element.Item2.IndexOf("--") == 0 && result[i].TicksOn >= result[i + 1].TicksOn && result[i].TicksOff <= result[i + 1].TicksOff)
+                        {
+                            // Include the chord at i into the lyric at i - 1                        
+                            result[i + 1].Element = (result[i].Element.Item1, result[i + 1].Element.Item2);
+                            result[i + 1].IsChord = false;
+                            result.RemoveAt(i);
+                            bFound = true;
+                            break;
+                        }
+                    }
+                }
+            } while (bFound);
+
+
+            /*
+            // Move chords that are last items of a line to the next line
+            do
+            {
+                bFound = false;
+                // If chord is the last item of the line, it should be moved to the first item of the next line
+                for (int i = 0; i < result.Count - 2; i++)
+                {
+                    if ((result[i].CharType == plLyric.CharTypes.Text && result[i].Element.Item1 != string.Empty && result[i].Element.Item2.IndexOf("--") == 0 && result[i + 1].CharType != plLyric.CharTypes.Text))
+                    {
+                        if (result[i + 2].CharType == plLyric.CharTypes.Text)
+                        {                                                        
+                            result.Insert(i + 2, result[i]);
+                            result.RemoveAt(i);
+                            bFound = true;
+                            break;
+                        }
+                    }
+
+                }
+            } while(bFound);
+            */
+
+            return result;
         }
 
         public void PopulateDetectedChords2()
