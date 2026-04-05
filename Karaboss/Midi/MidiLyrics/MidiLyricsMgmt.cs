@@ -475,10 +475,10 @@ namespace Karaboss.MidiLyrics
                         // Chords have to be discovered
                         // 2. If chords are not included in lyrics,
                         // we have to detect chords and add them to the lyrics or add them to an extra
-                        if (plLyrics.Count == 0)
+                        //if (plLyrics.Count == 0)
                             FullExtractLyrics(ShowChords);
 
-                        if (KLyrics.Lines.Count == 0)
+                        //if (KLyrics.Lines.Count == 0)
                             FullExtractLyrics2(ShowChords);
 
                         CompareLyrics(plLyrics, KLyrics);

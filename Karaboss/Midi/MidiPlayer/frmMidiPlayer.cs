@@ -4260,8 +4260,6 @@ namespace Karaboss
                 return;
             }
 
-
-
             myLyricsMgmt.ResetDisplayChordsOptions(Karaclass.m_ShowChords);
 
             DisplayLyricsForm();
