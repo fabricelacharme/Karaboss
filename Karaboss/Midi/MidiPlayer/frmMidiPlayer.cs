@@ -1065,7 +1065,7 @@ namespace Karaboss
                     }
 
                     myLyricsMgmt.plLyrics = myLyricsMgmt.PopulateDetectedChords(myLyricsMgmt.plLyrics);
-                    myLyricsMgmt.PopulateDetectedChords2();
+                    myLyricsMgmt.KLyrics =  myLyricsMgmt.PopulateDetectedChords2(myLyricsMgmt.KLyrics);
 
 
                     myLyricsMgmt.CleanLyrics();
