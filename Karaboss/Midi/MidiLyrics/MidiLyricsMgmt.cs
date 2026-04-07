@@ -164,12 +164,20 @@ namespace Karaboss.MidiLyrics
         public bool bHasLyrics
         {
             get {
+
+                if (OrgKLyrics.Lines.Count > 0) return true;
+                else if (KLyrics != null && KLyrics.Lines.Count > 0) return true;
+                else return false;
+                
+                /*
                 if (OrgplLyrics.Count > 0)
                     return true;
                 else if (plLyrics != null && plLyrics.Count > 0)
                     return true;
                 else
-                    return false; }
+                    return false; 
+                */
+            }
         }
 
 
@@ -213,6 +221,8 @@ namespace Karaboss.MidiLyrics
             set { _gridbeatchords = value; } 
         }               
               
+
+        public bool bShowChords {  get; set; }
         
         #endregion public
 
@@ -221,8 +231,10 @@ namespace Karaboss.MidiLyrics
         /// Constructor
         /// </summary>
         /// <param name="sequence"></param>
-        public MidiLyricsMgmt(Sequence sequence) 
+        public MidiLyricsMgmt(Sequence sequence, bool showchords = false) 
         {                                                
+            bShowChords = showchords;
+
             _lyricstracknum = -1;
             _melodytracknum = -1;
             
@@ -249,16 +261,16 @@ namespace Karaboss.MidiLyrics
             #region Minimal lyrics extraction
 
             // old
-            OrgplLyrics = ExtractLyrics();
+            //OrgplLyrics = ExtractLyrics();
             // new
             OrgKLyrics = ExtractLyrics2();
 
 
-            OrgplLyrics = RemoveExecessiveLinebreaks(OrgplLyrics);
+            //OrgplLyrics = RemoveExecessiveLinebreaks(OrgplLyrics);
             OrgKLyrics = RemoveExecessiveLinebreaks2(OrgKLyrics);
 
             // Compare the two types of lyrics 
-            CompareLyrics(OrgplLyrics, OrgKLyrics);
+            //CompareLyrics(OrgplLyrics, OrgKLyrics);
 
             // Extract chords in lyrics
             bHasChordsInLyrics = HasChordsInLyrics(_lyrics);
@@ -266,8 +278,8 @@ namespace Karaboss.MidiLyrics
                 ChordsOriginatedFrom = ChordsOrigins.Lyrics;
 
             // Search for the melody track            
-            _melodytracknum = GuessMelodyTrack(OrgplLyrics);
-            int melodytracknum2 = GuessMelodyTrack2(OrgKLyrics);
+            //_melodytracknum = GuessMelodyTrack(OrgplLyrics);
+            _melodytracknum = GuessMelodyTrack2(OrgKLyrics);
 
             #endregion Minimal lyrics extraction
         }
@@ -436,8 +448,7 @@ namespace Karaboss.MidiLyrics
         /// Reload lyrics with choosen options
         /// </summary>
         public void ResetDisplayChordsOptions(bool ShowChords)
-        {
-            //bShowChords = ShowChords;
+        {            
 
             if (ShowChords)
             {
@@ -450,13 +461,13 @@ namespace Karaboss.MidiLyrics
                     case ChordsOrigins.Lyrics:
                         // 1. If chords are  already included in lyrics
                         // Add false lyrics in chords alone (instrumental) ???
-                        FullExtractLyrics(ShowChords);
+                        //FullExtractLyrics(ShowChords);
                         FullExtractLyrics2(ShowChords);
                         break;
                     case ChordsOrigins.XmlEmbedded:
                         // Chords are provided by the Xml score
-                        if (plLyrics.Count == 0)
-                            FullExtractLyrics(ShowChords);
+                        //if (plLyrics.Count == 0)
+                        //    FullExtractLyrics(ShowChords);
                         if (KLyrics.Lines.Count == 0)
                             FullExtractLyrics2(ShowChords);
 
@@ -476,14 +487,14 @@ namespace Karaboss.MidiLyrics
                         // 2. If chords are not included in lyrics,
                         // we have to detect chords and add them to the lyrics or add them to an extra
                         //if (plLyrics.Count == 0)
-                            FullExtractLyrics(ShowChords);
+                        //    FullExtractLyrics(ShowChords);
 
                         //if (KLyrics.Lines.Count == 0)
                             FullExtractLyrics2(ShowChords);
 
-                        CompareLyrics(plLyrics, KLyrics);
+                        //CompareLyrics(plLyrics, KLyrics);
 
-                        plLyrics = PopulateDetectedChords(plLyrics);
+                        //plLyrics = PopulateDetectedChords(plLyrics);
                         KLyrics =  PopulateDetectedChords2(KLyrics);
 
                         // Clean lyrics HERE !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -508,7 +519,7 @@ namespace Karaboss.MidiLyrics
                 // So we have to delete all additions made by the chord discovery or adddition from files.                
                 
                 // All could be replaced by FullExtractLyrics();
-                FullExtractLyrics(false);
+                //FullExtractLyrics(false);
                 FullExtractLyrics2(false);
 
 
@@ -1857,6 +1868,9 @@ namespace Karaboss.MidiLyrics
                     KLyrics.Add(newline);
                 }
 
+                 kLyrics test = OrgKLyrics.Clone();
+
+
                 if (KLyrics.Lines.Count == 0)
                     return;
 
@@ -2306,17 +2320,40 @@ namespace Karaboss.MidiLyrics
         /// </summary>
         public void CleanLyrics()
         {            
-            plLyrics = RemoveEmptyLyrics(plLyrics);            
+            //plLyrics = RemoveEmptyLyrics(plLyrics);            
             
-            plLyrics = AddLineFeedAfterInstrumental(plLyrics);
+            //plLyrics = AddLineFeedAfterInstrumental(plLyrics);
             KLyrics = AddLineFeedAfterInstrumental2(KLyrics);
             
-            plLyrics = TruncateInstrumental(plLyrics);
+            //plLyrics = TruncateInstrumental(plLyrics);
             KLyrics = TruncateInstrumental2(KLyrics);
 
-            plLyrics = AddLineFeedBeforeInstrumental(plLyrics);      
+            //plLyrics = AddLineFeedBeforeInstrumental(plLyrics);      
             KLyrics = AddLineFeedBeforeInstrumental2(KLyrics);
             //plLyrics = RemoveExtraLinefeeds(plLyrics);            
+
+            KLyrics = AdjustChordTicks(KLyrics);
+
+        }
+
+
+        private kLyrics AdjustChordTicks(kLyrics lyrics)
+        {
+            kLyrics result = lyrics.Clone();
+            int lasttickson = result.Lines[result.Lines.Count - 1].Syllables.Last().TicksOn;
+
+            for (int i = result.Lines.Count - 1; i >= 0; i--)
+            {
+                for (int j = result.Lines[i].Syllables.Count - 1; j >=0; j--)
+                {                    
+                    if (result.Lines[i].Syllables[j].IsChord)
+                    {
+                        result.Lines[i].Syllables[j].TicksOff = lasttickson;
+                    }
+                    lasttickson = result.Lines[i].Syllables[j].TicksOn;
+                }
+            }
+            return result;
         }
 
 
@@ -2692,7 +2729,7 @@ namespace Karaboss.MidiLyrics
 
                         // new line with text
                         kline = new kLine();
-                        for (int k = 0; k < idx; k++)
+                        for (int k = 0; k < idx + 1; k++)
                         {
                             kline.Add(tmpline.Syllables[k]);
                         }
@@ -2702,7 +2739,7 @@ namespace Karaboss.MidiLyrics
 
                         // New line with chords
                         kline = new kLine();
-                        for (int k = idx; k < tmpline.Syllables.Count; k++)
+                        for (int k = idx + 1; k < tmpline.Syllables.Count; k++)
                         {
                             kline.Add(tmpline.Syllables[k]);
                         }
@@ -4063,34 +4100,18 @@ namespace Karaboss.MidiLyrics
             string chordName;
             string lyric;
             string lastChordName = "<>";
-            bool bFound;
-
-            #region guard
-            if (KLyrics.Lines.Count == 0)
-            {
-                //MessageBox.Show("No lyric line found. Please load lyrics before.", Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                //return kll;
-            }
-            #endregion guard
-
-            
-            kLyrics result = new kLyrics();
-            for (int i = 0; i < kll.Lines.Count; i ++)
-            {
-                result.Add(KLyrics.Lines[i]);
-            }
-
-            
+            bool bFound;                                             
             kLine chordline = new kLine();
             kLine l;            
             Syllable syll;
-            int tickfirst;
-            int ticklast;
-
-            kLine line;
-            kLine newline = new kLine();
-            int startj = 0;
+            kLine newline = new kLine();            
             kLine lplus;
+
+            kLyrics result = new kLyrics();
+            for (int i = 0; i < kll.Lines.Count; i++)
+            {
+                result.Add(KLyrics.Lines[i]);
+            }
 
 
             // Launch chords discovery
@@ -4098,6 +4119,59 @@ namespace Karaboss.MidiLyrics
 
             // Add all chords to a single KLine chordline
             GridBeatChords = Analyser.GridBeatChords;
+
+
+            
+            // Filter by chords not empty
+            Dictionary<int, (string, int)> dicChords = new Dictionary<int, (string, int)>();
+            for (int beat = 1; beat <= GridBeatChords.Count; beat++)
+            {
+                if (GridBeatChords.ContainsKey(beat))
+                {
+                    chordName = GridBeatChords[beat].Item1;
+                    if (chordName != string.Empty && chordName != EmptyChord && chordName != ChordNotFound && chordName != lastChordName)
+                    {
+                        dicChords.Add(beat, (GridBeatChords[beat].Item1, GridBeatChords[beat].Item2));
+                    }
+                }
+            }
+
+            foreach (int key in dicChords.Keys) 
+            {
+                if (dicChords.ContainsKey(key))
+                {
+                    chordName = dicChords[key].Item1;
+                    int beat = key;
+                    lastChordName = chordName;
+
+                    // With Analyser, the ticks precision is a beat
+                    ticks = (beat - 1) * beatDuration;
+
+
+                    int nextticks = 0;
+                    var mkey = dicChords.FirstOrDefault(x => x.Value.Item2 > ticks).Key;
+                    if (dicChords.ContainsKey(mkey))
+                        nextticks = dicChords[mkey].Item2;
+
+
+                    lyric = formateLyricOfChord(chordName, "");
+                    syll = new Syllable()
+                    {
+                        CharType = Syllable.CharTypes.Text,
+                        Text = lyric,
+                        Chord = chordName,
+                        TicksOn = ticks,
+                        //TicksOff = ticks,
+                        //TicksOff = ticks + beatDuration,   // minimum length of this chord is a beat
+                        TicksOff = nextticks > 0 ? nextticks : ticks + beatDuration,
+                        Beat = beat,
+                    };
+                    chordline.Add(syll);
+                }                
+            }
+                     
+         
+            /*
             for (int beat = 1; beat <= GridBeatChords.Count; beat++)
             {
                 if (GridBeatChords.ContainsKey(beat))
@@ -4108,8 +4182,15 @@ namespace Karaboss.MidiLyrics
                     {
                         lastChordName = chordName;
 
+                        //string nextchord = GridBeatChords.First(x => x.Value !=string.Empty).Value;
+                        //var myKey = GridBeatChords.FirstOrDefault( (string x => x.Value == "one", int y) ).Key;
+                        
+
                         // With Analyser, the ticks precision is a beat
                         ticks = (beat - 1) * beatDuration;
+
+                        //var mkey = GridBeatChords.FirstOrDefault(x => x.Value.Item1 != string.Empty && x.Value.Item2 > ticks);
+
 
                         lyric = formateLyricOfChord(chordName, "");
                         syll = new Syllable()
@@ -4118,77 +4199,18 @@ namespace Karaboss.MidiLyrics
                             Text = lyric,
                             Chord = chordName,
                             TicksOn = ticks,
-                            TicksOff = ticks,
+                            //TicksOff = ticks,
+                            TicksOff = ticks + beatDuration,   // minimum length of this chord is a beat
                             Beat = beat,                            
                         };
                         chordline.Add(syll);                                                                      
                     }
                 }
             }
+            */
 
             // Add chordline to KLyrics result
             result.Include(chordline);
-
-
-            /*
-            // For each line of tmp, add items of result if they have ticks between first and last syllable            
-            for (int i = 0; i < result.Lines.Count; i ++)
-            {                
-                //if (line.Syllables.Count == 1 && line.Syllables.First().CharType != Syllable.CharTypes.Text) continue;
-                line = result.Lines[i];
-                
-                tickfirst = line.Syllables.First().TicksOn;
-                ticklast = line.Syllables.Last().TicksOff;
-           
-                if (newline.Syllables.Count > 0)
-                {
-                    result.Add(newline);
-                    newline = new kLine();
-                }
-
-                for (int j = startj; j < chordline.Syllables.Count; j++)
-                {
-                    syll = chordline.Syllables[j];
-                    if (syll.TicksOn < tickfirst)
-                    {
-                        newline.Add(syll);
-                    }                                        
-                    else if (syll.TicksOn >= tickfirst && syll.TicksOn <= ticklast)
-                    {
-                        if (newline.Syllables.Count > 0)
-                        {
-                            //result.Add(newline);
-                            result.Lines.Insert(i, newline);
-                            newline = new kLine();
-                        }
-                        line.Add(syll);   
-                    }
-                    else if (syll.TicksOn > ticklast) 
-                    {
-                        if (newline.Syllables.Count > 0)
-                        {
-                            //result.Add(newline);                           
-                            result.Lines.Insert(i, newline);                            
-                            newline = new kLine();
-                        }
-                        startj = j;
-                        break;
-                    }
-                }                                
-            }
-            if (newline.Syllables.Count > 0)
-                result.Add(newline);
-
-
-            // Sort each line by TicksOn
-            for (int i = 0; i < result.Lines.Count; i ++)
-            {
-                l = result.Lines[i];                
-                l.Syllables = l.Syllables.OrderBy(o => o.TicksOn).ToList();                
-            }
-
-            */
-
 
 
             // Move trailing chords to next line                        
@@ -4234,8 +4256,20 @@ namespace Karaboss.MidiLyrics
                             // Check if a chord is inside a lyric (ie its TicksOn is greater than the Tickson of the lyrics and is lower than the TicksOff of the lyric
                             if (syll.IsChord && syll.TicksOn < syllprev.TicksOff)
                             {
+                                // chord           *************                    syll
+                                // lyric        -------------------                 syllprev
                                 // Include the chord at k into the lyric at k - 1                        
                                 syllprev.Chord = syll.Chord;                                                                
+                                l.Syllables.Remove(syll);
+                                bFound = true;
+                                bBreak = true;
+                                break;
+                            }
+                            else if (syll.IsChord && syll.TicksOn < syllprev.TicksOff &&  syll.TicksOn - syllprev.TicksOn <= beatDuration && syll.TicksOff >= syllprev.TicksOff)
+                            {
+                                // chord                *****************
+                                // lyric        -------------------
+                                syllprev.Chord = syll.Chord;
                                 l.Syllables.Remove(syll);
                                 bFound = true;
                                 bBreak = true;
@@ -4251,6 +4285,7 @@ namespace Karaboss.MidiLyrics
             // Merge by testing up
             // ie chords placed before the lyric having the same tickson
             Syllable syllnext;
+            bBreak = false;
             do
             {
                 bFound = false;
@@ -4273,11 +4308,35 @@ namespace Karaboss.MidiLyrics
                             // Check if a chord is inside a lyric (ie its TicksOn is greater than the Tickson of the lyrics and is lower than the TicksOff of the lyric
                             if (syll.IsChord && syll.TicksOn >= syllnext.TicksOn && syll.TicksOff <= syllnext.TicksOff)
                             {
+                                // lyric        -------------------
+                                // chord          *************
+
                                 // Include the chord at i into the lyric at i - 1                        
                                 syllnext.Chord = syll.Chord;                                
                                 l.Syllables.Remove(syll);
                                 bFound = true;
                                 break;
+                            }
+                            else if (syll.IsChord && syll.TicksOn >= syllnext.TicksOn - beatDuration && syll.TicksOff <= syllnext.TicksOff)
+                            {
+                                // lyric        -------------------
+                                // chord    *****************
+                                // Chord placed just before, ending inside
+                                // Include the chord at i into the lyric at i - 1                        
+                                syllnext.Chord = syll.Chord;
+                                l.Syllables.Remove(syll);
+                                bFound = true;
+                                break;
+                            }
+                            else if (syll.IsChord && syll.TicksOn < syllnext.TicksOff && syllnext.TicksOn - syll.TicksOn <= beatDuration && syll.TicksOff >= syllnext.TicksOff)
+                            {
+                                // lyric        -------------------
+                                // chord                *****************
+                                syllnext.Chord = syll.Chord;
+                                l.Syllables.Remove(syll);
+                                bFound = true;
+                                break;
+
                             }
                         }
                     }

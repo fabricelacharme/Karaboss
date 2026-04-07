@@ -159,6 +159,19 @@ namespace kar
             Lines.Insert(index, line);
         }
 
+        public int Count
+        {
+            get 
+            {
+                int count = 0;
+                foreach (kLine line in Lines)
+                {
+                    count += line.Syllables.Count;
+                }
+                return count; 
+            }
+        }
+
         public void Include(kLyrics lyrics)
         {
             List<Syllable> lst = new List<Syllable>();

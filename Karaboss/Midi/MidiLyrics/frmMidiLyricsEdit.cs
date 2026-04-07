@@ -32,11 +32,13 @@
 
 #endregion
 
+using kar;
 using Karaboss.MidiLyrics;
 using Karaboss.Mp3.Mp3Lyrics;
 using Karaboss.Resources.Localization;
 using Karaboss.SRT;
 using Karaboss.Utilities;
+using keffect;
 using Sanford.Multimedia.Midi;
 using System;
 using System.Collections.Generic;
@@ -46,6 +48,7 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
+using TagLib.Riff;
 using static System.Windows.Forms.LinkLabel;
 
 namespace Karaboss
@@ -69,8 +72,9 @@ namespace Karaboss
 
         #region declarations
 
-        private MidiLyricsMgmt _myLyricsMgmt;        
-        private List<plLyric> localplLyrics;
+        private MidiLyricsMgmt _myLyricsMgmt;
+        //private List<plLyric> localplLyrics;
+        private kLyrics localplLyrics;
 
         #region Internal lyrics separators
 
@@ -159,7 +163,7 @@ namespace Karaboss
         /// <param name="myLyricsMgmt"></param>
         /// <param name="fileName"></param>
         /// <param name="EditChords"></param>
-        public frmMidiLyricsEdit(Sequence sequence, OutputDevice outDev, List<plLyric> plLyrics, MidiLyricsMgmt myLyricsMgmt, string fileName, bool EditChords = false)
+        public frmMidiLyricsEdit(Sequence sequence, OutputDevice outDev, kLyrics plLyrics, MidiLyricsMgmt myLyricsMgmt, string fileName, bool EditChords = false)
         {
             InitializeComponent();
 
@@ -192,8 +196,8 @@ namespace Karaboss
             #region inform 2 types of lyrics are present
             // If both formats of lyrics are available, dispay button allowing to switch
             _myLyricsMgmt = myLyricsMgmt;
-            int l = _myLyricsMgmt.lstpllyrics[0].Count;
-            int t = _myLyricsMgmt.lstpllyrics[1].Count;
+            int l = _myLyricsMgmt.lstkLyrics[0].Count;
+            int t = _myLyricsMgmt.lstkLyrics[1].Count;
             btnDisplayOtherLyrics.Visible = (l > 0 && t > 0 );
                       
             if (l > 0 && t > 0)
@@ -243,7 +247,7 @@ namespace Karaboss
             }
 
             // If first time = no lyrics
-            if (plLyrics.Count == 0)
+            if (plLyrics.Lines.Count == 0)
                 LoadTrackGuide();
             else
             {
@@ -514,7 +518,8 @@ namespace Karaboss
                 frmMidiPlayer frmMidiPlayer = Utilities.FormUtilities.GetForm<frmMidiPlayer>();
                 frmMidiPlayer.DeleteAllLyrics();
 
-                localplLyrics = new List<plLyric>();
+                //localplLyrics = new List<plLyric>();
+                localplLyrics = new kLyrics();
 
                 InitGridView();
                 txtResult.Text = string.Empty;
@@ -936,6 +941,7 @@ namespace Karaboss
         /// Display modifications into a textbox
         /// </summary>
         /// <param name="lLyrics"></param>
+        /*
         private void PopulateTextBox(List<plLyric> lLyrics)
         {
             string plElement; 
@@ -997,6 +1003,74 @@ namespace Karaboss
 
             txtResult.Text = tx;
 
+            txtResult.SelectAll();
+            txtResult.SelectionAlignment = HorizontalAlignment.Center;
+        }
+        */
+        private void PopulateTextBox(kLyrics lLyrics)
+        {
+            string plElement;
+            string tx = string.Empty;
+            int iParagraph;
+            int iLineFeed;
+            string reste;
+
+            if (lLyrics == null)
+                return;
+
+            for (int i = 0; i < lLyrics.Lines.Count; i++)
+            {
+                for (int j = 0; j < lLyrics.Lines[i].Syllables.Count; j++)
+                {
+
+                    // Affiche les blancs
+                    plElement = lLyrics.Lines[i].Syllables[j].Text;
+                    iParagraph = plElement.LastIndexOf(_InternalSepParagraphs);
+                    iLineFeed = plElement.LastIndexOf(_InternalSepLines);
+
+                    // If paragraph
+                    if (iParagraph == 0 || (plElement.Length > _InternalSepParagraphs.Length && iParagraph == plElement.Length - _InternalSepParagraphs.Length))
+                    {
+                        tx += "\r\n\r\n";
+                        if (plElement.Length > _InternalSepParagraphs.Length)
+                        {
+                            if (iParagraph == 0)
+                                reste = plElement.Substring(_InternalSepParagraphs.Length, plElement.Length - _InternalSepParagraphs.Length);
+                            else
+                                reste = plElement.Substring(0, iParagraph);
+                        }
+                    }
+                    // If Linefeed
+                    else if (iLineFeed == 0 || (plElement.Length > _InternalSepLines.Length && iLineFeed == plElement.Length - _InternalSepLines.Length))
+                    {
+                        tx += "\r\n";
+                        if (plElement.Length > _InternalSepLines.Length)
+                        {
+                            if (iLineFeed == 0)
+                                reste = plElement.Substring(_InternalSepLines.Length, plElement.Length - _InternalSepLines.Length);
+                            else
+                                reste = plElement.Substring(0, iLineFeed);
+                        }
+                    }
+                    else
+                    {
+                        if (bEditChords)
+                        {
+                            // Chords edition
+                            // Extract chord name from the lyrics
+                            if (plElement != "" && _myLyricsMgmt.ChordsOriginatedFrom == MidiLyricsMgmt.ChordsOrigins.Lyrics)
+                            {
+                                // Remove chord from lyrics
+                                plElement = Regex.Replace(plElement, _myLyricsMgmt.RemoveChordPattern, @"");
+                            }
+                        }
+
+                        tx += plElement;
+                    }
+                }
+            }
+
+            txtResult.Text = tx;
             txtResult.SelectAll();
             txtResult.SelectionAlignment = HorizontalAlignment.Center;
         }
@@ -1468,6 +1542,7 @@ namespace Karaboss
         /// Populate datagridview with lyrics
         /// </summary>
         /// <param name="plLyrics"></param>
+        /*
         private void PopulateDataGridView(List<plLyric> lLyrics)
         {
             int plTicksOn;
@@ -1551,11 +1626,102 @@ namespace Karaboss
                 PopulateDataGridViewWithMelodyTrack(lLyrics);
             }
         }
+        */
+
+        private void PopulateDataGridView(kLyrics lLyrics)
+        {
+            int plTicksOn;
+            string plRealTime;
+            kar.Syllable.CharTypes plType;
+
+            string sNote;
+            string plChordName;
+            string plElement;
+            string[] rowlyric;
+            int idx;
+
+
+            switch (_myLyricsMgmt.ChordsOriginatedFrom)
+            {
+                case MidiLyricsMgmt.ChordsOrigins.Lyrics:
+                    // Chords are included inthe lyrics
+                    break;
+                // Chords are not included in the lyrics
+                case MidiLyricsMgmt.ChordsOrigins.XmlEmbedded:
+                case MidiLyricsMgmt.ChordsOrigins.MidiEmbedded:
+                case MidiLyricsMgmt.ChordsOrigins.Discovery:
+                    break;
+            }
+
+            string lyrics = _myLyricsMgmt.Lyrics;
+
+            // ==================================================
+            // Case: no track supplied for the melody => 0 notes, only lyrics
+            // Write only the lyrics into the grid
+            // ==================================================
+            if (melodyTrack == null)
+            {
+                // On affiche la liste des lyrics 
+                for (idx = 0; idx < lLyrics.Lines.Count; idx++)
+                {
+                    for (int j = 0; j < lLyrics.Lines[idx].Syllables.Count; j++)
+                    {
+
+                        plTicksOn = lLyrics.Lines[idx].Syllables[j].TicksOn;
+                        plRealTime = Utilities.LyricsUtilities.TicksToTime(plTicksOn, _division);
+                        //plNote = 0;
+                        sNote = "";
+                        plChordName = lLyrics.Lines[idx].Syllables[j].Chord;
+                        plElement = lLyrics.Lines[idx].Syllables[j].Text;
+                        plElement = plElement.Replace(" ", "_");
+                        plType = lLyrics.Lines[idx].Syllables[j].CharType;
+
+                        // New Row
+                        switch (plType)
+                        {
+                            case kar.Syllable.CharTypes.LineFeed:
+                                plElement = m_SepLine;
+                                break;
+                            case kar.Syllable.CharTypes.ParagraphSep:
+                                plElement = m_SepParagraph;
+                                break;
+                            default:
+                                break;
+                        }
+
+                        if (!bEditChords)
+                        {
+                            // No chord edition, do not modify lyrics
+                            rowlyric = new string[] { plTicksOn.ToString(), plRealTime, Karaclass.plTypeToString(plType), sNote, plElement };
+                        }
+                        else
+                        {
+                            // Chords edition
+                            // Extract chord name from the lyrics
+                            if (plElement != "" && _myLyricsMgmt.ChordsOriginatedFrom == MidiLyricsMgmt.ChordsOrigins.Lyrics)
+                            {
+                                // Remove chord
+                                plElement = Regex.Replace(plElement, _myLyricsMgmt.RemoveChordPattern, @"");
+                            }
+                            rowlyric = new string[] { plTicksOn.ToString(), plRealTime, Karaclass.plTypeToString(plType), plChordName, sNote, plElement };
+                        }
+                        dgView.Rows.Add(rowlyric);
+
+                    }
+                }
+            }
+            else
+            {
+                // A track is provided for the melody => write the notes and lyrics according to their startimes
+                PopulateDataGridViewWithMelodyTrack(lLyrics);
+            }
+        }
 
         /// <summary>
         /// Case: A track is provided for the melody => write the notes and lyrics according to their startimes
         /// </summary>
         /// <param name="lLyrics"></param>
+        /*
         private void PopulateDataGridViewWithMelodyTrack(List<plLyric> lLyrics)
         {
             int plTicksOn;
@@ -1702,8 +1868,158 @@ namespace Karaboss
                 }
             }
         }
+        */
+        private void PopulateDataGridViewWithMelodyTrack(kLyrics lLyrics)
+        {
+            int plTicksOn;
+            string plRealTime;
+            string plElement;
+            kar.Syllable.CharTypes plType;
+            int t;
+            string[] rowline;
+            int plNote;
+            bool bFound;
+            string sNote;
+            string plChordName = string.Empty;
+            // Not found notes
+            List<MidiNote> lstNotFound = new List<MidiNote>();
+
+            if (lLyrics == null)
+                return;
+
+            // 1. First add rows for all the lyrics (so the order of the lyrics will be kept)
+            for (int i = 0; i < lLyrics.Lines.Count; i++)
+            {
+                for (int j = 0; j < lLyrics.Lines[i].Syllables.Count; j++)
+                {
+                    plTicksOn = lLyrics.Lines[i].Syllables[j].TicksOn;
+                    plRealTime = Utilities.LyricsUtilities.TicksToTime(plTicksOn, _division);
+                    plChordName = lLyrics.Lines[i].Syllables[j].Chord;
+                    plElement = lLyrics.Lines[i].Syllables[j].Text;
+                    plType = lLyrics.Lines[i].Syllables[j].CharType;
+                    sNote = "";
+
+                    switch (plType)
+                    {
+                        case kar.Syllable.CharTypes.Text:
+                            // Replace blank spaces by underscore
+                            plElement = plElement.Replace(" ", "_");
+                            break;
+                        case kar.Syllable.CharTypes.LineFeed:
+                            plElement = m_SepLine;
+                            break;
+                        case kar.Syllable.CharTypes.ParagraphSep:
+                            plElement = m_SepParagraph;
+                            break;
+                        default:
+                            break;
+                    }
+
+                    if (!bEditChords)
+                    {
+                        rowline = new string[] { plTicksOn.ToString(), plRealTime, Karaclass.plTypeToString(plType), sNote, plElement };
+                    }
+                    else
+                    {
+                        // Chords edition
+                        // Extract chord name from the lyrics
+                        if (plElement != "" && _myLyricsMgmt.ChordsOriginatedFrom == MidiLyricsMgmt.ChordsOrigins.Lyrics)
+                        {
+                            // Remove chord
+                            plElement = Regex.Replace(plElement, _myLyricsMgmt.RemoveChordPattern, @"");
+                        }
+                        rowline = new string[] { plTicksOn.ToString(), plRealTime, Karaclass.plTypeToString(plType), plChordName, sNote, plElement };
+                    }
+
+                    dgView.Rows.Add(rowline);
+                }
+            }
+
+            // 2. Second, try to associate notes to existing rows
+            for (int i = 0; i < melodyTrack.Notes.Count; i++)
+            {
+                plTicksOn = melodyTrack.Notes[i].StartTime;
+                plNote = melodyTrack.Notes[i].Number;
+                bFound = false;
+                for (int row = 0; row < dgView.Rows.Count; row++)
+                {
+                    if (dgView.Rows[row].Cells[COL_TICKS].Value != null && IsNumeric(dgView.Rows[row].Cells[COL_TICKS].Value.ToString()))
+                    {
+                        t = Convert.ToInt32(dgView.Rows[row].Cells[COL_TICKS].Value);
+
+                        if (t == plTicksOn)
+                        {
+                            // Associate notes only to text rows (lyrics)
+                            if (dgView.Rows[row].Cells[COL_TYPE].Value.ToString() == "text")
+                            {
+                                dgView.Rows[row].Cells[COL_NOTE].Value = plNote.ToString();
+                                bFound = true;
+                                break;
+                            }
+                        }
+                        else if (t > plTicksOn)
+                        {
+                            break;
+                        }
+                    }
+                }
+
+                if (!bFound)
+                {
+                    // Notes having no row
+                    lstNotFound.Add(melodyTrack.Notes[i]);
+                }
+            }
 
 
+            // 3. insert Lost notes  on new rows
+            if (lstNotFound.Count > 0)
+            {
+                for (int i = 0; i < lstNotFound.Count; i++)
+                {
+                    plTicksOn = lstNotFound[i].StartTime;
+                    plRealTime = Utilities.LyricsUtilities.TicksToTime(plTicksOn, _division);
+                    plNote = lstNotFound[i].Number;
+
+                    bFound = false;
+                    for (int row = 0; row < dgView.Rows.Count; row++)
+                    {
+                        // insert is possible if the notes are before the last row
+                        if (dgView.Rows[row].Cells[COL_TICKS].Value != null && IsNumeric(dgView.Rows[row].Cells[COL_TICKS].Value.ToString()))
+                        {
+                            t = Convert.ToInt32(dgView.Rows[row].Cells[COL_TICKS].Value);
+                            // Insert note
+                            if (t > plTicksOn)
+                            {
+
+                                if (!bEditChords)
+                                    dgView.Rows.Insert(row, plTicksOn, plRealTime, "text", plNote.ToString(), "");
+                                else
+                                {
+                                    dgView.Rows.Insert(row, plTicksOn, plRealTime, "text", plChordName, plNote.ToString(), "");
+                                }
+
+                                bFound = true;
+                                break;
+                            }
+                        }
+                    }
+
+                    if (!bFound)
+                    {
+                        // Missing notes must be added at the end of the gridview, after the last row                        
+                        if (!bEditChords)
+                            rowline = new string[] { plTicksOn.ToString(), plRealTime, "text", plNote.ToString(), "" };
+                        else
+                            rowline = new string[] { plTicksOn.ToString(), plRealTime, "text", plChordName, plNote.ToString(), "" };
+
+                        dgView.Rows.Add(rowline);
+                    }
+                }
+            }
+        
+        
+        }
 
         /// <summary>
         /// Populate DataGridView with only notes of a track
@@ -1940,6 +2256,7 @@ namespace Karaboss
         /// Reload localpLyrics with data from gridview
         /// format lyrics to include the chords
         /// </summary>
+        /*
         private List<plLyric> LoadModifiedLyrics(bool bIncludeChordsInLyrics = false)
         {
 
@@ -2034,11 +2351,129 @@ namespace Karaboss
 
             return lst;
         }
+        */
+        private kLyrics LoadModifiedLyrics(bool bIncludeChordsInLyrics = false)
+        {
+
+            int line;
+            if (!CheckTimes(out line))
+            {
+                MessageBox.Show("Time on line " + line + " is incorrect", "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                dgView.CurrentCell = dgView.Rows[line - 1].Cells[0];
+                return null;
+            }
+
+            int plTicksOn;
+            string val;
+            kar.Syllable.CharTypes plType;
+            string plElement;
+            string chordName = string.Empty;
+
+
+            kLyrics klst = new kLyrics();
+            kLine kLine = new kLine();
+
+            for (int row = 0; row < dgView.Rows.Count; row++)
+            {
+                if (dgView.Rows[row].Cells[COL_TICKS].Value != null)
+                {
+                    if (dgView.Rows[row].Cells[COL_TICKS].Value != null && IsNumeric(dgView.Rows[row].Cells[COL_TICKS].Value.ToString()))
+                        plTicksOn = Convert.ToInt32(dgView.Rows[row].Cells[COL_TICKS].Value);
+                    else
+                        plTicksOn = 0;
+
+                    // Type
+                    if (dgView.Rows[row].Cells[COL_TYPE].Value != null)
+                    {
+                        val = dgView.Rows[row].Cells[COL_TYPE].Value.ToString();
+                        switch (val)
+                        {
+                            case "text":
+                                plType = kar.Syllable.CharTypes.Text;
+                                break;
+                            case "cr":
+                                plType = kar.Syllable.CharTypes.LineFeed;
+                                break;
+                            case "par":
+                                plType = kar.Syllable.CharTypes.ParagraphSep;
+                                break;
+                            default:
+                                plType = kar.Syllable.CharTypes.Text;
+                                break;
+                        }
+                    }
+                    else
+                    {
+                        plType = kar.Syllable.CharTypes.Text;
+                    }
+
+                    // Element
+                    if (dgView.Rows[row].Cells[COL_TEXT].Value != null)
+                    {
+                        if (plType == kar.Syllable.CharTypes.LineFeed)
+                            plElement = _InternalSepLines;
+                        else if (plType == kar.Syllable.CharTypes.ParagraphSep)
+                            plElement = _InternalSepParagraphs;
+                        else
+                            plElement = dgView.Rows[row].Cells[COL_TEXT].Value.ToString();
+                    }
+                    else
+                        plElement = "text";
+
+                    // replace again spaces
+                    plElement = plElement.Replace("_", " ");
+
+                    // chords edition
+                    if (bEditChords)
+                    {
+                        // Read chord name
+                        if (dgView.Rows[row].Cells[COL_CHORD].Value != null)
+                        {
+                            chordName = dgView.Rows[row].Cells[COL_CHORD].Value.ToString();
+                        }
+
+                        // Modifie text to include the chordname into the lyric
+                        // [Am]La petite maison [G]dans la prairie
+                        if (bIncludeChordsInLyrics && chordName != "")
+                        {
+                            plElement = "[" + chordName + "]" + plElement;
+                        }
+
+                    }
+
+                    switch (plType)
+                    {
+                        case kar.Syllable.CharTypes.Text:
+                            kLine.Add(new kar.Syllable() { CharType = plType, Chord = chordName, Text = plElement, TicksOn = plTicksOn });
+                            break;
+                        case kar.Syllable.CharTypes.LineFeed:
+                            if (kLine.Syllables.Count > 0)
+                                klst.Add(kLine);
+                            kLine = new kLine();
+                            break;
+                        case kar.Syllable.CharTypes.ParagraphSep:
+                            if (kLine.Syllables.Count > 0)
+                                klst.Add(kLine);
+                            kLine = new kLine();
+                            kLine.Add(new kar.Syllable() { CharType = plType, Chord = chordName, Text = plElement, TicksOn = plTicksOn });
+                            klst.Add(kLine);
+                            kLine = new kLine();
+                            break;
+                    }
+
+
+                    
+                }
+            }
+
+            return klst;
+        }
 
         /// <summary>
         /// Replace lyrics in frmMidiPlayer
         /// Appelle la méthode ReplaceLyrics de frmMidiPlayer
         /// </summary>
+        /*
         private void ReplaceLyrics(List<plLyric> l)
         {
             LyricTypes ltype;
@@ -2055,6 +2490,24 @@ namespace Karaboss
                 frmMidiPlayer.ReplaceLyrics(l, ltype, melodytracknum);
             }
         }
+        */
+        private void ReplaceLyrics(kLyrics l)
+        {
+            LyricTypes ltype;
+
+            if (TextLyricFormat == LyricFormats.Text)
+                ltype = LyricTypes.Text;
+            else
+                ltype = LyricTypes.Lyric;
+
+
+            if (Application.OpenForms.OfType<frmMidiPlayer>().Count() > 0)
+            {
+                frmMidiPlayer frmMidiPlayer = Utilities.FormUtilities.GetForm<frmMidiPlayer>();
+                frmMidiPlayer.ReplaceLyrics(l, ltype, melodytracknum);
+            }
+        }
+
 
         #endregion Lyrics
 
@@ -3435,13 +3888,13 @@ namespace Karaboss
 
                     if (_myLyricsMgmt.LyricType == LyricTypes.Lyric)
                     {
-                        localplLyrics = _myLyricsMgmt.lstpllyrics[0];
+                        localplLyrics = _myLyricsMgmt.lstkLyrics[0];//  lstpllyrics[0];
                         TextLyricFormat = LyricFormats.Lyric;
                         optFormatLyrics.Checked = true;
                     }
                     else if (_myLyricsMgmt.LyricType == LyricTypes.Text)
                     {
-                        localplLyrics = _myLyricsMgmt.lstpllyrics[1];
+                        localplLyrics = _myLyricsMgmt.lstkLyrics[1]; //lstpllyrics[1];
                         TextLyricFormat = LyricFormats.Text;
                         optFormatText.Checked = true;
                     }

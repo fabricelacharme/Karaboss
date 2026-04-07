@@ -294,15 +294,15 @@ namespace Karaboss
         }
 
 
-        public static string plTypeToString(plLyric.CharTypes plType)
+        public static string plTypeToString(kar.Syllable.CharTypes plType)
         {
             switch (plType)
             {
-                case plLyric.CharTypes.Text:
+                case kar.Syllable.CharTypes.Text:
                     return "text";
-                case plLyric.CharTypes.LineFeed:
+                case kar.Syllable.CharTypes.LineFeed:
                     return "cr";
-                case plLyric.CharTypes.ParagraphSep:
+                case kar.Syllable.CharTypes.ParagraphSep:
                     return "par";
                 default:
                     return "text";

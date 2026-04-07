@@ -1294,10 +1294,11 @@ namespace Karaboss
         /// TAB1: Display lyrics
         /// </summary>
         private void DisplayLyrics()
-        {            
+        {
             // New
-            myLyricsMgmt.FullExtractLyrics(true);
-            
+            //myLyricsMgmt.FullExtractLyrics(true);
+            myLyricsMgmt.FullExtractLyrics2(true);
+
             myLyricsMgmt.LoadLyricsPerBeat();
             myLyricsMgmt.LoadLyricsLines();
 
@@ -3338,8 +3339,12 @@ namespace Karaboss
 
             Track track = sequence1.tracks[myLyricsMgmt.MelodyTrackNum];
             
-            if (myLyricsMgmt.plLyrics.Count == 0)
-                myLyricsMgmt.FullExtractLyrics(true);
+            //if (myLyricsMgmt.plLyrics.Count == 0)
+            //    myLyricsMgmt.FullExtractLyrics(true);
+
+            if (myLyricsMgmt.KLyrics.Lines.Count == 0)
+                myLyricsMgmt.FullExtractLyrics2(true);
+
 
             #region check
             if (myLyricsMgmt.ChordDelimiter == (null, null) || myLyricsMgmt.ChordDelimiter == ("", "") || myLyricsMgmt.RemoveChordPattern == null)
