@@ -4068,8 +4068,8 @@ namespace Karaboss.MidiLyrics
             #region guard
             if (KLyrics.Lines.Count == 0)
             {
-                MessageBox.Show("No lyric line found. Please load lyrics before.", Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return kll;
+                //MessageBox.Show("No lyric line found. Please load lyrics before.", Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                //return kll;
             }
             #endregion guard
 
@@ -4084,13 +4084,20 @@ namespace Karaboss.MidiLyrics
             kLine chordline = new kLine();
             kLine l;            
             Syllable syll;
+            int tickfirst;
+            int ticklast;
+
+            kLine line;
+            kLine newline = new kLine();
+            int startj = 0;
+            kLine lplus;
+
 
             // Launch chords discovery
             ChordsAnalyser.ChordAnalyser Analyser = new ChordsAnalyser.ChordAnalyser(sequence1);
 
-            // Add all chords to a single line
+            // Add all chords to a single KLine chordline
             GridBeatChords = Analyser.GridBeatChords;
-
             for (int beat = 1; beat <= GridBeatChords.Count; beat++)
             {
                 if (GridBeatChords.ContainsKey(beat))
@@ -4119,15 +4126,12 @@ namespace Karaboss.MidiLyrics
                 }
             }
 
-            // Add kll to result
-            // For each line of tmp, add items of result if they have ticks between first and last syllable
-            int tickfirst;
-            int ticklast;
+            // Add chordline to KLyrics result
+            result.Include(chordline);
 
-            kLine line;
-            kLine newline = new kLine();
-            int startj = 0;
-            
+
+            /*
+            // For each line of tmp, add items of result if they have ticks between first and last syllable            
             for (int i = 0; i < result.Lines.Count; i ++)
             {                
                 //if (line.Syllables.Count == 1 && line.Syllables.First().CharType != Syllable.CharTypes.Text) continue;
@@ -4135,15 +4139,12 @@ namespace Karaboss.MidiLyrics
                 
                 tickfirst = line.Syllables.First().TicksOn;
                 ticklast = line.Syllables.Last().TicksOff;
-
-            
-
+           
                 if (newline.Syllables.Count > 0)
                 {
                     result.Add(newline);
                     newline = new kLine();
                 }
-
 
                 for (int j = startj; j < chordline.Syllables.Count; j++)
                 {
@@ -4186,10 +4187,11 @@ namespace Karaboss.MidiLyrics
                 l.Syllables = l.Syllables.OrderBy(o => o.TicksOn).ToList();                
             }
 
+            */
 
-            // Move trailing chords to next line
-            
-            kLine lplus;
+
+
+            // Move trailing chords to next line                        
             for (int i = 0; i < result.Lines.Count - 1; i++)
             {
                 l = result.Lines[i];

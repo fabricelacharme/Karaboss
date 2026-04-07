@@ -5,6 +5,7 @@ using System.Linq;
 
 namespace kar
 {
+    
     /// <summary>
     /// Represents a syllable with associated text, start time, and duration information.
     /// </summary>
@@ -28,7 +29,7 @@ namespace kar
         //public bool IsChord = false;
         public bool IsChord
         {
-            get {  return (CharType == CharTypes.Text && Text != string.Empty && Chord.IndexOf("--") == 0); }
+            get {  return (CharType == CharTypes.Text && Chord != string.Empty && Text.IndexOf("--") == 0); }
         }
 
         public double StartTime { get; set; }
@@ -130,11 +131,12 @@ namespace kar
     /// need to be displayed, synchronized, or manipulated as a group.</remarks>
     public class kLyrics : IEnumerable
     {
+
+        private  readonly string _InternalSepLines = "¼";
+        private  string _InternalSepParagraphs = "½";
+
         public List<kLine> Lines { get; set; }
 
-
-        //public double StartTime => Lines.First().StartTime;
-        //public double EndTime => Lines.Last().EndTime;
 
         public kLyrics(List<kLine> lines)
         {
@@ -152,10 +154,119 @@ namespace kar
         }
 
 
+        public void Add(int index, kLine line)
+        {
+            Lines.Insert(index, line);
+        }
+
+        public void Include(kLyrics lyrics)
+        {
+            List<Syllable> lst = new List<Syllable>();
+            
+            // Convert KLyrics to a single line
+            foreach (kLine line in Lines) 
+            {
+                for (int i = 0; i < line.Syllables.Count; i++)
+                {
+                    lst.Add(line.Syllables[i]);                    
+                }
+                
+                if (line.Syllables.Last().CharType == Syllable.CharTypes.Text)
+                {                   
+                    Syllable s = new Syllable()
+                    {
+                        Text = _InternalSepLines,
+                        Chord = string.Empty,
+                        CharType = Syllable.CharTypes.LineFeed,
+                        TicksOn = line.Syllables.Last().TicksOff,
+                        TicksOff = line.Syllables.Last().TicksOff,
+                    };
+                    lst.Add(s);
+                }
+            }
+
+            // Add KLyrics lyrics to the single line lst made of KLyrics
+            foreach (kLine line in lyrics.Lines)
+            {
+                for (int i = 0; i < line.Syllables.Count; i++)
+                {
+                    lst.Add(line.Syllables[i]);
+                }
+            }
+                                    
+            // Sort the single line lst by TicksOn
+            lst = lst.OrderBy(o => o.TicksOn).ToList();
+
+            // Rebuild Lines structure
+            kLine l = new kLine();
+            kLyrics lineLyrics = new kLyrics();
+            
+            for (int i = 0; i < lst.Count;i++)
+            {
+                switch (lst[i].CharType)
+                {
+                    case Syllable.CharTypes.LineFeed:
+                        if (l.Syllables.Count > 0)
+                            lineLyrics.Add(l);
+                        l = new kLine();
+                        break;
+                    case Syllable.CharTypes.ParagraphSep:
+                        if (l.Syllables.Count > 0)
+                            lineLyrics.Add(l);
+                        
+                        // line is a single syllable paragraph
+                        l = new kLine();
+                        l.Add(lst[i]);                        
+                        lineLyrics.Add(l);
+                        l = new kLine();
+                        break;
+                    case Syllable.CharTypes.Text:
+                        l.Add(lst[i]);
+                        break;
+                }
+            }
+            if (l.Syllables.Count > 0)
+                lineLyrics.Add(l);
+
+            Lines = null;
+            Lines = lineLyrics.Lines;
+                                    
+        }
+
+        
+        public void Include(kLine kLine)
+        {
+            // Transform KLine into a KLyrics with a single KLine
+            kLyrics lineLyrics = new kLyrics();
+            lineLyrics.Add(kLine);
+
+            // Include KLYrics lineLyrics into this
+            Include(lineLyrics);
+        }
+        
+        
         public int IndexOf(kLine line)
         {
             return Lines.IndexOf(line);
         }
+
+        public kLyrics Clone()
+        {
+            kLyrics result = new kLyrics();
+            kLine line = new kLine();
+            for (int i = 0; i < Lines.Count; i++)
+            {
+                line = new kLine();
+                for (int j = 0; j < Lines[i].Syllables.Count; j++)
+                {
+                    line.Syllables.Add(Lines[i].Syllables[j]);
+                }
+                result.Add(line);
+            }
+
+            return result;  
+        }
+
 
         // Implementation for the GetEnumerator method.
         IEnumerator IEnumerable.GetEnumerator()
