@@ -3581,6 +3581,9 @@ namespace Karaboss.Mp3
         */
         private keffect.KaraokeLyrics LoadModifiedLyrics2()
         {
+
+            #region check lines number
+
             int line;
             if (!CheckTimes(out line))
             {
@@ -3595,6 +3598,8 @@ namespace Karaboss.Mp3
                 }
                 return null;
             }
+
+            #endregion check lines number
 
             long time;
             string text;

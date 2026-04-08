@@ -620,23 +620,23 @@ namespace Sanford.Multimedia.Midi
                             if (s.StartsWith(m_SepParagraph))
                             {
                                 // Paragraph
-                                newTrack.LyricsText.Add(new Track.Lyric() { Type = Track.Lyric.Types.Paragraph, Element = _InternalSepParagraph, TicksOn = ticks });
-                                newTrack.TotalLyricsT += _InternalSepParagraph;
+                                newTrack.Lyrics.Add(new Track.Lyric() { Type = Track.Lyric.Types.Paragraph, Element = _InternalSepParagraph, TicksOn = ticks });
+                                newTrack.TotalLyricsL += _InternalSepParagraph;
 
                                 reste = sy.Replace(m_SepParagraph, string.Empty);   // just remove Paragraph separator
                             }
                             else
                             {
                                 // Linefeed
-                                newTrack.LyricsText.Add(new Track.Lyric() { Type = Track.Lyric.Types.LineFeed, Element = _InternalSepLine, TicksOn = ticks });
-                                newTrack.TotalLyricsT += _InternalSepLine;
+                                newTrack.Lyrics.Add(new Track.Lyric() { Type = Track.Lyric.Types.LineFeed, Element = _InternalSepLine, TicksOn = ticks });
+                                newTrack.TotalLyricsL += _InternalSepLine;
                                 reste = sy.Replace(m_SepLine, string.Empty);   // just remove Linefeed separator
                             }
 
                             if (reste != string.Empty)
                             {
-                                newTrack.TotalLyricsT += reste;
-                                newTrack.LyricsText.Add(new Track.Lyric() { Type = Track.Lyric.Types.Text, Element = reste, TicksOn = ticks });
+                                newTrack.TotalLyricsL += reste;
+                                newTrack.Lyrics.Add(new Track.Lyric() { Type = Track.Lyric.Types.Text, Element = reste, TicksOn = ticks });
                             }
                         }
                         else if (s.EndsWith(m_SepParagraph) || s.EndsWith(m_SepLine))
@@ -648,11 +648,11 @@ namespace Sanford.Multimedia.Midi
 
                                 if (reste != string.Empty)
                                 {
-                                    newTrack.TotalLyricsT += reste;
-                                    newTrack.LyricsText.Add(new Track.Lyric() { Type = Track.Lyric.Types.Text, Element = reste, TicksOn = ticks });
+                                    newTrack.TotalLyricsL += reste;
+                                    newTrack.Lyrics.Add(new Track.Lyric() { Type = Track.Lyric.Types.Text, Element = reste, TicksOn = ticks });
                                 }
-                                newTrack.LyricsText.Add(new Track.Lyric() { Type = Track.Lyric.Types.Paragraph, Element = _InternalSepParagraph, TicksOn = ticks });
-                                newTrack.TotalLyricsT += _InternalSepParagraph;
+                                newTrack.Lyrics.Add(new Track.Lyric() { Type = Track.Lyric.Types.Paragraph, Element = _InternalSepParagraph, TicksOn = ticks });
+                                newTrack.TotalLyricsL += _InternalSepParagraph;
 
                             }
                             else
@@ -661,11 +661,11 @@ namespace Sanford.Multimedia.Midi
                                 reste = sy.Replace(m_SepLine, string.Empty);   // just remove Linefeed separator
                                 if (reste != string.Empty)
                                 {
-                                    newTrack.TotalLyricsT += reste;
-                                    newTrack.LyricsText.Add(new Track.Lyric() { Type = Track.Lyric.Types.Text, Element = reste, TicksOn = ticks });
+                                    newTrack.TotalLyricsL += reste;
+                                    newTrack.Lyrics.Add(new Track.Lyric() { Type = Track.Lyric.Types.Text, Element = reste, TicksOn = ticks });
                                 }
-                                newTrack.LyricsText.Add(new Track.Lyric() { Type = Track.Lyric.Types.LineFeed, Element = _InternalSepLine, TicksOn = ticks });
-                                newTrack.TotalLyricsT += _InternalSepLine;
+                                newTrack.Lyrics.Add(new Track.Lyric() { Type = Track.Lyric.Types.LineFeed, Element = _InternalSepLine, TicksOn = ticks });
+                                newTrack.TotalLyricsL += _InternalSepLine;
                             }
                         }
                     }
@@ -680,8 +680,8 @@ namespace Sanford.Multimedia.Midi
                         else if (s != string.Empty)
                         {
                             // No linefeed, no paragraph, only text
-                            newTrack.TotalLyricsT += sy;
-                            newTrack.LyricsText.Add(new Track.Lyric() { Type = Track.Lyric.Types.Text, Element = sy, TicksOn = ticks });
+                            newTrack.TotalLyricsL += sy;
+                            newTrack.Lyrics.Add(new Track.Lyric() { Type = Track.Lyric.Types.Text, Element = sy, TicksOn = ticks });
                         }
                     }
 

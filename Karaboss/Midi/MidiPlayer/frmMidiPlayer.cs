@@ -4228,6 +4228,8 @@ namespace Karaboss
             Track.TotalLyricsL = "";
             Track.TotalLyricsT = "";
 
+            kar.Syllable pll = new kar.Syllable();
+
             if (l == null || l.Lines.Count == 0)
                 return;
 
@@ -4236,68 +4238,40 @@ namespace Karaboss
             {
                 kLine line = l.Lines[i];
 
-                for (int idx = 0; idx < line.Syllables.Count; idx++)
+                if (line.Syllables.Count == 1 && line.Syllables.First().CharType == kar.Syllable.CharTypes.ParagraphSep)
                 {
+                    // Paragraph line
+                    pll = line.Syllables.First();
 
-                    kar.Syllable pll = line.Syllables[idx];
+                    if (LyricType == LyricTypes.Text)
+                        currentCR = m_SepParagraph;
+                    else
+                        currentCR = "\r\r";
 
-                    // Si c'est un CR, le stocke et le collera au prochain lyric
-                    if (pll.CharType == kar.Syllable.CharTypes.LineFeed)
+                    Track.Lyric L = new Track.Lyric()
                     {
-                        if (LyricType == LyricTypes.Text)
-                            currentCR = m_SepLine;
-                        else
-                            currentCR = "\r";
-
-                        // Update Track.Lyrics List
-                        Track.Lyric L = new Track.Lyric()
-                        {
-                            Element = pll.Text,
-                            TicksOn = pll.TicksOn,
-                            Type = (Track.Lyric.Types)pll.CharType,
-                        };
-
-                        if (LyricType == LyricTypes.Text)
-                        {
-                            // si lyrics de type text                     
-                            Track.LyricsText.Add(L);
-                        }
-                        else
-                        {
-                            // si lyrics de type lyrics
-                            Track.Lyrics.Add(L);
-                        }
-
+                        Element = pll.Text,
+                        TicksOn = pll.TicksOn,
+                        Type = (Track.Lyric.Types)pll.CharType,
+                    };
+                    
+                    if (LyricType == LyricTypes.Text)
+                    {
+                        // si lyrics de type text                     
+                        Track.LyricsText.Add(L);
                     }
-                    else if (pll.CharType == kar.Syllable.CharTypes.ParagraphSep)
+                    else
                     {
-                        if (LyricType == LyricTypes.Text)
-                            currentCR = m_SepParagraph;
-                        else
-                            currentCR = "\r\r";
-
-
-                        // Update Track.Lyrics List
-                        Track.Lyric L = new Track.Lyric()
-                        {
-                            Element = pll.Text,
-                            TicksOn = pll.TicksOn,
-                            Type = (Track.Lyric.Types)pll.CharType,
-                        };
-
-                        if (LyricType == LyricTypes.Text)
-                        {
-                            // si lyrics de type text                     
-                            Track.LyricsText.Add(L);
-                        }
-                        else
-                        {
-                            // si lyrics de type lyrics
-                            Track.Lyrics.Add(L);
-                        }
+                        // si lyrics de type lyrics
+                        Track.Lyrics.Add(L);
                     }
-                    else if (pll.CharType == kar.Syllable.CharTypes.Text)
+                }
+                else 
+                { 
+                    // Normal line
+                    for (int idx = 0; idx < line.Syllables.Count; idx++)
                     {
+                        pll = line.Syllables[idx];
                         // C'est un lyric
                         currentTick = pll.TicksOn;
                         if (currentTick >= lastcurrenttick)
@@ -4364,11 +4338,49 @@ namespace Karaboss
                             // Insert new message
                             Track.Insert(currentTick, mtMsg);
                         }
-                        currentCR = "";
+                        currentCR = "";                                 
+                    }
+
+                    // Add a linefeed if next line is not a paragraph
+                    if (i < l.Lines.Count - 1 && l.Lines[i + 1].Syllables.Count != 1 && l.Lines[i + 1].Syllables.First().CharType != kar.Syllable.CharTypes.ParagraphSep)
+                    {
+                        if (LyricType == LyricTypes.Text)
+                            currentCR = m_SepLine;
+                        else
+                            currentCR = "\r";
+
+                        pll = new kar.Syllable()
+                        {
+                            Text = m_SepLine,
+                            TicksOn = lastcurrenttick,
+                            CharType = kar.Syllable.CharTypes.LineFeed
+                        };
+
+                        // Update Track.Lyrics List
+                        Track.Lyric L = new Track.Lyric()
+                        {
+                            Element = pll.Text,
+                            TicksOn = pll.TicksOn,
+                            Type = (Track.Lyric.Types)pll.CharType,
+                        };
+
+                        if (LyricType == LyricTypes.Text)
+                        {
+                            // si lyrics de type text                     
+                            Track.LyricsText.Add(L);
+                        }
+                        else
+                        {
+                            // si lyrics de type lyrics
+                            Track.Lyrics.Add(L);
+                        }
                     }
 
                 }
-            }
+
+
+
+            }                                    
         }
 
 
