@@ -1553,8 +1553,10 @@ namespace Karaboss
             // Case: no track supplied for the melody => 0 notes, only lyrics
             // Write only the lyrics into the grid
             // ==================================================
+            if (lLyrics == null) return;
+            
             PopulateDataGridViewWithoutMelodyTrack(lLyrics);
-
+            
             if (melodyTrack != null)
                 PopulateDataGridViewWithNotes(lLyrics);
             
@@ -1824,212 +1826,96 @@ namespace Karaboss
         private void PopulateDataGridViewWithNotes(kLyrics lLyrics)
         {
             int plTicksOn = 0;
-            string plRealTime = string.Empty;
-            string plElement;
-            kar.Syllable.CharTypes plType;
-            int t;
+            string plRealTime = string.Empty;                                    
             string[] rowline;
-            int plNote;
-            bool bFound;
-            string sNote;
+            int plNote;                       
             string plChordName = string.Empty;            
 
             // Not found notes
-            List<MidiNote> lstNotFound = new List<MidiNote>();
-            /*
-            if (lLyrics == null)
-                return;
-
-            // 1. First add rows for all the lyrics (so the order of the lyrics will be kept)
-            for (int i = 0; i < lLyrics.Lines.Count; i++)
-            {                
-
-                if (lLyrics.Lines[i].Syllables.Count == 1 && lLyrics.Lines[i].Syllables.First().CharType == kar.Syllable.CharTypes.ParagraphSep)
+            List<MidiNote> lstNotFound = new List<MidiNote>();                  
+            
+            // Load all times in a list
+            List<int> lstTimes = new List<int>();
+            for (int i = 0; i < dgView.Rows.Count; i ++)
+            {
+                if (dgView.Rows[i].Cells[COL_TICKS].Value != null && IsNumeric(dgView.Rows[i].Cells[COL_TICKS].Value.ToString()))
                 {
-                    // this is a paragraph
-                    plTicksOn = lLyrics.Lines[i].Syllables.First().TicksOn;
-                    plRealTime = Utilities.LyricsUtilities.TicksToTime(plTicksOn, _division);
-                    plChordName = string.Empty;
-                    plElement = m_SepParagraph; ;
-                    plType = kar.Syllable.CharTypes.ParagraphSep;
-                    sNote = "";
-
-                    if (!bEditChords)
-                    {
-                        rowline = new string[] { plTicksOn.ToString(), plRealTime, Karaclass.plTypeToString(plType), sNote, plElement };
-                    }
-                    else
-                    {
-                        // Chords edition
-                        // Extract chord name from the lyrics
-                        if (plElement != "" && _myLyricsMgmt.ChordsOriginatedFrom == MidiLyricsMgmt.ChordsOrigins.Lyrics)
-                        {
-                            // Remove chord
-                            plElement = Regex.Replace(plElement, _myLyricsMgmt.RemoveChordPattern, @"");
-                        }
-                        rowline = new string[] { plTicksOn.ToString(), plRealTime, Karaclass.plTypeToString(plType), plChordName, sNote, plElement };
-                    }
-                    dgView.Rows.Add(rowline);
+                    lstTimes.Add(Convert.ToInt32(dgView.Rows[i].Cells[COL_TICKS].Value));
                 }
-                else
-                {
-                    // This is a normal line
-                    for (int j = 0; j < lLyrics.Lines[i].Syllables.Count; j++)
-                    {
-                        plTicksOn = lLyrics.Lines[i].Syllables[j].TicksOn;
-                        plRealTime = Utilities.LyricsUtilities.TicksToTime(plTicksOn, _division);
-                        plChordName = lLyrics.Lines[i].Syllables[j].Chord;
-                        plElement = lLyrics.Lines[i].Syllables[j].Text;
-                        plType = lLyrics.Lines[i].Syllables[j].CharType;
-                        sNote = "";
-
-                        switch (plType)
-                        {
-                            case kar.Syllable.CharTypes.Text:
-                                // Replace blank spaces by underscore
-                                plElement = plElement.Replace(" ", "_");
-                                bParagraphFound = false;
-                                break;
-                            //case kar.Syllable.CharTypes.LineFeed:
-                            //    plElement = m_SepLine;
-                            //    break;
-                            case kar.Syllable.CharTypes.ParagraphSep:
-                                plElement = m_SepParagraph;
-                                bParagraphFound = true;
-                                break;
-                            default:
-                                break;
-                        }
-
-                        if (!bEditChords)
-                        {
-                            rowline = new string[] { plTicksOn.ToString(), plRealTime, Karaclass.plTypeToString(plType), sNote, plElement };
-                        }
-                        else
-                        {
-                            // Chords edition
-                            // Extract chord name from the lyrics
-                            if (plElement != "" && _myLyricsMgmt.ChordsOriginatedFrom == MidiLyricsMgmt.ChordsOrigins.Lyrics)
-                            {
-                                // Remove chord
-                                plElement = Regex.Replace(plElement, _myLyricsMgmt.RemoveChordPattern, @"");
-                            }
-                            rowline = new string[] { plTicksOn.ToString(), plRealTime, Karaclass.plTypeToString(plType), plChordName, sNote, plElement };
-                        }
-
-                        dgView.Rows.Add(rowline);
-                    }
-                
-
-                    // If next line is nor a paragraph, add a line break
-                    if (i < lLyrics.Lines.Count - 1 && lLyrics.Lines[i + 1].Syllables.Count != 1 && lLyrics.Lines[i + 1].Syllables.First().CharType != kar.Syllable.CharTypes.ParagraphSep)
-                    {
-                        if (!bEditChords)
-                        {
-                            plType = kar.Syllable.CharTypes.LineFeed;
-                            plElement = m_SepLine;
-                            sNote = string.Empty;
-                            rowline = new string[] { plTicksOn.ToString(), plRealTime, Karaclass.plTypeToString(plType), sNote, plElement };
-                        }
-                        else
-                        {
-                            plType = kar.Syllable.CharTypes.LineFeed;
-                            plElement = m_SepLine;
-                            plChordName = string.Empty;
-                            sNote = string.Empty;
-                            rowline = new string[] { plTicksOn.ToString(), plRealTime, Karaclass.plTypeToString(plType), plChordName, sNote, plElement };
-                        }
-                        dgView.Rows.Add(rowline);
-                    }
-                }                
             }
 
-            */
-
-            // 2. Second, try to associate notes to existing rows
+            // Try to associate notes to existing rows
+            // Find rows with time equal to notes and add notes not found in a list
+            int idx = 0;
             for (int i = 0; i < melodyTrack.Notes.Count; i++)
             {
                 plTicksOn = melodyTrack.Notes[i].StartTime;
-                plNote = melodyTrack.Notes[i].Number;
-                bFound = false;
-                for (int row = 0; row < dgView.Rows.Count; row++)
+                idx = lstTimes.FindIndex(o => o ==  plTicksOn);
+
+                if (idx > -1)
                 {
-                    if (dgView.Rows[row].Cells[COL_TICKS].Value != null && IsNumeric(dgView.Rows[row].Cells[COL_TICKS].Value.ToString()))
+                    // Associate notes only to text rows (lyrics)
+                    if (dgView.Rows[idx].Cells[COL_TYPE].Value.ToString() == "text")
                     {
-                        t = Convert.ToInt32(dgView.Rows[row].Cells[COL_TICKS].Value);
-
-                        if (t == plTicksOn)
-                        {
-                            // Associate notes only to text rows (lyrics)
-                            if (dgView.Rows[row].Cells[COL_TYPE].Value.ToString() == "text")
-                            {
-                                dgView.Rows[row].Cells[COL_NOTE].Value = plNote.ToString();
-                                bFound = true;
-                                break;
-                            }
-                        }
-                        else if (t > plTicksOn)
-                        {
-                            break;
-                        }
+                        dgView.Rows[idx].Cells[COL_NOTE].Value = melodyTrack.Notes[i].Number.ToString();                        
                     }
-                }
-
-                if (!bFound)
+                } 
+                else
                 {
                     // Notes having no row
-                    lstNotFound.Add(melodyTrack.Notes[i]);
+                    lstNotFound.Add(melodyTrack.Notes[i]);                    
                 }
             }
 
-
-            // 3. insert Lost notes  on new rows
-            if (lstNotFound.Count > 0)
+            if (lstNotFound.Count == 0) return; 
+            
+                
+            for (int i = 0; i < lstNotFound.Count ; i++)
             {
-                for (int i = 0; i < lstNotFound.Count; i++)
+                plTicksOn = lstNotFound[i].StartTime;
+                plNote = lstNotFound[i].Number;
+                plRealTime = Utilities.LyricsUtilities.TicksToTime(plTicksOn, _division);
+
+                if (plTicksOn < lstTimes.First())
                 {
-                    plTicksOn = lstNotFound[i].StartTime;
-                    plRealTime = Utilities.LyricsUtilities.TicksToTime(plTicksOn, _division);
-                    plNote = lstNotFound[i].Number;
-
-                    bFound = false;
-                    for (int row = 0; row < dgView.Rows.Count; row++)
+                    // Before
+                    if (!bEditChords)
+                        dgView.Rows.Insert(0, plTicksOn, plRealTime, "text", plNote.ToString(), "");
+                    else
                     {
-                        // insert is possible if the notes are before the last row
-                        if (dgView.Rows[row].Cells[COL_TICKS].Value != null && IsNumeric(dgView.Rows[row].Cells[COL_TICKS].Value.ToString()))
+                        dgView.Rows.Insert(0, plTicksOn, plRealTime, "text", plChordName, plNote.ToString(), "");
+                    }
+                    lstTimes.Insert(0, plTicksOn);
+
+                }
+                else if (plTicksOn < lstTimes.Last())
+                {
+                    idx = lstTimes.FindIndex(o => o > plTicksOn);
+                    if (idx > -1)
+                    {
+                        if (!bEditChords)
+                            dgView.Rows.Insert(idx, plTicksOn, plRealTime, "text", plNote.ToString(), "");
+                        else
                         {
-                            t = Convert.ToInt32(dgView.Rows[row].Cells[COL_TICKS].Value);
-                            // Insert note
-                            if (t > plTicksOn)
-                            {
-
-                                if (!bEditChords)
-                                    dgView.Rows.Insert(row, plTicksOn, plRealTime, "text", plNote.ToString(), "");
-                                else
-                                {
-                                    dgView.Rows.Insert(row, plTicksOn, plRealTime, "text", plChordName, plNote.ToString(), "");
-                                }
-
-                                bFound = true;
-                                break;
-                            }
+                            dgView.Rows.Insert(idx, plTicksOn, plRealTime, "text", plChordName, plNote.ToString(), "");
                         }
                     }
-
-                    if (!bFound)
+                    else
                     {
-                        // Missing notes must be added at the end of the gridview, after the last row                        
-                        if (!bEditChords)
-                            rowline = new string[] { plTicksOn.ToString(), plRealTime, "text", plNote.ToString(), "" };
-                        else
-                            rowline = new string[] { plTicksOn.ToString(), plRealTime, "text", plChordName, plNote.ToString(), "" };
-
-                        dgView.Rows.Add(rowline);
+                        Console.WriteLine("");
                     }
                 }
-            }
-        
-        
+                else
+                {
+                    // Missing notes must be added at the end of the gridview, after the last row                        
+                    if (!bEditChords)
+                        rowline = new string[] { plTicksOn.ToString(), plRealTime, "text", plNote.ToString(), "" };
+                    else
+                        rowline = new string[] { plTicksOn.ToString(), plRealTime, "text", plChordName, plNote.ToString(), "" };
+
+                    dgView.Rows.Add(rowline);
+                }              
+            }                                   
         }
 
         /// <summary>
