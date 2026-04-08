@@ -1,6 +1,6 @@
 #region License
 
-/* Copyright (c) 2025 Fabrice Lacharme
+/* Copyright (c) 2026 Fabrice Lacharme
  * 
  * Permission is hereby granted, free of charge, to any person obtaining a copy 
  * of this software and associated documentation files (the "Software"), to 
@@ -3507,16 +3507,21 @@ namespace Karaboss
                 * Workaround is to rewrite the lyrics
                 */
 
-                if ((sequence1.OrigFormat == 0) && (myLyricsMgmt.LyricType == LyricTypes.Lyric))
+                if (sequence1.OrigFormat == 0)
                 {
-                    int tracknum = myLyricsMgmt.LyricsTrackNum;
-                    Track track = sequence1.tracks[tracknum];
-                    // supprime tous les messages text & lyric
-                    track.deleteLyrics();
+                    myLyricsMgmt = new MidiLyricsMgmt(sequence1);
 
-                    // Insert all lyric events                    
-                    //TrkInsertLyrics(track, myLyricsMgmt.OrgplLyrics, myLyricsMgmt.LyricType);
-                    TrkInsertLyrics(track, myLyricsMgmt.OrgKLyrics, myLyricsMgmt.LyricType);
+                    if (myLyricsMgmt.LyricType == LyricTypes.Lyric)
+                    {                        
+                        int tracknum = myLyricsMgmt.LyricsTrackNum;
+                        Track track = sequence1.tracks[tracknum];
+                        // supprime tous les messages text & lyric
+                        track.deleteLyrics();
+
+                        // Insert all lyric events                    
+                        //TrkInsertLyrics(track, myLyricsMgmt.OrgplLyrics, myLyricsMgmt.LyricType);
+                        TrkInsertLyrics(track, myLyricsMgmt.OrgKLyrics, myLyricsMgmt.LyricType);
+                    }
                 }
 
 
@@ -3790,6 +3795,7 @@ namespace Karaboss
                 // FAB : force le format à 1 hu hu hu sinon on ne peut pas ajouter de paroles            
                 sequence1.Format = 1;
 
+                //
                 myLyricsMgmt = new MidiLyricsMgmt(sequence1);
 
                 /*
@@ -3798,18 +3804,21 @@ namespace Karaboss
                 * Workaround is to rewrite the lyrics
                 */
 
-                if ((sequence1.OrigFormat == 0) && (myLyricsMgmt.LyricType == LyricTypes.Lyric))
+                if (sequence1.OrigFormat == 0 )
                 {
-                    int tracknum = myLyricsMgmt.LyricsTrackNum;
-                    Track track = sequence1.tracks[tracknum];
-                    // supprime tous les messages text & lyric
-                    track.deleteLyrics();
+                    
+                    if (myLyricsMgmt.LyricType == LyricTypes.Lyric)
+                    {
+                        int tracknum = myLyricsMgmt.LyricsTrackNum;
+                        Track track = sequence1.tracks[tracknum];
+                        // supprime tous les messages text & lyric
+                        track.deleteLyrics();
 
-                    // Insert all lyric events                    
-                    //TrkInsertLyrics(track, myLyricsMgmt.OrgplLyrics, myLyricsMgmt.LyricType);
-                    TrkInsertLyrics(track, myLyricsMgmt.OrgKLyrics, myLyricsMgmt.LyricType);
+                        // Insert all lyric events                    
+                        //TrkInsertLyrics(track, myLyricsMgmt.OrgplLyrics, myLyricsMgmt.LyricType);
+                        TrkInsertLyrics(track, myLyricsMgmt.OrgKLyrics, myLyricsMgmt.LyricType);
+                    }
                 }
-
 
                 // Remove all MIDI events after last note
                 sequence1.Clean();
@@ -4351,7 +4360,7 @@ namespace Karaboss
 
                         pll = new kar.Syllable()
                         {
-                            Text = m_SepLine,
+                            Text = "",//m_SepLine,
                             TicksOn = lastcurrenttick,
                             CharType = kar.Syllable.CharTypes.LineFeed
                         };
@@ -4375,11 +4384,7 @@ namespace Karaboss
                             Track.Lyrics.Add(L);
                         }
                     }
-
                 }
-
-
-
             }                                    
         }
 

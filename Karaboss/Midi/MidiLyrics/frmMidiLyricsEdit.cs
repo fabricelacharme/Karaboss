@@ -1869,7 +1869,7 @@ namespace Karaboss
 
             if (lstNotFound.Count == 0) return; 
             
-                
+            // Load orphan notes     
             for (int i = 0; i < lstNotFound.Count ; i++)
             {
                 plTicksOn = lstNotFound[i].StartTime;
@@ -1899,6 +1899,7 @@ namespace Karaboss
                         {
                             dgView.Rows.Insert(idx, plTicksOn, plRealTime, "text", plChordName, plNote.ToString(), "");
                         }
+                        lstTimes.Insert(idx, plTicksOn);
                     }
                     else
                     {
@@ -1914,6 +1915,7 @@ namespace Karaboss
                         rowline = new string[] { plTicksOn.ToString(), plRealTime, "text", plChordName, plNote.ToString(), "" };
 
                     dgView.Rows.Add(rowline);
+                    lstTimes.Add(plTicksOn);
                 }              
             }                                   
         }

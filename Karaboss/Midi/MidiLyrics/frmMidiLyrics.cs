@@ -760,9 +760,11 @@ namespace Karaboss
             currentTextPos = 0;
 
             #region Load lyrics and chords in picturebox control with plLyrics
+            /*
             List<pictureBoxControl.plLyric> pcLyrics = new List<pictureBoxControl.plLyric>();
             pictureBoxControl.plLyric pcL;
 
+            
             for (int i = 0; i < plLs.Count; i++)
             {
                 plLyric plL = plLs[i];
@@ -797,7 +799,7 @@ namespace Karaboss
                 pcL.TicksOff = plL.TicksOff;
                 pcLyrics.Add(pcL);
             }
-
+            */
 
             #endregion transform kLyrics in plLyrics to load song in picturebox control with plLyrics
 
@@ -848,7 +850,7 @@ namespace Karaboss
             #region compare plLyrics and plLyricsNew
 
             // Compare the two types of lyrics 
-            myLyricsMgmt.CompareLyrics(plLs, _kLyrics);
+            //myLyricsMgmt.CompareLyrics(plLs, _kLyrics);
 
 
             #endregion compare plLyrics and plLyricsNew

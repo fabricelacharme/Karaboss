@@ -646,6 +646,15 @@ namespace Karaboss.MidiLyrics
         {
             bool bFound = false;
 
+
+            // Remove first and last linefeed/paragraph if exists
+            if (T.Lines.Count > 0 && T.Lines.First().Syllables.First().CharType != Syllable.CharTypes.Text)
+                T.Lines[0].Syllables.RemoveAt(0);
+
+            if (T.Lines.Count > 0&& T.Lines.Last().Syllables.Last().CharType != Syllable.CharTypes.Text)
+                T.Lines.Last().Syllables.RemoveAt(KLyrics.Lines.Last().Syllables.Count - 1);
+
+
             for (int i = 0; i < T.Lines.Count - 1; i++)
             {
                 // Reduce multiple line breaks in a row to one line break paragraph separator
@@ -1854,6 +1863,7 @@ namespace Karaboss.MidiLyrics
             {
                 // KLyrics is initialized with a deep copy of OrgKLyrics
                 // We can't use KLyrics = OrgKLyrics; This does not work, because objects remain linked            
+                /*
                 KLyrics = new kLyrics();                
                 kLine line = new kLine();
                 kLine newline = new kLine();
@@ -1867,22 +1877,23 @@ namespace Karaboss.MidiLyrics
                     }
                     KLyrics.Add(newline);
                 }
-
-                 kLyrics test = OrgKLyrics.Clone();
+                
+                */
+                KLyrics = OrgKLyrics.Clone();
 
 
                 if (KLyrics.Lines.Count == 0)
                     return;
 
                 // Remove first and last linefeed/paragraph if exists
-                if (KLyrics.Lines.First().Syllables.First().CharType != Syllable.CharTypes.Text)
-                    KLyrics.Lines[0].Syllables.RemoveAt(0);
+                //if (KLyrics.Lines.First().Syllables.First().CharType != Syllable.CharTypes.Text)
+                //    KLyrics.Lines[0].Syllables.RemoveAt(0);
 
-                if (KLyrics.Lines.Count == 0)
-                    return;
+                //if (KLyrics.Lines.Count == 0)
+                //    return;
 
-                if (KLyrics.Lines.Last().Syllables.Last().CharType != Syllable.CharTypes.Text)
-                    KLyrics.Lines.Last().Syllables.RemoveAt(KLyrics.Lines.Last().Syllables.Count - 1);
+                //if (KLyrics.Lines.Last().Syllables.Last().CharType != Syllable.CharTypes.Text)
+                //    KLyrics.Lines.Last().Syllables.RemoveAt(KLyrics.Lines.Last().Syllables.Count - 1);
 
                 if (KLyrics.Lines.Count == 0)
                     return;
