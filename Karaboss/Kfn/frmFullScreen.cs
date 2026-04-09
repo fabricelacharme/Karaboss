@@ -1,14 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.Linq;
 using System.Runtime.InteropServices;
-using System.Text;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace Karaboss.Kfn
@@ -23,7 +17,7 @@ namespace Karaboss.Kfn
         [return: MarshalAs(UnmanagedType.Bool)]
         public static extern bool GetIconInfo(IntPtr hIcon, ref IconInfo pIconInfo);
 
-        private TextBox _sender = null;
+        private TextBox _sender = null;        
 
         public struct IconInfo
         {
@@ -39,7 +33,7 @@ namespace Karaboss.Kfn
             InitializeComponent();            
 
             _sender = sender;
-
+            
             ShowInTaskbar = false;
             FormBorderStyle = FormBorderStyle.None;
             WindowState = FormWindowState.Maximized;
@@ -105,6 +99,16 @@ namespace Karaboss.Kfn
                         frmKfnCreate frmKfnCreate = Utilities.FormUtilities.GetForm<frmKfnCreate>();
                         frmKfnCreate.GetColorFromPicker(c, _sender);
                     }
+                    else if (Application.OpenForms.OfType<frmLyrOptions>().Count() > 0)
+                    {
+                        frmLyrOptions frmLyrOptions = Utilities.FormUtilities.GetForm<frmLyrOptions>();
+                        frmLyrOptions.GetColorFromPicker(c, _sender);
+                    }
+                    else if (Application.OpenForms.OfType<Karaboss.Mp3.frmMp3LyrOptions>().Count() > 0)
+                    {
+                        Karaboss.Mp3.frmMp3LyrOptions frmMp3LyrOptions = Utilities.FormUtilities.GetForm<Karaboss.Mp3.frmMp3LyrOptions>();
+                        frmMp3LyrOptions.GetColorFromPicker(c, _sender);
+                    }
                 }
                 Close();
             }
@@ -135,6 +139,17 @@ namespace Karaboss.Kfn
                 frmKfnCreate frmKfnCreate = Utilities.FormUtilities.GetForm<frmKfnCreate>();
                 frmKfnCreate.Show();
             }
+            else if (Application.OpenForms.OfType<frmLyrOptions>().Count() > 0)
+            {
+                frmLyrOptions frmLyrOptions = Utilities.FormUtilities.GetForm<frmLyrOptions>();
+                frmLyrOptions.Show();
+            }
+            else if (Application.OpenForms.OfType<Karaboss.Mp3.frmMp3LyrOptions>().Count() > 0)
+            {
+                Karaboss.Mp3.frmMp3LyrOptions frmMp3LyrOptions = Utilities.FormUtilities.GetForm<Karaboss.Mp3.frmMp3LyrOptions>();
+                frmMp3LyrOptions.Show();
+            }
+
         }
     }
 }

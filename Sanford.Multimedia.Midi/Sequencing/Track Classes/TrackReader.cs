@@ -589,21 +589,104 @@ namespace Sanford.Multimedia.Midi
             if (sy.Trim() != string.Empty)
                 sy = CleanSpecialChars(sy);
 
-
             try
             {
-
                 // Elimine caractères bizarres dans certains fichiers    
                 sy = cleanLyric(sy);
 
                 if (sy != string.Empty)
                 {
 
-                    string s = sy.Trim();                                      
-                    string reste = string.Empty;
-
                     #region extract data
 
+                    // Simplify the management of linefeed and paragraph by replacing them with special characters
+                    string m_SepParagraph = "\\";
+                    string m_SepLine = "/";
+                    string _InternalSepLine = "¼";
+                    string _InternalSepParagraph = "½";
+
+                    sy = sy.Replace("\r\r", m_SepParagraph);  //Paragraph
+                    sy = sy.Replace("\r", m_SepLine);     // Linefeed
+
+                    string s = sy.Trim();
+                    string reste = string.Empty;
+
+
+                    if (sy.IndexOf(m_SepParagraph) > -1 || sy.IndexOf(m_SepLine) > -1)
+                    {
+                        if (s.StartsWith(m_SepParagraph) || s.StartsWith(m_SepLine))
+                        {
+                            // Linefeed or paragraph at the begining of text
+                            if (s.StartsWith(m_SepParagraph))
+                            {
+                                // Paragraph
+                                newTrack.Lyrics.Add(new Track.Lyric() { Type = Track.Lyric.Types.Paragraph, Element = _InternalSepParagraph, TicksOn = ticks });
+                                newTrack.TotalLyricsL += _InternalSepParagraph;
+
+                                reste = sy.Replace(m_SepParagraph, string.Empty);   // just remove Paragraph separator
+                            }
+                            else
+                            {
+                                // Linefeed
+                                newTrack.Lyrics.Add(new Track.Lyric() { Type = Track.Lyric.Types.LineFeed, Element = _InternalSepLine, TicksOn = ticks });
+                                newTrack.TotalLyricsL += _InternalSepLine;
+                                reste = sy.Replace(m_SepLine, string.Empty);   // just remove Linefeed separator
+                            }
+
+                            if (reste != string.Empty)
+                            {
+                                newTrack.TotalLyricsL += reste;
+                                newTrack.Lyrics.Add(new Track.Lyric() { Type = Track.Lyric.Types.Text, Element = reste, TicksOn = ticks });
+                            }
+                        }
+                        else if (s.EndsWith(m_SepParagraph) || s.EndsWith(m_SepLine))
+                        {
+                            if (s.EndsWith(m_SepParagraph))
+                            {
+                                // Paragraph at the end of text                                    
+                                reste = reste.Replace(m_SepParagraph, string.Empty);
+
+                                if (reste != string.Empty)
+                                {
+                                    newTrack.TotalLyricsL += reste;
+                                    newTrack.Lyrics.Add(new Track.Lyric() { Type = Track.Lyric.Types.Text, Element = reste, TicksOn = ticks });
+                                }
+                                newTrack.Lyrics.Add(new Track.Lyric() { Type = Track.Lyric.Types.Paragraph, Element = _InternalSepParagraph, TicksOn = ticks });
+                                newTrack.TotalLyricsL += _InternalSepParagraph;
+
+                            }
+                            else
+                            {
+                                // Linefeed at the end of text : like "boy/ "                                    
+                                reste = sy.Replace(m_SepLine, string.Empty);   // just remove Linefeed separator
+                                if (reste != string.Empty)
+                                {
+                                    newTrack.TotalLyricsL += reste;
+                                    newTrack.Lyrics.Add(new Track.Lyric() { Type = Track.Lyric.Types.Text, Element = reste, TicksOn = ticks });
+                                }
+                                newTrack.Lyrics.Add(new Track.Lyric() { Type = Track.Lyric.Types.LineFeed, Element = _InternalSepLine, TicksOn = ticks });
+                                newTrack.TotalLyricsL += _InternalSepLine;
+                            }
+                        }
+                    }
+                    else 
+                    {                       
+                        if (sy == " ")
+                        {
+                            // Manage the space separator when lyrics are letter to letter
+                            newTrack.TotalLyricsL += "[]";
+                            newTrack.Lyrics.Add(new Track.Lyric() { Type = Track.Lyric.Types.Text, Element = "[]", TicksOn = ticks });
+                        }
+                        else if (s != string.Empty)
+                        {
+                            // No linefeed, no paragraph, only text
+                            newTrack.TotalLyricsL += sy;
+                            newTrack.Lyrics.Add(new Track.Lyric() { Type = Track.Lyric.Types.Text, Element = sy, TicksOn = ticks });
+                        }
+                    }
+
+                    #region deleteme
+                    /*
                     string Paragraph1 = "\r\r";
                     int iParagraph1 = sy.LastIndexOf(Paragraph1);
                     string Paragraph2 = "\\";
@@ -711,9 +794,12 @@ namespace Sanford.Multimedia.Midi
                         // Manage the space separator when lyrics are letter to letter
                         newTrack.TotalLyricsL += "[]";                        
                         newTrack.Lyrics.Add(new Track.Lyric() { Type = Track.Lyric.Types.Text, Element = "[]", TicksOn = ticks });
-
                     }
-                    #endregion                  
+                    */
+                    #endregion deleteme
+
+
+                    #endregion
 
                 } // s != ""                 
             }
@@ -810,22 +896,101 @@ namespace Sanford.Multimedia.Midi
                     else if ((sy.Substring(0, 1) != "@") && ticks >= 0)
                     {
 
+                        // Simplify the management of linefeed and paragraph by replacing them with special characters
+                        string m_SepParagraph = "\\";
+                        string m_SepLine = "/";
+                        string _InternalSepLine = "¼";
+                        string _InternalSepParagraph = "½";
+        
+                        sy = sy.Replace("\r\r", m_SepParagraph);  //Paragraph
+                        sy = sy.Replace("\r", m_SepLine);     // Linefeed
+
+
                         string s = sy.Trim();
                         string reste = string.Empty;
+                        if (s.Length == 0) return;
 
                         #region extract data
-                        string Paragraph1 = "\r\r";
+
+                        if (sy.IndexOf(m_SepParagraph) > -1 || sy.IndexOf(m_SepLine) > -1)
+                        {
+                            if (s.StartsWith(m_SepParagraph) || s.StartsWith(m_SepLine))
+                            {
+                                // Linefeed or paragraph at the begining of text
+                                if (s.StartsWith(m_SepParagraph))
+                                {
+                                    // Paragraph
+                                    newTrack.LyricsText.Add(new Track.Lyric() { Type = Track.Lyric.Types.Paragraph, Element = _InternalSepParagraph, TicksOn = ticks });
+                                    newTrack.TotalLyricsT += _InternalSepParagraph;
+
+                                    reste = sy.Replace(m_SepParagraph, string.Empty);   // just remove Paragraph separator
+                                }
+                                else
+                                {
+                                    // Linefeed
+                                    newTrack.LyricsText.Add(new Track.Lyric() { Type = Track.Lyric.Types.LineFeed, Element = _InternalSepLine, TicksOn = ticks });
+                                    newTrack.TotalLyricsT += _InternalSepLine;
+                                    reste = sy.Replace(m_SepLine, string.Empty);   // just remove Linefeed separator
+                                }
+                                
+                                if (reste != string.Empty)
+                                {
+                                    newTrack.TotalLyricsT += reste;
+                                    newTrack.LyricsText.Add(new Track.Lyric() { Type = Track.Lyric.Types.Text, Element = reste, TicksOn = ticks });
+                                }
+                            }
+                            else if (s.EndsWith(m_SepParagraph) || s.EndsWith(m_SepLine))
+                            {
+                                if (s.EndsWith(m_SepParagraph))
+                                {
+                                    // Paragraph at the end of text                                    
+                                    reste = reste.Replace(m_SepParagraph, string.Empty);
+
+                                    if (reste != string.Empty)
+                                    {
+                                        newTrack.TotalLyricsT += reste;
+                                        newTrack.LyricsText.Add(new Track.Lyric() { Type = Track.Lyric.Types.Text, Element = reste, TicksOn = ticks });
+                                    }
+                                    newTrack.LyricsText.Add(new Track.Lyric() { Type = Track.Lyric.Types.Paragraph, Element = _InternalSepParagraph, TicksOn = ticks });
+                                    newTrack.TotalLyricsT += _InternalSepParagraph;
+
+                                }
+                                else
+                                {
+                                    // Linefeed at the end of text : like "boy/ "                                    
+                                    reste = sy.Replace(m_SepLine, string.Empty);   // just remove Linefeed separator
+                                    if (reste != string.Empty)
+                                    {
+                                        newTrack.TotalLyricsT += reste;
+                                        newTrack.LyricsText.Add(new Track.Lyric() { Type = Track.Lyric.Types.Text, Element = reste, TicksOn = ticks });
+                                    }
+                                    newTrack.LyricsText.Add(new Track.Lyric() { Type = Track.Lyric.Types.LineFeed, Element = _InternalSepLine, TicksOn = ticks });
+                                    newTrack.TotalLyricsT += _InternalSepLine;
+                                }
+                            }
+                        }
+                        else
+                        {
+                            // No linefeed, no paragraph, only text
+                            newTrack.TotalLyricsT += sy;
+                            newTrack.LyricsText.Add(new Track.Lyric() { Type = Track.Lyric.Types.Text, Element = sy, TicksOn = ticks });
+                        }
+
+                        #region deleteme
+                        /*
+                         string Paragraph1 = "\r\r";
                         int iParagraph1 = sy.LastIndexOf(Paragraph1);
+                        
                         string Paragraph2 = "\\";
                         int iParagraph2 = sy.LastIndexOf(Paragraph2);
 
                         string LineFeed1 = "\r";
                         int iLineFeed1 = sy.LastIndexOf(LineFeed1);
+                        
                         string LineFeed2 = "/";
-                        int iLineFeed2 = sy.LastIndexOf(LineFeed2);
-
-                       
-
+                        int iLineFeed2 = sy.LastIndexOf(LineFeed2);  
+                          
+                         
                         if (iParagraph1 == 0 || (sy.Length > Paragraph1.Length && iParagraph1 == sy.Length - Paragraph1.Length))
                         {
                             // single paragraph
@@ -908,12 +1073,13 @@ namespace Sanford.Multimedia.Midi
                             newTrack.TotalLyricsT += sy;
                             newTrack.LyricsText.Add(new Track.Lyric() { Type = Track.Lyric.Types.Text, Element = sy, TicksOn = ticks });
                         }                       
+                        */
+                        #endregion deleteme
 
                         #endregion
-                      
+
                     }
                 }
-
             }
             catch (Exception err)
             {

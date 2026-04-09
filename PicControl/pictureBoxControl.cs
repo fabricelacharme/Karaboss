@@ -1,6 +1,6 @@
 ﻿#region License
 
-/* Copyright (c) 2025 Fabrice Lacharme
+/* Copyright (c) 2026 Fabrice Lacharme
  * 
  * Permission is hereby granted, free of charge, to any person obtaining a copy 
  * of this software and associated documentation files (the "Software"), to 
@@ -35,12 +35,15 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
+using System.Drawing.Drawing2D;
+using System.Drawing.Imaging;
+using System.Drawing.Text;
+using System.IO;
+using System.Runtime.InteropServices;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Windows.Forms;
-using System.Drawing.Drawing2D;
-using System.IO;
-using System.Text.RegularExpressions;
-using System.Runtime.InteropServices;
+using kar;
 
 namespace PicControl
 {
@@ -98,6 +101,44 @@ namespace PicControl
         }
 
         #endregion classes
+
+
+        #region KaraokeLyrics
+
+        public kLyrics KLyrics { get; set; }
+
+        #endregion KaraokeLyrics
+
+
+        #region Slideshow
+
+        System.Timers.Timer  timerTransition; 
+        System.Timers.Timer timerChangeImage;
+
+        private float mBlend;
+        private int mDir = 1;
+        private int count = 0;
+
+        private Image mImg1;
+        private Image mImg2;
+        private Image Image1
+        {
+            get { return mImg1; }
+            set { mImg1 = value; Invalidate(); }
+        }
+        private Image Image2
+        {
+            get { return mImg2; }
+            set { mImg2 = value; Invalidate(); }
+        }
+        private float m_Blend
+        {
+            get { return mBlend; }
+            set { mBlend = value; Invalidate(); }
+        }
+        private Bitmap[] pictures;
+
+        #endregion slideshow
 
 
         #region properties
@@ -222,7 +263,7 @@ namespace PicControl
 
                 switch (_optionbackground)
                 {
-                    case "Diaporama":
+                    case "Diaporama":                       
                         break;
                     case "SolidColor":
                         m_Cancel = true;
@@ -230,7 +271,7 @@ namespace PicControl
                         _timerGradient.Stop();
                         pboxWnd.Image = null;
                         m_CurrentImage = null;
-                        pboxWnd.BackColor = txtBackColor;
+                        pboxWnd.BackColor = _BgColor;
                         pboxWnd.Invalidate();
                         break;
                     
@@ -250,7 +291,7 @@ namespace PicControl
                         pboxWnd.Image = null;
                         m_CurrentImage = null;
                         ResetSize();
-                        pboxWnd.BackColor = txtRhythm0Color;
+                        pboxWnd.BackColor = _Rhythm0Color;
                         pboxWnd.Invalidate();
                         break;
 
@@ -266,23 +307,38 @@ namespace PicControl
                     default:
                         break;
                 }
-
             }
         }
+
 
         #region TextColor
 
         /// <summary>
+        /// Text sung color
+        /// </summary>
+        private Color _ActiveColor;
+        public Color ActiveColor
+        {
+            get
+            { return _ActiveColor; }
+            set
+            {
+                _ActiveColor = value;
+                pboxWnd.Invalidate();
+            }
+        }
+
+        /// <summary>
         /// Text color
         /// </summary>
-        private Color txtHighlightColor;
-        public Color TxtHighlightColor
+        private Color _HighlightColor;
+        public Color HighlightColor
         {
             get
-            { return txtHighlightColor; }
+            { return _HighlightColor; }
             set
             {
-                txtHighlightColor = value;
+                _HighlightColor = value;
                 pboxWnd.Invalidate();
             }
         }
@@ -290,30 +346,57 @@ namespace PicControl
         /// <summary>
         /// Text to sing color
         /// </summary>
-        private Color txtNextColor;
-        public Color TxtNextColor {
+        private Color _InactiveColor;
+        public Color InactiveColor {
             get
-            { return txtNextColor; }
+            { return _InactiveColor; }
             set
             {
-                txtNextColor = value;
+                _InactiveColor = value;
+                pboxWnd.Invalidate();
+            }
+        }
+                    
+        // Border Color
+        private Color _ActiveBorderColor;
+        public Color ActiveBorderColor {
+            get
+            { return _ActiveBorderColor; }
+            set
+            {
+                _ActiveBorderColor = value;
                 pboxWnd.Invalidate();
             }
         }
 
-        #region chords
+        private Color _InactiveBorderColor;
+        public Color InactiveBorderColor
+        {
+            get
+            { return _InactiveBorderColor; }
+            set
+            {
+                _InactiveBorderColor = value;
+                pboxWnd.Invalidate();
+            }
+        }
+
+        #endregion Textcolor       
+
+
+        #region chord color
 
         /// <summary>
         /// Text to sing color
         /// </summary>
-        private Color _chordNextColor;
-        public Color ChordNextColor
+        private Color _InactiveChordColor;
+        public Color InactiveChordColor
         {
             get
-            { return _chordNextColor; }
+            { return _InactiveChordColor; }
             set
             {
-                _chordNextColor = value;
+                _InactiveChordColor = value;
                 pboxWnd.Invalidate();
             }
         }
@@ -321,14 +404,14 @@ namespace PicControl
         /// <summary>
         /// Chord Highligt color
         /// </summary>
-        private Color _chordHighlightColor;
-        public Color ChordHighlightColor
+        private Color _HighlightChordColor;
+        public Color HighlightChordColor
         {
             get
-            { return _chordHighlightColor; }
+            { return _HighlightChordColor; }
             set
             {
-                _chordHighlightColor = value;
+                _HighlightChordColor = value;
                 pboxWnd.Invalidate();
             }
         }
@@ -337,56 +420,18 @@ namespace PicControl
         public bool bShowChords
         {
             get { return _bShowChords; }
-            set {
+            set
+            {
                 if (value != _bShowChords)
                 {
                     _bShowChords = value;
                     pboxWnd?.Invalidate();
                 }
             }
-         }
-
-        #endregion chords
-
-        /// <summary>
-        /// Text sung color
-        /// </summary>
-        private Color txtBeforeColor;
-        public Color TxtBeforeColor {
-            get
-            { return txtBeforeColor; }
-            set
-            {
-                txtBeforeColor = value;
-                pboxWnd.Invalidate();
-            }
         }
 
-        private bool _bColorContour = true;
-        public bool bColorContour
-        {
-            get
-            { return _bColorContour; }
-            set
-            {
-                _bColorContour = value;
-                pboxWnd.Invalidate();
-            }
-        }
+        #endregion chord color
 
-        // Text contour
-        private Color txtContourColor;
-        public Color TxtContourColor {
-            get
-            { return txtContourColor; }
-            set
-            {
-                txtContourColor = value;
-                pboxWnd.Invalidate();
-            }
-        }
-
-        #endregion Textcolor       
 
         #region Text others
 
@@ -408,6 +453,8 @@ namespace PicControl
             }        
         }
 
+
+        #region Font
         public Font KaraokeFont
         {
             get { return _karaokeFont; }
@@ -444,64 +491,141 @@ namespace PicControl
         }
 
 
+        #endregion Font
+
+
+        #region Frame type
+
+        // "NoBorder":
+        // "FrameThin":
+        // "Frame1":
+        // "Frame2":
+        // "Frame3":
+        // "Frame4":
+        // "Frame5":
+        // "Shadow":
+        // "Neon":
+        private string _frametype = "Frame1";
+        public string FrameType
+        {
+            get { return _frametype; }
+            set { 
+                _frametype = value; 
+            
+                switch (_frametype)
+                {
+                    case "NoBorder":
+                        _borderthick = 0;
+                        break;
+                    case "FrameThin":
+                        _borderthick = 0;
+                        break;
+                    case "Frame1":
+                        _borderthick = 1;
+                        break;
+                    case "Frame2":
+                        _borderthick = 2;
+                        break;
+                    case "Frame3":
+                        _borderthick = 3;
+                        break;
+                    case "Frame4":
+                        _borderthick = 4;
+                        break;
+                    case "Frame5":
+                        _borderthick = 5;
+                        break;
+                    case "Shadow":
+                        _borderthick = 2;
+                        break;
+                    case "Neon":
+                        _borderthick = 2;
+                        break;
+                    default:
+                        _borderthick = 1;
+                        break;
+                }
+                pboxWnd?.Invalidate();
+            }
+        }
+
+        private int _borderthick = 1;
+        public int BorderThick
+        {
+            get { return _borderthick; }
+            set 
+            {
+                try
+                {
+                    _borderthick = value;
+                    pboxWnd?.Invalidate();
+                }
+                catch (Exception e)
+                {
+                    Console.Write("Error: " + e.Message);
+                }
+            }
+        }
+
+        #endregion Frame type
+
+
         // Background color
-
         private int _bpm;
-
-        private Color txtBackColor;
-        public Color TxtBackColor {
+        private Color _BgColor;
+        public Color BgColor {
             get
-            { return txtBackColor; }
+            { return _BgColor; }
             set
             {
-                txtBackColor = value;
+                _BgColor = value;
                 if (_optionbackground == "SolidColor")
                 {
-                    pboxWnd.BackColor = txtBackColor;
+                    pboxWnd.BackColor = _BgColor;
                     pboxWnd.Invalidate();
                 }
             }
         }
 
-        private Color txtGrad0Color;
-        public Color TxtGrad0Color
+        private Color _Grad0Color;
+        public Color Grad0Color
         {
-            get { return txtGrad0Color; }
+            get { return _Grad0Color; }
             set
             {
-                txtGrad0Color = value;
+                _Grad0Color = value;
                 pboxWnd.Invalidate();
             }
         }
-        private Color txtGrad1Color;
-        public Color TxtGrad1Color
+        private Color _Grad1Color;
+        public Color Grad1Color
         {
-            get { return txtGrad1Color; }
+            get { return _Grad1Color; }
             set
             {
-                txtGrad1Color = value;
+                _Grad1Color = value;
                 pboxWnd.Invalidate();
             }
         }
-        private Color txtRhythm0Color;
-        public Color TxtRhythm0Color
+        private Color _Rhythm0Color;
+        public Color Rhythm0Color
         {
-            get { return txtRhythm0Color; }
+            get { return _Rhythm0Color; }
             set
             {
-                txtRhythm0Color = value;
-                pboxWnd.BackColor = txtRhythm0Color;
+                _Rhythm0Color = value;
+                pboxWnd.BackColor = _Rhythm0Color;
                 ResetSize();
                 pboxWnd.Invalidate();
             }
         }
-        private Color txtRhythm1Color;
-        public Color TxtRhythm1Color
+        private Color _Rhythm1Color;
+        public Color Rhythm1Color
         {
-            get { return txtRhythm1Color; }
+            get { return _Rhythm1Color; }
             set
             {
-                txtRhythm1Color = value;
+                _Rhythm1Color = value;
                 ResetSize();
                 pboxWnd.Invalidate();
             }
@@ -509,6 +633,7 @@ namespace PicControl
 
 
         #region Gradient & Rhythm
+
         readonly System.Windows.Forms.Timer _timerGradient = new System.Windows.Forms.Timer();        
 
         // Default angle for the gradient
@@ -652,16 +777,14 @@ namespace PicControl
         private List<string> m_ImageFilePaths;
         private MemoryStream m_ImageStream = null;        
 
-        //private AutoResetEvent m_FinishEvent = new AutoResetEvent(false);
         private ManualResetEvent m_FinishEvent = new ManualResetEvent(false);
 
         private bool m_Cancel = false;
         private bool m_Restart = false;       
 
-        //private int m_step = 51;          // 0 à 255 par step de 3, 5, 15, 17, 51
-        //private bool m_wait = false;
         
         delegate void UpdateTimerEnableCallback(bool enabled);
+
         #endregion SlideShow
 
 
@@ -715,8 +838,7 @@ namespace PicControl
         {
             InitializeComponent();
 
-            // Dipslay chords or not
-            //OptionShowChords = false;
+            // Dipslay chords or not            
             OptionShowChords = true;
 
             _karaokeFont = new Font("Arial", this.Font.Size);
@@ -734,24 +856,25 @@ namespace PicControl
             m_Alpha = 255;
             imgLayout = ImageLayout.Stretch;
 
-            //W = ClientSize.Width; // Reset width to the current width
-            //H = ClientSize.Height; // Reset height to the current height   
             Beat = 200; // Default speed for rhythm animation
 
             _timerGradient.Interval = 60; // 60 ms
             _timerGradient.Tick += new EventHandler(_timerGradient_Tick);
 
+            /*
             this.SetStyle(
                   System.Windows.Forms.ControlStyles.UserPaint |
                   System.Windows.Forms.ControlStyles.AllPaintingInWmPaint |
                   System.Windows.Forms.ControlStyles.OptimizedDoubleBuffer,
-                  true);       
-            
+                  true);
+            */
+            SetStyle(ControlStyles.AllPaintingInWmPaint | ControlStyles.UserPaint | ControlStyles.OptimizedDoubleBuffer, true);
+
             SetDefaultValues();
         }
 
 
-        #region Timer
+        #region Timer gradient
         private void _timerGradient_Tick(object sender, EventArgs e)
         {
             switch (_optionbackground)
@@ -777,13 +900,10 @@ namespace PicControl
         {
             // Reset the width and height to the current client rectangle size
             W = ClientRectangle.Width/2;
-            H = ClientRectangle.Height/2;
-            //W = Width; // Reset width to the current width
-            //H = Height; // Reset height to the current height            
-            
+            H = ClientRectangle.Height/2;            
         }
 
-        #endregion Timer
+        #endregion Timer gradient
 
 
         #region methods
@@ -818,7 +938,7 @@ namespace PicControl
         {
             try
             {
-                UpdateTimerEnable(false);
+                //UpdateTimerEnable(false);
 
                 m_Cancel = true;
                 m_Restart = true;
@@ -842,7 +962,8 @@ namespace PicControl
                     if (_optionbackground == "Diaporama")
                     {
                         LoadImageList(dirImages);
-                        C = m_ImageFilePaths.Count;
+                        //C = m_ImageFilePaths.Count;
+                        C = pictures.Length;
                     }
 
                     switch (C)
@@ -854,18 +975,24 @@ namespace PicControl
                         case 1:
                             // Single image
                             m_Cancel = true;
-                            pboxWnd.Image = Image.FromFile(m_ImageFilePaths[0]);
+
+                            m_CurrentImage = Image.FromFile(m_ImageFilePaths[0]);
+                            //pboxWnd.Image = m_CurrentImage; // Image.FromFile(m_ImageFilePaths[0]);
+                            //pboxWnd.Image = pictures[0];
                             break;
                         default:
-                            // Slideshow => backgroundworker
 
-                            //m_Cancel = true;
+                            /*                            
+                            // Slideshow => backgroundworker                            
                             m_Cancel = false;
-
                             // Initialize backgroundworker
                             InitBackGroundWorker();
                             random = new Random();
                             StartBgW();
+                            */
+
+                            InitSlideShow();
+
                             break;
                     }
                 }
@@ -874,17 +1001,74 @@ namespace PicControl
             {
                 Console.Write("Error: " + e.Message);
             }
-
         }
 
-        private void InitBackGroundWorker()
+
+        #region SlideShow with timer       
+        
+        // New Slideshow
+        private void InitSlideShow()
         {
-            backgroundWorkerSlideShow = new System.ComponentModel.BackgroundWorker();
-            backgroundWorkerSlideShow.WorkerSupportsCancellation = true;
-            backgroundWorkerSlideShow.WorkerReportsProgress = true;            
-            backgroundWorkerSlideShow.DoWork += new System.ComponentModel.DoWorkEventHandler(this.backgroundWorkerSlideShow_DoWork);
-            backgroundWorkerSlideShow.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.backgroundWorkerSlideShow_RunWorkerCompleted);
+            mBlend = 0;
+            count = 0;
+
+            timerChangeImage?.Dispose();
+            timerChangeImage = new System.Timers.Timer();            
+            timerChangeImage.Interval = freqSlideShow * 1000;
+            timerChangeImage.Elapsed += (sender, e) => OnTimerChangeImage();            
+
+            timerTransition?.Dispose();
+            timerTransition = new System.Timers.Timer();
+            timerTransition.Interval = 50;
+            timerTransition.Elapsed += (sender, e) => OnTimerTransition();            
+
+            try
+            {
+                Image1 = pictures[count];
+                Image2 = pictures[++count];
+            }
+            catch
+            {
+
+            }
+            timerTransition.Enabled = false;
+            timerChangeImage.Enabled = true;                                             
         }
+
+        private void OnTimerTransition()
+        {
+            mBlend += mDir * 0.02F;
+
+            if (mBlend > 1)
+            {
+                // When mBlend is greater than 1, we change the images
+                // and stop the timer "timerTransition" to prevent a new change before time elapse of "timerChangeImage"
+                mBlend = 0.0F;
+
+                if ((count + 1) < pictures.Length)
+                {
+                    Image1 = pictures[count];
+                    Image2 = pictures[++count];
+                }
+                else if (count < pictures.Length) 
+                {
+                    Image1 = pictures[count];
+                    Image2 = pictures[0];
+                    count = 0;
+                }
+                
+                timerTransition.Enabled = false;                                                  
+            }
+
+            m_Blend = mBlend;
+        }
+
+        private void OnTimerChangeImage()
+        {
+            timerTransition.Enabled = true;
+        }       
+
+        #endregion SlideShow with timer      
 
         /// <summary>
         /// Color the syllabe according to song position
@@ -998,8 +1182,13 @@ namespace PicControl
 
         #region SlideShow functions
 
+        /// <summary>
+        /// Load all images into a list
+        /// </summary>
+        /// <param name="dir"></param>
         private void LoadImageList(string dir)
         {
+            
             bgFiles = Directory.GetFiles(@dir, "*.jpg");
             m_ImageFilePaths.Clear();
             for (int i = 0; i < bgFiles.Length; ++i)
@@ -1007,6 +1196,18 @@ namespace PicControl
                 string file = bgFiles[i];
                 m_ImageFilePaths.Add(file);
             }
+            
+
+            // new slideshow
+            
+            count = 0;
+            //mBlend = 0.0F;
+            pictures = new Bitmap[bgFiles.Length];
+            for (int i = 0; i < bgFiles.Length; ++i)
+            {
+                pictures[i] = new Bitmap(bgFiles[i]);
+            }
+
         }
 
         #endregion SlideShow functions
@@ -1126,15 +1327,18 @@ namespace PicControl
         /// </summary>
         private void SetDefaultValues()
         {           
-            txtBackColor = Color.Black;     
-            txtContourColor = Color.Black;
-            txtNextColor = Color.White;
-            txtBeforeColor = Color.FromArgb(153, 180, 51);      // modern ui light green
-            txtHighlightColor = Color.FromArgb(238, 17, 17);    // modern ui dark Red;
+            _BgColor = Color.Black;     
+                        
+            _ActiveColor = Color.FromArgb(153, 180, 51);      // modern ui light green
+            _HighlightColor = Color.FromArgb(238, 17, 17);    // modern ui dark Red;
+            _InactiveColor = Color.White;
 
-            _chordNextColor = Color.FromArgb(255, 196, 13);         // modern ui Orange
-            _chordHighlightColor = Color.FromArgb(238, 17, 17);    // modern ui dark Red
-            //_chordFont = new Font(Comic)
+            _ActiveBorderColor = Color.Black;
+            _InactiveBorderColor = Color.Black;
+
+            _InactiveChordColor = Color.FromArgb(255, 196, 13);         // modern ui Orange
+            _HighlightChordColor = Color.FromArgb(238, 17, 17);    // modern ui dark Red
+            
             
             _txtNbLines = 3;         
 
@@ -2005,24 +2209,40 @@ namespace PicControl
         #endregion measures
 
 
-        #region draw lyrics chords
+        #region draw lyrics & chords
 
         /// <summary>
         /// Draw current line, syllabe by syllabe
-        /// already sung: TxtBeforeColor
-        /// Currently sung: TxtHighlightColor
-        /// Not yet sung: txtNextColor
+        /// already sung: _ActiveColor
+        /// Currently sung: _HighlightColor
+        /// Not yet sung: _InactiveColor
         /// </summary>
         /// <param name="clr"></param>
         /// <param name="syl"></param>
         /// <param name="x"></param>
         /// <param name="y"></param>
         /// <param name="e"></param>
-        private void drawSyllabe(Color clr, syllabe syl, int x0, int y0, int W, int H, PaintEventArgs e)
+        private void drawSyllabe(string kind, Color clr, syllabe syl, int x0, int y0, int W, int H, PaintEventArgs e)
         {
-            var path = new GraphicsPath();
+            var pth = new GraphicsPath();
             string tx = syl.text;
-                        
+
+            Color BorderColor = _ActiveBorderColor;            
+
+            switch (kind) 
+            {
+                case "Active":
+                case "Highlight":
+                    // outline            
+                    BorderColor = _ActiveBorderColor;                    
+                    break;
+                case "Inactive":
+                    // outline            
+                    BorderColor = _InactiveBorderColor;                    
+                    break;
+            }
+            Pen penContour = new Pen(BorderColor, _borderthick);
+
             try
             {                
 
@@ -2037,13 +2257,27 @@ namespace PicControl
                 #endregion
 
                 #region Draw text of syllabe
-                path.AddString(tx, m_font.FontFamily, (int)m_font.Style, emSize, new Point((int)x0, y0), sf);
-                e.Graphics.FillPath(new SolidBrush(clr), path);
-                
-                if (_bColorContour)
-                    e.Graphics.DrawPath(new Pen(txtContourColor), path); 
 
-                path.Dispose();
+                // Add syllable to the Graphics path
+                pth.AddString(tx, m_font.FontFamily, (int)m_font.Style, emSize, new Point((int)x0, y0), sf);
+
+                #region Apply effects               
+
+                if (FrameType == "Neon")
+                    CreateNeonEffect(BorderColor, e, pth);
+                else if (FrameType == "Shadow")
+                    CreateShadowEffect(tx, BorderColor, x0, y0, m_font, emSize, e, pth);
+
+                #endregion Apply effect
+
+                // Draw text
+                e.Graphics.FillPath(new SolidBrush(clr), pth);
+
+                // Outline the text
+                if (_borderthick > 0)
+                    e.Graphics.DrawPath(penContour, pth);
+
+                pth.Dispose();
                 #endregion
             }
             catch (Exception ed)
@@ -2081,6 +2315,7 @@ namespace PicControl
             }
         }
 
+
         /// <summary>
         /// Draw syllabes on next lines
         /// </summary>
@@ -2093,13 +2328,15 @@ namespace PicControl
         /// <param name="e"></param>
         private void drawSyllabeNextLines(Color clr, syllabe syl, int x0, int y0, int W, int H, PaintEventArgs e)
         {
-            var path = new GraphicsPath();
-            string tx = syl.text;            
+            GraphicsPath pth = new GraphicsPath();
+            string tx = syl.text;
+
+            // outline            
+            Pen penContour = new Pen(_InactiveBorderColor, _borderthick);
 
             try
             {                
-
-                #region background of syllabe                              
+                #region background of syllabe      
                 
                 if (_bTextBackGround)
                 {
@@ -2108,19 +2345,34 @@ namespace PicControl
                     // background
                     e.Graphics.FillRectangle(new SolidBrush(Color.Black), R);
                 }
-                
+
                 #endregion
 
-
                 #region Draw text of syllabe
-                
-                path.AddString(tx, m_font.FontFamily, (int)m_font.Style, emSize, new Point((int)x0, y0), sf);
-                e.Graphics.FillPath(new SolidBrush(clr), path);
-                
-                if (_bColorContour)
-                    e.Graphics.DrawPath(new Pen(txtContourColor), path);
 
-                path.Dispose();
+                // Add lines of lyrics to the Graphics path
+                pth.AddString(tx, m_font.FontFamily, (int)m_font.Style, emSize, new Point((int)x0, y0), sf);
+
+
+                #region Apply effects               
+
+                if (FrameType == "Neon")
+                    CreateNeonEffect(_InactiveBorderColor , e, pth);
+                else if (FrameType == "Shadow")
+                    CreateShadowEffect(tx, _InactiveBorderColor, x0, y0, m_font, emSize, e, pth);
+
+                #endregion Apply effect
+
+
+                // Draw text
+                // Color clr is always InactiveColor for "NextLines"
+                e.Graphics.FillPath(new SolidBrush(clr), pth);
+                
+                // Outiline the text
+                if (_borderthick > 0)
+                    e.Graphics.DrawPath(penContour, pth);
+
+                pth.Dispose();
                 
                 #endregion
             }
@@ -2129,6 +2381,105 @@ namespace PicControl
                 Console.Write("Error: " + ed.Message);
             }
         }
+
+
+        #region effects
+
+        /// <summary>
+        /// Create a neon effect
+        /// </summary>
+        /// <param name="e"></param>
+        /// <param name="pth"></param>
+        private void CreateNeonEffect(Color clr, PaintEventArgs e, GraphicsPath pth)
+        {
+            //Create a bitmap in a fixed ratio to the original drawing area.
+            Bitmap bm = new Bitmap(pboxWnd.ClientSize.Width / 5, pboxWnd.ClientSize.Height / 5);
+            //Get the graphics object for the image. 
+            Graphics gimg = Graphics.FromImage(bm);
+
+            //Create a matrix that shrinks the drawing output by the fixed ratio. 
+            Matrix mx = new Matrix(1.0f / 5, 0, 0, 1.0f / 5, -(1.0f / 5), -(1.0f / 5));
+
+            //Choose an appropriate smoothing mode for the halo. 
+            gimg.SmoothingMode = SmoothingMode.AntiAlias;
+
+            //Transform the graphics object so that the same half may be used for both halo and text output. 
+            gimg.Transform = mx;
+
+            //Using a suitable pen...
+            Color HaloColor = clr;
+            Brush HaloBrush = new SolidBrush(HaloColor);
+
+            Pen penHaloColor = new Pen(HaloColor, 3);
+
+            //Draw around the outline of the path
+            gimg.DrawPath(penHaloColor, pth);
+
+            //and then fill in for good measure. 
+            gimg.FillPath(HaloBrush, pth);
+
+            //We no longer need this graphics object
+            //g.Dispose();
+
+            //setup the smoothing mode for path drawing
+            e.Graphics.SmoothingMode = SmoothingMode.AntiAlias;
+
+            //and the interpolation mode for the expansion of the halo bitmap
+            e.Graphics.InterpolationMode = InterpolationMode.HighQualityBicubic;
+
+            //expand the halo making the edges nice and fuzzy. 
+            e.Graphics.DrawImage(bm, pboxWnd.ClientRectangle, 0, 0, bm.Width, bm.Height, GraphicsUnit.Pixel);
+        }
+
+
+        /// <summary>
+        /// Create a shadow effect
+        /// </summary>
+        /// <param name="line"></param>
+        /// <param name="x0"></param>
+        /// <param name="y0"></param>
+        /// <param name="font"></param>
+        /// <param name="e"></param>
+        /// <param name="pth"></param>
+        private void CreateShadowEffect(string line, Color clr, int x0, int y0, Font font, float emSize, PaintEventArgs e, GraphicsPath pth)
+        {
+            Bitmap bm = new Bitmap(pboxWnd.ClientSize.Width / 4, pboxWnd.ClientSize.Height / 4);
+
+            //Get a graphics object for it
+            Graphics g = Graphics.FromImage(bm);
+            Graphics ge = e.Graphics;            
+
+            // must use an antialiased rendering hint
+            g.TextRenderingHint = TextRenderingHint.AntiAlias;
+
+            //this matrix zooms the text out to 1/4 size and offsets it by a little right and down                
+            Matrix mx = new Matrix(0.25f, 0, 0, 0.25f, 1.3f, 1.3f);
+
+            g.Transform = mx;
+
+
+            //The shadow is drawn
+            g.DrawString(line, font, new SolidBrush(clr), x0, y0, sf);
+
+            //Don't need this anymore
+            g.Dispose();
+
+            //The destination Graphics uses a high quality mode
+            ge.InterpolationMode = InterpolationMode.HighQualityBicubic;
+
+            //and draws antialiased text for accurate fitting
+            ge.TextRenderingHint = TextRenderingHint.AntiAlias;
+
+            //The small image is blown up to fill the main client rectangle
+            ge.DrawImage(bm, pboxWnd.ClientRectangle, 0, 0, bm.Width, bm.Height, GraphicsUnit.Pixel);
+
+            // finally, the text is drawn on top
+            //pth.AddString(line, new FontFamily(font.Name), (int)FontStyle.Regular, emSize, new Point(x0, y0), sf);
+        }
+
+
+        #endregion effects
+
 
         /// <summary>
         /// Draw chord on next lines
@@ -2158,55 +2509,7 @@ namespace PicControl
                 Console.Write("Error: " + ed.Message);
             }
         }
-
-        /*
-        /// <summary>
-        /// Pas utilisé
-        /// </summary>
-        /// <param name="singclr"></param>
-        /// <param name="nextclr"></param>
-        /// <param name="syl"></param>
-        /// <param name="y0"></param>
-        /// <param name="e"></param>
-        private void drawFilledSyllabe(Color singclr, Color nextclr ,syllabe syl, int y0, PaintEventArgs e)
-        {
-            var path = new GraphicsPath();
-            string tx = syl.text;
-
-            try
-            {
-                float x0 = rRect[syl.posline].X;
-               
-                
-                // Not filled = nextclr
-                path.AddString(tx, m_font.FontFamily, (int)m_font.Style, emSize, new Point((int)x0, y0), sf);
-                e.Graphics.FillPath(new SolidBrush(nextclr), path);
-
-                // Filled
-                Region rb = new Region(path);
-                RectangleF rectb = rb.GetBounds(e.Graphics);
-                float W = rectb.Width * (percent / steps);
-
-                RectangleF intersectRectb = new RectangleF(rectb.X, rectb.Y, W, rectb.Height);
-                rb.Intersect(intersectRectb);
-                e.Graphics.FillRegion(new SolidBrush(singclr), rb);
-
-                // Entourage
-                e.Graphics.DrawPath(new Pen(txtContourColor), path);
-
-                rb.Dispose();        
-                
-                path.Dispose();
-
-            }
-            catch (Exception edf)
-            {
-                Console.Write("Error: " + edf.Message);
-            }
-
-        }
-        */
-
+    
 
         /// <summary>
         /// Draw syllabes of the current line according to its position
@@ -2255,13 +2558,13 @@ namespace PicControl
                         if (_bShowChords)
                         {
                             if (syllab.chord != "")
-                                drawChord(_chordNextColor, syllab, (int)x1, y0, e);
+                                drawChord(_InactiveChordColor, syllab, (int)x1, y0, e);
                             
-                            drawSyllabe(txtBeforeColor, syllab, (int)x1, y0 + 2 * offset / 3, W, H, e);                            // déjà chanté
+                            drawSyllabe("Active", _ActiveColor, syllab, (int)x1, y0 + 2 * offset / 3, W, H, e);                            // déjà chanté
                         }
                         else
                         {
-                            drawSyllabe(txtBeforeColor, syllab, (int)x1, y0, W, H, e);                                            // déjà chanté
+                            drawSyllabe("Active", _ActiveColor, syllab, (int)x1, y0, W, H, e);                                            // déjà chanté
                         }
                     }
                     else if (syllab.pos == _currentTextPos)
@@ -2273,13 +2576,13 @@ namespace PicControl
                             if (_bShowChords)
                             {
                                 if (syllab.chord != "")
-                                    drawChord(_chordHighlightColor, syllab, (int)x1, y0, e);
+                                    drawChord(_HighlightChordColor, syllab, (int)x1, y0, e);
                                 
-                                drawSyllabe(txtHighlightColor, syllab, (int)x1, y0 + 2 * offset / 3, W, H, e);                       // surbrillance
+                                drawSyllabe("Highlight", _HighlightColor, syllab, (int)x1, y0 + 2 * offset / 3, W, H, e);                       // surbrillance
                             }
                             else
                             {
-                                drawSyllabe(txtHighlightColor, syllab, (int)x1, y0, W, H, e);                                         // surbrillance     
+                                drawSyllabe("Highlignt", _HighlightColor, syllab, (int)x1, y0, W, H, e);                                         // surbrillance     
                             }
                         }
                         else
@@ -2287,13 +2590,13 @@ namespace PicControl
                             if (_bShowChords)
                             {
                                 if (syllab.chord != "")
-                                    drawChord(_chordNextColor, syllab, (int)x1, y0, e);
+                                    drawChord(_InactiveChordColor, syllab, (int)x1, y0, e);
                                 
-                                drawSyllabe(txtNextColor, syllab, (int)x1, y0 + 2 * offset / 3, W, H, e);
+                                drawSyllabe("Inactive", _InactiveColor, syllab, (int)x1, y0 + 2 * offset / 3, W, H, e);
                             }
                             else
                             {
-                                drawSyllabe(txtNextColor, syllab, (int)x1, y0, W, H, e);
+                                drawSyllabe("Inactive", _InactiveColor, syllab, (int)x1, y0, W, H, e);
                             }
                         }
 
@@ -2346,13 +2649,13 @@ namespace PicControl
                         if (_bShowChords)
                         {
                             if (syllab.chord != "")
-                                drawChord(_chordNextColor, syllab, (int)x1, (int)y0, e);
+                                drawChord(_InactiveChordColor, syllab, (int)x1, (int)y0, e);
                             
-                            drawSyllabe(txtNextColor, syllab, (int)x1, y0 + 2 * offset / 3, W, H, e);                           // pas encore chanté
+                            drawSyllabe("Inactive", _InactiveColor, syllab, (int)x1, y0 + 2 * offset / 3, W, H, e);                           // pas encore chanté
                         }
                         else
                         {
-                            drawSyllabe(txtNextColor, syllab, (int)x1, y0, W, H, e);                                      // pas encore chanté
+                            drawSyllabe("Inactive", _InactiveColor, syllab, (int)x1, y0, W, H, e);                                      // pas encore chanté
                         }
                     }
                 }
@@ -2365,11 +2668,13 @@ namespace PicControl
         }
 
         /// <summary>
-        /// Draw next full lines with color txtNextColor
+        /// Draw next full lines with color _InactiveColor
         /// </summary>
         /// <param name="e"></param>
         private void DrawNextLines(int y0, PaintEventArgs e)
-        {            
+        {
+            #region declarations
+
             int x0 = 0;
             int i;
             int offset = _lineHeight;
@@ -2381,10 +2686,11 @@ namespace PicControl
             float y1;
 
             int ChordOffset = offset;  // To manage when offset = 0 
+            #endregion declarations
+
 
             if (_txtNbLines == 1)
                 offset = 0;                      
-
 
             // Draw sentence                           
             #region draw lyrics
@@ -2433,18 +2739,17 @@ namespace PicControl
                                 
                                 // Draw chord above
                                 if (syllabes[i].chord != "")
-                                    drawChordNextLines(_chordNextColor, syllabes[i], (int)x1, (int)y1, e);
+                                    drawChordNextLines(_InactiveChordColor, syllabes[i], (int)x1, (int)y1, e);
 
                                 // Draw syllabe below at 2*ChordOffset/3
-                                drawSyllabeNextLines(txtNextColor, syllabes[i], (int)x1, (int)y1 + 2 * ChordOffset / 3, W, H, e);
+                                drawSyllabeNextLines(_InactiveColor, syllabes[i], (int)x1, (int)y1 + 2 * ChordOffset / 3, W, H, e);
                             }
                             else
                             {
                                 // No chords
                                 y1 = y0 + (k + 1) * offset;
-                                drawSyllabeNextLines(txtNextColor, syllabes[i], (int)x1, (int)y1, W, H, e);
-                            }
-                                                                                        
+                                drawSyllabeNextLines(_InactiveColor, syllabes[i], (int)x1, (int)y1, W, H, e);
+                            }                                                                                        
                         }
                     }
                     else if (syllabes[i].line > line)
@@ -2453,17 +2758,24 @@ namespace PicControl
                         break;
                     }
                 }
-
             }
-
             #endregion draw lyrics               
-
         }
 
-        #endregion draw lyrics chords
+        #endregion draw lyrics & chords
 
 
         #region backgroundworker
+
+        /*
+        private void InitBackGroundWorker()
+        {
+            backgroundWorkerSlideShow = new System.ComponentModel.BackgroundWorker();
+            backgroundWorkerSlideShow.WorkerSupportsCancellation = true;
+            backgroundWorkerSlideShow.WorkerReportsProgress = true;
+            backgroundWorkerSlideShow.DoWork += new System.ComponentModel.DoWorkEventHandler(this.backgroundWorkerSlideShow_DoWork);
+            backgroundWorkerSlideShow.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.backgroundWorkerSlideShow_RunWorkerCompleted);
+        }
 
         private string SelectRndFile(List<string> files)
         {            
@@ -2517,17 +2829,14 @@ namespace PicControl
 
         private void backgroundWorkerSlideShow_DoWork(object sender, DoWorkEventArgs e)
         {
-            List<string> files = (List<string>)e.Argument;
-            
+            List<string> files = (List<string>)e.Argument;            
             do
             {
                 if (m_Cancel == true)
                 {
                     break;
-                }
-                
+                }                
                 string file = SelectRndFile(files);
-
               
                 UpdateTimerEnable(true);              
                 m_FinishEvent.Reset();
@@ -2585,7 +2894,7 @@ namespace PicControl
                 try
                 {
                     UpdateTimerEnableCallback d = new UpdateTimerEnableCallback(UpdateTimerEnable);
-                    pboxWnd.Invoke(d, new object[] { enabled });
+                    pboxWnd?.Invoke(d, new object[] { enabled });
                 }
                 catch (Exception u)
                 {
@@ -2612,8 +2921,7 @@ namespace PicControl
                 }
             }
             catch (Exception est)
-            {
-                //m_Restart = true;
+            {                
                 Console.Write("Error starting backgroundworker: " + est.Message);
             }
         }
@@ -2627,27 +2935,31 @@ namespace PicControl
                 m_Cancel = true;
             }
         }
+        */
 
 
         /// <summary>
-        /// Terminate
+        /// Terminate backgroundworker
         /// </summary>
         public void Terminate()
         {
             m_Cancel = true;
             m_Restart = false;
 
-            m_ImageFilePaths = new List<string>();
+            m_ImageFilePaths = new List<string>();                                   
             if (m_ImageStream != null)
             {
                 m_ImageStream.Dispose();
                 m_ImageStream = null;
             }
 
-            if (backgroundWorkerSlideShow != null)
-            {
-                backgroundWorkerSlideShow.CancelAsync();
-            }
+            timerChangeImage?.Stop();
+            timerTransition?.Stop();
+
+            //if (backgroundWorkerSlideShow != null)
+            //{
+            //    backgroundWorkerSlideShow.CancelAsync();
+            //}
 
         }
 
@@ -2712,66 +3024,63 @@ namespace PicControl
         /// <param name="e"></param>
         private void pboxWnd_Paint(object sender, PaintEventArgs e)
         {
-            int x;
-            int y;
+            // Draw background image
+            #region draw background image or gradient
 
             // Create a GraphicsPath to define the area to fill
             GraphicsPath gp;
 
-            // Draw background image
-            #region draw background image or gradient
-
-            switch (_optionbackground) {                
+            switch (_optionbackground) 
+            {                
             
-                case "Diaporama":                
-                    if (m_CurrentImage != null)
-                    {
-                        #region sizemode
-                        switch (_sizemode)
-                        {
-                            case PictureBoxSizeMode.AutoSize:
-                                x = (this.ClientSize.Width - m_CurrentImage.Width) / 2;
-                                y = (this.ClientSize.Height - m_CurrentImage.Height) / 2;
-                                m_DisplayRectangle = new Rectangle(x, y, m_CurrentImage.Width, m_CurrentImage.Height);
-                                break;
-                            case PictureBoxSizeMode.CenterImage:
-                                x = (this.ClientSize.Width - m_CurrentImage.Width) / 2;
-                                y = (this.ClientSize.Height - m_CurrentImage.Height) / 2;
-                                m_DisplayRectangle = new Rectangle(x, y, m_CurrentImage.Width, m_CurrentImage.Height);
-                                break;
-                            case PictureBoxSizeMode.Normal:
-                                // coin superieur gauche
-                                m_DisplayRectangle = new Rectangle(0, 0, this.ClientSize.Width, this.ClientSize.Height);
-                                break;
-                            case PictureBoxSizeMode.StretchImage:
-                                //  l'image est étirée ou réduite pour s'ajuster à PictureBox.
-                                m_DisplayRectangle = new Rectangle(0, 0, this.ClientSize.Width, this.ClientSize.Height);
-                                break;
-                            case PictureBoxSizeMode.Zoom:
-                                m_DisplayRectangle = new Rectangle(0, 0, this.ClientSize.Width, this.ClientSize.Height);
-                                break;
-                        }
-                        #endregion
-
-                        try
-                        {
-                            e.Graphics.DrawImage(m_CurrentImage, m_DisplayRectangle, 0, 0, m_CurrentImage.Width, m_CurrentImage.Height, GraphicsUnit.Pixel);
-
-                        }
-                        catch (Exception dr)
-                        {
-                            Console.Write("Error drawing image: " + dr.Message);
-                        }
+                case "Diaporama":                                      
+                    if (pictures.Length == 1)
+                    {                        
+                        if (m_CurrentImage != null)
+                        {                            
+                            try
+                            {
+                                m_DisplayRectangle = GetRectangleForSizeMode(m_CurrentImage.Width, m_CurrentImage.Height);                                
+                                e.Graphics.DrawImage(m_CurrentImage, m_DisplayRectangle, 0, 0, m_CurrentImage.Width, m_CurrentImage.Height, GraphicsUnit.Pixel);
+                            }
+                            catch (Exception dr)
+                            {
+                                Console.Write("Error drawing image: " + dr.Message);
+                            }
+                        }                    
                     }
-                    break;
+                    else 
+                    {
+                        if (mImg1 == null || mImg2 == null)
+                            e.Graphics.FillRectangle(new SolidBrush(this.BackColor), new Rectangle(0, 0, this.Width, this.Height));
+                        else
+                        {                            
+                            
+                            ColorMatrix cm = new ColorMatrix();
+                            ImageAttributes ia = new ImageAttributes();
+                            
+                            cm.Matrix33 = mBlend;
+                            ia.SetColorMatrix(cm);
 
+                            Rectangle rc = GetRectangleForSizeMode(mImg2.Width, mImg2.Height);
+                            e.Graphics.DrawImage(mImg2, rc, 0, 0, mImg2.Width, mImg2.Height, GraphicsUnit.Pixel, ia);
+                            
+                            cm.Matrix33 = 1F - mBlend;
+                            ia.SetColorMatrix(cm);
+                            
+                            rc = GetRectangleForSizeMode(mImg1.Width, mImg1.Height);
+                            e.Graphics.DrawImage(mImg1, rc, 0, 0, mImg1.Width, mImg1.Height, GraphicsUnit.Pixel, ia);
+                        }
+                    }                    
+                    break;
+                                                    
                 case "Gradient":
                     // Draw gradient background
                     // Create a GraphicsPath to define the area to fill
                     gp = new GraphicsPath();
                     gp.AddRectangle(ClientRectangle);
                     e.Graphics.SmoothingMode = SmoothingMode.HighQuality;
-                    e.Graphics.FillPath(new LinearGradientBrush(ClientRectangle, txtGrad0Color, txtGrad1Color, _angle), gp);      
+                    e.Graphics.FillPath(new LinearGradientBrush(ClientRectangle, _Grad0Color, _Grad1Color, _angle), gp);      
                     gp.Dispose(); // Dispose the GraphicsPath to free resources
                     break;
 
@@ -2791,8 +3100,8 @@ namespace PicControl
                         gp.AddEllipse(rect);
                         using (PathGradientBrush pgb = new PathGradientBrush(gp))
                         {
-                            pgb.CenterColor = txtRhythm1Color; // Center color of the radial gradient
-                            pgb.SurroundColors = new Color[] { txtRhythm0Color }; // Surrounding color of the radial gradient
+                            pgb.CenterColor = _Rhythm1Color; // Center color of the radial gradient
+                            pgb.SurroundColors = new Color[] { _Rhythm0Color }; // Surrounding color of the radial gradient
                             e.Graphics.FillPath(pgb, gp); // Fill the path with the radial gradient
                             pgb.Dispose(); // Dispose the PathGradientBrush to free resources                        
                         }
@@ -2809,8 +3118,8 @@ namespace PicControl
                         gp.AddEllipse(rect1);
                         using (PathGradientBrush pgb = new PathGradientBrush(gp))
                         {
-                            pgb.CenterColor = txtRhythm1Color; // Center color of the radial gradient
-                            pgb.SurroundColors = new Color[] { txtRhythm0Color }; // Surrounding color of the radial gradient
+                            pgb.CenterColor = _Rhythm1Color; // Center color of the radial gradient
+                            pgb.SurroundColors = new Color[] { _Rhythm0Color }; // Surrounding color of the radial gradient
                             e.Graphics.FillPath(pgb, gp); // Fill the path with the radial gradient
                             pgb.Dispose(); // Dispose the PathGradientBrush to free resources                        
                         }
@@ -2820,8 +3129,8 @@ namespace PicControl
                         gp.AddEllipse(rect2);
                         using (PathGradientBrush pgb = new PathGradientBrush(gp))
                         {
-                            pgb.CenterColor = txtRhythm1Color; // Center color of the radial gradient
-                            pgb.SurroundColors = new Color[] { txtRhythm0Color }; // Surrounding color of the radial gradient
+                            pgb.CenterColor = _Rhythm1Color; // Center color of the radial gradient
+                            pgb.SurroundColors = new Color[] { _Rhythm0Color }; // Surrounding color of the radial gradient
                             e.Graphics.FillPath(pgb, gp); // Fill the path with the radial gradient
                             pgb.Dispose(); // Dispose the PathGradientBrush to free resources                        
                         }
@@ -2831,8 +3140,8 @@ namespace PicControl
                         gp.AddEllipse(rect3);
                         using (PathGradientBrush pgb = new PathGradientBrush(gp))
                         {
-                            pgb.CenterColor = txtRhythm1Color; // Center color of the radial gradient
-                            pgb.SurroundColors = new Color[] { txtRhythm0Color }; // Surrounding color of the radial gradient
+                            pgb.CenterColor = _Rhythm1Color; // Center color of the radial gradient
+                            pgb.SurroundColors = new Color[] { _Rhythm0Color }; // Surrounding color of the radial gradient
                             e.Graphics.FillPath(pgb, gp); // Fill the path with the radial gradient
                             pgb.Dispose(); // Dispose the PathGradientBrush to free resources                        
                         }
@@ -2842,27 +3151,29 @@ namespace PicControl
                         gp.AddEllipse(rect4);
                         using (PathGradientBrush pgb = new PathGradientBrush(gp))
                         {
-                            pgb.CenterColor = txtRhythm1Color; // Center color of the radial gradient
-                            pgb.SurroundColors = new Color[] { txtRhythm0Color }; // Surrounding color of the radial gradient
+                            pgb.CenterColor = _Rhythm1Color; // Center color of the radial gradient
+                            pgb.SurroundColors = new Color[] { _Rhythm0Color }; // Surrounding color of the radial gradient
                             e.Graphics.FillPath(pgb, gp); // Fill the path with the radial gradient
                             pgb.Dispose(); // Dispose the PathGradientBrush to free resources                        
                         }
                         gp.Dispose(); // Dispose the GraphicsPath to free resources                                       
                     }
-                    break;
-            }
-
-            //gp.Dispose(); // Dispose the GraphicsPath to free resources
-
+                    break;                           
+            }                        
+            
             #endregion
+            
 
-
-            // draw text
             #region draw text           
 
             if (lstLyricsLines is null || lstLyricsLines.Count == 0)
                 return;
 
+            DrawText(e);
+            
+            #region deleteme
+
+            /*
             try
             {                               
                 // Create list of rectangles when line changes
@@ -2902,11 +3213,104 @@ namespace PicControl
             {
                 Console.Write("Error drawing text on image: " + ep.Message);
             }
+            
+            
+            */
+
+            #endregion deleteme
+
             #endregion
 
 
             // Call the base class OnPaint method to ensure proper rendering            
             base.OnPaint(e);
+        }
+
+
+        private void DrawText(PaintEventArgs e)
+        {                             
+            try
+            {
+                // Create list of rectangles when line changes
+                synchronize(_currentTextPos);
+
+                // Antialiasing
+                e.Graphics.SmoothingMode = SmoothingMode.AntiAlias;
+
+                // Calculate offset to center the text vertically
+                int y0 = getOffsetHeight(emSize);
+
+                if (_txtNbLines > 1)
+                {
+                    // Several lines to display
+                    // progressive offset - vOffset increases, so y0 decreases
+                    y0 = y0 - vOffset;
+
+                    // Draw current line                    
+                    DrawCurrentLine(_currentPosition, y0, e);
+
+                    // Draw next lines                 
+                    DrawNextLines(y0, e);
+                }
+                else
+                {
+                    // A single line to display
+                    // Draw current line until end of line
+                    if (!bEndOfLine)
+                        DrawCurrentLine(_currentPosition, y0, e);
+                    else
+                        DrawNextLines(y0, e);
+                }
+            }
+            catch (Exception ep)
+            {
+                Console.Write("Error drawing text on image: " + ep.Message);
+            }            
+        }
+    
+
+        /// <summary>
+        /// Return rectangle for image
+        /// </summary>
+        /// <param name="imgWidth"></param>
+        /// <param name="imgHeight"></param>
+        /// <returns></returns>
+        private Rectangle GetRectangleForSizeMode(int imgWidth, int imgHeight)
+        {            
+            int x;
+            int y;            
+
+            switch (_sizemode)
+            {
+                case PictureBoxSizeMode.Normal:
+                    // coin superieur gauche
+                    return new Rectangle(0, 0, imgWidth, imgHeight);
+
+                case PictureBoxSizeMode.StretchImage:
+                    //  l'image est étirée ou réduite pour s'ajuster à PictureBox.
+                    return new Rectangle(0, 0, this.ClientSize.Width, this.ClientSize.Height);
+
+                                    
+                case PictureBoxSizeMode.CenterImage:
+                    x = (this.ClientSize.Width - imgWidth) / 2;
+                    y = (this.ClientSize.Height - imgHeight) / 2;
+                    return new Rectangle(x, y, imgWidth, imgHeight);
+
+
+                case PictureBoxSizeMode.AutoSize:
+                    x = (this.ClientSize.Width - imgWidth) / 2;
+                    y = (this.ClientSize.Height - imgHeight) / 2;
+                    return new Rectangle(x, y, imgWidth, imgHeight);
+
+                case PictureBoxSizeMode.Zoom:
+                    float zoomFactor = (float)ClientSize.Height / (float)imgHeight;
+                    x = (this.ClientSize.Width - (int)(imgWidth * zoomFactor)) / 2;
+                    y = 0;
+                    return new Rectangle(x, 0, (int)(imgWidth * zoomFactor), this.ClientSize.Height);
+                   
+                default:
+                    return new Rectangle(0, 0, this.ClientSize.Width, this.ClientSize.Height); 
+            }            
         }
 
 
@@ -3021,6 +3425,10 @@ namespace PicControl
             #region redraw image
             if (m_CurrentImage != null)
             {
+
+                //m_DisplayRectangle = GetRectangleForSizeMode(m_CurrentImage.Width, m_CurrentImage.Height);
+
+                /*
                 int x;
                 int y;
 
@@ -3048,6 +3456,7 @@ namespace PicControl
                         m_DisplayRectangle = new Rectangle(0, 0, this.ClientSize.Width, this.ClientSize.Height);
                         break;
                 }
+                */
             }
             #endregion
 
@@ -3091,7 +3500,11 @@ namespace PicControl
                 m_font?.Dispose(); 
                 m_CurrentImage? .Dispose();
                 pboxWnd? .Dispose ();
-
+                
+                timerChangeImage?.Stop();
+                timerTransition?.Stop();
+                timerChangeImage?.Dispose();
+                timerTransition?.Dispose();
 
                 disposed = true;
             }

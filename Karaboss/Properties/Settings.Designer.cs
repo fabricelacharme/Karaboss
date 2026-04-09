@@ -162,42 +162,6 @@ namespace Karaboss.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("False")]
-        public bool frmMidiLyricMaximized {
-            get {
-                return ((bool)(this["frmMidiLyricMaximized"]));
-            }
-            set {
-                this["frmMidiLyricMaximized"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("0, 200")]
-        public global::System.Drawing.Point frmMidiLyricLocation {
-            get {
-                return ((global::System.Drawing.Point)(this["frmMidiLyricLocation"]));
-            }
-            set {
-                this["frmMidiLyricLocation"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("800, 600")]
-        public global::System.Drawing.Size frmMidiLyricSize {
-            get {
-                return ((global::System.Drawing.Size)(this["frmMidiLyricSize"]));
-            }
-            set {
-                this["frmMidiLyricSize"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("False")]
         public bool frmMidiLyricsMaximized {
             get {
                 return ((bool)(this["frmMidiLyricsMaximized"]));
@@ -233,49 +197,49 @@ namespace Karaboss.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("Black")]
-        public global::System.Drawing.Color TxtBackColor {
+        [global::System.Configuration.DefaultSettingValueAttribute("#000000")]
+        public string BgColor {
             get {
-                return ((global::System.Drawing.Color)(this["TxtBackColor"]));
+                return ((string)(this["BgColor"]));
             }
             set {
-                this["TxtBackColor"] = value;
+                this["BgColor"] = value;
             }
         }
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("White")]
-        public global::System.Drawing.Color TxtNextColor {
+        [global::System.Configuration.DefaultSettingValueAttribute("#000000")]
+        public string InactiveColor {
             get {
-                return ((global::System.Drawing.Color)(this["TxtNextColor"]));
+                return ((string)(this["InactiveColor"]));
             }
             set {
-                this["TxtNextColor"] = value;
+                this["InactiveColor"] = value;
             }
         }
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("Red")]
-        public global::System.Drawing.Color TxtHighlightColor {
+        [global::System.Configuration.DefaultSettingValueAttribute("#FF0000")]
+        public string HighlightColor {
             get {
-                return ((global::System.Drawing.Color)(this["TxtHighlightColor"]));
+                return ((string)(this["HighlightColor"]));
             }
             set {
-                this["TxtHighlightColor"] = value;
+                this["HighlightColor"] = value;
             }
         }
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("YellowGreen")]
-        public global::System.Drawing.Color TxtBeforeColor {
+        [global::System.Configuration.DefaultSettingValueAttribute("#9ACD32")]
+        public string ActiveColor {
             get {
-                return ((global::System.Drawing.Color)(this["TxtBeforeColor"]));
+                return ((string)(this["ActiveColor"]));
             }
             set {
-                this["TxtBeforeColor"] = value;
+                this["ActiveColor"] = value;
             }
         }
         
@@ -341,13 +305,13 @@ namespace Karaboss.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("Black")]
-        public global::System.Drawing.Color TxtContourColor {
+        [global::System.Configuration.DefaultSettingValueAttribute("#010101")]
+        public string ActiveBorderColor {
             get {
-                return ((global::System.Drawing.Color)(this["TxtContourColor"]));
+                return ((string)(this["ActiveBorderColor"]));
             }
             set {
-                this["TxtContourColor"] = value;
+                this["ActiveBorderColor"] = value;
             }
         }
         
@@ -988,18 +952,6 @@ namespace Karaboss.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("True")]
-        public bool bColorContour {
-            get {
-                return ((bool)(this["bColorContour"]));
-            }
-            set {
-                this["bColorContour"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("Comic Sans MS, 8.25pt")]
         public global::System.Drawing.Font KaraokeFont {
             get {
@@ -1300,25 +1252,25 @@ namespace Karaboss.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("255, 196, 13")]
-        public global::System.Drawing.Color ChordNextColor {
+        [global::System.Configuration.DefaultSettingValueAttribute("#FF8C00")]
+        public string InactiveChordColor {
             get {
-                return ((global::System.Drawing.Color)(this["ChordNextColor"]));
+                return ((string)(this["InactiveChordColor"]));
             }
             set {
-                this["ChordNextColor"] = value;
+                this["InactiveChordColor"] = value;
             }
         }
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("Red")]
-        public global::System.Drawing.Color ChordHighlightColor {
+        [global::System.Configuration.DefaultSettingValueAttribute("#8B0000")]
+        public string HighlightChordColor {
             get {
-                return ((global::System.Drawing.Color)(this["ChordHighlightColor"]));
+                return ((string)(this["HighlightChordColor"]));
             }
             set {
-                this["ChordHighlightColor"] = value;
+                this["HighlightChordColor"] = value;
             }
         }
         
@@ -1727,48 +1679,48 @@ namespace Karaboss.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("MediumTurquoise")]
-        public global::System.Drawing.Color TxtGrad0Color {
+        public global::System.Drawing.Color Grad0Color {
             get {
-                return ((global::System.Drawing.Color)(this["TxtGrad0Color"]));
+                return ((global::System.Drawing.Color)(this["Grad0Color"]));
             }
             set {
-                this["TxtGrad0Color"] = value;
+                this["Grad0Color"] = value;
             }
         }
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("GreenYellow")]
-        public global::System.Drawing.Color TxtGrad1Color {
+        public global::System.Drawing.Color Grad1Color {
             get {
-                return ((global::System.Drawing.Color)(this["TxtGrad1Color"]));
+                return ((global::System.Drawing.Color)(this["Grad1Color"]));
             }
             set {
-                this["TxtGrad1Color"] = value;
+                this["Grad1Color"] = value;
             }
         }
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("Black")]
-        public global::System.Drawing.Color TxtRhythm0Color {
+        public global::System.Drawing.Color Rhythm0Color {
             get {
-                return ((global::System.Drawing.Color)(this["TxtRhythm0Color"]));
+                return ((global::System.Drawing.Color)(this["Rhythm0Color"]));
             }
             set {
-                this["TxtRhythm0Color"] = value;
+                this["Rhythm0Color"] = value;
             }
         }
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("DodgerBlue")]
-        public global::System.Drawing.Color TxtRhythm1Color {
+        public global::System.Drawing.Color Rhythm1Color {
             get {
-                return ((global::System.Drawing.Color)(this["TxtRhythm1Color"]));
+                return ((global::System.Drawing.Color)(this["Rhythm1Color"]));
             }
             set {
-                this["TxtRhythm1Color"] = value;
+                this["Rhythm1Color"] = value;
             }
         }
         
@@ -1846,7 +1798,7 @@ namespace Karaboss.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("#FFFFFF")]
+        [global::System.Configuration.DefaultSettingValueAttribute("#FEB471")]
         public string KfnBgColor {
             get {
                 return ((string)(this["KfnBgColor"]));
@@ -1937,6 +1889,114 @@ namespace Karaboss.Properties {
             }
             set {
                 this["KfnBorderEffectIndex"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("#8000FF")]
+        public string InactiveBorderColor {
+            get {
+                return ((string)(this["InactiveBorderColor"]));
+            }
+            set {
+                this["InactiveBorderColor"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Frame1")]
+        public string FrameType {
+            get {
+                return ((string)(this["FrameType"]));
+            }
+            set {
+                this["FrameType"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool frmMidiLyricMaximized {
+            get {
+                return ((bool)(this["frmMidiLyricMaximized"]));
+            }
+            set {
+                this["frmMidiLyricMaximized"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0, 200")]
+        public global::System.Drawing.Point frmMidiLyricLocation {
+            get {
+                return ((global::System.Drawing.Point)(this["frmMidiLyricLocation"]));
+            }
+            set {
+                this["frmMidiLyricLocation"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool bActiveBorder {
+            get {
+                return ((bool)(this["bActiveBorder"]));
+            }
+            set {
+                this["bActiveBorder"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool frmMp3LyricsTopMost {
+            get {
+                return ((bool)(this["frmMp3LyricsTopMost"]));
+            }
+            set {
+                this["frmMp3LyricsTopMost"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Arial Black")]
+        public string KaraokeFontName {
+            get {
+                return ((string)(this["KaraokeFontName"]));
+            }
+            set {
+                this["KaraokeFontName"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("18")]
+        public int KaraokeFontSize {
+            get {
+                return ((int)(this["KaraokeFontSize"]));
+            }
+            set {
+                this["KaraokeFontSize"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("200, 200")]
+        public global::System.Drawing.Point frmKfnCreateLocation {
+            get {
+                return ((global::System.Drawing.Point)(this["frmKfnCreateLocation"]));
+            }
+            set {
+                this["frmKfnCreateLocation"] = value;
             }
         }
     }

@@ -10,21 +10,29 @@ using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
-using TagLib.Mpeg4;
 
 namespace Karaboss.Kfn
 {
     public partial class frmKfnCreate : Form
-    {      
+    {
+        #region Declarations
+        
         private string fPath;      
         private readonly string strColorRegex = @"^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$";
         Regex regexColor;
-        string ftName;
-        uint ftSize;
+        
+        // Font
+        private string ftName;
+        private uint ftSize;
 
         List<string> LstTextPreview = new List<string>();
 
+        #endregion Declarations
 
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="path"></param>
         public frmKfnCreate(string path)
         {
             InitializeComponent();
@@ -36,6 +44,7 @@ namespace Karaboss.Kfn
 
             InitControls();
         }
+
 
         #region initializations
 
@@ -74,8 +83,11 @@ namespace Karaboss.Kfn
             PopulateLyricBorders();
             PopulatePicPreview();
         }
-       
 
+        /// <summary>
+        /// Populate ComboBox with fonts available on the system. Karafun seems to support only a few fonts, but we don't know which ones. 
+        /// So we propose all the fonts and let the user choose.
+        /// </summary>
         private void PopulateFonts()
         {
             // Karafun seems to support only a few fonts
@@ -84,10 +96,7 @@ namespace Karaboss.Kfn
                 cbFontName.Items.Add(fnt.Name);
             }
 
-            //List<string> fontNames = new List<string>() { "Arial", "Arial Black", "Arial Unicode MS", "Courier New", "Georgia", "Impact", "Tahoma", "Times New Roman", "Verdana" };
-            //cbFontName.DataSource = fontNames;
-
-            //cbFontName.SelectedIndex = cbFontName.FindString("Arial Black");
+            // Choose a default font
             for (int i = 0; i < cbFontName.Items.Count; i++)
             {
                 if (cbFontName.Items[i].ToString() == "Arial Black")
@@ -96,15 +105,14 @@ namespace Karaboss.Kfn
                     break;
                 }
             }
-
         }
 
         /// <summary>
-        /// Frames
+        /// Populate ComboBox with lyric borders available in Karafun. 
+        /// We use a key (not displayed) and a value (displayed) for each border.
         /// </summary>
         private void PopulateLyricBorders()
         {
-
             Dictionary<string,string> Frames = new Dictionary<string,string>();
             Frames.Add("NoBorder", Strings.KfnBorderNoBorder);
             Frames.Add("FrameThin", Strings.KfnBorderFrameThin);
@@ -115,20 +123,15 @@ namespace Karaboss.Kfn
             Frames.Add("Frame5", Strings.KfnBorderFrame5);
             Frames.Add("Shadow", Strings.KfnBorderShadow);
             Frames.Add("Neon", Strings.KfnBorderNeon);
-
-            /*
-            //List<string> lstBorders = new List<string>() { "Aucune bordure", "Fine bordure", "Bordure 1 pixel", "Bordure 2 pixel", "Bordure 3 pixel", "Bordure 4 pixel", "Bordure 5 pixel", "Ombré", "Neon" };
-            List<string> lstBorders = new List<string>() { "NoBorder", "FrameThin", "Frame1", "Frame2", "Frame3", "Frame4", "Frame5", "Shadow", "Neon" };
-            //List<string> lstBorders = new List<string>() { "No border", "Thin border", "1 - pixel border", "2 - pixel border", "3 - pixel border", "4 - pixel border", "5 - pixel border", "Shaded", "Neon" };
-            cbFrame.DataSource = lstBorders;
-            */
+            
 
             cbFrame.DataSource = new BindingSource(Frames, null);
             cbFrame.ValueMember = "Key";
             cbFrame.DisplayMember = "Value";
 
+            // Choose a default border (Frame1 1 pixel)
             if (cbFrame.Items.Count > 2 )
-                cbFrame.SelectedIndex = 2; // 1 pixel
+                cbFrame.SelectedIndex = 2;
         }
 
 
@@ -138,17 +141,18 @@ namespace Karaboss.Kfn
         #region select audios
 
         /// <summary>
-        /// Import audio file with vocals
+        /// Import first the audio file with vocals. 
+        /// Then, if the user wants, he can import, in a second time, an instrumental version of the same song. 
+        /// So the user can import one or two audio files: the first one is the one with vocals and the second one is the instrumental version. 
+        /// If only one audio file is imported, it will be used for lyrics synchronisation, even if it doesn't contain vocals. 
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void btnImportAudio1_Click(object sender, EventArgs e)
         {
             string FileName;
-
             try
             {
-
                 OpenFileDialog.Filter = "Mp3 files (*.mp3)|*.mp3|All files (*.*)|*.*";
                 OpenFileDialog.FileName = string.Empty;
                 OpenFileDialog.Title = "Vocal audio";
@@ -162,10 +166,8 @@ namespace Karaboss.Kfn
 
                 SetTitleFromFile(FileName);
 
-
                 btnLyricsUpdate.Visible = true;
                 lblLyricsUpdate.Visible = true;
-
             }
             catch (Exception ex)
             {
@@ -174,7 +176,7 @@ namespace Karaboss.Kfn
         }
 
         /// <summary>
-        /// Import audio file instrumental
+        /// Import the second audio file, which is the instrumental version of the same song.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -205,21 +207,19 @@ namespace Karaboss.Kfn
         /// </summary>
         /// <param name="FileName"></param>
         private void SetTitleFromFile(string FileName)
-        {
-                        
+        {                        
             if (txtTitle.Text.Trim().Length > 0) return;
-
 
             string artist = string.Empty;
             string song = string.Empty;
             string sname = Path.GetFileNameWithoutExtension(FileName);
 
+            // In case the file name is in the format "Artist - Song", we split the name of the artist and the name of the song.
             int n = sname.IndexOf(" - ");
             if (n > 0)
             {
                 artist = sname.Substring(0, n);
                 song = sname.Substring(n + 3);
-
             }
             else
             {
@@ -235,7 +235,7 @@ namespace Karaboss.Kfn
 
 
         /// <summary>
-        /// Import Song.ini file
+        /// Import the synchronised lyrics file. The lyrics file must be in the LRC format, which is a common format for synchronised lyrics.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -257,7 +257,8 @@ namespace Karaboss.Kfn
         #region select images
 
         /// <summary>
-        /// Import image
+        /// Optional: import an image to display in background during the karaoke. The image will be resized to fit the screen, so it can be smaller than the screen resolution. 
+        /// The supported formats are jpg, jpeg, png, gif, tif... If no image is imported, a default background color will be used.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -306,6 +307,13 @@ namespace Karaboss.Kfn
 
         #region background color
 
+        /// <summary>        
+        /// The user can choose the color with a ColorDialog box or with a full screen color picker. 
+        /// The background color will be used in Karafun if no image is imported.
+        /// So it's important to choose a background color that contrasts well with the color of the lyrics, to ensure good readability.
+        /// </summary>
+        /// <param name="sender">The source of the event, typically the button that was clicked.</param>
+        /// <param name="e">An EventArgs object that contains the event data.</param>
         private void btnBgColorSelect_Click(object sender, EventArgs e)
         {
             SelectColorFromButton(picBgColor, txtBgColor);
@@ -323,7 +331,7 @@ namespace Karaboss.Kfn
         }
 
         /// <summary>
-        /// Change font
+        /// Change font for lyrics preview. The font will be used in Karafun, so it's important to choose a font that is supported by Karafun.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -348,12 +356,86 @@ namespace Karaboss.Kfn
         #endregion background color
 
 
-        #region Button Create Play
+        #region Button Create Play Cancel
+
+        
+        private bool bModifiedSettings()
+        {
+            try
+            {
+                if (Properties.Settings.Default.KfnBgColor != CheckColor(txtBgColor.Text.Trim()) ||
+                 (Properties.Settings.Default.KfnAuthor != txtAuthor.Text.Trim()) ||
+                 (Properties.Settings.Default.KfnFontName != cbFontName.SelectedItem.ToString()) ||
+                 (Properties.Settings.Default.KfnComment != txtComment.Text.Trim()) ||
+                 (Properties.Settings.Default.KfnFontSize != (int)UpDownFontSize.Value) ||
+                 (Properties.Settings.Default.KfnActiveColor != CheckColor(txtActiveColor.Text.Trim())) ||
+                 (Properties.Settings.Default.KfnInactiveColor != CheckColor(txtInactiveColor.Text.Trim())) ||
+                 (Properties.Settings.Default.KfnActiveColorBorder != CheckColor(txtActiveColorBorder.Text.Trim())) ||
+                 (Properties.Settings.Default.KfnInactiveColorBorder != CheckColor(txtInactiveColorBorder.Text.Trim())) ||
+                 (Properties.Settings.Default.KfnBorderEffectIndex != cbFrame.SelectedIndex))
+                { return true; }
+                else
+                {
+                    return false;
+                }
+            } catch { return false; }
+        }
+
+        /// <summary>
+        /// Save default settings (colors, font, author, comment) in the application settings. 
+        /// These settings will be used as default values for the next KFN file creation.
+        /// </summary>
+        private void SaveDefaults()
+        {
+            // Background color
+            Properties.Settings.Default.KfnBgColor = CheckColor(txtBgColor.Text.Trim());
+
+            // Autor & comment
+            if (txtAuthor.Text.Trim().Length > 0)
+                Properties.Settings.Default.KfnAuthor = txtAuthor.Text.Trim();
+            if (txtComment.Text.Trim().Length > 0)
+                Properties.Settings.Default.KfnComment = txtComment.Text.Trim();
+
+            // Font
+            Properties.Settings.Default.KfnFontName = cbFontName.SelectedItem.ToString();
+            Properties.Settings.Default.KfnFontSize = (int)UpDownFontSize.Value;
+
+            // Lyrics color & border
+            Properties.Settings.Default.KfnActiveColor = CheckColor(txtActiveColor.Text.Trim());
+            Properties.Settings.Default.KfnInactiveColor = CheckColor(txtInactiveColor.Text.Trim());
+            Properties.Settings.Default.KfnActiveColorBorder = CheckColor(txtActiveColorBorder.Text.Trim());
+            Properties.Settings.Default.KfnInactiveColorBorder = CheckColor(txtInactiveColorBorder.Text.Trim());
+
+            // Lyrics border effect
+            Properties.Settings.Default.KfnBorderEffectIndex = cbFrame.SelectedIndex;
+
+            Properties.Settings.Default.Save();
+
+            //MessageBox.Show(Strings.DefaultSettingsSaved, Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Information);
+            
+        }
+
+
+        /// <summary>
+        /// Cancel and close the form. No KFN file will be created.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void btnCancel_Click(object sender, EventArgs e)
         {
             Close();
         }
 
+        /// <summary>
+        /// Launch the creation of the KFN file with the parameters entered by the user. 
+        /// The KFN file will be created in the same directory as the audio file, with the name entered in the txtKfnFileName text box. 
+        /// If the KFN file is created successfully, a message box will be displayed to inform the user and a button to play the KFN file will be visible. 
+        /// If the KFN file is not created successfully, an error message will be displayed. 
+        /// After creating the KFN file, the user can click on the play button to check that the KFN file is correct and that the synchronisation of the lyrics is good. 
+        /// If the KFN file is not correct, the user can go back to the previous steps and modify the parameters to create a new KFN file.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void btnCreateKfn_Click(object sender, EventArgs e)
         {
             tbControl.SelectedTab = tbPageAudios;
@@ -381,20 +463,12 @@ namespace Karaboss.Kfn
             string Title;
             string Artist;
             string Comment;
-            (string, uint) fontName;
-
-            /*
-            ActiveColor=#00ACFFFF
-            InactiveColor=#FFFFFFFF
-            FrameColor=#000000FF
-            InactiveFrameColor=#8000FFFF
-            FrameType=Neon
-            */
-            string ActiveColor;         // ACtiveColor
-            string InactiveColor;       // InactiveColor
-            string FrameColor;          // ActiveColorBorder
-            string InactiveFrameColor;  // InactiveColorBorder
-            string FrameType;           // 
+            (string, uint) fontName;            
+            string ActiveColor;        
+            string InactiveColor;      
+            string ActiveBorderColor;  
+            string InactiveBorderColor;
+            string FrameType;          
 
             #region guard
 
@@ -461,15 +535,14 @@ namespace Karaboss.Kfn
             // Background color: BgColor
             // See guard
 
-            // Font
-            //fontName = (txtLoremIpsum.Font.Name, (uint)txtLoremIpsum.Font.Size);
+            // Font            
             fontName = (ftName, ftSize);
 
 
             ActiveColor = txtActiveColor.Text.Trim();
             InactiveColor = txtInactiveColor.Text.Trim();
-            FrameColor = txtActiveColorBorder.Text.Trim();
-            InactiveFrameColor = txtInactiveColorBorder.Text.Trim();
+            ActiveBorderColor = txtActiveColorBorder.Text.Trim();
+            InactiveBorderColor = txtInactiveColorBorder.Text.Trim();
             
             
             FrameType = ((KeyValuePair<string, string>)cbFrame.SelectedItem).Key;
@@ -487,8 +560,8 @@ namespace Karaboss.Kfn
 
             KfnParameters.Add("ActiveColor", ActiveColor);
             KfnParameters.Add("InactiveColor", InactiveColor);
-            KfnParameters.Add("FrameColor", FrameColor);
-            KfnParameters.Add("InactiveFrameColor", InactiveFrameColor);
+            KfnParameters.Add("ActiveBorderColor", ActiveBorderColor);
+            KfnParameters.Add("InactiveBorderColor", InactiveBorderColor);
             KfnParameters.Add("FrameType", FrameType);
 
 
@@ -540,7 +613,14 @@ namespace Karaboss.Kfn
             Cursor = Cursors.Default;
         }
 
-
+        /// <summary>
+        /// Play the created KFN file with Karafun. 
+        /// This button is visible only if the KFN file has been created successfully. 
+        /// It allows the user to check that the KFN file is correct and that the synchronisation of the lyrics is good. 
+        /// If the KFN file is not correct, the user can go back to the previous steps and modify the parameters to create a new KFN file.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void btnPlay_Click(object sender, EventArgs e)
         {
             //string path = Path.GetDirectoryName(txtAudio1.Text.Trim());
@@ -604,10 +684,11 @@ namespace Karaboss.Kfn
 
         }
 
-        #endregion Button Create Play
+        #endregion Button Create Play Cancel
 
 
-        #region navigation
+        #region navigation in tabs
+
         // Page1 
         private void btnTb1Next_Click(object sender, EventArgs e)
         {
@@ -643,8 +724,7 @@ namespace Karaboss.Kfn
             tbControl.SelectedTab = tbPageImages;
         }
 
-
-        #endregion navigation
+        #endregion navigation in tabs
 
 
         #region functions
@@ -666,8 +746,16 @@ namespace Karaboss.Kfn
 
             picBox.BackColor = dlg.Color;
             textBox.Text = ToHex(dlg.Color);
+            picPreview.Invalidate();            
         }
 
+        /// <summary>
+        /// Displays a full-screen color picker dialog and associates the selected color with the specified text box.
+        /// </summary>
+        /// <remarks>This method hides the current form before displaying the color picker in full-screen
+        /// mode. The selected color is typically applied to the provided text box. Ensure that the text box is valid
+        /// and accessible when calling this method.</remarks>
+        /// <param name="textBox">The text box control that will receive the selected color from the color picker. Cannot be null.</param>
         private void SelectColorFromPicker(TextBox textBox)
         {
             this.Hide();
@@ -715,7 +803,11 @@ namespace Karaboss.Kfn
             throw new ArgumentException($"Unsupported color value: {input}", nameof(input));
         }
 
-
+        /// <summary>
+        /// Check if the color is in the correct format (hexa) and return it. If not, return a default color (black).
+        /// </summary>
+        /// <param name="color"></param>
+        /// <returns></returns>
         private string CheckColor(string color)
         {
             if (regexColor.IsMatch(color))
@@ -735,17 +827,22 @@ namespace Karaboss.Kfn
         {
 
             // Select drawing mode
+            // We have two main modes: border and shadow. If the user selects a border, we draw the text with a border of the selected thickness.
+            // If the user selects shadow, we draw the text with a shadow effect.
+            // If the user selects neon, we draw the text with a neon effect.
+            
+            // TODO: Framethin is not yet developped.
+            // It is a special case because the border is very thin and almost invisible, so we draw the text without border in this case.
+
             float thick;
 
             string FrameType = ((KeyValuePair<string, string>)cbFrame.SelectedItem).Key;
             switch (FrameType)
             {
-                case "NoBorder":
+                case "NoBorder":                   
+                case "FrameThin":
                     thick = 0.0f;
                     DrawTextWithBorder(thick, e);
-                    return;
-                    
-                case "FrameThin":
                     break;
 
                 case "Frame1":
@@ -787,10 +884,19 @@ namespace Karaboss.Kfn
                     return;
             }                                   
         }
+       
 
-
+        /// <summary>
+        /// Draws each line of preview text with a colored border and fill, using active or inactive colors depending on
+        /// the line index.
+        /// </summary>
+        /// <remarks>The first three lines are rendered using the active color scheme; subsequent lines
+        /// use the inactive color scheme. The method centers text both vertically and horizontally within the drawing
+        /// area. If the border thickness is zero, only the filled text is drawn without an outline.</remarks>
+        /// <param name="thick">The thickness, in pixels, of the border to draw around each text line. Must be zero or positive.</param>
+        /// <param name="e">A PaintEventArgs object that provides the graphics context in which to draw the text and borders.</param>
         private void DrawTextWithBorder(float thick, PaintEventArgs e)
-        {           
+        {
             Pen pen;
             Brush brush;
 
@@ -804,6 +910,13 @@ namespace Karaboss.Kfn
             Pen ActiveBorderPen = new Pen(ActiveColorBorderBrush, thick);
             Pen InactiveBorderPen = new Pen(InactiveColorBorderBrush, thick);
 
+            string line;
+
+            // Vertical distance between lines                    
+            int x0;
+            int _lineHeight = (int)(1.2 * ftSize);
+            int y0 = VCenterText(LstTextPreview.Count, _lineHeight);
+
             using (Font myFont = new Font(ftName, ftSize))
             {
                 try
@@ -813,12 +926,10 @@ namespace Karaboss.Kfn
                     //create a path
                     GraphicsPath pth = new GraphicsPath();
 
-                                   
-                    StringFormat sf = new StringFormat();
-                    sf.Alignment = StringAlignment.Center;
-                    sf.LineAlignment = StringAlignment.Center;
+                    StringFormat sf = new StringFormat(StringFormat.GenericTypographic) { FormatFlags = StringFormatFlags.MeasureTrailingSpaces };
 
                     float emSize = g.DpiY * ftSize / 72f;
+
 
                     for (int i = 0; i < LstTextPreview.Count; i++)
                     {
@@ -835,14 +946,18 @@ namespace Karaboss.Kfn
                         }
                         #endregion
 
+                        line = LstTextPreview[i];
+                        // Center text horizontally and vertically
+                        x0 = HCenterText(line);
+
                         // Active line
                         pth.AddString(
-                            LstTextPreview[i],
+                            line,
                             new FontFamily(ftName),
                             0,
                             emSize,
-                            new Point(169, (int)(55 + i * emSize)), 
-                            sf); 
+                            new Point(x0, y0 + i * _lineHeight),
+                            sf);
 
                         // Fill
                         g.FillPath(brush, pth);
@@ -859,7 +974,7 @@ namespace Karaboss.Kfn
                     ActiveBorderPen.Dispose();
                     InactiveBorderPen.Dispose();
                     pth.Dispose();
-                    //g.Dispose();
+
                 }
                 catch (Exception ex)
                 {
@@ -868,9 +983,13 @@ namespace Karaboss.Kfn
             }
         }
 
-
+        /// <summary>
+        /// Neon effect on lyrics
+        /// </summary>
+        /// <param name="e"></param>
         private void DrawTextWithNeon(PaintEventArgs e)
         {
+            string line;
             float thick = 2.0f;
 
             Color HaloColor;
@@ -885,10 +1004,14 @@ namespace Karaboss.Kfn
             Pen ActiveBorderPen = new Pen(ActiveColorBorderBrush, thick);
             Pen InactiveBorderPen = new Pen(InactiveColorBorderBrush, thick);
 
+            // Vertical distance between lines
+            int x0;
+            int _lineHeight = (int)(1.2 * ftSize);
+            int y0 = VCenterText(LstTextPreview.Count, _lineHeight);
+
 
             for (int i = 0; i < LstTextPreview.Count; i++)
             {
-
                 #region select active/inactive
                 if (i < 3)
                 {
@@ -908,22 +1031,25 @@ namespace Karaboss.Kfn
 
                 //Create a bitmap in a fixed ratio to the original drawing area.
                 Bitmap bm = new Bitmap(picPreview.ClientSize.Width / 5, picPreview.ClientSize.Height / 5);
-
-                //Create a GraphicsPath object. 
-                GraphicsPath pth = new GraphicsPath();
-
                 //Get the graphics object for the image. 
                 Graphics g = Graphics.FromImage(bm);
+                float emSize = g.DpiY * ftSize / 72f;
+
+                //Create a GraphicsPath object. 
+                GraphicsPath pth = new GraphicsPath();                
+
+                // Create a Graphics object from e
                 Graphics ge = e.Graphics;
 
-
                 //Add the string in the chosen style.
-                string tx = LstTextPreview[i];
-                //int x0 = HCenterText(tx);      // Center horizontally
-                float emSize = g.DpiY * ftSize / 72f;
-                pth.AddString(tx, new FontFamily(ftName), (int)FontStyle.Regular, emSize, new Point(10, (int)(i * emSize)), StringFormat.GenericTypographic);
+                line = LstTextPreview[i];
+                x0 = HCenterText(line);      // Center horizontally                                
+
+                //pth.AddString(line, new FontFamily(ftName), (int)FontStyle.Regular, emSize, new Point(10, (int)(i * emSize)), StringFormat.GenericTypographic);
+                pth.AddString(line, new FontFamily(ftName), (int)FontStyle.Regular, emSize, new Point(x0, y0 + (int)(i * _lineHeight)), StringFormat.GenericTypographic);
 
 
+                #region GraphicsFromImage
                 //Create a matrix that shrinks the drawing output by the fixed ratio. 
                 Matrix mx = new Matrix(1.0f / 5, 0, 0, 1.0f / 5, -(1.0f / 5), -(1.0f / 5));
 
@@ -934,10 +1060,10 @@ namespace Karaboss.Kfn
                 g.Transform = mx;
 
                 //Using a suitable pen...
-                Pen p = new Pen(HaloColor, 3);
+                Pen penHaloColor = new Pen(HaloColor, 3);
 
                 //Draw around the outline of the path
-                g.DrawPath(p, pth);
+                g.DrawPath(penHaloColor, pth);
 
                 //and then fill in for good measure. 
                 g.FillPath(HaloBrush, pth);
@@ -945,44 +1071,63 @@ namespace Karaboss.Kfn
                 //We no longer need this graphics object
                 g.Dispose();
 
+                #endregion GraphicsFromImage
+
+
+                // FAB: destroy everything  => not kept
                 //this just shifts the effect a little bit so that the edge isn't cut off in the demonstration
-                ge.Transform = new Matrix(1, 0, 0, 1, 50, 50);
+                //ge.Transform = new Matrix(1, 0, 0, 1, 50, 50);
 
                 //setup the smoothing mode for path drawing
                 ge.SmoothingMode = SmoothingMode.AntiAlias;
-
+                
                 //and the interpolation mode for the expansion of the halo bitmap
                 ge.InterpolationMode = InterpolationMode.HighQualityBicubic;
 
                 //expand the halo making the edges nice and fuzzy. 
                 ge.DrawImage(bm, picPreview.ClientRectangle, 0, 0, bm.Width, bm.Height, GraphicsUnit.Pixel);
 
+
+
                 //Redraw the original text
                 ge.FillPath(brush, pth);
 
-                // FAB outline
+                
+                // outline text
                 ge.DrawPath(pen, pth);
-
-
+                
+                // Clean all
                 pth.Dispose();
             }
 
-
-            //and you're done. 
-            //pth.Dispose();
         }
 
-
+        /// <summary>
+        /// Shadow effect on lyrics
+        /// </summary>
+        /// <param name="e"></param>
         private void DrawTextWithShadow(PaintEventArgs e)
         {
-            string tx;
+            string line;
             Brush brush;
             Pen pen;
             Color ColorShadow;
-            
+
+            // Vertical distance between lines
+            int x0;
+            int _lineHeight = (int)(1.2 * ftSize);
+            int y0 = VCenterText(LstTextPreview.Count, _lineHeight);
+
+            Font myFont = new Font(ftName, ftSize);
+
+            StringFormat sf = new StringFormat(StringFormat.GenericTypographic) { FormatFlags = StringFormatFlags.MeasureTrailingSpaces };
+
             for (int i = 0; i < LstTextPreview.Count; i++)
             {
                 #region select active/inactive
+                
+                // Lines 0 to 2 are "actives "
+                // others are inactives
                 if (i < 3)
                 {
                     brush = new SolidBrush(picActiveColor.BackColor);
@@ -996,9 +1141,14 @@ namespace Karaboss.Kfn
                     ColorShadow = pen.Color;
                 }
                 #endregion
+                
+                line = LstTextPreview[i];
 
-                tx = LstTextPreview[i];
-                Font myFont = new Font(ftName, ftSize);
+                // Center text horizontally and vertically
+                x0 = HCenterText(line);
+
+
+                #region Shadow effect
                 Bitmap bm = new Bitmap(picPreview.ClientSize.Width / 4, picPreview.ClientSize.Height / 4);
 
                 //Get a graphics object for it
@@ -1008,27 +1158,20 @@ namespace Karaboss.Kfn
                 //Create a GraphicsPath object. 
                 GraphicsPath pth = new GraphicsPath();
 
+                float emSize = ge.DpiY * ftSize / 72f;
+
 
                 // must use an antialiased rendering hint
                 g.TextRenderingHint = TextRenderingHint.AntiAlias;
 
-                //this matrix zooms the text out to 1/4 size and offsets it by a little right and down
-                //Matrix mx = new Matrix(0.25f, 0, 0, 0.25f, 3, 3);
+                //this matrix zooms the text out to 1/4 size and offsets it by a little right and down                
                 Matrix mx = new Matrix(0.25f, 0, 0, 0.25f, 1.3f, 1.3f);
-                //Matrix mx = new Matrix(0.25f, 0, 0, 0.25f, 1, 1);
-                //Matrix mx = new Matrix(0.255f, 0, 0, 0.25f, 1, 1);
 
                 g.Transform = mx;
-                //pth.Transform(mx);                                                      // FAB
-                float emSize = ge.DpiY * ftSize / 72f;
+
 
                 //The shadow is drawn
-                //g.DrawString(tx, myFont, new SolidBrush(Color.FromArgb(128, Color.Black)), 10, 10 + i * emSize, StringFormat.GenericTypographic);
-                g.DrawString(tx, myFont, new SolidBrush(ColorShadow), 10, 10 + i * emSize, StringFormat.GenericTypographic);               // FAB
-
-                //pth.AddString(tx, new FontFamily(ftName), (int)FontStyle.Regular, emSize, new Point(10, (int)(i * emSize)), StringFormat.GenericTypographic);  // FAB
-                //ge.FillPath(new SolidBrush(Color.FromArgb(128, Color.Black)), pth);                                                                            // FAB
-
+                g.DrawString(line, myFont, new SolidBrush(ColorShadow), x0, y0 + i * _lineHeight, sf);
 
                 //Don't need this anymore
                 g.Dispose();
@@ -1042,18 +1185,35 @@ namespace Karaboss.Kfn
                 //The small image is blown up to fill the main client rectangle
                 ge.DrawImage(bm, picPreview.ClientRectangle, 0, 0, bm.Width, bm.Height, GraphicsUnit.Pixel);
 
-                //finally, the text is drawn on top
-                //ge.DrawString(tx, myFont, brush, 10, 10 + i * emSize, StringFormat.GenericTypographic);
-                pth.AddString(tx, new FontFamily(ftName), (int)FontStyle.Regular, emSize, new Point(10, 10 + (int)(i * emSize)), StringFormat.GenericTypographic);   // FAB
+                // finally, the text is drawn on top
+                pth.AddString(line, new FontFamily(ftName), (int)FontStyle.Regular, emSize, new Point(x0, y0 + (int)(i * _lineHeight)), sf);
+
+                #endregion Shadow effect
+
+                // Draw text
                 ge.FillPath(brush, pth);                                                                                                                        // FAB
-                                                                                                                                                                // FAB outline
+                
+                // Outline text
                 ge.DrawPath(pen, pth);
-
-
+                
+                // Clean all
                 bm.Dispose();
                 pth.Dispose();
-
             }
+        }
+
+
+        /// <summary>
+        /// Center text vertically, according to number of lines to display and line height
+        /// </summary>
+        /// <returns></returns>
+        private int VCenterText(int _nbLyricsLines, int _lineHeight)
+        {
+
+            // Height of control minus height of lines to show            
+            int y = (picPreview.ClientSize.Height - (_nbLyricsLines) * _lineHeight) / 2;
+            
+            return y > 0 ? y : 0;
         }
 
         /// <summary>
@@ -1063,12 +1223,18 @@ namespace Karaboss.Kfn
         /// <returns></returns>
         private int HCenterText(string s)
         {
-            int res = -(int)ftSize / 2 + (picPreview.ClientSize.Width - (int)MeasureString(s, ftSize)) / 2;                        
-            return res > 0 ? res : 0;
+            int W = picPreview.ClientSize.Width;
+            int L = (int)MeasureString(s, ftSize);            
+            int left = (W - L) / 2;
+                        
+            return left > 0 ? left : 0;
         }
 
         /// <summary>
         /// Measure the length of a string with a specific size
+        /// For unknown rease I am obliged to multiply by 1.34 to have something acceptable. 
+        /// I don't know why, but it works for the preview and the KFN file. 
+        /// So I keep it like this for the moment, but it should be investigated in the future.
         /// </summary>
         /// <param name="line"></param>
         /// <param name="fSize"></param>
@@ -1082,18 +1248,26 @@ namespace Karaboss.Kfn
             {
                 using (Graphics g = picPreview.CreateGraphics())
                 {
+                    
+                    // HORRIBLE FIX : multiply by 1.34 to have something acceptable ??????????
+                    Font m_font = new Font(ftName, (1.34f)*femSize, FontStyle.Regular, GraphicsUnit.Pixel);
+                    
                     g.TextRenderingHint = TextRenderingHint.AntiAlias;
-                    g.PageUnit = GraphicsUnit.Pixel;
-
-                    Font m_font = new Font(ftName, femSize, FontStyle.Regular, GraphicsUnit.Pixel);
+                    g.PageUnit = GraphicsUnit.Pixel;                    
                     SizeF sz = g.MeasureString(line, m_font, new Point(0, 0), sf);
-                    ret = sz.Width;
+                    ret = sz.Width;                    
                     g.Dispose();
                 }
             }
             return ret;
         }
-
+      
+        /// <summary>
+        /// Remplit la liste d'aperçu de texte avec un ensemble prédéfini de chaînes pour l'aperçu d'image.
+        /// </summary>
+        /// <remarks>Utilise des valeurs statiques pour fournir un exemple ou un aperçu de texte. Cette
+        /// méthode est généralement appelée pour initialiser ou réinitialiser l'aperçu affiché à
+        /// l'utilisateur.</remarks>
         private void PopulatePicPreview()
         {            
             LstTextPreview.Add("Lorem ipsum dolor");
@@ -1116,6 +1290,22 @@ namespace Karaboss.Kfn
         /// <param name="e"></param>
         private void frmKfnCreate_Load(object sender, EventArgs e)
         {
+            // Set window location and size
+            #region window location
+
+            Location = Properties.Settings.Default.frmKfnCreateLocation;
+            // Verify if this windows is visible in extended screens
+            Rectangle rect = new Rectangle(int.MaxValue, int.MaxValue, int.MinValue, int.MinValue);
+            foreach (Screen screen in Screen.AllScreens)
+                rect = Rectangle.Union(rect, screen.Bounds);
+
+            if (Location.X > rect.Width)
+                Location = new Point(0, Location.Y);
+            if (Location.Y > rect.Height)
+                Location = new Point(Location.X, 0);
+
+            #endregion
+
             try
             {
                 txtAuthor.Text = Properties.Settings.Default.KfnAuthor;
@@ -1137,8 +1327,7 @@ namespace Karaboss.Kfn
 
                 UpDownFontSize.Value = Properties.Settings.Default.KfnFontSize;
 
-                string f = Properties.Settings.Default.KfnFontName;
-                //cbFontName.SelectedItem = cbFontName.FindString(f);       // Fix find Arial before Arial Black
+                string f = Properties.Settings.Default.KfnFontName;                
                 for (int i = 0; i < cbFontName.Items.Count; i++)
                 {
                     if (cbFontName.Items[i].ToString() == f)
@@ -1167,29 +1356,33 @@ namespace Karaboss.Kfn
         /// <param name="e"></param>
         private void frmKfnCreate_FormClosing(object sender, FormClosingEventArgs e)
         {
-            // Background color
-            Properties.Settings.Default.KfnBgColor = CheckColor(txtBgColor.Text.Trim());
-                       
-            // Autor & comment
-            if (txtAuthor.Text.Trim().Length > 0) 
-                Properties.Settings.Default.KfnAuthor = txtAuthor.Text.Trim();
-            if (txtComment.Text.Trim().Length > 0)
-                Properties.Settings.Default.KfnComment = txtComment.Text.Trim();
+            if (bModifiedSettings())
+            {
+                // The settings have been changed. Would you like to save them?
+                String tx = Karaboss.Resources.Localization.Strings.QuestionSaveDefaults;
 
-            // Font
-            Properties.Settings.Default.KfnFontName = cbFontName.SelectedItem.ToString();
-            Properties.Settings.Default.KfnFontSize = (int)UpDownFontSize.Value;
+                DialogResult dr = MessageBox.Show(tx, Application.ProductName, MessageBoxButtons.YesNoCancel, MessageBoxIcon.Warning);
+                if (dr == DialogResult.Cancel)
+                {
+                    e.Cancel = true;
+                    return;
+                }
+                else if (dr == DialogResult.Yes)
+                {                    
+                    // Save LRC file                    
+                    SaveDefaults();
+                    e.Cancel = false;
+                }
+            }
 
-            // Lyrics color & border
-            Properties.Settings.Default.KfnActiveColor = CheckColor(txtActiveColor.Text.Trim());
-            Properties.Settings.Default.KfnInactiveColor = CheckColor(txtInactiveColor.Text.Trim());
-            Properties.Settings.Default.KfnActiveColorBorder = CheckColor(txtActiveColorBorder.Text.Trim());
-            Properties.Settings.Default.KfnInactiveColorBorder = CheckColor(txtInactiveColorBorder.Text.Trim());
+            // Copy window location to app settings                
+            if (WindowState == FormWindowState.Normal)
+            {                
+                Karaboss.Properties.Settings.Default.frmKfnCreateLocation = Location;                                               
 
-            // Lyrics border effect
-            Properties.Settings.Default.KfnBorderEffectIndex = cbFrame.SelectedIndex;
-
-            Properties.Settings.Default.Save();
+                // Save settings
+                Properties.Settings.Default.Save();
+            }
         }
 
         #endregion form load close
@@ -1242,7 +1435,6 @@ namespace Karaboss.Kfn
         {
             Close();
         }
-
               
         private void mnuHelpForums_Click(object sender, EventArgs e)
         {
@@ -1260,6 +1452,7 @@ namespace Karaboss.Kfn
 
 
         #region Lyrics decoration 
+
 
         #region text events
         private void txtActiveColor_TextChanged(object sender, EventArgs e)
@@ -1283,6 +1476,7 @@ namespace Karaboss.Kfn
         }
 
         #endregion text events
+
 
         private void cbBorderEffectSelect_SelectedIndexChanged(object sender, EventArgs e)
         {
@@ -1312,6 +1506,7 @@ namespace Karaboss.Kfn
 
         #endregion select color with button
 
+
         #region select color with picker
 
         private void btnActiveColorPicker_Click(object sender, EventArgs e)
@@ -1334,10 +1529,37 @@ namespace Karaboss.Kfn
             SelectColorFromPicker(txtInactiveColorBorder);
         }
 
+
+
         #endregion select color with picker
 
         #endregion lyrics decoration
 
-       
+
+
+        private void picBgColor_BackColorChanged(object sender, EventArgs e)
+        {
+            picPreview.Invalidate();
+        }
+
+        private void picActiveColor_BackColorChanged(object sender, EventArgs e)
+        {
+            picPreview.Invalidate();
+        }
+
+        private void picInactiveColor_BackColorChanged(object sender, EventArgs e)
+        {
+            picPreview.Invalidate();
+        }
+
+        private void picActiveColorBorder_BackColorChanged(object sender, EventArgs e)
+        {
+            picPreview.Invalidate();
+        }
+
+        private void picInactiveColorBorder_BackColorChanged(object sender, EventArgs e)
+        {
+            picPreview.Invalidate();
+        }
     }
 }

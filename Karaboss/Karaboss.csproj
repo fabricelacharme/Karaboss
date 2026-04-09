@@ -966,6 +966,10 @@
       <Project>{6d414dbf-73a0-4804-8c02-b50271b91357}</Project>
       <Name>KaraokeEffect</Name>
     </ProjectReference>
+    <ProjectReference Include="..\KaraokeLyrics\KaraokeLyrics.csproj">
+      <Project>{3e48776d-7aaa-4f08-896a-cce5239353f0}</Project>
+      <Name>KaraokeLyrics</Name>
+    </ProjectReference>
     <ProjectReference Include="..\KFNViewer\KFNV.csproj">
       <Project>{3c65aed8-cf22-4533-bbc1-9000683688b8}</Project>
       <Name>KFNV</Name>

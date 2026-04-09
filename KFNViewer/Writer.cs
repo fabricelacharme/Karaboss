@@ -29,8 +29,8 @@ namespace KFNV
 
         public string ActiveColor { get; set; }
         public string InactiveColor { get; set; }
-        public string FrameColor { get; set; }
-        public string InactiveFrameColor { get; set; }
+        public string ActiveBorderColor { get; set; }
+        public string InactiveBorderColor { get; set; }
         public string FrameType { get; set; }
 
 
@@ -90,8 +90,8 @@ namespace KFNV
 
             ActiveColor = KfnParameters["ActiveColor"];
             InactiveColor = KfnParameters["InactiveColor"];
-            FrameColor = KfnParameters["FrameColor"];
-            InactiveFrameColor = KfnParameters["InactiveFrameColor"];
+            ActiveBorderColor = KfnParameters["ActiveBorderColor"];
+            InactiveBorderColor = KfnParameters["InactiveBorderColor"];
             FrameType = KfnParameters["FrameType"];
 
             Offset = 0;
@@ -632,8 +632,8 @@ namespace KFNV
                 ActiveColor,                // initial_active_color
                 InactiveColor,              // initial_inactive_color
 
-                FrameColor,                 // frame_color
-                InactiveFrameColor,         // inactive_frame_color
+                ActiveBorderColor,          // frame_color
+                InactiveBorderColor,        // inactive_frame_color
                 FrameType,                  // frame_type
 
                 syncsLst,                   // Sync

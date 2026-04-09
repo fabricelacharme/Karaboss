@@ -167,7 +167,7 @@
     <value>Suivant</value>
   </data>
   <data name="btnTb2Previous.Text" xml:space="preserve">
-    <value>Précédant</value>
+    <value>Précédent</value>
   </data>
   <data name="lblLyrics.Size" type="System.Drawing.Size, System.Drawing">
     <value>79, 15</value>
@@ -194,7 +194,7 @@
     <value>Importer</value>
   </data>
   <data name="btnTb3Previous.Text" xml:space="preserve">
-    <value>Précédant</value>
+    <value>Précédent</value>
   </data>
   <data name="btnCreateKfn.Text" xml:space="preserve">
     <value>Créer le fichier KFN</value>
@@ -245,7 +245,7 @@
     <value>Couleur du fond</value>
   </data>
   <data name="btnTb4Previous.Text" xml:space="preserve">
-    <value>Précédant</value>
+    <value>Précédent</value>
   </data>
   <data name="tbPageBackground.Text" xml:space="preserve">
     <value>Arrière plan</value>

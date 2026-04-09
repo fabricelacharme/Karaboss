@@ -65,9 +65,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="KaraokeEffect.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
+    <Compile Include="KaraokeEffect.cs" />
     <Compile Include="KaraokeEffect.Designer.cs">
       <DependentUpon>KaraokeEffect.cs</DependentUpon>
     </Compile>
@@ -105,6 +103,12 @@
       <ProductName>.NET Framework 3.5 SP1</ProductName>
       <Install>false</Install>
     </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\KaraokeLyrics\KaraokeLyrics.csproj">
+      <Project>{3e48776d-7aaa-4f08-896a-cce5239353f0}</Project>
+      <Name>KaraokeLyrics</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -35,15 +35,6 @@
     <Setting Name="frmScoreSize" Type="System.Drawing.Size" Scope="User">
       <Value Profile="(Default)">400, 800</Value>
     </Setting>
-    <Setting Name="frmMidiLyricMaximized" Type="System.Boolean" Scope="User">
-      <Value Profile="(Default)">False</Value>
-    </Setting>
-    <Setting Name="frmMidiLyricLocation" Type="System.Drawing.Point" Scope="User">
-      <Value Profile="(Default)">0, 200</Value>
-    </Setting>
-    <Setting Name="frmMidiLyricSize" Type="System.Drawing.Size" Scope="User">
-      <Value Profile="(Default)">800, 600</Value>
-    </Setting>
     <Setting Name="frmMidiLyricsMaximized" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
     </Setting>
@@ -53,17 +44,17 @@
     <Setting Name="frmMidiLyricsSize" Type="System.Drawing.Size" Scope="User">
       <Value Profile="(Default)">400, 600</Value>
     </Setting>
-    <Setting Name="TxtBackColor" Type="System.Drawing.Color" Scope="User">
-      <Value Profile="(Default)">Black</Value>
+    <Setting Name="BgColor" Type="System.String" Scope="User">
+      <Value Profile="(Default)">#000000</Value>
     </Setting>
-    <Setting Name="TxtNextColor" Type="System.Drawing.Color" Scope="User">
-      <Value Profile="(Default)">White</Value>
+    <Setting Name="InactiveColor" Type="System.String" Scope="User">
+      <Value Profile="(Default)">#000000</Value>
     </Setting>
-    <Setting Name="TxtHighlightColor" Type="System.Drawing.Color" Scope="User">
-      <Value Profile="(Default)">Red</Value>
+    <Setting Name="HighlightColor" Type="System.String" Scope="User">
+      <Value Profile="(Default)">#FF0000</Value>
     </Setting>
-    <Setting Name="TxtBeforeColor" Type="System.Drawing.Color" Scope="User">
-      <Value Profile="(Default)">YellowGreen</Value>
+    <Setting Name="ActiveColor" Type="System.String" Scope="User">
+      <Value Profile="(Default)">#9ACD32</Value>
     </Setting>
     <Setting Name="frmMidiLyricsEditMaximized" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
@@ -80,8 +71,8 @@
     <Setting Name="dirSlideShow" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
-    <Setting Name="TxtContourColor" Type="System.Drawing.Color" Scope="User">
-      <Value Profile="(Default)">Black</Value>
+    <Setting Name="ActiveBorderColor" Type="System.String" Scope="User">
+      <Value Profile="(Default)">#010101</Value>
     </Setting>
     <Setting Name="freqSlideShow" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">10</Value>
@@ -242,9 +233,6 @@
     <Setting Name="PianoRollZoomY" Type="System.Single" Scope="User">
       <Value Profile="(Default)">1</Value>
     </Setting>
-    <Setting Name="bColorContour" Type="System.Boolean" Scope="User">
-      <Value Profile="(Default)">True</Value>
-    </Setting>
     <Setting Name="KaraokeFont" Type="System.Drawing.Font" Scope="User">
       <Value Profile="(Default)">Comic Sans MS, 8.25pt</Value>
     </Setting>
@@ -320,11 +308,11 @@
     <Setting Name="LyricsEditFont" Type="System.Drawing.Font" Scope="User">
       <Value Profile="(Default)">Segoe UI, 9pt</Value>
     </Setting>
-    <Setting Name="ChordNextColor" Type="System.Drawing.Color" Scope="User">
-      <Value Profile="(Default)">255, 196, 13</Value>
+    <Setting Name="InactiveChordColor" Type="System.String" Scope="User">
+      <Value Profile="(Default)">#FF8C00</Value>
     </Setting>
-    <Setting Name="ChordHighlightColor" Type="System.Drawing.Color" Scope="User">
-      <Value Profile="(Default)">Red</Value>
+    <Setting Name="HighlightChordColor" Type="System.String" Scope="User">
+      <Value Profile="(Default)">#8B0000</Value>
     </Setting>
     <Setting Name="bShowChords" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
@@ -428,16 +416,16 @@
     <Setting Name="frmMidiLyricsTopMost" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
     </Setting>
-    <Setting Name="TxtGrad0Color" Type="System.Drawing.Color" Scope="User">
+    <Setting Name="Grad0Color" Type="System.Drawing.Color" Scope="User">
       <Value Profile="(Default)">MediumTurquoise</Value>
     </Setting>
-    <Setting Name="TxtGrad1Color" Type="System.Drawing.Color" Scope="User">
+    <Setting Name="Grad1Color" Type="System.Drawing.Color" Scope="User">
       <Value Profile="(Default)">GreenYellow</Value>
     </Setting>
-    <Setting Name="TxtRhythm0Color" Type="System.Drawing.Color" Scope="User">
+    <Setting Name="Rhythm0Color" Type="System.Drawing.Color" Scope="User">
       <Value Profile="(Default)">Black</Value>
     </Setting>
-    <Setting Name="TxtRhythm1Color" Type="System.Drawing.Color" Scope="User">
+    <Setting Name="Rhythm1Color" Type="System.Drawing.Color" Scope="User">
       <Value Profile="(Default)">DodgerBlue</Value>
     </Setting>
     <Setting Name="DefaultEncoding" Type="System.String" Scope="User">
@@ -459,7 +447,7 @@
       <Value Profile="(Default)" />
     </Setting>
     <Setting Name="KfnBgColor" Type="System.String" Scope="User">
-      <Value Profile="(Default)">#FFFFFF</Value>
+      <Value Profile="(Default)">#FEB471</Value>
     </Setting>
     <Setting Name="KfnFontName" Type="System.String" Scope="User">
       <Value Profile="(Default)">Arial Black</Value>
@@ -481,6 +469,33 @@
     </Setting>
     <Setting Name="KfnBorderEffectIndex" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">2</Value>
+    </Setting>
+    <Setting Name="InactiveBorderColor" Type="System.String" Scope="User">
+      <Value Profile="(Default)">#8000FF</Value>
+    </Setting>
+    <Setting Name="FrameType" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Frame1</Value>
+    </Setting>
+    <Setting Name="frmMidiLyricMaximized" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="frmMidiLyricLocation" Type="System.Drawing.Point" Scope="User">
+      <Value Profile="(Default)">0, 200</Value>
+    </Setting>
+    <Setting Name="bActiveBorder" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="frmMp3LyricsTopMost" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="KaraokeFontName" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Arial Black</Value>
+    </Setting>
+    <Setting Name="KaraokeFontSize" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">18</Value>
+    </Setting>
+    <Setting Name="frmKfnCreateLocation" Type="System.Drawing.Point" Scope="User">
+      <Value Profile="(Default)">200, 200</Value>
     </Setting>
   </Settings>
 </SettingsFile>

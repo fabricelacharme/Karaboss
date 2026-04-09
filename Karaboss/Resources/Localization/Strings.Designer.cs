@@ -1664,6 +1664,20 @@ namespace Karaboss.Resources.Localization {
             {
                 return ResourceManager.GetString("KfnBorderNeon", resourceCulture);
             }
+        }        
+        internal static string DefaultSettingsSaved
+        {
+            get
+            {
+                return ResourceManager.GetString("DefaultSettingsSaved", resourceCulture);
+            }
         }
+        internal static string QuestionSaveDefaults
+        {
+            get
+            {
+                return ResourceManager.GetString("QuestionSaveDefaults", resourceCulture);
+            }
+        }        
     }
 }

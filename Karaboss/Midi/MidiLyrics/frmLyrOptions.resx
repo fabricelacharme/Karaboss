@@ -118,124 +118,124 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="btnBackColor.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+  <data name="btnBgColor.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
   </data>
   <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
-  <data name="btnBackColor.Location" type="System.Drawing.Point, System.Drawing">
-    <value>52, 73</value>
+  <data name="btnBgColor.Location" type="System.Drawing.Point, System.Drawing">
+    <value>96, 69</value>
   </data>
-  <data name="btnBackColor.Size" type="System.Drawing.Size, System.Drawing">
-    <value>75, 21</value>
+  <data name="btnBgColor.Size" type="System.Drawing.Size, System.Drawing">
+    <value>26, 23</value>
   </data>
   <assembly alias="mscorlib" name="mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="btnBackColor.TabIndex" type="System.Int32, mscorlib">
+  <data name="btnBgColor.TabIndex" type="System.Int32, mscorlib">
     <value>1</value>
   </data>
-  <data name="btnBackColor.Text" xml:space="preserve">
-    <value>Back color</value>
+  <data name="btnBgColor.Text" xml:space="preserve">
+    <value>...</value>
   </data>
-  <data name="btnBackColor.Visible" type="System.Boolean, mscorlib">
+  <data name="btnBgColor.Visible" type="System.Boolean, mscorlib">
     <value>False</value>
   </data>
-  <data name="&gt;&gt;btnBackColor.Name" xml:space="preserve">
-    <value>btnBackColor</value>
+  <data name="&gt;&gt;btnBgColor.Name" xml:space="preserve">
+    <value>btnBgColor</value>
   </data>
-  <data name="&gt;&gt;btnBackColor.Type" xml:space="preserve">
+  <data name="&gt;&gt;btnBgColor.Type" xml:space="preserve">
     <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="&gt;&gt;btnBackColor.Parent" xml:space="preserve">
+  <data name="&gt;&gt;btnBgColor.Parent" xml:space="preserve">
     <value>grpBoxBackGround</value>
   </data>
-  <data name="&gt;&gt;btnBackColor.ZOrder" xml:space="preserve">
-    <value>8</value>
+  <data name="&gt;&gt;btnBgColor.ZOrder" xml:space="preserve">
+    <value>10</value>
   </data>
-  <data name="btnSungColor.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+  <data name="btnActiveColor.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
   </data>
-  <data name="btnSungColor.Location" type="System.Drawing.Point, System.Drawing">
-    <value>530, 51</value>
+  <data name="btnActiveColor.Location" type="System.Drawing.Point, System.Drawing">
+    <value>228, 62</value>
   </data>
-  <data name="btnSungColor.Size" type="System.Drawing.Size, System.Drawing">
-    <value>92, 21</value>
+  <data name="btnActiveColor.Size" type="System.Drawing.Size, System.Drawing">
+    <value>25, 23</value>
   </data>
-  <data name="btnSungColor.TabIndex" type="System.Int32, mscorlib">
+  <data name="btnActiveColor.TabIndex" type="System.Int32, mscorlib">
     <value>2</value>
   </data>
-  <data name="btnSungColor.Text" xml:space="preserve">
-    <value>Before</value>
+  <data name="btnActiveColor.Text" xml:space="preserve">
+    <value>...</value>
   </data>
-  <data name="&gt;&gt;btnSungColor.Name" xml:space="preserve">
-    <value>btnSungColor</value>
+  <data name="&gt;&gt;btnActiveColor.Name" xml:space="preserve">
+    <value>btnActiveColor</value>
   </data>
-  <data name="&gt;&gt;btnSungColor.Type" xml:space="preserve">
+  <data name="&gt;&gt;btnActiveColor.Type" xml:space="preserve">
     <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="&gt;&gt;btnSungColor.Parent" xml:space="preserve">
-    <value>$this</value>
+  <data name="&gt;&gt;btnActiveColor.Parent" xml:space="preserve">
+    <value>grpBoxTextColor</value>
   </data>
-  <data name="&gt;&gt;btnSungColor.ZOrder" xml:space="preserve">
-    <value>43</value>
-  </data>
-  <data name="btnSingColor.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
-    <value>NoControl</value>
-  </data>
-  <data name="btnSingColor.Location" type="System.Drawing.Point, System.Drawing">
-    <value>530, 76</value>
-  </data>
-  <data name="btnSingColor.Size" type="System.Drawing.Size, System.Drawing">
-    <value>92, 21</value>
-  </data>
-  <data name="btnSingColor.TabIndex" type="System.Int32, mscorlib">
-    <value>3</value>
-  </data>
-  <data name="btnSingColor.Text" xml:space="preserve">
-    <value>Highlight</value>
-  </data>
-  <data name="&gt;&gt;btnSingColor.Name" xml:space="preserve">
-    <value>btnSingColor</value>
-  </data>
-  <data name="&gt;&gt;btnSingColor.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;btnSingColor.Parent" xml:space="preserve">
-    <value>$this</value>
-  </data>
-  <data name="&gt;&gt;btnSingColor.ZOrder" xml:space="preserve">
-    <value>42</value>
-  </data>
-  <data name="btnForeColor.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
-    <value>NoControl</value>
-  </data>
-  <data name="btnForeColor.Location" type="System.Drawing.Point, System.Drawing">
-    <value>530, 101</value>
-  </data>
-  <data name="btnForeColor.Size" type="System.Drawing.Size, System.Drawing">
-    <value>92, 21</value>
-  </data>
-  <data name="btnForeColor.TabIndex" type="System.Int32, mscorlib">
+  <data name="&gt;&gt;btnActiveColor.ZOrder" xml:space="preserve">
     <value>4</value>
   </data>
-  <data name="btnForeColor.Text" xml:space="preserve">
-    <value>Next</value>
+  <data name="btnHighlightColor.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
   </data>
-  <data name="&gt;&gt;btnForeColor.Name" xml:space="preserve">
-    <value>btnForeColor</value>
+  <data name="btnHighlightColor.Location" type="System.Drawing.Point, System.Drawing">
+    <value>228, 87</value>
   </data>
-  <data name="&gt;&gt;btnForeColor.Type" xml:space="preserve">
+  <data name="btnHighlightColor.Size" type="System.Drawing.Size, System.Drawing">
+    <value>25, 23</value>
+  </data>
+  <data name="btnHighlightColor.TabIndex" type="System.Int32, mscorlib">
+    <value>3</value>
+  </data>
+  <data name="btnHighlightColor.Text" xml:space="preserve">
+    <value>...</value>
+  </data>
+  <data name="&gt;&gt;btnHighlightColor.Name" xml:space="preserve">
+    <value>btnHighlightColor</value>
+  </data>
+  <data name="&gt;&gt;btnHighlightColor.Type" xml:space="preserve">
     <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="&gt;&gt;btnForeColor.Parent" xml:space="preserve">
-    <value>$this</value>
+  <data name="&gt;&gt;btnHighlightColor.Parent" xml:space="preserve">
+    <value>grpBoxTextColor</value>
   </data>
-  <data name="&gt;&gt;btnForeColor.ZOrder" xml:space="preserve">
-    <value>41</value>
+  <data name="&gt;&gt;btnHighlightColor.ZOrder" xml:space="preserve">
+    <value>6</value>
+  </data>
+  <data name="btnInactiveColor.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="btnInactiveColor.Location" type="System.Drawing.Point, System.Drawing">
+    <value>228, 113</value>
+  </data>
+  <data name="btnInactiveColor.Size" type="System.Drawing.Size, System.Drawing">
+    <value>25, 23</value>
+  </data>
+  <data name="btnInactiveColor.TabIndex" type="System.Int32, mscorlib">
+    <value>4</value>
+  </data>
+  <data name="btnInactiveColor.Text" xml:space="preserve">
+    <value>...</value>
+  </data>
+  <data name="&gt;&gt;btnInactiveColor.Name" xml:space="preserve">
+    <value>btnInactiveColor</value>
+  </data>
+  <data name="&gt;&gt;btnInactiveColor.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;btnInactiveColor.Parent" xml:space="preserve">
+    <value>grpBoxTextColor</value>
+  </data>
+  <data name="&gt;&gt;btnInactiveColor.ZOrder" xml:space="preserve">
+    <value>8</value>
   </data>
   <data name="btnApply.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
   </data>
   <data name="btnApply.Location" type="System.Drawing.Point, System.Drawing">
-    <value>472, 374</value>
+    <value>285, 429</value>
   </data>
   <data name="btnApply.Size" type="System.Drawing.Size, System.Drawing">
     <value>100, 25</value>
@@ -256,13 +256,13 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;btnApply.ZOrder" xml:space="preserve">
-    <value>40</value>
+    <value>9</value>
   </data>
   <data name="btnOk.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
   </data>
   <data name="btnOk.Location" type="System.Drawing.Point, System.Drawing">
-    <value>578, 374</value>
+    <value>391, 429</value>
   </data>
   <data name="btnOk.Size" type="System.Drawing.Size, System.Drawing">
     <value>100, 25</value>
@@ -283,13 +283,13 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;btnOk.ZOrder" xml:space="preserve">
-    <value>39</value>
+    <value>8</value>
   </data>
   <data name="btnCancel.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
   </data>
   <data name="btnCancel.Location" type="System.Drawing.Point, System.Drawing">
-    <value>684, 374</value>
+    <value>497, 429</value>
   </data>
   <data name="btnCancel.Size" type="System.Drawing.Size, System.Drawing">
     <value>100, 25</value>
@@ -310,46 +310,46 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;btnCancel.ZOrder" xml:space="preserve">
-    <value>38</value>
+    <value>7</value>
   </data>
-  <data name="label1.AutoSize" type="System.Boolean, mscorlib">
+  <data name="lblNumberOfLines.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
   </data>
-  <data name="label1.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+  <data name="lblNumberOfLines.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
   </data>
-  <data name="label1.Location" type="System.Drawing.Point, System.Drawing">
-    <value>530, 156</value>
+  <data name="lblNumberOfLines.Location" type="System.Drawing.Point, System.Drawing">
+    <value>156, 264</value>
   </data>
-  <data name="label1.Size" type="System.Drawing.Size, System.Drawing">
+  <data name="lblNumberOfLines.Size" type="System.Drawing.Size, System.Drawing">
     <value>83, 13</value>
   </data>
-  <data name="label1.TabIndex" type="System.Int32, mscorlib">
+  <data name="lblNumberOfLines.TabIndex" type="System.Int32, mscorlib">
     <value>9</value>
   </data>
-  <data name="label1.Text" xml:space="preserve">
+  <data name="lblNumberOfLines.Text" xml:space="preserve">
     <value>Number of lines:</value>
   </data>
-  <data name="&gt;&gt;label1.Name" xml:space="preserve">
-    <value>label1</value>
+  <data name="&gt;&gt;lblNumberOfLines.Name" xml:space="preserve">
+    <value>lblNumberOfLines</value>
   </data>
-  <data name="&gt;&gt;label1.Type" xml:space="preserve">
+  <data name="&gt;&gt;lblNumberOfLines.Type" xml:space="preserve">
     <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="&gt;&gt;label1.Parent" xml:space="preserve">
-    <value>$this</value>
+  <data name="&gt;&gt;lblNumberOfLines.Parent" xml:space="preserve">
+    <value>grpBoxTextColor</value>
   </data>
-  <data name="&gt;&gt;label1.ZOrder" xml:space="preserve">
-    <value>37</value>
+  <data name="&gt;&gt;lblNumberOfLines.ZOrder" xml:space="preserve">
+    <value>10</value>
   </data>
   <metadata name="folderBrowserDialog1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>17, 17</value>
   </metadata>
   <data name="txtSlideShow.Location" type="System.Drawing.Point, System.Drawing">
-    <value>110, 298</value>
+    <value>113, 23</value>
   </data>
   <data name="txtSlideShow.Size" type="System.Drawing.Size, System.Drawing">
-    <value>385, 20</value>
+    <value>370, 20</value>
   </data>
   <data name="txtSlideShow.TabIndex" type="System.Int32, mscorlib">
     <value>10</value>
@@ -361,10 +361,10 @@
     <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;txtSlideShow.Parent" xml:space="preserve">
-    <value>$this</value>
+    <value>grpBoxSlideShow</value>
   </data>
   <data name="&gt;&gt;txtSlideShow.ZOrder" xml:space="preserve">
-    <value>36</value>
+    <value>0</value>
   </data>
   <data name="label2.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -373,7 +373,7 @@
     <value>NoControl</value>
   </data>
   <data name="label2.Location" type="System.Drawing.Point, System.Drawing">
-    <value>5, 301</value>
+    <value>8, 26</value>
   </data>
   <data name="label2.Size" type="System.Drawing.Size, System.Drawing">
     <value>103, 13</value>
@@ -391,16 +391,16 @@
     <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;label2.Parent" xml:space="preserve">
-    <value>$this</value>
+    <value>grpBoxSlideShow</value>
   </data>
   <data name="&gt;&gt;label2.ZOrder" xml:space="preserve">
-    <value>35</value>
+    <value>1</value>
   </data>
   <data name="btnDirSlideShow.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
   </data>
   <data name="btnDirSlideShow.Location" type="System.Drawing.Point, System.Drawing">
-    <value>501, 295</value>
+    <value>487, 23</value>
   </data>
   <data name="btnDirSlideShow.Size" type="System.Drawing.Size, System.Drawing">
     <value>59, 23</value>
@@ -418,37 +418,37 @@
     <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;btnDirSlideShow.Parent" xml:space="preserve">
-    <value>$this</value>
+    <value>grpBoxSlideShow</value>
   </data>
   <data name="&gt;&gt;btnDirSlideShow.ZOrder" xml:space="preserve">
-    <value>34</value>
+    <value>2</value>
   </data>
-  <data name="btnContourColor.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+  <data name="btnActiveBorderColor.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
   </data>
-  <data name="btnContourColor.Location" type="System.Drawing.Point, System.Drawing">
-    <value>564, 126</value>
+  <data name="btnActiveBorderColor.Location" type="System.Drawing.Point, System.Drawing">
+    <value>228, 138</value>
   </data>
-  <data name="btnContourColor.Size" type="System.Drawing.Size, System.Drawing">
-    <value>58, 21</value>
+  <data name="btnActiveBorderColor.Size" type="System.Drawing.Size, System.Drawing">
+    <value>25, 23</value>
   </data>
-  <data name="btnContourColor.TabIndex" type="System.Int32, mscorlib">
+  <data name="btnActiveBorderColor.TabIndex" type="System.Int32, mscorlib">
     <value>13</value>
   </data>
-  <data name="btnContourColor.Text" xml:space="preserve">
-    <value>Contour</value>
+  <data name="btnActiveBorderColor.Text" xml:space="preserve">
+    <value>...</value>
   </data>
-  <data name="&gt;&gt;btnContourColor.Name" xml:space="preserve">
-    <value>btnContourColor</value>
+  <data name="&gt;&gt;btnActiveBorderColor.Name" xml:space="preserve">
+    <value>btnActiveBorderColor</value>
   </data>
-  <data name="&gt;&gt;btnContourColor.Type" xml:space="preserve">
+  <data name="&gt;&gt;btnActiveBorderColor.Type" xml:space="preserve">
     <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="&gt;&gt;btnContourColor.Parent" xml:space="preserve">
-    <value>$this</value>
+  <data name="&gt;&gt;btnActiveBorderColor.Parent" xml:space="preserve">
+    <value>grpBoxTextColor</value>
   </data>
-  <data name="&gt;&gt;btnContourColor.ZOrder" xml:space="preserve">
-    <value>33</value>
+  <data name="&gt;&gt;btnActiveBorderColor.ZOrder" xml:space="preserve">
+    <value>12</value>
   </data>
   <data name="label3.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -457,7 +457,7 @@
     <value>NoControl</value>
   </data>
   <data name="label3.Location" type="System.Drawing.Point, System.Drawing">
-    <value>5, 323</value>
+    <value>8, 48</value>
   </data>
   <data name="label3.Size" type="System.Drawing.Size, System.Drawing">
     <value>60, 13</value>
@@ -475,13 +475,13 @@
     <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;label3.Parent" xml:space="preserve">
-    <value>$this</value>
+    <value>grpBoxSlideShow</value>
   </data>
   <data name="&gt;&gt;label3.ZOrder" xml:space="preserve">
-    <value>30</value>
+    <value>4</value>
   </data>
   <data name="txtSlideShowFreq.Location" type="System.Drawing.Point, System.Drawing">
-    <value>110, 320</value>
+    <value>113, 45</value>
   </data>
   <data name="txtSlideShowFreq.Size" type="System.Drawing.Size, System.Drawing">
     <value>35, 20</value>
@@ -499,10 +499,10 @@
     <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;txtSlideShowFreq.Parent" xml:space="preserve">
-    <value>$this</value>
+    <value>grpBoxSlideShow</value>
   </data>
   <data name="&gt;&gt;txtSlideShowFreq.ZOrder" xml:space="preserve">
-    <value>31</value>
+    <value>3</value>
   </data>
   <data name="label4.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -511,7 +511,7 @@
     <value>NoControl</value>
   </data>
   <data name="label4.Location" type="System.Drawing.Point, System.Drawing">
-    <value>153, 323</value>
+    <value>156, 48</value>
   </data>
   <data name="label4.Size" type="System.Drawing.Size, System.Drawing">
     <value>53, 13</value>
@@ -529,43 +529,10 @@
     <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;label4.Parent" xml:space="preserve">
-    <value>$this</value>
+    <value>grpBoxSlideShow</value>
   </data>
   <data name="&gt;&gt;label4.ZOrder" xml:space="preserve">
-    <value>29</value>
-  </data>
-  <data name="label5.AutoSize" type="System.Boolean, mscorlib">
-    <value>True</value>
-  </data>
-  <data name="label5.Font" type="System.Drawing.Font, System.Drawing">
-    <value>Microsoft Sans Serif, 8.25pt, style=Bold</value>
-  </data>
-  <data name="label5.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
-    <value>NoControl</value>
-  </data>
-  <data name="label5.Location" type="System.Drawing.Point, System.Drawing">
-    <value>5, 275</value>
-  </data>
-  <data name="label5.Size" type="System.Drawing.Size, System.Drawing">
-    <value>80, 13</value>
-  </data>
-  <data name="label5.TabIndex" type="System.Int32, mscorlib">
-    <value>18</value>
-  </data>
-  <data name="label5.Text" xml:space="preserve">
-    <value>DIAPORAMA</value>
-  </data>
-  <data name="&gt;&gt;label5.Name" xml:space="preserve">
-    <value>label5</value>
-  </data>
-  <data name="&gt;&gt;label5.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;label5.Parent" xml:space="preserve">
-    <value>$this</value>
-  </data>
-  <data name="&gt;&gt;label5.ZOrder" xml:space="preserve">
-    <value>28</value>
+    <value>6</value>
   </data>
   <data name="cbSizeMode.Items" xml:space="preserve">
     <value>Normal</value>
@@ -583,7 +550,7 @@
     <value>Zoom</value>
   </data>
   <data name="cbSizeMode.Location" type="System.Drawing.Point, System.Drawing">
-    <value>110, 346</value>
+    <value>113, 71</value>
   </data>
   <data name="cbSizeMode.Size" type="System.Drawing.Size, System.Drawing">
     <value>121, 21</value>
@@ -598,10 +565,10 @@
     <value>System.Windows.Forms.ComboBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;cbSizeMode.Parent" xml:space="preserve">
-    <value>$this</value>
+    <value>grpBoxSlideShow</value>
   </data>
   <data name="&gt;&gt;cbSizeMode.ZOrder" xml:space="preserve">
-    <value>27</value>
+    <value>8</value>
   </data>
   <data name="label6.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -610,7 +577,7 @@
     <value>NoControl</value>
   </data>
   <data name="label6.Location" type="System.Drawing.Point, System.Drawing">
-    <value>5, 346</value>
+    <value>8, 71</value>
   </data>
   <data name="label6.Size" type="System.Drawing.Size, System.Drawing">
     <value>47, 13</value>
@@ -628,19 +595,19 @@
     <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;label6.Parent" xml:space="preserve">
-    <value>$this</value>
+    <value>grpBoxSlideShow</value>
   </data>
   <data name="&gt;&gt;label6.ZOrder" xml:space="preserve">
-    <value>26</value>
+    <value>7</value>
   </data>
   <data name="btnResetDir.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
   </data>
   <data name="btnResetDir.Location" type="System.Drawing.Point, System.Drawing">
-    <value>567, 295</value>
+    <value>487, 52</value>
   </data>
   <data name="btnResetDir.Size" type="System.Drawing.Size, System.Drawing">
-    <value>46, 23</value>
+    <value>59, 23</value>
   </data>
   <data name="btnResetDir.TabIndex" type="System.Int32, mscorlib">
     <value>24</value>
@@ -655,10 +622,10 @@
     <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;btnResetDir.Parent" xml:space="preserve">
-    <value>$this</value>
+    <value>grpBoxSlideShow</value>
   </data>
   <data name="&gt;&gt;btnResetDir.ZOrder" xml:space="preserve">
-    <value>25</value>
+    <value>5</value>
   </data>
   <data name="radioDiaporama.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -667,7 +634,7 @@
     <value>NoControl</value>
   </data>
   <data name="radioDiaporama.Location" type="System.Drawing.Point, System.Drawing">
-    <value>7, 25</value>
+    <value>8, 25</value>
   </data>
   <data name="radioDiaporama.Size" type="System.Drawing.Size, System.Drawing">
     <value>76, 17</value>
@@ -688,7 +655,7 @@
     <value>grpBoxBackGround</value>
   </data>
   <data name="&gt;&gt;radioDiaporama.ZOrder" xml:space="preserve">
-    <value>6</value>
+    <value>8</value>
   </data>
   <data name="radioSolidColor.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -697,7 +664,7 @@
     <value>NoControl</value>
   </data>
   <data name="radioSolidColor.Location" type="System.Drawing.Point, System.Drawing">
-    <value>7, 50</value>
+    <value>8, 50</value>
   </data>
   <data name="radioSolidColor.Size" type="System.Drawing.Size, System.Drawing">
     <value>75, 17</value>
@@ -718,7 +685,7 @@
     <value>grpBoxBackGround</value>
   </data>
   <data name="&gt;&gt;radioSolidColor.ZOrder" xml:space="preserve">
-    <value>7</value>
+    <value>9</value>
   </data>
   <data name="radioTransparent.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -727,7 +694,7 @@
     <value>NoControl</value>
   </data>
   <data name="radioTransparent.Location" type="System.Drawing.Point, System.Drawing">
-    <value>5, 241</value>
+    <value>8, 241</value>
   </data>
   <data name="radioTransparent.Size" type="System.Drawing.Size, System.Drawing">
     <value>82, 17</value>
@@ -748,43 +715,43 @@
     <value>grpBoxBackGround</value>
   </data>
   <data name="&gt;&gt;radioTransparent.ZOrder" xml:space="preserve">
-    <value>10</value>
+    <value>12</value>
   </data>
-  <data name="label8.AutoSize" type="System.Boolean, mscorlib">
+  <data name="lblVerticalText.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
   </data>
-  <data name="label8.Font" type="System.Drawing.Font, System.Drawing">
+  <data name="lblVerticalText.Font" type="System.Drawing.Font, System.Drawing">
     <value>Microsoft Sans Serif, 8.25pt, style=Bold</value>
   </data>
-  <data name="label8.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+  <data name="lblVerticalText.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
   </data>
-  <data name="label8.Location" type="System.Drawing.Point, System.Drawing">
-    <value>531, 33</value>
+  <data name="lblVerticalText.Location" type="System.Drawing.Point, System.Drawing">
+    <value>47, 14</value>
   </data>
-  <data name="label8.Size" type="System.Drawing.Size, System.Drawing">
-    <value>69, 13</value>
+  <data name="lblVerticalText.Size" type="System.Drawing.Size, System.Drawing">
+    <value>135, 13</value>
   </data>
-  <data name="label8.TabIndex" type="System.Int32, mscorlib">
+  <data name="lblVerticalText.TabIndex" type="System.Int32, mscorlib">
     <value>32</value>
   </data>
-  <data name="label8.Text" xml:space="preserve">
-    <value>Text Color:</value>
+  <data name="lblVerticalText.Text" xml:space="preserve">
+    <value>Vertical text properties</value>
   </data>
-  <data name="&gt;&gt;label8.Name" xml:space="preserve">
-    <value>label8</value>
+  <data name="&gt;&gt;lblVerticalText.Name" xml:space="preserve">
+    <value>lblVerticalText</value>
   </data>
-  <data name="&gt;&gt;label8.Type" xml:space="preserve">
+  <data name="&gt;&gt;lblVerticalText.Type" xml:space="preserve">
     <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="&gt;&gt;label8.Parent" xml:space="preserve">
-    <value>$this</value>
+  <data name="&gt;&gt;lblVerticalText.Parent" xml:space="preserve">
+    <value>grpBoxTextColor</value>
   </data>
-  <data name="&gt;&gt;label8.ZOrder" xml:space="preserve">
-    <value>20</value>
+  <data name="&gt;&gt;lblVerticalText.ZOrder" xml:space="preserve">
+    <value>0</value>
   </data>
   <data name="UpDownNbLines.Location" type="System.Drawing.Point, System.Drawing">
-    <value>616, 151</value>
+    <value>256, 262</value>
   </data>
   <data name="UpDownNbLines.Size" type="System.Drawing.Size, System.Drawing">
     <value>35, 20</value>
@@ -799,10 +766,10 @@
     <value>System.Windows.Forms.NumericUpDown, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;UpDownNbLines.Parent" xml:space="preserve">
-    <value>$this</value>
+    <value>grpBoxTextColor</value>
   </data>
   <data name="&gt;&gt;UpDownNbLines.ZOrder" xml:space="preserve">
-    <value>19</value>
+    <value>26</value>
   </data>
   <data name="chkDisplayBalls.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -811,7 +778,7 @@
     <value>NoControl</value>
   </data>
   <data name="chkDisplayBalls.Location" type="System.Drawing.Point, System.Drawing">
-    <value>129, 7</value>
+    <value>180, 45</value>
   </data>
   <data name="chkDisplayBalls.Size" type="System.Drawing.Size, System.Drawing">
     <value>84, 17</value>
@@ -832,52 +799,7 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;chkDisplayBalls.ZOrder" xml:space="preserve">
-    <value>18</value>
-  </data>
-  <data name="&gt;&gt;pictureBox2.Name" xml:space="preserve">
-    <value>pictureBox2</value>
-  </data>
-  <data name="&gt;&gt;pictureBox2.Type" xml:space="preserve">
-    <value>System.Windows.Forms.PictureBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;pictureBox2.Parent" xml:space="preserve">
-    <value>pnlBalls</value>
-  </data>
-  <data name="&gt;&gt;pictureBox2.ZOrder" xml:space="preserve">
-    <value>0</value>
-  </data>
-  <data name="&gt;&gt;pictureBox1.Name" xml:space="preserve">
-    <value>pictureBox1</value>
-  </data>
-  <data name="&gt;&gt;pictureBox1.Type" xml:space="preserve">
-    <value>System.Windows.Forms.PictureBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;pictureBox1.Parent" xml:space="preserve">
-    <value>pnlBalls</value>
-  </data>
-  <data name="&gt;&gt;pictureBox1.ZOrder" xml:space="preserve">
-    <value>1</value>
-  </data>
-  <data name="pnlBalls.Location" type="System.Drawing.Point, System.Drawing">
-    <value>130, 30</value>
-  </data>
-  <data name="pnlBalls.Size" type="System.Drawing.Size, System.Drawing">
-    <value>385, 17</value>
-  </data>
-  <data name="pnlBalls.TabIndex" type="System.Int32, mscorlib">
-    <value>37</value>
-  </data>
-  <data name="&gt;&gt;pnlBalls.Name" xml:space="preserve">
-    <value>pnlBalls</value>
-  </data>
-  <data name="&gt;&gt;pnlBalls.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Panel, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;pnlBalls.Parent" xml:space="preserve">
-    <value>$this</value>
-  </data>
-  <data name="&gt;&gt;pnlBalls.ZOrder" xml:space="preserve">
-    <value>17</value>
+    <value>5</value>
   </data>
   <data name="pictureBox2.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
@@ -933,128 +855,152 @@
   <data name="&gt;&gt;pictureBox1.ZOrder" xml:space="preserve">
     <value>1</value>
   </data>
-  <data name="pictBackColor.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+  <data name="pnlBalls.Location" type="System.Drawing.Point, System.Drawing">
+    <value>180, 70</value>
+  </data>
+  <data name="pnlBalls.Size" type="System.Drawing.Size, System.Drawing">
+    <value>385, 17</value>
+  </data>
+  <data name="pnlBalls.TabIndex" type="System.Int32, mscorlib">
+    <value>37</value>
+  </data>
+  <data name="&gt;&gt;pnlBalls.Name" xml:space="preserve">
+    <value>pnlBalls</value>
+  </data>
+  <data name="&gt;&gt;pnlBalls.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Panel, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;pnlBalls.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;pnlBalls.ZOrder" xml:space="preserve">
+    <value>4</value>
+  </data>
+  <data name="picBgColor.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
   </data>
-  <data name="pictBackColor.Location" type="System.Drawing.Point, System.Drawing">
-    <value>25, 70</value>
+  <data name="picBgColor.Location" type="System.Drawing.Point, System.Drawing">
+    <value>72, 70</value>
   </data>
-  <data name="pictBackColor.Size" type="System.Drawing.Size, System.Drawing">
+  <data name="picBgColor.Size" type="System.Drawing.Size, System.Drawing">
     <value>21, 21</value>
   </data>
-  <data name="pictBackColor.TabIndex" type="System.Int32, mscorlib">
+  <data name="picBgColor.TabIndex" type="System.Int32, mscorlib">
     <value>33</value>
   </data>
-  <data name="pictBackColor.Visible" type="System.Boolean, mscorlib">
+  <data name="picBgColor.Visible" type="System.Boolean, mscorlib">
     <value>False</value>
   </data>
-  <data name="&gt;&gt;pictBackColor.Name" xml:space="preserve">
-    <value>pictBackColor</value>
+  <data name="&gt;&gt;picBgColor.Name" xml:space="preserve">
+    <value>picBgColor</value>
   </data>
-  <data name="&gt;&gt;pictBackColor.Type" xml:space="preserve">
+  <data name="&gt;&gt;picBgColor.Type" xml:space="preserve">
     <value>System.Windows.Forms.PictureBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="&gt;&gt;pictBackColor.Parent" xml:space="preserve">
+  <data name="&gt;&gt;picBgColor.Parent" xml:space="preserve">
     <value>grpBoxBackGround</value>
   </data>
-  <data name="&gt;&gt;pictBackColor.ZOrder" xml:space="preserve">
-    <value>9</value>
+  <data name="&gt;&gt;picBgColor.ZOrder" xml:space="preserve">
+    <value>11</value>
   </data>
-  <data name="pictContour.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+  <data name="picActiveBorderColor.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
   </data>
-  <data name="pictContour.Location" type="System.Drawing.Point, System.Drawing">
-    <value>628, 126</value>
+  <data name="picActiveBorderColor.Location" type="System.Drawing.Point, System.Drawing">
+    <value>197, 138</value>
   </data>
-  <data name="pictContour.Size" type="System.Drawing.Size, System.Drawing">
+  <data name="picActiveBorderColor.Size" type="System.Drawing.Size, System.Drawing">
     <value>21, 21</value>
   </data>
-  <data name="pictContour.TabIndex" type="System.Int32, mscorlib">
+  <data name="picActiveBorderColor.TabIndex" type="System.Int32, mscorlib">
     <value>28</value>
   </data>
-  <data name="&gt;&gt;pictContour.Name" xml:space="preserve">
-    <value>pictContour</value>
+  <data name="&gt;&gt;picActiveBorderColor.Name" xml:space="preserve">
+    <value>picActiveBorderColor</value>
   </data>
-  <data name="&gt;&gt;pictContour.Type" xml:space="preserve">
+  <data name="&gt;&gt;picActiveBorderColor.Type" xml:space="preserve">
     <value>System.Windows.Forms.PictureBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="&gt;&gt;pictContour.Parent" xml:space="preserve">
-    <value>$this</value>
+  <data name="&gt;&gt;picActiveBorderColor.Parent" xml:space="preserve">
+    <value>grpBoxTextColor</value>
   </data>
-  <data name="&gt;&gt;pictContour.ZOrder" xml:space="preserve">
-    <value>21</value>
-  </data>
-  <data name="pictNext.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
-    <value>NoControl</value>
-  </data>
-  <data name="pictNext.Location" type="System.Drawing.Point, System.Drawing">
-    <value>628, 101</value>
-  </data>
-  <data name="pictNext.Size" type="System.Drawing.Size, System.Drawing">
-    <value>21, 21</value>
-  </data>
-  <data name="pictNext.TabIndex" type="System.Int32, mscorlib">
-    <value>27</value>
-  </data>
-  <data name="&gt;&gt;pictNext.Name" xml:space="preserve">
-    <value>pictNext</value>
-  </data>
-  <data name="&gt;&gt;pictNext.Type" xml:space="preserve">
-    <value>System.Windows.Forms.PictureBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;pictNext.Parent" xml:space="preserve">
-    <value>$this</value>
-  </data>
-  <data name="&gt;&gt;pictNext.ZOrder" xml:space="preserve">
-    <value>22</value>
-  </data>
-  <data name="pictHighlight.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
-    <value>NoControl</value>
-  </data>
-  <data name="pictHighlight.Location" type="System.Drawing.Point, System.Drawing">
-    <value>628, 76</value>
-  </data>
-  <data name="pictHighlight.Size" type="System.Drawing.Size, System.Drawing">
-    <value>21, 21</value>
-  </data>
-  <data name="pictHighlight.TabIndex" type="System.Int32, mscorlib">
-    <value>26</value>
-  </data>
-  <data name="&gt;&gt;pictHighlight.Name" xml:space="preserve">
-    <value>pictHighlight</value>
-  </data>
-  <data name="&gt;&gt;pictHighlight.Type" xml:space="preserve">
-    <value>System.Windows.Forms.PictureBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;pictHighlight.Parent" xml:space="preserve">
-    <value>$this</value>
-  </data>
-  <data name="&gt;&gt;pictHighlight.ZOrder" xml:space="preserve">
+  <data name="&gt;&gt;picActiveBorderColor.ZOrder" xml:space="preserve">
     <value>23</value>
   </data>
-  <data name="pictBefore.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+  <data name="picInactiveColor.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
   </data>
-  <data name="pictBefore.Location" type="System.Drawing.Point, System.Drawing">
-    <value>628, 51</value>
+  <data name="picInactiveColor.Location" type="System.Drawing.Point, System.Drawing">
+    <value>197, 113</value>
   </data>
-  <data name="pictBefore.Size" type="System.Drawing.Size, System.Drawing">
+  <data name="picInactiveColor.Size" type="System.Drawing.Size, System.Drawing">
     <value>21, 21</value>
   </data>
-  <data name="pictBefore.TabIndex" type="System.Int32, mscorlib">
-    <value>25</value>
+  <data name="picInactiveColor.TabIndex" type="System.Int32, mscorlib">
+    <value>27</value>
   </data>
-  <data name="&gt;&gt;pictBefore.Name" xml:space="preserve">
-    <value>pictBefore</value>
+  <data name="&gt;&gt;picInactiveColor.Name" xml:space="preserve">
+    <value>picInactiveColor</value>
   </data>
-  <data name="&gt;&gt;pictBefore.Type" xml:space="preserve">
+  <data name="&gt;&gt;picInactiveColor.Type" xml:space="preserve">
     <value>System.Windows.Forms.PictureBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="&gt;&gt;pictBefore.Parent" xml:space="preserve">
-    <value>$this</value>
+  <data name="&gt;&gt;picInactiveColor.Parent" xml:space="preserve">
+    <value>grpBoxTextColor</value>
   </data>
-  <data name="&gt;&gt;pictBefore.ZOrder" xml:space="preserve">
-    <value>24</value>
+  <data name="&gt;&gt;picInactiveColor.ZOrder" xml:space="preserve">
+    <value>19</value>
+  </data>
+  <data name="picHighlightColor.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="picHighlightColor.Location" type="System.Drawing.Point, System.Drawing">
+    <value>197, 88</value>
+  </data>
+  <data name="picHighlightColor.Size" type="System.Drawing.Size, System.Drawing">
+    <value>21, 21</value>
+  </data>
+  <data name="picHighlightColor.TabIndex" type="System.Int32, mscorlib">
+    <value>26</value>
+  </data>
+  <data name="&gt;&gt;picHighlightColor.Name" xml:space="preserve">
+    <value>picHighlightColor</value>
+  </data>
+  <data name="&gt;&gt;picHighlightColor.Type" xml:space="preserve">
+    <value>System.Windows.Forms.PictureBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;picHighlightColor.Parent" xml:space="preserve">
+    <value>grpBoxTextColor</value>
+  </data>
+  <data name="&gt;&gt;picHighlightColor.ZOrder" xml:space="preserve">
+    <value>14</value>
+  </data>
+  <data name="picActiveColor.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="picActiveColor.Location" type="System.Drawing.Point, System.Drawing">
+    <value>197, 63</value>
+  </data>
+  <data name="picActiveColor.Size" type="System.Drawing.Size, System.Drawing">
+    <value>21, 21</value>
+  </data>
+  <data name="picActiveColor.TabIndex" type="System.Int32, mscorlib">
+    <value>25</value>
+  </data>
+  <data name="&gt;&gt;picActiveColor.Name" xml:space="preserve">
+    <value>picActiveColor</value>
+  </data>
+  <data name="&gt;&gt;picActiveColor.Type" xml:space="preserve">
+    <value>System.Windows.Forms.PictureBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;picActiveColor.Parent" xml:space="preserve">
+    <value>grpBoxTextColor</value>
+  </data>
+  <data name="&gt;&gt;picActiveColor.ZOrder" xml:space="preserve">
+    <value>13</value>
+  </data>
+  <data name="cbOptionsTextDisplay.Font" type="System.Drawing.Font, System.Drawing">
+    <value>Calibri, 9.75pt</value>
   </data>
   <data name="cbOptionsTextDisplay.Items" xml:space="preserve">
     <value>Top</value>
@@ -1066,10 +1012,10 @@
     <value>Bottom</value>
   </data>
   <data name="cbOptionsTextDisplay.Location" type="System.Drawing.Point, System.Drawing">
-    <value>530, 177</value>
+    <value>134, 215</value>
   </data>
   <data name="cbOptionsTextDisplay.Size" type="System.Drawing.Size, System.Drawing">
-    <value>121, 21</value>
+    <value>121, 23</value>
   </data>
   <data name="cbOptionsTextDisplay.TabIndex" type="System.Int32, mscorlib">
     <value>38</value>
@@ -1084,10 +1030,10 @@
     <value>System.Windows.Forms.ComboBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;cbOptionsTextDisplay.Parent" xml:space="preserve">
-    <value>$this</value>
+    <value>grpBoxTextColor</value>
   </data>
   <data name="&gt;&gt;cbOptionsTextDisplay.ZOrder" xml:space="preserve">
-    <value>16</value>
+    <value>28</value>
   </data>
   <data name="chkTextBackground.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -1096,7 +1042,7 @@
     <value>NoControl</value>
   </data>
   <data name="chkTextBackground.Location" type="System.Drawing.Point, System.Drawing">
-    <value>530, 204</value>
+    <value>11, 242</value>
   </data>
   <data name="chkTextBackground.Size" type="System.Drawing.Size, System.Drawing">
     <value>108, 17</value>
@@ -1114,119 +1060,44 @@
     <value>System.Windows.Forms.CheckBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;chkTextBackground.Parent" xml:space="preserve">
-    <value>$this</value>
+    <value>grpBoxTextColor</value>
   </data>
   <data name="&gt;&gt;chkTextBackground.ZOrder" xml:space="preserve">
-    <value>15</value>
+    <value>30</value>
   </data>
-  <data name="chkContour.AutoSize" type="System.Boolean, mscorlib">
+  <data name="lblFont.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
   </data>
-  <data name="chkContour.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+  <data name="lblFont.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
   </data>
-  <data name="chkContour.Location" type="System.Drawing.Point, System.Drawing">
-    <value>530, 131</value>
+  <data name="lblFont.Location" type="System.Drawing.Point, System.Drawing">
+    <value>8, 40</value>
   </data>
-  <data name="chkContour.Size" type="System.Drawing.Size, System.Drawing">
-    <value>15, 14</value>
-  </data>
-  <data name="chkContour.TabIndex" type="System.Int32, mscorlib">
-    <value>40</value>
-  </data>
-  <data name="&gt;&gt;chkContour.Name" xml:space="preserve">
-    <value>chkContour</value>
-  </data>
-  <data name="&gt;&gt;chkContour.Type" xml:space="preserve">
-    <value>System.Windows.Forms.CheckBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;chkContour.Parent" xml:space="preserve">
-    <value>$this</value>
-  </data>
-  <data name="&gt;&gt;chkContour.ZOrder" xml:space="preserve">
-    <value>14</value>
-  </data>
-  <data name="label7.AutoSize" type="System.Boolean, mscorlib">
-    <value>True</value>
-  </data>
-  <data name="label7.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
-    <value>NoControl</value>
-  </data>
-  <data name="label7.Location" type="System.Drawing.Point, System.Drawing">
-    <value>527, 248</value>
-  </data>
-  <data name="label7.Size" type="System.Drawing.Size, System.Drawing">
+  <data name="lblFont.Size" type="System.Drawing.Size, System.Drawing">
     <value>31, 13</value>
   </data>
-  <data name="label7.TabIndex" type="System.Int32, mscorlib">
+  <data name="lblFont.TabIndex" type="System.Int32, mscorlib">
     <value>42</value>
   </data>
-  <data name="label7.Text" xml:space="preserve">
+  <data name="lblFont.Text" xml:space="preserve">
     <value>Font:</value>
   </data>
-  <data name="&gt;&gt;label7.Name" xml:space="preserve">
-    <value>label7</value>
+  <data name="&gt;&gt;lblFont.Name" xml:space="preserve">
+    <value>lblFont</value>
   </data>
-  <data name="&gt;&gt;label7.Type" xml:space="preserve">
+  <data name="&gt;&gt;lblFont.Type" xml:space="preserve">
     <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="&gt;&gt;label7.Parent" xml:space="preserve">
-    <value>$this</value>
+  <data name="&gt;&gt;lblFont.Parent" xml:space="preserve">
+    <value>grpBoxTextColor</value>
   </data>
-  <data name="&gt;&gt;label7.ZOrder" xml:space="preserve">
-    <value>13</value>
+  <data name="&gt;&gt;lblFont.ZOrder" xml:space="preserve">
+    <value>32</value>
   </data>
   <metadata name="fontDialog1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>186, 17</value>
   </metadata>
-  <data name="btnFonts.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
-    <value>NoControl</value>
-  </data>
-  <data name="btnFonts.Location" type="System.Drawing.Point, System.Drawing">
-    <value>718, 243</value>
-  </data>
-  <data name="btnFonts.Size" type="System.Drawing.Size, System.Drawing">
-    <value>44, 23</value>
-  </data>
-  <data name="btnFonts.TabIndex" type="System.Int32, mscorlib">
-    <value>43</value>
-  </data>
-  <data name="btnFonts.Text" xml:space="preserve">
-    <value>...</value>
-  </data>
-  <data name="&gt;&gt;btnFonts.Name" xml:space="preserve">
-    <value>btnFonts</value>
-  </data>
-  <data name="&gt;&gt;btnFonts.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;btnFonts.Parent" xml:space="preserve">
-    <value>$this</value>
-  </data>
-  <data name="&gt;&gt;btnFonts.ZOrder" xml:space="preserve">
-    <value>12</value>
-  </data>
-  <data name="txtFont.Location" type="System.Drawing.Point, System.Drawing">
-    <value>564, 246</value>
-  </data>
-  <data name="txtFont.Size" type="System.Drawing.Size, System.Drawing">
-    <value>148, 20</value>
-  </data>
-  <data name="txtFont.TabIndex" type="System.Int32, mscorlib">
-    <value>44</value>
-  </data>
-  <data name="&gt;&gt;txtFont.Name" xml:space="preserve">
-    <value>txtFont</value>
-  </data>
-  <data name="&gt;&gt;txtFont.Type" xml:space="preserve">
-    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;txtFont.Parent" xml:space="preserve">
-    <value>$this</value>
-  </data>
-  <data name="&gt;&gt;txtFont.ZOrder" xml:space="preserve">
-    <value>11</value>
-  </data>
   <data name="chkTextUppercase.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
   </data>
@@ -1234,7 +1105,7 @@
     <value>NoControl</value>
   </data>
   <data name="chkTextUppercase.Location" type="System.Drawing.Point, System.Drawing">
-    <value>530, 223</value>
+    <value>11, 263</value>
   </data>
   <data name="chkTextUppercase.Size" type="System.Drawing.Size, System.Drawing">
     <value>108, 17</value>
@@ -1252,10 +1123,10 @@
     <value>System.Windows.Forms.CheckBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;chkTextUppercase.Parent" xml:space="preserve">
-    <value>$this</value>
+    <value>grpBoxTextColor</value>
   </data>
   <data name="&gt;&gt;chkTextUppercase.ZOrder" xml:space="preserve">
-    <value>10</value>
+    <value>34</value>
   </data>
   <data name="chkForceShowChords.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -1264,7 +1135,7 @@
     <value>NoControl</value>
   </data>
   <data name="chkForceShowChords.Location" type="System.Drawing.Point, System.Drawing">
-    <value>670, 107</value>
+    <value>11, 375</value>
   </data>
   <data name="chkForceShowChords.Size" type="System.Drawing.Size, System.Drawing">
     <value>88, 17</value>
@@ -1282,10 +1153,10 @@
     <value>System.Windows.Forms.CheckBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;chkForceShowChords.Parent" xml:space="preserve">
-    <value>$this</value>
+    <value>grpBoxTextColor</value>
   </data>
   <data name="&gt;&gt;chkForceShowChords.ZOrder" xml:space="preserve">
-    <value>4</value>
+    <value>15</value>
   </data>
   <data name="label10.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -1297,7 +1168,7 @@
     <value>NoControl</value>
   </data>
   <data name="label10.Location" type="System.Drawing.Point, System.Drawing">
-    <value>671, 34</value>
+    <value>47, 311</value>
   </data>
   <data name="label10.Size" type="System.Drawing.Size, System.Drawing">
     <value>83, 13</value>
@@ -1315,112 +1186,112 @@
     <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;label10.Parent" xml:space="preserve">
-    <value>$this</value>
+    <value>grpBoxTextColor</value>
   </data>
   <data name="&gt;&gt;label10.ZOrder" xml:space="preserve">
-    <value>5</value>
+    <value>17</value>
   </data>
-  <data name="picChordHighlight.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+  <data name="picHighlightChordColor.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
   </data>
-  <data name="picChordHighlight.Location" type="System.Drawing.Point, System.Drawing">
-    <value>768, 77</value>
+  <data name="picHighlightChordColor.Location" type="System.Drawing.Point, System.Drawing">
+    <value>158, 350</value>
   </data>
-  <data name="picChordHighlight.Size" type="System.Drawing.Size, System.Drawing">
+  <data name="picHighlightChordColor.Size" type="System.Drawing.Size, System.Drawing">
     <value>21, 21</value>
   </data>
-  <data name="picChordHighlight.TabIndex" type="System.Int32, mscorlib">
+  <data name="picHighlightChordColor.TabIndex" type="System.Int32, mscorlib">
     <value>49</value>
   </data>
-  <data name="&gt;&gt;picChordHighlight.Name" xml:space="preserve">
-    <value>picChordHighlight</value>
+  <data name="&gt;&gt;picHighlightChordColor.Name" xml:space="preserve">
+    <value>picHighlightChordColor</value>
   </data>
-  <data name="&gt;&gt;picChordHighlight.Type" xml:space="preserve">
+  <data name="&gt;&gt;picHighlightChordColor.Type" xml:space="preserve">
     <value>System.Windows.Forms.PictureBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="&gt;&gt;picChordHighlight.Parent" xml:space="preserve">
-    <value>$this</value>
+  <data name="&gt;&gt;picHighlightChordColor.Parent" xml:space="preserve">
+    <value>grpBoxTextColor</value>
   </data>
-  <data name="&gt;&gt;picChordHighlight.ZOrder" xml:space="preserve">
-    <value>6</value>
+  <data name="&gt;&gt;picHighlightChordColor.ZOrder" xml:space="preserve">
+    <value>18</value>
   </data>
-  <data name="picChordBefore.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+  <data name="picInactiveChordColor.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
   </data>
-  <data name="picChordBefore.Location" type="System.Drawing.Point, System.Drawing">
-    <value>768, 52</value>
+  <data name="picInactiveChordColor.Location" type="System.Drawing.Point, System.Drawing">
+    <value>158, 326</value>
   </data>
-  <data name="picChordBefore.Size" type="System.Drawing.Size, System.Drawing">
+  <data name="picInactiveChordColor.Size" type="System.Drawing.Size, System.Drawing">
     <value>21, 21</value>
   </data>
-  <data name="picChordBefore.TabIndex" type="System.Int32, mscorlib">
+  <data name="picInactiveChordColor.TabIndex" type="System.Int32, mscorlib">
     <value>48</value>
   </data>
-  <data name="&gt;&gt;picChordBefore.Name" xml:space="preserve">
-    <value>picChordBefore</value>
+  <data name="&gt;&gt;picInactiveChordColor.Name" xml:space="preserve">
+    <value>picInactiveChordColor</value>
   </data>
-  <data name="&gt;&gt;picChordBefore.Type" xml:space="preserve">
+  <data name="&gt;&gt;picInactiveChordColor.Type" xml:space="preserve">
     <value>System.Windows.Forms.PictureBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="&gt;&gt;picChordBefore.Parent" xml:space="preserve">
-    <value>$this</value>
+  <data name="&gt;&gt;picInactiveChordColor.Parent" xml:space="preserve">
+    <value>grpBoxTextColor</value>
   </data>
-  <data name="&gt;&gt;picChordBefore.ZOrder" xml:space="preserve">
-    <value>7</value>
+  <data name="&gt;&gt;picInactiveChordColor.ZOrder" xml:space="preserve">
+    <value>20</value>
   </data>
-  <data name="btnChordHighlightColor.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+  <data name="btnHighlightChordColor.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
   </data>
-  <data name="btnChordHighlightColor.Location" type="System.Drawing.Point, System.Drawing">
-    <value>670, 77</value>
+  <data name="btnHighlightChordColor.Location" type="System.Drawing.Point, System.Drawing">
+    <value>185, 351</value>
   </data>
-  <data name="btnChordHighlightColor.Size" type="System.Drawing.Size, System.Drawing">
-    <value>92, 21</value>
+  <data name="btnHighlightChordColor.Size" type="System.Drawing.Size, System.Drawing">
+    <value>28, 23</value>
   </data>
-  <data name="btnChordHighlightColor.TabIndex" type="System.Int32, mscorlib">
+  <data name="btnHighlightChordColor.TabIndex" type="System.Int32, mscorlib">
     <value>47</value>
   </data>
-  <data name="btnChordHighlightColor.Text" xml:space="preserve">
-    <value>Highlight</value>
+  <data name="btnHighlightChordColor.Text" xml:space="preserve">
+    <value>...</value>
   </data>
-  <data name="&gt;&gt;btnChordHighlightColor.Name" xml:space="preserve">
-    <value>btnChordHighlightColor</value>
+  <data name="&gt;&gt;btnHighlightChordColor.Name" xml:space="preserve">
+    <value>btnHighlightChordColor</value>
   </data>
-  <data name="&gt;&gt;btnChordHighlightColor.Type" xml:space="preserve">
+  <data name="&gt;&gt;btnHighlightChordColor.Type" xml:space="preserve">
     <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="&gt;&gt;btnChordHighlightColor.Parent" xml:space="preserve">
-    <value>$this</value>
+  <data name="&gt;&gt;btnHighlightChordColor.Parent" xml:space="preserve">
+    <value>grpBoxTextColor</value>
   </data>
-  <data name="&gt;&gt;btnChordHighlightColor.ZOrder" xml:space="preserve">
-    <value>8</value>
+  <data name="&gt;&gt;btnHighlightChordColor.ZOrder" xml:space="preserve">
+    <value>22</value>
   </data>
-  <data name="btnChordNormalColor.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+  <data name="btnInactiveChordColor.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
   </data>
-  <data name="btnChordNormalColor.Location" type="System.Drawing.Point, System.Drawing">
-    <value>670, 52</value>
+  <data name="btnInactiveChordColor.Location" type="System.Drawing.Point, System.Drawing">
+    <value>185, 324</value>
   </data>
-  <data name="btnChordNormalColor.Size" type="System.Drawing.Size, System.Drawing">
-    <value>92, 21</value>
+  <data name="btnInactiveChordColor.Size" type="System.Drawing.Size, System.Drawing">
+    <value>28, 23</value>
   </data>
-  <data name="btnChordNormalColor.TabIndex" type="System.Int32, mscorlib">
+  <data name="btnInactiveChordColor.TabIndex" type="System.Int32, mscorlib">
     <value>46</value>
   </data>
-  <data name="btnChordNormalColor.Text" xml:space="preserve">
-    <value>Normal</value>
+  <data name="btnInactiveChordColor.Text" xml:space="preserve">
+    <value>...</value>
   </data>
-  <data name="&gt;&gt;btnChordNormalColor.Name" xml:space="preserve">
-    <value>btnChordNormalColor</value>
+  <data name="&gt;&gt;btnInactiveChordColor.Name" xml:space="preserve">
+    <value>btnInactiveChordColor</value>
   </data>
-  <data name="&gt;&gt;btnChordNormalColor.Type" xml:space="preserve">
+  <data name="&gt;&gt;btnInactiveChordColor.Type" xml:space="preserve">
     <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="&gt;&gt;btnChordNormalColor.Parent" xml:space="preserve">
-    <value>$this</value>
+  <data name="&gt;&gt;btnInactiveChordColor.Parent" xml:space="preserve">
+    <value>grpBoxTextColor</value>
   </data>
-  <data name="&gt;&gt;btnChordNormalColor.ZOrder" xml:space="preserve">
-    <value>9</value>
+  <data name="&gt;&gt;btnInactiveChordColor.ZOrder" xml:space="preserve">
+    <value>24</value>
   </data>
   <data name="chkTopMost.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -1429,7 +1300,7 @@
     <value>NoControl</value>
   </data>
   <data name="chkTopMost.Location" type="System.Drawing.Point, System.Drawing">
-    <value>130, 243</value>
+    <value>180, 22</value>
   </data>
   <data name="chkTopMost.Size" type="System.Drawing.Size, System.Drawing">
     <value>136, 17</value>
@@ -1452,11 +1323,71 @@
   <data name="&gt;&gt;chkTopMost.ZOrder" xml:space="preserve">
     <value>3</value>
   </data>
+  <data name="btnBgColorPicker.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="btnBgColorPicker.Location" type="System.Drawing.Point, System.Drawing">
+    <value>124, 69</value>
+  </data>
+  <data name="btnBgColorPicker.Size" type="System.Drawing.Size, System.Drawing">
+    <value>25, 23</value>
+  </data>
+  <data name="btnBgColorPicker.TabIndex" type="System.Int32, mscorlib">
+    <value>69</value>
+  </data>
+  <data name="btnBgColorPicker.Text" xml:space="preserve">
+    <value>/</value>
+  </data>
+  <data name="btnBgColorPicker.Visible" type="System.Boolean, mscorlib">
+    <value>False</value>
+  </data>
+  <data name="&gt;&gt;btnBgColorPicker.Name" xml:space="preserve">
+    <value>btnBgColorPicker</value>
+  </data>
+  <data name="&gt;&gt;btnBgColorPicker.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;btnBgColorPicker.Parent" xml:space="preserve">
+    <value>grpBoxBackGround</value>
+  </data>
+  <data name="&gt;&gt;btnBgColorPicker.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="txtBgColor.Location" type="System.Drawing.Point, System.Drawing">
+    <value>8, 70</value>
+  </data>
+  <data name="txtBgColor.MaxLength" type="System.Int32, mscorlib">
+    <value>7</value>
+  </data>
+  <data name="txtBgColor.Size" type="System.Drawing.Size, System.Drawing">
+    <value>60, 20</value>
+  </data>
+  <data name="txtBgColor.TabIndex" type="System.Int32, mscorlib">
+    <value>60</value>
+  </data>
+  <data name="txtBgColor.Text" xml:space="preserve">
+    <value>#000000</value>
+  </data>
+  <data name="txtBgColor.Visible" type="System.Boolean, mscorlib">
+    <value>False</value>
+  </data>
+  <data name="&gt;&gt;txtBgColor.Name" xml:space="preserve">
+    <value>txtBgColor</value>
+  </data>
+  <data name="&gt;&gt;txtBgColor.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;txtBgColor.Parent" xml:space="preserve">
+    <value>grpBoxBackGround</value>
+  </data>
+  <data name="&gt;&gt;txtBgColor.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
   <data name="cbRhythm1.Location" type="System.Drawing.Point, System.Drawing">
-    <value>1, 209</value>
+    <value>8, 212</value>
   </data>
   <data name="cbRhythm1.Size" type="System.Drawing.Size, System.Drawing">
-    <value>116, 21</value>
+    <value>140, 21</value>
   </data>
   <data name="cbRhythm1.TabIndex" type="System.Int32, mscorlib">
     <value>56</value>
@@ -1471,13 +1402,13 @@
     <value>grpBoxBackGround</value>
   </data>
   <data name="&gt;&gt;cbRhythm1.ZOrder" xml:space="preserve">
-    <value>0</value>
+    <value>2</value>
   </data>
   <data name="cbRhythm0.Location" type="System.Drawing.Point, System.Drawing">
-    <value>1, 187</value>
+    <value>8, 188</value>
   </data>
   <data name="cbRhythm0.Size" type="System.Drawing.Size, System.Drawing">
-    <value>116, 21</value>
+    <value>140, 21</value>
   </data>
   <data name="cbRhythm0.TabIndex" type="System.Int32, mscorlib">
     <value>55</value>
@@ -1492,13 +1423,13 @@
     <value>grpBoxBackGround</value>
   </data>
   <data name="&gt;&gt;cbRhythm0.ZOrder" xml:space="preserve">
-    <value>1</value>
+    <value>3</value>
   </data>
   <data name="cbGrad1.Location" type="System.Drawing.Point, System.Drawing">
-    <value>1, 141</value>
+    <value>8, 142</value>
   </data>
   <data name="cbGrad1.Size" type="System.Drawing.Size, System.Drawing">
-    <value>116, 21</value>
+    <value>140, 21</value>
   </data>
   <data name="cbGrad1.TabIndex" type="System.Int32, mscorlib">
     <value>54</value>
@@ -1513,13 +1444,13 @@
     <value>grpBoxBackGround</value>
   </data>
   <data name="&gt;&gt;cbGrad1.ZOrder" xml:space="preserve">
-    <value>2</value>
+    <value>4</value>
   </data>
   <data name="cbGrad0.Location" type="System.Drawing.Point, System.Drawing">
-    <value>1, 119</value>
+    <value>8, 119</value>
   </data>
   <data name="cbGrad0.Size" type="System.Drawing.Size, System.Drawing">
-    <value>116, 21</value>
+    <value>141, 21</value>
   </data>
   <data name="cbGrad0.TabIndex" type="System.Int32, mscorlib">
     <value>40</value>
@@ -1534,7 +1465,7 @@
     <value>grpBoxBackGround</value>
   </data>
   <data name="&gt;&gt;cbGrad0.ZOrder" xml:space="preserve">
-    <value>3</value>
+    <value>5</value>
   </data>
   <data name="radioRhythm.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -1543,7 +1474,7 @@
     <value>NoControl</value>
   </data>
   <data name="radioRhythm.Location" type="System.Drawing.Point, System.Drawing">
-    <value>5, 168</value>
+    <value>8, 168</value>
   </data>
   <data name="radioRhythm.Size" type="System.Drawing.Size, System.Drawing">
     <value>61, 17</value>
@@ -1564,7 +1495,7 @@
     <value>grpBoxBackGround</value>
   </data>
   <data name="&gt;&gt;radioRhythm.ZOrder" xml:space="preserve">
-    <value>4</value>
+    <value>6</value>
   </data>
   <data name="radioGradient.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -1573,7 +1504,7 @@
     <value>NoControl</value>
   </data>
   <data name="radioGradient.Location" type="System.Drawing.Point, System.Drawing">
-    <value>7, 100</value>
+    <value>8, 100</value>
   </data>
   <data name="radioGradient.Size" type="System.Drawing.Size, System.Drawing">
     <value>92, 17</value>
@@ -1594,13 +1525,13 @@
     <value>grpBoxBackGround</value>
   </data>
   <data name="&gt;&gt;radioGradient.ZOrder" xml:space="preserve">
-    <value>5</value>
+    <value>7</value>
   </data>
   <data name="grpBoxBackGround.Location" type="System.Drawing.Point, System.Drawing">
-    <value>7, 7</value>
+    <value>8, 12</value>
   </data>
   <data name="grpBoxBackGround.Size" type="System.Drawing.Size, System.Drawing">
-    <value>117, 265</value>
+    <value>160, 300</value>
   </data>
   <data name="grpBoxBackGround.TabIndex" type="System.Int32, mscorlib">
     <value>53</value>
@@ -1621,7 +1552,7 @@
     <value>2</value>
   </data>
   <data name="pBox.Location" type="System.Drawing.Point, System.Drawing">
-    <value>130, 47</value>
+    <value>180, 87</value>
   </data>
   <data name="pBox.LyricsTimes" mimetype="application/x-microsoft.net.object.binary.base64">
     <value>
@@ -1652,7 +1583,7 @@
     <value>4, 4, 4, 4</value>
   </data>
   <data name="pBox.Size" type="System.Drawing.Size, System.Drawing">
-    <value>385, 187</value>
+    <value>385, 226</value>
   </data>
   <data name="pBox.TabIndex" type="System.Int32, mscorlib">
     <value>14</value>
@@ -1667,7 +1598,814 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;pBox.ZOrder" xml:space="preserve">
-    <value>32</value>
+    <value>6</value>
+  </data>
+  <data name="label9.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="label9.Font" type="System.Drawing.Font, System.Drawing">
+    <value>Microsoft Sans Serif, 8.25pt</value>
+  </data>
+  <data name="label9.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="label9.Location" type="System.Drawing.Point, System.Drawing">
+    <value>8, 142</value>
+  </data>
+  <data name="label9.Size" type="System.Drawing.Size, System.Drawing">
+    <value>96, 13</value>
+  </data>
+  <data name="label9.TabIndex" type="System.Int32, mscorlib">
+    <value>54</value>
+  </data>
+  <data name="label9.Text" xml:space="preserve">
+    <value>Active border color</value>
+  </data>
+  <data name="&gt;&gt;label9.Name" xml:space="preserve">
+    <value>label9</value>
+  </data>
+  <data name="&gt;&gt;label9.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;label9.Parent" xml:space="preserve">
+    <value>grpBoxTextColor</value>
+  </data>
+  <data name="&gt;&gt;label9.ZOrder" xml:space="preserve">
+    <value>36</value>
+  </data>
+  <data name="picInactiveBorderColor.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="picInactiveBorderColor.Location" type="System.Drawing.Point, System.Drawing">
+    <value>197, 163</value>
+  </data>
+  <data name="picInactiveBorderColor.Size" type="System.Drawing.Size, System.Drawing">
+    <value>21, 21</value>
+  </data>
+  <data name="picInactiveBorderColor.TabIndex" type="System.Int32, mscorlib">
+    <value>56</value>
+  </data>
+  <data name="&gt;&gt;picInactiveBorderColor.Name" xml:space="preserve">
+    <value>picInactiveBorderColor</value>
+  </data>
+  <data name="&gt;&gt;picInactiveBorderColor.Type" xml:space="preserve">
+    <value>System.Windows.Forms.PictureBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;picInactiveBorderColor.Parent" xml:space="preserve">
+    <value>grpBoxTextColor</value>
+  </data>
+  <data name="&gt;&gt;picInactiveBorderColor.ZOrder" xml:space="preserve">
+    <value>40</value>
+  </data>
+  <data name="btnInactiveBorderColor.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="btnInactiveBorderColor.Location" type="System.Drawing.Point, System.Drawing">
+    <value>228, 163</value>
+  </data>
+  <data name="btnInactiveBorderColor.Size" type="System.Drawing.Size, System.Drawing">
+    <value>25, 23</value>
+  </data>
+  <data name="btnInactiveBorderColor.TabIndex" type="System.Int32, mscorlib">
+    <value>55</value>
+  </data>
+  <data name="btnInactiveBorderColor.Text" xml:space="preserve">
+    <value>...</value>
+  </data>
+  <data name="&gt;&gt;btnInactiveBorderColor.Name" xml:space="preserve">
+    <value>btnInactiveBorderColor</value>
+  </data>
+  <data name="&gt;&gt;btnInactiveBorderColor.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;btnInactiveBorderColor.Parent" xml:space="preserve">
+    <value>grpBoxTextColor</value>
+  </data>
+  <data name="&gt;&gt;btnInactiveBorderColor.ZOrder" xml:space="preserve">
+    <value>38</value>
+  </data>
+  <data name="lblActiveColor.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="lblActiveColor.Font" type="System.Drawing.Font, System.Drawing">
+    <value>Microsoft Sans Serif, 8.25pt</value>
+  </data>
+  <data name="lblActiveColor.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="lblActiveColor.Location" type="System.Drawing.Point, System.Drawing">
+    <value>8, 68</value>
+  </data>
+  <data name="lblActiveColor.Size" type="System.Drawing.Size, System.Drawing">
+    <value>63, 13</value>
+  </data>
+  <data name="lblActiveColor.TabIndex" type="System.Int32, mscorlib">
+    <value>58</value>
+  </data>
+  <data name="lblActiveColor.Text" xml:space="preserve">
+    <value>Active color</value>
+  </data>
+  <data name="&gt;&gt;lblActiveColor.Name" xml:space="preserve">
+    <value>lblActiveColor</value>
+  </data>
+  <data name="&gt;&gt;lblActiveColor.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;lblActiveColor.Parent" xml:space="preserve">
+    <value>grpBoxTextColor</value>
+  </data>
+  <data name="&gt;&gt;lblActiveColor.ZOrder" xml:space="preserve">
+    <value>42</value>
+  </data>
+  <data name="txtActiveColor.Location" type="System.Drawing.Point, System.Drawing">
+    <value>134, 64</value>
+  </data>
+  <data name="txtActiveColor.MaxLength" type="System.Int32, mscorlib">
+    <value>7</value>
+  </data>
+  <data name="txtActiveColor.Size" type="System.Drawing.Size, System.Drawing">
+    <value>60, 20</value>
+  </data>
+  <data name="txtActiveColor.TabIndex" type="System.Int32, mscorlib">
+    <value>59</value>
+  </data>
+  <data name="txtActiveColor.Text" xml:space="preserve">
+    <value>#9ACD32</value>
+  </data>
+  <data name="&gt;&gt;txtActiveColor.Name" xml:space="preserve">
+    <value>txtActiveColor</value>
+  </data>
+  <data name="&gt;&gt;txtActiveColor.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;txtActiveColor.Parent" xml:space="preserve">
+    <value>grpBoxTextColor</value>
+  </data>
+  <data name="&gt;&gt;txtActiveColor.ZOrder" xml:space="preserve">
+    <value>44</value>
+  </data>
+  <data name="cbFontName.Font" type="System.Drawing.Font, System.Drawing">
+    <value>Calibri, 9.75pt</value>
+  </data>
+  <data name="cbFontName.Location" type="System.Drawing.Point, System.Drawing">
+    <value>134, 35</value>
+  </data>
+  <data name="cbFontName.Size" type="System.Drawing.Size, System.Drawing">
+    <value>157, 23</value>
+  </data>
+  <data name="cbFontName.TabIndex" type="System.Int32, mscorlib">
+    <value>60</value>
+  </data>
+  <data name="&gt;&gt;cbFontName.Name" xml:space="preserve">
+    <value>cbFontName</value>
+  </data>
+  <data name="&gt;&gt;cbFontName.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ComboBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;cbFontName.Parent" xml:space="preserve">
+    <value>grpBoxTextColor</value>
+  </data>
+  <data name="&gt;&gt;cbFontName.ZOrder" xml:space="preserve">
+    <value>46</value>
+  </data>
+  <data name="txtHighlightColor.Location" type="System.Drawing.Point, System.Drawing">
+    <value>134, 88</value>
+  </data>
+  <data name="txtHighlightColor.MaxLength" type="System.Int32, mscorlib">
+    <value>7</value>
+  </data>
+  <data name="txtHighlightColor.Size" type="System.Drawing.Size, System.Drawing">
+    <value>60, 20</value>
+  </data>
+  <data name="txtHighlightColor.TabIndex" type="System.Int32, mscorlib">
+    <value>62</value>
+  </data>
+  <data name="txtHighlightColor.Text" xml:space="preserve">
+    <value>#FF0000</value>
+  </data>
+  <data name="&gt;&gt;txtHighlightColor.Name" xml:space="preserve">
+    <value>txtHighlightColor</value>
+  </data>
+  <data name="&gt;&gt;txtHighlightColor.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;txtHighlightColor.Parent" xml:space="preserve">
+    <value>grpBoxTextColor</value>
+  </data>
+  <data name="&gt;&gt;txtHighlightColor.ZOrder" xml:space="preserve">
+    <value>45</value>
+  </data>
+  <data name="lblHighlightColor.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="lblHighlightColor.Font" type="System.Drawing.Font, System.Drawing">
+    <value>Microsoft Sans Serif, 8.25pt</value>
+  </data>
+  <data name="lblHighlightColor.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="lblHighlightColor.Location" type="System.Drawing.Point, System.Drawing">
+    <value>8, 92</value>
+  </data>
+  <data name="lblHighlightColor.Size" type="System.Drawing.Size, System.Drawing">
+    <value>74, 13</value>
+  </data>
+  <data name="lblHighlightColor.TabIndex" type="System.Int32, mscorlib">
+    <value>61</value>
+  </data>
+  <data name="lblHighlightColor.Text" xml:space="preserve">
+    <value>Highlight color</value>
+  </data>
+  <data name="&gt;&gt;lblHighlightColor.Name" xml:space="preserve">
+    <value>lblHighlightColor</value>
+  </data>
+  <data name="&gt;&gt;lblHighlightColor.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;lblHighlightColor.Parent" xml:space="preserve">
+    <value>grpBoxTextColor</value>
+  </data>
+  <data name="&gt;&gt;lblHighlightColor.ZOrder" xml:space="preserve">
+    <value>47</value>
+  </data>
+  <data name="txtInactiveColor.Location" type="System.Drawing.Point, System.Drawing">
+    <value>134, 113</value>
+  </data>
+  <data name="txtInactiveColor.MaxLength" type="System.Int32, mscorlib">
+    <value>7</value>
+  </data>
+  <data name="txtInactiveColor.Size" type="System.Drawing.Size, System.Drawing">
+    <value>60, 20</value>
+  </data>
+  <data name="txtInactiveColor.TabIndex" type="System.Int32, mscorlib">
+    <value>64</value>
+  </data>
+  <data name="txtInactiveColor.Text" xml:space="preserve">
+    <value>#000000</value>
+  </data>
+  <data name="&gt;&gt;txtInactiveColor.Name" xml:space="preserve">
+    <value>txtInactiveColor</value>
+  </data>
+  <data name="&gt;&gt;txtInactiveColor.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;txtInactiveColor.Parent" xml:space="preserve">
+    <value>grpBoxTextColor</value>
+  </data>
+  <data name="&gt;&gt;txtInactiveColor.ZOrder" xml:space="preserve">
+    <value>41</value>
+  </data>
+  <data name="lblInactiveColor.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="lblInactiveColor.Font" type="System.Drawing.Font, System.Drawing">
+    <value>Microsoft Sans Serif, 8.25pt</value>
+  </data>
+  <data name="lblInactiveColor.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="lblInactiveColor.Location" type="System.Drawing.Point, System.Drawing">
+    <value>8, 117</value>
+  </data>
+  <data name="lblInactiveColor.Size" type="System.Drawing.Size, System.Drawing">
+    <value>71, 13</value>
+  </data>
+  <data name="lblInactiveColor.TabIndex" type="System.Int32, mscorlib">
+    <value>63</value>
+  </data>
+  <data name="lblInactiveColor.Text" xml:space="preserve">
+    <value>Inactive color</value>
+  </data>
+  <data name="&gt;&gt;lblInactiveColor.Name" xml:space="preserve">
+    <value>lblInactiveColor</value>
+  </data>
+  <data name="&gt;&gt;lblInactiveColor.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;lblInactiveColor.Parent" xml:space="preserve">
+    <value>grpBoxTextColor</value>
+  </data>
+  <data name="&gt;&gt;lblInactiveColor.ZOrder" xml:space="preserve">
+    <value>43</value>
+  </data>
+  <data name="label7.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="label7.Font" type="System.Drawing.Font, System.Drawing">
+    <value>Microsoft Sans Serif, 8.25pt</value>
+  </data>
+  <data name="label7.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="label7.Location" type="System.Drawing.Point, System.Drawing">
+    <value>8, 171</value>
+  </data>
+  <data name="label7.Size" type="System.Drawing.Size, System.Drawing">
+    <value>104, 13</value>
+  </data>
+  <data name="label7.TabIndex" type="System.Int32, mscorlib">
+    <value>65</value>
+  </data>
+  <data name="label7.Text" xml:space="preserve">
+    <value>Inactive border color</value>
+  </data>
+  <data name="&gt;&gt;label7.Name" xml:space="preserve">
+    <value>label7</value>
+  </data>
+  <data name="&gt;&gt;label7.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;label7.Parent" xml:space="preserve">
+    <value>grpBoxTextColor</value>
+  </data>
+  <data name="&gt;&gt;label7.ZOrder" xml:space="preserve">
+    <value>39</value>
+  </data>
+  <data name="txtActiveBorderColor.Location" type="System.Drawing.Point, System.Drawing">
+    <value>134, 139</value>
+  </data>
+  <data name="txtActiveBorderColor.MaxLength" type="System.Int32, mscorlib">
+    <value>7</value>
+  </data>
+  <data name="txtActiveBorderColor.Size" type="System.Drawing.Size, System.Drawing">
+    <value>60, 20</value>
+  </data>
+  <data name="txtActiveBorderColor.TabIndex" type="System.Int32, mscorlib">
+    <value>66</value>
+  </data>
+  <data name="txtActiveBorderColor.Text" xml:space="preserve">
+    <value>#010101</value>
+  </data>
+  <data name="&gt;&gt;txtActiveBorderColor.Name" xml:space="preserve">
+    <value>txtActiveBorderColor</value>
+  </data>
+  <data name="&gt;&gt;txtActiveBorderColor.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;txtActiveBorderColor.Parent" xml:space="preserve">
+    <value>grpBoxTextColor</value>
+  </data>
+  <data name="&gt;&gt;txtActiveBorderColor.ZOrder" xml:space="preserve">
+    <value>37</value>
+  </data>
+  <data name="txtInactiveBorderColor.Location" type="System.Drawing.Point, System.Drawing">
+    <value>134, 165</value>
+  </data>
+  <data name="txtInactiveBorderColor.MaxLength" type="System.Int32, mscorlib">
+    <value>7</value>
+  </data>
+  <data name="txtInactiveBorderColor.Size" type="System.Drawing.Size, System.Drawing">
+    <value>60, 20</value>
+  </data>
+  <data name="txtInactiveBorderColor.TabIndex" type="System.Int32, mscorlib">
+    <value>67</value>
+  </data>
+  <data name="txtInactiveBorderColor.Text" xml:space="preserve">
+    <value>#8000FF</value>
+  </data>
+  <data name="&gt;&gt;txtInactiveBorderColor.Name" xml:space="preserve">
+    <value>txtInactiveBorderColor</value>
+  </data>
+  <data name="&gt;&gt;txtInactiveBorderColor.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;txtInactiveBorderColor.Parent" xml:space="preserve">
+    <value>grpBoxTextColor</value>
+  </data>
+  <data name="&gt;&gt;txtInactiveBorderColor.ZOrder" xml:space="preserve">
+    <value>35</value>
+  </data>
+  <data name="btnInactiveBoderColorPicker.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="btnInactiveBoderColorPicker.Location" type="System.Drawing.Point, System.Drawing">
+    <value>259, 162</value>
+  </data>
+  <data name="btnInactiveBoderColorPicker.Size" type="System.Drawing.Size, System.Drawing">
+    <value>25, 23</value>
+  </data>
+  <data name="btnInactiveBoderColorPicker.TabIndex" type="System.Int32, mscorlib">
+    <value>72</value>
+  </data>
+  <data name="btnInactiveBoderColorPicker.Text" xml:space="preserve">
+    <value>/</value>
+  </data>
+  <data name="&gt;&gt;btnInactiveBoderColorPicker.Name" xml:space="preserve">
+    <value>btnInactiveBoderColorPicker</value>
+  </data>
+  <data name="&gt;&gt;btnInactiveBoderColorPicker.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;btnInactiveBoderColorPicker.Parent" xml:space="preserve">
+    <value>grpBoxTextColor</value>
+  </data>
+  <data name="&gt;&gt;btnInactiveBoderColorPicker.ZOrder" xml:space="preserve">
+    <value>25</value>
+  </data>
+  <data name="btnActiveColorBorderPicker.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="btnActiveColorBorderPicker.Location" type="System.Drawing.Point, System.Drawing">
+    <value>259, 136</value>
+  </data>
+  <data name="btnActiveColorBorderPicker.Size" type="System.Drawing.Size, System.Drawing">
+    <value>25, 23</value>
+  </data>
+  <data name="btnActiveColorBorderPicker.TabIndex" type="System.Int32, mscorlib">
+    <value>71</value>
+  </data>
+  <data name="btnActiveColorBorderPicker.Text" xml:space="preserve">
+    <value>/</value>
+  </data>
+  <data name="&gt;&gt;btnActiveColorBorderPicker.Name" xml:space="preserve">
+    <value>btnActiveColorBorderPicker</value>
+  </data>
+  <data name="&gt;&gt;btnActiveColorBorderPicker.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;btnActiveColorBorderPicker.Parent" xml:space="preserve">
+    <value>grpBoxTextColor</value>
+  </data>
+  <data name="&gt;&gt;btnActiveColorBorderPicker.ZOrder" xml:space="preserve">
+    <value>27</value>
+  </data>
+  <data name="btnInactiveColorPicker.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="btnInactiveColorPicker.Location" type="System.Drawing.Point, System.Drawing">
+    <value>259, 113</value>
+  </data>
+  <data name="btnInactiveColorPicker.Size" type="System.Drawing.Size, System.Drawing">
+    <value>25, 23</value>
+  </data>
+  <data name="btnInactiveColorPicker.TabIndex" type="System.Int32, mscorlib">
+    <value>70</value>
+  </data>
+  <data name="btnInactiveColorPicker.Text" xml:space="preserve">
+    <value>/</value>
+  </data>
+  <data name="&gt;&gt;btnInactiveColorPicker.Name" xml:space="preserve">
+    <value>btnInactiveColorPicker</value>
+  </data>
+  <data name="&gt;&gt;btnInactiveColorPicker.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;btnInactiveColorPicker.Parent" xml:space="preserve">
+    <value>grpBoxTextColor</value>
+  </data>
+  <data name="&gt;&gt;btnInactiveColorPicker.ZOrder" xml:space="preserve">
+    <value>29</value>
+  </data>
+  <data name="btnHighlightColorPicker.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="btnHighlightColorPicker.Location" type="System.Drawing.Point, System.Drawing">
+    <value>259, 87</value>
+  </data>
+  <data name="btnHighlightColorPicker.Size" type="System.Drawing.Size, System.Drawing">
+    <value>25, 23</value>
+  </data>
+  <data name="btnHighlightColorPicker.TabIndex" type="System.Int32, mscorlib">
+    <value>69</value>
+  </data>
+  <data name="btnHighlightColorPicker.Text" xml:space="preserve">
+    <value>/</value>
+  </data>
+  <data name="&gt;&gt;btnHighlightColorPicker.Name" xml:space="preserve">
+    <value>btnHighlightColorPicker</value>
+  </data>
+  <data name="&gt;&gt;btnHighlightColorPicker.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;btnHighlightColorPicker.Parent" xml:space="preserve">
+    <value>grpBoxTextColor</value>
+  </data>
+  <data name="&gt;&gt;btnHighlightColorPicker.ZOrder" xml:space="preserve">
+    <value>31</value>
+  </data>
+  <data name="btnActiveColorPicker.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="btnActiveColorPicker.Location" type="System.Drawing.Point, System.Drawing">
+    <value>259, 61</value>
+  </data>
+  <data name="btnActiveColorPicker.Size" type="System.Drawing.Size, System.Drawing">
+    <value>25, 23</value>
+  </data>
+  <data name="btnActiveColorPicker.TabIndex" type="System.Int32, mscorlib">
+    <value>68</value>
+  </data>
+  <data name="btnActiveColorPicker.Text" xml:space="preserve">
+    <value>/</value>
+  </data>
+  <data name="&gt;&gt;btnActiveColorPicker.Name" xml:space="preserve">
+    <value>btnActiveColorPicker</value>
+  </data>
+  <data name="&gt;&gt;btnActiveColorPicker.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;btnActiveColorPicker.Parent" xml:space="preserve">
+    <value>grpBoxTextColor</value>
+  </data>
+  <data name="&gt;&gt;btnActiveColorPicker.ZOrder" xml:space="preserve">
+    <value>33</value>
+  </data>
+  <data name="cbFrameType.Font" type="System.Drawing.Font, System.Drawing">
+    <value>Calibri, 9.75pt</value>
+  </data>
+  <data name="cbFrameType.Location" type="System.Drawing.Point, System.Drawing">
+    <value>134, 190</value>
+  </data>
+  <data name="cbFrameType.Size" type="System.Drawing.Size, System.Drawing">
+    <value>157, 23</value>
+  </data>
+  <data name="cbFrameType.TabIndex" type="System.Int32, mscorlib">
+    <value>74</value>
+  </data>
+  <data name="&gt;&gt;cbFrameType.Name" xml:space="preserve">
+    <value>cbFrameType</value>
+  </data>
+  <data name="&gt;&gt;cbFrameType.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ComboBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;cbFrameType.Parent" xml:space="preserve">
+    <value>grpBoxTextColor</value>
+  </data>
+  <data name="&gt;&gt;cbFrameType.ZOrder" xml:space="preserve">
+    <value>16</value>
+  </data>
+  <data name="lblBorder.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="lblBorder.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="lblBorder.Location" type="System.Drawing.Point, System.Drawing">
+    <value>6, 191</value>
+  </data>
+  <data name="lblBorder.Size" type="System.Drawing.Size, System.Drawing">
+    <value>38, 13</value>
+  </data>
+  <data name="lblBorder.TabIndex" type="System.Int32, mscorlib">
+    <value>73</value>
+  </data>
+  <data name="lblBorder.Text" xml:space="preserve">
+    <value>Border</value>
+  </data>
+  <data name="&gt;&gt;lblBorder.Name" xml:space="preserve">
+    <value>lblBorder</value>
+  </data>
+  <data name="&gt;&gt;lblBorder.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;lblBorder.Parent" xml:space="preserve">
+    <value>grpBoxTextColor</value>
+  </data>
+  <data name="&gt;&gt;lblBorder.ZOrder" xml:space="preserve">
+    <value>21</value>
+  </data>
+  <data name="label8.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="label8.Font" type="System.Drawing.Font, System.Drawing">
+    <value>Microsoft Sans Serif, 8.25pt</value>
+  </data>
+  <data name="label8.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="label8.Location" type="System.Drawing.Point, System.Drawing">
+    <value>8, 330</value>
+  </data>
+  <data name="label8.Size" type="System.Drawing.Size, System.Drawing">
+    <value>71, 13</value>
+  </data>
+  <data name="label8.TabIndex" type="System.Int32, mscorlib">
+    <value>75</value>
+  </data>
+  <data name="label8.Text" xml:space="preserve">
+    <value>Inactive color</value>
+  </data>
+  <data name="&gt;&gt;label8.Name" xml:space="preserve">
+    <value>label8</value>
+  </data>
+  <data name="&gt;&gt;label8.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;label8.Parent" xml:space="preserve">
+    <value>grpBoxTextColor</value>
+  </data>
+  <data name="&gt;&gt;label8.ZOrder" xml:space="preserve">
+    <value>11</value>
+  </data>
+  <data name="label11.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="label11.Font" type="System.Drawing.Font, System.Drawing">
+    <value>Microsoft Sans Serif, 8.25pt</value>
+  </data>
+  <data name="label11.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="label11.Location" type="System.Drawing.Point, System.Drawing">
+    <value>8, 355</value>
+  </data>
+  <data name="label11.Size" type="System.Drawing.Size, System.Drawing">
+    <value>74, 13</value>
+  </data>
+  <data name="label11.TabIndex" type="System.Int32, mscorlib">
+    <value>76</value>
+  </data>
+  <data name="label11.Text" xml:space="preserve">
+    <value>Highlight color</value>
+  </data>
+  <data name="&gt;&gt;label11.Name" xml:space="preserve">
+    <value>label11</value>
+  </data>
+  <data name="&gt;&gt;label11.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;label11.Parent" xml:space="preserve">
+    <value>grpBoxTextColor</value>
+  </data>
+  <data name="&gt;&gt;label11.ZOrder" xml:space="preserve">
+    <value>9</value>
+  </data>
+  <data name="txtHighlightChordColor.Location" type="System.Drawing.Point, System.Drawing">
+    <value>92, 351</value>
+  </data>
+  <data name="txtHighlightChordColor.Size" type="System.Drawing.Size, System.Drawing">
+    <value>60, 20</value>
+  </data>
+  <data name="txtHighlightChordColor.TabIndex" type="System.Int32, mscorlib">
+    <value>77</value>
+  </data>
+  <data name="txtHighlightChordColor.Text" xml:space="preserve">
+    <value>#8B0000</value>
+  </data>
+  <data name="&gt;&gt;txtHighlightChordColor.Name" xml:space="preserve">
+    <value>txtHighlightChordColor</value>
+  </data>
+  <data name="&gt;&gt;txtHighlightChordColor.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;txtHighlightChordColor.Parent" xml:space="preserve">
+    <value>grpBoxTextColor</value>
+  </data>
+  <data name="&gt;&gt;txtHighlightChordColor.ZOrder" xml:space="preserve">
+    <value>7</value>
+  </data>
+  <data name="txtInactiveChordColor.Location" type="System.Drawing.Point, System.Drawing">
+    <value>92, 327</value>
+  </data>
+  <data name="txtInactiveChordColor.Size" type="System.Drawing.Size, System.Drawing">
+    <value>60, 20</value>
+  </data>
+  <data name="txtInactiveChordColor.TabIndex" type="System.Int32, mscorlib">
+    <value>78</value>
+  </data>
+  <data name="txtInactiveChordColor.Text" xml:space="preserve">
+    <value>#FF8C00</value>
+  </data>
+  <data name="&gt;&gt;txtInactiveChordColor.Name" xml:space="preserve">
+    <value>txtInactiveChordColor</value>
+  </data>
+  <data name="&gt;&gt;txtInactiveChordColor.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;txtInactiveChordColor.Parent" xml:space="preserve">
+    <value>grpBoxTextColor</value>
+  </data>
+  <data name="&gt;&gt;txtInactiveChordColor.ZOrder" xml:space="preserve">
+    <value>5</value>
+  </data>
+  <data name="btnHighlightChordColorPicker.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="btnHighlightChordColorPicker.Location" type="System.Drawing.Point, System.Drawing">
+    <value>548, 144</value>
+  </data>
+  <data name="btnHighlightChordColorPicker.Size" type="System.Drawing.Size, System.Drawing">
+    <value>25, 23</value>
+  </data>
+  <data name="btnHighlightChordColorPicker.TabIndex" type="System.Int32, mscorlib">
+    <value>80</value>
+  </data>
+  <data name="btnHighlightChordColorPicker.Text" xml:space="preserve">
+    <value>/</value>
+  </data>
+  <data name="&gt;&gt;btnHighlightChordColorPicker.Name" xml:space="preserve">
+    <value>btnHighlightChordColorPicker</value>
+  </data>
+  <data name="&gt;&gt;btnHighlightChordColorPicker.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;btnHighlightChordColorPicker.Parent" xml:space="preserve">
+    <value>grpBoxTextColor</value>
+  </data>
+  <data name="&gt;&gt;btnHighlightChordColorPicker.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="btnInactiveChordColorPicker.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="btnInactiveChordColorPicker.Location" type="System.Drawing.Point, System.Drawing">
+    <value>548, 117</value>
+  </data>
+  <data name="btnInactiveChordColorPicker.Size" type="System.Drawing.Size, System.Drawing">
+    <value>25, 23</value>
+  </data>
+  <data name="btnInactiveChordColorPicker.TabIndex" type="System.Int32, mscorlib">
+    <value>79</value>
+  </data>
+  <data name="btnInactiveChordColorPicker.Text" xml:space="preserve">
+    <value>/</value>
+  </data>
+  <data name="&gt;&gt;btnInactiveChordColorPicker.Name" xml:space="preserve">
+    <value>btnInactiveChordColorPicker</value>
+  </data>
+  <data name="&gt;&gt;btnInactiveChordColorPicker.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;btnInactiveChordColorPicker.Parent" xml:space="preserve">
+    <value>grpBoxTextColor</value>
+  </data>
+  <data name="&gt;&gt;btnInactiveChordColorPicker.ZOrder" xml:space="preserve">
+    <value>3</value>
+  </data>
+  <data name="label12.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="label12.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="label12.Location" type="System.Drawing.Point, System.Drawing">
+    <value>8, 215</value>
+  </data>
+  <data name="label12.Size" type="System.Drawing.Size, System.Drawing">
+    <value>41, 13</value>
+  </data>
+  <data name="label12.TabIndex" type="System.Int32, mscorlib">
+    <value>81</value>
+  </data>
+  <data name="label12.Text" xml:space="preserve">
+    <value>Display</value>
+  </data>
+  <data name="&gt;&gt;label12.Name" xml:space="preserve">
+    <value>label12</value>
+  </data>
+  <data name="&gt;&gt;label12.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;label12.Parent" xml:space="preserve">
+    <value>grpBoxTextColor</value>
+  </data>
+  <data name="&gt;&gt;label12.ZOrder" xml:space="preserve">
+    <value>2</value>
+  </data>
+  <data name="grpBoxTextColor.Location" type="System.Drawing.Point, System.Drawing">
+    <value>580, 12</value>
+  </data>
+  <data name="grpBoxTextColor.Size" type="System.Drawing.Size, System.Drawing">
+    <value>299, 406</value>
+  </data>
+  <data name="grpBoxTextColor.TabIndex" type="System.Int32, mscorlib">
+    <value>82</value>
+  </data>
+  <data name="&gt;&gt;grpBoxTextColor.Name" xml:space="preserve">
+    <value>grpBoxTextColor</value>
+  </data>
+  <data name="&gt;&gt;grpBoxTextColor.Type" xml:space="preserve">
+    <value>System.Windows.Forms.GroupBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;grpBoxTextColor.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;grpBoxTextColor.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="grpBoxSlideShow.Location" type="System.Drawing.Point, System.Drawing">
+    <value>8, 320</value>
+  </data>
+  <data name="grpBoxSlideShow.Size" type="System.Drawing.Size, System.Drawing">
+    <value>554, 100</value>
+  </data>
+  <data name="grpBoxSlideShow.TabIndex" type="System.Int32, mscorlib">
+    <value>83</value>
+  </data>
+  <data name="grpBoxSlideShow.Text" xml:space="preserve">
+    <value>Diaporama</value>
+  </data>
+  <data name="&gt;&gt;grpBoxSlideShow.Name" xml:space="preserve">
+    <value>grpBoxSlideShow</value>
+  </data>
+  <data name="&gt;&gt;grpBoxSlideShow.Type" xml:space="preserve">
+    <value>System.Windows.Forms.GroupBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;grpBoxSlideShow.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;grpBoxSlideShow.ZOrder" xml:space="preserve">
+    <value>0</value>
   </data>
   <metadata name="$this.Localizable" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
@@ -1679,7 +2417,7 @@
     <value>6, 13</value>
   </data>
   <data name="$this.ClientSize" type="System.Drawing.Size, System.Drawing">
-    <value>796, 411</value>
+    <value>886, 460</value>
   </data>
   <data name="$this.Icon" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>

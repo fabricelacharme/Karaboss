@@ -216,26 +216,36 @@
             // 
             // pBox
             // 
-            this.pBox.bColorContour = true;
+            this.pBox.ActiveBorderColor = System.Drawing.Color.DarkTurquoise;
+            this.pBox.ActiveColor = System.Drawing.Color.YellowGreen;
+            this.pBox.BackColor = System.Drawing.Color.White;            
             this.pBox.bDemo = false;
             this.pBox.Beat = 200;
             this.pBox.BeatDuration = 0;
             this.pBox.bforceUppercase = false;
+            this.pBox.BgColor = System.Drawing.Color.Black;
+            this.pBox.BorderThick = 1;
             this.pBox.bShowChords = false;
             this.pBox.bShowParagraphs = true;
             this.pBox.bTextBackGround = true;
             this.pBox.ChordFont = new System.Drawing.Font("Comic Sans MS", 8.25F);
-            this.pBox.ChordHighlightColor = System.Drawing.Color.FromArgb(((int)(((byte)(238)))), ((int)(((byte)(17)))), ((int)(((byte)(17)))));
-            this.pBox.ChordNextColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(196)))), ((int)(((byte)(13)))));
             this.pBox.CurrentTextPos = 2;
             this.pBox.CurrentTime = 3;
             this.pBox.DirSlideShow = null;
             resources.ApplyResources(this.pBox, "pBox");
+            this.pBox.FrameType = "Frame1";
             this.pBox.FreqDirSlideShow = 0;
+            this.pBox.Grad0Color = System.Drawing.Color.Empty;
+            this.pBox.Grad1Color = System.Drawing.Color.Empty;
             this.pBox.GradientAngle = 45F;
             this.pBox.GradientColor0 = System.Drawing.Color.Empty;
             this.pBox.GradientColor1 = System.Drawing.Color.Empty;
+            this.pBox.HighlightChordColor = System.Drawing.Color.FromArgb(((int)(((byte)(238)))), ((int)(((byte)(17)))), ((int)(((byte)(17)))));
+            this.pBox.HighlightColor = System.Drawing.Color.Red;
             this.pBox.imgLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.pBox.InactiveBorderColor = System.Drawing.Color.DarkTurquoise;
+            this.pBox.InactiveChordColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(196)))), ((int)(((byte)(13)))));
+            this.pBox.InactiveColor = System.Drawing.Color.White;
             this.pBox.KaraokeFont = new System.Drawing.Font("Segoe Print", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.pBox.LyricsTimes = ((System.Collections.Generic.List<int>)(resources.GetObject("pBox.LyricsTimes")));
             this.pBox.LyricsWords = ((System.Collections.Generic.List<string>)(resources.GetObject("pBox.LyricsWords")));
@@ -246,27 +256,20 @@
             this.pBox.OptionBackground = "SolidColor";
             this.pBox.OptionDisplay = PicControl.pictureBoxControl.OptionsDisplay.Top;
             this.pBox.OptionShowChords = true;
+            this.pBox.Rhythm0Color = System.Drawing.Color.Empty;
+            this.pBox.Rhythm1Color = System.Drawing.Color.Empty;
             this.pBox.RhythmColor0 = System.Drawing.Color.Empty;
             this.pBox.RhythmColor1 = System.Drawing.Color.Empty;
             this.pBox.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Normal;
             this.pBox.TransparencyKey = System.Drawing.Color.Lime;
             this.pBox.Txt = "";
-            this.pBox.TxtBackColor = System.Drawing.Color.White;
-            this.pBox.TxtBeforeColor = System.Drawing.Color.YellowGreen;
-            this.pBox.TxtContourColor = System.Drawing.Color.DarkTurquoise;
-            this.pBox.TxtGrad0Color = System.Drawing.Color.Empty;
-            this.pBox.TxtGrad1Color = System.Drawing.Color.Empty;
-            this.pBox.TxtHighlightColor = System.Drawing.Color.Red;
             this.pBox.TxtNbLines = 3;
-            this.pBox.TxtNextColor = System.Drawing.Color.White;
-            this.pBox.TxtRhythm0Color = System.Drawing.Color.Empty;
-            this.pBox.TxtRhythm1Color = System.Drawing.Color.Empty;
             // 
             // timer1
             // 
             this.timer1.Tick += new System.EventHandler(this.Timer1_Tick);
             // 
-            // frmMidiLyric
+            // frmMidiLyrics
             // 
             resources.ApplyResources(this, "$this");
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;

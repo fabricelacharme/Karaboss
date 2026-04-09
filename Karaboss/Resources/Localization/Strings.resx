@@ -610,4 +610,10 @@
   <data name="KfnBorderNeon" xml:space="preserve">
     <value>Neon</value>
   </data>
+  <data name="DefaultSettingsSaved" xml:space="preserve">
+    <value>The default settings have been saved</value>
+  </data>
+  <data name="QuestionSaveDefaults" xml:space="preserve">
+    <value>The settings have been changed. Would you like to save them?</value>
+  </data>
 </root>
