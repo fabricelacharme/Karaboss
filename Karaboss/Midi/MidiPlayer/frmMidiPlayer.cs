@@ -4360,7 +4360,7 @@ namespace Karaboss
 
                         pll = new kar.Syllable()
                         {
-                            Text = "",//m_SepLine,
+                            Text = m_SepLine,
                             TicksOn = lastcurrenttick,
                             CharType = kar.Syllable.CharTypes.LineFeed
                         };
