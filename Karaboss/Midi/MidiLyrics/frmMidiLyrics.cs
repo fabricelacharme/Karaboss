@@ -161,7 +161,7 @@ namespace Karaboss
                 {
                     _bForceUppercase = value;
                     pBox.bforceUppercase = _bForceUppercase;
-                    LoadSong(myLyricsMgmt.plLyrics, myLyricsMgmt.KLyrics);
+                    LoadSong(myLyricsMgmt.KLyrics);
                 }
             }
         }
@@ -752,7 +752,7 @@ namespace Karaboss
         ///  1/4 = LineFeed
         ///  1/2 = Paragraph
         /// </summary>
-        public void LoadSong(List<plLyric> plLs, kLyrics _kLyrics)
+        public void LoadSong(kLyrics kl)
         {
             string lyric;
             string chord;
@@ -806,7 +806,7 @@ namespace Karaboss
 
             #region transform kLyrics in plLyrics to load song in picturebox control with plLyrics
 
-            List<plLyric> plLsNew = myLyricsMgmt.ConvertToPlLyric(_kLyrics);
+            List<plLyric> plLsNew = myLyricsMgmt.ConvertToPlLyric(kl);
 
             List<pictureBoxControl.plLyric> pcLyricsNew = new List<pictureBoxControl.plLyric>();
             pictureBoxControl.plLyric pcLNew;
@@ -847,13 +847,6 @@ namespace Karaboss
 
             #endregion transform kLyrics in plLyrics to load song in picturebox control with plLyrics
 
-            #region compare plLyrics and plLyricsNew
-
-            // Compare the two types of lyrics 
-            //myLyricsMgmt.CompareLyrics(plLs, _kLyrics);
-
-
-            #endregion compare plLyrics and plLyricsNew
 
 
             #region load lyrics and chords in picturebox control
@@ -863,7 +856,7 @@ namespace Karaboss
             pBox.LoadSong(pcLyricsNew);
 
             // Load kLyrics with kLyrics to have all the information for chords and lyrics positions, used for balls animation
-            pBox.KLyrics = _kLyrics;
+            pBox.KLyrics = kl;
 
             #endregion load lyrics and chords in picturebox control
 
@@ -876,7 +869,7 @@ namespace Karaboss
             pBox.CurrentTextPos = -1;
 
             if (bShowBalls)
-                LoadBallsTimes(plLs);
+                LoadBallsTimes(kl);
         }
 
 
@@ -917,20 +910,23 @@ namespace Karaboss
         /// Load times for the Ball animation
         /// </summary>
         /// <param name="plLyrics"></param>
-        public void LoadBallsTimes(List<plLyric> plLyrics)
+        public void LoadBallsTimes(kLyrics kl)
         {
-            if (!bShowBalls || plLyrics.Count == 0)
+            if (!bShowBalls || kl.Lines.Count == 0)
             { return; }
 
             LyricsTimes = new List<int>();
 
-            for (int i = 0; i < plLyrics.Count; i++)
+            for (int i = 0; i < kl.Lines.Count; i++)
             {
-                if (plLyrics[i].CharType == plLyric.CharTypes.Text || plLyrics[i].CharType == plLyric.CharTypes.ParagraphSep)
-                //if (plLyrics[i].CharType == plLyric.CharTypes.Text)
+                for (int j = 0; j < kl.Lines[i].Syllables.Count; j++)
                 {
-                    LyricsTimes.Add(plLyrics[i].TicksOn);
-                }
+                    Syllable syllable = kl.Lines[i].Syllables[j];
+                    if (syllable.CharType == Syllable.CharTypes.Text || syllable.CharType == Syllable.CharTypes.ParagraphSep)
+                    {
+                        LyricsTimes.Add(syllable.TicksOn);
+                    }
+                }                               
             }
 
             picBalls.Division = myLyricsMgmt.Division;
@@ -1172,7 +1168,7 @@ namespace Karaboss
                 myLyricsMgmt.ResetDisplayChordsOptions(chkChords.Checked);
 
                 // Load modified lyrics into the picturebox
-                LoadSong(myLyricsMgmt.plLyrics, myLyricsMgmt.KLyrics);
+                LoadSong(myLyricsMgmt.KLyrics);
 
                 // Refresh score with or without chords
                 frmMidiPlayer frmMidiPlayer = Utilities.FormUtilities.GetForm<frmMidiPlayer>();
@@ -1207,11 +1203,11 @@ namespace Karaboss
             else
             {
                 // Chords have to be guessed with a vertical search                
-                myLyricsMgmt.KLyrics = myLyricsMgmt.PopulateDetectedChords2(myLyricsMgmt.KLyrics);
-                myLyricsMgmt.CleanLyrics();
+                myLyricsMgmt.KLyrics = myLyricsMgmt.PopulateDetectedChords(myLyricsMgmt.KLyrics);
+                myLyricsMgmt.CleanLyricsWithChords();
             }
 
-            tx = myLyricsMgmt.GetLyricsLinesWithChords2();
+            tx = myLyricsMgmt.GetLyricsLinesWithChords();
             System.IO.File.WriteAllText(@file, tx);
 
             try

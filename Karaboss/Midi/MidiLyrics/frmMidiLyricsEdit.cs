@@ -3777,8 +3777,8 @@ namespace Karaboss
         #region switch to other available format
         private void btnDisplayOtherLyrics_Click(object sender, EventArgs e)
         {
-            int l = _myLyricsMgmt.lstpllyrics[0].Count;
-            int t = _myLyricsMgmt.lstpllyrics[1].Count;
+            int l = _myLyricsMgmt.lstkLyrics[0].Count;
+            int t = _myLyricsMgmt.lstkLyrics[1].Count;
 
             if (l > 0 && t > 0)
             {

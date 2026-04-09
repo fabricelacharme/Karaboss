@@ -37,6 +37,7 @@ using MusicXml;
 using Sanford.Multimedia.Midi;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
@@ -94,8 +95,8 @@ namespace Karaboss.MidiLyrics
 
 
         // Default List of lyrics
-        public List<plLyric> plLyrics { get; set; }
-        public List<plLyric> OrgplLyrics { get; set; }
+        //public List<plLyric> plLyrics { get; set; }
+        //public List<plLyric> OrgplLyrics { get; set; }
 
         public int Numerator { get; set; }
         public int Division { get; set; }
@@ -103,7 +104,7 @@ namespace Karaboss.MidiLyrics
         // FAB 21/11/2024 : list of the 2 different types of lyric:
         // 0 = lyric
         // 1 = text        
-        public List<List<plLyric>> lstpllyrics { get; set; }
+        //public List<List<plLyric>> lstpllyrics { get; set; }
         public List<kLyrics> lstkLyrics { get; set; }
 
 
@@ -238,7 +239,7 @@ namespace Karaboss.MidiLyrics
             _removechordpattern = patternBracket;
             _chordDelimiter = ("[", "]");
 
-            plLyrics = new List<plLyric>();
+            //plLyrics = new List<plLyric>();
             KLyrics = new kLyrics();
 
             //lstpllyrics = new List<List<plLyric>>();
@@ -253,23 +254,16 @@ namespace Karaboss.MidiLyrics
             
             #region Minimal lyrics extraction
 
-            // old
-            //OrgplLyrics = ExtractLyrics();
-            // new
-            OrgKLyrics = ExtractLyrics2();
-
-            
-            OrgKLyrics = RemoveExecessiveLinebreaks2(OrgKLyrics);
-
+            OrgKLyrics = ExtractLyrics();            
+            OrgKLyrics = RemoveExecessiveLinebreaks(OrgKLyrics);
 
             // Extract chords in lyrics
             bHasChordsInLyrics = HasChordsInLyrics(_lyrics);
             if (bHasChordsInLyrics)
                 ChordsOriginatedFrom = ChordsOrigins.Lyrics;
 
-            // Search for the melody track            
-            //_melodytracknum = GuessMelodyTrack(OrgplLyrics);
-            _melodytracknum = GuessMelodyTrack2(OrgKLyrics);
+            // Search for the melody track                        
+            _melodytracknum = GuessMelodyTrack(OrgKLyrics);
 
             #endregion Minimal lyrics extraction
         }
@@ -433,16 +427,16 @@ namespace Karaboss.MidiLyrics
                     case ChordsOrigins.Lyrics:
                         // 1. If chords are  already included in lyrics
                         // Add false lyrics in chords alone (instrumental) ???                        
-                        FullExtractLyrics2(ShowChords);
+                        FullExtractLyrics(ShowChords);
                         break;
                     case ChordsOrigins.XmlEmbedded:
                         // Chords are provided by the Xml score                                                
                         if (KLyrics.Lines.Count == 0)
-                            FullExtractLyrics2(ShowChords);
+                            FullExtractLyrics(ShowChords);
 
                         // include xml chords in plLyrics
                         PopulateXmlChords(lstXmlChords);
-                        CleanLyrics();
+                        CleanLyricsWithChords();
                         
                         break;
                     
@@ -455,16 +449,13 @@ namespace Karaboss.MidiLyrics
                         // Chords have to be discovered
                         // 2. If chords are not included in lyrics,
                         // we have to detect chords and add them to the lyrics or add them to an extra
-                        //if (plLyrics.Count == 0)
-                        //    FullExtractLyrics(ShowChords);
-
                         //if (KLyrics.Lines.Count == 0)
-                            FullExtractLyrics2(ShowChords);                        
+                            FullExtractLyrics(ShowChords);                        
                         
-                        KLyrics =  PopulateDetectedChords2(KLyrics);
+                        KLyrics =  PopulateDetectedChords(KLyrics);
 
                         // Clean lyrics HERE !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-                        CleanLyrics();
+                        CleanLyricsWithChords();
                         break;
                     
                     default:
@@ -486,7 +477,7 @@ namespace Karaboss.MidiLyrics
                 
                 // All could be replaced by FullExtractLyrics();
                 //FullExtractLyrics(false);
-                FullExtractLyrics2(false);
+                FullExtractLyrics(false);
 
 
             }
@@ -498,7 +489,7 @@ namespace Karaboss.MidiLyrics
         /// Add a trailing space when the lyrics have no space.
         /// Remove the '-' character
         /// </summary>
-        private void SetTrailingSpace2()
+        private void SetTrailingSpace()
         {
             #region check
             // Concerns only lyrics without space
@@ -533,7 +524,7 @@ namespace Karaboss.MidiLyrics
         /// <summary>
         /// Remove excessive linebreaks for KLyrics: if we have more than one line break in a row, we reduce them to one line break paragraph separator
         /// </summary>
-        private kLyrics RemoveExecessiveLinebreaks2(kLyrics T)
+        private kLyrics RemoveExecessiveLinebreaks(kLyrics T)
         {
             bool bFound = false;
 
@@ -581,9 +572,9 @@ namespace Karaboss.MidiLyrics
 
 
         /// <summary>
-        /// Add a carriage return if Uppercase, ponctuation, too long
+        /// Files without any linefedd (XML for example) Add a carriage return if Uppercase, ponctuation, too long
         /// </summary>
-        private kLyrics AddCarriageReturn2()
+        private kLyrics AddCarriageReturn()
         {
             #region check
             if (_bHasCarriageReturn)
@@ -631,13 +622,11 @@ namespace Karaboss.MidiLyrics
                         {
                             // Cut every time we have a punctuation at the end of the syllable
                             // Add previous lyric and start a new line
-                            if (_line.Syllables.Count > 0)
-                            {
-                                _tmpL.Add(_line);
-                                _line = new kLine();
-                            }
-                            lyricLengh = s.Length;
-                            _line.Add(syll);                           
+                            _line.Add(syll);
+                            _tmpL.Add(_line);                                                                               
+                            
+                            _line = new kLine();                            
+                            lyricLengh = 0;                            
                         }
                         else
                         {
@@ -645,14 +634,32 @@ namespace Karaboss.MidiLyrics
                             // Cut if blank is found in the syllable
                             if (lyricLengh > linelength && s.IndexOf(" ") > -1)
                             {
-                                // Add previous lyric and start a new line
-                                if (_line.Syllables.Count > 0)
+                                if (s.StartsWith(" "))
                                 {
+                                    // Space at the beginning of the syllable, we cut before the space and we keep the space at the beginning of the next line
+                                    // Add previous lyric and start a new line
+                                    if (_line.Syllables.Count > 0)
+                                    {
+                                        _tmpL.Add(_line);
+                                        _line = new kLine();
+                                    }
+                                    lyricLengh = s.Length;
+                                    _line.Add(syll);
+
+                                }
+                                else if (s.EndsWith(" "))
+                                {
+                                    // Space at the end of the syllable, we cut after the space and we keep the space at the end of the previous line
+                                    _line.Add(syll);
                                     _tmpL.Add(_line);
                                     _line = new kLine();
+                                    lyricLengh = 0;
                                 }
-                                lyricLengh = s.Length;
-                                _line.Add(syll);
+                                else
+                                {
+                                    lyricLengh += s.Length;
+                                    _line.Add(syll);
+                                }                                                            
                             }
                             else
                             {
@@ -679,7 +686,7 @@ namespace Karaboss.MidiLyrics
         /// <summary>
         /// Fix ticksoff of lyrics with melody notes
         /// </summary>        
-        private void FixTimes2()
+        private void FixTimes()
         {                                    
             Syllable syll;
 
@@ -823,7 +830,7 @@ namespace Karaboss.MidiLyrics
         /// Set linefeeds & paragraphs to the end of the beat of the previous lyric
         /// /lyric -> beat/linefeed/lyric
         /// </summary>
-        private void FixLinefeeds2()
+        private void FixLinefeeds()
         {
             int nbBeatsPerMeasure = sequence1.Numerator;
             int beatDuration = _measurelen / nbBeatsPerMeasure;
@@ -859,7 +866,7 @@ namespace Karaboss.MidiLyrics
         /// <summary>
         /// Lyrics extraction & display
         /// </summary>       
-        private kLyrics ExtractLyrics2()
+        private kLyrics ExtractLyrics()
         {
             double l_text = 1;
             double l_lyric = 1;
@@ -892,15 +899,13 @@ namespace Karaboss.MidiLyrics
             lstkLyrics.Add(new kLyrics());      // text
 
             if (trklyric >= 0)
-            {
-                //lstpllyrics[0] = LoadLyricsLyric(sequence1.tracks[trklyric]);
-                lstkLyrics[0] = LoadLyricsLyric2(sequence1.tracks[trklyric]);
+            {             
+                lstkLyrics[0] = LoadLyricsLyric(sequence1.tracks[trklyric]);
 
             }
             if (trktext >= 0)
             {
-                //lstpllyrics[1] = LoadLyricsText(sequence1.tracks[trktext]);
-                lstkLyrics[1] = LoadLyricsText2(sequence1.tracks[trktext]);
+                lstkLyrics[1] = LoadLyricsText(sequence1.tracks[trktext]);
             }
 
 
@@ -957,7 +962,7 @@ namespace Karaboss.MidiLyrics
         /// </summary>
         /// <param name="track"></param>
         /// <returns></returns>
-        private kLyrics LoadLyricsText2(Sanford.Multimedia.Midi.Track track)
+        private kLyrics LoadLyricsText(Sanford.Multimedia.Midi.Track track)
         {
             kLyrics l = new kLyrics();
             int plTicksOn; 
@@ -1035,7 +1040,7 @@ namespace Karaboss.MidiLyrics
         /// </summary>
         /// <param name="track"></param>
         /// <returns></returns>        
-        private kLyrics LoadLyricsLyric2(Sanford.Multimedia.Midi.Track track)
+        private kLyrics LoadLyricsLyric(Sanford.Multimedia.Midi.Track track)
         {
             kLyrics l = new kLyrics();
 
@@ -1157,7 +1162,7 @@ namespace Karaboss.MidiLyrics
         /// <summary>
         /// Full extract of lyrics. Launch all functions
         /// </summary>       
-        public void FullExtractLyrics2(bool ShowChords)
+        public void FullExtractLyrics(bool ShowChords)
         {
             try
             {
@@ -1185,17 +1190,17 @@ namespace Karaboss.MidiLyrics
                 #region rearrange lyrics
 
                 // Guess spacing or not and carriage return or not
-                GetLyricsSpacingModel2();
+                GetLyricsSpacingModel();
 
                 // Add a trailing space to each syllabe
                 if (_lyricsspacing == lyricsSpacings.WithoutSpace)
                 {
-                    SetTrailingSpace2();
+                    SetTrailingSpace();
                 }
 
                 // If zero carriage return in the lyrics
-                //if (!_bHasCarriageReturn)                
-                //   KLyrics = AddCarriageReturn2();
+                if (!_bHasCarriageReturn)                
+                   KLyrics = AddCarriageReturn();
                 
 
                 #endregion rearrange lyrics
@@ -1205,26 +1210,25 @@ namespace Karaboss.MidiLyrics
                 //_melodytracknum = GuessMelodyTrack(plLyrics);
 
                 // Fix lyrics endtime to notes of the melody track end time
-                FixTimes2();
+                FixTimes();
 
                 // Move linefeeds to the end of the previous lyric
-                FixLinefeeds2();
+                FixLinefeeds();
 
 
                 // Extract chords from lyrics ALWAYS ????                
                 if (bHasChordsInLyrics && ShowChords)
                 {
                     // Add chords found in lyrics in the list pllyrics
-                    ExtractChordsInLyrics2(ShowChords);
+                    ExtractChordsInLyrics(ShowChords);
                 }
-
-                //TestCheckTimes();                             
+                
 
                 #region clean lyrics
 
                 // Remove empty lyrics
-                KLyrics = RemoveEmptyLyrics2(KLyrics);
-                //plLyrics = RemoveExtraLinefeeds(plLyrics);
+                KLyrics = RemoveEmptyLyrics(KLyrics);
+                
 
                 #endregion clean lyrics
 
@@ -1243,7 +1247,7 @@ namespace Karaboss.MidiLyrics
         /// <summary>
         /// Guess if lyrics have carriage return and spaces between syllabes
         /// </summary>        
-        private void GetLyricsSpacingModel2()
+        private void GetLyricsSpacingModel()
         {
 
             _bHasCarriageReturn = false;
@@ -1360,7 +1364,7 @@ namespace Karaboss.MidiLyrics
         /// A very complex search :-)
         /// </summary>
         /// <returns></returns>       
-        private int GuessMelodyTrack2(kLyrics l)
+        private int GuessMelodyTrack(kLyrics l)
         {
             // Comparer timing pistes à pistes            
             int nbfound; 
@@ -1474,14 +1478,14 @@ namespace Karaboss.MidiLyrics
         /// <summary>
         /// Clean for detected chords; launch all functions
         /// </summary>
-        public void CleanLyrics()
+        public void CleanLyricsWithChords()
         {            
                                              
-            KLyrics = AddLineFeedAfterInstrumental2(KLyrics);
+            KLyrics = AddLineFeedAfterInstrumental(KLyrics);
                         
-            KLyrics = TruncateInstrumental2(KLyrics);
+            KLyrics = TruncateInstrumental(KLyrics);
             
-            KLyrics = AddLineFeedBeforeInstrumental2(KLyrics);                  
+            KLyrics = AddLineFeedBeforeInstrumental(KLyrics);                  
 
             KLyrics = AdjustChordTicks(KLyrics);
 
@@ -1513,7 +1517,7 @@ namespace Karaboss.MidiLyrics
         /// To be launch first
         /// </summary>
         /// <returns></returns>  
-        private kLyrics RemoveEmptyLyrics2(kLyrics l)
+        private kLyrics RemoveEmptyLyrics(kLyrics l)
         {
             string lyric;
             kLyrics lst = new kLyrics();
@@ -1537,7 +1541,7 @@ namespace Karaboss.MidiLyrics
         /// Add a Linefeed after an instrumental
         /// </summary>
         /// <returns></returns>        
-        private kLyrics AddLineFeedAfterInstrumental2(kLyrics l)
+        private kLyrics AddLineFeedAfterInstrumental(kLyrics l)
         {
             int nbChords = 0;
             kLyrics lstKL = new kLyrics();
@@ -1594,7 +1598,7 @@ namespace Karaboss.MidiLyrics
         /// </summary>
         /// <param name="l"></param>
         /// <returns></returns>        
-        private kLyrics TruncateInstrumental2(kLyrics l)
+        private kLyrics TruncateInstrumental(kLyrics l)
         {
             int nbChords = 0;
             kLyrics lstKL = new kLyrics();
@@ -1649,7 +1653,7 @@ namespace Karaboss.MidiLyrics
         /// </summary>
         /// <param name="l"></param>
         /// <returns></returns>        
-        private kLyrics AddLineFeedBeforeInstrumental2(kLyrics l)
+        private kLyrics AddLineFeedBeforeInstrumental(kLyrics l)
         {                       
             int nbChords = 0;
             kLyrics lstKl = new kLyrics();
@@ -1753,7 +1757,7 @@ namespace Karaboss.MidiLyrics
         /// and add them to plLyric
         /// </summary>
         /// <param name="tracknum"></param>       
-        private void ExtractChordsInLyrics2(bool ShowChords)
+        private void ExtractChordsInLyrics(bool ShowChords)
         {
             // TODO improve performance
             // avoid to recalculate pattern & Chorddelimiter
@@ -1854,7 +1858,8 @@ namespace Karaboss.MidiLyrics
         /// key : beat
         /// Value : lyrics in this beat
         /// </summary>
-        public void LoadLyricsPerBeat()
+        /*
+        public void LoadLyricsPerBeat2()
         {
             _gridlyrics = new Dictionary<int, string>();
             //int tickson;
@@ -1920,13 +1925,79 @@ namespace Karaboss.MidiLyrics
                 MessageBox.Show(tx, "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
+        */
 
+        public void LoadLyricsPerBeat()
+        {
+            _gridlyrics = new Dictionary<int, string>();
+            int beat;
+            int nbBeatsPerMeasure = sequence1.Numerator;
+            int currentbeat = 1;
+            string currenttext = string.Empty;
+            int currentmeasure;// = 0;
+            string cr = Environment.NewLine;
+
+            string lyricElement;
+            string replace = @"";
+
+            for (int i = 0; i < KLyrics.Lines.Count; i++)
+            {
+                for (int j = 0; j < KLyrics.Lines[i].Syllables.Count; j++)
+                {
+                    if (KLyrics.Lines[i].Syllables[j].CharType == Syllable.CharTypes.Text)
+                    {
+                        beat = KLyrics.Lines[i].Syllables[j].Beat;
+
+                        // New beat
+                        // Store previous syllabes
+                        if (beat != currentbeat)
+                        {
+                            currentmeasure = 1 + (currentbeat - 1) / nbBeatsPerMeasure;
+
+                            try
+                            {
+                                _gridlyrics.Add(currentbeat, currenttext);
+                            }
+                            catch (Exception ex)
+                            {
+                                string tx = ex.Message + cr + "Syllab :" + currenttext + cr + "Measure: " + currentmeasure;
+                                MessageBox.Show(tx, "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            }
+                            currentbeat = beat;
+                            currenttext = string.Empty;
+                        }
+                        // Add syllabe to currenttext
+
+                        // Remove chords from lyrics 
+                        lyricElement = KLyrics.Lines[i].Syllables[j].Text;
+
+                        if (bHasChordsInLyrics && _removechordpattern != null)
+                        {
+                            lyricElement = Regex.Replace(lyricElement, _removechordpattern, replace);
+                        }
+                        currenttext += lyricElement;
+                    }
+                }
+            }
+            // Last word ?
+            currentmeasure = 1 + (currentbeat - 1) / nbBeatsPerMeasure;
+            try
+            {
+                _gridlyrics.Add(currentbeat, currenttext);
+            }
+            catch (Exception ex)
+            {
+                string tx = ex.Message + cr + "Syllab :" + currenttext + cr + "Measure: " + currentmeasure;
+                MessageBox.Show(tx, "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
 
         /// <summary>
         /// TAB1 / lyrics bottom
         /// Load Lyrics lines in Dictionaries LyrictLines & LyricsTimes
         /// </summary>
-        public void LoadLyricsLines()
+        /*
+        public void LoadLyricsLines2()
         {
             LyricsLines = new Dictionary<int, string>();  // tickson of the first lyric, line of lyrics
             LyricsTimes = new Dictionary<int, int>();     // tickson of the first lyric, ticksoff of the last lyric
@@ -2010,7 +2081,134 @@ namespace Karaboss.MidiLyrics
                 //LyricsTimesKeys = LyricsTimes.Keys.ToArray();
             }
         }
+        */
+        public void LoadLyricsLines()
+        {
+            LyricsLines = new Dictionary<int, string>();  // tickson of the first lyric, line of lyrics
+            LyricsTimes = new Dictionary<int, int>();     // tickson of the first lyric, ticksoff of the last lyric
 
+            string line = string.Empty;
+            bool newline = false;
+            int ticksoff = 0;
+            int curindex = -1;         
+            string cr = Environment.NewLine;
+            string lyricElement; 
+            string replace = @"";
+
+            for (int i = 0; i < KLyrics.Lines.Count; i++)
+            {
+                newline = true;
+
+                for (int j = 0; j < KLyrics.Lines[i].Syllables.Count; j++)
+                {                    
+                    if (KLyrics.Lines[i].Syllables[j].CharType == Syllable.CharTypes.Text)
+                    {
+                        // the first item after newline
+                        if (newline)
+                        {
+                            if (line.Trim() != "")
+                            {
+                                try
+                                {
+                                    LyricsLines.Add(curindex, line);
+                                    LyricsTimes.Add(curindex, ticksoff);
+                                }
+                                catch (Exception ex)
+                                {
+                                    string tx = ex.Message + cr + "Line: " + line;
+                                    MessageBox.Show(tx, Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                                }
+                            }
+                            newline = false;
+                            line = string.Empty;
+                        }
+                        // Last line (the last line will not have a new line event)
+                        if (line.Trim() == "")
+                        {
+                            curindex = KLyrics.Lines[i].Syllables[j].TicksOn;
+                        }
+                        // others items of a line
+                        lyricElement = KLyrics.Lines[i].Syllables[j].Text;
+                        if (bHasChordsInLyrics && _removechordpattern != null)
+                        {
+                            // Remove chords from lyrics 
+                            lyricElement = Regex.Replace(lyricElement, _removechordpattern, replace);
+                        }
+                        line += lyricElement;
+                        ticksoff = KLyrics.Lines[i].Syllables[j].TicksOff;
+                    }
+                
+                
+                
+                }
+
+                /*
+                // if new line
+                if (plLyrics[i].CharType == plLyric.CharTypes.LineFeed || plLyrics[i].CharType == plLyric.CharTypes.ParagraphSep)
+                {
+                    // Case several lines with the same start time
+                    newtime = plLyrics[i].TicksOn;
+                    if (newtime != currenttime)
+                    {
+                        newline = true;
+                        currenttime = newtime;
+                    }
+                }
+                else if (plLyrics[i].CharType == plLyric.CharTypes.Text)
+                {
+                    // the first item after newline
+                    if (newline)
+                    {
+                        if (line.Trim() != "")
+                        {
+                            try
+                            {
+                                LyricsLines.Add(curindex, line);
+                                LyricsTimes.Add(curindex, ticksoff);
+                            }
+                            catch (Exception ex)
+                            {
+                                string tx = ex.Message + cr + "Line: " + line;
+                                MessageBox.Show(tx, "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            }
+                        }
+                        newline = false;
+                        line = string.Empty;
+                    }
+
+                    // Last line (the last line will not have a new line event)
+                    if (line.Trim() == "")
+                    {
+                        curindex = plLyrics[i].TicksOn;
+                    }
+
+                    // others items of a line
+                    lyricElement = plLyrics[i].Element.Item2;
+
+                    if (bHasChordsInLyrics && _removechordpattern != null)
+                    {
+                        // Remove chords from lyrics 
+                        lyricElement = Regex.Replace(lyricElement, _removechordpattern, replace);
+                    }
+                    line += lyricElement;
+                    ticksoff = plLyrics[i].TicksOff;
+                }
+                */
+            }
+
+
+            // Do not forget last line
+            if (line.Trim() != "")
+            {
+                LyricsLines.Add(curindex, line);
+                LyricsTimes.Add(curindex, ticksoff);
+            }
+
+            if (LyricsLines.Count > 0)
+            {
+                LyricsLinesKeys = LyricsLines.Keys.ToArray();                
+            }
+        }
 
         /// <summary>
         /// return the line of lyrics related to pos
@@ -2127,7 +2325,8 @@ namespace Karaboss.MidiLyrics
         /// <summary>
         /// Include chords updated from frmChords
         /// </summary>
-        public void PopulateUpdatedChords(Dictionary<int, (string, int)> gbc)
+        /*
+        public void PopulateUpdatedChords2(Dictionary<int, (string, int)> gbc)
         {
             int nbBeatsPerMeasure = sequence1.Numerator;
             int beatDuration = _measurelen / nbBeatsPerMeasure;
@@ -2351,11 +2550,32 @@ namespace Karaboss.MidiLyrics
             // Add tickoff to new elements chord ?
             //CheckTimes();
         }
+        */
+
+        public void PopulateUpdatedChords(Dictionary<int, (string, int)> gbc)
+        {
+            int nbBeatsPerMeasure = sequence1.Numerator;
+            int beatDuration = _measurelen / nbBeatsPerMeasure;
+           
+            // Beat
+            // (chord, ticks)
+            GridBeatChords = gbc;
+           
+
+            if (ChordDelimiter == (null, null) || ChordDelimiter == ("", "") || RemoveChordPattern == null)
+            {
+                ChordDelimiter = ("[", "]");
+                RemoveChordPattern = patternBracket;
+            }
+
+            // Reset chords in KLyrics            
+            KLyrics = PopulateDetectedChords(OrgKLyrics);
+        }
 
         /// <summary>
         /// Include detected chords into the list plLyrics
         /// </summary>                
-        public kLyrics PopulateDetectedChords2(kLyrics kll)
+        public kLyrics PopulateDetectedChords(kLyrics kll)
         {
             int nbBeatsPerMeasure = sequence1.Numerator;
             int beatDuration = _measurelen / nbBeatsPerMeasure;
@@ -2634,8 +2854,9 @@ namespace Karaboss.MidiLyrics
 
 
         #region include remove xml chords in plLyrics
-
-        public void PopulateXmlChords(List<MusicXml.ChordItem> lstChords)
+        
+        /*
+        public void PopulateXmlChords2(List<MusicXml.ChordItem> lstChords)
         {
             string chordName;
             string lyric;            
@@ -2747,10 +2968,125 @@ namespace Karaboss.MidiLyrics
                     }
                 }
             }
-
-
-
         }
+        */
+        
+        public void PopulateXmlChords(List<MusicXml.ChordItem> lstChords)
+        {
+            string chordName;
+            string lyric;
+            int ticks;
+            int TicksOn;
+            int TicksOff = 0;
+            bool bFound;
+            int insertIndex;
+            int beat;
+
+            if (sequence1 == null || sequence1.Numerator == 0)
+            {
+                MessageBox.Show("Invalid sequence: null or Numerator = 0", "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+            int nbBeatsPerMeasure = sequence1.Numerator;
+            int beatDuration = _measurelen / nbBeatsPerMeasure;
+
+            foreach (ChordItem chord in lstChords)
+            {
+                chordName = chord.ChordName;
+                ticks = chord.TicksOn;
+                bFound = false;
+                insertIndex = -1;
+                beat = 1 + ticks / beatDuration;
+
+                for (int i = 0; i < KLyrics.Lines.Count; i++)
+                {
+                    for (int j = 0; j < KLyrics.Lines[i].Syllables.Count; j++)
+                    {
+                        TicksOn = KLyrics.Lines[i].Syllables[j].TicksOn;
+                        TicksOff = KLyrics.Lines[i].Syllables[j].TicksOff;
+
+                        if (ticks == TicksOn)
+                        {
+                            // ticks has the same value than a TicksOn, the chord has to be added to the lyric in the field 'chord'
+                            if (KLyrics.Lines[i].Syllables[j].CharType == Syllable.CharTypes.Text)
+                            {
+                                lyric = KLyrics.Lines[i].Syllables[j].Text;
+                                lyric = formateLyricOfChord(chordName, lyric);
+                                KLyrics.Lines[i].Syllables[j].Chord = chordName;
+                                KLyrics.Lines[i].Syllables[j].Text = lyric;
+                                bFound = true;
+                            }
+                            else
+                            {
+                                // This is a linefeed or paragraph => insert a new lyric
+                                // Case of Alexandrie Alexandra song                                
+
+                                // Insert the chord after the linefeed of the lyrics line
+                                // Test if the element after the linefeed hast not the same TicksOn
+                                if (j + 1 < KLyrics.Lines[i].Syllables.Count)
+                                {
+                                    if (ticks == KLyrics.Lines[i].Syllables[j + 1].TicksOn)
+                                    {
+                                        lyric = KLyrics.Lines[i].Syllables[j + 1].Text;
+                                        lyric = formateLyricOfChord(chordName, lyric);
+                                        KLyrics.Lines[i].Syllables[j + 1].Chord = chordName;
+                                        KLyrics.Lines[i].Syllables[j + 1].Text = lyric;
+                                        bFound = true;
+                                    }
+                                    else
+                                    {
+                                        insertIndex = j + 1;
+                                        bFound = false;
+                                    }
+                                }
+                                else
+                                {
+                                    insertIndex = j;
+                                    bFound = false;
+                                }
+                            }
+                            break;
+                        }
+
+                        else if (ticks > TicksOn && ticks < TicksOff && KLyrics.Lines[i].Syllables[j].CharType == Syllable.CharTypes.Text && KLyrics.Lines[i].Syllables[j].IsChord == false)
+                        {
+                            lyric = KLyrics.Lines[i].Syllables[j].Text;
+                            lyric = formateLyricOfChord(chordName, lyric);
+                            KLyrics.Lines[i].Syllables[j].Chord = chordName;
+                            KLyrics.Lines[i].Syllables[j].Text = lyric;
+                            bFound = true;
+                            break;
+                        }
+                        else if (ticks < TicksOn)
+                        {
+                            // ticks is smaller than this TicksOn => the chord has to be inserted at its place as a new element
+                            insertIndex = j;
+                            bFound = false;
+                            break;
+                        }
+                    }
+
+
+                    if (!bFound)
+                    {
+                        lyric = formateLyricOfChord(chordName, "");
+
+                        // Ticks was never smaller or equal to an existing TickOn => is has to be added at the end
+                        if (insertIndex == -1)
+                        {
+                            KLyrics.Lines[i].Syllables.Add(new Syllable() { Beat = beat, CharType = Syllable.CharTypes.Text, Chord = chordName, Text = lyric, TicksOn = ticks, TicksOff = TicksOff });
+                        }
+                        else
+                        {
+                            // ticks was found smaller or equal to an existing TicksOn
+                            KLyrics.Lines[i].Syllables.Insert(insertIndex, new Syllable() { Beat = beat, CharType = Syllable.CharTypes.Text, Chord = chordName, Text = lyric, TicksOn = ticks, TicksOff = TicksOff });
+                        }
+                    }
+
+                }
+            }
+        }
+
 
         #endregion include remove xml chords in plLyrics
 
@@ -2780,12 +3116,13 @@ namespace Karaboss.MidiLyrics
 
         #region Display text of lyrics & chords
 
+
         #region TAB3
-        /// <summary>
-        /// TAB 3: Display words & lyrics
-        /// </summary>
-        /// <returns></returns>      
-        public string DisplayWordsAndChords()
+
+        #region deleteme
+
+        /*
+        public string DisplayWordsAndChords2()
         {
             // New version with all beats
             string res = string.Empty;
@@ -3326,6 +3663,585 @@ namespace Karaboss.MidiLyrics
 
             return res;
         }
+        */
+
+        #endregion deleteme
+
+        /// <summary>
+        /// TAB 3: Display words & lyrics
+        /// </summary>
+        /// <returns></returns>      
+        public string DisplayWordsAndChords()
+        {
+            // New version with all beats
+            string res = string.Empty;
+            string cr = Environment.NewLine;
+            int nbBeatsPerMeasure = sequence1.Numerator;
+            int beat;
+
+            string beatchord = string.Empty;
+            string beatlyr = string.Empty;
+            string linebeatlyr = string.Empty;
+            string linebeatchord = string.Empty;
+            Syllable pll;
+
+            string lyr = string.Empty;            
+            string replace = @"";
+
+            int interval;
+            int ticksoff;
+            int tickson;
+            int beatDuration = _measurelen / nbBeatsPerMeasure;
+            int _measure;
+
+            string chordName;
+
+            #region guard
+            if (GridBeatChords == null || KLyrics == null)
+            {
+                MessageBox.Show("Error: GridBeatChords is null", "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return "";
+            }
+            #endregion guard
+
+            // Create a dictionary key = beat, value = list of lyrics in this beat
+            Dictionary<int, List<Syllable>> diclyr = new Dictionary<int, List<Syllable>>();
+            for (int i = 1; i <= _nbBeats; i++)
+            {
+                diclyr[i] = new List<Syllable>();
+            }
+
+            // Load all syllables in a single list (instead of having them in lines) in order to easily manipulate them
+            List<Syllable> plLyrics = new List<Syllable>();
+            for (int i = 0; i < KLyrics.Lines.Count; i++)
+            {
+                
+                for (int j = 0; j < KLyrics.Lines[i].Syllables.Count; j++)
+                {
+                    plLyrics.Add(KLyrics.Lines[i].Syllables[j]);
+                }
+
+                // Add a linefeed at the end of each line, except if the line already ends with a paragraph separator
+                // And also if the next line starts with a paragraph separator (case of empty line)
+                if (i < KLyrics.Lines.Count - 1 && KLyrics.Lines[i + 1].Syllables.First().CharType != Syllable.CharTypes.ParagraphSep && plLyrics.Last().CharType != Syllable.CharTypes.ParagraphSep)
+                {
+                    Syllable pllcr = new Syllable()
+                    {
+                        Beat = plLyrics.Last().Beat,
+                        CharType = Syllable.CharTypes.LineFeed,
+                        TicksOn = plLyrics.Last().TicksOff
+                    };
+                    plLyrics.Add(pllcr);
+                }
+
+            }
+
+
+            // Load lyrics in each beat
+            int _prevmeasure;
+            for (int i = 0; i < plLyrics.Count; i++)
+            {
+                beat = plLyrics[i].Beat;
+
+                if (beat == 0)
+                {
+                    MessageBox.Show("Error plLyrics with beat at 0", "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return string.Empty;
+                }
+
+
+                // Set all linefeeds to start of measure?
+                // What if a line ends in the measure and the next line starts in the same measure ?
+                if (plLyrics[i].CharType == Syllable.CharTypes.LineFeed || plLyrics[i].CharType == Syllable.CharTypes.ParagraphSep)
+                {
+                    _measure = 1 + (beat - 1) / nbBeatsPerMeasure;
+
+                    // if prev line is not on the same measure                    
+                    if (i > 0 && plLyrics[i - 1].CharType == Syllable.CharTypes.Text)
+                    {
+                        // Measure of previous text lyrics
+                        _prevmeasure = 1 + (plLyrics[i - 1].Beat - 1) / nbBeatsPerMeasure;
+                        if (_prevmeasure < _measure)
+                        {
+                            // if measure of previous text lyric is before measure
+                            // Last beat of prev measure
+                            beat = (_measure - 1) * nbBeatsPerMeasure;
+                            plLyrics[i].Beat = beat;
+                            plLyrics[i].TicksOn = beat * beatDuration;
+                        }
+                    }
+                    else if (i == 0)
+                    {
+                        // First pll is a cr => move it at the beginning of previous measure
+                        _prevmeasure = _measure - 1;
+                        if (_prevmeasure > 0)
+                        {
+                            // Last beat of prevmeasure
+                            beat = (_measure - 1) * nbBeatsPerMeasure;
+                            plLyrics[i].Beat = beat;
+                            plLyrics[i].TicksOn = beat * beatDuration;
+                        }
+                    }
+                }
+
+
+                if (beat < _nbBeats)
+                {
+                    diclyr[beat].Add(plLyrics[i]);
+                }
+            }
+
+            // INSTRUMENTAL BEFORE THE FIRST LINE
+            // Add a linefeed to the first line
+            if (plLyrics.Count > 0)
+            {
+                // Fist lyric is a Text
+                if (plLyrics[0].CharType == Syllable.CharTypes.Text)
+                {
+                    // Add a linefeed at the end of previous measure                    
+                    pll = new Syllable()
+                    {
+                        CharType = Syllable.CharTypes.LineFeed
+                    };
+                    beat = plLyrics[0].Beat;
+                    _measure = 1 + (beat - 1) / nbBeatsPerMeasure;
+
+                    int lastbeat = (_measure - 1) * nbBeatsPerMeasure;
+                    if (lastbeat == 0)
+                        lastbeat = 1;
+
+                    pll.Beat = lastbeat;
+
+                    pll.TicksOn = pll.Beat * beatDuration;
+                    diclyr[pll.Beat].Insert(0, pll);
+
+                }
+                else
+                {
+                    // First lyric is not a text
+                    // should be ok, but sometimes not
+
+                    // Kill first cr
+                    beat = plLyrics[0].Beat;
+
+                    if (diclyr[beat].Count > 1)
+                        diclyr[beat].RemoveAt(0);
+                    else
+                        diclyr[beat] = new List<Syllable>();
+
+                    int i = 0;
+                    while (plLyrics[i].CharType != Syllable.CharTypes.Text)
+                    {
+                        i++;
+                    }
+                    if (plLyrics[i].CharType == Syllable.CharTypes.Text)
+                    {
+                        beat = plLyrics[i].Beat;
+                        _measure = 1 + (beat - 1) / nbBeatsPerMeasure;
+                        int lastbeat = (_measure - 1) * nbBeatsPerMeasure;
+                        if (lastbeat == 0)
+                            lastbeat = 1;
+
+                        pll = new Syllable()
+                        {
+                            CharType = Syllable.CharTypes.LineFeed,
+                            Beat = lastbeat,
+                        };
+                        pll.TicksOn = pll.Beat * beatDuration;
+                        diclyr[pll.Beat].Insert(0, pll);
+                    }
+                }
+            }
+
+            //==========================================================
+            // Check next linefeed: if next linefeed is too far, it means that there is a instrumental before next lyric
+            // So add an additional linefeed
+            // TODO : if next lyric is too far => there is also an instrumental
+            //==========================================================            
+            for (int i = 0; i < plLyrics.Count; i++)
+            {
+                if (plLyrics[i].CharType == Syllable.CharTypes.Text)
+                {
+                    if (i < plLyrics.Count - 1)
+                    {
+                        // INSTRUMENTAL BEFORE A LINE
+                        // If the next LINE lyric is very far, add a linefeed at the begining of the next LINE lyric                        
+                        // use case : 'lyric','cr',chord chord,chord,'lyric' => 'lyric','cr',chord chord,chord,***<new cr>***,lyric
+                        // Contrary : 'lyric',chord chord,chord,'lyric' must stay as is
+
+                        if ((plLyrics[i + 1].CharType == Syllable.CharTypes.LineFeed || plLyrics[i + 1].CharType == Syllable.CharTypes.ParagraphSep))
+                        {
+
+                            if (i < plLyrics.Count - 2 && plLyrics[i + 2].CharType == Syllable.CharTypes.Text)
+                            {
+                                ticksoff = plLyrics[i].TicksOff;
+                                tickson = plLyrics[i + 2].TicksOn;  // begining of next line
+                                interval = tickson - ticksoff;
+                                if (interval > 2 * _measurelen)
+                                {
+                                    beat = 1 + tickson / beatDuration;
+                                    _measure = 1 + (beat - 1) / nbBeatsPerMeasure;
+
+                                    int lastbeat = (_measure - 1) * nbBeatsPerMeasure;
+
+                                    //Console.WriteLine(string.Format("**** Instrumental before line : measure: {0} Beat: {1} **************", _measure, beat));
+
+                                    // Add a linefeed at the beginning of the the next lyric
+                                    pll = new Syllable()
+                                    {
+                                        CharType = Syllable.CharTypes.LineFeed,
+                                        Beat = lastbeat,
+                                        TicksOn = beat * beatDuration,
+                                    };
+
+                                    diclyr[pll.Beat].Insert(0, pll);
+                                }
+                            }
+                            else if (i < plLyrics.Count - 3 && plLyrics[i + 3].CharType == Syllable.CharTypes.Text)
+                            {
+                                ticksoff = plLyrics[i].TicksOff;
+                                tickson = plLyrics[i + 3].TicksOn;  // begining of next line
+                                interval = tickson - ticksoff;
+                                if (interval > 2 * _measurelen)
+                                {
+                                    beat = 1 + tickson / beatDuration;
+                                    _measure = 1 + (beat - 1) / nbBeatsPerMeasure;
+
+                                    int lastbeat = (_measure - 1) * nbBeatsPerMeasure;
+
+                                    //Console.WriteLine(string.Format("**** Instrumental before line : measure: {0} Beat: {1} **************", _measure, beat));
+
+                                    // Add a linefeed at the beginning of the the next lyric
+                                    pll = new Syllable()
+                                    {
+                                        CharType = Syllable.CharTypes.LineFeed,
+                                        Beat = lastbeat,
+                                        TicksOn = beat * beatDuration,
+                                    };
+                                    diclyr[pll.Beat].Insert(0, pll);
+                                }
+                            }
+
+                        }
+                    }
+
+
+
+                    if (i < plLyrics.Count - 1)
+                    {
+                        // INSTRUMENTAL AFTER A LINE
+                        // CR AT END OF LINE TOO FAR, INSTRUMENTAL TRAILING
+                        // If the next plLyric is a linefeed and very far, meaning there is an instrumental before next line
+                        // interval checked is 2 measures
+                        // If greater than 2 measure => add a linefeed the the end of the current lyric, in order to have the instrumental in a separate line
+                        // use case : lyric,chord,chord,chord,cr,lyric => lyric,***<new cr>***,chord,chord,chord,cr,lyric 
+                        if (plLyrics[i + 1].CharType == Syllable.CharTypes.LineFeed || plLyrics[i + 1].CharType == Syllable.CharTypes.ParagraphSep)
+                        {
+                            ticksoff = plLyrics[i].TicksOff;
+                            tickson = plLyrics[i + 1].TicksOn;
+                            interval = tickson - ticksoff;
+                            if (interval > 2 * _measurelen)
+                            {
+                                beat = 1 + ticksoff / beatDuration;
+                                //_measure = 1 + (beat - 1) / nbBeatsPerMeasure;
+                                //Console.WriteLine(string.Format("**** Instrumental after line : measure: {0} Beat: {1} **************", _measure, beat));
+
+                                // TODO : add a linefeed to 1st time of this measure (this beat ?)
+                                // Do not forget the end of the song : no linefeed
+                                pll = new Syllable()
+                                {
+                                    CharType = Syllable.CharTypes.ParagraphSep,
+                                    Beat = beat,
+                                    TicksOn = beat * beatDuration,
+                                };
+                                diclyr[beat].Add(pll);
+                            }
+                        }
+                    }
+                }
+            }
+
+            // Add a cr to the Last lyric (in case of instrumental after the last lyric)
+            if (plLyrics.Count > 0 && plLyrics[plLyrics.Count - 1].CharType == Syllable.CharTypes.Text)
+            {
+                pll = new Syllable()
+                {
+                    CharType = Syllable.CharTypes.ParagraphSep,
+                    Beat = plLyrics[plLyrics.Count - 1].Beat,
+                };
+
+                if (pll.Beat < _nbBeats)
+                {
+                    pll.TicksOn = pll.Beat * beatDuration;
+                    diclyr[pll.Beat].Add(pll);
+                }
+            }
+
+
+            // =================================================
+            // Extract chords & lyrics and format in text mode
+            // =================================================
+            // Do not repeat chords
+            string _currentChordName = "<>";
+
+            for (int measure = 1; measure <= _nbMeasures; measure++)
+            {
+                for (int timeinmeasure = 1; timeinmeasure <= nbBeatsPerMeasure; timeinmeasure++)
+                {
+                    beat = (measure - 1) * nbBeatsPerMeasure + timeinmeasure;
+                    if (beat <= _nbBeats && beat <= GridBeatChords.Count)
+                    {
+                        chordName = GridBeatChords[beat].Item1;
+
+
+                        // ===========================
+                        // 1 - Search lyrics
+                        // ===========================
+                        if (diclyr[beat].Count > 0)
+                        {
+                            string lastchord = string.Empty;
+
+                            // foreach lyric in this beat
+                            for (int i = 0; i < diclyr[beat].Count; i++)
+                            {
+                                pll = diclyr[beat][i];
+
+
+                                #region Store result
+                                // LINEFEED => STORE RESULT
+                                if (pll.CharType == Syllable.CharTypes.LineFeed || pll.CharType == Syllable.CharTypes.ParagraphSep)
+                                {
+                                    // Store line
+                                    linebeatlyr += beatlyr;
+                                    linebeatchord += beatchord;
+                                    if (linebeatlyr != "" || linebeatchord != "")
+                                    {
+                                        if (pll.CharType == Syllable.CharTypes.LineFeed)
+                                        {
+
+                                            // If Linefeed, one cr
+                                            if (linebeatchord != "" && linebeatlyr != "")
+                                                res += linebeatchord + cr + linebeatlyr + cr;
+                                            else if (linebeatchord != "")
+                                                res += linebeatchord + cr;
+                                            else if (linebeatlyr != "")
+                                                res += linebeatlyr + cr;
+
+
+                                        }
+                                        else if (pll.CharType == Syllable.CharTypes.ParagraphSep)
+                                        {
+
+                                            // If paragraph, 2 cr
+                                            if (linebeatchord != "" && linebeatlyr != "")
+                                                res += linebeatchord + cr + linebeatlyr + cr + cr;
+                                            else if (linebeatchord != "")
+                                                res += linebeatchord + cr + cr;
+                                            else if (linebeatlyr != "")
+                                                res += linebeatlyr + cr + cr;
+
+
+                                        }
+                                    }
+                                    // Reset all
+                                    linebeatchord = string.Empty;
+                                    linebeatlyr = string.Empty;
+                                    beatlyr = string.Empty;
+                                    beatchord = string.Empty;
+                                    lastchord = string.Empty;
+                                }
+                                #endregion store result
+                                else if (pll.CharType == Syllable.CharTypes.Text)
+                                {
+                                    lyr = pll.Text;
+
+                                    if (bHasChordsInLyrics && _removechordpattern != null)
+                                    {
+                                        // Remove chords from lyrics 
+                                        lyr = Regex.Replace(lyr, _removechordpattern, replace);
+                                    }
+
+                                    // ===========================
+                                    // 2 - Search chords
+                                    // ===========================                                        
+                                    if (chordName == EmptyChord)
+                                        chordName = "";
+
+                                    if (chordName != "" && chordName != _currentChordName)
+                                    {
+                                        _currentChordName = chordName;
+                                    }
+                                    else
+                                    {
+                                        chordName = "";
+                                    }
+
+                                    // Do not repeat chord on all lyrics of this beat
+                                    if (lastchord == chordName)
+                                        chordName = "";
+                                    else
+                                        lastchord = chordName;
+
+
+                                    // ===========================
+                                    // 3 - Manage lyrics &
+                                    //  Add spaces to harmonize lenght of items
+                                    // ===========================
+                                    // lyric AND chord                                    
+                                    if (lyr.Trim() != "" && chordName.Trim() != "")
+                                    {
+                                        // F1 if (beatlyr.Length > chord.Length)
+                                        if (lyr.Length > chordName.Length)
+                                        {
+                                            // Case of lyrics starting with a space (instead of trailing space)
+                                            if (lyr.Substring(0, 1) == " ")
+                                            {
+                                                beatchord += " " + chordName;
+                                                beatchord += new string(' ', lyr.Length - 1 - chordName.Length);
+                                                beatlyr += lyr;
+                                            }
+                                            else
+                                            {
+                                                // F1 beatchord += new string(' ', beatlyr.Length - chord.Length);
+                                                beatchord += chordName;
+                                                beatchord += new string(' ', lyr.Length - chordName.Length);
+                                                beatlyr += lyr;
+                                            }
+                                        }
+                                        // F1 else if (beatlyr.Length < chord.Length)
+                                        else if (lyr.Length < chordName.Length)
+                                        {
+                                            if (lyr.Substring(0, 1) == " ")
+                                            {
+                                                //Console.WriteLine("lyric left space");
+                                                beatchord += " " + chordName;
+                                                beatlyr += lyr;
+                                                beatlyr += new string(' ', chordName.Length + 1 - lyr.Length);
+                                            }
+                                            else
+                                            {
+                                                beatchord += chordName;
+                                                beatlyr += lyr;
+                                                beatlyr += new string(' ', chordName.Length - lyr.Length);
+                                            }
+                                        }
+                                        else
+                                        {
+                                            if (lyr.Substring(0, 1) == " ")
+                                            {
+                                                //Console.WriteLine("lyric left space");
+                                                beatchord += " " + chordName;
+                                                beatlyr += lyr + " ";
+                                            }
+                                            else
+                                            {
+                                                beatchord += chordName;
+                                                beatlyr += lyr;
+                                            }
+                                        }
+                                    }
+                                    // lyric, no chord                                    
+                                    else if (lyr.Trim() != "" && chordName.Trim() == "")
+                                    {
+                                        beatchord += new string(' ', lyr.Length);
+                                        beatlyr += lyr;
+                                    }
+                                    // no lyric, chord                                    
+                                    else if (lyr.Trim() == "" && chordName.Trim() != "")
+                                    {
+                                        beatchord += chordName + " ";
+                                        beatlyr += new string(' ', chordName.Length + 1);
+                                    }
+
+                                    // Reset all
+                                    linebeatlyr += beatlyr;
+                                    linebeatchord += beatchord;
+                                    beatlyr = string.Empty;
+                                    beatchord = string.Empty;
+                                    lyr = string.Empty;
+                                    chordName = string.Empty;
+                                }
+                            } // foreach beatlyr
+                        }
+                        else
+                        {
+                            // diclyr[beat] is null
+                            // Chords ?
+
+                            // ===========================
+                            // 2 - Search chords
+                            // ===========================                                        
+                            if (chordName == EmptyChord)
+                                chordName = "";
+
+                            if (chordName != "" && chordName != _currentChordName)
+                            {
+                                _currentChordName = chordName;
+                            }
+                            else
+                            {
+                                chordName = "";
+                            }
+
+
+                            // ===========================
+                            // 3 - Manage lyrics &
+                            //  Add spaces to rech lenght of items
+                            // ===========================
+                            // lyric
+                            if (beatlyr.Trim() != "" && chordName.Trim() != "")
+                            {
+                                if (beatlyr.Length > chordName.Length)
+                                {
+                                    beatchord += chordName;
+                                    beatchord += new string(' ', beatlyr.Length - chordName.Length);
+                                }
+                                else if (beatlyr.Length < chordName.Length)
+                                {
+                                    beatchord += chordName;
+                                    beatlyr += new string(' ', chordName.Length - lyr.Length);
+                                }
+                                else
+                                {
+                                    beatchord += chordName;
+
+                                }
+                            }
+                            // lyric, no chord
+                            else if (beatlyr.Trim() != "" && chordName.Trim() == "")
+                            {
+                                beatchord += new string(' ', lyr.Length);
+                            }
+                            // no lyric, chord
+                            else if (beatlyr.Trim() == "" && chordName.Trim() != "")
+                            {
+                                beatchord += chordName + " ";
+                                beatlyr += new string(' ', chordName.Length + 1);
+                            }
+
+                            // Reset all
+                            linebeatlyr += beatlyr;
+                            linebeatchord += beatchord;
+                            beatlyr = string.Empty;
+                            beatchord = string.Empty;
+                            lyr = string.Empty;
+                            chordName = string.Empty;
+                        }
+                    }
+                }
+            }
+
+            // Store last line
+            linebeatlyr += beatlyr;
+
+            if (linebeatlyr != "" || linebeatchord != "")
+            {
+                // New Line => store result                
+                res += linebeatchord + cr + linebeatlyr;
+            }
+
+            return res;
+        }
 
         #endregion TAB3
 
@@ -3335,7 +4251,8 @@ namespace Karaboss.MidiLyrics
         /// Used in frmChords TAB1, 2 & 3 and frmMidiLyrics
         /// </summary>
         /// <returns></returns>
-        public Dictionary<int, (string, int)> FillGridBeatChordsWithLyricsChords()
+        /*
+        public Dictionary<int, (string, int)> FillGridBeatChordsWithLyricsChords2()
         {
             int nbBeatsPerMeasure = sequence1.Numerator;
             //int measure;
@@ -3378,6 +4295,47 @@ namespace Karaboss.MidiLyrics
 
                     _gridbeatchords[beat] = (chordName, pll.TicksOn);
                 }
+            }
+
+            return _gridbeatchords;
+        }
+        */
+        public Dictionary<int, (string, int)> FillGridBeatChordsWithLyricsChords()
+        {
+            int nbBeatsPerMeasure = sequence1.Numerator;            
+            int beat;
+            int beatDuration = _measurelen / nbBeatsPerMeasure;
+            int beats = (int)Math.Ceiling(_totalTicks / (float)beatDuration);
+            string chordName;
+
+            _gridbeatchords = new Dictionary<int, (string, int)>();
+
+            #region check
+            if (KLyrics == null || KLyrics.Count == 0)
+                return _gridbeatchords;
+            #endregion check
+
+            // Initialize dictionary
+            if (KLyrics.Lines[KLyrics.Lines.Count -1].Syllables.Last().Beat > beats)
+                beats = KLyrics.Lines[KLyrics.Lines.Count - 1].Syllables.Last().Beat;
+
+            for (int i = 1; i <= beats; i++)
+            {
+                _gridbeatchords[i] = (ChordNotFound, 0);
+            }
+
+            for (int i = 0; i < KLyrics.Lines.Count; i++)
+            {
+                for (int j = 0; j < KLyrics.Lines[i].Syllables.Count; j++)
+                {
+                    Syllable syll = KLyrics.Lines[i].Syllables[j];
+                    chordName = syll.Chord;
+                    if (chordName != string.Empty)
+                    {
+                        beat = syll.Beat;
+                        _gridbeatchords[beat] = (chordName, syll.TicksOn);
+                    }
+                }               
             }
 
             return _gridbeatchords;
@@ -3465,7 +4423,7 @@ namespace Karaboss.MidiLyrics
             return tx;
         }
         */
-        public string GetLyricsLinesWithChords2()
+        public string GetLyricsLinesWithChords()
         {
             string tx = string.Empty;
             string chord;
