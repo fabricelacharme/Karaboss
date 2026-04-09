@@ -32,9 +32,11 @@
 
 #endregion
 
+using kar;
 using Karaboss.MidiLyrics;
 using Karaboss.SRT;
 using Mozilla.NUniversalCharDet;
+using Sanford.Multimedia.Midi;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -43,7 +45,6 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
-using kar;
 
 namespace Karaboss.Utilities
 {
@@ -52,69 +53,7 @@ namespace Karaboss.Utilities
         Lines = 0,
         Syllabes = 1,
     }
-
-    /*
-    public class Syllable
-    {
-        public string Text { get; set; }
-        public double StartTime { get; set; }
-        public double Duration { get; set; }    // syllable duration
-
-        public Syllable(string text, double startTime, double duration)
-        {
-            Text = text;
-            StartTime = startTime;
-            Duration = duration;
-        }
-    }
-
-    public class KaraokeLine
-    {
-        public List<Syllable> Syllables { get; set; }
-        public double StartTime => Syllables.First().StartTime;
-        public double EndTime => Syllables.Last().StartTime + Syllables.Last().Duration;
-
-        public KaraokeLine(List<Syllable> syllables)
-        {
-            Syllables = syllables;
-        }
-
-        public KaraokeLine()
-        {
-            Syllables = new List<Syllable>();
-        }
-
-        public void Add(Syllable syllable)
-        {
-            Syllables.Add(syllable);
-        }
-
-    }
-
-    public class KaraokeLyrics
-    {
-        public List<KaraokeLine> Lines { get; set; }
-
-        public double StartTime => Lines.First().StartTime;
-        public double EndTime => Lines.Last().EndTime;
-
-        public KaraokeLyrics(List<KaraokeLine> lines)
-        {
-            Lines = lines;
-        }
-
-        public KaraokeLyrics()
-        {
-            Lines = new List<KaraokeLine>();
-        }
-
-        public void Add(KaraokeLine line)
-        {
-            Lines.Add(line);
-        }
-
-    }
-    */
+   
 
     public static class LyricsUtilities
     {
@@ -2851,8 +2790,6 @@ namespace Karaboss.Utilities
         #endregion import export KOK
 
 
-
-
         #region import export SRT
 
         #region export SRT
@@ -2951,6 +2888,178 @@ namespace Karaboss.Utilities
         #endregion export SRT
 
         #endregion import export SRT
+
+
+        #region track lyrics
+
+        public static void TrkInsertLyrics(Track Track, kLyrics l, LyricTypes LyricType)
+        {
+            int currentTick;
+            int lastcurrenttick = 0;
+
+            string currentElement;
+            string currentCR = string.Empty;
+
+            Track.Lyrics.Clear();
+            Track.LyricsText.Clear();
+
+            Track.TotalLyricsL = "";
+            Track.TotalLyricsT = "";
+
+            kar.Syllable pll = new kar.Syllable();
+
+            if (l == null || l.Lines.Count == 0)
+                return;
+
+            // Recréé tout les textes et lyrics
+            for (int i = 0; i < l.Lines.Count; i++)
+            {
+                kLine line = l.Lines[i];
+
+
+                // Paragraph line
+                if (line.Syllables.Count == 1 && line.Syllables.First().CharType == kar.Syllable.CharTypes.ParagraphSep)
+                {
+                    pll = line.Syllables.First();
+
+                    if (LyricType == LyricTypes.Text)
+                        currentCR = m_SepParagraph;
+                    else
+                        currentCR = "\r\r";
+
+                    Track.Lyric L = new Track.Lyric()
+                    {
+                        Element = pll.Text,
+                        TicksOn = pll.TicksOn,
+                        Type = (Track.Lyric.Types)pll.CharType,
+                    };
+
+                    if (LyricType == LyricTypes.Text)
+                    {
+                        // si lyrics de type text                     
+                        Track.LyricsText.Add(L);
+                    }
+                    else
+                    {
+                        // si lyrics de type lyrics
+                        Track.Lyrics.Add(L);
+                    }
+                }
+                else
+                {
+                    // Normal line
+                    for (int idx = 0; idx < line.Syllables.Count; idx++)
+                    {
+                        pll = line.Syllables[idx];
+                        // C'est un lyric
+                        currentTick = pll.TicksOn;
+                        if (currentTick >= lastcurrenttick)
+                        {
+                            lastcurrenttick = currentTick;
+                            currentElement = currentCR + pll.Text;
+
+                            // Transforme en byte la nouvelle chaine
+                            // ERROR FAB 16-01-2021 : must tyake into accout encoding selected by end user !!!
+                            byte[] newdata; // = Encoding.Default.GetBytes(currentElement);
+
+                            switch (OpenMidiFileOptions.TextEncoding)
+                            {
+                                case "Ascii":
+                                    //sy = System.Text.Encoding.Default.GetString(data);
+                                    newdata = System.Text.Encoding.Default.GetBytes(currentElement);
+                                    break;
+                                case "Chinese":
+                                    System.Text.Encoding chinese = System.Text.Encoding.GetEncoding("gb2312");
+                                    newdata = chinese.GetBytes(currentElement);
+                                    break;
+                                case "Japanese":
+                                    System.Text.Encoding japanese = System.Text.Encoding.GetEncoding("shift_jis");
+                                    newdata = japanese.GetBytes(currentElement);
+                                    break;
+                                case "Korean":
+                                    System.Text.Encoding korean = System.Text.Encoding.GetEncoding("ks_c_5601-1987");
+                                    newdata = korean.GetBytes(currentElement);
+                                    break;
+                                case "Vietnamese":
+                                    System.Text.Encoding vietnamese = System.Text.Encoding.GetEncoding("windows-1258");
+                                    newdata = vietnamese.GetBytes(currentElement);
+                                    break;
+                                default:
+                                    newdata = System.Text.Encoding.Default.GetBytes(currentElement);
+                                    break;
+                            }
+
+
+                            MetaMessage mtMsg;
+
+                            // Update Track.Lyrics List
+                            Track.Lyric L = new Track.Lyric()
+                            {
+                                Element = pll.Text,
+                                TicksOn = pll.TicksOn,
+                                Type = (Track.Lyric.Types)pll.CharType,
+                            };
+
+
+                            if (LyricType == LyricTypes.Text)
+                            {
+                                // si lyrics de type text
+                                mtMsg = new MetaMessage(MetaType.Text, newdata);
+                                Track.LyricsText.Add(L);
+                            }
+                            else
+                            {
+                                // si lyrics de type lyrics
+                                mtMsg = new MetaMessage(MetaType.Lyric, newdata);
+                                Track.Lyrics.Add(L);
+                            }
+
+                            // Insert new message
+                            Track.Insert(currentTick, mtMsg);
+                        }
+                        currentCR = "";
+                    }
+
+                    // Add a linefeed if next line is not a paragraph
+                    if (i < l.Lines.Count - 1 && l.Lines[i + 1].Syllables.Count != 1 && l.Lines[i + 1].Syllables.First().CharType != kar.Syllable.CharTypes.ParagraphSep)
+                    {
+                        if (LyricType == LyricTypes.Text)
+                            currentCR = m_SepLine;
+                        else
+                            currentCR = "\r";
+
+                        pll = new kar.Syllable()
+                        {
+                            Text = m_SepLine,
+                            TicksOn = lastcurrenttick,
+                            CharType = kar.Syllable.CharTypes.LineFeed
+                        };
+
+                        // Update Track.Lyrics List
+                        Track.Lyric L = new Track.Lyric()
+                        {
+                            Element = pll.Text,
+                            TicksOn = pll.TicksOn,
+                            Type = (Track.Lyric.Types)pll.CharType,
+                        };
+
+                        if (LyricType == LyricTypes.Text)
+                        {
+                            // si lyrics de type text                     
+                            Track.LyricsText.Add(L);
+                        }
+                        else
+                        {
+                            // si lyrics de type lyrics
+                            Track.Lyrics.Add(L);
+                        }
+                    }
+                }
+            }
+        }
+
+
+        #endregion track lyrics
 
 
     }

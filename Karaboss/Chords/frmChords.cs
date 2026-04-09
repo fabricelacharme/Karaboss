@@ -46,7 +46,6 @@ using System.IO;
 using System.Linq;
 using System.Windows.Forms;
 using Karaboss.Resources.Localization;
-using Karaboss.xplorer;
 
 namespace Karaboss
 {
@@ -64,9 +63,9 @@ namespace Karaboss
         private bool scrolling = false;
 
         // Current file beeing edited
-        private string MIDIfileName; // = string.Empty;
-        private string MIDIfilePath; // = string.Empty;
-        private string MIDIfileFullPath; // = string.Empty;
+        private string MIDIfileName; 
+        private string MIDIfilePath; 
+        private string MIDIfileFullPath; 
 
         private readonly string m_SepLine = "/";
         private readonly string m_SepParagraph = "\\";
@@ -507,7 +506,7 @@ namespace Karaboss
             // Mandatory to color headers
             tabChordsControl.DrawMode = TabDrawMode.OwnerDrawFixed;
 
-            #region 1er TAB                    
+            #region 1st TAB                    
             // * tabPageDiagrams
             // * -- pnlDisplayHorz
             //      -- ChordControl1
@@ -658,7 +657,6 @@ namespace Karaboss
             #endregion bitmaps of chords
 
 
-
             #region Panel Bottom
             // 5 : add a panel at the bottom
             // This panel will host the lyrics
@@ -706,10 +704,10 @@ namespace Karaboss
 
             #endregion
 
-            #endregion 1er TAB
+            #endregion 1st TAB
 
 
-            #region 2eme TAB MAP
+            #region 2nd TAB MAP
 
             #region display map chords
             pnlDisplayMap = new Panel() {
@@ -746,10 +744,10 @@ namespace Karaboss
 
             #endregion ChordMapControl
 
-            #endregion 2eme TAB 
+            #endregion 2nd TAB 
 
 
-            #region 3eme TAB LYRICS
+            #region 3rd TAB LYRICS
 
             pnlDisplayWords = new Panel() {
                 Parent = tabPageLyrics,
@@ -774,10 +772,10 @@ namespace Karaboss
             };
             pnlDisplayWords.Controls.Add(txtDisplayWords);
 
-            #endregion 3eme TAB
+            #endregion 3rd TAB
 
             // =================================
-            #region 4eme TAB MODIFY
+            #region 4th TAB MODIFY
             // =================================
 
             #region Modify map chords
@@ -823,7 +821,7 @@ namespace Karaboss
 
             #endregion ChordMapControl
 
-            #endregion 4eme TAB
+            #endregion 4th TAB
 
         }
      
@@ -1295,9 +1293,7 @@ namespace Karaboss
         /// </summary>
         private void DisplayLyrics()
         {
-            // New
-            //myLyricsMgmt.FullExtractLyrics(true);
-            myLyricsMgmt.FullExtractLyrics2(true);
+            myLyricsMgmt.FullExtractLyrics(true);
 
             myLyricsMgmt.LoadLyricsPerBeat();
             myLyricsMgmt.LoadLyricsLines();
@@ -1309,7 +1305,6 @@ namespace Karaboss
             // Display lyrics on chords map
             ChordMapControl1.GridLyrics = myLyricsMgmt.Gridlyrics;
             ChordMapControlModify.GridLyrics = myLyricsMgmt.Gridlyrics;
-
         }            
          
         /// <summary>
@@ -1319,7 +1314,6 @@ namespace Karaboss
         private void DisplayLineLyrics(int pos)
         {
             lblLyrics.Text = myLyricsMgmt.DisplayLineLyrics(pos);
-
             lblOtherLyrics.Text = myLyricsMgmt.DisplayOtherLinesLyrics(pos);
         }
 
@@ -3339,12 +3333,8 @@ namespace Karaboss
 
             Track track = sequence1.tracks[myLyricsMgmt.MelodyTrackNum];
             
-            //if (myLyricsMgmt.plLyrics.Count == 0)
-            //    myLyricsMgmt.FullExtractLyrics(true);
-
             if (myLyricsMgmt.KLyrics.Lines.Count == 0)
-                myLyricsMgmt.FullExtractLyrics2(true);
-
+                myLyricsMgmt.FullExtractLyrics(true);
 
             #region check
             if (myLyricsMgmt.ChordDelimiter == (null, null) || myLyricsMgmt.ChordDelimiter == ("", "") || myLyricsMgmt.RemoveChordPattern == null)
@@ -3355,13 +3345,10 @@ namespace Karaboss
             #endregion check
 
             myLyricsMgmt.PopulateUpdatedChords(GridBeatChords);
-            myLyricsMgmt.CleanLyrics();
-
-           
+            myLyricsMgmt.CleanLyricsWithChords();           
 
             // Insert new lyrics in the sequence
-            ReplaceLyrics(myLyricsMgmt.plLyrics, LyricTypes.Lyric, myLyricsMgmt.MelodyTrackNum);
-
+            ReplaceLyrics(myLyricsMgmt.KLyrics, LyricTypes.Lyric, myLyricsMgmt.MelodyTrackNum);
         }
 
 
@@ -3372,7 +3359,7 @@ namespace Karaboss
         /// The target is to host the lyrics in the melody track
         /// </summary>
         /// <param name="pLyrics"></param>
-        private void ReplaceLyrics(List<plLyric> newpLyrics, LyricTypes newLyricType, int melodytracknum)
+        private void ReplaceLyrics(kar.kLyrics newpLyrics, LyricTypes newLyricType, int melodytracknum)
         {
             // LyricType has changed => refresh display
             bool bRefreshDisplay = (newLyricType != myLyricsMgmt.LyricType);
@@ -3391,14 +3378,15 @@ namespace Karaboss
             Track track = sequence1.tracks[melodytracknum];
 
             // Insert all lyric events
-            TrkInsertLyrics(track, newpLyrics, newLyricType);
+            //TrkInsertLyrics(track, newpLyrics, newLyricType);
+            LyricsUtilities.TrkInsertLyrics(track, newpLyrics, newLyricType);
 
             // Reload myLyricMgmt
             myLyricsMgmt = new MidiLyricsMgmt(sequence1);
 
 
             // Refresh frmMidiLyrics
-            if (myLyricsMgmt.OrgplLyrics.Count > 0)
+            if (myLyricsMgmt.OrgKLyrics.Count > 0)
             {
                 // Reset display
                 myLyricsMgmt.ResetDisplayChordsOptions(Karaclass.m_ShowChords);               
@@ -3415,7 +3403,8 @@ namespace Karaboss
         /// <param name="Track"></param>
         /// <param name="l"></param>
         /// <param name="LyricType"></param>
-        private void TrkInsertLyrics(Track Track, List<plLyric> l, LyricTypes LyricType)
+        /*
+        private void TrkInsertLyrics(Track Track, kar.kLyrics l, LyricTypes LyricType)
         {
             int currentTick;
             int lastcurrenttick = 0;
@@ -3568,7 +3557,7 @@ namespace Karaboss
                 }
             }
         }
-
+        */
 
         /// <summary>
         /// Rewrite tags level sequence
