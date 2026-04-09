@@ -403,7 +403,6 @@ namespace Karaboss
             get { return _dirSlideShow; }
             set
             {
-
                 // Change only if not in playlist mode
                 //if (_bplaylist)
                 //    return;
@@ -857,7 +856,7 @@ namespace Karaboss
 
             // Load lyrics with plLyrics            
             //pBox.LoadSong(pcLyrics);
-            pBox.LoadSong(pcLyricsNew);
+            //pBox.LoadSong(pcLyricsNew);
 
 
             #endregion load lyrics and chords in picturebox control
@@ -1382,8 +1381,6 @@ namespace Karaboss
         #endregion panel events
 
         #endregion pnlWindow        
-
-
 
 
         /// <summary>

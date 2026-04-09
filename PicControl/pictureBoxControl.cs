@@ -41,11 +41,8 @@ using System.Drawing.Imaging;
 using System.Drawing.Text;
 using System.IO;
 using System.Runtime.InteropServices;
-using System.Text.RegularExpressions;
 using System.Threading;
 using System.Windows.Forms;
-using static PicControl.pictureBoxControl;
-using static System.Windows.Forms.LinkLabel;
 
 namespace PicControl
 {
@@ -111,8 +108,10 @@ namespace PicControl
         public kLyrics KLyrics 
         { 
             get { return _kLyrics; } 
-            set { 
+            set 
+            { 
                 _kLyrics = value; 
+                LoadSong();
             } 
         }
 
@@ -274,6 +273,7 @@ namespace PicControl
                 {
                     case "Diaporama":                       
                         break;
+                    
                     case "SolidColor":
                         m_Cancel = true;
                         Terminate();
@@ -1042,6 +1042,7 @@ namespace PicControl
         /// Load text of song
         /// </summary>
         /// <param name="toto"></param>
+        /*
         public void LoadSong(List<plLyric> plLyrics, bool bDemoMode = false)
         {
             string lyrics; // = string.Empty;
@@ -1096,6 +1097,64 @@ namespace PicControl
                     createListNextRectangles(syllabes[0].last + 1);                            
             } 
                      
+        }
+        */
+        public void LoadSong(bool bDemoMode = false)
+        {
+            string lyrics;
+            lstLyricsLines = new List<string>();
+            syllabes = new List<syllabe>();
+
+            if (_kLyrics.Count > 0)
+            {
+                lyrics = string.Empty;
+                pboxWnd.Invalidate();
+
+                for (int i = 0; i < _kLyrics.Lines.Count; i++)
+                {
+                    for (int j = 0; j < _kLyrics.Lines[i].Syllables.Count; j++)
+                    {
+                        // Force uppercase
+                        if (_bforceuppercase)
+                            _kLyrics.Lines[i].Syllables[j].Text = _kLyrics.Lines[i].Syllables[j].Text.ToUpper();
+                        lyrics += _kLyrics.Lines[i].Syllables[j].Text;
+                    }
+                }
+
+                this.Txt = lyrics;
+
+                // store lines in a specific list
+                if (_kLyrics != null)
+                    lstLyricsLines = StoreLyricsLines(_kLyrics);
+
+                // Number of lines (offset calculation)
+                _nbLyricsLines = lstLyricsLines.Count - 1;
+
+                // ajust font size
+                lineMax = GetMaxLength();
+                AjustText(lineMax);
+
+                // Store syllabes                
+                if (_kLyrics != null)
+                    syllabes = StoreLyricsSyllabes(_kLyrics);
+
+                if (bDemoMode)
+                {
+                    bHighLight = true;
+                }
+                else
+                {
+                    bHighLight = false;
+                    // Position initiale                 
+                    _currentTextPos = -1;
+                }
+
+                // Create rectangles
+                createListRectangles(0);
+                if (syllabes != null && syllabes.Count > 0)
+                    createListNextRectangles(syllabes[0].last + 1);
+            }
+
         }
 
         #endregion public methods
@@ -1230,110 +1289,73 @@ namespace PicControl
         /// </summary>
         /// <param name="sec">Count down max </param>
         public void LoadWaitSong(int sec)
-        {           
-            string tx = string.Empty;
-
-            // 10|9|8|7|6|5|4|3|2|1|0|                     
-            for (int i = sec; i >= 0; i--)
-            {
-                tx += i.ToString() + _InternalSepLines;
-            }
-            
-
-            List<plLyric> plLyrics = StoreDemoText(tx);
-            
+        {
             _txtNbLines = 1;
             dirSlideShow = null;
-            SetBackground(null);
-
-            LoadSong(plLyrics);
+            SetBackground(null);           
 
             // Initial position
             _currentTextPos = -1;
             vOffset = 0;
             nextStartOfLineTime = 0;
 
-            //m_wait = true;
+
+            List<string> lines = new List<string>();
+            // 10|9|8|7|6|5|4|3|2|1|0|       
+            for (int i = sec; i >= 0; i--)
+            {
+                lines.Add(i.ToString());
+            }
+
+            // Do not use KLyrics but _kLyrics to be able to use the same LoadSong method for demo and real text
+            _kLyrics = StoreDemoText(lines);
+            LoadSong(true);
         }
 
         public void endDemoText()
         {            
             syllabes = null;
         }
-        
+
+
         /// <summary>
         /// Store demo text
         /// '|' are carriage return
         /// </summary>
         /// <param name="tx"></param>
         /// <returns></returns>
-        private List<plLyric> StoreDemoText(string tx, int ticks = 0)
+        private kLyrics StoreDemoText(List<string> lines, int tcks = 0)
         {
-            // replace spaces and carriage return 
-            // tata toto<cr>titi tutu devient
-            // tata toto titi<cr>' ' tutu devient
-            // tata]toto<cr>[,titi],tutu
+            int ticks = 0;
+            Syllable syll;
+            kLine kLine = new kLine();
+            kLyrics KL = new kLyrics();
 
-            // protect spaces, replaced by ']' + space
-            string m_ProtectSpace = "¾";
-            string S = tx.Replace(" ", m_ProtectSpace + " ");
-
-            // _InternalSepLines = replaced by _InternalSepLines + space
-            S = S.Replace(_InternalSepLines, _InternalSepLines + " ");
-
-            // Split syllabes by spaces
-            string[] strLyricSyllabes = S.Split(new Char[] { ' ' });
-
-            LyricsWords = new List<string>();
-            LyricsTimes = new List<int>();
-
-            // load lists syllabes and times
-            List<plLyric> plLyrics = new List<plLyric>();
-
-            string sx = string.Empty;
-            (string, string) plElement = (string.Empty, string.Empty);
-            int plTime = 0;
-            plLyric.Types plType = plLyric.Types.Text;
-
-            for (int i = 0; i < strLyricSyllabes.Length; i++)
+            for (int i = 0; i < lines.Count; i++)
             {
-                sx = strLyricSyllabes[i];
-                sx = sx.Replace(m_ProtectSpace, " ");    // retrieve spaces
+                string l = lines[i];
+                string[] words = l.Split(new Char[] { ' ' });
 
-                plElement = ("", sx);
-                plTime = ticks + (i + 1) * 10;        // time each 10 ticks
-
-                if (sx.Length > 1 && sx.Substring(sx.Length - 1, 1) == _InternalSepLines)
+                kLine = new kLine();
+                for (int j = 0; j < words.Length; j++)
                 {
-                    // String ended by _InternalSepLines
-                    string reste = sx.Substring(0, sx.Length - 1);
-                    
-                    plType = plLyric.Types.Text;
-                    plElement = ("", reste);
-                    plLyrics.Add(new plLyric() { Type = plType, Element = plElement, TicksOn = plTime });
+                    if (bforceUppercase)
+                        words[j] = words[j].ToUpper();
 
-                    plType =  plLyric.Types.LineFeed;
-                    plElement = ("", _InternalSepLines);
-                    plLyrics.Add(new plLyric() { Type = plType, Element = plElement, TicksOn = plTime });
-
+                    string w = words[j] + " ";
+                    ticks = tcks + (i + 1) * (j + 1) * 10;
+                    syll = new Syllable() { Text = w, TicksOn = ticks };
+                    kLine.Add(syll);
                 }
-                else
-                {
-                    if (sx == _InternalSepLines)
-                        plType = plLyric.Types.LineFeed;
-                    else
-                        plType = plLyric.Types.Text;
-                    
-                    plLyrics.Add(new plLyric() { Type = plType, Element = plElement, TicksOn = plTime });
-                }                
+                KL.Add(kLine);
             }
-            return plLyrics;
+
+            return KL;
         }
 
+       
         /// <summary>
         /// Set default values for demonstration purpose
-        /// 1/4 = LineFeed
-        /// 1/2 = Paragraph
         /// </summary>
         private void SetDefaultValues()
         {           
@@ -1378,52 +1400,47 @@ namespace PicControl
         }
 
         public void LoadDemoText()
-        {
-            // Default text
-            string tx = "Lorem ipsum dolor sit amet," + _InternalSepLines;
-            tx += "consectetur adipisicing elit," + _InternalSepLines;
-            tx += "sed do eiusmod tempor incididunt" + _InternalSepLines;
-            tx += "ut labore et dolore magna aliqua." + _InternalSepLines;
-            tx += "Ut enim ad minim veniam," + _InternalSepLines;
-            tx += "quis nostrud exercitation ullamco" + _InternalSepLines;
-            tx += "laboris nisi ut aliquip" + _InternalSepLines;
-            tx += "ex ea commodo consequat." + _InternalSepLines;
-            tx += "Duis aute irure dolor in reprehenderit" + _InternalSepLines;
-            tx += "in voluptate velit esse cillum dolore" + _InternalSepLines;
-            tx += "eu fugiat nulla pariatur.";
+        {            
+            List<string> lines = new List<string>();
+            lines.Add("Lorem ipsum dolor sit amet,");
+            lines.Add("consectetur adipisicing elit,");
+            lines.Add("sed do eiusmod tempor incididunt");
+            lines.Add("ut labore et dolore magna aliqua.");
+            lines.Add("Ut enim ad minim veniam,");
+            lines.Add("quis nostrud exercitation ullamco");
+            lines.Add("laboris nisi ut aliquip");
+            lines.Add("ex ea commodo consequat.");
+            lines.Add("Duis aute irure dolor in reprehenderit");
+            lines.Add("in voluptate velit esse cillum dolore");
+            lines.Add("eu fugiat nulla pariatur.");
 
-            if (_bforceuppercase)
-                tx = tx.ToUpper();
-
-            List<plLyric> plLyrics = StoreDemoText(tx);
-
-            // Store lyrics in kLyrics format
-            _kLyrics = new kLyrics();
-            kLine line = new kLine();
-            for (int i = 0; i < plLyrics.Count; i++)
-            {
-                if (plLyrics[i].Type == plLyric.Types.LineFeed)
-                {
-                    _kLyrics.Add(line);
-                    line = new kLine();
-                }
-                else
-                {
-                    line.Add(new Syllable() { Text = plLyrics[i].Element.Item2, TicksOn = plLyrics[i].TicksOn });
-                }
-            }
-
-            LoadSong(plLyrics, true);
+            // Do not use KLyrics but _kLyrics to be able to use the same LoadSong method for demo and real text
+            _kLyrics = StoreDemoText(lines);
+           
+            // Load song with demo text
+            LoadSong(true);           
         }
 
         /// <summary>
-        /// Display a text
+        /// Display a text from another windows form (used in playlists to display song title and artist during the wait time before the song starts)
         /// </summary>
         /// <param name="tx"></param>
         public void DisplayText(string tx, int ticks = 0)
-        {            
-            List<plLyric> plLyrics = StoreDemoText(tx, ticks);
-            LoadSong(plLyrics);
+        {
+            List<string> lines = new List<string>();
+
+            string[] ArrayLines = tx.Split( _InternalSepLines.ToCharArray());
+            for (int i = 0; i < ArrayLines.Length; i++ )
+            {
+                lines.Add(ArrayLines[i]);
+            }
+                                   
+
+            //List<plLyric> plLyrics = StoreDemoText(tx, ticks);
+            _kLyrics = StoreDemoText(lines, ticks);
+            
+            //LoadSong(plLyrics);
+            LoadSong();
 
             // Initial position
             _currentPosition = 0;
@@ -2111,16 +2128,7 @@ namespace PicControl
                 if (syllabes[syllabeposition].line != currentLine)
                 {
                     currentLine = syllabes[syllabeposition].line;
-
-                    /*
-                    Console.WriteLine("************* line : " + currentLine );
-
-                    if (currentLine == 2) 
-                    {
-                        Console.WriteLine("ici");
-                    }
-                    */
-
+                    
                     // Beginning of line
                     x0 = syllabeposition - syllabes[syllabeposition].posline;
                     // Create list of rectangles for current line
@@ -2168,8 +2176,6 @@ namespace PicControl
 
             float h = MeasureStringHeight("ABCDEFGHIJKLMNOPQRSTUVWXYZ", femsize);
             long H = (long)pboxWnd.ClientSize.Height;
-
-
 
             switch (_OptionDisplay)
             {
@@ -2227,7 +2233,6 @@ namespace PicControl
 
                     g.Dispose();
                 }
-
             }
             return ret;
         }
@@ -2276,8 +2281,6 @@ namespace PicControl
                     tx = lstLyricsLines[i];
                 }
             }
-
-
             return tx;
         }
 
@@ -3108,8 +3111,12 @@ namespace PicControl
             switch (_optionbackground) 
             {                
             
-                case "Diaporama":                                      
-                    if (pictures.Length == 1)
+                case "SolidColor":                    
+                    e.Graphics.FillRectangle(new SolidBrush(_BgColor), new Rectangle(0, 0, this.Width, this.Height));
+                    break;
+
+                case "Diaporama":                                                                             
+                    if (pictures != null && pictures.Length == 1)
                     {                        
                         if (m_CurrentImage != null)
                         {                            
@@ -3549,24 +3556,22 @@ namespace PicControl
             }
         }
 
-
         #endregion paint resize
 
 
         #region Dispose
-        protected virtual void Dispose(bool disposing)
+        //protected virtual void Dispose(bool disposing)
+        protected override void Dispose(bool disposing)
         {
             if (!disposed)
             {
                 if (disposing)
                 {
-
                     if (m_ImageStream != null)
                     {
                         m_ImageStream.Dispose();
                         m_ImageStream = null;
-                    }
-                                       
+                    }                                      
                 }
 
                 _karaokeFont? .Dispose();
@@ -3583,7 +3588,7 @@ namespace PicControl
             }
         }
 
-        public void Dispose()
+        public new void Dispose()
         {
             Dispose(true);
             GC.SuppressFinalize(this);
