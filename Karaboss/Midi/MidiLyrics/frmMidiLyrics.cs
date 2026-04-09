@@ -851,12 +851,14 @@ namespace Karaboss
 
             #region load lyrics and chords in picturebox control
 
+            // Load kLyrics with kLyrics to have all the information for chords and lyrics positions, used for balls animation
+            pBox.KLyrics = kl;
+
+
             // Load lyrics with plLyrics            
             //pBox.LoadSong(pcLyrics);
             pBox.LoadSong(pcLyricsNew);
 
-            // Load kLyrics with kLyrics to have all the information for chords and lyrics positions, used for balls animation
-            pBox.KLyrics = kl;
 
             #endregion load lyrics and chords in picturebox control
 

@@ -31,6 +31,7 @@
  */
 
 #endregion
+using kar;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -43,7 +44,8 @@ using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Windows.Forms;
-using kar;
+using static PicControl.pictureBoxControl;
+using static System.Windows.Forms.LinkLabel;
 
 namespace PicControl
 {
@@ -105,7 +107,14 @@ namespace PicControl
 
         #region KaraokeLyrics
 
-        public kLyrics KLyrics { get; set; }
+        private kLyrics _kLyrics;
+        public kLyrics KLyrics 
+        { 
+            get { return _kLyrics; } 
+            set { 
+                _kLyrics = value; 
+            } 
+        }
 
         #endregion KaraokeLyrics
 
@@ -906,7 +915,7 @@ namespace PicControl
         #endregion Timer gradient
 
 
-        #region methods
+        #region public methods
 
         #region Move Windows
 
@@ -1003,73 +1012,7 @@ namespace PicControl
             }
         }
 
-
-        #region SlideShow with timer       
-        
-        // New Slideshow
-        private void InitSlideShow()
-        {
-            mBlend = 0;
-            count = 0;
-
-            timerChangeImage?.Dispose();
-            timerChangeImage = new System.Timers.Timer();            
-            timerChangeImage.Interval = freqSlideShow * 1000;
-            timerChangeImage.Elapsed += (sender, e) => OnTimerChangeImage();            
-
-            timerTransition?.Dispose();
-            timerTransition = new System.Timers.Timer();
-            timerTransition.Interval = 50;
-            timerTransition.Elapsed += (sender, e) => OnTimerTransition();            
-
-            try
-            {
-                Image1 = pictures[count];
-                Image2 = pictures[++count];
-            }
-            catch
-            {
-
-            }
-            timerTransition.Enabled = false;
-            timerChangeImage.Enabled = true;                                             
-        }
-
-        private void OnTimerTransition()
-        {
-            mBlend += mDir * 0.02F;
-
-            if (mBlend > 1)
-            {
-                // When mBlend is greater than 1, we change the images
-                // and stop the timer "timerTransition" to prevent a new change before time elapse of "timerChangeImage"
-                mBlend = 0.0F;
-
-                if ((count + 1) < pictures.Length)
-                {
-                    Image1 = pictures[count];
-                    Image2 = pictures[++count];
-                }
-                else if (count < pictures.Length) 
-                {
-                    Image1 = pictures[count];
-                    Image2 = pictures[0];
-                    count = 0;
-                }
-                
-                timerTransition.Enabled = false;                                                  
-            }
-
-            m_Blend = mBlend;
-        }
-
-        private void OnTimerChangeImage()
-        {
-            timerTransition.Enabled = true;
-        }       
-
-        #endregion SlideShow with timer      
-
+      
         /// <summary>
         /// Color the syllabe according to song position
         /// </summary>
@@ -1106,8 +1049,7 @@ namespace PicControl
             syllabes = new List<syllabe>();
 
             if (plLyrics.Count > 0)
-            {                
-                
+            {                                
                 lyrics = string.Empty;
                 pboxWnd.Invalidate();
 
@@ -1121,23 +1063,25 @@ namespace PicControl
                 }
 
                 this.Txt = lyrics;
+
                 // store lines in a specific list
-                StoreLyricsLines(lyrics);
+                if (_kLyrics != null)
+                    lstLyricsLines = StoreLyricsLines(_kLyrics);
+                
+                // Number of lines (offset calculation)
+                _nbLyricsLines = lstLyricsLines.Count - 1;
 
                 // ajust font size
                 lineMax = GetMaxLength();
                 AjustText(lineMax);
 
-                //TestCheckTimes(plLyrics);
-
-                // Store syllabes
-                StoreLyricsSyllabes(plLyrics);
-
-
+                // Store syllabes                
+                if (_kLyrics != null)
+                    syllabes = StoreLyricsSyllabes(_kLyrics);
+                
                 if (bDemoMode)
                 {
                     bHighLight = true;
-
                 }
                 else
                 {
@@ -1149,13 +1093,112 @@ namespace PicControl
                 // Create rectangles
                 createListRectangles(0);       
                 if (syllabes != null && syllabes.Count > 0)
-                    createListNextRectangles(syllabes[0].last + 1);
-                            
+                    createListNextRectangles(syllabes[0].last + 1);                            
             } 
                      
         }
 
-        #endregion methods
+        #endregion public methods
+
+
+        #region SlideShow with timer       
+
+        // New Slideshow
+        private void InitSlideShow()
+        {
+            mBlend = 0;
+            count = 0;
+
+            timerChangeImage?.Dispose();
+            timerChangeImage = new System.Timers.Timer();
+            timerChangeImage.Interval = freqSlideShow * 1000;
+            timerChangeImage.Elapsed += (sender, e) => OnTimerChangeImage();
+
+            timerTransition?.Dispose();
+            timerTransition = new System.Timers.Timer();
+            timerTransition.Interval = 50;
+            timerTransition.Elapsed += (sender, e) => OnTimerTransition();
+
+            try
+            {
+                Image1 = pictures[count];
+                Image2 = pictures[++count];
+            }
+            catch
+            {
+
+            }
+            timerTransition.Enabled = false;
+            timerChangeImage.Enabled = true;
+        }
+
+        private void OnTimerTransition()
+        {
+            mBlend += mDir * 0.02F;
+
+            if (mBlend > 1)
+            {
+                // When mBlend is greater than 1, we change the images
+                // and stop the timer "timerTransition" to prevent a new change before time elapse of "timerChangeImage"
+                mBlend = 0.0F;
+
+                if ((count + 1) < pictures.Length)
+                {
+                    Image1 = pictures[count];
+                    Image2 = pictures[++count];
+                }
+                else if (count < pictures.Length)
+                {
+                    Image1 = pictures[count];
+                    Image2 = pictures[0];
+                    count = 0;
+                }
+
+                timerTransition.Enabled = false;
+            }
+
+            m_Blend = mBlend;
+        }
+
+        private void OnTimerChangeImage()
+        {
+            timerTransition.Enabled = true;
+        }
+
+        #region SlideShow functions
+
+        /// <summary>
+        /// Load all images into a list
+        /// </summary>
+        /// <param name="dir"></param>
+        private void LoadImageList(string dir)
+        {
+
+            bgFiles = Directory.GetFiles(@dir, "*.jpg");
+            m_ImageFilePaths.Clear();
+            for (int i = 0; i < bgFiles.Length; ++i)
+            {
+                string file = bgFiles[i];
+                m_ImageFilePaths.Add(file);
+            }
+
+
+            // new slideshow
+
+            count = 0;
+            //mBlend = 0.0F;
+            pictures = new Bitmap[bgFiles.Length];
+            for (int i = 0; i < bgFiles.Length; ++i)
+            {
+                pictures[i] = new Bitmap(bgFiles[i]);
+            }
+
+        }
+
+        #endregion SlideShow functions
+
+
+        #endregion SlideShow with timer      
 
 
         #region tests
@@ -1178,39 +1221,6 @@ namespace PicControl
         }
         */
         #endregion tests
-
-
-        #region SlideShow functions
-
-        /// <summary>
-        /// Load all images into a list
-        /// </summary>
-        /// <param name="dir"></param>
-        private void LoadImageList(string dir)
-        {
-            
-            bgFiles = Directory.GetFiles(@dir, "*.jpg");
-            m_ImageFilePaths.Clear();
-            for (int i = 0; i < bgFiles.Length; ++i)
-            {
-                string file = bgFiles[i];
-                m_ImageFilePaths.Add(file);
-            }
-            
-
-            // new slideshow
-            
-            count = 0;
-            //mBlend = 0.0F;
-            pictures = new Bitmap[bgFiles.Length];
-            for (int i = 0; i < bgFiles.Length; ++i)
-            {
-                pictures[i] = new Bitmap(bgFiles[i]);
-            }
-
-        }
-
-        #endregion SlideShow functions
 
 
         #region demo, wait
@@ -1387,8 +1397,23 @@ namespace PicControl
 
             List<plLyric> plLyrics = StoreDemoText(tx);
 
-            LoadSong(plLyrics, true);
+            // Store lyrics in kLyrics format
+            _kLyrics = new kLyrics();
+            kLine line = new kLine();
+            for (int i = 0; i < plLyrics.Count; i++)
+            {
+                if (plLyrics[i].Type == plLyric.Types.LineFeed)
+                {
+                    _kLyrics.Add(line);
+                    line = new kLine();
+                }
+                else
+                {
+                    line.Add(new Syllable() { Text = plLyrics[i].Element.Item2, TicksOn = plLyrics[i].TicksOn });
+                }
+            }
 
+            LoadSong(plLyrics, true);
         }
 
         /// <summary>
@@ -1417,20 +1442,14 @@ namespace PicControl
         /// Store lyrics lines in a list called lstLyricsLines
         /// </summary>
         /// <param name="ly"></param>
-        private void StoreLyricsLines(string ly)
+        /*
+        private List<string> StoreLyricsLinesold(string ly)
         {
-            lstLyricsLines = new List<string>();
+            List<string> lstLines = new List<string>();
 
             string tx = string.Empty;
 
-            /*
-            * A back slash "\" character marks the end of a line of lyrics, as displayed by a Karaoke viewer/player program.
-            *
-            * A forward slash "/" character marks the end of a "paragraph" of lyrics. 
-            * Some Karaoke viewer / player programs interpret this to mean that the screen should be refreshed starting with the next line of lyrics at the top.
-            *
-            * Dash characters at the end of syllables are removed by the Karaoke viewer/player program, and the syllables are joined together. 
-            */
+           
             
             string lyr = string.Empty;
                              
@@ -1461,19 +1480,51 @@ namespace PicControl
                 if (_bshowparagraphs && tx == _InternalSepParagraphs)
                 {
                     // new paragraph = empty line (space)
-                    lstLyricsLines.Add(" ");
+                    lstLines.Add(" ");
                 }
                 else if (tx != "")
                 {                                        
-                    lstLyricsLines.Add(tx);
+                    lstLines.Add(tx);
                 }
             }
 
             // Number of lines (offset calculation)
-            _nbLyricsLines = lstLyricsLines.Count - 1;
+            //_nbLyricsLines = lstLyricsLines.Count - 1;
 
+            return lstLines;
+        }
+        */
+        private List<string> StoreLyricsLines(kLyrics kl)
+        {
+
+            /*
+           * A back slash "\" character marks the end of a line of lyrics, as displayed by a Karaoke viewer/player program.
+           *
+           * A forward slash "/" character marks the end of a "paragraph" of lyrics. 
+           * Some Karaoke viewer / player programs interpret this to mean that the screen should be refreshed starting with the next line of lyrics at the top.
+           *
+           * Dash characters at the end of syllables are removed by the Karaoke viewer/player program, and the syllables are joined together. 
+           */
+
+            List<string> lstLines = new List<string>();
+
+            for (int i = 0; i < kl.Lines.Count; i++)
+            {
+                string lineContent = kl.Lines[i].ToString();
+                if (_bshowparagraphs && lineContent == _InternalSepParagraphs)
+                {
+                    // new paragraph = empty line (space)
+                    lstLines.Add(" ");
+                }
+                else if (lineContent != "")
+                {
+                    lstLines.Add(lineContent);
+                }
+            }
+            return lstLines;
         }
 
+        /*
         private int GetMaxSyllabesInLine(int ind, int line, List<plLyric> plLyrics)
         {
             int max = 0;
@@ -1491,8 +1542,7 @@ namespace PicControl
             {
                 if (ind < plLyrics.Count)
                 {                    
-                    tx = plLyrics[ind].Element.Item2;
-                    //tx = tx.Trim();
+                    tx = plLyrics[ind].Element.Item2;                    
 
                     if (plLyrics[ind].Type == plLyric.Types.LineFeed || plLyrics[ind].Type == plLyric.Types.Paragraph)
                     {
@@ -1527,205 +1577,230 @@ namespace PicControl
 
             return max;
         }
+        */
 
         /// <summary>
         /// Store syllabes in a list, each item being a class called syllabe
         /// </summary>
-        /// <param name="plLyrics"></param>
-        private void StoreLyricsSyllabes(List<plLyric> plLyrics)
+        /// <param name="plLyrics"></param>      
+        List<syllabe> StoreLyricsSyllabes(kLyrics kl)
         {
-            syllabes = new List<syllabe>();
+            List<syllabe> lstSyllabes = new List<syllabe>();
 
-            string chordName = string.Empty;
-            string tx;
-            int itime = 0;
-            int idx = -1;
-            int firstitem = 0;
-            int indexSyllabe = 0;
-            int offset = 0;
-            int max;
-            int pos;
-            int iline;
-            int lastpos;
-            int line = 0;            
-
-            try
+            for (int i = 0; i < kl.Lines.Count; i++)
             {
-                
-                if (lstLyricsLines.Count == 0)
-                    return;
+                kLine line = kl.Lines[i];
 
-                // Loop line by line           
-                do
+                for (int j = 0; j < line.Syllables.Count; j++)
                 {
-                    string strline = lstLyricsLines[line];
-                    string strwrkline = strline;
-                    pos = 0;
-                    max = 0;
-                    iline = -1;
+                    Syllable kSyl = line.Syllables[j];
 
-                    // ==============================
-                    // Paragraph = empty line
-                    // ==============================
-                    if (plLyrics[indexSyllabe].Type == plLyric.Types.Paragraph)
+                    syllabe syl = new syllabe();
+
+                    syl.chord = kSyl.Chord;
+                    syl.line = i;                                                                   // line number of syllabe
+                    syl.posline = j;                                                                // position dans la ligne
+                    syl.pos = lstSyllabes.Count;                                                    // position dans la chanson
+                    syl.text = kSyl.CharType == Syllable.CharTypes.ParagraphSep ? " " : kSyl.Text;           // text of syllabe, space if paragraph
+                    syl.time = kSyl.TicksOn;                                                        // time of syllabe
+                    syl.SylCount = line.Syllables.Count;                                            // number of syllabes in this line                      
+                    syl.last = line.Syllables.Count - 1;                                            // position of last syllabe
+                    for (int k = 0; k < i; k++)
                     {
-                        #region add paragraph                        
-
-                        idx++;
-                        // Paragraphe = ligne vide
-                        // Crée un nouvel item syllabe
-                        syllabe syl = new syllabe();
-
-                        syl.chord = "";
-                        syl.line = line;                // line number of syllabe
-                        syl.pos = idx;                      // position dans la chanson
-                        syl.posline = 0;                    // position dans la ligne
-                        syl.text = " ";
-                        syl.SylCount = 1;                   // number of syllabes in this line
-                        syl.last = idx;                     // position of last syllabe                        
-                        syl.time = plLyrics[indexSyllabe].TicksOn; // time of syllabe
-                        syl.offset = offset;
-                        syllabes.Add(syl);
-
-                        indexSyllabe++;
-                        
-                        line++;
-                        #endregion add paragraph
-
+                        syl.last += kl.Lines[k].Syllables.Count;
                     }
-                    else if (plLyrics[indexSyllabe].Type == plLyric.Types.LineFeed)
-                    {
-                        #region linefeed
-                        // ==============================
-                        // LINEFEED
-                        // ==============================
-                        indexSyllabe++;                        
-
-                        #endregion linefeed
-                    }
-                    else
-                    {
-                        #region Text
-                        // ==============================
-                        // Normal line
-                        // ==============================                                                                                              
-
-                        // Search for number of syllabes in this line                    
-                        max = 0;
-                        if (plLyrics[indexSyllabe].Element.Item2.Trim() != "")
-                        {
-                            max = GetMaxSyllabesInLine(indexSyllabe, line, plLyrics);
-
-                            if (max == 0)
-                            {
-                                MessageBox.Show("Error: Syllabe not found", "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);    
-                                return;
-                            }
-                        }
-
-                        //nbLineFeeds = 0;
-                        lastpos = 0;
-                        // Offset de la ligne
-                        offset = 0;
-                        pos = 0;
-                        strwrkline = strline;
-
-                        // Loop for each syllabe in the same line                        
-                        do
-                        {
-                            if (indexSyllabe < plLyrics.Count)
-                            {
-                                chordName = plLyrics[indexSyllabe].Element.Item1;
-                                tx = plLyrics[indexSyllabe].Element.Item2;
-                                string trimtx = tx.Trim();
-                                itime = plLyrics[indexSyllabe].TicksOn;
-
-                               
-                                // ====================
-                                // NORMAL TEXT
-                                // ====================
-                                pos = strwrkline.IndexOf(trimtx, lastpos);
-
-                                if (pos != -1)
-                                {
-                                    offset = 0; // Offset de la ligne
-                                    lastpos = pos;
-
-                                    // Crée un nouvel item syllabe
-                                    syllabe syl = new syllabe();
-
-                                    idx++;
-                                    iline++;
-
-                                    if (iline == 0)
-                                        firstitem = idx;
-
-                                    if (max == 0)
-                                        max = 1;
-
-
-                                    syl.chord = chordName;
-                                    syl.line = line;                    // line number of syllabe
-                                    syl.posline = iline;                // position dans la ligne
-                                    syl.pos = idx;                      // position dans la chanson
-                                    syl.text = tx;                      // text of syllabe
-                                    syl.time = itime;                   // time of syllabe
-                                    syl.SylCount = max;                 // number of syllabes in this line
-                                    syl.last = firstitem + max - 1;     // position of last syllabe
-                                    syl.offset = offset;
-
-                                    syllabes.Add(syl);
-
-                                    if (syl.line == _nbLyricsLines && syl.posline == 0)
-                                    {
-                                        _lastLinePosition = syl.time;
-                                    }
-
-                                    // incrémente index
-                                    indexSyllabe++;
-
-                                    #region exit if CR
-                                    // if next syllabe is a linefeed => next line
-                                    if (indexSyllabe < plLyrics.Count && plLyrics[indexSyllabe].Type != plLyric.Types.Text)
-                                    {
-                                        line++;
-                                        break;
-                                    }
-
-                                    /*
-                                    if (indexSyllabe < plLyrics.Count && plLyrics[indexSyllabe].Type == plLyric.Types.LineFeed)
-                                    {                                        
-                                        line++;
-                                        break;
-                                    }
-
-                                    if (indexSyllabe < plLyrics.Count && plLyrics[indexSyllabe].Type == plLyric.Types.Paragraph)
-                                    {                                        
-                                        line++;
-                                        break;
-                                    }
-                                    */
-                                    #endregion exit if CR
-
-                                    // Replace used letters by a "#"
-                                    string rep = new string('#', trimtx.Length);
-                                    var regex = new Regex(Regex.Escape(trimtx));
-                                    strwrkline = regex.Replace(strwrkline, rep, 1);
-                                }
-                                
-                            }
-                        } while (pos != -1 && indexSyllabe < plLyrics.Count);
-
-                        #endregion Text
-                    }
-
-                } while (line <= lstLyricsLines.Count - 1 && indexSyllabe < plLyrics.Count);
+                    syl.offset = 0;
+                    lstSyllabes.Add(syl);
+                }
             }
-            catch (Exception ex) 
-            {
-                MessageBox.Show(ex.Message);
-            }
+            return lstSyllabes;
         }
+
+        /*
+          private List<syllabe> StoreLyricsSyllabes2(List<plLyric> plLyrics)
+          {
+              List<syllabe> syllabes = new List<syllabe>();
+
+              string chordName = string.Empty;
+              string tx;
+              int itime = 0;
+              int idx = -1;
+              int firstitem = 0;
+              int indexSyllabe = 0;
+              int offset = 0;
+              int max;
+              int pos;
+              int iline;
+              int lastpos;
+              int line = 0;            
+
+              try
+              {
+
+                  if (lstLyricsLines.Count == 0)
+                      return null;
+
+                  // Loop line by line           
+                  do
+                  {
+                      string strline = lstLyricsLines[line];
+                      string strwrkline = strline;
+                      pos = 0;
+                      max = 0;
+                      iline = -1;
+
+                      // ==============================
+                      // Paragraph = empty line
+                      // ==============================
+                      if (plLyrics[indexSyllabe].Type == plLyric.Types.Paragraph)
+                      {
+                          #region add paragraph                        
+
+                          idx++;
+                          // Paragraphe = ligne vide
+                          // Crée un nouvel item syllabe
+                          syllabe syl = new syllabe();
+
+                          syl.chord = "";
+                          syl.line = line;                            // line number of syllabe
+                          syl.pos = idx;                              // position dans la chanson
+                          syl.posline = 0;                            // position dans la ligne
+                          syl.text = " ";
+                          syl.SylCount = 1;                           // number of syllabes in this line
+                          syl.last = idx;                             // position of last syllabe                        
+                          syl.time = plLyrics[indexSyllabe].TicksOn;  // time of syllabe
+                          syl.offset = offset;
+                          syllabes.Add(syl);
+
+                          indexSyllabe++;
+
+                          line++;
+                          #endregion add paragraph
+
+                      }
+                      else if (plLyrics[indexSyllabe].Type == plLyric.Types.LineFeed)
+                      {
+                          #region linefeed
+                          // ==============================
+                          // LINEFEED
+                          // ==============================
+                          indexSyllabe++;                        
+
+                          #endregion linefeed
+                      }
+                      else
+                      {
+                          #region Text
+                          // ==============================
+                          // Normal line
+                          // ==============================                                                                                              
+
+                          // Search for number of syllabes in this line                    
+                          max = 0;
+                          if (plLyrics[indexSyllabe].Element.Item2.Trim() != "")
+                          {
+                              max = GetMaxSyllabesInLine(indexSyllabe, line, plLyrics);
+
+                              if (max == 0)
+                              {
+                                  MessageBox.Show("Error: Syllabe not found", "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);    
+                                  return null;
+                              }
+                          }
+
+                          //nbLineFeeds = 0;
+                          lastpos = 0;
+                          // Offset de la ligne
+                          offset = 0;
+                          pos = 0;
+                          strwrkline = strline;
+
+                          // Loop for each syllabe in the same line                        
+                          do
+                          {
+                              if (indexSyllabe < plLyrics.Count)
+                              {
+                                  chordName = plLyrics[indexSyllabe].Element.Item1;
+                                  tx = plLyrics[indexSyllabe].Element.Item2;
+                                  string trimtx = tx.Trim();
+                                  itime = plLyrics[indexSyllabe].TicksOn;
+
+
+                                  // ====================
+                                  // NORMAL TEXT
+                                  // ====================
+                                  pos = strwrkline.IndexOf(trimtx, lastpos);
+
+                                  if (pos != -1)
+                                  {
+                                      offset = 0; // Offset de la ligne
+                                      lastpos = pos;
+
+                                      // Crée un nouvel item syllabe
+                                      syllabe syl = new syllabe();
+
+                                      idx++;
+                                      iline++;
+
+                                      if (iline == 0)
+                                          firstitem = idx;
+
+                                      if (max == 0)
+                                          max = 1;
+
+
+                                      syl.chord = chordName;
+                                      syl.line = line;                    // line number of syllabe
+                                      syl.posline = iline;                // position dans la ligne
+                                      syl.pos = idx;                      // position dans la chanson
+                                      syl.text = tx;                      // text of syllabe
+                                      syl.time = itime;                   // time of syllabe
+                                      syl.SylCount = max;                 // number of syllabes in this line
+                                      syl.last = firstitem + max - 1;     // position of last syllabe
+                                      syl.offset = offset;
+
+                                      syllabes.Add(syl);
+
+                                      if (syl.line == _nbLyricsLines && syl.posline == 0)
+                                      {
+                                          _lastLinePosition = syl.time;
+                                      }
+
+                                      // incrémente index
+                                      indexSyllabe++;
+
+                                      #region exit if CR
+                                      // if next syllabe is a linefeed => next line
+                                      if (indexSyllabe < plLyrics.Count && plLyrics[indexSyllabe].Type != plLyric.Types.Text)
+                                      {
+                                          line++;
+                                          break;
+                                      }
+
+                                      #endregion exit if CR
+
+                                      // Replace used letters by a "#"
+                                      string rep = new string('#', trimtx.Length);
+                                      var regex = new Regex(Regex.Escape(trimtx));
+                                      strwrkline = regex.Replace(strwrkline, rep, 1);
+                                  }
+
+                              }
+                          } while (pos != -1 && indexSyllabe < plLyrics.Count);
+
+                          #endregion Text
+                      }
+
+                  } while (line <= lstLyricsLines.Count - 1 && indexSyllabe < plLyrics.Count);
+              }
+              catch (Exception ex) 
+              {
+                  MessageBox.Show(ex.Message);
+              }
+
+              return syllabes;
+          }
+        */
 
 
         /// <summary>
@@ -3221,11 +3296,9 @@ namespace PicControl
 
             #endregion
 
-
             // Call the base class OnPaint method to ensure proper rendering            
             base.OnPaint(e);
         }
-
 
         private void DrawText(PaintEventArgs e)
         {                             
