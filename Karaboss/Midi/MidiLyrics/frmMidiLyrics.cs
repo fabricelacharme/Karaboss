@@ -1206,11 +1206,12 @@ namespace Karaboss
             }
             else
             {
-                // Chords have to be guessed with a vertical search
-                myLyricsMgmt.plLyrics = myLyricsMgmt.PopulateDetectedChords(myLyricsMgmt.plLyrics);
+                // Chords have to be guessed with a vertical search                
+                myLyricsMgmt.KLyrics = myLyricsMgmt.PopulateDetectedChords2(myLyricsMgmt.KLyrics);
+                myLyricsMgmt.CleanLyrics();
             }
 
-            tx = myLyricsMgmt.GetLyricsLinesWithChords();
+            tx = myLyricsMgmt.GetLyricsLinesWithChords2();
             System.IO.File.WriteAllText(@file, tx);
 
             try
