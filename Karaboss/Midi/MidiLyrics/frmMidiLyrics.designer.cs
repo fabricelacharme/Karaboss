@@ -218,7 +218,7 @@
             // 
             this.pBox.ActiveBorderColor = System.Drawing.Color.DarkTurquoise;
             this.pBox.ActiveColor = System.Drawing.Color.YellowGreen;
-            this.pBox.BackColor = System.Drawing.Color.White;            
+            this.pBox.BackColor = System.Drawing.Color.White;
             this.pBox.bDemo = false;
             this.pBox.Beat = 200;
             this.pBox.BeatDuration = 0;
@@ -247,6 +247,7 @@
             this.pBox.InactiveChordColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(196)))), ((int)(((byte)(13)))));
             this.pBox.InactiveColor = System.Drawing.Color.White;
             this.pBox.KaraokeFont = new System.Drawing.Font("Segoe Print", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.pBox.KLyrics = null;
             this.pBox.LyricsTimes = ((System.Collections.Generic.List<int>)(resources.GetObject("pBox.LyricsTimes")));
             this.pBox.LyricsWords = ((System.Collections.Generic.List<string>)(resources.GetObject("pBox.LyricsWords")));
             this.pBox.m_Alpha = 255;

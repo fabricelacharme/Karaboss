@@ -40,6 +40,7 @@ using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 using System.Drawing.Text;
 using System.IO;
+using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading;
 using System.Windows.Forms;
@@ -822,7 +823,9 @@ namespace PicControl
         private int PAUSE_TIME;
 
         private List<string> lstLyricsLines;    // Liste de lignes
-        
+        private List<string> lstChordsLines;    // List of lines of chords (same number of lines as lstLyricsLines but with chords instead of lyrics)
+
+
         private int currentLine = 0;
         private string lineMax; // Ligne longueur max
         
@@ -1103,9 +1106,10 @@ namespace PicControl
         {
             string lyrics;
             lstLyricsLines = new List<string>();
+            lstChordsLines = new List<string>();
             syllabes = new List<syllabe>();
 
-            if (_kLyrics.Count > 0)
+            if (_kLyrics != null && _kLyrics.Count > 0)
             {
                 lyrics = string.Empty;
                 pboxWnd.Invalidate();
@@ -1125,8 +1129,10 @@ namespace PicControl
 
                 // store lines in a specific list
                 if (_kLyrics != null)
+                {
                     lstLyricsLines = StoreLyricsLines(_kLyrics);
-
+                    lstChordsLines = StoreChordLines(_kLyrics);
+                }
                 // Number of lines (offset calculation)
                 _nbLyricsLines = lstLyricsLines.Count - 1;
 
@@ -1540,6 +1546,42 @@ namespace PicControl
             }
             return lstLines;
         }
+
+        private List<string> StoreChordLines(kLyrics kl)
+        {
+            string chord;
+            string lyric;
+            string lineChords = string.Empty;
+            List<string> lstChords = new List<string>();
+
+            for (int i = 0; i < kl.Lines.Count; i++)
+            {
+                lineChords = string.Empty;
+                for (int j = 0; j < kl.Lines[i].Syllables.Count; j++)
+                {
+                    Syllable syll = kl.Lines[i].Syllables[j];
+                    if (syll.CharType == Syllable.CharTypes.Text)
+                    {
+                        chord = syll.Chord;
+                        lyric = syll.Text;
+                        
+                        if (chord.Length > lyric.Length)
+                        {
+                            lyric += new string(' ', chord.Length - lyric.Length);
+                        }
+                        else if (chord.Length < lyric.Length)
+                        {
+                            chord += new string(' ', lyric.Length - chord.Length);
+                        }
+                        lineChords += chord;                        
+                    }
+                }
+                lstChords.Add(lineChords);
+            }            
+
+            return lstChords;
+        }
+
 
         /*
         private int GetMaxSyllabesInLine(int ind, int line, List<plLyric> plLyrics)
@@ -2749,7 +2791,7 @@ namespace PicControl
         /// Draw next full lines with color _InactiveColor
         /// </summary>
         /// <param name="e"></param>
-        private void DrawNextLines(int y0, PaintEventArgs e)
+        private void DrawNextLines2(int y0, PaintEventArgs e)
         {
             #region declarations
 
@@ -2837,6 +2879,189 @@ namespace PicControl
                     }
                 }
             }
+            #endregion draw lyrics               
+        }
+
+
+        private void DrawNextLines(int y0, PaintEventArgs e)
+        {
+            #region declarations
+            GraphicsPath pth = new GraphicsPath();
+            GraphicsPath pthc = new GraphicsPath();
+
+            // outline            
+            Pen penContour = new Pen(_InactiveBorderColor, _borderthick);
+
+            kLine kline;
+            string lineContent;
+            string lineChords;
+
+            int x0;            
+            int offset = _lineHeight;
+
+            int W;
+            int H;
+
+            float x1;
+            float y1;
+
+            int ChordOffset = offset;  // To manage when offset = 0 
+            #endregion declarations
+
+            if (_txtNbLines == 1)
+                offset = 0;
+
+            // Draw sentence                           
+            #region draw lyrics
+
+            if (syllabes == null || _currentTextPos >= syllabes.Count)
+                return;
+
+            if (_currentTextPos >= 0)
+                x0 = _currentTextPos - syllabes[_currentTextPos].posline;
+
+
+            for (int k = 0; k < _txtNbLines; k++)
+            {
+                int line = currentLine + k + 1;
+                // k = 0;
+                // Si currentline = 0 => line = 1
+                // mais si il y a un séparateur paragraphe, 
+                // on parcourt la boucle for (i = x0; i < syllabes.Count; i++) sans rien faire 
+                // du coup, k passe à 1 et on utilise les rectangles de la ligne suivante
+                if (_txtNbLines == 1)
+                {
+                    if (line > currentLine + 1) break;
+                }
+                else
+                {
+                    if (line > currentLine + _txtNbLines - 1) break;
+                }
+
+                // Line content
+                kline = _kLyrics.Lines[line];
+
+                // If there is a paragraph separator, we don't display the line
+                if (kline.Syllables.First().CharType == Syllable.CharTypes.ParagraphSep) continue;                
+
+                lineContent = kline.ToString();
+                lineChords = lstChordsLines[line];          // TODO : à revoir pour les accords directement dans la classe KLyrics
+
+                x1 = rListNextRect[k][0].X;
+
+                // Draw line content
+                if (_bShowChords)
+                {
+                    #region draw chords
+
+                    y1 = y0 + (k + 1) * offset + (k + 1) * offset;
+
+                    // Draw chord above
+                    // Add lines of lyrics to the Graphics path                                        
+                    pthc.AddString(lineChords, _chordFont.FontFamily, (int)_chordFont.Style, 3 * emSize / 4, new Point((int)x1, (int)y1), sf);
+                    e.Graphics.FillPath(new SolidBrush(_InactiveChordColor), pthc);
+
+                    pthc.Dispose();
+                                        
+                    #endregion draw chords
+
+                    #region draw text
+                    // Draw syllabe below at 2*ChordOffset/3
+                    y1 = y1 + 2 * ChordOffset / 3;
+                    
+                    // Add lines of lyrics to the Graphics path
+                    pth.AddString(lineContent, m_font.FontFamily, (int)m_font.Style, emSize, new Point((int)x1, (int)y1), sf);
+
+                    #region Apply effects               
+
+                    if (FrameType == "Neon")
+                        CreateNeonEffect(_InactiveBorderColor, e, pth);
+                    else if (FrameType == "Shadow")
+                        CreateShadowEffect(lineContent, _InactiveBorderColor, (int)x1, (int)y1, m_font, emSize, e, pth);
+
+                    #endregion Apply effect
+
+                    // Draw text
+                    // Color clr is always InactiveColor for "NextLines"
+                    e.Graphics.FillPath(new SolidBrush(_InactiveColor), pth);
+
+                    // Outiline the text
+                    if (_borderthick > 0)
+                        e.Graphics.DrawPath(penContour, pth);
+                    #endregion draw text
+                }
+                else
+                {
+
+                    #region draw text
+                    // No chords
+                    y1 = y0 + (k + 1) * offset;
+
+                    // Add lines of lyrics to the Graphics path
+                    pth.AddString(lineContent, m_font.FontFamily, (int)m_font.Style, emSize, new Point((int)x1, (int)y1), sf);
+
+                    #region Apply effects               
+
+                    if (FrameType == "Neon")
+                        CreateNeonEffect(_InactiveBorderColor, e, pth);
+                    else if (FrameType == "Shadow")
+                        CreateShadowEffect(lineContent, _InactiveBorderColor, (int)x1, (int)y1, m_font, emSize, e, pth);
+
+                    #endregion Apply effect
+
+                    // Draw text
+                    // Color clr is always InactiveColor for "NextLines"
+                    e.Graphics.FillPath(new SolidBrush(_InactiveColor), pth);
+
+                    // Outiline the text
+                    if (_borderthick > 0)
+                        e.Graphics.DrawPath(penContour, pth);
+                    #endregion draw text
+
+                }
+
+                /*
+                for (i = x0; i < syllabes.Count; i++)
+                {
+                    if (syllabes[i].line == line)
+                    {
+                        int pos = syllabes[i].posline;
+                        if (pos < rListNextRect[k].Count)
+                        {
+                            // Rectangle for next lines
+                            x1 = rListNextRect[k][pos].X;
+                            W = (int)rListNextRect[k][pos].Width;
+                            H = (int)rListNextRect[k][pos].Height;
+
+                            if (_bShowChords)
+                            {
+                                y1 = y0 + (k + 1) * offset + (k + 1) * offset;
+
+                                // Draw chord above
+                                if (syllabes[i].chord != "")
+                                    drawChordNextLines(_InactiveChordColor, syllabes[i], (int)x1, (int)y1, e);
+
+                                // Draw syllabe below at 2*ChordOffset/3
+                                drawSyllabeNextLines(_InactiveColor, syllabes[i], (int)x1, (int)y1 + 2 * ChordOffset / 3, W, H, e);
+                            }
+                            else
+                            {
+                                // No chords
+                                y1 = y0 + (k + 1) * offset;
+                                drawSyllabeNextLines(_InactiveColor, syllabes[i], (int)x1, (int)y1, W, H, e);
+                            }
+                        }
+                    }
+                    else if (syllabes[i].line > line)
+                    {
+                        x0 = i;
+                        break;
+                    }
+                }
+                */
+            }
+
+            pth.Dispose();
             #endregion draw lyrics               
         }
 
