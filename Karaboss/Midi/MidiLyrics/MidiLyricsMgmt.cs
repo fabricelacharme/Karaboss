@@ -1256,6 +1256,12 @@ namespace Karaboss.MidiLyrics
             bool bWithSpace = false;
             bool bHasCr = false;
 
+            if (KLyrics.Lines.Count > 0)
+            {
+                bHasCr = true;
+                _bHasCarriageReturn = true;
+            }
+
             // What is the type of separator between lyrics ? space or nothing
             // If there is a space before or after the string, the lyrics are separated by a space
             foreach (kLine line in KLyrics.Lines)

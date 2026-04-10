@@ -123,7 +123,7 @@ namespace Karaboss
             LoadOptions();     
             SetOptions();
 
-            pBox.SetBackground(dirSlideShow);
+            pBox.DirSlideShow = dirSlideShow;
             pBox.bDemo = true;
             pBox.LoadDemoText();
         }
@@ -623,7 +623,7 @@ namespace Karaboss
                 
                 Cursor.Current = Cursors.WaitCursor;
                 txtSlideShow.Text = dirSlideShow;
-                pBox.SetBackground(dirSlideShow);
+                pBox.DirSlideShow = dirSlideShow;
             }
         }
 
@@ -636,7 +636,7 @@ namespace Karaboss
         {
             dirSlideShow = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), Application.ProductName);
             txtSlideShow.Text = dirSlideShow;
-            pBox.SetBackground(dirSlideShow);
+            pBox.DirSlideShow = dirSlideShow;
         }
 
         /// <summary>
@@ -819,7 +819,7 @@ namespace Karaboss
 
                 pBox.OptionBackground = "Diaporama";
                 bgOption = "Diaporama";
-                pBox.SetBackground(dirSlideShow);
+                pBox.DirSlideShow = dirSlideShow;
             }
         }
 

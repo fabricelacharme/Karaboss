@@ -415,7 +415,7 @@ namespace Karaboss
                 else
                     _dirSlideShow = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), Application.ProductName);
 
-                pBox.SetBackground(_dirSlideShow);
+                pBox.DirSlideShow = _dirSlideShow;
             }
         }
 
@@ -457,6 +457,7 @@ namespace Karaboss
                 switch (_optionbackground)
                 {
                     case "Diaporama":
+                        pBox.DirSlideShow = DirSlideShow;
                         pBox.OptionBackground = "Diaporama";
                         break;
                     case "SolidColor":
@@ -573,29 +574,32 @@ namespace Karaboss
                 switch (bgOption)
                 {
                     case "Diaporama":
-                        _optionbackground = "Diaporama";
+                        // Frequency of slide show
+                        FreqSlideShow = Properties.Settings.Default.freqSlideShow;
+                        DirSlideShow = Properties.Settings.Default.dirSlideShow;                        
+                        OptionBackground = "Diaporama";
                         break;
                     case "SolidColor":
-                        _optionbackground = "SolidColor";
+                        OptionBackground = "SolidColor";
                         break;
 
                     case "Gradient":
-                        _optionbackground = "Gradient";
+                        OptionBackground = "Gradient";
                         break;
 
                     case "Rhythm":
-                        _optionbackground = "Rhythm";
+                        OptionBackground = "Rhythm";
                         break;
 
                     case "Transparent":
-                        _optionbackground = "Transparent";
+                        OptionBackground = "Transparent";
                         break;
 
                     default:
-                        _optionbackground = "Diaporama";
+                        OptionBackground = "Diaporama";
                         break;
                 }
-                OptionBackground = _optionbackground;
+                //OptionBackground = _optionbackground;
 
                 switch (Properties.Settings.Default.LyricsOptionDisplay)
                 {
@@ -639,8 +643,7 @@ namespace Karaboss
 
                 // Number of Lines to display
                 TxtNbLines = Properties.Settings.Default.TxtNbLines;
-                // Frequency of slide show
-                FreqSlideShow = Properties.Settings.Default.freqSlideShow;
+               
                 // Position image
                 SizeMode = Properties.Settings.Default.SizeMode;
 
@@ -736,13 +739,33 @@ namespace Karaboss
         }
 
         /// <summary>
-        /// Remet les options courante pour le cas des playlists
-        /// La cinématique d'attente bouzille tout
+        /// Use case : Plalist
+        /// Force Slideshow backgroud if it was requested in the plalist, even if the option is not set in the display options
         /// </summary>
         /// <param name="dirSlideShow"></param>
-        public void SetSlideShow(string dirSlideShow)
+        public void ForceSlideShow(string dirSlideShow)
         {
             DirSlideShow = dirSlideShow;
+            pBox.FreqDirSlideShow = Properties.Settings.Default.freqSlideShow;
+            pBox.DirSlideShow = DirSlideShow;
+            pBox.OptionBackground = "Diaporama";
+            
+        }
+
+        /// <summary>
+        /// Use case: Plalists
+        /// No slide show waq requested in the plalist, but the slideshow was forced for the previous song, so restore background option to the one set in display options
+        /// </summary>
+        public void RestoreBackgroundAnimation()
+        {
+            if (_optionbackground == "Diaporama")
+            {                                            
+                pBox.FreqDirSlideShow = Properties.Settings.Default.freqSlideShow;
+                DirSlideShow = Properties.Settings.Default.dirSlideShow;                
+                pBox.DirSlideShow = DirSlideShow;
+            }
+            
+            pBox.OptionBackground = _optionbackground;
         }
 
 

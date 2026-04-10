@@ -110,7 +110,8 @@ namespace PicControl
         { 
             get { return _kLyrics; } 
             set 
-            { 
+            {
+                if (value == null) return;
                 _kLyrics = value; 
                 LoadSong();
             } 
@@ -272,7 +273,9 @@ namespace PicControl
 
                 switch (_optionbackground)
                 {
-                    case "Diaporama":                       
+                    case "Diaporama":
+                        if (dirSlideShow != null && Directory.Exists(dirSlideShow) && freqSlideShow > 0)
+                            InitSlideShow(dirSlideShow);
                         break;
                     
                     case "SolidColor":
@@ -755,11 +758,12 @@ namespace PicControl
             get
             { return freqSlideShow; }
             set
-            { freqSlideShow = value;
-            if (freqSlideShow > 0)
-                {                    
-                    PAUSE_TIME = 1000 * freqSlideShow;
-                }
+            { 
+                freqSlideShow = value;
+                //if (freqSlideShow > 0)
+                //{                    
+                //    PAUSE_TIME = 1000 * freqSlideShow;
+                //}
             }
         }
 
@@ -946,7 +950,7 @@ namespace PicControl
         /// Define new slideShow directory and frequency
         /// </summary>
         /// <param name="dirImages"></param>
-        public void SetBackground(string dirImages)
+        public void InitSlideShow(string dirImages)
         {
             try
             {
@@ -973,7 +977,7 @@ namespace PicControl
 
                     if (_optionbackground == "Diaporama")
                     {
-                        LoadImageList(dirImages);
+                        LoadImageList(dirImages);                        
                         //C = m_ImageFilePaths.Count;
                         C = pictures.Length;
                     }
@@ -1003,7 +1007,7 @@ namespace PicControl
                             StartBgW();
                             */
 
-                            InitSlideShow();
+                            LaunchSlideShow();
 
                             break;
                     }
@@ -1157,8 +1161,8 @@ namespace PicControl
 
                 // Create rectangles
                 createListRectangles(0);
-                if (syllabes != null && syllabes.Count > 0)
-                    createListNextRectangles(syllabes[0].last + 1);
+                //if (syllabes != null && syllabes.Count > 0)
+                //    createListNextRectangles(syllabes[0].last + 1);
             }
 
         }
@@ -1169,7 +1173,7 @@ namespace PicControl
         #region SlideShow with timer       
 
         // New Slideshow
-        private void InitSlideShow()
+        private void LaunchSlideShow()
         {
             mBlend = 0;
             count = 0;
@@ -1189,9 +1193,9 @@ namespace PicControl
                 Image1 = pictures[count];
                 Image2 = pictures[++count];
             }
-            catch
+            catch (Exception ex) 
             {
-
+                Console.WriteLine("Error loading images: " + ex.Message);
             }
             timerTransition.Enabled = false;
             timerChangeImage.Enabled = true;
@@ -1298,7 +1302,7 @@ namespace PicControl
         {
             _txtNbLines = 1;
             dirSlideShow = null;
-            SetBackground(null);           
+            InitSlideShow(null);           
 
             // Initial position
             _currentTextPos = -1;
@@ -1976,7 +1980,7 @@ namespace PicControl
 
                     int line = syllabes[pos].line;
                     string strLine = lstLyricsLines[line];
-                    float Offset = getOffset(strLine, emSize);           // Offset de la ligne (centré)
+                    float Offset = CenterLine(strLine, emSize);           // Offset de la ligne (centré)
 
                     int idx = -1;                    
                     float x = Offset;
@@ -2012,7 +2016,7 @@ namespace PicControl
             }
         }
 
-       
+       /*
         /// <summary>
         /// Create rectangles for next lines
         /// </summary>
@@ -2042,9 +2046,8 @@ namespace PicControl
 
                     for (int k = start; k < end; k++)
                     {
-                        strLine = lstLyricsLines[line];
-                        
-                        Offset = getOffset(strLine, emSize);           // Offset de la ligne (centré)
+                        strLine = lstLyricsLines[line];                        
+                        Offset = CenterLine(strLine, emSize);           // Offset de la ligne (centré horizontalement)
                         
                         rNextRect = new List<RectangleF>();
 
@@ -2055,7 +2058,7 @@ namespace PicControl
                         {
                             idx++;
 
-                            // Taille de l'expace = caractère tiret
+                            // Taille de l'espace = caractère tiret
                             tx = syllabes[i].text;
                             
                             RectangleF rect = new RectangleF();
@@ -2094,6 +2097,8 @@ namespace PicControl
 
             }
         }
+        */
+
 
         /// <summary>
         /// Find index of syllabe to sing according to time
@@ -2177,7 +2182,7 @@ namespace PicControl
                     createListRectangles(x0);
 
                     // Create list of rectangles for next line
-                    createListNextRectangles(syllabes[syllabeposition].last + 1);
+                    //createListNextRectangles(syllabes[syllabeposition].last + 1);
                 }
             }
         }
@@ -2192,7 +2197,7 @@ namespace PicControl
         /// </summary>
         /// <param name="tx"></param>
         /// <returns></returns>
-        private int getOffset(string tx, float femsize)
+        private int CenterLine(string tx, float femsize)
         {
             float ret; // = 0;
             float L = MeasureString(tx, femsize);
@@ -2421,8 +2426,7 @@ namespace PicControl
 
             try
             {
-                #region Draw text of chord
-                //path.AddString(tx, m_font.FontFamily, (int)m_font.Style, 3 * emSize / 4, new Point((int)x0, y0), sf);
+                #region Draw text of chord                
                 path.AddString(tx, _chordFont.FontFamily, (int)_chordFont.Style, 3 * emSize / 4, new Point((int)x0, y0), sf);
                 e.Graphics.FillPath(new SolidBrush(clr), path);
 
@@ -2434,202 +2438,7 @@ namespace PicControl
                 Console.Write("Error: " + ed.Message);
             }
         }
-
-
-        /// <summary>
-        /// Draw syllabes on next lines
-        /// </summary>
-        /// <param name="clr"></param>
-        /// <param name="syl"></param>
-        /// <param name="x0"></param>
-        /// <param name="y0"></param>
-        /// <param name="W"></param>
-        /// <param name="H"></param>
-        /// <param name="e"></param>
-        private void drawSyllabeNextLines(Color clr, syllabe syl, int x0, int y0, int W, int H, PaintEventArgs e)
-        {
-            GraphicsPath pth = new GraphicsPath();
-            string tx = syl.text;
-
-            // outline            
-            Pen penContour = new Pen(_InactiveBorderColor, _borderthick);
-
-            try
-            {                
-                #region background of syllabe      
-                
-                if (_bTextBackGround)
-                {
-                    // Black background to make text more visible                    
-                    RectangleF R = new RectangleF(x0, y0, W, H);
-                    // background
-                    e.Graphics.FillRectangle(new SolidBrush(Color.Black), R);
-                }
-
-                #endregion
-
-                #region Draw text of syllabe
-
-                // Add lines of lyrics to the Graphics path
-                pth.AddString(tx, m_font.FontFamily, (int)m_font.Style, emSize, new Point((int)x0, y0), sf);
-
-
-                #region Apply effects               
-
-                if (FrameType == "Neon")
-                    CreateNeonEffect(_InactiveBorderColor , e, pth);
-                else if (FrameType == "Shadow")
-                    CreateShadowEffect(tx, _InactiveBorderColor, x0, y0, m_font, emSize, e, pth);
-
-                #endregion Apply effect
-
-
-                // Draw text
-                // Color clr is always InactiveColor for "NextLines"
-                e.Graphics.FillPath(new SolidBrush(clr), pth);
-                
-                // Outiline the text
-                if (_borderthick > 0)
-                    e.Graphics.DrawPath(penContour, pth);
-
-                pth.Dispose();
-                
-                #endregion
-            }
-            catch (Exception ed)
-            {
-                Console.Write("Error: " + ed.Message);
-            }
-        }
-
-
-        #region effects
-
-        /// <summary>
-        /// Create a neon effect
-        /// </summary>
-        /// <param name="e"></param>
-        /// <param name="pth"></param>
-        private void CreateNeonEffect(Color clr, PaintEventArgs e, GraphicsPath pth)
-        {
-            //Create a bitmap in a fixed ratio to the original drawing area.
-            Bitmap bm = new Bitmap(pboxWnd.ClientSize.Width / 5, pboxWnd.ClientSize.Height / 5);
-            //Get the graphics object for the image. 
-            Graphics gimg = Graphics.FromImage(bm);
-
-            //Create a matrix that shrinks the drawing output by the fixed ratio. 
-            Matrix mx = new Matrix(1.0f / 5, 0, 0, 1.0f / 5, -(1.0f / 5), -(1.0f / 5));
-
-            //Choose an appropriate smoothing mode for the halo. 
-            gimg.SmoothingMode = SmoothingMode.AntiAlias;
-
-            //Transform the graphics object so that the same half may be used for both halo and text output. 
-            gimg.Transform = mx;
-
-            //Using a suitable pen...
-            Color HaloColor = clr;
-            Brush HaloBrush = new SolidBrush(HaloColor);
-
-            Pen penHaloColor = new Pen(HaloColor, 3);
-
-            //Draw around the outline of the path
-            gimg.DrawPath(penHaloColor, pth);
-
-            //and then fill in for good measure. 
-            gimg.FillPath(HaloBrush, pth);
-
-            //We no longer need this graphics object
-            //g.Dispose();
-
-            //setup the smoothing mode for path drawing
-            e.Graphics.SmoothingMode = SmoothingMode.AntiAlias;
-
-            //and the interpolation mode for the expansion of the halo bitmap
-            e.Graphics.InterpolationMode = InterpolationMode.HighQualityBicubic;
-
-            //expand the halo making the edges nice and fuzzy. 
-            e.Graphics.DrawImage(bm, pboxWnd.ClientRectangle, 0, 0, bm.Width, bm.Height, GraphicsUnit.Pixel);
-        }
-
-
-        /// <summary>
-        /// Create a shadow effect
-        /// </summary>
-        /// <param name="line"></param>
-        /// <param name="x0"></param>
-        /// <param name="y0"></param>
-        /// <param name="font"></param>
-        /// <param name="e"></param>
-        /// <param name="pth"></param>
-        private void CreateShadowEffect(string line, Color clr, int x0, int y0, Font font, float emSize, PaintEventArgs e, GraphicsPath pth)
-        {
-            Bitmap bm = new Bitmap(pboxWnd.ClientSize.Width / 4, pboxWnd.ClientSize.Height / 4);
-
-            //Get a graphics object for it
-            Graphics g = Graphics.FromImage(bm);
-            Graphics ge = e.Graphics;            
-
-            // must use an antialiased rendering hint
-            g.TextRenderingHint = TextRenderingHint.AntiAlias;
-
-            //this matrix zooms the text out to 1/4 size and offsets it by a little right and down                
-            Matrix mx = new Matrix(0.25f, 0, 0, 0.25f, 1.3f, 1.3f);
-
-            g.Transform = mx;
-
-
-            //The shadow is drawn
-            g.DrawString(line, font, new SolidBrush(clr), x0, y0, sf);
-
-            //Don't need this anymore
-            g.Dispose();
-
-            //The destination Graphics uses a high quality mode
-            ge.InterpolationMode = InterpolationMode.HighQualityBicubic;
-
-            //and draws antialiased text for accurate fitting
-            ge.TextRenderingHint = TextRenderingHint.AntiAlias;
-
-            //The small image is blown up to fill the main client rectangle
-            ge.DrawImage(bm, pboxWnd.ClientRectangle, 0, 0, bm.Width, bm.Height, GraphicsUnit.Pixel);
-
-            // finally, the text is drawn on top
-            //pth.AddString(line, new FontFamily(font.Name), (int)FontStyle.Regular, emSize, new Point(x0, y0), sf);
-        }
-
-
-        #endregion effects
-
-
-        /// <summary>
-        /// Draw chord on next lines
-        /// </summary>
-        /// <param name="clr"></param>
-        /// <param name="syl"></param>
-        /// <param name="x0"></param>
-        /// <param name="y0"></param>
-        /// <param name="e"></param>
-        private void drawChordNextLines(Color clr, syllabe syl, int x0, int y0, PaintEventArgs e)
-        {
-            var path = new GraphicsPath();
-            string tx = syl.chord;
-
-            try
-            {
-                #region Draw text of chord
-                //path.AddString(tx, m_font.FontFamily, (int)m_font.Style, 3*emSize/4, new Point((int)x0, y0), sf);
-                path.AddString(tx, _chordFont.FontFamily, (int)_chordFont.Style, 3 * emSize / 4, new Point((int)x0, y0), sf);
-                e.Graphics.FillPath(new SolidBrush(clr), path);
-                
-                path.Dispose();
-                #endregion
-            }
-            catch (Exception ed)
-            {
-                Console.Write("Error: " + ed.Message);
-            }
-        }
-    
+       
 
         /// <summary>
         /// Draw syllabes of the current line according to its position
@@ -2790,99 +2599,7 @@ namespace PicControl
         /// <summary>
         /// Draw next full lines with color _InactiveColor
         /// </summary>
-        /// <param name="e"></param>
-        private void DrawNextLines2(int y0, PaintEventArgs e)
-        {
-            #region declarations
-
-            int x0 = 0;
-            int i;
-            int offset = _lineHeight;
-
-            int W;
-            int H;
-
-            float x1;
-            float y1;
-
-            int ChordOffset = offset;  // To manage when offset = 0 
-            #endregion declarations
-
-
-            if (_txtNbLines == 1)
-                offset = 0;                      
-
-            // Draw sentence                           
-            #region draw lyrics
-
-            if (syllabes == null || _currentTextPos >= syllabes.Count)
-                return;
-            
-            if (_currentTextPos >= 0)
-                x0 = _currentTextPos - syllabes[_currentTextPos].posline;
-            
-
-            for (int k = 0; k < _txtNbLines; k++)
-            {              
-                int line = currentLine + k + 1;
-                // k = 0;
-                // Si currentline = 0 => line = 1
-                // mais si il y a un séparateur paragraphe, 
-                // on parcourt la boucle for (i = x0; i < syllabes.Count; i++) sans rien faire 
-                // du coup, k passe à 1 et on utilise les rectangles de la ligne suivante
-
-
-                if (_txtNbLines == 1)
-                {
-                    if (line > currentLine + 1) break;
-                }
-                else
-                {
-                    if (line > currentLine + _txtNbLines - 1) break;
-                }
-
-                for (i = x0; i < syllabes.Count; i++)
-                {
-                    if (syllabes[i].line == line)
-                    {                        
-                        int pos = syllabes[i].posline;
-                        if (pos < rListNextRect[k].Count)
-                        {
-                            // Rectangle for next lines
-                            x1 = rListNextRect[k][pos].X;
-                            W = (int)rListNextRect[k][pos].Width;
-                            H = (int)rListNextRect[k][pos].Height;
-
-                            if (_bShowChords)
-                            {
-                                y1 = y0 + (k + 1) * offset + (k + 1) * offset;
-                                
-                                // Draw chord above
-                                if (syllabes[i].chord != "")
-                                    drawChordNextLines(_InactiveChordColor, syllabes[i], (int)x1, (int)y1, e);
-
-                                // Draw syllabe below at 2*ChordOffset/3
-                                drawSyllabeNextLines(_InactiveColor, syllabes[i], (int)x1, (int)y1 + 2 * ChordOffset / 3, W, H, e);
-                            }
-                            else
-                            {
-                                // No chords
-                                y1 = y0 + (k + 1) * offset;
-                                drawSyllabeNextLines(_InactiveColor, syllabes[i], (int)x1, (int)y1, W, H, e);
-                            }                                                                                        
-                        }
-                    }
-                    else if (syllabes[i].line > line)
-                    {
-                        x0 = i;
-                        break;
-                    }
-                }
-            }
-            #endregion draw lyrics               
-        }
-
-
+        /// <param name="e"></param>               
         private void DrawNextLines(int y0, PaintEventArgs e)
         {
             #region declarations
@@ -2921,10 +2638,13 @@ namespace PicControl
                 x0 = _currentTextPos - syllabes[_currentTextPos].posline;
 
 
-            for (int k = 0; k < _txtNbLines; k++)
+            for (int linenr = 0; linenr < _txtNbLines; linenr++)
             {
-                int line = currentLine + k + 1;
-                // k = 0;
+                int line = currentLine + linenr + 1;
+                
+                if (line > _kLyrics.Lines.Count -1) return;
+
+                // linenr = 0;
                 // Si currentline = 0 => line = 1
                 // mais si il y a un séparateur paragraphe, 
                 // on parcourt la boucle for (i = x0; i < syllabes.Count; i++) sans rien faire 
@@ -2947,14 +2667,15 @@ namespace PicControl
                 lineContent = kline.ToString();
                 lineChords = lstChordsLines[line];          // TODO : à revoir pour les accords directement dans la classe KLyrics
 
-                x1 = rListNextRect[k][0].X;
+                //x1 = rListNextRect[linenr][0].X;
+                x1 = CenterLine(lineContent, emSize);
 
                 // Draw line content
                 if (_bShowChords)
                 {
                     #region draw chords
 
-                    y1 = y0 + (k + 1) * offset + (k + 1) * offset;
+                    y1 = y0 + (linenr + 1) * offset + (linenr + 1) * offset;
 
                     // Draw chord above
                     // Add lines of lyrics to the Graphics path                                        
@@ -2995,7 +2716,7 @@ namespace PicControl
 
                     #region draw text
                     // No chords
-                    y1 = y0 + (k + 1) * offset;
+                    y1 = y0 + (linenr + 1) * offset;
 
                     // Add lines of lyrics to the Graphics path
                     pth.AddString(lineContent, m_font.FontFamily, (int)m_font.Style, emSize, new Point((int)x1, (int)y1), sf);
@@ -3018,55 +2739,307 @@ namespace PicControl
                         e.Graphics.DrawPath(penContour, pth);
                     #endregion draw text
 
-                }
-
-                /*
-                for (i = x0; i < syllabes.Count; i++)
-                {
-                    if (syllabes[i].line == line)
-                    {
-                        int pos = syllabes[i].posline;
-                        if (pos < rListNextRect[k].Count)
-                        {
-                            // Rectangle for next lines
-                            x1 = rListNextRect[k][pos].X;
-                            W = (int)rListNextRect[k][pos].Width;
-                            H = (int)rListNextRect[k][pos].Height;
-
-                            if (_bShowChords)
-                            {
-                                y1 = y0 + (k + 1) * offset + (k + 1) * offset;
-
-                                // Draw chord above
-                                if (syllabes[i].chord != "")
-                                    drawChordNextLines(_InactiveChordColor, syllabes[i], (int)x1, (int)y1, e);
-
-                                // Draw syllabe below at 2*ChordOffset/3
-                                drawSyllabeNextLines(_InactiveColor, syllabes[i], (int)x1, (int)y1 + 2 * ChordOffset / 3, W, H, e);
-                            }
-                            else
-                            {
-                                // No chords
-                                y1 = y0 + (k + 1) * offset;
-                                drawSyllabeNextLines(_InactiveColor, syllabes[i], (int)x1, (int)y1, W, H, e);
-                            }
-                        }
-                    }
-                    else if (syllabes[i].line > line)
-                    {
-                        x0 = i;
-                        break;
-                    }
-                }
-                */
+                }                
             }
 
             pth.Dispose();
             #endregion draw lyrics               
         }
 
+        
+        #region deleteme
+
+        /*
+       /// <summary>
+       /// Draw syllabes on next lines
+       /// </summary>
+       /// <param name="clr"></param>
+       /// <param name="syl"></param>
+       /// <param name="x0"></param>
+       /// <param name="y0"></param>
+       /// <param name="W"></param>
+       /// <param name="H"></param>
+       /// <param name="e"></param>
+       private void drawSyllabeNextLines(Color clr, syllabe syl, int x0, int y0, int W, int H, PaintEventArgs e)
+       {
+           GraphicsPath pth = new GraphicsPath();
+           string tx = syl.text;
+
+           // outline            
+           Pen penContour = new Pen(_InactiveBorderColor, _borderthick);
+
+           try
+           {                
+               #region background of syllabe      
+
+               if (_bTextBackGround)
+               {
+                   // Black background to make text more visible                    
+                   RectangleF R = new RectangleF(x0, y0, W, H);
+                   // background
+                   e.Graphics.FillRectangle(new SolidBrush(Color.Black), R);
+               }
+
+               #endregion
+
+               #region Draw text of syllabe
+
+               // Add lines of lyrics to the Graphics path
+               pth.AddString(tx, m_font.FontFamily, (int)m_font.Style, emSize, new Point((int)x0, y0), sf);
+
+
+               #region Apply effects               
+
+               if (FrameType == "Neon")
+                   CreateNeonEffect(_InactiveBorderColor , e, pth);
+               else if (FrameType == "Shadow")
+                   CreateShadowEffect(tx, _InactiveBorderColor, x0, y0, m_font, emSize, e, pth);
+
+               #endregion Apply effect
+
+
+               // Draw text
+               // Color clr is always InactiveColor for "NextLines"
+               e.Graphics.FillPath(new SolidBrush(clr), pth);
+
+               // Outiline the text
+               if (_borderthick > 0)
+                   e.Graphics.DrawPath(penContour, pth);
+
+               pth.Dispose();
+
+               #endregion
+           }
+           catch (Exception ed)
+           {
+               Console.Write("Error: " + ed.Message);
+           }
+       }
+
+
+       /// <summary>
+       /// Draw chord on next lines
+       /// </summary>
+       /// <param name="clr"></param>
+       /// <param name="syl"></param>
+       /// <param name="x0"></param>
+       /// <param name="y0"></param>
+       /// <param name="e"></param>
+       private void drawChordNextLines(Color clr, syllabe syl, int x0, int y0, PaintEventArgs e)
+       {
+           var path = new GraphicsPath();
+           string tx = syl.chord;
+
+           try
+           {
+               #region Draw text of chord
+               //path.AddString(tx, m_font.FontFamily, (int)m_font.Style, 3*emSize/4, new Point((int)x0, y0), sf);
+               path.AddString(tx, _chordFont.FontFamily, (int)_chordFont.Style, 3 * emSize / 4, new Point((int)x0, y0), sf);
+               e.Graphics.FillPath(new SolidBrush(clr), path);
+
+               path.Dispose();
+               #endregion
+           }
+           catch (Exception ed)
+           {
+               Console.Write("Error: " + ed.Message);
+           }
+       }
+       
+        
+       private void DrawNextLines2(int y0, PaintEventArgs e)
+       {
+           #region declarations
+
+           int x0 = 0;
+           int i;
+           int offset = _lineHeight;
+
+           int W;
+           int H;
+
+           float x1;
+           float y1;
+
+           int ChordOffset = offset;  // To manage when offset = 0 
+           #endregion declarations
+
+
+           if (_txtNbLines == 1)
+               offset = 0;                      
+
+           // Draw sentence                           
+           #region draw lyrics
+
+           if (syllabes == null || _currentTextPos >= syllabes.Count)
+               return;
+
+           if (_currentTextPos >= 0)
+               x0 = _currentTextPos - syllabes[_currentTextPos].posline;
+
+
+           for (int k = 0; k < _txtNbLines; k++)
+           {              
+               int line = currentLine + k + 1;
+               // k = 0;
+               // Si currentline = 0 => line = 1
+               // mais si il y a un séparateur paragraphe, 
+               // on parcourt la boucle for (i = x0; i < syllabes.Count; i++) sans rien faire 
+               // du coup, k passe à 1 et on utilise les rectangles de la ligne suivante
+
+
+               if (_txtNbLines == 1)
+               {
+                   if (line > currentLine + 1) break;
+               }
+               else
+               {
+                   if (line > currentLine + _txtNbLines - 1) break;
+               }
+
+               for (i = x0; i < syllabes.Count; i++)
+               {
+                   if (syllabes[i].line == line)
+                   {                        
+                       int pos = syllabes[i].posline;
+                       if (pos < rListNextRect[k].Count)
+                       {
+                           // Rectangle for next lines
+                           x1 = rListNextRect[k][pos].X;
+                           W = (int)rListNextRect[k][pos].Width;
+                           H = (int)rListNextRect[k][pos].Height;
+
+                           if (_bShowChords)
+                           {
+                               y1 = y0 + (k + 1) * offset + (k + 1) * offset;
+
+                               // Draw chord above
+                               if (syllabes[i].chord != "")
+                                   drawChordNextLines(_InactiveChordColor, syllabes[i], (int)x1, (int)y1, e);
+
+                               // Draw syllabe below at 2*ChordOffset/3
+                               drawSyllabeNextLines(_InactiveColor, syllabes[i], (int)x1, (int)y1 + 2 * ChordOffset / 3, W, H, e);
+                           }
+                           else
+                           {
+                               // No chords
+                               y1 = y0 + (k + 1) * offset;
+                               drawSyllabeNextLines(_InactiveColor, syllabes[i], (int)x1, (int)y1, W, H, e);
+                           }                                                                                        
+                       }
+                   }
+                   else if (syllabes[i].line > line)
+                   {
+                       x0 = i;
+                       break;
+                   }
+               }
+           }
+           #endregion draw lyrics               
+       }
+       */
+
+        #endregion deleteme
+
         #endregion draw lyrics & chords
 
+
+        #region effects
+
+        /// <summary>
+        /// Create a neon effect
+        /// </summary>
+        /// <param name="e"></param>
+        /// <param name="pth"></param>
+        private void CreateNeonEffect(Color clr, PaintEventArgs e, GraphicsPath pth)
+        {
+            //Create a bitmap in a fixed ratio to the original drawing area.
+            Bitmap bm = new Bitmap(pboxWnd.ClientSize.Width / 5, pboxWnd.ClientSize.Height / 5);
+            //Get the graphics object for the image. 
+            Graphics gimg = Graphics.FromImage(bm);
+
+            //Create a matrix that shrinks the drawing output by the fixed ratio. 
+            Matrix mx = new Matrix(1.0f / 5, 0, 0, 1.0f / 5, -(1.0f / 5), -(1.0f / 5));
+
+            //Choose an appropriate smoothing mode for the halo. 
+            gimg.SmoothingMode = SmoothingMode.AntiAlias;
+
+            //Transform the graphics object so that the same half may be used for both halo and text output. 
+            gimg.Transform = mx;
+
+            //Using a suitable pen...
+            Color HaloColor = clr;
+            Brush HaloBrush = new SolidBrush(HaloColor);
+
+            Pen penHaloColor = new Pen(HaloColor, 3);
+
+            //Draw around the outline of the path
+            gimg.DrawPath(penHaloColor, pth);
+
+            //and then fill in for good measure. 
+            gimg.FillPath(HaloBrush, pth);
+
+            //We no longer need this graphics object
+            //g.Dispose();
+
+            //setup the smoothing mode for path drawing
+            e.Graphics.SmoothingMode = SmoothingMode.AntiAlias;
+
+            //and the interpolation mode for the expansion of the halo bitmap
+            e.Graphics.InterpolationMode = InterpolationMode.HighQualityBicubic;
+
+            //expand the halo making the edges nice and fuzzy. 
+            e.Graphics.DrawImage(bm, pboxWnd.ClientRectangle, 0, 0, bm.Width, bm.Height, GraphicsUnit.Pixel);
+        }
+
+
+        /// <summary>
+        /// Create a shadow effect
+        /// </summary>
+        /// <param name="line"></param>
+        /// <param name="x0"></param>
+        /// <param name="y0"></param>
+        /// <param name="font"></param>
+        /// <param name="e"></param>
+        /// <param name="pth"></param>
+        private void CreateShadowEffect(string line, Color clr, int x0, int y0, Font font, float emSize, PaintEventArgs e, GraphicsPath pth)
+        {
+            Bitmap bm = new Bitmap(pboxWnd.ClientSize.Width / 4, pboxWnd.ClientSize.Height / 4);
+
+            //Get a graphics object for it
+            Graphics g = Graphics.FromImage(bm);
+            Graphics ge = e.Graphics;
+
+            // must use an antialiased rendering hint
+            g.TextRenderingHint = TextRenderingHint.AntiAlias;
+
+            //this matrix zooms the text out to 1/4 size and offsets it by a little right and down                
+            Matrix mx = new Matrix(0.25f, 0, 0, 0.25f, 1.3f, 1.3f);
+
+            g.Transform = mx;
+
+
+            //The shadow is drawn
+            g.DrawString(line, font, new SolidBrush(clr), x0, y0, sf);
+
+            //Don't need this anymore
+            g.Dispose();
+
+            //The destination Graphics uses a high quality mode
+            ge.InterpolationMode = InterpolationMode.HighQualityBicubic;
+
+            //and draws antialiased text for accurate fitting
+            ge.TextRenderingHint = TextRenderingHint.AntiAlias;
+
+            //The small image is blown up to fill the main client rectangle
+            ge.DrawImage(bm, pboxWnd.ClientRectangle, 0, 0, bm.Width, bm.Height, GraphicsUnit.Pixel);
+
+            // finally, the text is drawn on top
+            //pth.AddString(line, new FontFamily(font.Name), (int)FontStyle.Regular, emSize, new Point(x0, y0), sf);
+        }
+
+
+        #endregion effects
 
         #region backgroundworker
 
@@ -3681,7 +3654,7 @@ namespace PicControl
                     {
                         pos = syllabes[0].last + 1;
                         // Rectangles for other lines
-                        createListNextRectangles(pos);
+                        //createListNextRectangles(pos);
                     }
                 }
                 else
@@ -3693,7 +3666,7 @@ namespace PicControl
                     // Rectangles of next line
                     pos = syllabes[_currentTextPos].last + 1;
                     // Rectangles for other lines 
-                    createListNextRectangles(pos);
+                    //createListNextRectangles(pos);
                 }
             }
 
