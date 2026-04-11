@@ -218,15 +218,15 @@ namespace Karaboss
             }
         }
 
-        private int _NbLines = 3;
+        private int _nbLyricsLines = 3;
         // number of lines to display
-        public int TxtNbLines
+        public int nbLyricsLines
         {
-            get { return _NbLines; }
+            get { return _nbLyricsLines; }
             set
             {
-                _NbLines = value;
-                pBox.TxtNbLines = _NbLines;
+                _nbLyricsLines = value;
+                pBox.nbLyricsLines = _nbLyricsLines;
             }
         }
 
@@ -642,7 +642,7 @@ namespace Karaboss
 
 
                 // Number of Lines to display
-                TxtNbLines = Properties.Settings.Default.TxtNbLines;
+                nbLyricsLines = Properties.Settings.Default.TxtNbLines;
                
                 // Position image
                 SizeMode = Properties.Settings.Default.SizeMode;

@@ -33,11 +33,9 @@
 #endregion
 using GradientApp;
 using Karaboss.Resources.Localization;
-using keffect;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Drawing.Text;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -81,14 +79,17 @@ namespace Karaboss
         private Color Grad1Color;
         private Color Rhythm0Color;
         private Color Rhythm1Color;
-        
+
         #endregion background colors
 
 
+        #region Chords
         // Chord color
         private Color InactiveChordColor;
         private Color HighlightChordColor;
         private bool _bShowChords = false;
+
+        #endregion Chords
 
         // Lyrics TopMost
         private bool _bTopMost = false;
@@ -104,12 +105,19 @@ namespace Karaboss
         private int freqSlideShow;
 
         // Size mode of the picture background
-        private PictureBoxSizeMode SizeMode;
+        private PictureBoxSizeMode _sizeMode;
+        public PictureBoxSizeMode SizeMode
+        {
+            get { return _sizeMode; }
+            set
+            {
+                _sizeMode = value;
+                pBox.SizeMode = _sizeMode;
+            }
+        }
 
-
-
-
-        private frmMidiLyrics frmMidiLyrics;
+        // Number of lines to display
+        private int _nbLyricsLines;        
         
         #endregion private declarations
 
@@ -117,7 +125,6 @@ namespace Karaboss
         {
             InitializeComponent();  
             
-
             TopMost = true;
 
             LoadOptions();     
@@ -525,7 +532,7 @@ namespace Karaboss
 
                 // picturebox            
                 pBox.FreqDirSlideShow = freqSlideShow;
-                pBox.TxtNbLines = NbLines;
+                pBox.nbLyricsLines = NbLines;
                 pBox.CurrentTime = 30;
 
                 // Backgrounds
@@ -675,7 +682,7 @@ namespace Karaboss
             {
                 Cursor.Current = Cursors.WaitCursor;
 
-                frmMidiLyrics = Utilities.FormUtilities.GetForm<frmMidiLyrics>();
+                frmMidiLyrics frmMidiLyrics = Utilities.FormUtilities.GetForm<frmMidiLyrics>();
 
                 frmMidiLyrics.bShowBalls = Karaclass.m_DisplayBalls;
 
@@ -711,7 +718,7 @@ namespace Karaboss
                 frmMidiLyrics.bTopMost = _bTopMost;
 
                 NbLines = Convert.ToInt32(UpDownNbLines.Value);
-                frmMidiLyrics.TxtNbLines = NbLines;
+                frmMidiLyrics.nbLyricsLines = NbLines;
 
                 frmMidiLyrics.SizeMode = SizeMode;
 
@@ -973,7 +980,7 @@ namespace Karaboss
         private void UpDownNbLines_ValueChanged(object sender, EventArgs e)
         {
             NbLines = (int)UpDownNbLines.Value;
-            pBox.TxtNbLines = NbLines;
+            pBox.nbLyricsLines = NbLines;
         }
 
         private void TxtSlideShow_TextChanged(object sender, EventArgs e)

@@ -81,9 +81,7 @@ namespace Karaboss.Mp3
         // Number of lines to display
         private int _nbLyricsLines;
 
-
-
-        private frmMp3Lyrics frmMp3Lyrics;
+        //private frmMp3Lyrics frmMp3Lyrics;
         
         #endregion private declarations
 
@@ -198,9 +196,7 @@ namespace Karaboss.Mp3
             mp3KaraokeLyrics.Add(mp3KaraokeLine);
 
             karaokeEffect1.mp3KaraokeLyrics = mp3KaraokeLyrics;
-
-         
-           
+                   
 
             // Needed to put exactly these 4 positions in order to have "Lorem ipsum" in red and "dolor" in green
             // I don't even understand how my creation works            
@@ -720,7 +716,7 @@ namespace Karaboss.Mp3
             if (Application.OpenForms.OfType<frmMp3Lyrics>().Count() > 0)
             {
                 Cursor.Current = Cursors.WaitCursor;
-                frmMp3Lyrics = Utilities.FormUtilities.GetForm<frmMp3Lyrics>();
+                frmMp3Lyrics frmMp3Lyrics = Utilities.FormUtilities.GetForm<frmMp3Lyrics>();
 
                 frmMp3Lyrics.bShowBalls = Karaclass.m_DisplayBalls;
 

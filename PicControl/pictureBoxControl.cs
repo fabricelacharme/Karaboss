@@ -42,7 +42,6 @@ using System.Drawing.Text;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
-using System.Threading;
 using System.Windows.Forms;
 
 namespace PicControl
@@ -67,12 +66,12 @@ namespace PicControl
         [DllImportAttribute("user32.dll")]
         public static extern bool ReleaseCapture();
         private HashSet<Control> controlsToMove = new HashSet<Control>();
-        
-        #endregion
-       
 
+        #endregion
+
+        
         #region classes
-       
+
         // Syllabes
         public class syllabe
         {
@@ -108,7 +107,6 @@ namespace PicControl
 
 
         #region Slideshow
-
 
         /// <summary>
         /// SlideShow directory
@@ -181,159 +179,13 @@ namespace PicControl
         #endregion slideshow
 
 
-        #region properties
-
-
-        #region Internal lyrics separators
-
-        private string _InternalSepLines = "¼";
-        private string _InternalSepParagraphs = "½";
-
-        #endregion
-
-        public ImageLayout imgLayout { get; set; }
-        public Image m_CurrentImage { get; set; }
-        public Rectangle m_DisplayRectangle { get; set; }
-        public int m_Alpha { get; set; }
-
-        // Display chords or not
-        public bool OptionShowChords { get; set; }
-
-        /// <summary>
-        /// Display lyrics option: top, Center, Bottom
-        /// </summary>
-        public enum OptionsDisplay
-        {
-            Top = 0,
-            Center = 1,
-            Bottom = 2,
-        }
-        private OptionsDisplay _OptionDisplay;
-        /// <summary>
-        /// Display lyrics option: top, Center, Bottom
-        /// </summary>
-        public OptionsDisplay OptionDisplay
-        {
-            get { return _OptionDisplay; }
-            set { _OptionDisplay = value;
-                pboxWnd.Invalidate();
-            }
-        }
-
-        private bool _bTextBackGround = true;
-        public bool bTextBackGround
-        {
-            get { return _bTextBackGround; }
-            set { _bTextBackGround = value;
-                pboxWnd.Invalidate();
-            }
-        }
-
-        
-        private int _currentPosition;
-        public int CurrentTime {
-            get
-            { return _currentPosition; }
-            set
-            {
-                _currentPosition = value;
-            }
-        }
-
-
-        private int _beatDuration = 0;
-        public int BeatDuration
-        {
-            get { return _beatDuration; }
-            set { _beatDuration = value; }
-        }
-
-        public int _currentTextPos;
-        public int CurrentTextPos
-        {
-            get
-            { return _currentTextPos; }
-            set
-            {
-                _currentTextPos = value;
-            }
-        }
-
-        /// <summary>
-        /// Transparency color
-        /// </summary>
-        private Color _transparencykey = Color.Lime;
-        public Color TransparencyKey
-        {
-            get { return _transparencykey; }
-            set { _transparencykey = value; }
-        }
-
-        private string _optionbackground;
-        public string OptionBackground
-        {
-            get { return _optionbackground; }
-            set { _optionbackground = value;
-
-                switch (_optionbackground)
-                {
-                    case "Diaporama":
-                        if (dirSlideShow != null && Directory.Exists(dirSlideShow) && freqSlideShow > 0)
-                            InitSlideShow(dirSlideShow);
-                        break;
-                    
-                    case "SolidColor":
-                        //m_Cancel = true;
-                        Terminate();
-                        _timerGradient.Stop();
-                        pboxWnd.Image = null;
-                        m_CurrentImage = null;
-                        pboxWnd.BackColor = _BgColor;
-                        pboxWnd.Invalidate();
-                        break;
-                    
-                    case "Gradient":
-                        //m_Cancel = true;
-                        Terminate();
-                        pboxWnd.Image = null;
-                        m_CurrentImage = null;
-                        _timerGradient.Start();                        
-                        pboxWnd.Invalidate();
-                        break;
-
-                    case "Rhythm":
-                        //m_Cancel = true;
-                        Terminate();
-                        _timerGradient.Start();
-                        pboxWnd.Image = null;
-                        m_CurrentImage = null;
-                        ResetSize();
-                        pboxWnd.BackColor = _Rhythm0Color;
-                        pboxWnd.Invalidate();
-                        break;
-
-                    case "Transparent":
-                        //m_Cancel = true;
-                        Terminate();    
-                        _timerGradient.Stop();
-                        pboxWnd.Image = null;
-                        m_CurrentImage = null;
-                        pboxWnd.BackColor = _transparencykey;
-                        pboxWnd.Invalidate();
-                        break;
-                    default:
-                        break;
-                }
-            }
-        }
-
-
         #region TextColor
 
         /// <summary>
         /// Text sung color
         /// </summary>
-        private Color _ActiveColor;
+        private Color _ActiveColor = Color.FromArgb(153, 180, 51);
+        [Description("text color for lyrics that have already been sung")]
         public Color ActiveColor
         {
             get
@@ -349,6 +201,7 @@ namespace PicControl
         /// Text color
         /// </summary>
         private Color _HighlightColor;
+        [Description("the color of the lyrics currently being sung")]
         public Color HighlightColor
         {
             get
@@ -364,7 +217,9 @@ namespace PicControl
         /// Text to sing color
         /// </summary>
         private Color _InactiveColor;
-        public Color InactiveColor {
+        [Description("text color for the remaining lyrics")]
+        public Color InactiveColor
+        {
             get
             { return _InactiveColor; }
             set
@@ -373,10 +228,11 @@ namespace PicControl
                 pboxWnd.Invalidate();
             }
         }
-                    
+
         // Border Color
         private Color _ActiveBorderColor;
-        public Color ActiveBorderColor {
+        public Color ActiveBorderColor
+        {
             get
             { return _ActiveBorderColor; }
             set
@@ -401,7 +257,10 @@ namespace PicControl
         #endregion Textcolor       
 
 
-        #region chord color
+        #region Chord color
+
+        // Display chords or not
+        public bool OptionShowChords { get; set; }
 
         /// <summary>
         /// Text to sing color
@@ -447,68 +306,50 @@ namespace PicControl
             }
         }
 
-        #endregion chord color
+        #endregion Chord color
 
 
-        #region Text others
+        #region Text transform
 
+        private int _totalLyricsLines;
 
-        private bool _bdemo = false;
-        public bool bDemo
+        private int _nbLyricsLines = 3;
+        [Description("number of lines to display")]
+        public int nbLyricsLines
         {
-            get { return _bdemo; }
-            set { _bdemo = value; }
+            get
+            { return _nbLyricsLines; }
+            set
+            {
+                _nbLyricsLines = value;
+                ajustTextAgain();
+                pboxWnd.Invalidate();
+            }
         }
-
-        // Lyrics : converts characters to uppercase
+        
         private bool _bforceuppercase;
-        public bool bforceUppercase {
+        [Description("force uppercase for lyrics")]
+        public bool bforceUppercase
+        {
             get { return _bforceuppercase; }
-            set { _bforceuppercase = value;
+            set
+            {
+                _bforceuppercase = value;
                 if (_bdemo)
                     LoadDemoText();
-            }        
-        }
-
-
-        #region Font
-        public Font KaraokeFont
-        {
-            get { return _karaokeFont; }
-            set
-            {
-                try
-                {
-                    _karaokeFont = value;
-                    pboxWnd.Invalidate();
-                }
-                catch (Exception e)
-                {
-                    Console.Write("Error: " + e.Message);
-                }
             }
         }
-
-        private Font _chordFont;
-        public Font ChordFont
+             
+        private bool _bshowparagraphs = true;
+        [Description("show a blank line between paragraphs")]
+        public bool bShowParagraphs
         {
-            get { return _chordFont; }
-            set
-            {
-                try
-                {
-                    _chordFont = value;
-                    pboxWnd.Invalidate();
-                }
-                catch (Exception e)
-                {
-                    Console.Write("Error: " + e.Message);
-                }
-            }
+            get { return _bshowparagraphs; }
+            set { _bshowparagraphs = value; }
         }
 
 
-        #endregion Font
+        #endregion Text transform
 
 
         #region Frame type
@@ -526,9 +367,10 @@ namespace PicControl
         public string FrameType
         {
             get { return _frametype; }
-            set { 
-                _frametype = value; 
-            
+            set
+            {
+                _frametype = value;
+
                 switch (_frametype)
                 {
                     case "NoBorder":
@@ -570,7 +412,7 @@ namespace PicControl
         public int BorderThick
         {
             get { return _borderthick; }
-            set 
+            set
             {
                 try
                 {
@@ -585,12 +427,90 @@ namespace PicControl
         }
 
         #endregion Frame type
+       
 
+        #region Gradient
+
+        private Color _Grad0Color;
+        public Color Grad0Color
+        {
+            get { return _Grad0Color; }
+            set
+            {
+                _Grad0Color = value;
+                pboxWnd.Invalidate();
+            }
+        }
+        
+        private Color _Grad1Color;
+        public Color Grad1Color
+        {
+            get { return _Grad1Color; }
+            set
+            {
+                _Grad1Color = value;
+                pboxWnd.Invalidate();
+            }
+        }
+        
+        private Color _Rhythm0Color;
+        public Color Rhythm0Color
+        {
+            get { return _Rhythm0Color; }
+            set
+            {
+                _Rhythm0Color = value;
+                pboxWnd.BackColor = _Rhythm0Color;
+                ResetSize();
+                pboxWnd.Invalidate();
+            }
+        }
+        
+        private Color _Rhythm1Color;
+        public Color Rhythm1Color
+        {
+            get { return _Rhythm1Color; }
+            set
+            {
+                _Rhythm1Color = value;
+                ResetSize();
+                pboxWnd.Invalidate();
+            }
+        }
+        
+
+        readonly System.Windows.Forms.Timer _timerGradient = new System.Windows.Forms.Timer();
+
+        // Default angle for the gradient
+        
+        private int W;
+        private int H;
+        private int speed;
+        
+        private int _beat;
+        public int Beat
+        {
+            get { return _beat; }
+            set
+            {
+                _beat = value;
+                speed = (int)(_beat / 12.0);
+            }
+        }
+
+        private float _angle = 45.0f;
+        public float GradientAngle { get { return _angle; } set { _angle = value; pboxWnd.Invalidate(); } }       
+
+        #endregion Gradient
+
+
+        #region Background
 
         // Background color
         private int _bpm;
         private Color _BgColor;
-        public Color BgColor {
+        public Color BgColor
+        {
             get
             { return _BgColor; }
             set
@@ -604,142 +524,118 @@ namespace PicControl
             }
         }
 
-        private Color _Grad0Color;
-        public Color Grad0Color
+        // Color beside text (background of text)
+        private bool _bTextBackGround = true;
+        public bool bTextBackGround
         {
-            get { return _Grad0Color; }
+            get { return _bTextBackGround; }
             set
             {
-                _Grad0Color = value;
+                _bTextBackGround = value;
                 pboxWnd.Invalidate();
             }
         }
-        private Color _Grad1Color;
-        public Color Grad1Color
-        {
-            get { return _Grad1Color; }
-            set
-            {
-                _Grad1Color = value;
-                pboxWnd.Invalidate();
-            }
-        }
-        private Color _Rhythm0Color;
-        public Color Rhythm0Color
-        {
-            get { return _Rhythm0Color; }
-            set
-            {
-                _Rhythm0Color = value;
-                pboxWnd.BackColor = _Rhythm0Color;
-                ResetSize();
-                pboxWnd.Invalidate();
-            }
-        }
-        private Color _Rhythm1Color;
-        public Color Rhythm1Color
-        {
-            get { return _Rhythm1Color; }
-            set
-            {
-                _Rhythm1Color = value;
-                ResetSize();
-                pboxWnd.Invalidate();
-            }
-        }
-
-
-        #region Gradient & Rhythm
-
-        readonly System.Windows.Forms.Timer _timerGradient = new System.Windows.Forms.Timer();        
-
-        // Default angle for the gradient
-        private float _angle = 45.0f;
-        private int W;
-        private int H;
-        private int speed;
-        private int _beat;        
-        public int Beat
-        {
-            get { return _beat; }
-            set
-            {
-                _beat = value;
-                speed = (int)(_beat / 12.0);
-            }
-        }
-        public float GradientAngle { get { return _angle; } set { _angle = value; pboxWnd.Invalidate(); } }
-
-        private Color _gradientColor0;
-        public Color GradientColor0
-        {
-            get { return _gradientColor0; }
-            set
-            {
-                _gradientColor0 = value;
-                pboxWnd.Invalidate();
-            }
-        }
-        private Color _gradientColor1;
-        public Color GradientColor1
-        {
-            get { return _gradientColor1; }
-            set
-            {
-                _gradientColor1 = value;
-                pboxWnd.Invalidate();
-            }
-        }
-
-        private Color _rhythmColor0;
-        public Color RhythmColor0
-        {
-            get { return _rhythmColor0; }
-            set
-            {
-                _rhythmColor0 = value;
-                pboxWnd.Invalidate();
-            }
-        }
-
-        private Color _rhythmColor1;
-        public Color RhythmColor1
-        {
-            get { return _rhythmColor1; }
-            set
-            {
-                _rhythmColor1 = value;
-                pboxWnd.Invalidate();
-            }
-        }
-        #endregion Gradient & Rhythm
 
         /// <summary>
-        /// Number of lines to display
+        /// Transparency color
         /// </summary>
-        private int _txtNbLines;
-        public int TxtNbLines {
-            get
-            { return _txtNbLines; }
+        private Color _transparencykey = Color.Lime;
+        public Color TransparencyKey
+        {
+            get { return _transparencykey; }
+            set { _transparencykey = value; }
+        }
+
+
+        private string _optionbackground;
+        public string OptionBackground
+        {
+            get { return _optionbackground; }
             set
             {
-                _txtNbLines = value;
-                ajustTextAgain();
+                _optionbackground = value;
+
+                switch (_optionbackground)
+                {
+                    case "Diaporama":
+                        if (dirSlideShow != null && Directory.Exists(dirSlideShow) && freqSlideShow > 0)
+                            InitSlideShow(dirSlideShow);
+                        break;
+
+                    case "SolidColor":
+                        //m_Cancel = true;
+                        Terminate();
+                        _timerGradient.Stop();
+                        pboxWnd.Image = null;
+                        m_CurrentImage = null;
+                        pboxWnd.BackColor = _BgColor;
+                        pboxWnd.Invalidate();
+                        break;
+
+                    case "Gradient":
+                        //m_Cancel = true;
+                        Terminate();
+                        pboxWnd.Image = null;
+                        m_CurrentImage = null;
+                        _timerGradient.Start();
+                        pboxWnd.Invalidate();
+                        break;
+
+                    case "Rhythm":
+                        //m_Cancel = true;
+                        Terminate();
+                        _timerGradient.Start();
+                        pboxWnd.Image = null;
+                        m_CurrentImage = null;
+                        ResetSize();
+                        pboxWnd.BackColor = _Rhythm0Color;
+                        pboxWnd.Invalidate();
+                        break;
+
+                    case "Transparent":
+                        //m_Cancel = true;
+                        Terminate();
+                        _timerGradient.Stop();
+                        pboxWnd.Image = null;
+                        m_CurrentImage = null;
+                        pboxWnd.BackColor = _transparencykey;
+                        pboxWnd.Invalidate();
+                        break;
+                    default:
+                        break;
+                }
+            }
+        }
+
+
+        /// <summary>
+        /// Display lyrics option: top, Center, Bottom
+        /// </summary>
+        public enum OptionsDisplay
+        {
+            Top = 0,
+            Center = 1,
+            Bottom = 2,
+        }
+        private OptionsDisplay _OptionDisplay;
+        /// <summary>
+        /// Display lyrics option: top, Center, Bottom
+        /// </summary>
+        public OptionsDisplay OptionDisplay
+        {
+            get { return _OptionDisplay; }
+            set
+            {
+                _OptionDisplay = value;
                 pboxWnd.Invalidate();
             }
         }
 
-        // Show a blank line between paragraphs
-        private bool _bshowparagraphs = true;
-        public bool bShowParagraphs
-        {
-            get { return _bshowparagraphs; }
-            set { _bshowparagraphs = value; }
-        }
 
-        #endregion
+        #endregion Background
 
-   
+
+        #region Image display
 
         /// <summary>
         /// Size mode of picturebox
@@ -748,34 +644,135 @@ namespace PicControl
         public PictureBoxSizeMode SizeMode
         {
             get { return _sizemode; }
-            set { _sizemode = value;
-            pboxWnd.SizeMode = _sizemode;
+            set
+            {
+                _sizemode = value;
+                pboxWnd.SizeMode = _sizemode;
             }
         }
-        
-        #endregion properties
+
+        #endregion Image display
 
 
-        #region private
+        #region Font
 
-        private bool disposed = false;        
 
-        private string strCurrentImage; // current image to insure that random will provide a different one        
+        private Font m_font;
+        private float emSize; // Size of the font
+        private StringFormat sf;
+
+        private Font _karaokeFont;
+        [Description("Karaoke font")]
+        public Font KaraokeFont
+        {
+            get { return _karaokeFont; }
+            set
+            {
+                try
+                {
+                    _karaokeFont = value;
+                    pboxWnd.Invalidate();
+                }
+                catch (Exception e)
+                {
+                    Console.Write("Error: " + e.Message);
+                }
+            }
+        }
+
+        private Font _chordFont;
+        public Font ChordFont
+        {
+            get { return _chordFont; }
+            set
+            {
+                try
+                {
+                    _chordFont = value;
+                    pboxWnd.Invalidate();
+                }
+                catch (Exception e)
+                {
+                    Console.Write("Error: " + e.Message);
+                }
+            }
+        }
+
+
+        #endregion Font
+
+
+        #region Demo
+
+        private bool _bdemo = false;
+        public bool bDemo
+        {
+            get { return _bdemo; }
+            set { _bdemo = value; }
+        }
+
+        #endregion Demo
+
+
+        #region Internal lyrics separators
+
+        private string _InternalSepLines = "¼";
+        private string _InternalSepParagraphs = "½";
+
+        #endregion
+
+
+        #region Others
+
+        public ImageLayout imgLayout { get; set; }
+        public Image m_CurrentImage { get; set; }
+                       
+        public Rectangle m_DisplayRectangle { get; set; }        
+                        
+        private int _currentPosition;
+        public int CurrentTime {
+            get
+            { return _currentPosition; }
+            set
+            {
+                _currentPosition = value;
+            }
+        }
+
+        private int _beatDuration = 0;
+        public int BeatDuration
+        {
+            get { return _beatDuration; }
+            set { _beatDuration = value; }
+        }
+
+        public int _currentTextPos;
+        public int CurrentTextPos
+        {
+            get
+            { return _currentTextPos; }
+            set
+            {
+                _currentTextPos = value;
+            }
+        }
+                              
+
+        private bool disposed = false;                  
 
         private int vOffset = 0;
         private int _lineHeight = 0;
 
-        private Font _karaokeFont;
-        private int _linesHeight = 0;
-        private int _nbLyricsLines = 0;
+        
+        private int _linesHeight = 0;        // Full song height (number of lines * line height)
 
         private bool bEndOfLine = false;
         private bool bHighLight = false;
-        private int nextStartOfLineTime = 0;
-        private int _lastLinePosition = 0;
+        private int nextStartOfLineTime = 0;        
         private int TimeToNextLineDuration = 0;
-        private int PAUSE_TIME;
 
+
+        private List<syllabe> syllabes;
         private List<string> lstLyricsLines;    // Liste de lignes
         private List<string> lstChordsLines;    // List of lines of chords (same number of lines as lstLyricsLines but with chords instead of lyrics)
 
@@ -783,21 +780,14 @@ namespace PicControl
         private int currentLine = 0;
         private string lineMax; // Ligne longueur max
         
- 
-        private List<syllabe> syllabes;
-
-        private Font m_font;
-        private float emSize; // Size of the font
-        private StringFormat sf;           
-
+        
         private List<RectangleF> rRect;
-        private List<RectangleF> rNextRect;
-        //private List<RectangleF>[] rListNextRect;
-
+        private List<RectangleF> rNextRect;        
 
         private int _beatNumber = 1;
 
-        #endregion private
+        #endregion Others
+
 
         /// <summary>
         /// Constructor of pictureBoxControl
@@ -821,7 +811,7 @@ namespace PicControl
             #endregion
             
             m_ImageFilePaths = new List<string>();
-            m_Alpha = 255;
+            //m_Alpha = 255;
             imgLayout = ImageLayout.Stretch;
 
             Beat = 200; // Default speed for rhythm animation
@@ -906,8 +896,7 @@ namespace PicControl
         {
             try
             {
-                m_CurrentImage = null;
-                strCurrentImage = string.Empty;                
+                m_CurrentImage = null;                 
 
                 pboxWnd.Image = null;
                 pboxWnd.Invalidate();
@@ -1010,8 +999,8 @@ namespace PicControl
                     lstLyricsLines = StoreLyricsLines(_kLyrics);
                     lstChordsLines = StoreChordLines(_kLyrics);
                 }
-                // Number of lines (offset calculation)
-                _nbLyricsLines = lstLyricsLines.Count - 1;
+                // Number total of lines (offset calculation)
+                _totalLyricsLines = lstLyricsLines.Count - 1;
 
                 // ajust font size
                 lineMax = GetMaxLength();
@@ -1151,7 +1140,7 @@ namespace PicControl
         /// <param name="sec">Count down max </param>
         public void LoadWaitSong(int sec)
         {
-            _txtNbLines = 1;
+            _nbLyricsLines = 1;
             dirSlideShow = null;
             InitSlideShow(null);           
 
@@ -1233,7 +1222,7 @@ namespace PicControl
             _HighlightChordColor = Color.FromArgb(238, 17, 17);    // modern ui dark Red
             
             
-            _txtNbLines = 3;         
+            _nbLyricsLines = 3;         
 
             
 
@@ -1473,7 +1462,7 @@ namespace PicControl
 
                 float textHeight = MeasureStringHeight(S, inisize);
                 float totaltextHeight;
-                totaltextHeight = _txtNbLines * (textHeight + 10);
+                totaltextHeight = _nbLyricsLines * (textHeight + 10);
 
                 if (_bShowChords)
                 {
@@ -1493,7 +1482,7 @@ namespace PicControl
                             femsize = g.DpiY * inisize / 72;                            
                             textHeight = MeasureStringHeight(S, femsize);
                             
-                            totaltextHeight = _txtNbLines * (textHeight + 10);
+                            totaltextHeight = _nbLyricsLines * (textHeight + 10);
                             if (_bShowChords)
                             {
                                 // FAB CHROD
@@ -1703,31 +1692,31 @@ namespace PicControl
             switch (_OptionDisplay)
             {
                 case OptionsDisplay.Top:
-                    if (_txtNbLines == 1)
+                    if (_nbLyricsLines == 1)
                         ret = 10;
                     else
                         ret = _lineHeight;
                     break;
 
                 case OptionsDisplay.Center:
-                    if (_txtNbLines == 1)
+                    if (_nbLyricsLines == 1)
                     {
-                        ret = (H - ((_txtNbLines) * (h + 10))) / 2;
+                        ret = (H - ((_nbLyricsLines) * (h + 10))) / 2;
                     }
                     else
                     {
                         if (_bShowChords)
-                            ret = (H - ((2 * _txtNbLines - 1) * (h + 10))) / 2;
+                            ret = (H - ((2 * _nbLyricsLines - 1) * (h + 10))) / 2;
                         else
-                            ret = (H - ((_txtNbLines - 1) * (h + 10))) / 2;
+                            ret = (H - ((_nbLyricsLines - 1) * (h + 10))) / 2;
                     }
                     break;
 
                 case OptionsDisplay.Bottom:
                     if (_bShowChords)
-                        ret = (H - (int)(2.5 * _txtNbLines) * _lineHeight) - 10;
+                        ret = (H - (int)(2.5 * _nbLyricsLines) * _lineHeight) - 10;
                     else
-                        ret = (H - _txtNbLines * _lineHeight) - 10;
+                        ret = (H - _nbLyricsLines * _lineHeight) - 10;
 
                     break;
             }
@@ -2101,7 +2090,7 @@ namespace PicControl
             int ChordOffset = offset;  // To manage when offset = 0 
             #endregion declarations
 
-            if (_txtNbLines == 1)
+            if (_nbLyricsLines == 1)
                 offset = 0;
 
             // Draw sentence                           
@@ -2114,7 +2103,7 @@ namespace PicControl
                 x0 = _currentTextPos - syllabes[_currentTextPos].posline;
 
 
-            for (int linenr = 0; linenr < _txtNbLines; linenr++)
+            for (int linenr = 0; linenr < _nbLyricsLines; linenr++)
             {
                 int line = currentLine + linenr + 1;
                 
@@ -2125,13 +2114,13 @@ namespace PicControl
                 // mais si il y a un séparateur paragraphe, 
                 // on parcourt la boucle for (i = x0; i < syllabes.Count; i++) sans rien faire 
                 // du coup, k passe à 1 et on utilise les rectangles de la ligne suivante
-                if (_txtNbLines == 1)
+                if (_nbLyricsLines == 1)
                 {
                     if (line > currentLine + 1) break;
                 }
                 else
                 {
-                    if (line > currentLine + _txtNbLines - 1) break;
+                    if (line > currentLine + _nbLyricsLines - 1) break;
                 }
 
                 // Line content
@@ -2142,8 +2131,7 @@ namespace PicControl
 
                 lineContent = kline.ToString();
                 lineChords = lstChordsLines[line];          // TODO : à revoir pour les accords directement dans la classe KLyrics
-
-                //x1 = rListNextRect[linenr][0].X;
+                
                 x1 = CenterLine(lineContent, emSize);
 
                 // Draw line content
@@ -2530,55 +2518,7 @@ namespace PicControl
             if (lstLyricsLines is null || lstLyricsLines.Count == 0)
                 return;
 
-            DrawText(e);
-            
-            #region deleteme
-
-            /*
-            try
-            {                               
-                // Create list of rectangles when line changes
-                synchronize(_currentTextPos);
-
-                // Antialiasing
-                e.Graphics.SmoothingMode = SmoothingMode.AntiAlias;
-
-                // Calculate offset to center the text vertically
-                int y0 = getOffsetHeight(emSize);
-
-                if (_txtNbLines > 1)
-                {
-                    // Several lines to display
-                    // progressive offset - vOffset increases, so y0 decreases
-                    y0 = y0 - vOffset;                    
-
-                    // Draw current line                    
-                    DrawCurrentLine(_currentPosition, y0, e);
-
-                    // Draw next lines                 
-                    DrawNextLines(y0, e);
-                    
-                }
-                else
-                {
-                    // A single line to display
-                    // Draw current line until end of line
-                    if (!bEndOfLine)
-                        DrawCurrentLine(_currentPosition, y0, e);
-                    else                    
-                        DrawNextLines(y0, e);                    
-                }
-
-            }
-            catch (Exception ep)
-            {
-                Console.Write("Error drawing text on image: " + ep.Message);
-            }
-            
-            
-            */
-
-            #endregion deleteme
+            DrawText(e);                    
 
             #endregion
 
@@ -2599,7 +2539,7 @@ namespace PicControl
                 // Calculate offset to center the text vertically
                 int y0 = getOffsetHeight(emSize);
 
-                if (_txtNbLines > 1)
+                if (_nbLyricsLines > 1)
                 {
                     // Several lines to display
                     // progressive offset - vOffset increases, so y0 decreases

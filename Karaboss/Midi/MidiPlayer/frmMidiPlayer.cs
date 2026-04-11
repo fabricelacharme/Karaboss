@@ -4377,7 +4377,7 @@ namespace Karaboss
                 // REstore number of lines of lyrics to display
                 if (Karaclass.m_PauseBetweenSongs)
                 {
-                    frmMidiLyric.TxtNbLines = Properties.Settings.Default.TxtNbLines;
+                    frmMidiLyric.nbLyricsLines = Properties.Settings.Default.TxtNbLines;
                 }
 
                 frmMidiLyric.LoadSong(myLyricsMgmt.KLyrics);
@@ -6760,7 +6760,7 @@ namespace Karaboss
                     frmMidiLyric.AlloModifyDirSlideShow = false;
 
                     // Warning, number of lyrics lines is changed here
-                    frmMidiLyric.TxtNbLines = nbLines;
+                    frmMidiLyric.nbLyricsLines = nbLines;
                     frmMidiLyric.bTextBackGround = false;
 
                     // Display singer in top panel
