@@ -1,4 +1,6 @@
-﻿namespace Karaboss.Mp3
+﻿using kar;
+
+namespace Karaboss.Mp3
 {
     partial class frmMp3Lyrics
     {
@@ -24,8 +26,8 @@
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmMp3Lyrics));
-            keffect.KaraokeLine karaokeLine3 = new keffect.KaraokeLine();
-            keffect.KaraokeLyrics karaokeLyrics3 = new keffect.KaraokeLyrics();
+            kLine karaokeLine3 = new kLine();
+            kLyrics karaokeLyrics3 = new kLyrics();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.btnEditLyrics = new System.Windows.Forms.Button();
             this.btnExportLyricsToText = new System.Windows.Forms.Button();

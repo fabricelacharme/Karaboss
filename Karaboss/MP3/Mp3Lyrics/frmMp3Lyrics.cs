@@ -41,7 +41,8 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
-using static keffect.KaraokeEffect;
+using kar;
+using keffect;
 
 namespace Karaboss.Mp3
 {    
@@ -332,7 +333,7 @@ namespace Karaboss.Mp3
             set 
             {  
                 _bprogressivehighlight= value;
-                karaokeEffect1.TransitionEffect = _bprogressivehighlight? TransitionEffects.Progressive : TransitionEffects.None;
+                karaokeEffect1.TransitionEffect = _bprogressivehighlight? keffect.KaraokeEffect.TransitionEffects.Progressive : keffect.KaraokeEffect.TransitionEffects.None;
             }
         }
 
@@ -807,8 +808,7 @@ namespace Karaboss.Mp3
             if (Mp3LyricsMgmtHelper.mp3KaraokeLyrics == null) return;
 
             // Karaoke Effect
-            karaokeEffect1.TransitionEffect = TransitionEffects.None;                        
-            //karaokeEffect1.SyncLyrics = Mp3LyricsMgmtHelper.SyncLyrics;                        
+            karaokeEffect1.TransitionEffect = keffect.KaraokeEffect.TransitionEffects.None;                                                            
             karaokeEffect1.mp3KaraokeLyrics = Mp3LyricsMgmtHelper.mp3KaraokeLyrics;
 
             karaokeEffect1.nbLyricsLines = 3;
@@ -823,7 +823,7 @@ namespace Karaboss.Mp3
         //    karaokeEffect1.SyncLyrics = lyrics;
         //}
 
-        public void SetLyrics2(keffect.KaraokeLyrics lyrics)
+        public void SetLyrics2(kLyrics lyrics)
         {
             //karaokeEffect1.Lyrics = lyrics;
             karaokeEffect1.mp3KaraokeLyrics = lyrics;
@@ -854,14 +854,14 @@ namespace Karaboss.Mp3
         /// Load balls times
         /// </summary>
         /// <param name="SyncLyrics"></param>
-        public void LoadBallsTimes(keffect.KaraokeLyrics SyncLyrics)
+        public void LoadBallsTimes(kLyrics SyncLyrics)
         {
             #region guard
             if (!_bShowBalls || SyncLyrics.Lines.Count == 0) return;
             #endregion guard
 
 
-            keffect.KaraokeLine syncline = new keffect.KaraokeLine();
+            kLine syncline = new kLine();
             List<int> LyricsTimes = new List<int>();
 
             currentTextPos = 0;
@@ -913,7 +913,7 @@ namespace Karaboss.Mp3
             //if (Mp3LyricsMgmtHelper.SyncLyrics == null) return 0;
             if (Mp3LyricsMgmtHelper.mp3KaraokeLyrics == null) return 0;
             
-            keffect.KaraokeLine syncline = new keffect.KaraokeLine();
+            kLine syncline = new kLine();
             
             for (i = 0; i < Mp3LyricsMgmtHelper.mp3KaraokeLyrics.Lines.Count; i++)
             {

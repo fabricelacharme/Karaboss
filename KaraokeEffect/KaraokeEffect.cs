@@ -31,6 +31,7 @@
  */
 
 #endregion
+using kar;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -47,7 +48,7 @@ using System.Windows.Forms;
 
 namespace keffect
 {
-    
+    /*
     public class Syllable
     {
         public string Text { get; set; }
@@ -180,7 +181,7 @@ namespace keffect
             }
         }
     }
-
+    */
 
 
     public partial class KaraokeEffect : UserControl, IMessageFilter
@@ -239,9 +240,12 @@ namespace keffect
 
         #endregion Others
 
-        // new
-        private KaraokeLine _karaokeLine;
-        public KaraokeLine mp3KaraokeLine
+
+        #region Karaoke lyrics
+
+        
+        private kLine _karaokeLine;
+        public kLine mp3KaraokeLine
         {
             get { return _karaokeLine; }
             set
@@ -250,9 +254,10 @@ namespace keffect
                 _karaokeLine = value;
             }
         }
+        
 
-        private KaraokeLyrics _karaokeLyrics;
-        public KaraokeLyrics mp3KaraokeLyrics
+        private kLyrics _karaokeLyrics;
+        public kLyrics mp3KaraokeLyrics
         {
             get { return _karaokeLyrics; }
             set
@@ -263,6 +268,9 @@ namespace keffect
                 Init();
             }
         }
+
+        #endregion Karaoke lyrics
+
 
         #region Move form without title bar
         public const int WM_NCLBUTTONDOWN = 0xA1;
@@ -331,7 +339,6 @@ namespace keffect
 
 
         #endregion SlideShow
-
 
         
         #region Text color
@@ -921,8 +928,8 @@ namespace keffect
             _steppercent = 0.01F;
 
             
-            mp3KaraokeLine = new KaraokeLine(new List<Syllable> { new Syllable("Hello", 0, 500), new Syllable(" World", 500, 500) });            
-            mp3KaraokeLyrics = new KaraokeLyrics();
+            mp3KaraokeLine = new kLine(new List<Syllable> { new Syllable("Hello", 0, 500), new Syllable(" World", 500, 500) });            
+            mp3KaraokeLyrics = new kLyrics();
             mp3KaraokeLyrics.Add(mp3KaraokeLine);
 
             _nbLyricsLines = 1;
@@ -936,7 +943,7 @@ namespace keffect
             Lines = new List<string[]>();
             Times = new List<long[]>();
                        
-            KaraokeLine karaokeline; 
+            kLine karaokeline; 
 
             string[] s;
             long[] t;

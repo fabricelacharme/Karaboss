@@ -40,7 +40,7 @@ using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using TagLib;
 using TagLib.Id3v2;
-using static System.Windows.Forms.LinkLabel;
+using kar;
 
 namespace Karaboss.Mp3.Mp3Lyrics
 {
@@ -54,18 +54,7 @@ namespace Karaboss.Mp3.Mp3Lyrics
         LyricsWithoutTimeStamps,
     }
     
-    [Serializable()]
-    public struct SyncText
-    {
-        public long Time { get; set; }
-        public string Text { get; set; }
-        public SyncText(long time, string text)
-        {
-            Time = time;
-            Text = text;
-        }
-    }
-
+   
     public static class Mp3LyricsMgmtHelper
     {
                        
@@ -85,15 +74,9 @@ namespace Karaboss.Mp3.Mp3Lyrics
 
 
         #region kEffect
-
-        // Line of struct SyncText
-        //public static List<keffect.KaraokeEffect.kSyncText> SyncLine = new List<keffect.KaraokeEffect.kSyncText>();
-        // List of lines of struct SyncText
-        //public static List<List<keffect.KaraokeEffect.kSyncText>> SyncLyrics = new List<List<keffect.KaraokeEffect.kSyncText>>();
-
-        // Replacement of List<List<keffect.KaraokeEffect.kSyncText>> for KaraokeLyrics class
-        public static keffect.KaraokeLine mp3KaraokeLine = new keffect.KaraokeLine();
-        public static keffect.KaraokeLyrics mp3KaraokeLyrics = new keffect.KaraokeLyrics();
+       
+        public static kLine mp3KaraokeLine = new kLine();
+        public static kLyrics mp3KaraokeLyrics = new kLyrics();
 
 
         #endregion KEffect
@@ -203,7 +186,7 @@ namespace Karaboss.Mp3.Mp3Lyrics
         /// Export lyrics issued form a text File
         /// </summary>
         /// <param name="SyncLyrics"></param>
-        public static void ExportSyncLyricsToText(keffect.KaraokeLyrics SyncLyrics)
+        public static void ExportSyncLyricsToText(kLyrics SyncLyrics)
         {
             // Export Sync Lyrics to Text
             if (SyncLyrics == null || SyncLyrics.Lines.Count() == 0)
@@ -218,7 +201,7 @@ namespace Karaboss.Mp3.Mp3Lyrics
 
             string path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), Application.ProductName);
             string file = path + "\\mp3lyrics.txt";
-            keffect.KaraokeLine SyncLine;
+            kLine SyncLine;
 
             for (int j = 0; j < SyncLyrics.Lines.Count(); j++)
             {
@@ -256,21 +239,21 @@ namespace Karaboss.Mp3.Mp3Lyrics
 
 
         /// <summary>
-        /// Get sync lyrics in List<List<SyncText>> for KEffect from SynchronisedLyricsFrame
+        /// Get sync lyrics in KEffect from SynchronisedLyricsFrame
         /// </summary>
         /// <param name="SyncLyricsFrame"></param>
         /// <returns></returns>
-        public static keffect.KaraokeLyrics GetLyricsFromMp3File(SynchronisedLyricsFrame SyncLyricsFrame)
+        public static kLyrics GetLyricsFromMp3File(SynchronisedLyricsFrame SyncLyricsFrame)
         {
             string lyric;
             long time;
-            keffect.Syllable sct;
+            Syllable sct;
             
             bool bNewLine = false;            
             bool bParagraph = false;
 
-            keffect.KaraokeLine SyncLine = new keffect.KaraokeLine();
-            keffect.KaraokeLyrics SyncLyrics = new keffect.KaraokeLyrics();
+            kLine SyncLine = new kLine();
+            kLyrics SyncLyrics = new kLyrics();
 
 
             bool bHasLineFeeds = false;
@@ -327,7 +310,7 @@ namespace Karaboss.Mp3.Mp3Lyrics
                         }
                     }
 
-                    sct = new  keffect.Syllable(lyric, time);
+                    sct = new  Syllable(lyric, time);
 
                     
                     if (bParagraph)
@@ -338,12 +321,12 @@ namespace Karaboss.Mp3.Mp3Lyrics
                             SyncLyrics.Add(SyncLine);
 
                         // add a blank line for the paragraph
-                        SyncLine = new keffect.KaraokeLine();
-                        SyncLine.Add(new keffect.Syllable("", time));
+                        SyncLine = new kLine();
+                        SyncLine.Add(new Syllable("", time));
                         SyncLyrics.Add(SyncLine);
 
                         // new line
-                        SyncLine = new keffect.KaraokeLine();
+                        SyncLine = new kLine();
                         SyncLine.Add(sct);
                     }
                     else if (bNewLine)
@@ -355,7 +338,7 @@ namespace Karaboss.Mp3.Mp3Lyrics
                             SyncLyrics.Add(SyncLine);
 
                         // new line
-                        SyncLine = new keffect.KaraokeLine();
+                        SyncLine = new kLine();
                         SyncLine.Add(sct);
                     }
                     else
@@ -376,8 +359,8 @@ namespace Karaboss.Mp3.Mp3Lyrics
                 {
                     lyric = SyncLyricsFrame.Text[i].Text.Trim();
                     time = SyncLyricsFrame.Text[i].Time;
-                    sct = new keffect.Syllable(lyric, time);
-                    SyncLine = new keffect.KaraokeLine();
+                    sct = new Syllable(lyric, time);
+                    SyncLine = new kLine();
                     SyncLine.Add(sct);
                     SyncLyrics.Add(SyncLine);
                 }
@@ -398,42 +381,8 @@ namespace Karaboss.Mp3.Mp3Lyrics
         /// <param name="FileName">The path of the file for which to locate and read the associated LRC lyrics file. The file must exist and
         /// have a .lrc extension.</param>
         /// <returns>A list of karaoke effect synchronization text elements extracted from the LRC file, or null if the LRC file
-        /// does not exist or is invalid.</returns>
-        /*
-        public static List<List<keffect.KaraokeEffect.kSyncText>> GetLyricsFromLrcFile(string FileName)
-        {
-            // Search for existing LRC file
-            string lrcFile = Path.ChangeExtension(FileName, ".lrc");
-            if (!System.IO.File.Exists(lrcFile)) return null;
-
-            // Extract Artist, Title, Album, Year from LRC file            
-            string[] lines = System.IO.File.ReadAllLines(lrcFile);
-
-            if (lines == null)
-            {
-                MessageBox.Show("Invalid lrc file: " + Path.GetFileName(lrcFile), "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return null;
-            }
-
-            Artist = string.Empty;
-            Title = string.Empty;
-            Album = string.Empty;
-            Year = 0;
-            Description = string.Empty;
-            Tool = string.Empty;
-
-            Artist = GetArtistFromLrc(lines);
-            Title = GetTitleFromLrc(lines);
-            Album = GetAlbumFromLrc(lines);
-            Year = GetYearFromLrc(lines);
-            Tool = GetToolFromLrc(lines);
-
-
-            return LyricsUtilities.ReadLrcFromFile(lrcFile);
-        }
-        */
-
-        public static keffect.KaraokeLyrics GetLyricsFromLrcFile(string FileName)
+        /// does not exist or is invalid.</returns>     
+        public static kLyrics GetLyricsFromLrcFile(string FileName)
         {
             // Search for existing LRC file
             string lrcFile = Path.ChangeExtension(FileName, ".lrc");
@@ -503,15 +452,15 @@ namespace Karaboss.Mp3.Mp3Lyrics
         /// </summary>
         /// <param name="TagLyrics"></param>
         /// <returns></returns>
-        public static keffect.KaraokeLyrics GetKEffectStringLyrics(string TagLyrics)
+        public static kLyrics GetKEffectStringLyrics(string TagLyrics)
         {
             if (TagLyrics == null || TagLyrics == "") return null;
 
             string cr = Environment.NewLine;
             string[] lines = TagLyrics.Split(new[] { "\r\n", "\r", "\n" }, StringSplitOptions.None);
             string line;
-            keffect.KaraokeLine SyncLine;
-            keffect.KaraokeLyrics SyncLyrics = new keffect.KaraokeLyrics();
+            kLine SyncLine;
+            kLyrics SyncLyrics = new kLyrics();
             long time;
             string text;
 
@@ -521,8 +470,8 @@ namespace Karaboss.Mp3.Mp3Lyrics
 
                 time = 0;
                 text = cr + line;                
-                SyncLine = new keffect.KaraokeLine();
-                SyncLine.Add(new keffect.Syllable(text, time)); 
+                SyncLine = new kLine();
+                SyncLine.Add(new Syllable(text, time)); 
 
                 SyncLyrics.Add(SyncLine );
             }

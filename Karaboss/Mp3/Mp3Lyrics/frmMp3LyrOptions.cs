@@ -7,13 +7,14 @@ using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
+using kar;
 
 namespace Karaboss.Mp3
 {
     public partial class frmMp3LyrOptions : Form
     {
-        keffect.KaraokeLine mp3KaraokeLine = new keffect.KaraokeLine();
-        keffect.KaraokeLyrics mp3KaraokeLyrics = new keffect.KaraokeLyrics();
+        kLine mp3KaraokeLine = new kLine();
+        kLyrics mp3KaraokeLyrics = new kLyrics();
 
         #region private declarations
 
@@ -110,89 +111,89 @@ namespace Karaboss.Mp3
             karaokeEffect1.nbLyricsLines = Properties.Settings.Default.TxtNbLines;
 
 
-            mp3KaraokeLine = new keffect.KaraokeLine();
-            mp3KaraokeLine.Add(new keffect.Syllable("Lorem", 0));
-            mp3KaraokeLine.Add(new keffect.Syllable(" ipsum", 500));
-            mp3KaraokeLine.Add(new keffect.Syllable(" dolor", 1000));
-            mp3KaraokeLine.Add(new keffect.Syllable(" sit", 1500));
-            mp3KaraokeLine.Add(new keffect.Syllable(" amet", 2000));
+            mp3KaraokeLine = new kLine();
+            mp3KaraokeLine.Add(new Syllable("Lorem", 0));
+            mp3KaraokeLine.Add(new Syllable(" ipsum", 500));
+            mp3KaraokeLine.Add(new Syllable(" dolor", 1000));
+            mp3KaraokeLine.Add(new Syllable(" sit", 1500));
+            mp3KaraokeLine.Add(new Syllable(" amet", 2000));
             mp3KaraokeLyrics.Add(mp3KaraokeLine);
 
-            mp3KaraokeLine = new keffect.KaraokeLine();
-            mp3KaraokeLine.Add(new keffect.Syllable("consectetur", 2500));
-            mp3KaraokeLine.Add(new keffect.Syllable(" adipisicing", 3000));
-            mp3KaraokeLine.Add(new keffect.Syllable(" elit", 3500));
+            mp3KaraokeLine = new kLine();
+            mp3KaraokeLine.Add(new Syllable("consectetur", 2500));
+            mp3KaraokeLine.Add(new Syllable(" adipisicing", 3000));
+            mp3KaraokeLine.Add(new Syllable(" elit", 3500));
             mp3KaraokeLyrics.Add(mp3KaraokeLine);
 
-            mp3KaraokeLine = new keffect.KaraokeLine();
-            mp3KaraokeLine.Add(new keffect.Syllable("sed", 4000));
-            mp3KaraokeLine.Add(new keffect.Syllable(" do", 4500));
-            mp3KaraokeLine.Add(new keffect.Syllable(" eiusmod", 5000));
-            mp3KaraokeLine.Add(new keffect.Syllable(" tempor", 5500));
-            mp3KaraokeLine.Add(new keffect.Syllable(" incididunt", 6000));
+            mp3KaraokeLine = new kLine();
+            mp3KaraokeLine.Add(new Syllable("sed", 4000));
+            mp3KaraokeLine.Add(new Syllable(" do", 4500));
+            mp3KaraokeLine.Add(new Syllable(" eiusmod", 5000));
+            mp3KaraokeLine.Add(new Syllable(" tempor", 5500));
+            mp3KaraokeLine.Add(new Syllable(" incididunt", 6000));
             mp3KaraokeLyrics.Add(mp3KaraokeLine);
 
-            mp3KaraokeLine = new keffect.KaraokeLine();
-            mp3KaraokeLine.Add(new keffect.Syllable("ut", 6500));
-            mp3KaraokeLine.Add(new keffect.Syllable(" labore", 7000));
-            mp3KaraokeLine.Add(new keffect.Syllable("et", 7500));
-            mp3KaraokeLine.Add(new keffect.Syllable(" dolore", 8000));
-            mp3KaraokeLine.Add(new keffect.Syllable(" magna", 8500));
-            mp3KaraokeLine.Add(new keffect.Syllable(" aliqua.", 9000));
+            mp3KaraokeLine = new kLine();
+            mp3KaraokeLine.Add(new Syllable("ut", 6500));
+            mp3KaraokeLine.Add(new Syllable(" labore", 7000));
+            mp3KaraokeLine.Add(new Syllable("et", 7500));
+            mp3KaraokeLine.Add(new Syllable(" dolore", 8000));
+            mp3KaraokeLine.Add(new Syllable(" magna", 8500));
+            mp3KaraokeLine.Add(new Syllable(" aliqua.", 9000));
             mp3KaraokeLyrics.Add(mp3KaraokeLine);
 
-            mp3KaraokeLine = new keffect.KaraokeLine();
-            mp3KaraokeLine.Add(new keffect.Syllable("Ut", 9200));
-            mp3KaraokeLine.Add(new keffect.Syllable(" enim", 9500));
-            mp3KaraokeLine.Add(new keffect.Syllable(" ad", 10000));
-            mp3KaraokeLine.Add(new keffect.Syllable(" minim", 10500));
-            mp3KaraokeLine.Add(new keffect.Syllable(" veniam", 11000));
+            mp3KaraokeLine = new kLine();
+            mp3KaraokeLine.Add(new Syllable("Ut", 9200));
+            mp3KaraokeLine.Add(new Syllable(" enim", 9500));
+            mp3KaraokeLine.Add(new Syllable(" ad", 10000));
+            mp3KaraokeLine.Add(new Syllable(" minim", 10500));
+            mp3KaraokeLine.Add(new Syllable(" veniam", 11000));
             mp3KaraokeLyrics.Add(mp3KaraokeLine);
 
-            mp3KaraokeLine = new keffect.KaraokeLine();
-            mp3KaraokeLine.Add(new keffect.Syllable("quis", 11500));
-            mp3KaraokeLine.Add(new keffect.Syllable(" nostrud", 12000));
-            mp3KaraokeLine.Add(new keffect.Syllable(" exercitation", 12500));
-            mp3KaraokeLine.Add(new keffect.Syllable(" ullamco", 13000));
+            mp3KaraokeLine = new kLine();
+            mp3KaraokeLine.Add(new Syllable("quis", 11500));
+            mp3KaraokeLine.Add(new Syllable(" nostrud", 12000));
+            mp3KaraokeLine.Add(new Syllable(" exercitation", 12500));
+            mp3KaraokeLine.Add(new Syllable(" ullamco", 13000));
             mp3KaraokeLyrics.Add(mp3KaraokeLine);
 
-            mp3KaraokeLine = new keffect.KaraokeLine();
-            mp3KaraokeLine.Add(new keffect.Syllable("laboris", 14000));
-            mp3KaraokeLine.Add(new keffect.Syllable(" nisi", 14500));
-            mp3KaraokeLine.Add(new keffect.Syllable(" ut", 15000));
-            mp3KaraokeLine.Add(new keffect.Syllable(" aliquip", 15500));
+            mp3KaraokeLine = new kLine();
+            mp3KaraokeLine.Add(new Syllable("laboris", 14000));
+            mp3KaraokeLine.Add(new Syllable(" nisi", 14500));
+            mp3KaraokeLine.Add(new Syllable(" ut", 15000));
+            mp3KaraokeLine.Add(new Syllable(" aliquip", 15500));
             mp3KaraokeLyrics.Add(mp3KaraokeLine);
 
-            mp3KaraokeLine = new keffect.KaraokeLine();
-            mp3KaraokeLine.Add(new keffect.Syllable("ex", 16000));
-            mp3KaraokeLine.Add(new keffect.Syllable(" ea", 16500));
-            mp3KaraokeLine.Add(new keffect.Syllable(" commodo", 17000));
-            mp3KaraokeLine.Add(new keffect.Syllable(" consequat.", 17500));
+            mp3KaraokeLine = new kLine();
+            mp3KaraokeLine.Add(new Syllable("ex", 16000));
+            mp3KaraokeLine.Add(new Syllable(" ea", 16500));
+            mp3KaraokeLine.Add(new Syllable(" commodo", 17000));
+            mp3KaraokeLine.Add(new Syllable(" consequat.", 17500));
             mp3KaraokeLyrics.Add(mp3KaraokeLine);
 
-            mp3KaraokeLine = new keffect.KaraokeLine();
-            mp3KaraokeLine.Add(new keffect.Syllable("Duis", 18000));
-            mp3KaraokeLine.Add(new keffect.Syllable(" aute", 18500));
-            mp3KaraokeLine.Add(new keffect.Syllable(" irure", 19000));
-            mp3KaraokeLine.Add(new keffect.Syllable(" dolor", 19500));
-            mp3KaraokeLine.Add(new keffect.Syllable(" in", 20000));
-            mp3KaraokeLine.Add(new keffect.Syllable(" reprehenderit", 20500));
+            mp3KaraokeLine = new kLine();
+            mp3KaraokeLine.Add(new Syllable("Duis", 18000));
+            mp3KaraokeLine.Add(new Syllable(" aute", 18500));
+            mp3KaraokeLine.Add(new Syllable(" irure", 19000));
+            mp3KaraokeLine.Add(new Syllable(" dolor", 19500));
+            mp3KaraokeLine.Add(new Syllable(" in", 20000));
+            mp3KaraokeLine.Add(new Syllable(" reprehenderit", 20500));
             mp3KaraokeLyrics.Add(mp3KaraokeLine);
 
-            mp3KaraokeLine = new keffect.KaraokeLine();
-            mp3KaraokeLine.Add(new keffect.Syllable("in", 20600));
-            mp3KaraokeLine.Add(new keffect.Syllable("voluptate", 21000));
-            mp3KaraokeLine.Add(new keffect.Syllable(" velit", 21500));
-            mp3KaraokeLine.Add(new keffect.Syllable(" esse", 22000));
-            mp3KaraokeLine.Add(new keffect.Syllable(" cillum", 22500));
-            mp3KaraokeLine.Add(new keffect.Syllable(" dolore", 23000));
+            mp3KaraokeLine = new kLine();
+            mp3KaraokeLine.Add(new Syllable("in", 20600));
+            mp3KaraokeLine.Add(new Syllable("voluptate", 21000));
+            mp3KaraokeLine.Add(new Syllable(" velit", 21500));
+            mp3KaraokeLine.Add(new Syllable(" esse", 22000));
+            mp3KaraokeLine.Add(new Syllable(" cillum", 22500));
+            mp3KaraokeLine.Add(new Syllable(" dolore", 23000));
             mp3KaraokeLyrics.Add(mp3KaraokeLine);
 
-            mp3KaraokeLine = new keffect.KaraokeLine();
-            mp3KaraokeLine.Add(new keffect.Syllable("eu", 23500));
-            mp3KaraokeLine.Add(new keffect.Syllable(" fugiat", 24000));
-            mp3KaraokeLine.Add(new keffect.Syllable(" nulla", 24500));
-            mp3KaraokeLine.Add(new keffect.Syllable(" pariatur.", 25000));
+            mp3KaraokeLine = new kLine();
+            mp3KaraokeLine.Add(new Syllable("eu", 23500));
+            mp3KaraokeLine.Add(new Syllable(" fugiat", 24000));
+            mp3KaraokeLine.Add(new Syllable(" nulla", 24500));
+            mp3KaraokeLine.Add(new Syllable(" pariatur.", 25000));
             mp3KaraokeLyrics.Add(mp3KaraokeLine);
 
             karaokeEffect1.mp3KaraokeLyrics = mp3KaraokeLyrics;
