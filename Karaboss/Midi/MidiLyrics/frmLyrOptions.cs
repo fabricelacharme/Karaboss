@@ -619,11 +619,14 @@ namespace Karaboss
             folderBrowserDialog1.SelectedPath = dirSlideShow;
             if (folderBrowserDialog1.ShowDialog() == DialogResult.OK)
             {
+                // Force display to Option Diaporama
+                radioDiaporama.Checked = true;
+
                 dirSlideShow = folderBrowserDialog1.SelectedPath;
                 
                 Cursor.Current = Cursors.WaitCursor;
-                txtSlideShow.Text = dirSlideShow;
-                pBox.DirSlideShow = dirSlideShow;
+                txtSlideShow.Text = dirSlideShow;         // pBox is updated in txtSlideShow_TextChanged event
+
             }
         }
 
@@ -634,6 +637,9 @@ namespace Karaboss
         /// <param name="e"></param>
         private void BtnResetDir_Click(object sender, EventArgs e)
         {
+            // Force display to Option Diaporama
+            radioDiaporama.Checked = true;
+
             dirSlideShow = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), Application.ProductName);
             txtSlideShow.Text = dirSlideShow;
             pBox.DirSlideShow = dirSlideShow;
@@ -971,7 +977,7 @@ namespace Karaboss
         }
 
         private void TxtSlideShow_TextChanged(object sender, EventArgs e)
-        {
+        {           
             string tx = txtSlideShow.Text;
             tx = tx.Trim();
             dirSlideShow = tx;

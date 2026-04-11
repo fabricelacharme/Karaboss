@@ -504,7 +504,7 @@ namespace Karaboss
         #endregion properties
 
 
-        public List<pictureBoxControl.plLyric> plLyrics;
+        //public List<pictureBoxControl.plLyric> plLyrics;
 
         /// <summary>
         /// Constructor
@@ -776,114 +776,10 @@ namespace Karaboss
         /// </summary>
         public void LoadSong(kLyrics kl)
         {
-            string lyric;
-            string chord;
-
             currentTextPos = 0;
-
-            #region Load lyrics and chords in picturebox control with plLyrics
-            /*
-            List<pictureBoxControl.plLyric> pcLyrics = new List<pictureBoxControl.plLyric>();
-            pictureBoxControl.plLyric pcL;
-
-            
-            for (int i = 0; i < plLs.Count; i++)
-            {
-                plLyric plL = plLs[i];
-
-                pcL = new pictureBoxControl.plLyric()
-                {
-                    Type = (pictureBoxControl.plLyric.Types)plL.CharType,
-                };
-
-                // Chord, lyric
-                chord = plL.Element.Item1;
-                lyric = plL.Element.Item2;
-
-                if (Karaclass.m_ShowChords)
-                {
-                    // if bShowChords, the chords will be displayed above the lyrics, so clean chords included in lyrics
-                    if (myLyricsMgmt != null && myLyricsMgmt.ChordsOriginatedFrom == MidiLyricsMgmt.ChordsOrigins.Lyrics)
-                    {
-
-                        if (myLyricsMgmt.RemoveChordPattern == null)
-                        {
-                            MessageBox.Show("RemoveChordsPattern is null", Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
-                            return;
-                        }
-                        lyric = Regex.Replace(lyric, myLyricsMgmt.RemoveChordPattern, @"");
-                    }
-                }
-
-                // Add element
-                pcL.Element = (chord, lyric);
-                pcL.TicksOn = plL.TicksOn;
-                pcL.TicksOff = plL.TicksOff;
-                pcLyrics.Add(pcL);
-            }
-            */
-
-            #endregion transform kLyrics in plLyrics to load song in picturebox control with plLyrics
-
-
-            #region transform kLyrics in plLyrics to load song in picturebox control with plLyrics
-
-            List<plLyric> plLsNew = myLyricsMgmt.ConvertToPlLyric(kl);
-
-            List<pictureBoxControl.plLyric> pcLyricsNew = new List<pictureBoxControl.plLyric>();
-            pictureBoxControl.plLyric pcLNew;
-
-            for (int i = 0; i < plLsNew.Count; i++)
-            {
-                plLyric plLNew = plLsNew[i];
-
-                pcLNew = new pictureBoxControl.plLyric()
-                {
-                    Type = (pictureBoxControl.plLyric.Types)plLNew.CharType,
-                };
-
-                // Chord, lyric
-                chord = plLNew.Element.Item1;
-                lyric = plLNew.Element.Item2;
-
-                if (Karaclass.m_ShowChords)
-                {
-                    // if bShowChords, the chords will be displayed above the lyrics, so clean chords included in lyrics
-                    if (myLyricsMgmt != null && myLyricsMgmt.ChordsOriginatedFrom == MidiLyricsMgmt.ChordsOrigins.Lyrics)
-                    {
-                        if (myLyricsMgmt.RemoveChordPattern == null)
-                        {
-                            MessageBox.Show("RemoveChordsPattern is null", Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
-                            return;
-                        }
-                        lyric = Regex.Replace(lyric, myLyricsMgmt.RemoveChordPattern, @"");
-                    }
-                }
-                // Add element
-                pcLNew.Element = (chord, lyric);
-                pcLNew.TicksOn = plLNew.TicksOn;
-                pcLNew.TicksOff = plLNew.TicksOff;
-                pcLyricsNew.Add(pcLNew);
-            }
-
-
-            #endregion transform kLyrics in plLyrics to load song in picturebox control with plLyrics
-
-
-
-            #region load lyrics and chords in picturebox control
-
+                   
             // Load kLyrics with kLyrics to have all the information for chords and lyrics positions, used for balls animation
             pBox.KLyrics = kl;
-
-
-            // Load lyrics with plLyrics            
-            //pBox.LoadSong(pcLyrics);
-            //pBox.LoadSong(pcLyricsNew);
-
-
-            #endregion load lyrics and chords in picturebox control
-
 
             // Force Uppercase         
             pBox.bforceUppercase = _bForceUppercase;

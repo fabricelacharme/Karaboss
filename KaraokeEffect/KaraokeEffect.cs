@@ -42,9 +42,7 @@ using System.Drawing.Text;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
-using System.Threading;
 using System.Windows.Forms;
-using kar;
 
 
 namespace keffect
@@ -390,21 +388,7 @@ namespace keffect
 
         #endregion decl
 
-        /*
-        [Serializable()]
-        public struct kSyncText
-        {
-            public long Time { get; set; }
-            public string Text { get; set; }
-
-            public kSyncText(long time, string text)
-            {
-                this.Time = time;
-                this.Text = text;
-            }
-        }
-        */
-
+      
         #region properties
       
         #region text color
@@ -768,47 +752,8 @@ namespace keffect
 
         #endregion Background
 
-        /*
-        private List<kSyncText> _SyncLine;
-        public List<kSyncText> SyncLine
-        {
-            get { return _SyncLine; }
-            set { _SyncLine = value; }
-        }
-
-        private List<List<kSyncText>> _SyncLyrics;
-        public List<List<kSyncText>> SyncLyrics
-        {
-            get { return _SyncLyrics; }
-            set
-            {
-                if (value == null) return;
-
-                _SyncLyrics = value;
-                //Init();
-            }
-        }
+     
         
-        
-        public KaraokeLyrics Lyrics
-        {
-            get
-            {
-                List<KaraokeLine> lines = _SyncLyrics.Select(syncline => new KaraokeLine(syncline.Select(s => new Syllable(s.Text, s.Time, 0)).ToList())).ToList();
-                return new KaraokeLyrics(lines);
-            }
-            set
-            {
-                if (value == null) return;
-                _SyncLyrics = value.Lines.Select(line => line.Syllables.Select(s => new kSyncText((long)s.StartTime, s.Text)).ToList()).ToList();
-                Init();
-            }
-        }
-        */
-
-        
-
-
         // new
         private KaraokeLine _karaokeLine;
         public KaraokeLine mp3KaraokeLine
@@ -932,7 +877,6 @@ namespace keffect
             */
             SetStyle(ControlStyles.AllPaintingInWmPaint | ControlStyles.UserPaint | ControlStyles.OptimizedDoubleBuffer, true);
 
-
             SetDefaultValues();
             Init();                       
         }
@@ -996,12 +940,8 @@ namespace keffect
         #region Initializations
         private void SetDefaultValues()
         {
-            //m_ImageFilePaths = new List<string>();            
             m_ImageFilePaths = new string[] { };
             m_BitmapsArray = new Bitmap[] { };
-
-            //m_Alpha = 255;
-            //imgLayout = ImageLayout.Stretch;
 
 
             sf = new StringFormat(StringFormat.GenericTypographic) { FormatFlags = StringFormatFlags.MeasureTrailingSpaces };
@@ -1010,10 +950,6 @@ namespace keffect
             
             _steppercent = 0.01F;
 
-            // Add new line "Hello World"
-            //SyncLyrics = new List<List<kSyncText>>();
-            //SyncLine = new List<kSyncText> { new kSyncText(0, "Hello"), new kSyncText(500, " World") };                        
-            //SyncLyrics.Add(SyncLine);
             
             mp3KaraokeLine = new KaraokeLine(new List<Syllable> { new Syllable("Hello", 0, 500), new Syllable(" World", 500, 500) });            
             mp3KaraokeLyrics = new KaraokeLyrics();
@@ -1029,40 +965,14 @@ namespace keffect
         {            
             Lines = new List<string[]>();
             Times = new List<long[]>();
-            
-            //List<kSyncText> syncline = new List<kSyncText>();
-            KaraokeLine karaokeline; // = new KaraokeLine();
+                       
+            KaraokeLine karaokeline; 
 
             string[] s;
             long[] t;
             string tx;
-
-            /*
-            for (int i = 0; i < _SyncLyrics.Count; i++)
-            {
-                syncline = _SyncLyrics[i];
-                t = new long[syncline.Count];
-                s = new string[syncline.Count];
-
-                for (int j = 0; j < syncline.Count; j++ )
-                {
-                    t[j] = syncline[j].Time;
-
-                    // Clean text
-                    tx = syncline[j].Text;
-                    tx = tx.Replace(Environment.NewLine, "");
-                    if (_bforceUppercase)
-                        tx = tx.ToUpper();
-
-                    s[j] = tx;
-                }
-                Times.Add(t);
-                Lines.Add(s);                
-            }
-            */
-
+         
             if (_karaokeLyrics == null || _karaokeLyrics.Lines == null) return;
-
             
             for (int i = 0; i < _karaokeLyrics.Lines.Count; i++)
             {
@@ -1113,7 +1023,6 @@ namespace keffect
             _LastLineToShow = SetLastLineToShow(_FirstLineToShow, _lines, _nbLyricsLines);
 
         }
-
 
         #endregion
       
@@ -2692,21 +2601,21 @@ namespace keffect
         /// <param name="dirImages"></param>
         public void SetBackground(string dirImages)
         {
+
+            if (dirImages == null || !Directory.Exists(dirImages))
+            {
+                pBox.BackColor = Color.Black;
+                return;
+            }
+            
             try
             {
-                //UpdateTimerEnable(false);
-
-                //m_Cancel = true;
-                //m_Restart = true;
 
                 m_CurrentImage = null;
-                //strCurrentImage = string.Empty;
-                //rndIter = 0;
 
                 pBox.Image = null;
                 pBox.Invalidate();                
-                
-                //m_ImageFilePaths.Clear();
+                                
                 m_ImageFilePaths = new string[] { };
                 m_BitmapsArray = new Bitmap[] { };
 
@@ -2728,24 +2637,13 @@ namespace keffect
                     switch (C)
                     {
                         case 0:
-                            // No image, just background color
-                            //m_Cancel = true;
+                            // No image, just background color                            
                             break;
                         case 1:
-                            // Single image
-                            //m_Cancel = true;
+                            // Single image                            
                             pBox.Image = m_BitmapsArray[0]; //  Image.FromFile(m_ImageFilePaths[0]);
                             break;
-                        default:
-                            /*                            
-                            // Slideshow => backgroundworker                            
-                            m_Cancel = false;
-                            // Initialize backgroundworker
-                            InitBackGroundWorker();
-                            random = new Random();
-                            StartBgW();
-                            */
-
+                        default:                            
                             InitSlideShow();
 
                             break;
@@ -2800,6 +2698,7 @@ namespace keffect
                 // and stop the timer "timerTransition" to prevent a new change before time elapse of "timerChangeImage"
                 mBlend = 0.0F;
 
+
                 if ((count + 1) < m_BitmapsArray.Length)
                 {
                     Image1 = m_BitmapsArray[count];
@@ -2832,31 +2731,13 @@ namespace keffect
         /// </summary>
         public void Terminate()
         {
-            //m_Cancel = true;
-            //m_Restart = false;
-
-            //m_ImageFilePaths = new List<string>();
             m_ImageFilePaths = new string[] { };
             m_BitmapsArray = new Bitmap[] { };
-
-
-            /*
-            if (m_ImageStream != null)
-            {
-                m_ImageStream.Dispose();
-                m_ImageStream = null;
-            }
-            */
 
             timerChangeImage?.Stop();
             timerTransition?.Stop();
 
-            //if (backgroundWorkerSlideShow != null)
-            //{
-            //    backgroundWorkerSlideShow.CancelAsync();
-            //}
         }
-
 
         #endregion SlideShow
 

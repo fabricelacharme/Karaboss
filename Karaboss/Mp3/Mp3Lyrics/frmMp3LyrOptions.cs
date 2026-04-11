@@ -199,30 +199,7 @@ namespace Karaboss.Mp3
 
             karaokeEffect1.mp3KaraokeLyrics = mp3KaraokeLyrics;
 
-            //SyncLine = new List<keffect.KaraokeEffect.kSyncText> { new keffect.KaraokeEffect.kSyncText(0, "Lorem"), new keffect.KaraokeEffect.kSyncText(500, " ipsum"), new keffect.KaraokeEffect.kSyncText(1000, " dolor"), new keffect.KaraokeEffect.kSyncText(1500, " sit"), new keffect.KaraokeEffect.kSyncText(2000, " amet") };
-            //SyncLyrics.Add(SyncLine);
-            //SyncLine = new List<keffect.KaraokeEffect.kSyncText> { new keffect.KaraokeEffect.kSyncText(2500, "consectetur"), new keffect.KaraokeEffect.kSyncText(3000, " adipisicing"), new keffect.KaraokeEffect.kSyncText(3500, " elit") };
-            //SyncLyrics.Add(SyncLine);
-            //SyncLine = new List<keffect.KaraokeEffect.kSyncText> { new keffect.KaraokeEffect.kSyncText(4000, "sed"), new keffect.KaraokeEffect.kSyncText(4500, " do"), new keffect.KaraokeEffect.kSyncText(5000, " eiusmod"), new keffect.KaraokeEffect.kSyncText(5500, " tempor"), new keffect.KaraokeEffect.kSyncText(6000, " incididunt") };
-            //SyncLyrics.Add(SyncLine);
-            //SyncLine = new List<keffect.KaraokeEffect.kSyncText> { new keffect.KaraokeEffect.kSyncText(6500, "ut"), new keffect.KaraokeEffect.kSyncText(7000, " labore"), new keffect.KaraokeEffect.kSyncText(7500, "et"), new keffect.KaraokeEffect.kSyncText(8000, " dolore"), new keffect.KaraokeEffect.kSyncText(8500, " magna"), new keffect.KaraokeEffect.kSyncText(9000, " aliqua.") };
-            //SyncLyrics.Add(SyncLine);
-            //SyncLine = new List<keffect.KaraokeEffect.kSyncText> { new keffect.KaraokeEffect.kSyncText(9200, "Ut"), new keffect.KaraokeEffect.kSyncText(9500, " enim"), new keffect.KaraokeEffect.kSyncText(10000, " ad"), new keffect.KaraokeEffect.kSyncText(10500, " minim"), new keffect.KaraokeEffect.kSyncText(11000, " veniam") };
-            //SyncLyrics.Add(SyncLine);
-            //SyncLine = new List<keffect.KaraokeEffect.kSyncText> { new keffect.KaraokeEffect.kSyncText(11500, "quis"), new keffect.KaraokeEffect.kSyncText(12000, " nostrud"), new keffect.KaraokeEffect.kSyncText(12500, " exercitation"), new keffect.KaraokeEffect.kSyncText(13000, " ullamco") };
-            //SyncLyrics.Add(SyncLine);
-            //SyncLine = new List<keffect.KaraokeEffect.kSyncText> { new keffect.KaraokeEffect.kSyncText(14000, "laboris"), new keffect.KaraokeEffect.kSyncText(14500, " nisi"), new keffect.KaraokeEffect.kSyncText(15000, " ut"), new keffect.KaraokeEffect.kSyncText(15500, " aliquip") };
-            //SyncLyrics.Add(SyncLine);
-            //SyncLine = new List<keffect.KaraokeEffect.kSyncText> { new keffect.KaraokeEffect.kSyncText(16000, "ex"), new keffect.KaraokeEffect.kSyncText(16500, " ea"), new keffect.KaraokeEffect.kSyncText(17000, " commodo"), new keffect.KaraokeEffect.kSyncText(17500, " consequat.") };
-            //SyncLyrics.Add(SyncLine);
-            //SyncLine = new List<keffect.KaraokeEffect.kSyncText> { new keffect.KaraokeEffect.kSyncText(18000, "Duis"), new keffect.KaraokeEffect.kSyncText(18500, " aute"), new keffect.KaraokeEffect.kSyncText(19000, " irure"), new keffect.KaraokeEffect.kSyncText(19500, " dolor"), new keffect.KaraokeEffect.kSyncText(20000, " in"), new keffect.KaraokeEffect.kSyncText(20500, " reprehenderit") };
-            //SyncLyrics.Add(SyncLine);
-            //SyncLine = new List<keffect.KaraokeEffect.kSyncText> { new keffect.KaraokeEffect.kSyncText(20600, "in"), new keffect.KaraokeEffect.kSyncText(21000, "voluptate"), new keffect.KaraokeEffect.kSyncText(21500, " velit"), new keffect.KaraokeEffect.kSyncText(22000, " esse"), new keffect.KaraokeEffect.kSyncText(22500, " cillum"), new keffect.KaraokeEffect.kSyncText(23000, " dolore") };
-            //SyncLyrics.Add(SyncLine);
-            //SyncLine = new List<keffect.KaraokeEffect.kSyncText> { new keffect.KaraokeEffect.kSyncText(23500, "eu"), new keffect.KaraokeEffect.kSyncText(24000, " fugiat"), new keffect.KaraokeEffect.kSyncText(24500, " nulla"), new keffect.KaraokeEffect.kSyncText(25000, " pariatur.") };
-            //SyncLyrics.Add(SyncLine);
-
-            //karaokeEffect1.SyncLyrics = SyncLyrics;
+         
            
 
             // Needed to put exactly these 4 positions in order to have "Lorem ipsum" in red and "dolor" in green
@@ -687,17 +664,22 @@ namespace Karaboss.Mp3
             folderBrowserDialog1.SelectedPath = dirSlideShow;
             if (folderBrowserDialog1.ShowDialog() == DialogResult.OK)
             {
+                // Force option display to Diaporama when changing the directory for slideshow
+                radioDiaporama.Checked = true;
+
                 dirSlideShow = folderBrowserDialog1.SelectedPath;
 
                 Cursor.Current = Cursors.WaitCursor;
                 txtSlideShow.Text = dirSlideShow;
-                karaokeEffect1.SetBackground(dirSlideShow);
             }
         }
 
 
         private void btnResetDir_Click(object sender, EventArgs e)
         {
+            // Force option display to Diaporama when selecting a directory for slideshow
+            radioDiaporama.Checked = true;
+
             dirSlideShow = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), Application.ProductName);
             txtSlideShow.Text = dirSlideShow;
             karaokeEffect1.SetBackground(dirSlideShow);
@@ -1021,12 +1003,14 @@ namespace Karaboss.Mp3
 
 
         private void txtSlideShow_TextChanged(object sender, EventArgs e)
-        {
+        {            
             string tx = txtSlideShow.Text;
             tx = tx.Trim();
             dirSlideShow = tx;
-            //karaokeEffect1.DirSlideShow = dirSlideShow;
-            karaokeEffect1.SetBackground(dirSlideShow);
+
+            // Only if option Diaporama is selected
+            if (radioDiaporama.Checked)
+                karaokeEffect1.SetBackground(dirSlideShow);
         }
 
         private bool IsNumeric(string s)
