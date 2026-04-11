@@ -158,8 +158,8 @@
             this.karaokeEffect1.Grad0Color = System.Drawing.Color.Empty;
             this.karaokeEffect1.Grad1Color = System.Drawing.Color.Empty;
             this.karaokeEffect1.GradientAngle = 45F;
-            this.karaokeEffect1.GradientColor0 = System.Drawing.Color.Empty;
-            this.karaokeEffect1.GradientColor1 = System.Drawing.Color.Empty;
+            //this.karaokeEffect1.GradientColor0 = System.Drawing.Color.Empty;
+            //this.karaokeEffect1.GradientColor1 = System.Drawing.Color.Empty;
             this.karaokeEffect1.HighlightColor = System.Drawing.Color.FromArgb(((int)(((byte)(238)))), ((int)(((byte)(17)))), ((int)(((byte)(17)))));
             this.karaokeEffect1.InactiveBorderColor = System.Drawing.Color.Empty;
             this.karaokeEffect1.InactiveColor = System.Drawing.Color.White;
@@ -175,8 +175,8 @@
             this.karaokeEffect1.Position = 0;
             this.karaokeEffect1.Rhythm0Color = System.Drawing.Color.Empty;
             this.karaokeEffect1.Rhythm1Color = System.Drawing.Color.Empty;
-            this.karaokeEffect1.RhythmColor0 = System.Drawing.Color.Empty;
-            this.karaokeEffect1.RhythmColor1 = System.Drawing.Color.Empty;
+            //this.karaokeEffect1.RhythmColor0 = System.Drawing.Color.Empty;
+            //this.karaokeEffect1.RhythmColor1 = System.Drawing.Color.Empty;
             this.karaokeEffect1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Normal;
             this.karaokeEffect1.StepPercent = 0.01F;
             this.karaokeEffect1.timerIntervall = ((long)(50));

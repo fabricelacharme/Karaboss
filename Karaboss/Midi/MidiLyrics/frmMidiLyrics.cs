@@ -218,15 +218,15 @@ namespace Karaboss
             }
         }
 
-        private int _NbLines = 3;
+        private int _nbLyricsLines = 3;
         // number of lines to display
-        public int TxtNbLines
+        public int nbLyricsLines
         {
-            get { return _NbLines; }
+            get { return _nbLyricsLines; }
             set
             {
-                _NbLines = value;
-                pBox.TxtNbLines = _NbLines;
+                _nbLyricsLines = value;
+                pBox.nbLyricsLines = _nbLyricsLines;
             }
         }
 
@@ -403,7 +403,6 @@ namespace Karaboss
             get { return _dirSlideShow; }
             set
             {
-
                 // Change only if not in playlist mode
                 //if (_bplaylist)
                 //    return;
@@ -416,7 +415,7 @@ namespace Karaboss
                 else
                     _dirSlideShow = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), Application.ProductName);
 
-                pBox.SetBackground(_dirSlideShow);
+                pBox.DirSlideShow = _dirSlideShow;
             }
         }
 
@@ -458,6 +457,7 @@ namespace Karaboss
                 switch (_optionbackground)
                 {
                     case "Diaporama":
+                        pBox.DirSlideShow = DirSlideShow;
                         pBox.OptionBackground = "Diaporama";
                         break;
                     case "SolidColor":
@@ -504,7 +504,7 @@ namespace Karaboss
         #endregion properties
 
 
-        public List<pictureBoxControl.plLyric> plLyrics;
+        //public List<pictureBoxControl.plLyric> plLyrics;
 
         /// <summary>
         /// Constructor
@@ -574,29 +574,32 @@ namespace Karaboss
                 switch (bgOption)
                 {
                     case "Diaporama":
-                        _optionbackground = "Diaporama";
+                        // Frequency of slide show
+                        FreqSlideShow = Properties.Settings.Default.freqSlideShow;
+                        DirSlideShow = Properties.Settings.Default.dirSlideShow;                        
+                        OptionBackground = "Diaporama";
                         break;
                     case "SolidColor":
-                        _optionbackground = "SolidColor";
+                        OptionBackground = "SolidColor";
                         break;
 
                     case "Gradient":
-                        _optionbackground = "Gradient";
+                        OptionBackground = "Gradient";
                         break;
 
                     case "Rhythm":
-                        _optionbackground = "Rhythm";
+                        OptionBackground = "Rhythm";
                         break;
 
                     case "Transparent":
-                        _optionbackground = "Transparent";
+                        OptionBackground = "Transparent";
                         break;
 
                     default:
-                        _optionbackground = "Diaporama";
+                        OptionBackground = "Diaporama";
                         break;
                 }
-                OptionBackground = _optionbackground;
+                //OptionBackground = _optionbackground;
 
                 switch (Properties.Settings.Default.LyricsOptionDisplay)
                 {
@@ -639,9 +642,8 @@ namespace Karaboss
 
 
                 // Number of Lines to display
-                TxtNbLines = Properties.Settings.Default.TxtNbLines;
-                // Frequency of slide show
-                FreqSlideShow = Properties.Settings.Default.freqSlideShow;
+                nbLyricsLines = Properties.Settings.Default.TxtNbLines;
+               
                 // Position image
                 SizeMode = Properties.Settings.Default.SizeMode;
 
@@ -737,13 +739,33 @@ namespace Karaboss
         }
 
         /// <summary>
-        /// Remet les options courante pour le cas des playlists
-        /// La cinématique d'attente bouzille tout
+        /// Use case : Plalist
+        /// Force Slideshow backgroud if it was requested in the plalist, even if the option is not set in the display options
         /// </summary>
         /// <param name="dirSlideShow"></param>
-        public void SetSlideShow(string dirSlideShow)
+        public void ForceSlideShow(string dirSlideShow)
         {
             DirSlideShow = dirSlideShow;
+            pBox.FreqDirSlideShow = Properties.Settings.Default.freqSlideShow;
+            pBox.DirSlideShow = DirSlideShow;
+            pBox.OptionBackground = "Diaporama";
+            
+        }
+
+        /// <summary>
+        /// Use case: Plalists
+        /// No slide show waq requested in the plalist, but the slideshow was forced for the previous song, so restore background option to the one set in display options
+        /// </summary>
+        public void RestoreBackgroundAnimation()
+        {
+            if (_optionbackground == "Diaporama")
+            {                                            
+                pBox.FreqDirSlideShow = Properties.Settings.Default.freqSlideShow;
+                DirSlideShow = Properties.Settings.Default.dirSlideShow;                
+                pBox.DirSlideShow = DirSlideShow;
+            }
+            
+            pBox.OptionBackground = _optionbackground;
         }
 
 
@@ -754,112 +776,10 @@ namespace Karaboss
         /// </summary>
         public void LoadSong(kLyrics kl)
         {
-            string lyric;
-            string chord;
-
             currentTextPos = 0;
-
-            #region Load lyrics and chords in picturebox control with plLyrics
-            /*
-            List<pictureBoxControl.plLyric> pcLyrics = new List<pictureBoxControl.plLyric>();
-            pictureBoxControl.plLyric pcL;
-
-            
-            for (int i = 0; i < plLs.Count; i++)
-            {
-                plLyric plL = plLs[i];
-
-                pcL = new pictureBoxControl.plLyric()
-                {
-                    Type = (pictureBoxControl.plLyric.Types)plL.CharType,
-                };
-
-                // Chord, lyric
-                chord = plL.Element.Item1;
-                lyric = plL.Element.Item2;
-
-                if (Karaclass.m_ShowChords)
-                {
-                    // if bShowChords, the chords will be displayed above the lyrics, so clean chords included in lyrics
-                    if (myLyricsMgmt != null && myLyricsMgmt.ChordsOriginatedFrom == MidiLyricsMgmt.ChordsOrigins.Lyrics)
-                    {
-
-                        if (myLyricsMgmt.RemoveChordPattern == null)
-                        {
-                            MessageBox.Show("RemoveChordsPattern is null", Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
-                            return;
-                        }
-                        lyric = Regex.Replace(lyric, myLyricsMgmt.RemoveChordPattern, @"");
-                    }
-                }
-
-                // Add element
-                pcL.Element = (chord, lyric);
-                pcL.TicksOn = plL.TicksOn;
-                pcL.TicksOff = plL.TicksOff;
-                pcLyrics.Add(pcL);
-            }
-            */
-
-            #endregion transform kLyrics in plLyrics to load song in picturebox control with plLyrics
-
-
-            #region transform kLyrics in plLyrics to load song in picturebox control with plLyrics
-
-            List<plLyric> plLsNew = myLyricsMgmt.ConvertToPlLyric(kl);
-
-            List<pictureBoxControl.plLyric> pcLyricsNew = new List<pictureBoxControl.plLyric>();
-            pictureBoxControl.plLyric pcLNew;
-
-            for (int i = 0; i < plLsNew.Count; i++)
-            {
-                plLyric plLNew = plLsNew[i];
-
-                pcLNew = new pictureBoxControl.plLyric()
-                {
-                    Type = (pictureBoxControl.plLyric.Types)plLNew.CharType,
-                };
-
-                // Chord, lyric
-                chord = plLNew.Element.Item1;
-                lyric = plLNew.Element.Item2;
-
-                if (Karaclass.m_ShowChords)
-                {
-                    // if bShowChords, the chords will be displayed above the lyrics, so clean chords included in lyrics
-                    if (myLyricsMgmt != null && myLyricsMgmt.ChordsOriginatedFrom == MidiLyricsMgmt.ChordsOrigins.Lyrics)
-                    {
-                        if (myLyricsMgmt.RemoveChordPattern == null)
-                        {
-                            MessageBox.Show("RemoveChordsPattern is null", Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
-                            return;
-                        }
-                        lyric = Regex.Replace(lyric, myLyricsMgmt.RemoveChordPattern, @"");
-                    }
-                }
-                // Add element
-                pcLNew.Element = (chord, lyric);
-                pcLNew.TicksOn = plLNew.TicksOn;
-                pcLNew.TicksOff = plLNew.TicksOff;
-                pcLyricsNew.Add(pcLNew);
-            }
-
-
-            #endregion transform kLyrics in plLyrics to load song in picturebox control with plLyrics
-
-
-
-            #region load lyrics and chords in picturebox control
-
-            // Load lyrics with plLyrics            
-            //pBox.LoadSong(pcLyrics);
-            pBox.LoadSong(pcLyricsNew);
-
+                   
             // Load kLyrics with kLyrics to have all the information for chords and lyrics positions, used for balls animation
             pBox.KLyrics = kl;
-
-            #endregion load lyrics and chords in picturebox control
-
 
             // Force Uppercase         
             pBox.bforceUppercase = _bForceUppercase;
@@ -1380,8 +1300,6 @@ namespace Karaboss
         #endregion panel events
 
         #endregion pnlWindow        
-
-
 
 
         /// <summary>

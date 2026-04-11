@@ -31,6 +31,7 @@
  */
 
 #endregion
+using kar;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -39,11 +40,9 @@ using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 using System.Drawing.Text;
 using System.IO;
+using System.Linq;
 using System.Runtime.InteropServices;
-using System.Text.RegularExpressions;
-using System.Threading;
 using System.Windows.Forms;
-using kar;
 
 namespace PicControl
 {
@@ -67,24 +66,11 @@ namespace PicControl
         [DllImportAttribute("user32.dll")]
         public static extern bool ReleaseCapture();
         private HashSet<Control> controlsToMove = new HashSet<Control>();
-        
-        #endregion
-       
 
+        #endregion
+
+        
         #region classes
-        public class plLyric
-        {
-            public enum Types
-            {
-                Text = 1,
-                LineFeed = 2,
-                Paragraph = 3,
-            }
-            public Types Type { get; set; }
-            public (string, string) Element { get; set; }    // item1 = chord, item2 = lyric
-            public int TicksOn { get; set; }
-            public int TicksOff { get; set; }
-        }
 
         // Syllabes
         public class syllabe
@@ -105,12 +91,64 @@ namespace PicControl
 
         #region KaraokeLyrics
 
-        public kLyrics KLyrics { get; set; }
+        private kLyrics _kLyrics;
+        public kLyrics KLyrics 
+        { 
+            get { return _kLyrics; } 
+            set 
+            {
+                if (value == null) return;
+                _kLyrics = value; 
+                LoadSong();
+            } 
+        }
 
         #endregion KaraokeLyrics
 
 
         #region Slideshow
+
+        /// <summary>
+        /// SlideShow directory
+        /// </summary>
+        private string dirSlideShow;
+        public string DirSlideShow
+        {
+            get
+            { return dirSlideShow; }
+            set
+            {
+                if (value == null) return;
+                if (value != dirSlideShow)
+                {
+                    dirSlideShow = value;
+                    
+                    InitSlideShow(dirSlideShow);
+                    pboxWnd.Invalidate();
+                    
+                }
+            }
+        }
+
+        /// <summary>
+        /// SlideShow frequency
+        /// </summary>
+        private int freqSlideShow;
+        public int FreqDirSlideShow
+        {
+            get
+            { return freqSlideShow; }
+            set
+            {
+                freqSlideShow = value;                
+            }
+        }
+
+
+        private string[] bgFiles;
+        private string DefaultDirSlideShow;
+
+        private List<string> m_ImageFilePaths;
 
         System.Timers.Timer  timerTransition; 
         System.Timers.Timer timerChangeImage;
@@ -141,182 +179,13 @@ namespace PicControl
         #endregion slideshow
 
 
-        #region properties
-
-
-        #region Internal lyrics separators
-
-        private string _InternalSepLines = "¼";
-        private string _InternalSepParagraphs = "½";
-
-        #endregion
-
-        public ImageLayout imgLayout { get; set; }
-        public Image m_CurrentImage { get; set; }
-        public Rectangle m_DisplayRectangle { get; set; }
-        public int m_Alpha { get; set; }
-
-        // Display chords or not
-        public bool OptionShowChords { get; set; }
-
-        /// <summary>
-        /// Display lyrics option: top, Center, Bottom
-        /// </summary>
-        public enum OptionsDisplay
-        {
-            Top = 0,
-            Center = 1,
-            Bottom = 2,
-        }
-        private OptionsDisplay _OptionDisplay;
-        /// <summary>
-        /// Display lyrics option: top, Center, Bottom
-        /// </summary>
-        public OptionsDisplay OptionDisplay
-        {
-            get { return _OptionDisplay; }
-            set { _OptionDisplay = value;
-                pboxWnd.Invalidate();
-            }
-        }
-
-        private bool _bTextBackGround = true;
-        public bool bTextBackGround
-        {
-            get { return _bTextBackGround; }
-            set { _bTextBackGround = value;
-                pboxWnd.Invalidate();
-            }
-        }
-
-        public bool IsBusy
-        {
-            get {
-
-                if (backgroundWorkerSlideShow != null)
-                    return backgroundWorkerSlideShow.IsBusy;
-                else
-                    return false;
-            }
-        }
-
-        public List<string> LyricsWords { get; set; }  // Liste non dégrossie des syllabes
-        public List<int> LyricsTimes { get; set; }     // Liste non dégrossie des temps
-
-        private string slyrics = string.Empty;
-        public string Txt {
-            get
-            {
-                return slyrics;
-            }
-            set
-            {
-                slyrics = value;
-            }
-        }
-
-        //private int _realCurrentTime;
-        private int _currentPosition;
-        public int CurrentTime {
-            get
-            { return _currentPosition; }
-            set
-            {
-                _currentPosition = value;
-            }
-        }
-
-
-        private int _beatDuration = 0;
-        public int BeatDuration
-        {
-            get { return _beatDuration; }
-            set { _beatDuration = value; }
-        }
-
-        public int _currentTextPos;
-        public int CurrentTextPos
-        {
-            get
-            { return _currentTextPos; }
-            set
-            {
-                _currentTextPos = value;
-            }
-        }
-
-        /// <summary>
-        /// Transparency color
-        /// </summary>
-        private Color _transparencykey = Color.Lime;
-        public Color TransparencyKey
-        {
-            get { return _transparencykey; }
-            set { _transparencykey = value; }
-        }
-
-        private string _optionbackground;
-        public string OptionBackground
-        {
-            get { return _optionbackground; }
-            set { _optionbackground = value;
-
-                switch (_optionbackground)
-                {
-                    case "Diaporama":                       
-                        break;
-                    case "SolidColor":
-                        m_Cancel = true;
-                        Terminate();
-                        _timerGradient.Stop();
-                        pboxWnd.Image = null;
-                        m_CurrentImage = null;
-                        pboxWnd.BackColor = _BgColor;
-                        pboxWnd.Invalidate();
-                        break;
-                    
-                    case "Gradient":
-                        m_Cancel = true;
-                        Terminate();
-                        pboxWnd.Image = null;
-                        m_CurrentImage = null;
-                        _timerGradient.Start();                        
-                        pboxWnd.Invalidate();
-                        break;
-
-                    case "Rhythm":
-                        m_Cancel = true;
-                        Terminate();
-                        _timerGradient.Start();
-                        pboxWnd.Image = null;
-                        m_CurrentImage = null;
-                        ResetSize();
-                        pboxWnd.BackColor = _Rhythm0Color;
-                        pboxWnd.Invalidate();
-                        break;
-
-                    case "Transparent":
-                        m_Cancel = true;
-                        Terminate();    
-                        _timerGradient.Stop();
-                        pboxWnd.Image = null;
-                        m_CurrentImage = null;
-                        pboxWnd.BackColor = _transparencykey;
-                        pboxWnd.Invalidate();
-                        break;
-                    default:
-                        break;
-                }
-            }
-        }
-
-
         #region TextColor
 
         /// <summary>
         /// Text sung color
         /// </summary>
-        private Color _ActiveColor;
+        private Color _ActiveColor = Color.FromArgb(153, 180, 51);
+        [Description("text color for lyrics that have already been sung")]
         public Color ActiveColor
         {
             get
@@ -332,6 +201,7 @@ namespace PicControl
         /// Text color
         /// </summary>
         private Color _HighlightColor;
+        [Description("the color of the lyrics currently being sung")]
         public Color HighlightColor
         {
             get
@@ -347,7 +217,9 @@ namespace PicControl
         /// Text to sing color
         /// </summary>
         private Color _InactiveColor;
-        public Color InactiveColor {
+        [Description("text color for the remaining lyrics")]
+        public Color InactiveColor
+        {
             get
             { return _InactiveColor; }
             set
@@ -356,10 +228,11 @@ namespace PicControl
                 pboxWnd.Invalidate();
             }
         }
-                    
+
         // Border Color
         private Color _ActiveBorderColor;
-        public Color ActiveBorderColor {
+        public Color ActiveBorderColor
+        {
             get
             { return _ActiveBorderColor; }
             set
@@ -384,7 +257,10 @@ namespace PicControl
         #endregion Textcolor       
 
 
-        #region chord color
+        #region Chord color
+
+        // Display chords or not
+        public bool OptionShowChords { get; set; }
 
         /// <summary>
         /// Text to sing color
@@ -430,68 +306,50 @@ namespace PicControl
             }
         }
 
-        #endregion chord color
+        #endregion Chord color
 
 
-        #region Text others
+        #region Text transform
 
+        private int _totalLyricsLines;
 
-        private bool _bdemo = false;
-        public bool bDemo
+        private int _nbLyricsLines = 3;
+        [Description("number of lines to display")]
+        public int nbLyricsLines
         {
-            get { return _bdemo; }
-            set { _bdemo = value; }
+            get
+            { return _nbLyricsLines; }
+            set
+            {
+                _nbLyricsLines = value;
+                ajustTextAgain();
+                pboxWnd.Invalidate();
+            }
         }
-
-        // Lyrics : converts characters to uppercase
+        
         private bool _bforceuppercase;
-        public bool bforceUppercase {
+        [Description("force uppercase for lyrics")]
+        public bool bforceUppercase
+        {
             get { return _bforceuppercase; }
-            set { _bforceuppercase = value;
+            set
+            {
+                _bforceuppercase = value;
                 if (_bdemo)
                     LoadDemoText();
-            }        
-        }
-
-
-        #region Font
-        public Font KaraokeFont
-        {
-            get { return _karaokeFont; }
-            set
-            {
-                try
-                {
-                    _karaokeFont = value;
-                    pboxWnd.Invalidate();
-                }
-                catch (Exception e)
-                {
-                    Console.Write("Error: " + e.Message);
-                }
             }
         }
-
-        private Font _chordFont;
-        public Font ChordFont
+             
+        private bool _bshowparagraphs = true;
+        [Description("show a blank line between paragraphs")]
+        public bool bShowParagraphs
         {
-            get { return _chordFont; }
-            set
-            {
-                try
-                {
-                    _chordFont = value;
-                    pboxWnd.Invalidate();
-                }
-                catch (Exception e)
-                {
-                    Console.Write("Error: " + e.Message);
-                }
-            }
+            get { return _bshowparagraphs; }
+            set { _bshowparagraphs = value; }
         }
 
 
-        #endregion Font
+        #endregion Text transform
 
 
         #region Frame type
@@ -509,9 +367,10 @@ namespace PicControl
         public string FrameType
         {
             get { return _frametype; }
-            set { 
-                _frametype = value; 
-            
+            set
+            {
+                _frametype = value;
+
                 switch (_frametype)
                 {
                     case "NoBorder":
@@ -553,7 +412,7 @@ namespace PicControl
         public int BorderThick
         {
             get { return _borderthick; }
-            set 
+            set
             {
                 try
                 {
@@ -568,12 +427,90 @@ namespace PicControl
         }
 
         #endregion Frame type
+       
 
+        #region Gradient
+
+        private Color _Grad0Color;
+        public Color Grad0Color
+        {
+            get { return _Grad0Color; }
+            set
+            {
+                _Grad0Color = value;
+                pboxWnd.Invalidate();
+            }
+        }
+        
+        private Color _Grad1Color;
+        public Color Grad1Color
+        {
+            get { return _Grad1Color; }
+            set
+            {
+                _Grad1Color = value;
+                pboxWnd.Invalidate();
+            }
+        }
+        
+        private Color _Rhythm0Color;
+        public Color Rhythm0Color
+        {
+            get { return _Rhythm0Color; }
+            set
+            {
+                _Rhythm0Color = value;
+                pboxWnd.BackColor = _Rhythm0Color;
+                ResetSize();
+                pboxWnd.Invalidate();
+            }
+        }
+        
+        private Color _Rhythm1Color;
+        public Color Rhythm1Color
+        {
+            get { return _Rhythm1Color; }
+            set
+            {
+                _Rhythm1Color = value;
+                ResetSize();
+                pboxWnd.Invalidate();
+            }
+        }
+        
+
+        readonly System.Windows.Forms.Timer _timerGradient = new System.Windows.Forms.Timer();
+
+        // Default angle for the gradient
+        
+        private int W;
+        private int H;
+        private int speed;
+        
+        private int _beat;
+        public int Beat
+        {
+            get { return _beat; }
+            set
+            {
+                _beat = value;
+                speed = (int)(_beat / 12.0);
+            }
+        }
+
+        private float _angle = 45.0f;
+        public float GradientAngle { get { return _angle; } set { _angle = value; pboxWnd.Invalidate(); } }       
+
+        #endregion Gradient
+
+
+        #region Background
 
         // Background color
         private int _bpm;
         private Color _BgColor;
-        public Color BgColor {
+        public Color BgColor
+        {
             get
             { return _BgColor; }
             set
@@ -587,171 +524,118 @@ namespace PicControl
             }
         }
 
-        private Color _Grad0Color;
-        public Color Grad0Color
+        // Color beside text (background of text)
+        private bool _bTextBackGround = true;
+        public bool bTextBackGround
         {
-            get { return _Grad0Color; }
+            get { return _bTextBackGround; }
             set
             {
-                _Grad0Color = value;
+                _bTextBackGround = value;
                 pboxWnd.Invalidate();
             }
         }
-        private Color _Grad1Color;
-        public Color Grad1Color
-        {
-            get { return _Grad1Color; }
-            set
-            {
-                _Grad1Color = value;
-                pboxWnd.Invalidate();
-            }
-        }
-        private Color _Rhythm0Color;
-        public Color Rhythm0Color
-        {
-            get { return _Rhythm0Color; }
-            set
-            {
-                _Rhythm0Color = value;
-                pboxWnd.BackColor = _Rhythm0Color;
-                ResetSize();
-                pboxWnd.Invalidate();
-            }
-        }
-        private Color _Rhythm1Color;
-        public Color Rhythm1Color
-        {
-            get { return _Rhythm1Color; }
-            set
-            {
-                _Rhythm1Color = value;
-                ResetSize();
-                pboxWnd.Invalidate();
-            }
-        }
-
-
-        #region Gradient & Rhythm
-
-        readonly System.Windows.Forms.Timer _timerGradient = new System.Windows.Forms.Timer();        
-
-        // Default angle for the gradient
-        private float _angle = 45.0f;
-        private int W;
-        private int H;
-        private int speed;
-        private int _beat;        
-        public int Beat
-        {
-            get { return _beat; }
-            set
-            {
-                _beat = value;
-                speed = (int)(_beat / 12.0);
-            }
-        }
-        public float GradientAngle { get { return _angle; } set { _angle = value; pboxWnd.Invalidate(); } }
-
-        private Color _gradientColor0;
-        public Color GradientColor0
-        {
-            get { return _gradientColor0; }
-            set
-            {
-                _gradientColor0 = value;
-                pboxWnd.Invalidate();
-            }
-        }
-        private Color _gradientColor1;
-        public Color GradientColor1
-        {
-            get { return _gradientColor1; }
-            set
-            {
-                _gradientColor1 = value;
-                pboxWnd.Invalidate();
-            }
-        }
-
-        private Color _rhythmColor0;
-        public Color RhythmColor0
-        {
-            get { return _rhythmColor0; }
-            set
-            {
-                _rhythmColor0 = value;
-                pboxWnd.Invalidate();
-            }
-        }
-
-        private Color _rhythmColor1;
-        public Color RhythmColor1
-        {
-            get { return _rhythmColor1; }
-            set
-            {
-                _rhythmColor1 = value;
-                pboxWnd.Invalidate();
-            }
-        }
-        #endregion Gradient & Rhythm
 
         /// <summary>
-        /// Number of lines to display
+        /// Transparency color
         /// </summary>
-        private int _txtNbLines;
-        public int TxtNbLines {
-            get
-            { return _txtNbLines; }
+        private Color _transparencykey = Color.Lime;
+        public Color TransparencyKey
+        {
+            get { return _transparencykey; }
+            set { _transparencykey = value; }
+        }
+
+
+        private string _optionbackground;
+        public string OptionBackground
+        {
+            get { return _optionbackground; }
             set
             {
-                _txtNbLines = value;
-                ajustTextAgain();
-                pboxWnd.Invalidate();
-            }
-        }
+                _optionbackground = value;
 
-        // Show a blank line between paragraphs
-        private bool _bshowparagraphs = true;
-        public bool bShowParagraphs
-        {
-            get { return _bshowparagraphs; }
-            set { _bshowparagraphs = value; }
-        }
+                switch (_optionbackground)
+                {
+                    case "Diaporama":
+                        if (dirSlideShow != null && Directory.Exists(dirSlideShow) && freqSlideShow > 0)
+                            InitSlideShow(dirSlideShow);
+                        break;
 
-        #endregion
+                    case "SolidColor":
+                        //m_Cancel = true;
+                        Terminate();
+                        _timerGradient.Stop();
+                        pboxWnd.Image = null;
+                        m_CurrentImage = null;
+                        pboxWnd.BackColor = _BgColor;
+                        pboxWnd.Invalidate();
+                        break;
 
-        /// <summary>
-        /// SlideShow directory
-        /// </summary>
-        private string dirSlideShow;
-        public string DirSlideShow {
-            get
-            { return dirSlideShow; }
-            set
-            {
-                dirSlideShow = value;
-                pboxWnd.Invalidate();
-            }
-        }
-        
-        /// <summary>
-        /// SlideShow frequency
-        /// </summary>
-        private int freqSlideShow;
-        public int FreqDirSlideShow
-        {
-            get
-            { return freqSlideShow; }
-            set
-            { freqSlideShow = value;
-            if (freqSlideShow > 0)
-                {                    
-                    PAUSE_TIME = 1000 * freqSlideShow;
+                    case "Gradient":
+                        //m_Cancel = true;
+                        Terminate();
+                        pboxWnd.Image = null;
+                        m_CurrentImage = null;
+                        _timerGradient.Start();
+                        pboxWnd.Invalidate();
+                        break;
+
+                    case "Rhythm":
+                        //m_Cancel = true;
+                        Terminate();
+                        _timerGradient.Start();
+                        pboxWnd.Image = null;
+                        m_CurrentImage = null;
+                        ResetSize();
+                        pboxWnd.BackColor = _Rhythm0Color;
+                        pboxWnd.Invalidate();
+                        break;
+
+                    case "Transparent":
+                        //m_Cancel = true;
+                        Terminate();
+                        _timerGradient.Stop();
+                        pboxWnd.Image = null;
+                        m_CurrentImage = null;
+                        pboxWnd.BackColor = _transparencykey;
+                        pboxWnd.Invalidate();
+                        break;
+                    default:
+                        break;
                 }
             }
         }
+
+
+        /// <summary>
+        /// Display lyrics option: top, Center, Bottom
+        /// </summary>
+        public enum OptionsDisplay
+        {
+            Top = 0,
+            Center = 1,
+            Bottom = 2,
+        }
+        private OptionsDisplay _OptionDisplay;
+        /// <summary>
+        /// Display lyrics option: top, Center, Bottom
+        /// </summary>
+        public OptionsDisplay OptionDisplay
+        {
+            get { return _OptionDisplay; }
+            set
+            {
+                _OptionDisplay = value;
+                pboxWnd.Invalidate();
+            }
+        }
+
+
+        #endregion Background
+
+
+        #region Image display
 
         /// <summary>
         /// Size mode of picturebox
@@ -760,80 +644,154 @@ namespace PicControl
         public PictureBoxSizeMode SizeMode
         {
             get { return _sizemode; }
-            set { _sizemode = value;
-            pboxWnd.SizeMode = _sizemode;
+            set
+            {
+                _sizemode = value;
+                pboxWnd.SizeMode = _sizemode;
             }
         }
-        
-        #endregion properties
+
+        #endregion Image display
 
 
-        #region SlideShow       
-
-        private Random random;
-        private string[] bgFiles;
-        private string DefaultDirSlideShow;       
-        
-        private List<string> m_ImageFilePaths;
-        private MemoryStream m_ImageStream = null;        
-
-        private ManualResetEvent m_FinishEvent = new ManualResetEvent(false);
-
-        private bool m_Cancel = false;
-        private bool m_Restart = false;       
-
-        
-        delegate void UpdateTimerEnableCallback(bool enabled);
-
-        #endregion SlideShow
+        #region Font
 
 
-        #region private
+        private Font m_font;
+        private float emSize; // Size of the font
+        private StringFormat sf;
 
-        private bool disposed = false;
+        private Font _karaokeFont;
+        [Description("Karaoke font")]
+        public Font KaraokeFont
+        {
+            get { return _karaokeFont; }
+            set
+            {
+                try
+                {
+                    _karaokeFont = value;
+                    pboxWnd.Invalidate();
+                }
+                catch (Exception e)
+                {
+                    Console.Write("Error: " + e.Message);
+                }
+            }
+        }
 
-        private BackgroundWorker backgroundWorkerSlideShow;
+        private Font _chordFont;
+        public Font ChordFont
+        {
+            get { return _chordFont; }
+            set
+            {
+                try
+                {
+                    _chordFont = value;
+                    pboxWnd.Invalidate();
+                }
+                catch (Exception e)
+                {
+                    Console.Write("Error: " + e.Message);
+                }
+            }
+        }
 
-        private string strCurrentImage; // current image to insure that random will provide a different one
-        private int rndIter = 0;
 
+        #endregion Font
+
+
+        #region Demo
+
+        private bool _bdemo = false;
+        public bool bDemo
+        {
+            get { return _bdemo; }
+            set { _bdemo = value; }
+        }
+
+        #endregion Demo
+
+
+        #region Internal lyrics separators
+
+        private string _InternalSepLines = "¼";
+        private string _InternalSepParagraphs = "½";
+
+        #endregion
+
+
+        #region Others
+
+        public ImageLayout imgLayout { get; set; }
+        public Image m_CurrentImage { get; set; }
+                       
+        public Rectangle m_DisplayRectangle { get; set; }        
+                        
+        private int _currentPosition;
+        public int CurrentTime {
+            get
+            { return _currentPosition; }
+            set
+            {
+                _currentPosition = value;
+            }
+        }
+
+        private int _beatDuration = 0;
+        public int BeatDuration
+        {
+            get { return _beatDuration; }
+            set { _beatDuration = value; }
+        }
+
+        public int _currentTextPos;
+        public int CurrentTextPos
+        {
+            get
+            { return _currentTextPos; }
+            set
+            {
+                _currentTextPos = value;
+            }
+        }
+                              
+
+        private bool disposed = false;                  
 
         private int vOffset = 0;
         private int _lineHeight = 0;
 
-        private Font _karaokeFont;
-        private int _linesHeight = 0;
-        private int _nbLyricsLines = 0;
+        
+        private int _linesHeight = 0;        // Full song height (number of lines * line height)
 
         private bool bEndOfLine = false;
         private bool bHighLight = false;
-        private int nextStartOfLineTime = 0;
-        private int _lastLinePosition = 0;
+        private int nextStartOfLineTime = 0;        
         private int TimeToNextLineDuration = 0;
-        private int PAUSE_TIME;
 
+
+        private List<syllabe> syllabes;
         private List<string> lstLyricsLines;    // Liste de lignes
-        
+        private List<string> lstChordsLines;    // List of lines of chords (same number of lines as lstLyricsLines but with chords instead of lyrics)
+
+
         private int currentLine = 0;
         private string lineMax; // Ligne longueur max
         
- 
-        private List<syllabe> syllabes;
-
-        private Font m_font;
-        private float emSize; // Size of the font
-        private StringFormat sf;           
-
+        
         private List<RectangleF> rRect;
-        private List<RectangleF> rNextRect;
-        private List<RectangleF>[] rListNextRect;
-
+        private List<RectangleF> rNextRect;        
 
         private int _beatNumber = 1;
 
-        #endregion private
+        #endregion Others
 
-        // Constructor
+
+        /// <summary>
+        /// Constructor of pictureBoxControl
+        /// </summary>
         public pictureBoxControl()
         {
             InitializeComponent();
@@ -853,7 +811,7 @@ namespace PicControl
             #endregion
             
             m_ImageFilePaths = new List<string>();
-            m_Alpha = 255;
+            //m_Alpha = 255;
             imgLayout = ImageLayout.Stretch;
 
             Beat = 200; // Default speed for rhythm animation
@@ -906,7 +864,7 @@ namespace PicControl
         #endregion Timer gradient
 
 
-        #region methods
+        #region public methods
 
         #region Move Windows
 
@@ -934,18 +892,11 @@ namespace PicControl
         /// Define new slideShow directory and frequency
         /// </summary>
         /// <param name="dirImages"></param>
-        public void SetBackground(string dirImages)
+        public void InitSlideShow(string dirImages)
         {
             try
             {
-                //UpdateTimerEnable(false);
-
-                m_Cancel = true;
-                m_Restart = true;
-
-                m_CurrentImage = null;
-                strCurrentImage = string.Empty;
-                rndIter = 0;
+                m_CurrentImage = null;                 
 
                 pboxWnd.Image = null;
                 pboxWnd.Invalidate();
@@ -961,7 +912,7 @@ namespace PicControl
 
                     if (_optionbackground == "Diaporama")
                     {
-                        LoadImageList(dirImages);
+                        LoadImageList(dirImages);                        
                         //C = m_ImageFilePaths.Count;
                         C = pictures.Length;
                     }
@@ -970,11 +921,11 @@ namespace PicControl
                     {
                         case 0:
                             // No image, just background color
-                            m_Cancel = true;
+                            //m_Cancel = true;
                             break;
                         case 1:
                             // Single image
-                            m_Cancel = true;
+                            //m_Cancel = true;
 
                             m_CurrentImage = Image.FromFile(m_ImageFilePaths[0]);
                             //pboxWnd.Image = m_CurrentImage; // Image.FromFile(m_ImageFilePaths[0]);
@@ -991,7 +942,7 @@ namespace PicControl
                             StartBgW();
                             */
 
-                            InitSlideShow();
+                            LaunchSlideShow();
 
                             break;
                     }
@@ -1003,73 +954,7 @@ namespace PicControl
             }
         }
 
-
-        #region SlideShow with timer       
-        
-        // New Slideshow
-        private void InitSlideShow()
-        {
-            mBlend = 0;
-            count = 0;
-
-            timerChangeImage?.Dispose();
-            timerChangeImage = new System.Timers.Timer();            
-            timerChangeImage.Interval = freqSlideShow * 1000;
-            timerChangeImage.Elapsed += (sender, e) => OnTimerChangeImage();            
-
-            timerTransition?.Dispose();
-            timerTransition = new System.Timers.Timer();
-            timerTransition.Interval = 50;
-            timerTransition.Elapsed += (sender, e) => OnTimerTransition();            
-
-            try
-            {
-                Image1 = pictures[count];
-                Image2 = pictures[++count];
-            }
-            catch
-            {
-
-            }
-            timerTransition.Enabled = false;
-            timerChangeImage.Enabled = true;                                             
-        }
-
-        private void OnTimerTransition()
-        {
-            mBlend += mDir * 0.02F;
-
-            if (mBlend > 1)
-            {
-                // When mBlend is greater than 1, we change the images
-                // and stop the timer "timerTransition" to prevent a new change before time elapse of "timerChangeImage"
-                mBlend = 0.0F;
-
-                if ((count + 1) < pictures.Length)
-                {
-                    Image1 = pictures[count];
-                    Image2 = pictures[++count];
-                }
-                else if (count < pictures.Length) 
-                {
-                    Image1 = pictures[count];
-                    Image2 = pictures[0];
-                    count = 0;
-                }
-                
-                timerTransition.Enabled = false;                                                  
-            }
-
-            m_Blend = mBlend;
-        }
-
-        private void OnTimerChangeImage()
-        {
-            timerTransition.Enabled = true;
-        }       
-
-        #endregion SlideShow with timer      
-
+      
         /// <summary>
         /// Color the syllabe according to song position
         /// </summary>
@@ -1098,46 +983,36 @@ namespace PicControl
         /// <summary>
         /// Load text of song
         /// </summary>
-        /// <param name="toto"></param>
-        public void LoadSong(List<plLyric> plLyrics, bool bDemoMode = false)
-        {
-            string lyrics; // = string.Empty;
+        /// <param name="toto"></param>     
+        public void LoadSong(bool bDemoMode = false)
+        {            
             lstLyricsLines = new List<string>();
+            lstChordsLines = new List<string>();
             syllabes = new List<syllabe>();
 
-            if (plLyrics.Count > 0)
-            {                
-                
-                lyrics = string.Empty;
-                pboxWnd.Invalidate();
-
-                for (int i = 0; i < plLyrics.Count; i++)
-                {
-                    // Force uppercase
-                    if (_bforceuppercase)
-                        plLyrics[i].Element = (plLyrics[i].Element.Item1, plLyrics[i].Element.Item2.ToUpper());
-
-                    lyrics += plLyrics[i].Element.Item2;
-                }
-
-                this.Txt = lyrics;
+            if (_kLyrics != null && _kLyrics.Count > 0)
+            {
+               
                 // store lines in a specific list
-                StoreLyricsLines(lyrics);
+                if (_kLyrics != null)
+                {
+                    lstLyricsLines = StoreLyricsLines(_kLyrics);
+                    lstChordsLines = StoreChordLines(_kLyrics);
+                }
+                // Number total of lines (offset calculation)
+                _totalLyricsLines = lstLyricsLines.Count - 1;
 
                 // ajust font size
                 lineMax = GetMaxLength();
                 AjustText(lineMax);
 
-                //TestCheckTimes(plLyrics);
-
-                // Store syllabes
-                StoreLyricsSyllabes(plLyrics);
-
+                // Store syllabes                
+                if (_kLyrics != null)
+                    syllabes = StoreLyricsSyllabes(_kLyrics);
 
                 if (bDemoMode)
                 {
                     bHighLight = true;
-
                 }
                 else
                 {
@@ -1147,38 +1022,79 @@ namespace PicControl
                 }
 
                 // Create rectangles
-                createListRectangles(0);       
-                if (syllabes != null && syllabes.Count > 0)
-                    createListNextRectangles(syllabes[0].last + 1);
-                            
-            } 
-                     
-        }
-
-        #endregion methods
-
-
-        #region tests
-
-        /*
-        private void TestCheckTimes(List<plLyric> plLyrics)
-        {
-            int lastTime = -1;
-            int t = -1;
-            for (int i = 0; i < plLyrics.Count; i++)
-            {
-                t = plLyrics[i].TicksOn;
-                if (t < lastTime)
-                {
-                    MessageBox.Show("Error: times not in order", "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    return;
-                }
-                lastTime = t;
+                createListRectangles(0);
+                //if (syllabes != null && syllabes.Count > 0)
+                //    createListNextRectangles(syllabes[0].last + 1);
             }
-        }
-        */
-        #endregion tests
 
+        }
+
+        #endregion public methods
+
+
+        #region SlideShow with timer       
+
+        // New Slideshow
+        private void LaunchSlideShow()
+        {
+            mBlend = 0;
+            count = 0;
+
+            timerChangeImage?.Dispose();
+            timerChangeImage = new System.Timers.Timer();
+            timerChangeImage.Interval = freqSlideShow * 1000;
+            timerChangeImage.Elapsed += (sender, e) => OnTimerChangeImage();
+
+            timerTransition?.Dispose();
+            timerTransition = new System.Timers.Timer();
+            timerTransition.Interval = 50;
+            timerTransition.Elapsed += (sender, e) => OnTimerTransition();
+
+            try
+            {
+                Image1 = pictures[count];
+                Image2 = pictures[++count];
+            }
+            catch (Exception ex) 
+            {
+                Console.WriteLine("Error loading images: " + ex.Message);
+            }
+            timerTransition.Enabled = false;
+            timerChangeImage.Enabled = true;
+        }
+
+        private void OnTimerTransition()
+        {
+            mBlend += mDir * 0.02F;
+
+            if (mBlend > 1)
+            {
+                // When mBlend is greater than 1, we change the images
+                // and stop the timer "timerTransition" to prevent a new change before time elapse of "timerChangeImage"
+                mBlend = 0.0F;
+
+                if ((count + 1) < pictures.Length)
+                {
+                    Image1 = pictures[count];
+                    Image2 = pictures[++count];
+                }
+                else if (count < pictures.Length)
+                {
+                    Image1 = pictures[count];
+                    Image2 = pictures[0];
+                    count = 0;
+                }
+
+                timerTransition.Enabled = false;
+            }
+
+            m_Blend = mBlend;
+        }
+
+        private void OnTimerChangeImage()
+        {
+            timerTransition.Enabled = true;
+        }
 
         #region SlideShow functions
 
@@ -1188,7 +1104,7 @@ namespace PicControl
         /// <param name="dir"></param>
         private void LoadImageList(string dir)
         {
-            
+
             bgFiles = Directory.GetFiles(@dir, "*.jpg");
             m_ImageFilePaths.Clear();
             for (int i = 0; i < bgFiles.Length; ++i)
@@ -1196,10 +1112,10 @@ namespace PicControl
                 string file = bgFiles[i];
                 m_ImageFilePaths.Add(file);
             }
-            
+
 
             // new slideshow
-            
+
             count = 0;
             //mBlend = 0.0F;
             pictures = new Bitmap[bgFiles.Length];
@@ -1213,6 +1129,9 @@ namespace PicControl
         #endregion SlideShow functions
 
 
+        #endregion SlideShow with timer      
+
+
         #region demo, wait
 
         /// <summary>
@@ -1220,110 +1139,73 @@ namespace PicControl
         /// </summary>
         /// <param name="sec">Count down max </param>
         public void LoadWaitSong(int sec)
-        {           
-            string tx = string.Empty;
-
-            // 10|9|8|7|6|5|4|3|2|1|0|                     
-            for (int i = sec; i >= 0; i--)
-            {
-                tx += i.ToString() + _InternalSepLines;
-            }
-            
-
-            List<plLyric> plLyrics = StoreDemoText(tx);
-            
-            _txtNbLines = 1;
+        {
+            _nbLyricsLines = 1;
             dirSlideShow = null;
-            SetBackground(null);
-
-            LoadSong(plLyrics);
+            InitSlideShow(null);           
 
             // Initial position
             _currentTextPos = -1;
             vOffset = 0;
             nextStartOfLineTime = 0;
 
-            //m_wait = true;
+
+            List<string> lines = new List<string>();
+            // 10|9|8|7|6|5|4|3|2|1|0|       
+            for (int i = sec; i >= 0; i--)
+            {
+                lines.Add(i.ToString());
+            }
+
+            // Do not use KLyrics but _kLyrics to be able to use the same LoadSong method for demo and real text
+            _kLyrics = StoreDemoText(lines);
+            LoadSong(true);
         }
 
         public void endDemoText()
         {            
             syllabes = null;
         }
-        
+
+
         /// <summary>
         /// Store demo text
         /// '|' are carriage return
         /// </summary>
         /// <param name="tx"></param>
         /// <returns></returns>
-        private List<plLyric> StoreDemoText(string tx, int ticks = 0)
+        private kLyrics StoreDemoText(List<string> lines, int tcks = 0)
         {
-            // replace spaces and carriage return 
-            // tata toto<cr>titi tutu devient
-            // tata toto titi<cr>' ' tutu devient
-            // tata]toto<cr>[,titi],tutu
+            int ticks = 0;
+            Syllable syll;
+            kLine kLine = new kLine();
+            kLyrics KL = new kLyrics();
 
-            // protect spaces, replaced by ']' + space
-            string m_ProtectSpace = "¾";
-            string S = tx.Replace(" ", m_ProtectSpace + " ");
-
-            // _InternalSepLines = replaced by _InternalSepLines + space
-            S = S.Replace(_InternalSepLines, _InternalSepLines + " ");
-
-            // Split syllabes by spaces
-            string[] strLyricSyllabes = S.Split(new Char[] { ' ' });
-
-            LyricsWords = new List<string>();
-            LyricsTimes = new List<int>();
-
-            // load lists syllabes and times
-            List<plLyric> plLyrics = new List<plLyric>();
-
-            string sx = string.Empty;
-            (string, string) plElement = (string.Empty, string.Empty);
-            int plTime = 0;
-            plLyric.Types plType = plLyric.Types.Text;
-
-            for (int i = 0; i < strLyricSyllabes.Length; i++)
+            for (int i = 0; i < lines.Count; i++)
             {
-                sx = strLyricSyllabes[i];
-                sx = sx.Replace(m_ProtectSpace, " ");    // retrieve spaces
+                string l = lines[i];
+                string[] words = l.Split(new Char[] { ' ' });
 
-                plElement = ("", sx);
-                plTime = ticks + (i + 1) * 10;        // time each 10 ticks
-
-                if (sx.Length > 1 && sx.Substring(sx.Length - 1, 1) == _InternalSepLines)
+                kLine = new kLine();
+                for (int j = 0; j < words.Length; j++)
                 {
-                    // String ended by _InternalSepLines
-                    string reste = sx.Substring(0, sx.Length - 1);
-                    
-                    plType = plLyric.Types.Text;
-                    plElement = ("", reste);
-                    plLyrics.Add(new plLyric() { Type = plType, Element = plElement, TicksOn = plTime });
+                    if (bforceUppercase)
+                        words[j] = words[j].ToUpper();
 
-                    plType =  plLyric.Types.LineFeed;
-                    plElement = ("", _InternalSepLines);
-                    plLyrics.Add(new plLyric() { Type = plType, Element = plElement, TicksOn = plTime });
-
+                    string w = words[j] + " ";
+                    ticks = tcks + (i + 1) * (j + 1) * 10;
+                    syll = new Syllable() { Text = w, TicksOn = ticks };
+                    kLine.Add(syll);
                 }
-                else
-                {
-                    if (sx == _InternalSepLines)
-                        plType = plLyric.Types.LineFeed;
-                    else
-                        plType = plLyric.Types.Text;
-                    
-                    plLyrics.Add(new plLyric() { Type = plType, Element = plElement, TicksOn = plTime });
-                }                
+                KL.Add(kLine);
             }
-            return plLyrics;
+
+            return KL;
         }
 
+       
         /// <summary>
         /// Set default values for demonstration purpose
-        /// 1/4 = LineFeed
-        /// 1/2 = Paragraph
         /// </summary>
         private void SetDefaultValues()
         {           
@@ -1340,16 +1222,19 @@ namespace PicControl
             _HighlightChordColor = Color.FromArgb(238, 17, 17);    // modern ui dark Red
             
             
-            _txtNbLines = 3;         
+            _nbLyricsLines = 3;         
 
-            OptionBackground = "SolidColor";                                    
+            
 
             // Default dir for slide show
-            DefaultDirSlideShow = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), Application.ProductName);
-
             freqSlideShow = 5 * 1000;
-            m_Cancel = false;
-            
+            DefaultDirSlideShow = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), Application.ProductName);
+            DirSlideShow = DefaultDirSlideShow;
+
+            //OptionBackground = "SolidColor";
+            OptionBackground = "Diaporama";
+
+
             emSize = 4;            
             m_font = new Font(_karaokeFont.FontFamily, emSize, FontStyle.Regular, GraphicsUnit.Pixel);
 
@@ -1368,37 +1253,46 @@ namespace PicControl
         }
 
         public void LoadDemoText()
-        {
-            // Default text
-            string tx = "Lorem ipsum dolor sit amet," + _InternalSepLines;
-            tx += "consectetur adipisicing elit," + _InternalSepLines;
-            tx += "sed do eiusmod tempor incididunt" + _InternalSepLines;
-            tx += "ut labore et dolore magna aliqua." + _InternalSepLines;
-            tx += "Ut enim ad minim veniam," + _InternalSepLines;
-            tx += "quis nostrud exercitation ullamco" + _InternalSepLines;
-            tx += "laboris nisi ut aliquip" + _InternalSepLines;
-            tx += "ex ea commodo consequat." + _InternalSepLines;
-            tx += "Duis aute irure dolor in reprehenderit" + _InternalSepLines;
-            tx += "in voluptate velit esse cillum dolore" + _InternalSepLines;
-            tx += "eu fugiat nulla pariatur.";
+        {            
+            List<string> lines = new List<string>();
+            lines.Add("Lorem ipsum dolor sit amet,");
+            lines.Add("consectetur adipisicing elit,");
+            lines.Add("sed do eiusmod tempor incididunt");
+            lines.Add("ut labore et dolore magna aliqua.");
+            lines.Add("Ut enim ad minim veniam,");
+            lines.Add("quis nostrud exercitation ullamco");
+            lines.Add("laboris nisi ut aliquip");
+            lines.Add("ex ea commodo consequat.");
+            lines.Add("Duis aute irure dolor in reprehenderit");
+            lines.Add("in voluptate velit esse cillum dolore");
+            lines.Add("eu fugiat nulla pariatur.");
 
-            if (_bforceuppercase)
-                tx = tx.ToUpper();
-
-            List<plLyric> plLyrics = StoreDemoText(tx);
-
-            LoadSong(plLyrics, true);
-
+            // Do not use KLyrics but _kLyrics to be able to use the same LoadSong method for demo and real text
+            _kLyrics = StoreDemoText(lines);
+           
+            // Load song with demo text
+            LoadSong(true);           
         }
 
         /// <summary>
-        /// Display a text
+        /// Display a text from another windows form (used in playlists to display song title and artist during the wait time before the song starts)
         /// </summary>
         /// <param name="tx"></param>
         public void DisplayText(string tx, int ticks = 0)
-        {            
-            List<plLyric> plLyrics = StoreDemoText(tx, ticks);
-            LoadSong(plLyrics);
+        {
+            List<string> lines = new List<string>();
+
+            string[] ArrayLines = tx.Split( _InternalSepLines.ToCharArray());
+            for (int i = 0; i < ArrayLines.Length; i++ )
+            {
+                lines.Add(ArrayLines[i]);
+            }
+                                   
+
+            //List<plLyric> plLyrics = StoreDemoText(tx, ticks);
+            _kLyrics = StoreDemoText(lines, ticks);
+                        
+            LoadSong();
 
             // Initial position
             _currentPosition = 0;
@@ -1416,317 +1310,110 @@ namespace PicControl
         /// <summary>
         /// Store lyrics lines in a list called lstLyricsLines
         /// </summary>
-        /// <param name="ly"></param>
-        private void StoreLyricsLines(string ly)
+        /// <param name="ly"></param>    
+        private List<string> StoreLyricsLines(kLyrics kl)
         {
-            lstLyricsLines = new List<string>();
-
-            string tx = string.Empty;
 
             /*
-            * A back slash "\" character marks the end of a line of lyrics, as displayed by a Karaoke viewer/player program.
-            *
-            * A forward slash "/" character marks the end of a "paragraph" of lyrics. 
-            * Some Karaoke viewer / player programs interpret this to mean that the screen should be refreshed starting with the next line of lyrics at the top.
-            *
-            * Dash characters at the end of syllables are removed by the Karaoke viewer/player program, and the syllables are joined together. 
-            */
-            
-            string lyr = string.Empty;
-                             
+           * A back slash "\" character marks the end of a line of lyrics, as displayed by a Karaoke viewer/player program.
+           *
+           * A forward slash "/" character marks the end of a "paragraph" of lyrics. 
+           * Some Karaoke viewer / player programs interpret this to mean that the screen should be refreshed starting with the next line of lyrics at the top.
+           *
+           * Dash characters at the end of syllables are removed by the Karaoke viewer/player program, and the syllables are joined together. 
+           */
 
-            lyr = ly;
-            if (_bshowparagraphs) 
+            List<string> lstLines = new List<string>();
+
+            for (int i = 0; i < kl.Lines.Count; i++)
             {
-                // Replace new paragraph by newline + new paragraph + new line to allow split by linefeed
-                lyr = lyr.Replace(_InternalSepParagraphs, _InternalSepLines + _InternalSepParagraphs + _InternalSepLines);
-
-            }
-            else
-            {
-                lyr = ly.Replace(_InternalSepParagraphs, _InternalSepLines); 
-            }
-
-            // TO BE MODIFIED
-            char ChrSepLines = Convert.ToChar(_InternalSepLines);
-            string[] strLyricsLines = lyr.Split(new Char[] { ChrSepLines }, StringSplitOptions.RemoveEmptyEntries);
-
-            for (int i = 0; i < strLyricsLines.Length; i++)
-            {
-                // FAB CHORD
-                // DO NOT TRIM BECAUSE OF CHORDS whith no text
-                //tx = strLyricsLines[i].Trim();                
-                tx = strLyricsLines[i];
-
-                if (_bshowparagraphs && tx == _InternalSepParagraphs)
+                string lineContent = kl.Lines[i].ToString();
+                if (_bshowparagraphs && lineContent == _InternalSepParagraphs)
                 {
                     // new paragraph = empty line (space)
-                    lstLyricsLines.Add(" ");
+                    lstLines.Add(" ");
                 }
-                else if (tx != "")
-                {                                        
-                    lstLyricsLines.Add(tx);
+                else if (lineContent != "")
+                {
+                    lstLines.Add(lineContent);
                 }
             }
-
-            // Number of lines (offset calculation)
-            _nbLyricsLines = lstLyricsLines.Count - 1;
-
+            return lstLines;
         }
 
-        private int GetMaxSyllabesInLine(int ind, int line, List<plLyric> plLyrics)
+        private List<string> StoreChordLines(kLyrics kl)
         {
-            int max = 0;
-            // Recherche le nombre max de syllabes dans la ligne            
-            int lastpos = 0;
-            string tx;
-            int pos = 0;
-            string strline = lstLyricsLines[line];
-            string strwrkline = strline;
+            string chord;
+            string lyric;
+            string lineChords = string.Empty;
+            List<string> lstChords = new List<string>();
 
-            if (strwrkline.Trim().Length == 0)
-                return 0;
-
-            do
+            for (int i = 0; i < kl.Lines.Count; i++)
             {
-                if (ind < plLyrics.Count)
-                {                    
-                    tx = plLyrics[ind].Element.Item2;
-                    //tx = tx.Trim();
-
-                    if (plLyrics[ind].Type == plLyric.Types.LineFeed || plLyrics[ind].Type == plLyric.Types.Paragraph)
+                lineChords = string.Empty;
+                for (int j = 0; j < kl.Lines[i].Syllables.Count; j++)
+                {
+                    Syllable syll = kl.Lines[i].Syllables[j];
+                    if (syll.CharType == Syllable.CharTypes.Text)
                     {
-                        break;
-                    }
-                    else if (tx != "")
-                    {
-                        // Si toutes les syllabes sont identiques dans la ligne (ex la la la la)
-                        // , c'est faux .... lastpos reste à zéro
-                        pos = strwrkline.IndexOf(tx, lastpos);
-
-                        if (pos != -1)
+                        chord = syll.Chord;
+                        lyric = syll.Text;
+                        
+                        if (chord.Length > lyric.Length)
                         {
-                            max++; // Nombre de syllabes
-                            lastpos = pos;
-                            ind++;
-
-                            // Replace used letters by a "#"
-                            string rep = new string('#', tx.Length);
-                            var regex = new Regex(Regex.Escape(tx));
-                            strwrkline = regex.Replace(strwrkline, rep, 1);
-
+                            lyric += new string(' ', chord.Length - lyric.Length);
                         }
-                    }
-                    else
-                    {
-                        ind++;
+                        else if (chord.Length < lyric.Length)
+                        {
+                            chord += new string(' ', lyric.Length - chord.Length);
+                        }
+                        lineChords += chord;                        
                     }
                 }
-            } while (pos != -1 && ind < plLyrics.Count);
+                lstChords.Add(lineChords);
+            }            
 
-
-            return max;
+            return lstChords;
         }
+     
 
         /// <summary>
         /// Store syllabes in a list, each item being a class called syllabe
         /// </summary>
-        /// <param name="plLyrics"></param>
-        private void StoreLyricsSyllabes(List<plLyric> plLyrics)
+        /// <param name="plLyrics"></param>      
+        List<syllabe> StoreLyricsSyllabes(kLyrics kl)
         {
-            syllabes = new List<syllabe>();
+            List<syllabe> lstSyllabes = new List<syllabe>();
 
-            string chordName = string.Empty;
-            string tx;
-            int itime = 0;
-            int idx = -1;
-            int firstitem = 0;
-            int indexSyllabe = 0;
-            int offset = 0;
-            int max;
-            int pos;
-            int iline;
-            int lastpos;
-            int line = 0;            
-
-            try
+            for (int i = 0; i < kl.Lines.Count; i++)
             {
-                
-                if (lstLyricsLines.Count == 0)
-                    return;
+                kLine line = kl.Lines[i];
 
-                // Loop line by line           
-                do
+                for (int j = 0; j < line.Syllables.Count; j++)
                 {
-                    string strline = lstLyricsLines[line];
-                    string strwrkline = strline;
-                    pos = 0;
-                    max = 0;
-                    iline = -1;
+                    Syllable kSyl = line.Syllables[j];
 
-                    // ==============================
-                    // Paragraph = empty line
-                    // ==============================
-                    if (plLyrics[indexSyllabe].Type == plLyric.Types.Paragraph)
+                    syllabe syl = new syllabe();
+
+                    syl.chord = kSyl.Chord;
+                    syl.line = i;                                                                   // line number of syllabe
+                    syl.posline = j;                                                                // position dans la ligne
+                    syl.pos = lstSyllabes.Count;                                                    // position dans la chanson
+                    syl.text = kSyl.CharType == Syllable.CharTypes.ParagraphSep ? " " : kSyl.Text;           // text of syllabe, space if paragraph
+                    syl.time = kSyl.TicksOn;                                                        // time of syllabe
+                    syl.SylCount = line.Syllables.Count;                                            // number of syllabes in this line                      
+                    syl.last = line.Syllables.Count - 1;                                            // position of last syllabe
+                    for (int k = 0; k < i; k++)
                     {
-                        #region add paragraph                        
-
-                        idx++;
-                        // Paragraphe = ligne vide
-                        // Crée un nouvel item syllabe
-                        syllabe syl = new syllabe();
-
-                        syl.chord = "";
-                        syl.line = line;                // line number of syllabe
-                        syl.pos = idx;                      // position dans la chanson
-                        syl.posline = 0;                    // position dans la ligne
-                        syl.text = " ";
-                        syl.SylCount = 1;                   // number of syllabes in this line
-                        syl.last = idx;                     // position of last syllabe                        
-                        syl.time = plLyrics[indexSyllabe].TicksOn; // time of syllabe
-                        syl.offset = offset;
-                        syllabes.Add(syl);
-
-                        indexSyllabe++;
-                        
-                        line++;
-                        #endregion add paragraph
-
+                        syl.last += kl.Lines[k].Syllables.Count;
                     }
-                    else if (plLyrics[indexSyllabe].Type == plLyric.Types.LineFeed)
-                    {
-                        #region linefeed
-                        // ==============================
-                        // LINEFEED
-                        // ==============================
-                        indexSyllabe++;                        
-
-                        #endregion linefeed
-                    }
-                    else
-                    {
-                        #region Text
-                        // ==============================
-                        // Normal line
-                        // ==============================                                                                                              
-
-                        // Search for number of syllabes in this line                    
-                        max = 0;
-                        if (plLyrics[indexSyllabe].Element.Item2.Trim() != "")
-                        {
-                            max = GetMaxSyllabesInLine(indexSyllabe, line, plLyrics);
-
-                            if (max == 0)
-                            {
-                                MessageBox.Show("Error: Syllabe not found", "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);    
-                                return;
-                            }
-                        }
-
-                        //nbLineFeeds = 0;
-                        lastpos = 0;
-                        // Offset de la ligne
-                        offset = 0;
-                        pos = 0;
-                        strwrkline = strline;
-
-                        // Loop for each syllabe in the same line                        
-                        do
-                        {
-                            if (indexSyllabe < plLyrics.Count)
-                            {
-                                chordName = plLyrics[indexSyllabe].Element.Item1;
-                                tx = plLyrics[indexSyllabe].Element.Item2;
-                                string trimtx = tx.Trim();
-                                itime = plLyrics[indexSyllabe].TicksOn;
-
-                               
-                                // ====================
-                                // NORMAL TEXT
-                                // ====================
-                                pos = strwrkline.IndexOf(trimtx, lastpos);
-
-                                if (pos != -1)
-                                {
-                                    offset = 0; // Offset de la ligne
-                                    lastpos = pos;
-
-                                    // Crée un nouvel item syllabe
-                                    syllabe syl = new syllabe();
-
-                                    idx++;
-                                    iline++;
-
-                                    if (iline == 0)
-                                        firstitem = idx;
-
-                                    if (max == 0)
-                                        max = 1;
-
-
-                                    syl.chord = chordName;
-                                    syl.line = line;                    // line number of syllabe
-                                    syl.posline = iline;                // position dans la ligne
-                                    syl.pos = idx;                      // position dans la chanson
-                                    syl.text = tx;                      // text of syllabe
-                                    syl.time = itime;                   // time of syllabe
-                                    syl.SylCount = max;                 // number of syllabes in this line
-                                    syl.last = firstitem + max - 1;     // position of last syllabe
-                                    syl.offset = offset;
-
-                                    syllabes.Add(syl);
-
-                                    if (syl.line == _nbLyricsLines && syl.posline == 0)
-                                    {
-                                        _lastLinePosition = syl.time;
-                                    }
-
-                                    // incrémente index
-                                    indexSyllabe++;
-
-                                    #region exit if CR
-                                    // if next syllabe is a linefeed => next line
-                                    if (indexSyllabe < plLyrics.Count && plLyrics[indexSyllabe].Type != plLyric.Types.Text)
-                                    {
-                                        line++;
-                                        break;
-                                    }
-
-                                    /*
-                                    if (indexSyllabe < plLyrics.Count && plLyrics[indexSyllabe].Type == plLyric.Types.LineFeed)
-                                    {                                        
-                                        line++;
-                                        break;
-                                    }
-
-                                    if (indexSyllabe < plLyrics.Count && plLyrics[indexSyllabe].Type == plLyric.Types.Paragraph)
-                                    {                                        
-                                        line++;
-                                        break;
-                                    }
-                                    */
-                                    #endregion exit if CR
-
-                                    // Replace used letters by a "#"
-                                    string rep = new string('#', trimtx.Length);
-                                    var regex = new Regex(Regex.Escape(trimtx));
-                                    strwrkline = regex.Replace(strwrkline, rep, 1);
-                                }
-                                
-                            }
-                        } while (pos != -1 && indexSyllabe < plLyrics.Count);
-
-                        #endregion Text
-                    }
-
-                } while (line <= lstLyricsLines.Count - 1 && indexSyllabe < plLyrics.Count);
+                    syl.offset = 0;
+                    lstSyllabes.Add(syl);
+                }
             }
-            catch (Exception ex) 
-            {
-                MessageBox.Show(ex.Message);
-            }
+            return lstSyllabes;
         }
-
+       
 
         /// <summary>
         /// Ajuste la taille de la fonte en fonction de la taille de pictureBox1
@@ -1775,7 +1462,7 @@ namespace PicControl
 
                 float textHeight = MeasureStringHeight(S, inisize);
                 float totaltextHeight;
-                totaltextHeight = _txtNbLines * (textHeight + 10);
+                totaltextHeight = _nbLyricsLines * (textHeight + 10);
 
                 if (_bShowChords)
                 {
@@ -1795,7 +1482,7 @@ namespace PicControl
                             femsize = g.DpiY * inisize / 72;                            
                             textHeight = MeasureStringHeight(S, femsize);
                             
-                            totaltextHeight = _txtNbLines * (textHeight + 10);
+                            totaltextHeight = _nbLyricsLines * (textHeight + 10);
                             if (_bShowChords)
                             {
                                 // FAB CHROD
@@ -1842,7 +1529,7 @@ namespace PicControl
 
                     int line = syllabes[pos].line;
                     string strLine = lstLyricsLines[line];
-                    float Offset = getOffset(strLine, emSize);           // Offset de la ligne (centré)
+                    float Offset = CenterLine(strLine, emSize);           // Offset de la ligne (centré)
 
                     int idx = -1;                    
                     float x = Offset;
@@ -1877,90 +1564,7 @@ namespace PicControl
                 }
             }
         }
-
-       
-        /// <summary>
-        /// Create rectangles for next lines
-        /// </summary>
-        /// <param name="pos"></param>
-        private void createListNextRectangles(int pos)
-        {
-            if (pos < 0)
-                pos = 0;
-
-            if (pos < syllabes.Count)
-            {
-                using (Graphics g = pboxWnd.CreateGraphics())
-                {
-                    string strLine;
-                    string tx = string.Empty;
-                    float Offset;
-                    rListNextRect = new List<RectangleF>[_txtNbLines];
-                    int line = syllabes[pos].line;
-                    
-                    // si la ligne précédante est " " car saut de paragraphe, il faudrait ajouter une liste de rectangle fictogve à l'indice 0                    
-                    int start = 0;
-                    int end = _txtNbLines;
-
-
-                    rListNextRect = new List<RectangleF>[end];
-                    
-
-                    for (int k = start; k < end; k++)
-                    {
-                        strLine = lstLyricsLines[line];
-                        
-                        Offset = getOffset(strLine, emSize);           // Offset de la ligne (centré)
-                        
-                        rNextRect = new List<RectangleF>();
-
-                        int idx = -1;
-                        float x = Offset;
-
-                        for (int i = pos; i < syllabes[pos].SylCount + pos; i++)
-                        {
-                            idx++;
-
-                            // Taille de l'expace = caractère tiret
-                            tx = syllabes[i].text;
-                            
-                            RectangleF rect = new RectangleF();
-
-                            SizeF sz = g.MeasureString(tx, m_font, new Point(0, 0), sf);
-                            x += sz.Width;
-
-                            rect.Width = sz.Width + 1;
-                            rect.Height = sz.Height + 1;
-
-                            if (idx == 0)
-                            {
-                                rect.X = Offset - 1;
-                            }
-                            else
-                            {
-                                rect.X = rNextRect[idx - 1].X + rNextRect[idx - 1].Width - 1;
-                            }
-                            rNextRect.Add(rect);                            
-                        }
-
-                        rListNextRect[k] = rNextRect;
-
-                        line++;
-
-                        if (line > lstLyricsLines.Count - 1)
-                            break;
-
-                        pos = syllabes[pos].last + 1;
-                        if (pos >= syllabes.Count)
-                            break;                        
-                    }                    
-
-                    g.Dispose();   
-                }                
-
-            }
-        }
-
+    
         /// <summary>
         /// Find index of syllabe to sing according to time
         /// TODO : remove chords ?
@@ -2036,23 +1640,14 @@ namespace PicControl
                 if (syllabes[syllabeposition].line != currentLine)
                 {
                     currentLine = syllabes[syllabeposition].line;
-
-                    /*
-                    Console.WriteLine("************* line : " + currentLine );
-
-                    if (currentLine == 2) 
-                    {
-                        Console.WriteLine("ici");
-                    }
-                    */
-
+                    
                     // Beginning of line
                     x0 = syllabeposition - syllabes[syllabeposition].posline;
                     // Create list of rectangles for current line
                     createListRectangles(x0);
 
                     // Create list of rectangles for next line
-                    createListNextRectangles(syllabes[syllabeposition].last + 1);
+                    //createListNextRectangles(syllabes[syllabeposition].last + 1);
                 }
             }
         }
@@ -2067,7 +1662,7 @@ namespace PicControl
         /// </summary>
         /// <param name="tx"></param>
         /// <returns></returns>
-        private int getOffset(string tx, float femsize)
+        private int CenterLine(string tx, float femsize)
         {
             float ret; // = 0;
             float L = MeasureString(tx, femsize);
@@ -2094,36 +1689,34 @@ namespace PicControl
             float h = MeasureStringHeight("ABCDEFGHIJKLMNOPQRSTUVWXYZ", femsize);
             long H = (long)pboxWnd.ClientSize.Height;
 
-
-
             switch (_OptionDisplay)
             {
                 case OptionsDisplay.Top:
-                    if (_txtNbLines == 1)
+                    if (_nbLyricsLines == 1)
                         ret = 10;
                     else
                         ret = _lineHeight;
                     break;
 
                 case OptionsDisplay.Center:
-                    if (_txtNbLines == 1)
+                    if (_nbLyricsLines == 1)
                     {
-                        ret = (H - ((_txtNbLines) * (h + 10))) / 2;
+                        ret = (H - ((_nbLyricsLines) * (h + 10))) / 2;
                     }
                     else
                     {
                         if (_bShowChords)
-                            ret = (H - ((2 * _txtNbLines - 1) * (h + 10))) / 2;
+                            ret = (H - ((2 * _nbLyricsLines - 1) * (h + 10))) / 2;
                         else
-                            ret = (H - ((_txtNbLines - 1) * (h + 10))) / 2;
+                            ret = (H - ((_nbLyricsLines - 1) * (h + 10))) / 2;
                     }
                     break;
 
                 case OptionsDisplay.Bottom:
                     if (_bShowChords)
-                        ret = (H - (int)(2.5 * _txtNbLines) * _lineHeight) - 10;
+                        ret = (H - (int)(2.5 * _nbLyricsLines) * _lineHeight) - 10;
                     else
-                        ret = (H - _txtNbLines * _lineHeight) - 10;
+                        ret = (H - _nbLyricsLines * _lineHeight) - 10;
 
                     break;
             }
@@ -2152,7 +1745,6 @@ namespace PicControl
 
                     g.Dispose();
                 }
-
             }
             return ret;
         }
@@ -2201,8 +1793,6 @@ namespace PicControl
                     tx = lstLyricsLines[i];
                 }
             }
-
-
             return tx;
         }
 
@@ -2301,8 +1891,7 @@ namespace PicControl
 
             try
             {
-                #region Draw text of chord
-                //path.AddString(tx, m_font.FontFamily, (int)m_font.Style, 3 * emSize / 4, new Point((int)x0, y0), sf);
+                #region Draw text of chord                
                 path.AddString(tx, _chordFont.FontFamily, (int)_chordFont.Style, 3 * emSize / 4, new Point((int)x0, y0), sf);
                 e.Graphics.FillPath(new SolidBrush(clr), path);
 
@@ -2314,202 +1903,7 @@ namespace PicControl
                 Console.Write("Error: " + ed.Message);
             }
         }
-
-
-        /// <summary>
-        /// Draw syllabes on next lines
-        /// </summary>
-        /// <param name="clr"></param>
-        /// <param name="syl"></param>
-        /// <param name="x0"></param>
-        /// <param name="y0"></param>
-        /// <param name="W"></param>
-        /// <param name="H"></param>
-        /// <param name="e"></param>
-        private void drawSyllabeNextLines(Color clr, syllabe syl, int x0, int y0, int W, int H, PaintEventArgs e)
-        {
-            GraphicsPath pth = new GraphicsPath();
-            string tx = syl.text;
-
-            // outline            
-            Pen penContour = new Pen(_InactiveBorderColor, _borderthick);
-
-            try
-            {                
-                #region background of syllabe      
-                
-                if (_bTextBackGround)
-                {
-                    // Black background to make text more visible                    
-                    RectangleF R = new RectangleF(x0, y0, W, H);
-                    // background
-                    e.Graphics.FillRectangle(new SolidBrush(Color.Black), R);
-                }
-
-                #endregion
-
-                #region Draw text of syllabe
-
-                // Add lines of lyrics to the Graphics path
-                pth.AddString(tx, m_font.FontFamily, (int)m_font.Style, emSize, new Point((int)x0, y0), sf);
-
-
-                #region Apply effects               
-
-                if (FrameType == "Neon")
-                    CreateNeonEffect(_InactiveBorderColor , e, pth);
-                else if (FrameType == "Shadow")
-                    CreateShadowEffect(tx, _InactiveBorderColor, x0, y0, m_font, emSize, e, pth);
-
-                #endregion Apply effect
-
-
-                // Draw text
-                // Color clr is always InactiveColor for "NextLines"
-                e.Graphics.FillPath(new SolidBrush(clr), pth);
-                
-                // Outiline the text
-                if (_borderthick > 0)
-                    e.Graphics.DrawPath(penContour, pth);
-
-                pth.Dispose();
-                
-                #endregion
-            }
-            catch (Exception ed)
-            {
-                Console.Write("Error: " + ed.Message);
-            }
-        }
-
-
-        #region effects
-
-        /// <summary>
-        /// Create a neon effect
-        /// </summary>
-        /// <param name="e"></param>
-        /// <param name="pth"></param>
-        private void CreateNeonEffect(Color clr, PaintEventArgs e, GraphicsPath pth)
-        {
-            //Create a bitmap in a fixed ratio to the original drawing area.
-            Bitmap bm = new Bitmap(pboxWnd.ClientSize.Width / 5, pboxWnd.ClientSize.Height / 5);
-            //Get the graphics object for the image. 
-            Graphics gimg = Graphics.FromImage(bm);
-
-            //Create a matrix that shrinks the drawing output by the fixed ratio. 
-            Matrix mx = new Matrix(1.0f / 5, 0, 0, 1.0f / 5, -(1.0f / 5), -(1.0f / 5));
-
-            //Choose an appropriate smoothing mode for the halo. 
-            gimg.SmoothingMode = SmoothingMode.AntiAlias;
-
-            //Transform the graphics object so that the same half may be used for both halo and text output. 
-            gimg.Transform = mx;
-
-            //Using a suitable pen...
-            Color HaloColor = clr;
-            Brush HaloBrush = new SolidBrush(HaloColor);
-
-            Pen penHaloColor = new Pen(HaloColor, 3);
-
-            //Draw around the outline of the path
-            gimg.DrawPath(penHaloColor, pth);
-
-            //and then fill in for good measure. 
-            gimg.FillPath(HaloBrush, pth);
-
-            //We no longer need this graphics object
-            //g.Dispose();
-
-            //setup the smoothing mode for path drawing
-            e.Graphics.SmoothingMode = SmoothingMode.AntiAlias;
-
-            //and the interpolation mode for the expansion of the halo bitmap
-            e.Graphics.InterpolationMode = InterpolationMode.HighQualityBicubic;
-
-            //expand the halo making the edges nice and fuzzy. 
-            e.Graphics.DrawImage(bm, pboxWnd.ClientRectangle, 0, 0, bm.Width, bm.Height, GraphicsUnit.Pixel);
-        }
-
-
-        /// <summary>
-        /// Create a shadow effect
-        /// </summary>
-        /// <param name="line"></param>
-        /// <param name="x0"></param>
-        /// <param name="y0"></param>
-        /// <param name="font"></param>
-        /// <param name="e"></param>
-        /// <param name="pth"></param>
-        private void CreateShadowEffect(string line, Color clr, int x0, int y0, Font font, float emSize, PaintEventArgs e, GraphicsPath pth)
-        {
-            Bitmap bm = new Bitmap(pboxWnd.ClientSize.Width / 4, pboxWnd.ClientSize.Height / 4);
-
-            //Get a graphics object for it
-            Graphics g = Graphics.FromImage(bm);
-            Graphics ge = e.Graphics;            
-
-            // must use an antialiased rendering hint
-            g.TextRenderingHint = TextRenderingHint.AntiAlias;
-
-            //this matrix zooms the text out to 1/4 size and offsets it by a little right and down                
-            Matrix mx = new Matrix(0.25f, 0, 0, 0.25f, 1.3f, 1.3f);
-
-            g.Transform = mx;
-
-
-            //The shadow is drawn
-            g.DrawString(line, font, new SolidBrush(clr), x0, y0, sf);
-
-            //Don't need this anymore
-            g.Dispose();
-
-            //The destination Graphics uses a high quality mode
-            ge.InterpolationMode = InterpolationMode.HighQualityBicubic;
-
-            //and draws antialiased text for accurate fitting
-            ge.TextRenderingHint = TextRenderingHint.AntiAlias;
-
-            //The small image is blown up to fill the main client rectangle
-            ge.DrawImage(bm, pboxWnd.ClientRectangle, 0, 0, bm.Width, bm.Height, GraphicsUnit.Pixel);
-
-            // finally, the text is drawn on top
-            //pth.AddString(line, new FontFamily(font.Name), (int)FontStyle.Regular, emSize, new Point(x0, y0), sf);
-        }
-
-
-        #endregion effects
-
-
-        /// <summary>
-        /// Draw chord on next lines
-        /// </summary>
-        /// <param name="clr"></param>
-        /// <param name="syl"></param>
-        /// <param name="x0"></param>
-        /// <param name="y0"></param>
-        /// <param name="e"></param>
-        private void drawChordNextLines(Color clr, syllabe syl, int x0, int y0, PaintEventArgs e)
-        {
-            var path = new GraphicsPath();
-            string tx = syl.chord;
-
-            try
-            {
-                #region Draw text of chord
-                //path.AddString(tx, m_font.FontFamily, (int)m_font.Style, 3*emSize/4, new Point((int)x0, y0), sf);
-                path.AddString(tx, _chordFont.FontFamily, (int)_chordFont.Style, 3 * emSize / 4, new Point((int)x0, y0), sf);
-                e.Graphics.FillPath(new SolidBrush(clr), path);
-                
-                path.Dispose();
-                #endregion
-            }
-            catch (Exception ed)
-            {
-                Console.Write("Error: " + ed.Message);
-            }
-        }
-    
+       
 
         /// <summary>
         /// Draw syllabes of the current line according to its position
@@ -2670,13 +2064,21 @@ namespace PicControl
         /// <summary>
         /// Draw next full lines with color _InactiveColor
         /// </summary>
-        /// <param name="e"></param>
+        /// <param name="e"></param>               
         private void DrawNextLines(int y0, PaintEventArgs e)
         {
             #region declarations
+            GraphicsPath pth = new GraphicsPath();
+            GraphicsPath pthc = new GraphicsPath();
 
-            int x0 = 0;
-            int i;
+            // outline            
+            Pen penContour = new Pen(_InactiveBorderColor, _borderthick);
+
+            kLine kline;
+            string lineContent;
+            string lineChords;
+
+            int x0;            
             int offset = _lineHeight;
 
             int W;
@@ -2688,285 +2090,228 @@ namespace PicControl
             int ChordOffset = offset;  // To manage when offset = 0 
             #endregion declarations
 
-
-            if (_txtNbLines == 1)
-                offset = 0;                      
+            if (_nbLyricsLines == 1)
+                offset = 0;
 
             // Draw sentence                           
             #region draw lyrics
 
             if (syllabes == null || _currentTextPos >= syllabes.Count)
                 return;
-            
+
             if (_currentTextPos >= 0)
                 x0 = _currentTextPos - syllabes[_currentTextPos].posline;
-            
 
-            for (int k = 0; k < _txtNbLines; k++)
-            {              
-                int line = currentLine + k + 1;
-                // k = 0;
+
+            for (int linenr = 0; linenr < _nbLyricsLines; linenr++)
+            {
+                int line = currentLine + linenr + 1;
+                
+                if (line > _kLyrics.Lines.Count -1) return;
+
+                // linenr = 0;
                 // Si currentline = 0 => line = 1
                 // mais si il y a un séparateur paragraphe, 
                 // on parcourt la boucle for (i = x0; i < syllabes.Count; i++) sans rien faire 
                 // du coup, k passe à 1 et on utilise les rectangles de la ligne suivante
-
-
-                if (_txtNbLines == 1)
+                if (_nbLyricsLines == 1)
                 {
                     if (line > currentLine + 1) break;
                 }
                 else
                 {
-                    if (line > currentLine + _txtNbLines - 1) break;
+                    if (line > currentLine + _nbLyricsLines - 1) break;
                 }
 
-                for (i = x0; i < syllabes.Count; i++)
+                // Line content
+                kline = _kLyrics.Lines[line];
+
+                // If there is a paragraph separator, we don't display the line
+                if (kline.Syllables.First().CharType == Syllable.CharTypes.ParagraphSep) continue;                
+
+                lineContent = kline.ToString();
+                lineChords = lstChordsLines[line];          // TODO : à revoir pour les accords directement dans la classe KLyrics
+                
+                x1 = CenterLine(lineContent, emSize);
+
+                // Draw line content
+                if (_bShowChords)
                 {
-                    if (syllabes[i].line == line)
-                    {                        
-                        int pos = syllabes[i].posline;
-                        if (pos < rListNextRect[k].Count)
-                        {
-                            // Rectangle for next lines
-                            x1 = rListNextRect[k][pos].X;
-                            W = (int)rListNextRect[k][pos].Width;
-                            H = (int)rListNextRect[k][pos].Height;
+                    #region draw chords
 
-                            if (_bShowChords)
-                            {
-                                y1 = y0 + (k + 1) * offset + (k + 1) * offset;
-                                
-                                // Draw chord above
-                                if (syllabes[i].chord != "")
-                                    drawChordNextLines(_InactiveChordColor, syllabes[i], (int)x1, (int)y1, e);
+                    y1 = y0 + (linenr + 1) * offset + (linenr + 1) * offset;
 
-                                // Draw syllabe below at 2*ChordOffset/3
-                                drawSyllabeNextLines(_InactiveColor, syllabes[i], (int)x1, (int)y1 + 2 * ChordOffset / 3, W, H, e);
-                            }
-                            else
-                            {
-                                // No chords
-                                y1 = y0 + (k + 1) * offset;
-                                drawSyllabeNextLines(_InactiveColor, syllabes[i], (int)x1, (int)y1, W, H, e);
-                            }                                                                                        
-                        }
-                    }
-                    else if (syllabes[i].line > line)
-                    {
-                        x0 = i;
-                        break;
-                    }
-                }
-            }
-            #endregion draw lyrics               
-        }
+                    // Draw chord above
+                    // Add lines of lyrics to the Graphics path                                        
+                    pthc.AddString(lineChords, _chordFont.FontFamily, (int)_chordFont.Style, 3 * emSize / 4, new Point((int)x1, (int)y1), sf);
+                    e.Graphics.FillPath(new SolidBrush(_InactiveChordColor), pthc);
 
-        #endregion draw lyrics & chords
+                    pthc.Dispose();
+                                        
+                    #endregion draw chords
 
+                    #region draw text
+                    // Draw syllabe below at 2*ChordOffset/3
+                    y1 = y1 + 2 * ChordOffset / 3;
+                    
+                    // Add lines of lyrics to the Graphics path
+                    pth.AddString(lineContent, m_font.FontFamily, (int)m_font.Style, emSize, new Point((int)x1, (int)y1), sf);
 
-        #region backgroundworker
+                    #region Apply effects               
 
-        /*
-        private void InitBackGroundWorker()
-        {
-            backgroundWorkerSlideShow = new System.ComponentModel.BackgroundWorker();
-            backgroundWorkerSlideShow.WorkerSupportsCancellation = true;
-            backgroundWorkerSlideShow.WorkerReportsProgress = true;
-            backgroundWorkerSlideShow.DoWork += new System.ComponentModel.DoWorkEventHandler(this.backgroundWorkerSlideShow_DoWork);
-            backgroundWorkerSlideShow.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.backgroundWorkerSlideShow_RunWorkerCompleted);
-        }
+                    if (FrameType == "Neon")
+                        CreateNeonEffect(_InactiveBorderColor, e, pth);
+                    else if (FrameType == "Shadow")
+                        CreateShadowEffect(lineContent, _InactiveBorderColor, (int)x1, (int)y1, m_font, emSize, e, pth);
 
-        private string SelectRndFile(List<string> files)
-        {            
-            if (files.Count > 0)
-            {            
-                int rand = random.Next(0, files.Count);
-                if (files[rand] != strCurrentImage || rndIter > 10)
-                {
-                    rndIter = 0;
-                    strCurrentImage = files[rand];
-                    return files[rand];
+                    #endregion Apply effect
+
+                    // Draw text
+                    // Color clr is always InactiveColor for "NextLines"
+                    e.Graphics.FillPath(new SolidBrush(_InactiveColor), pth);
+
+                    // Outiline the text
+                    if (_borderthick > 0)
+                        e.Graphics.DrawPath(penContour, pth);
+                    #endregion draw text
                 }
                 else
                 {
-                    rndIter++;
-                    return SelectRndFile(files);
-                }
-            }
-            else
-            {
-                return null;
-            }
-        }
 
-        private void backgroundWorkerSlideShow_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
-        {           
-            if (m_Restart == true)
-            {
-                StopBgW();                
+                    #region draw text
+                    // No chords
+                    y1 = y0 + (linenr + 1) * offset;
 
-                int C = m_ImageFilePaths.Count;
+                    // Add lines of lyrics to the Graphics path
+                    pth.AddString(lineContent, m_font.FontFamily, (int)m_font.Style, emSize, new Point((int)x1, (int)y1), sf);
 
-                switch (C)
-                {
-                    case 0:                        
-                        break;
-                    case 1:                        
-                        pboxWnd.Image = Image.FromFile(m_ImageFilePaths[0]);
-                        break;
-                    default:                        
-                        StartBgW();
-                        break;
-                }
-            }
-            else
-            {
-                backgroundWorkerSlideShow.Dispose();
-                SetBackground(DefaultDirSlideShow);
-            }
-        }
+                    #region Apply effects               
 
-        private void backgroundWorkerSlideShow_DoWork(object sender, DoWorkEventArgs e)
-        {
-            List<string> files = (List<string>)e.Argument;            
-            do
-            {
-                if (m_Cancel == true)
-                {
-                    break;
+                    if (FrameType == "Neon")
+                        CreateNeonEffect(_InactiveBorderColor, e, pth);
+                    else if (FrameType == "Shadow")
+                        CreateShadowEffect(lineContent, _InactiveBorderColor, (int)x1, (int)y1, m_font, emSize, e, pth);
+
+                    #endregion Apply effect
+
+                    // Draw text
+                    // Color clr is always InactiveColor for "NextLines"
+                    e.Graphics.FillPath(new SolidBrush(_InactiveColor), pth);
+
+                    // Outiline the text
+                    if (_borderthick > 0)
+                        e.Graphics.DrawPath(penContour, pth);
+                    #endregion draw text
+
                 }                
-                string file = SelectRndFile(files);
-              
-                UpdateTimerEnable(true);              
-                m_FinishEvent.Reset();
+            }
 
-                if (m_ImageStream != null)
-                {
-                    m_ImageStream.Dispose();
-                    m_ImageStream = null;
-                }
-
-                try
-                {                    
-                    using (FileStream fs = File.OpenRead(file))
-                    {
-                        byte[] ba = new byte[fs.Length];
-                        fs.Read(ba, 0, ba.Length);
-                        m_ImageStream = new MemoryStream(ba);
-
-                        if (m_CurrentImage != null)
-                        {
-                            m_CurrentImage.Dispose();
-                            m_CurrentImage = null;
-                        }
-
-                        m_CurrentImage = Image.FromStream(m_ImageStream);
-                        fs.Dispose();
-                        pboxWnd.Invalidate();
-                    }                                       
-                }
-                catch (Exception op)
-                {
-                    m_CurrentImage = null;
-                    Console.Write("Error opening image " + op.Message);
-                }
-                
-                
-                // do not launch if new slideshow is required
-                if (m_Restart == false)
-                {                   
-                    //UpdateTimerEnable(true);
-                    //m_FinishEvent.WaitOne();
-                    m_FinishEvent.Reset();
-
-                    PAUSE_TIME = 1000 * freqSlideShow;
-                    Thread.Sleep(PAUSE_TIME);
-                }
-            } while (m_Cancel == false);
+            pth.Dispose();
+            #endregion draw lyrics               
         }
-                        
 
-        private void UpdateTimerEnable(bool enabled)
+           
+        #endregion draw lyrics & chords
+
+
+        #region effects
+
+        /// <summary>
+        /// Create a neon effect
+        /// </summary>
+        /// <param name="e"></param>
+        /// <param name="pth"></param>
+        private void CreateNeonEffect(Color clr, PaintEventArgs e, GraphicsPath pth)
         {
-            if (this.InvokeRequired)
-            {
-                try
-                {
-                    UpdateTimerEnableCallback d = new UpdateTimerEnableCallback(UpdateTimerEnable);
-                    pboxWnd?.Invoke(d, new object[] { enabled });
-                }
-                catch (Exception u)
-                {
-                    Console.Write("Error UpdateTimerEnable " + u.Message);
-                }
-            }           
+            //Create a bitmap in a fixed ratio to the original drawing area.
+            Bitmap bm = new Bitmap(pboxWnd.ClientSize.Width / 5, pboxWnd.ClientSize.Height / 5);
+            //Get the graphics object for the image. 
+            Graphics gimg = Graphics.FromImage(bm);
+
+            //Create a matrix that shrinks the drawing output by the fixed ratio. 
+            Matrix mx = new Matrix(1.0f / 5, 0, 0, 1.0f / 5, -(1.0f / 5), -(1.0f / 5));
+
+            //Choose an appropriate smoothing mode for the halo. 
+            gimg.SmoothingMode = SmoothingMode.AntiAlias;
+
+            //Transform the graphics object so that the same half may be used for both halo and text output. 
+            gimg.Transform = mx;
+
+            //Using a suitable pen...
+            Color HaloColor = clr;
+            Brush HaloBrush = new SolidBrush(HaloColor);
+
+            Pen penHaloColor = new Pen(HaloColor, 3);
+
+            //Draw around the outline of the path
+            gimg.DrawPath(penHaloColor, pth);
+
+            //and then fill in for good measure. 
+            gimg.FillPath(HaloBrush, pth);
+
+            //We no longer need this graphics object
+            //g.Dispose();
+
+            //setup the smoothing mode for path drawing
+            e.Graphics.SmoothingMode = SmoothingMode.AntiAlias;
+
+            //and the interpolation mode for the expansion of the halo bitmap
+            e.Graphics.InterpolationMode = InterpolationMode.HighQualityBicubic;
+
+            //expand the halo making the edges nice and fuzzy. 
+            e.Graphics.DrawImage(bm, pboxWnd.ClientRectangle, 0, 0, bm.Width, bm.Height, GraphicsUnit.Pixel);
         }
-
-
-        private void StartBgW()
-        {
-            if (backgroundWorkerSlideShow.IsBusy)
-            {
-                StopBgW();                
-            }
-
-            try
-            {
-                if (!backgroundWorkerSlideShow.IsBusy)
-                {
-                    m_Restart = false;
-                    m_Cancel = false;
-                    backgroundWorkerSlideShow.RunWorkerAsync(m_ImageFilePaths);
-                }
-            }
-            catch (Exception est)
-            {                
-                Console.Write("Error starting backgroundworker: " + est.Message);
-            }
-        }
-
-        private void StopBgW()
-        {
-            if (backgroundWorkerSlideShow.IsBusy)
-            {
-                backgroundWorkerSlideShow.CancelAsync();
-
-                m_Cancel = true;
-            }
-        }
-        */
 
 
         /// <summary>
-        /// Terminate backgroundworker
+        /// Create a shadow effect
         /// </summary>
-        public void Terminate()
+        /// <param name="line"></param>
+        /// <param name="x0"></param>
+        /// <param name="y0"></param>
+        /// <param name="font"></param>
+        /// <param name="e"></param>
+        /// <param name="pth"></param>
+        private void CreateShadowEffect(string line, Color clr, int x0, int y0, Font font, float emSize, PaintEventArgs e, GraphicsPath pth)
         {
-            m_Cancel = true;
-            m_Restart = false;
+            Bitmap bm = new Bitmap(pboxWnd.ClientSize.Width / 4, pboxWnd.ClientSize.Height / 4);
 
-            m_ImageFilePaths = new List<string>();                                   
-            if (m_ImageStream != null)
-            {
-                m_ImageStream.Dispose();
-                m_ImageStream = null;
-            }
+            //Get a graphics object for it
+            Graphics g = Graphics.FromImage(bm);
+            Graphics ge = e.Graphics;
 
-            timerChangeImage?.Stop();
-            timerTransition?.Stop();
+            // must use an antialiased rendering hint
+            g.TextRenderingHint = TextRenderingHint.AntiAlias;
 
-            //if (backgroundWorkerSlideShow != null)
-            //{
-            //    backgroundWorkerSlideShow.CancelAsync();
-            //}
+            //this matrix zooms the text out to 1/4 size and offsets it by a little right and down                
+            Matrix mx = new Matrix(0.25f, 0, 0, 0.25f, 1.3f, 1.3f);
 
+            g.Transform = mx;
+
+
+            //The shadow is drawn
+            g.DrawString(line, font, new SolidBrush(clr), x0, y0, sf);
+
+            //Don't need this anymore
+            g.Dispose();
+
+            //The destination Graphics uses a high quality mode
+            ge.InterpolationMode = InterpolationMode.HighQualityBicubic;
+
+            //and draws antialiased text for accurate fitting
+            ge.TextRenderingHint = TextRenderingHint.AntiAlias;
+
+            //The small image is blown up to fill the main client rectangle
+            ge.DrawImage(bm, pboxWnd.ClientRectangle, 0, 0, bm.Width, bm.Height, GraphicsUnit.Pixel);
+
+            // finally, the text is drawn on top
+            //pth.AddString(line, new FontFamily(font.Name), (int)FontStyle.Regular, emSize, new Point(x0, y0), sf);
         }
 
-        #endregion backgroundworker
+        #endregion effects
 
-
-        #region paint resize terminate
+      
+        #region paint resize
 
         /// <summary>
         /// Guess if picturebox should be paint.
@@ -3033,8 +2378,12 @@ namespace PicControl
             switch (_optionbackground) 
             {                
             
-                case "Diaporama":                                      
-                    if (pictures.Length == 1)
+                case "SolidColor":                    
+                    e.Graphics.FillRectangle(new SolidBrush(_BgColor), new Rectangle(0, 0, this.Width, this.Height));
+                    break;
+
+                case "Diaporama":                                                                             
+                    if (pictures != null && pictures.Length == 1)
                     {                        
                         if (m_CurrentImage != null)
                         {                            
@@ -3169,63 +2518,13 @@ namespace PicControl
             if (lstLyricsLines is null || lstLyricsLines.Count == 0)
                 return;
 
-            DrawText(e);
-            
-            #region deleteme
-
-            /*
-            try
-            {                               
-                // Create list of rectangles when line changes
-                synchronize(_currentTextPos);
-
-                // Antialiasing
-                e.Graphics.SmoothingMode = SmoothingMode.AntiAlias;
-
-                // Calculate offset to center the text vertically
-                int y0 = getOffsetHeight(emSize);
-
-                if (_txtNbLines > 1)
-                {
-                    // Several lines to display
-                    // progressive offset - vOffset increases, so y0 decreases
-                    y0 = y0 - vOffset;                    
-
-                    // Draw current line                    
-                    DrawCurrentLine(_currentPosition, y0, e);
-
-                    // Draw next lines                 
-                    DrawNextLines(y0, e);
-                    
-                }
-                else
-                {
-                    // A single line to display
-                    // Draw current line until end of line
-                    if (!bEndOfLine)
-                        DrawCurrentLine(_currentPosition, y0, e);
-                    else                    
-                        DrawNextLines(y0, e);                    
-                }
-
-            }
-            catch (Exception ep)
-            {
-                Console.Write("Error drawing text on image: " + ep.Message);
-            }
-            
-            
-            */
-
-            #endregion deleteme
+            DrawText(e);                    
 
             #endregion
-
 
             // Call the base class OnPaint method to ensure proper rendering            
             base.OnPaint(e);
         }
-
 
         private void DrawText(PaintEventArgs e)
         {                             
@@ -3240,7 +2539,7 @@ namespace PicControl
                 // Calculate offset to center the text vertically
                 int y0 = getOffsetHeight(emSize);
 
-                if (_txtNbLines > 1)
+                if (_nbLyricsLines > 1)
                 {
                     // Several lines to display
                     // progressive offset - vOffset increases, so y0 decreases
@@ -3376,7 +2675,7 @@ namespace PicControl
                     {
                         pos = syllabes[0].last + 1;
                         // Rectangles for other lines
-                        createListNextRectangles(pos);
+                        //createListNextRectangles(pos);
                     }
                 }
                 else
@@ -3388,7 +2687,7 @@ namespace PicControl
                     // Rectangles of next line
                     pos = syllabes[_currentTextPos].last + 1;
                     // Rectangles for other lines 
-                    createListNextRectangles(pos);
+                    //createListNextRectangles(pos);
                 }
             }
 
@@ -3476,25 +2775,46 @@ namespace PicControl
             }
         }
 
-
         #endregion paint resize
 
 
-        #region Dispose
-        protected virtual void Dispose(bool disposing)
+        #region Dispose        
+
+        /// <summary>
+        /// Terminate 
+        /// </summary>
+        public void Terminate()
+        {
+            //m_Cancel = true;
+            //m_Restart = false;
+
+            m_ImageFilePaths = new List<string>();
+            /*
+            if (m_ImageStream != null)
+            {
+                m_ImageStream.Dispose();
+                m_ImageStream = null;
+            }
+            */
+
+            timerChangeImage?.Stop();
+            timerTransition?.Stop();
+        }
+
+        protected override void Dispose(bool disposing)
         {
             if (!disposed)
             {
+                /*
                 if (disposing)
-                {
-
+                {                    
                     if (m_ImageStream != null)
                     {
                         m_ImageStream.Dispose();
                         m_ImageStream = null;
-                    }
-                                       
+                    }                                      
                 }
+                */
 
                 _karaokeFont? .Dispose();
                 m_font?.Dispose(); 
@@ -3510,7 +2830,7 @@ namespace PicControl
             }
         }
 
-        public void Dispose()
+        public new void Dispose()
         {
             Dispose(true);
             GC.SuppressFinalize(this);

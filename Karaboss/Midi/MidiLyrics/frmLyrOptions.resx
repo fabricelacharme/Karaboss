@@ -1327,16 +1327,13 @@
     <value>NoControl</value>
   </data>
   <data name="btnBgColorPicker.Location" type="System.Drawing.Point, System.Drawing">
-    <value>124, 69</value>
+    <value>124, 68</value>
   </data>
   <data name="btnBgColorPicker.Size" type="System.Drawing.Size, System.Drawing">
-    <value>25, 23</value>
+    <value>26, 26</value>
   </data>
   <data name="btnBgColorPicker.TabIndex" type="System.Int32, mscorlib">
     <value>69</value>
-  </data>
-  <data name="btnBgColorPicker.Text" xml:space="preserve">
-    <value>/</value>
   </data>
   <data name="btnBgColorPicker.Visible" type="System.Boolean, mscorlib">
     <value>False</value>
@@ -1979,16 +1976,13 @@
     <value>NoControl</value>
   </data>
   <data name="btnInactiveBoderColorPicker.Location" type="System.Drawing.Point, System.Drawing">
-    <value>259, 162</value>
+    <value>259, 161</value>
   </data>
   <data name="btnInactiveBoderColorPicker.Size" type="System.Drawing.Size, System.Drawing">
-    <value>25, 23</value>
+    <value>26, 26</value>
   </data>
   <data name="btnInactiveBoderColorPicker.TabIndex" type="System.Int32, mscorlib">
     <value>72</value>
-  </data>
-  <data name="btnInactiveBoderColorPicker.Text" xml:space="preserve">
-    <value>/</value>
   </data>
   <data name="&gt;&gt;btnInactiveBoderColorPicker.Name" xml:space="preserve">
     <value>btnInactiveBoderColorPicker</value>
@@ -2006,16 +2000,13 @@
     <value>NoControl</value>
   </data>
   <data name="btnActiveColorBorderPicker.Location" type="System.Drawing.Point, System.Drawing">
-    <value>259, 136</value>
+    <value>259, 135</value>
   </data>
   <data name="btnActiveColorBorderPicker.Size" type="System.Drawing.Size, System.Drawing">
-    <value>25, 23</value>
+    <value>26, 26</value>
   </data>
   <data name="btnActiveColorBorderPicker.TabIndex" type="System.Int32, mscorlib">
     <value>71</value>
-  </data>
-  <data name="btnActiveColorBorderPicker.Text" xml:space="preserve">
-    <value>/</value>
   </data>
   <data name="&gt;&gt;btnActiveColorBorderPicker.Name" xml:space="preserve">
     <value>btnActiveColorBorderPicker</value>
@@ -2033,16 +2024,13 @@
     <value>NoControl</value>
   </data>
   <data name="btnInactiveColorPicker.Location" type="System.Drawing.Point, System.Drawing">
-    <value>259, 113</value>
+    <value>259, 112</value>
   </data>
   <data name="btnInactiveColorPicker.Size" type="System.Drawing.Size, System.Drawing">
-    <value>25, 23</value>
+    <value>26, 26</value>
   </data>
   <data name="btnInactiveColorPicker.TabIndex" type="System.Int32, mscorlib">
     <value>70</value>
-  </data>
-  <data name="btnInactiveColorPicker.Text" xml:space="preserve">
-    <value>/</value>
   </data>
   <data name="&gt;&gt;btnInactiveColorPicker.Name" xml:space="preserve">
     <value>btnInactiveColorPicker</value>
@@ -2060,16 +2048,13 @@
     <value>NoControl</value>
   </data>
   <data name="btnHighlightColorPicker.Location" type="System.Drawing.Point, System.Drawing">
-    <value>259, 87</value>
+    <value>259, 86</value>
   </data>
   <data name="btnHighlightColorPicker.Size" type="System.Drawing.Size, System.Drawing">
-    <value>25, 23</value>
+    <value>26, 26</value>
   </data>
   <data name="btnHighlightColorPicker.TabIndex" type="System.Int32, mscorlib">
     <value>69</value>
-  </data>
-  <data name="btnHighlightColorPicker.Text" xml:space="preserve">
-    <value>/</value>
   </data>
   <data name="&gt;&gt;btnHighlightColorPicker.Name" xml:space="preserve">
     <value>btnHighlightColorPicker</value>
@@ -2090,13 +2075,10 @@
     <value>259, 61</value>
   </data>
   <data name="btnActiveColorPicker.Size" type="System.Drawing.Size, System.Drawing">
-    <value>25, 23</value>
+    <value>26, 26</value>
   </data>
   <data name="btnActiveColorPicker.TabIndex" type="System.Int32, mscorlib">
     <value>68</value>
-  </data>
-  <data name="btnActiveColorPicker.Text" xml:space="preserve">
-    <value>/</value>
   </data>
   <data name="&gt;&gt;btnActiveColorPicker.Name" xml:space="preserve">
     <value>btnActiveColorPicker</value>

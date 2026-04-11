@@ -3487,7 +3487,7 @@ namespace Karaboss
 
                 if (sequence1.OrigFormat == 0)
                 {
-                    myLyricsMgmt = new MidiLyricsMgmt(sequence1);
+                    //myLyricsMgmt = new MidiLyricsMgmt(sequence1);
 
                     if (myLyricsMgmt.LyricType == LyricTypes.Lyric)
                     {                        
@@ -4377,7 +4377,7 @@ namespace Karaboss
                 // REstore number of lines of lyrics to display
                 if (Karaclass.m_PauseBetweenSongs)
                 {
-                    frmMidiLyric.TxtNbLines = Properties.Settings.Default.TxtNbLines;
+                    frmMidiLyric.nbLyricsLines = Properties.Settings.Default.TxtNbLines;
                 }
 
                 frmMidiLyric.LoadSong(myLyricsMgmt.KLyrics);
@@ -4443,7 +4443,7 @@ namespace Karaboss
             frmMidiLyric.Activate();
 
             // cas d'une playlist ou non : met à jour le diaporama
-            SetSlideShow();
+            SetSlideShowOfPlaylist();
 
         }
 
@@ -4642,19 +4642,28 @@ namespace Karaboss
             myLyricsMgmt.LyricsTrackNum = lyricstracknum;
         }
 
-        // Slideshow
-        private void SetSlideShow()
+        /// <summary>
+        /// If the song is part of a playlist, set the diaporama defined for this song or the default one if not defined
+        /// </summary>
+        private void SetSlideShowOfPlaylist()
         {
             if (frmMidiLyric != null)
             {
                 // cas d'une playlist ou non : met à jour le diaporama
                 if (currentPlaylistItem != null)
+                {
                     dirSlideShow = currentPlaylistItem.DirSlideShow;
-                else
-                    dirSlideShow = Properties.Settings.Default.dirSlideShow;
 
-                frmMidiLyric.SetSlideShow(dirSlideShow);
-
+                    // If nothing defined for this song, take default value
+                    if (dirSlideShow != string.Empty)
+                    {
+                        frmMidiLyric.ForceSlideShow(dirSlideShow);
+                    }
+                    else
+                    {
+                        frmMidiLyric.RestoreBackgroundAnimation();
+                    }
+                }                
             }
         }
 
@@ -6751,7 +6760,7 @@ namespace Karaboss
                     frmMidiLyric.AlloModifyDirSlideShow = false;
 
                     // Warning, number of lyrics lines is changed here
-                    frmMidiLyric.TxtNbLines = nbLines;
+                    frmMidiLyric.nbLyricsLines = nbLines;
                     frmMidiLyric.bTextBackGround = false;
 
                     // Display singer in top panel
@@ -8005,7 +8014,7 @@ namespace Karaboss
                 if (frmMidiLyric != null)
                 {
                     frmMidiLyric.LoadKarOptions();
-                    SetSlideShow();
+                    SetSlideShowOfPlaylist();
                 }
                 PlayPauseMusic();
 

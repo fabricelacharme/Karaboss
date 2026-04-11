@@ -463,6 +463,7 @@
             // 
             // btnBgColorPicker
             // 
+            this.btnBgColorPicker.Image = global::Karaboss.Properties.Resources.color_picker_black18;
             resources.ApplyResources(this.btnBgColorPicker, "btnBgColorPicker");
             this.btnBgColorPicker.Name = "btnBgColorPicker";
             this.btnBgColorPicker.UseVisualStyleBackColor = true;
@@ -539,8 +540,8 @@
             this.pBox.Grad0Color = System.Drawing.Color.Empty;
             this.pBox.Grad1Color = System.Drawing.Color.Empty;
             this.pBox.GradientAngle = 45F;
-            this.pBox.GradientColor0 = System.Drawing.Color.Empty;
-            this.pBox.GradientColor1 = System.Drawing.Color.Empty;
+            //this.pBox.GradientColor0 = System.Drawing.Color.Empty;
+            //this.pBox.GradientColor1 = System.Drawing.Color.Empty;
             this.pBox.HighlightChordColor = System.Drawing.Color.FromArgb(((int)(((byte)(238)))), ((int)(((byte)(17)))), ((int)(((byte)(17)))));
             this.pBox.HighlightColor = System.Drawing.Color.Coral;
             this.pBox.imgLayout = System.Windows.Forms.ImageLayout.Stretch;
@@ -548,10 +549,8 @@
             this.pBox.InactiveChordColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(196)))), ((int)(((byte)(13)))));
             this.pBox.InactiveColor = System.Drawing.Color.YellowGreen;
             this.pBox.KaraokeFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
+            this.pBox.KLyrics = null;
             resources.ApplyResources(this.pBox, "pBox");
-            this.pBox.LyricsTimes = ((System.Collections.Generic.List<int>)(resources.GetObject("pBox.LyricsTimes")));
-            this.pBox.LyricsWords = ((System.Collections.Generic.List<string>)(resources.GetObject("pBox.LyricsWords")));
-            this.pBox.m_Alpha = 255;
             this.pBox.m_CurrentImage = null;
             this.pBox.m_DisplayRectangle = new System.Drawing.Rectangle(0, 0, 0, 0);
             this.pBox.Name = "pBox";
@@ -560,13 +559,11 @@
             this.pBox.OptionShowChords = true;
             this.pBox.Rhythm0Color = System.Drawing.Color.Empty;
             this.pBox.Rhythm1Color = System.Drawing.Color.Empty;
-            this.pBox.RhythmColor0 = System.Drawing.Color.Empty;
-            this.pBox.RhythmColor1 = System.Drawing.Color.Empty;
             this.pBox.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Normal;
             this.pBox.TransparencyKey = System.Drawing.Color.Lime;
-            this.pBox.Txt = "Lorem ipsum dolor sit amet,\rconsectetur adipisicing elit,\rsed do eiusmod tempor i" +
-    "ncididunt\rut labore et dolore magna aliqua.\rUt enim ad minim veniam,";
-            this.pBox.TxtNbLines = 3;
+            //this.pBox.Txt = "Lorem ipsum dolor sit amet,\rconsectetur adipisicing elit,\rsed do eiusmod tempor i" +
+    //"ncididunt\rut labore et dolore magna aliqua.\rUt enim ad minim veniam,";
+            this.pBox.nbLyricsLines = 3;
             // 
             // label9
             // 
@@ -646,6 +643,7 @@
             // 
             // btnInactiveBoderColorPicker
             // 
+            this.btnInactiveBoderColorPicker.Image = global::Karaboss.Properties.Resources.color_picker_black18;
             resources.ApplyResources(this.btnInactiveBoderColorPicker, "btnInactiveBoderColorPicker");
             this.btnInactiveBoderColorPicker.Name = "btnInactiveBoderColorPicker";
             this.btnInactiveBoderColorPicker.UseVisualStyleBackColor = true;
@@ -653,6 +651,7 @@
             // 
             // btnActiveColorBorderPicker
             // 
+            this.btnActiveColorBorderPicker.Image = global::Karaboss.Properties.Resources.color_picker_black18;
             resources.ApplyResources(this.btnActiveColorBorderPicker, "btnActiveColorBorderPicker");
             this.btnActiveColorBorderPicker.Name = "btnActiveColorBorderPicker";
             this.btnActiveColorBorderPicker.UseVisualStyleBackColor = true;
@@ -660,6 +659,7 @@
             // 
             // btnInactiveColorPicker
             // 
+            this.btnInactiveColorPicker.Image = global::Karaboss.Properties.Resources.color_picker_black18;
             resources.ApplyResources(this.btnInactiveColorPicker, "btnInactiveColorPicker");
             this.btnInactiveColorPicker.Name = "btnInactiveColorPicker";
             this.btnInactiveColorPicker.UseVisualStyleBackColor = true;
@@ -667,6 +667,7 @@
             // 
             // btnHighlightColorPicker
             // 
+            this.btnHighlightColorPicker.Image = global::Karaboss.Properties.Resources.color_picker_black18;
             resources.ApplyResources(this.btnHighlightColorPicker, "btnHighlightColorPicker");
             this.btnHighlightColorPicker.Name = "btnHighlightColorPicker";
             this.btnHighlightColorPicker.UseVisualStyleBackColor = true;
@@ -674,6 +675,7 @@
             // 
             // btnActiveColorPicker
             // 
+            this.btnActiveColorPicker.Image = global::Karaboss.Properties.Resources.color_picker_black18;
             resources.ApplyResources(this.btnActiveColorPicker, "btnActiveColorPicker");
             this.btnActiveColorPicker.Name = "btnActiveColorPicker";
             this.btnActiveColorPicker.UseVisualStyleBackColor = true;
