@@ -815,6 +815,14 @@ namespace Karaboss
             pBox.ResetTop();
         }
 
+        public void PlayStopActions(bool isStopped)
+        {
+            // Disable buttons for editing lyrics and chords
+            btnEditLyrics.Enabled = isStopped;
+            btnEditLyricsChords.Enabled = isStopped;
+        }
+
+
         public void StopDiaporama()
         {
             pBox.Terminate();

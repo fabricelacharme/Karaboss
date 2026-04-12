@@ -97,9 +97,10 @@ namespace PicControl
             get { return _kLyrics; } 
             set 
             {
-                if (value == null) return;
+                if (value == null) return;                               
                 _kLyrics = value; 
-                LoadSong();
+                if (_kLyrics.Lines.Count > 0)
+                    LoadSong();
             } 
         }
 
@@ -1164,7 +1165,7 @@ namespace PicControl
             }
 
             // Do not use KLyrics but _kLyrics to be able to use the same LoadSong method for demo and real text
-            _kLyrics = StoreDemoText(lines);
+            _kLyrics = StoreDemoText(lines, 500);
             LoadSong(true);
         }
 
@@ -1180,7 +1181,7 @@ namespace PicControl
         /// </summary>
         /// <param name="tx"></param>
         /// <returns></returns>
-        private kLyrics StoreDemoText(List<string> lines, int tcks = 0)
+        private kLyrics StoreDemoText(List<string> lines, int step,  int tcks = 0)
         {
             int ticks = 0;
             Syllable syll;
@@ -1199,8 +1200,10 @@ namespace PicControl
                         words[j] = words[j].ToUpper();
 
                     string w = words[j] + " ";
-                    ticks = tcks + (i + 1) * (j + 1) * 10;
+                    //ticks = tcks + (i + 1) * (j + 1) * 10;
                     syll = new Syllable() { Text = w, TicksOn = ticks };
+                    ticks += step;
+
                     kLine.Add(syll);
                 }
                 KL.Add(kLine);
@@ -1274,7 +1277,7 @@ namespace PicControl
             lines.Add("eu fugiat nulla pariatur.");
 
             // Do not use KLyrics but _kLyrics to be able to use the same LoadSong method for demo and real text
-            _kLyrics = StoreDemoText(lines);
+            _kLyrics = StoreDemoText(lines, 500);
            
             // Load song with demo text
             LoadSong(true);           

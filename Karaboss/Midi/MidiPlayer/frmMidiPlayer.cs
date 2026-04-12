@@ -51,10 +51,8 @@ using kar;
 
 namespace Karaboss
 {
-
     public partial class frmMidiPlayer : Form
-    {
-        
+    {       
         MusicXmlReader MXmlReader; 
         MusicTxtReader MTxtReader; 
         MusicTxtWriter MTxtWriter;
@@ -873,6 +871,7 @@ namespace Karaboss
                 if (Application.OpenForms.OfType<frmMidiLyrics>().Count() > 0)
                 {
                     frmMidiLyric.BeatDuration = sequence1.Division;
+                    frmMidiLyric.PlayStopActions(false);
                 }
 
                 // start animation balls
@@ -958,6 +957,7 @@ namespace Karaboss
                 {
                     frmMidiLyric.ResetTop();
                     frmMidiLyric.StopDiaporama();
+                    frmMidiLyric.PlayStopActions(true);
                 }
 
                 positionHScrollBarNew.Value = 0;

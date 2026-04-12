@@ -8,14 +8,12 @@ using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
-using TagLib.Id3v2;
+
 
 namespace Karaboss.Mp3
 {
     public partial class frmMp3LyrOptions : Form
     {
-        kLine mp3KaraokeLine = new kLine();
-        kLyrics mp3KaraokeLyrics = new kLyrics();
 
         #region private declarations
 
@@ -85,6 +83,8 @@ namespace Karaboss.Mp3
         // Number of lines to display
         private int _nbLyricsLines;
 
+        // Karaoke display type (FixedLines, ScrollingLinesBottomUp, ScrollingLinesTopDown, TwoLinesSwapped
+        private string KaraokeDisplayType;
 
         #endregion private declarations
 
@@ -107,108 +107,67 @@ namespace Karaboss.Mp3
 
         #region option form settings
 
+        private kLyrics StoreDemoText(List<string> lines, int step, int tcks = 0)
+        {
+            int ticks = 0;
+            Syllable syll;
+            kLine kLine = new kLine();
+            kLyrics KL = new kLyrics();
+
+            for (int i = 0; i < lines.Count; i++)
+            {
+                string l = lines[i];
+                string[] words = l.Split(new Char[] { ' ' });
+
+                kLine = new kLine();
+                for (int j = 0; j < words.Length; j++)
+                {
+                    if (bForceUppercase)
+                        words[j] = words[j].ToUpper();
+
+                    string w = words[j] + " ";                    
+                    syll = new Syllable() { Text = w, StartTime = ticks };
+                    ticks += step;
+
+                    kLine.Add(syll);
+                }
+                KL.Add(kLine);
+            }
+
+            return KL;
+        }
+
+
         private void LoadDefaultOptions()
         {
             // Nb lines to display
             karaokeEffect1.nbLyricsLines = Properties.Settings.Default.TxtNbLines;
 
 
-            mp3KaraokeLine = new kLine();
-            mp3KaraokeLine.Add(new Syllable("Lorem", 0));
-            mp3KaraokeLine.Add(new Syllable(" ipsum", 500));
-            mp3KaraokeLine.Add(new Syllable(" dolor", 1000));
-            mp3KaraokeLine.Add(new Syllable(" sit", 1500));
-            mp3KaraokeLine.Add(new Syllable(" amet", 2000));
-            mp3KaraokeLyrics.Add(mp3KaraokeLine);
+            // Demo text
+            List<string> lines = new List<string>();
+            lines.Add("Lorem ipsum dolor sit amet,");
+            lines.Add("consectetur adipisicing elit,");
+            lines.Add("sed do eiusmod tempor incididunt");
+            lines.Add("ut labore et dolore magna aliqua.");
+            lines.Add("Ut enim ad minim veniam,");
+            lines.Add("quis nostrud exercitation ullamco");
+            lines.Add("laboris nisi ut aliquip");
+            lines.Add("ex ea commodo consequat.");
+            lines.Add("Duis aute irure dolor in reprehenderit");
+            lines.Add("in voluptate velit esse cillum dolore");
+            lines.Add("eu fugiat nulla pariatur.");            
 
-            mp3KaraokeLine = new kLine();
-            mp3KaraokeLine.Add(new Syllable("consectetur", 2500));
-            mp3KaraokeLine.Add(new Syllable(" adipisicing", 3000));
-            mp3KaraokeLine.Add(new Syllable(" elit", 3500));
-            mp3KaraokeLyrics.Add(mp3KaraokeLine);
-
-            mp3KaraokeLine = new kLine();
-            mp3KaraokeLine.Add(new Syllable("sed", 4000));
-            mp3KaraokeLine.Add(new Syllable(" do", 4500));
-            mp3KaraokeLine.Add(new Syllable(" eiusmod", 5000));
-            mp3KaraokeLine.Add(new Syllable(" tempor", 5500));
-            mp3KaraokeLine.Add(new Syllable(" incididunt", 6000));
-            mp3KaraokeLyrics.Add(mp3KaraokeLine);
-
-            mp3KaraokeLine = new kLine();
-            mp3KaraokeLine.Add(new Syllable("ut", 6500));
-            mp3KaraokeLine.Add(new Syllable(" labore", 7000));
-            mp3KaraokeLine.Add(new Syllable("et", 7500));
-            mp3KaraokeLine.Add(new Syllable(" dolore", 8000));
-            mp3KaraokeLine.Add(new Syllable(" magna", 8500));
-            mp3KaraokeLine.Add(new Syllable(" aliqua.", 9000));
-            mp3KaraokeLyrics.Add(mp3KaraokeLine);
-
-            mp3KaraokeLine = new kLine();
-            mp3KaraokeLine.Add(new Syllable("Ut", 9200));
-            mp3KaraokeLine.Add(new Syllable(" enim", 9500));
-            mp3KaraokeLine.Add(new Syllable(" ad", 10000));
-            mp3KaraokeLine.Add(new Syllable(" minim", 10500));
-            mp3KaraokeLine.Add(new Syllable(" veniam", 11000));
-            mp3KaraokeLyrics.Add(mp3KaraokeLine);
-
-            mp3KaraokeLine = new kLine();
-            mp3KaraokeLine.Add(new Syllable("quis", 11500));
-            mp3KaraokeLine.Add(new Syllable(" nostrud", 12000));
-            mp3KaraokeLine.Add(new Syllable(" exercitation", 12500));
-            mp3KaraokeLine.Add(new Syllable(" ullamco", 13000));
-            mp3KaraokeLyrics.Add(mp3KaraokeLine);
-
-            mp3KaraokeLine = new kLine();
-            mp3KaraokeLine.Add(new Syllable("laboris", 14000));
-            mp3KaraokeLine.Add(new Syllable(" nisi", 14500));
-            mp3KaraokeLine.Add(new Syllable(" ut", 15000));
-            mp3KaraokeLine.Add(new Syllable(" aliquip", 15500));
-            mp3KaraokeLyrics.Add(mp3KaraokeLine);
-
-            mp3KaraokeLine = new kLine();
-            mp3KaraokeLine.Add(new Syllable("ex", 16000));
-            mp3KaraokeLine.Add(new Syllable(" ea", 16500));
-            mp3KaraokeLine.Add(new Syllable(" commodo", 17000));
-            mp3KaraokeLine.Add(new Syllable(" consequat.", 17500));
-            mp3KaraokeLyrics.Add(mp3KaraokeLine);
-
-            mp3KaraokeLine = new kLine();
-            mp3KaraokeLine.Add(new Syllable("Duis", 18000));
-            mp3KaraokeLine.Add(new Syllable(" aute", 18500));
-            mp3KaraokeLine.Add(new Syllable(" irure", 19000));
-            mp3KaraokeLine.Add(new Syllable(" dolor", 19500));
-            mp3KaraokeLine.Add(new Syllable(" in", 20000));
-            mp3KaraokeLine.Add(new Syllable(" reprehenderit", 20500));
-            mp3KaraokeLyrics.Add(mp3KaraokeLine);
-
-            mp3KaraokeLine = new kLine();
-            mp3KaraokeLine.Add(new Syllable("in", 20600));
-            mp3KaraokeLine.Add(new Syllable("voluptate", 21000));
-            mp3KaraokeLine.Add(new Syllable(" velit", 21500));
-            mp3KaraokeLine.Add(new Syllable(" esse", 22000));
-            mp3KaraokeLine.Add(new Syllable(" cillum", 22500));
-            mp3KaraokeLine.Add(new Syllable(" dolore", 23000));
-            mp3KaraokeLyrics.Add(mp3KaraokeLine);
-
-            mp3KaraokeLine = new kLine();
-            mp3KaraokeLine.Add(new Syllable("eu", 23500));
-            mp3KaraokeLine.Add(new Syllable(" fugiat", 24000));
-            mp3KaraokeLine.Add(new Syllable(" nulla", 24500));
-            mp3KaraokeLine.Add(new Syllable(" pariatur.", 25000));
-            mp3KaraokeLyrics.Add(mp3KaraokeLine);
-
-            karaokeEffect1.KLyrics = mp3KaraokeLyrics;
-
+            karaokeEffect1.KLyrics = StoreDemoText(lines, 500);
 
             // Needed to put exactly these 4 positions in order to have "Lorem ipsum" in red and "dolor" in green
             // I don't even understand how my creation works            
             karaokeEffect1.TransitionEffect = keffect.KaraokeEffect.TransitionEffects.None;
 
-            karaokeEffect1.SetPos(10);   // index, _line, _lastline put to 0
-            karaokeEffect1.SetPos(510);  // after Lorem
-            karaokeEffect1.SetPos(1010); // after ipsum
-            karaokeEffect1.SetPos(1510); // after dolor
+            karaokeEffect1.SetPos(500);   // index, _line, _lastline put to 0
+            karaokeEffect1.SetPos(1010);  // after Lorem
+            karaokeEffect1.SetPos(1510); // after ipsum
+            karaokeEffect1.SetPos(2010); // after dolor       
 
         }
 
@@ -255,8 +214,9 @@ namespace Karaboss.Mp3
 
 
                 // Karaoke display types
+                // karaokeEffect1 is updated by the options form when changing the display type, so we need to set it before setting the selected item in the combo box
                 PopulateKaraokeDisplayTypes();
-                string KaraokeDisplayType = Properties.Settings.Default.KaraokeDisplayType;
+                KaraokeDisplayType = Properties.Settings.Default.KaraokeDisplayType;
                 foreach (KeyValuePair<string, string> valuePair in cbKaraokeType.Items)
                 {
                     if (!string.IsNullOrEmpty(valuePair.Key))
@@ -365,32 +325,6 @@ namespace Karaboss.Mp3
                         break;
                 }
 
-
-
-                /*
-                string KaraokeDisplayType = Properties.Settings.Default.KaraokeDisplayType;
-                switch (KaraokeDisplayType)
-                {
-                    case "FixedLines":
-                        karaokeEffect1.KaraokeDisplayType = kar.KaraokeDisplayTypes.FixedLines;
-                        break;
-                    case "ScrollingLinesTopDown":
-                        karaokeEffect1.KaraokeDisplayType = kar.KaraokeDisplayTypes.ScrollingLinesTopDown;
-                        break;
-                    case "ScrollingLinesBottomUp":
-                        karaokeEffect1.KaraokeDisplayType = kar.KaraokeDisplayTypes.ScrollingLinesBottomUp;
-                        break;
-                    case "TwoLinesSwapped":
-                        karaokeEffect1.KaraokeDisplayType = kar.KaraokeDisplayTypes.TwoLinesSwapped; break;
-                    case "FourLinesSwapped":
-                        karaokeEffect1.KaraokeDisplayType = kar.KaraokeDisplayTypes.FourLinesSwapped; break;
-                    default:
-                        karaokeEffect1.KaraokeDisplayType = kar.KaraokeDisplayTypes.FixedLines;
-                        break;
-                }
-                */
-
-
                 // Nb lines to display
                 _nbLyricsLines = Properties.Settings.Default.TxtNbLines;
 
@@ -466,6 +400,9 @@ namespace Karaboss.Mp3
             cbKaraokeType.DisplayMember = "Value";
         }
 
+        /// <summary>
+        /// Populate fonts combo box with system fonts. Karafun seems to support only a few fonts, but we will display all the system fonts and let the user choose. If the font is not supported by Karafun, it will be replaced by Arial Black which is the default font in Karafun.
+        /// </summary>
         private void PopulateFonts()
         {
             // Karafun seems to support only a few fonts
@@ -500,13 +437,7 @@ namespace Karaboss.Mp3
             Frames.Add("Shadow", Strings.KfnBorderShadow);
             Frames.Add("Neon", Strings.KfnBorderNeon);
 
-            /*
-            //List<string> lstBorders = new List<string>() { "Aucune bordure", "Fine bordure", "Bordure 1 pixel", "Bordure 2 pixel", "Bordure 3 pixel", "Bordure 4 pixel", "Bordure 5 pixel", "Ombré", "Neon" };
-            List<string> lstBorders = new List<string>() { "NoBorder", "FrameThin", "Frame1", "Frame2", "Frame3", "Frame4", "Frame5", "Shadow", "Neon" };
-            //List<string> lstBorders = new List<string>() { "No border", "Thin border", "1 - pixel border", "2 - pixel border", "3 - pixel border", "4 - pixel border", "5 - pixel border", "Shaded", "Neon" };
-            cbFrame.DataSource = lstBorders;
-            */
-
+     
             cbFrameType.DataSource = new BindingSource(Frames, null);
             cbFrameType.ValueMember = "Key";
             cbFrameType.DisplayMember = "Value";
@@ -588,6 +519,10 @@ namespace Karaboss.Mp3
                 // Lyrics background
                 Properties.Settings.Default.bLyricsBackGround = chkTextBackground.Checked;
 
+
+                // Karaoke display type
+                Properties.Settings.Default.KaraokeDisplayType = KaraokeDisplayType;
+   
                 // Save all
                 Properties.Settings.Default.Save();
 
@@ -762,8 +697,6 @@ namespace Karaboss.Mp3
             Close();
         }
 
-
-
         /// <summary>
         /// Apply changes to frmMp3Lyrics
         /// </summary>
@@ -822,6 +755,9 @@ namespace Karaboss.Mp3
 
                 // directory for slide show
                 frmMp3Lyrics.DirSlideShow = dirSlideShow;
+
+                frmMp3Lyrics.KaraokeDisplayType = KaraokeDisplayType;
+
             }
         }
 
@@ -1117,7 +1053,55 @@ namespace Karaboss.Mp3
             bProgressiveHighlight = chkHighLightProgressive.Checked;
         }
 
+        /// <summary>
+        /// Change the karaoke display type:        
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void cbKaraokeType_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            try
+            {
+                if (cbKaraokeType.SelectedValue.GetType() == typeof(string))
+                {
+                    KaraokeDisplayType = cbKaraokeType.SelectedValue.ToString();
+                }
+                else
+                {
+                    KaraokeDisplayType = ((KeyValuePair<string, string>)cbKaraokeType.SelectedValue).Key.ToString();
+                                    
+                }
 
+                switch (KaraokeDisplayType)
+                {
+                case "FixedLines":
+                    karaokeEffect1.KaraokeDisplayType = KaraokeDisplayTypes.FixedLines;
+                    break;
+                case "ScrollingLinesBottomUp":
+                    karaokeEffect1.KaraokeDisplayType = KaraokeDisplayTypes.ScrollingLinesBottomUp;
+                    break;
+                case "ScrollingLinesTopDown":
+                    karaokeEffect1.KaraokeDisplayType = KaraokeDisplayTypes.ScrollingLinesTopDown;
+                    break;
+                case "TwoLinesSwapped":
+                    karaokeEffect1.KaraokeDisplayType = KaraokeDisplayTypes.TwoLinesSwapped;
+                    break;
+                case "FourLinesSwapped":
+                    karaokeEffect1.KaraokeDisplayType = KaraokeDisplayTypes.FourLinesSwapped;
+                    break;
+
+                default:
+                    karaokeEffect1.KaraokeDisplayType = KaraokeDisplayTypes.FixedLines;
+                    break;
+                }
+
+            } 
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+
+        }
 
         #endregion events
 
@@ -1426,25 +1410,6 @@ namespace Karaboss.Mp3
 
         #endregion functions
 
-        private void cbKaraokeType_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            Console.WriteLine("Selected karaoke type: " + cbKaraokeType.Text + " (" + cbKaraokeType.SelectedIndex + ")");
-
-            if (KaraokeTypes.ContainsValue(cbKaraokeType.Text))
-            {
-                Console.WriteLine("Karaoke type found: " + cbKaraokeType.Text);
-            }
-
-
-            foreach (var item in KaraokeTypes)
-            {
-                Console.WriteLine("Karaoke type: " + item.Key + " - " + item.Value);
-                if (item.Value == cbKaraokeType.Text)
-                {
-                    Console.WriteLine("Selected karaoke type: " + item.Value);
-                    string a  = item.Key;
-                }
-            }
-        }
+        
     }
 }

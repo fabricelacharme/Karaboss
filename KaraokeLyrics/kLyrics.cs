@@ -8,11 +8,12 @@ namespace kar
 
     public enum KaraokeDisplayTypes
     {        
-        FixedLines = 0,
-        ScrollingLinesBottomUp = 1,
-        ScrollingLinesTopDown = 2,
-        TwoLinesSwapped = 3,
-        FourLinesSwapped = 4,
+        None = 0,
+        FixedLines = 1,
+        ScrollingLinesBottomUp = 2,
+        ScrollingLinesTopDown = 3,
+        TwoLinesSwapped = 4,
+        FourLinesSwapped = 5,
     }
 
 

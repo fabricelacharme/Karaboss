@@ -114,7 +114,7 @@ namespace Karaboss.Mp3
         #region Karaoke display types
         
         // Karaoke display types
-        private string _karaokeDisplayType = "FixedLines";
+        private string _karaokeDisplayType = "None";
         public string KaraokeDisplayType
         {
             get { return _karaokeDisplayType; }
@@ -124,6 +124,9 @@ namespace Karaboss.Mp3
                 
                 switch (_karaokeDisplayType)
                 {
+                    case "None":
+                        karaokeEffect1.KaraokeDisplayType = kar.KaraokeDisplayTypes.None;
+                        break;
                     case "FixedLines":
                         karaokeEffect1.KaraokeDisplayType = kar.KaraokeDisplayTypes.FixedLines;
                         break;

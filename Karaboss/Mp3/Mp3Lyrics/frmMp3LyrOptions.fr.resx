@@ -117,96 +117,508 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="lblHighlightColor.Text" xml:space="preserve">
-    <value>Surbrillance</value>
+  <assembly alias="mscorlib" name="mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="radioTransparent.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="radioTransparent.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="radioSolidColor.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="radioSolidColor.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
   </data>
   <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
-  <data name="radioGradient.Size" type="System.Drawing.Size, System.Drawing">
-    <value>103, 17</value>
+  <data name="radioSolidColor.Size" type="System.Drawing.Size, System.Drawing">
+    <value>92, 17</value>
   </data>
-  <data name="btnHighlightColorPicker.Size" type="System.Drawing.Size, System.Drawing">
-    <value>25, 26</value>
+  <data name="radioSolidColor.Text" xml:space="preserve">
+    <value>Couleur pleine</value>
   </data>
-  <data name="lblBorder.Size" type="System.Drawing.Size, System.Drawing">
-    <value>44, 13</value>
+  <data name="radioDiaporama.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
   </data>
-  <data name="chkDisplayBalls.Text" xml:space="preserve">
-    <value>Afficher les balles</value>
+  <data name="radioDiaporama.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
   </data>
-  <data name="label9.Size" type="System.Drawing.Size, System.Drawing">
-    <value>114, 13</value>
+  <data name="btnBgColor.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
   </data>
-  <data name="chkTextBackground.Text" xml:space="preserve">
-    <value>Arrière plan texte</value>
+  <data name="btnBgColor.Visible" type="System.Boolean, mscorlib">
+    <value>False</value>
   </data>
-  <data name="chkTextBackground.Size" type="System.Drawing.Size, System.Drawing">
-    <value>105, 17</value>
+  <data name="btnResetDir.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
   </data>
-  <data name="btnOk.Size" type="System.Drawing.Size, System.Drawing">
-    <value>100, 25</value>
+  <data name="label6.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="label6.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="label6.Size" type="System.Drawing.Size, System.Drawing">
+    <value>89, 13</value>
+  </data>
+  <data name="label6.Text" xml:space="preserve">
+    <value>Format de l'image</value>
+  </data>
+  <data name="cbSizeMode.Text" xml:space="preserve">
+    <value>Normal</value>
+  </data>
+  <data name="label4.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="label4.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="label4.Size" type="System.Drawing.Size, System.Drawing">
+    <value>53, 13</value>
+  </data>
+  <data name="label4.Text" xml:space="preserve">
+    <value>(seconds)</value>
+  </data>
+  <data name="label3.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="label3.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="label3.Size" type="System.Drawing.Size, System.Drawing">
+    <value>58, 13</value>
+  </data>
+  <data name="label3.Text" xml:space="preserve">
+    <value>Fréquence</value>
+  </data>
+  <data name="btnDirSlideShow.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="btnDirSlideShow.Text" xml:space="preserve">
+    <value>Modifier</value>
+  </data>
+  <data name="label2.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="label2.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
   </data>
   <data name="label2.Size" type="System.Drawing.Size, System.Drawing">
     <value>56, 13</value>
   </data>
-  <data name="lblFont.Text" xml:space="preserve">
-    <value>Police</value>
+  <data name="label2.Text" xml:space="preserve">
+    <value>Répertoire</value>
   </data>
-  <data name="chkTopMost.Text" xml:space="preserve">
-    <value>Fenêtre des paroles toujours visible</value>
-  </data>
-  <data name="lblVerticalText.Size" type="System.Drawing.Size, System.Drawing">
-    <value>135, 13</value>
+  <data name="btnCancel.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
   </data>
   <data name="btnCancel.Size" type="System.Drawing.Size, System.Drawing">
     <value>100, 25</value>
   </data>
-  <data name="chkHighLightProgressive.Size" type="System.Drawing.Size, System.Drawing">
-    <value>134, 17</value>
+  <data name="btnCancel.Text" xml:space="preserve">
+    <value>A&amp;nnuler</value>
   </data>
-  <data name="lblFont.Size" type="System.Drawing.Size, System.Drawing">
-    <value>36, 13</value>
+  <data name="btnOk.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="btnOk.Size" type="System.Drawing.Size, System.Drawing">
+    <value>100, 25</value>
+  </data>
+  <data name="btnApply.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
   </data>
   <data name="btnApply.Size" type="System.Drawing.Size, System.Drawing">
     <value>100, 25</value>
   </data>
+  <data name="btnApply.Text" xml:space="preserve">
+    <value>&amp;Appliquer</value>
+  </data>
+  <data name="kLyrics1.Lines" mimetype="application/x-microsoft.net.object.binary.base64">
+    <value>
+        AAEAAAD/////AQAAAAAAAAAMAgAAAJMBS2FyYW9rZUx5cmljcywgVmVyc2lvbj0xLjAuMC4wLCBDdWx0
+        dXJlPW5ldXRyYWwsIFB1YmxpY0tleVRva2VuPW51bGxdXSwgbXNjb3JsaWIsIFZlcnNpb249NC4wLjAu
+        MCwgQ3VsdHVyZT1uZXV0cmFsLCBQdWJsaWNLZXlUb2tlbj1iNzdhNWM1NjE5MzRlMDg5DAMAAABES2Fy
+        YW9rZUx5cmljcywgVmVyc2lvbj0xLjAuMC4wLCBDdWx0dXJlPW5ldXRyYWwsIFB1YmxpY0tleVRva2Vu
+        PW51bGwFAQAAACxTeXN0ZW0uQ29sbGVjdGlvbnMuR2VuZXJpYy5MaXN0YDFbW2thci5rTGluZQMAAAAG
+        X2l0ZW1zBV9zaXplCF92ZXJzaW9uBAAAC2thci5rTGluZVtdAwAAAAgIAgAAAAkEAAAAAAAAAAAAAAAH
+        BAAAAAABAAAAAAAAAAQJa2FyLmtMaW5lAwAAAAs=
+</value>
+  </data>
+  <data name="karaokeEffect1.Size" type="System.Drawing.Size, System.Drawing">
+    <value>385, 226</value>
+  </data>
+  <data name="chkHighLightProgressive.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="chkHighLightProgressive.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="chkHighLightProgressive.Size" type="System.Drawing.Size, System.Drawing">
+    <value>134, 17</value>
+  </data>
+  <data name="chkHighLightProgressive.Text" xml:space="preserve">
+    <value>Remplissage progressif</value>
+  </data>
+  <data name="chkDisplayBalls.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="chkDisplayBalls.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="chkDisplayBalls.Size" type="System.Drawing.Size, System.Drawing">
+    <value>108, 17</value>
+  </data>
+  <data name="chkDisplayBalls.Text" xml:space="preserve">
+    <value>Afficher les balles</value>
+  </data>
+  <data name="pictureBox2.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="pictureBox1.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="cbRhythm1.Size" type="System.Drawing.Size, System.Drawing">
+    <value>140, 21</value>
+  </data>
+  <data name="cbRhythm0.Size" type="System.Drawing.Size, System.Drawing">
+    <value>140, 21</value>
+  </data>
+  <data name="cbGrad1.Size" type="System.Drawing.Size, System.Drawing">
+    <value>140, 21</value>
+  </data>
+  <data name="radioRhythm.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="radioRhythm.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="radioRhythm.Size" type="System.Drawing.Size, System.Drawing">
+    <value>67, 17</value>
+  </data>
+  <data name="radioRhythm.Text" xml:space="preserve">
+    <value>Rhythme</value>
+  </data>
+  <data name="radioGradient.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="radioGradient.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="radioGradient.Size" type="System.Drawing.Size, System.Drawing">
+    <value>103, 17</value>
+  </data>
+  <data name="radioGradient.Text" xml:space="preserve">
+    <value>Gradient couleur</value>
+  </data>
+  <data name="btnBgColorPicker.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="btnBgColorPicker.Text" xml:space="preserve">
+    <value>/</value>
+  </data>
+  <data name="btnBgColorPicker.Visible" type="System.Boolean, mscorlib">
+    <value>False</value>
+  </data>
+  <data name="txtBgColor.MaxLength" type="System.Int32, mscorlib">
+    <value>7</value>
+  </data>
+  <data name="txtBgColor.Visible" type="System.Boolean, mscorlib">
+    <value>False</value>
+  </data>
+  <data name="grpBoxBackGround.Text" xml:space="preserve">
+    <value>Background</value>
+  </data>
+  <data name="chkTopMost.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="chkTopMost.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="chkTopMost.Size" type="System.Drawing.Size, System.Drawing">
+    <value>191, 17</value>
+  </data>
+  <data name="chkTopMost.Text" xml:space="preserve">
+    <value>Fenêtre des paroles toujours visible</value>
+  </data>
+  <data name="lblVerticalText.Font" type="System.Drawing.Font, System.Drawing">
+    <value>Microsoft Sans Serif, 8.25pt, style=Bold</value>
+  </data>
+  <data name="lblVerticalText.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="lblVerticalText.Size" type="System.Drawing.Size, System.Drawing">
+    <value>135, 13</value>
+  </data>
+  <data name="btnActiveColor.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="btnHighlightColor.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="btnInactiveColor.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="btnActiveBorderColor.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="picActiveColor.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="picHighlightColor.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="cbFrameType.Font" type="System.Drawing.Font, System.Drawing">
+    <value>Calibri, 9pt</value>
+  </data>
+  <data name="cbFrameType.Size" type="System.Drawing.Size, System.Drawing">
+    <value>157, 22</value>
+  </data>
+  <data name="picInactiveColor.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="lblBorder.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="lblBorder.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="lblBorder.Size" type="System.Drawing.Size, System.Drawing">
+    <value>44, 13</value>
+  </data>
+  <data name="lblBorder.Text" xml:space="preserve">
+    <value>Bordure</value>
+  </data>
+  <data name="picActiveBorderColor.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="btnInactiveBoderColorPicker.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="btnInactiveBoderColorPicker.Size" type="System.Drawing.Size, System.Drawing">
+    <value>25, 26</value>
+  </data>
+  <data name="btnInactiveBoderColorPicker.Text" xml:space="preserve">
+    <value>/</value>
+  </data>
+  <data name="btnActiveColorBorderPicker.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="btnActiveColorBorderPicker.Size" type="System.Drawing.Size, System.Drawing">
+    <value>25, 26</value>
+  </data>
+  <data name="btnActiveColorBorderPicker.Text" xml:space="preserve">
+    <value>/</value>
+  </data>
+  <data name="btnInactiveColorPicker.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="btnInactiveColorPicker.Size" type="System.Drawing.Size, System.Drawing">
+    <value>25, 26</value>
+  </data>
+  <data name="btnInactiveColorPicker.Text" xml:space="preserve">
+    <value>/</value>
+  </data>
+  <data name="chkTextBackground.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="chkTextBackground.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="chkTextBackground.Size" type="System.Drawing.Size, System.Drawing">
+    <value>105, 17</value>
+  </data>
+  <data name="chkTextBackground.Text" xml:space="preserve">
+    <value>Arrière plan texte</value>
+  </data>
+  <data name="btnHighlightColorPicker.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="btnHighlightColorPicker.Size" type="System.Drawing.Size, System.Drawing">
+    <value>25, 26</value>
+  </data>
+  <data name="btnHighlightColorPicker.Text" xml:space="preserve">
+    <value>/</value>
+  </data>
+  <data name="lblFont.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="lblFont.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="lblFont.Size" type="System.Drawing.Size, System.Drawing">
+    <value>36, 13</value>
+  </data>
+  <data name="lblFont.Text" xml:space="preserve">
+    <value>Police</value>
+  </data>
+  <data name="btnActiveColorPicker.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="btnActiveColorPicker.Size" type="System.Drawing.Size, System.Drawing">
+    <value>25, 26</value>
+  </data>
+  <data name="btnActiveColorPicker.Text" xml:space="preserve">
+    <value>/</value>
+  </data>
+  <data name="chkTextUppercase.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="chkTextUppercase.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="chkTextUppercase.Size" type="System.Drawing.Size, System.Drawing">
+    <value>126, 17</value>
+  </data>
   <data name="chkTextUppercase.Text" xml:space="preserve">
     <value>Mettre en majuscules</value>
   </data>
-  <data name="cbKaraokeType.Size" type="System.Drawing.Size, System.Drawing">
-    <value>121, 22</value>
+  <data name="txtInactiveBorderColor.MaxLength" type="System.Int32, mscorlib">
+    <value>7</value>
   </data>
-  <data name="radioSolidColor.Size" type="System.Drawing.Size, System.Drawing">
-    <value>92, 17</value>
+  <data name="label9.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
   </data>
-  <data name="label6.Size" type="System.Drawing.Size, System.Drawing">
+  <data name="label9.Font" type="System.Drawing.Font, System.Drawing">
+    <value>Microsoft Sans Serif, 8.25pt</value>
+  </data>
+  <data name="label9.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="label9.Size" type="System.Drawing.Size, System.Drawing">
+    <value>114, 13</value>
+  </data>
+  <data name="label9.Text" xml:space="preserve">
+    <value>Couleur bordure active</value>
+  </data>
+  <data name="txtActiveBorderColor.MaxLength" type="System.Int32, mscorlib">
+    <value>7</value>
+  </data>
+  <data name="btnInactiveBorderColor.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="label11.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="label11.Font" type="System.Drawing.Font, System.Drawing">
+    <value>Microsoft Sans Serif, 8.25pt</value>
+  </data>
+  <data name="label11.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="label11.Size" type="System.Drawing.Size, System.Drawing">
+    <value>122, 13</value>
+  </data>
+  <data name="label11.Text" xml:space="preserve">
+    <value>Couleur bordure inactive</value>
+  </data>
+  <data name="picInactiveBorderColor.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="txtInactiveColor.MaxLength" type="System.Int32, mscorlib">
+    <value>7</value>
+  </data>
+  <data name="lblActiveColor.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="lblActiveColor.Font" type="System.Drawing.Font, System.Drawing">
+    <value>Microsoft Sans Serif, 8.25pt</value>
+  </data>
+  <data name="lblActiveColor.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="lblActiveColor.Size" type="System.Drawing.Size, System.Drawing">
+    <value>75, 13</value>
+  </data>
+  <data name="lblActiveColor.Text" xml:space="preserve">
+    <value>Couleur active</value>
+  </data>
+  <data name="lblInactiveColor.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="lblInactiveColor.Font" type="System.Drawing.Font, System.Drawing">
+    <value>Microsoft Sans Serif, 8.25pt</value>
+  </data>
+  <data name="lblInactiveColor.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="lblInactiveColor.Size" type="System.Drawing.Size, System.Drawing">
+    <value>83, 13</value>
+  </data>
+  <data name="lblInactiveColor.Text" xml:space="preserve">
+    <value>Couleur inactive</value>
+  </data>
+  <data name="txtActiveColor.MaxLength" type="System.Int32, mscorlib">
+    <value>7</value>
+  </data>
+  <data name="lblHighlightColor.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="lblHighlightColor.Font" type="System.Drawing.Font, System.Drawing">
+    <value>Microsoft Sans Serif, 8.25pt</value>
+  </data>
+  <data name="lblHighlightColor.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="lblHighlightColor.Size" type="System.Drawing.Size, System.Drawing">
+    <value>62, 13</value>
+  </data>
+  <data name="lblHighlightColor.Text" xml:space="preserve">
+    <value>Surbrillance</value>
+  </data>
+  <data name="label12.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="label12.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="label12.Size" type="System.Drawing.Size, System.Drawing">
+    <value>87, 13</value>
+  </data>
+  <data name="label12.Text" xml:space="preserve">
+    <value>Position verticale</value>
+  </data>
+  <data name="lblNumberOfLines.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="lblNumberOfLines.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="lblNumberOfLines.Size" type="System.Drawing.Size, System.Drawing">
     <value>89, 13</value>
   </data>
   <data name="lblNumberOfLines.Text" xml:space="preserve">
     <value>Nombre de lignes</value>
   </data>
-  <data name="label4.Text" xml:space="preserve">
-    <value>(seconds)</value>
+  <data name="UpDownNbLines.Size" type="System.Drawing.Size, System.Drawing">
+    <value>35, 20</value>
   </data>
-  <data name="label12.Size" type="System.Drawing.Size, System.Drawing">
-    <value>87, 13</value>
+  <data name="cbOptionsTextDisplay.Font" type="System.Drawing.Font, System.Drawing">
+    <value>Calibri, 9pt</value>
   </data>
   <data name="cbOptionsTextDisplay.Size" type="System.Drawing.Size, System.Drawing">
     <value>121, 22</value>
   </data>
-  <data name="cbRhythm1.Size" type="System.Drawing.Size, System.Drawing">
-    <value>140, 21</value>
+  <data name="cbOptionsTextDisplay.Text" xml:space="preserve">
+    <value>Center</value>
   </data>
-  <data name="chkTopMost.Size" type="System.Drawing.Size, System.Drawing">
-    <value>191, 17</value>
+  <data name="cbKaraokeType.Font" type="System.Drawing.Font, System.Drawing">
+    <value>Calibri, 9pt</value>
   </data>
-  <data name="lblInactiveColor.Text" xml:space="preserve">
-    <value>Couleur inactive</value>
+  <data name="cbKaraokeType.Size" type="System.Drawing.Size, System.Drawing">
+    <value>174, 22</value>
   </data>
-  <data name="radioSolidColor.Text" xml:space="preserve">
-    <value>Couleur pleine</value>
+  <data name="label1.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
   </data>
-  <data name="label3.Size" type="System.Drawing.Size, System.Drawing">
-    <value>58, 13</value>
+  <data name="label1.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="label1.Size" type="System.Drawing.Size, System.Drawing">
+    <value>88, 13</value>
+  </data>
+  <data name="label1.Text" xml:space="preserve">
+    <value>Type de karaoké</value>
   </data>
   <data name="$this.Icon" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
@@ -283,406 +695,5 @@
         AAAAAAAAAAHAAAAH4ADAB/AD4A/wB+AP8AfAB/ADAAfgAAABwAAAAAAAAAAAAIAAAACAAAABwAAAA8AA
         AAPgAAAH8MADB/HAA8//wAP//8AD///AA/8=
 </value>
-  </data>
-  <data name="label1.Size" type="System.Drawing.Size, System.Drawing">
-    <value>88, 13</value>
-  </data>
-  <data name="btnActiveColorPicker.Size" type="System.Drawing.Size, System.Drawing">
-    <value>25, 26</value>
-  </data>
-  <data name="radioRhythm.Size" type="System.Drawing.Size, System.Drawing">
-    <value>67, 17</value>
-  </data>
-  <data name="btnInactiveColorPicker.Size" type="System.Drawing.Size, System.Drawing">
-    <value>25, 26</value>
-  </data>
-  <data name="chkDisplayBalls.Size" type="System.Drawing.Size, System.Drawing">
-    <value>108, 17</value>
-  </data>
-  <data name="btnDirSlideShow.Text" xml:space="preserve">
-    <value>Modifier</value>
-  </data>
-  <data name="radioRhythm.Text" xml:space="preserve">
-    <value>Rhythme</value>
-  </data>
-  <data name="label11.Text" xml:space="preserve">
-    <value>Couleur bordure inactive</value>
-  </data>
-  <data name="btnCancel.Text" xml:space="preserve">
-    <value>A&amp;nnuler</value>
-  </data>
-  <data name="radioGradient.Text" xml:space="preserve">
-    <value>Gradient couleur</value>
-  </data>
-  <data name="cbGrad1.Size" type="System.Drawing.Size, System.Drawing">
-    <value>140, 21</value>
-  </data>
-  <data name="label3.Text" xml:space="preserve">
-    <value>Fréquence</value>
-  </data>
-  <data name="lblActiveColor.Text" xml:space="preserve">
-    <value>Couleur active</value>
-  </data>
-  <data name="label2.Text" xml:space="preserve">
-    <value>Répertoire</value>
-  </data>
-  <data name="lblActiveColor.Size" type="System.Drawing.Size, System.Drawing">
-    <value>75, 13</value>
-  </data>
-  <data name="cbFrameType.Size" type="System.Drawing.Size, System.Drawing">
-    <value>157, 22</value>
-  </data>
-  <data name="chkTextUppercase.Size" type="System.Drawing.Size, System.Drawing">
-    <value>126, 17</value>
-  </data>
-  <data name="karaokeEffect1.Size" type="System.Drawing.Size, System.Drawing">
-    <value>385, 226</value>
-  </data>
-  <data name="label1.Text" xml:space="preserve">
-    <value>Type de karaoké</value>
-  </data>
-  <data name="cbRhythm0.Size" type="System.Drawing.Size, System.Drawing">
-    <value>140, 21</value>
-  </data>
-  <data name="lblInactiveColor.Size" type="System.Drawing.Size, System.Drawing">
-    <value>83, 13</value>
-  </data>
-  <data name="label9.Text" xml:space="preserve">
-    <value>Couleur bordure active</value>
-  </data>
-  <data name="label6.Text" xml:space="preserve">
-    <value>Format de l'image</value>
-  </data>
-  <data name="label4.Size" type="System.Drawing.Size, System.Drawing">
-    <value>53, 13</value>
-  </data>
-  <data name="btnInactiveBoderColorPicker.Size" type="System.Drawing.Size, System.Drawing">
-    <value>25, 26</value>
-  </data>
-  <data name="lblVerticalText.Font" type="System.Drawing.Font, System.Drawing">
-    <value>Microsoft Sans Serif, 8.25pt, style=Bold</value>
-  </data>
-  <data name="btnActiveColorBorderPicker.Size" type="System.Drawing.Size, System.Drawing">
-    <value>25, 26</value>
-  </data>
-  <data name="btnApply.Text" xml:space="preserve">
-    <value>&amp;Appliquer</value>
-  </data>
-  <data name="UpDownNbLines.Size" type="System.Drawing.Size, System.Drawing">
-    <value>35, 20</value>
-  </data>
-  <data name="lblBorder.Text" xml:space="preserve">
-    <value>Bordure</value>
-  </data>
-  <data name="lblNumberOfLines.Size" type="System.Drawing.Size, System.Drawing">
-    <value>89, 13</value>
-  </data>
-  <data name="lblHighlightColor.Size" type="System.Drawing.Size, System.Drawing">
-    <value>62, 13</value>
-  </data>
-  <data name="label12.Text" xml:space="preserve">
-    <value>Position verticale</value>
-  </data>
-  <data name="label11.Size" type="System.Drawing.Size, System.Drawing">
-    <value>122, 13</value>
-  </data>
-  <data name="chkHighLightProgressive.Text" xml:space="preserve">
-    <value>Remplissage progressif</value>
-  </data>
-  <assembly alias="mscorlib" name="mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="radioTransparent.AutoSize" type="System.Boolean, mscorlib">
-    <value>True</value>
-  </data>
-  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="radioTransparent.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
-    <value>NoControl</value>
-  </data>
-  <data name="radioSolidColor.AutoSize" type="System.Boolean, mscorlib">
-    <value>True</value>
-  </data>
-  <data name="radioSolidColor.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
-    <value>NoControl</value>
-  </data>
-  <data name="radioDiaporama.AutoSize" type="System.Boolean, mscorlib">
-    <value>True</value>
-  </data>
-  <data name="radioDiaporama.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
-    <value>NoControl</value>
-  </data>
-  <data name="btnBgColor.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
-    <value>NoControl</value>
-  </data>
-  <data name="btnBgColor.Visible" type="System.Boolean, mscorlib">
-    <value>False</value>
-  </data>
-  <data name="btnResetDir.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
-    <value>NoControl</value>
-  </data>
-  <data name="label6.AutoSize" type="System.Boolean, mscorlib">
-    <value>True</value>
-  </data>
-  <data name="label6.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
-    <value>NoControl</value>
-  </data>
-  <data name="cbSizeMode.Text" xml:space="preserve">
-    <value>Normal</value>
-  </data>
-  <data name="label4.AutoSize" type="System.Boolean, mscorlib">
-    <value>True</value>
-  </data>
-  <data name="label4.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
-    <value>NoControl</value>
-  </data>
-  <data name="label3.AutoSize" type="System.Boolean, mscorlib">
-    <value>True</value>
-  </data>
-  <data name="label3.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
-    <value>NoControl</value>
-  </data>
-  <data name="btnDirSlideShow.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
-    <value>NoControl</value>
-  </data>
-  <data name="label2.AutoSize" type="System.Boolean, mscorlib">
-    <value>True</value>
-  </data>
-  <data name="label2.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
-    <value>NoControl</value>
-  </data>
-  <data name="btnCancel.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
-    <value>NoControl</value>
-  </data>
-  <data name="btnOk.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
-    <value>NoControl</value>
-  </data>
-  <data name="btnApply.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
-    <value>NoControl</value>
-  </data>
-  <data name="chkHighLightProgressive.AutoSize" type="System.Boolean, mscorlib">
-    <value>True</value>
-  </data>
-  <data name="chkHighLightProgressive.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
-    <value>NoControl</value>
-  </data>
-  <data name="chkDisplayBalls.AutoSize" type="System.Boolean, mscorlib">
-    <value>True</value>
-  </data>
-  <data name="chkDisplayBalls.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
-    <value>NoControl</value>
-  </data>
-  <data name="pictureBox2.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
-    <value>NoControl</value>
-  </data>
-  <data name="pictureBox1.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
-    <value>NoControl</value>
-  </data>
-  <data name="radioRhythm.AutoSize" type="System.Boolean, mscorlib">
-    <value>True</value>
-  </data>
-  <data name="radioRhythm.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
-    <value>NoControl</value>
-  </data>
-  <data name="radioGradient.AutoSize" type="System.Boolean, mscorlib">
-    <value>True</value>
-  </data>
-  <data name="radioGradient.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
-    <value>NoControl</value>
-  </data>
-  <data name="btnBgColorPicker.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
-    <value>NoControl</value>
-  </data>
-  <data name="btnBgColorPicker.Text" xml:space="preserve">
-    <value>/</value>
-  </data>
-  <data name="btnBgColorPicker.Visible" type="System.Boolean, mscorlib">
-    <value>False</value>
-  </data>
-  <data name="txtBgColor.MaxLength" type="System.Int32, mscorlib">
-    <value>7</value>
-  </data>
-  <data name="txtBgColor.Visible" type="System.Boolean, mscorlib">
-    <value>False</value>
-  </data>
-  <data name="grpBoxBackGround.Text" xml:space="preserve">
-    <value>Background</value>
-  </data>
-  <data name="chkTopMost.AutoSize" type="System.Boolean, mscorlib">
-    <value>True</value>
-  </data>
-  <data name="chkTopMost.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
-    <value>NoControl</value>
-  </data>
-  <data name="lblVerticalText.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
-    <value>NoControl</value>
-  </data>
-  <data name="btnActiveColor.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
-    <value>NoControl</value>
-  </data>
-  <data name="btnHighlightColor.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
-    <value>NoControl</value>
-  </data>
-  <data name="btnInactiveColor.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
-    <value>NoControl</value>
-  </data>
-  <data name="btnActiveBorderColor.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
-    <value>NoControl</value>
-  </data>
-  <data name="picActiveColor.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
-    <value>NoControl</value>
-  </data>
-  <data name="picHighlightColor.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
-    <value>NoControl</value>
-  </data>
-  <data name="cbFrameType.Font" type="System.Drawing.Font, System.Drawing">
-    <value>Calibri, 9pt</value>
-  </data>
-  <data name="picInactiveColor.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
-    <value>NoControl</value>
-  </data>
-  <data name="lblBorder.AutoSize" type="System.Boolean, mscorlib">
-    <value>True</value>
-  </data>
-  <data name="lblBorder.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
-    <value>NoControl</value>
-  </data>
-  <data name="picActiveBorderColor.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
-    <value>NoControl</value>
-  </data>
-  <data name="btnInactiveBoderColorPicker.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
-    <value>NoControl</value>
-  </data>
-  <data name="btnInactiveBoderColorPicker.Text" xml:space="preserve">
-    <value>/</value>
-  </data>
-  <data name="btnActiveColorBorderPicker.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
-    <value>NoControl</value>
-  </data>
-  <data name="btnActiveColorBorderPicker.Text" xml:space="preserve">
-    <value>/</value>
-  </data>
-  <data name="btnInactiveColorPicker.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
-    <value>NoControl</value>
-  </data>
-  <data name="btnInactiveColorPicker.Text" xml:space="preserve">
-    <value>/</value>
-  </data>
-  <data name="chkTextBackground.AutoSize" type="System.Boolean, mscorlib">
-    <value>True</value>
-  </data>
-  <data name="chkTextBackground.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
-    <value>NoControl</value>
-  </data>
-  <data name="btnHighlightColorPicker.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
-    <value>NoControl</value>
-  </data>
-  <data name="btnHighlightColorPicker.Text" xml:space="preserve">
-    <value>/</value>
-  </data>
-  <data name="lblFont.AutoSize" type="System.Boolean, mscorlib">
-    <value>True</value>
-  </data>
-  <data name="lblFont.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
-    <value>NoControl</value>
-  </data>
-  <data name="btnActiveColorPicker.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
-    <value>NoControl</value>
-  </data>
-  <data name="btnActiveColorPicker.Text" xml:space="preserve">
-    <value>/</value>
-  </data>
-  <data name="chkTextUppercase.AutoSize" type="System.Boolean, mscorlib">
-    <value>True</value>
-  </data>
-  <data name="chkTextUppercase.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
-    <value>NoControl</value>
-  </data>
-  <data name="txtInactiveBorderColor.MaxLength" type="System.Int32, mscorlib">
-    <value>7</value>
-  </data>
-  <data name="label9.AutoSize" type="System.Boolean, mscorlib">
-    <value>True</value>
-  </data>
-  <data name="label9.Font" type="System.Drawing.Font, System.Drawing">
-    <value>Microsoft Sans Serif, 8.25pt</value>
-  </data>
-  <data name="label9.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
-    <value>NoControl</value>
-  </data>
-  <data name="txtActiveBorderColor.MaxLength" type="System.Int32, mscorlib">
-    <value>7</value>
-  </data>
-  <data name="btnInactiveBorderColor.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
-    <value>NoControl</value>
-  </data>
-  <data name="label11.AutoSize" type="System.Boolean, mscorlib">
-    <value>True</value>
-  </data>
-  <data name="label11.Font" type="System.Drawing.Font, System.Drawing">
-    <value>Microsoft Sans Serif, 8.25pt</value>
-  </data>
-  <data name="label11.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
-    <value>NoControl</value>
-  </data>
-  <data name="picInactiveBorderColor.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
-    <value>NoControl</value>
-  </data>
-  <data name="txtInactiveColor.MaxLength" type="System.Int32, mscorlib">
-    <value>7</value>
-  </data>
-  <data name="lblActiveColor.AutoSize" type="System.Boolean, mscorlib">
-    <value>True</value>
-  </data>
-  <data name="lblActiveColor.Font" type="System.Drawing.Font, System.Drawing">
-    <value>Microsoft Sans Serif, 8.25pt</value>
-  </data>
-  <data name="lblActiveColor.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
-    <value>NoControl</value>
-  </data>
-  <data name="lblInactiveColor.AutoSize" type="System.Boolean, mscorlib">
-    <value>True</value>
-  </data>
-  <data name="lblInactiveColor.Font" type="System.Drawing.Font, System.Drawing">
-    <value>Microsoft Sans Serif, 8.25pt</value>
-  </data>
-  <data name="lblInactiveColor.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
-    <value>NoControl</value>
-  </data>
-  <data name="txtActiveColor.MaxLength" type="System.Int32, mscorlib">
-    <value>7</value>
-  </data>
-  <data name="lblHighlightColor.AutoSize" type="System.Boolean, mscorlib">
-    <value>True</value>
-  </data>
-  <data name="lblHighlightColor.Font" type="System.Drawing.Font, System.Drawing">
-    <value>Microsoft Sans Serif, 8.25pt</value>
-  </data>
-  <data name="lblHighlightColor.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
-    <value>NoControl</value>
-  </data>
-  <data name="label12.AutoSize" type="System.Boolean, mscorlib">
-    <value>True</value>
-  </data>
-  <data name="label12.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
-    <value>NoControl</value>
-  </data>
-  <data name="lblNumberOfLines.AutoSize" type="System.Boolean, mscorlib">
-    <value>True</value>
-  </data>
-  <data name="lblNumberOfLines.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
-    <value>NoControl</value>
-  </data>
-  <data name="cbOptionsTextDisplay.Font" type="System.Drawing.Font, System.Drawing">
-    <value>Calibri, 9pt</value>
-  </data>
-  <data name="cbOptionsTextDisplay.Text" xml:space="preserve">
-    <value>Center</value>
-  </data>
-  <data name="cbKaraokeType.Font" type="System.Drawing.Font, System.Drawing">
-    <value>Calibri, 9pt</value>
-  </data>
-  <data name="label1.AutoSize" type="System.Boolean, mscorlib">
-    <value>True</value>
-  </data>
-  <data name="label1.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
-    <value>NoControl</value>
   </data>
 </root>

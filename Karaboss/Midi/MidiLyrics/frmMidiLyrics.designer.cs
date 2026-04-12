@@ -231,7 +231,7 @@
             this.pBox.ChordFont = new System.Drawing.Font("Comic Sans MS", 8.25F);
             this.pBox.CurrentTextPos = 2;
             this.pBox.CurrentTime = 3;
-            this.pBox.DirSlideShow = null;
+            this.pBox.DirSlideShow = "C:\\Users\\Fabrice\\AppData\\Local\\Microsoft® Visual Studio®";
             resources.ApplyResources(this.pBox, "pBox");
             this.pBox.FrameType = "Frame1";
             this.pBox.FreqDirSlideShow = 0;
@@ -249,14 +249,14 @@
             this.pBox.m_CurrentImage = null;
             this.pBox.m_DisplayRectangle = new System.Drawing.Rectangle(0, 0, 0, 0);
             this.pBox.Name = "pBox";
+            this.pBox.nbLyricsLines = 3;
             this.pBox.OptionBackground = "SolidColor";
             this.pBox.OptionDisplay = PicControl.pictureBoxControl.OptionsDisplay.Top;
             this.pBox.OptionShowChords = true;
             this.pBox.Rhythm0Color = System.Drawing.Color.Empty;
             this.pBox.Rhythm1Color = System.Drawing.Color.Empty;
             this.pBox.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Normal;
-            this.pBox.TransparencyKey = System.Drawing.Color.Lime;            
-            this.pBox.nbLyricsLines = 3;
+            this.pBox.TransparencyKey = System.Drawing.Color.Lime;
             // 
             // timer1
             // 

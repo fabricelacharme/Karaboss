@@ -115,7 +115,8 @@ namespace keffect
                 if (value == null) return;
 
                 _kLyrics = value;
-                Init();
+                if(_kLyrics != null && _kLyrics.Lines.Count > 0)
+                    Init();
             }
         }
 

@@ -384,13 +384,7 @@ namespace Karaboss
             Frames.Add("Shadow", Strings.KfnBorderShadow);
             Frames.Add("Neon", Strings.KfnBorderNeon);
 
-            /*
-            //List<string> lstBorders = new List<string>() { "Aucune bordure", "Fine bordure", "Bordure 1 pixel", "Bordure 2 pixel", "Bordure 3 pixel", "Bordure 4 pixel", "Bordure 5 pixel", "Ombré", "Neon" };
-            List<string> lstBorders = new List<string>() { "NoBorder", "FrameThin", "Frame1", "Frame2", "Frame3", "Frame4", "Frame5", "Shadow", "Neon" };
-            //List<string> lstBorders = new List<string>() { "No border", "Thin border", "1 - pixel border", "2 - pixel border", "3 - pixel border", "4 - pixel border", "5 - pixel border", "Shaded", "Neon" };
-            cbFrame.DataSource = lstBorders;
-            */
-
+        
             cbFrameType.DataSource = new BindingSource(Frames, null);
             cbFrameType.ValueMember = "Key";
             cbFrameType.DisplayMember = "Value";

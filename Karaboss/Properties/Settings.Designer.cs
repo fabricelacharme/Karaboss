@@ -2002,7 +2002,7 @@ namespace Karaboss.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("FixedLines")]
+        [global::System.Configuration.DefaultSettingValueAttribute("None")]
         public string KaraokeDisplayType {
             get {
                 return ((string)(this["KaraokeDisplayType"]));
