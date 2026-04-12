@@ -497,5 +497,8 @@
     <Setting Name="frmKfnCreateLocation" Type="System.Drawing.Point" Scope="User">
       <Value Profile="(Default)">200, 200</Value>
     </Setting>
+    <Setting Name="KaraokeDisplayType" Type="System.String" Scope="User">
+      <Value Profile="(Default)">FixedLines</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

@@ -64,10 +64,7 @@ namespace Karaboss.Mp3
 
         #endregion
         
-        private long _timerintervall = 50;
-
-        private frmMp3LyrOptions frmMp3LyrOptions;
-
+        private long _timerintervall = 50;        
         private int currentTextPos = 0;
              
 
@@ -112,6 +109,42 @@ namespace Karaboss.Mp3
         }
 
         #endregion Font
+
+
+        #region Karaoke display types
+        
+        // Karaoke display types
+        private string _karaokeDisplayType = "FixedLines";
+        public string KaraokeDisplayType
+        {
+            get { return _karaokeDisplayType; }
+            set
+            {
+                _karaokeDisplayType = value;    
+                
+                switch (_karaokeDisplayType)
+                {
+                    case "FixedLines":
+                        karaokeEffect1.KaraokeDisplayType = kar.KaraokeDisplayTypes.FixedLines;
+                        break;
+                    case "ScrollingLinesTopDown":
+                        karaokeEffect1.KaraokeDisplayType = kar.KaraokeDisplayTypes.ScrollingLinesTopDown;
+                        break;
+                    case "ScrollingLinesBottomUp":
+                        karaokeEffect1.KaraokeDisplayType = kar.KaraokeDisplayTypes.ScrollingLinesBottomUp;
+                        break;
+                    case "TwoLinesSwapped":
+                            karaokeEffect1.KaraokeDisplayType = kar.KaraokeDisplayTypes.TwoLinesSwapped; break;
+                    case "FourLinesSwapped":
+                            karaokeEffect1.KaraokeDisplayType = kar.KaraokeDisplayTypes.FourLinesSwapped; break;
+                    default:
+                        karaokeEffect1.KaraokeDisplayType = kar.KaraokeDisplayTypes.FixedLines;
+                        break;
+                }               
+            }
+        }
+
+        #endregion Karaoke display types
 
 
         // Frame type
@@ -500,6 +533,9 @@ namespace Karaboss.Mp3
         {
             try
             {
+                // Karaoke display type
+                KaraokeDisplayType = Properties.Settings.Default.KaraokeDisplayType;               // setting this property set the karaokeEffect1.KaraokeDisplayType property
+
                 // Lyrics border effect 
                 _frametype = Properties.Settings.Default.FrameType;
                 karaokeEffect1.FrameType = _frametype;
@@ -809,26 +845,19 @@ namespace Karaboss.Mp3
 
             // Karaoke Effect
             karaokeEffect1.TransitionEffect = keffect.KaraokeEffect.TransitionEffects.None;                                                            
-            karaokeEffect1.mp3KaraokeLyrics = Mp3LyricsMgmtHelper.mp3KaraokeLyrics;
+            karaokeEffect1.KLyrics = Mp3LyricsMgmtHelper.mp3KaraokeLyrics;
 
             karaokeEffect1.nbLyricsLines = 3;
         }
 
+
         /// <summary>
-        /// Send lyrics to KaraokeEffect
+        /// Load lyrics into karaokeEffect1.KLyrics
         /// </summary>
         /// <param name="lyrics"></param>
-        //public void SetLyrics(List<List<kSyncText>> lyrics)
-        //{
-        //    karaokeEffect1.SyncLyrics = lyrics;
-        //}
-
-        public void SetLyrics2(kLyrics lyrics)
+        public void SetLyrics(kLyrics lyrics)
         {
-            //karaokeEffect1.Lyrics = lyrics;
-            karaokeEffect1.mp3KaraokeLyrics = lyrics;
-
-
+            karaokeEffect1.KLyrics = lyrics;
         }
 
         #endregion lyrics
@@ -1105,13 +1134,21 @@ namespace Karaboss.Mp3
         }
 
         private void btnFrmOptions_Click(object sender, EventArgs e)
-        {
-            Cursor.Current = Cursors.WaitCursor;
-            frmMp3LyrOptions = new frmMp3LyrOptions();
-            //frmMp3LyrOptions.ShowDialog();
-            frmMp3LyrOptions.Show();
+        {            
+            if (Application.OpenForms.OfType<frmMp3LyrOptions>().Count() == 0)
+            {
+                Cursor.Current = Cursors.WaitCursor;
+
+                frmMp3LyrOptions frmMp3LyrOptions = new frmMp3LyrOptions();
+                //frmMp3LyrOptions.ShowDialog();
+                frmMp3LyrOptions.Show();
+            }
+            else
+            {
+                frmMp3LyrOptions frmMp3LyrOptions = Utilities.FormUtilities.GetForm<frmMp3LyrOptions>();
+                frmMp3LyrOptions.Focus();
+            }
         }
-      
 
         /// <summary>
         /// Export lyrics to text

@@ -776,9 +776,8 @@ namespace Karaboss.Mp3
                     
                     // Reload modified lyrics before playing
                     if (Application.OpenForms.OfType<frmMp3Lyrics>().Count() > 0)
-                    {                                                
-                        //frmMp3Lyrics.SetLyrics(localSyncLyrics);
-                        frmMp3Lyrics.SetLyrics2(localKaraokeLyrics);
+                    {                                                                        
+                        frmMp3Lyrics.SetLyrics(localKaraokeLyrics);
                     }
                     
 
@@ -2424,25 +2423,7 @@ namespace Karaboss.Mp3
 
             // Save to KOK file
             LyricsUtilities.SaveKOKSyllabes(fullPath, lstDgRows, bRemoveAccents, bUpperCase, bLowerCase, bRemoveNonAlphaNumeric, _LrcMillisecondsDigits, null);
-
-            /*
-            List<List<Utilities.LyricsUtilities.LyricsItem>> lstLines = Utilities.LyricsUtilities.ExtractDgRows(lstDgRows, _LrcMillisecondsDigits);
-
-            // Save and open kok file
-            string lines = Utilities.LyricsUtilities.SaveLyricsToKokFormat(lstLines);
-
-            try
-            {
-                Encoding encoding = LyricsUtilities.GetDefaultEncoding();
-                System.IO.File.WriteAllText(fullPath, lines, encoding);
-                System.Diagnostics.Process.Start(@fullPath);
-
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message);
-            }
-            */
+           
         }
 
         #endregion export kok

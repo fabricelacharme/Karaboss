@@ -168,8 +168,8 @@ namespace Karaboss.Mp3
             this.karaokeEffect1.KaraokeFont = new System.Drawing.Font("Comic Sans MS", 61.33333F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel);
             this.karaokeEffect1.m_CurrentImage = null;
             this.karaokeEffect1.m_DisplayRectangle = new System.Drawing.Rectangle(0, 0, 0, 0);
-            this.karaokeEffect1.mp3KaraokeLine = karaokeLine3;
-            this.karaokeEffect1.mp3KaraokeLyrics = karaokeLyrics3;
+            //this.karaokeEffect1.mp3KaraokeLine = karaokeLine3;
+            //this.karaokeEffect1.mp3KaraokeLyrics = karaokeLyrics3;
             this.karaokeEffect1.Name = "karaokeEffect1";
             this.karaokeEffect1.nbLyricsLines = 1;
             this.karaokeEffect1.OptionBackground = null;

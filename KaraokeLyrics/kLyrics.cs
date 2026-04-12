@@ -5,7 +5,17 @@ using System.Linq;
 
 namespace kar
 {
-    
+
+    public enum KaraokeDisplayTypes
+    {        
+        FixedLines = 0,
+        ScrollingLinesBottomUp = 1,
+        ScrollingLinesTopDown = 2,
+        TwoLinesSwapped = 3,
+        FourLinesSwapped = 4,
+    }
+
+
     /// <summary>
     /// Represents a syllable with associated text, start time, and duration information.
     /// </summary>
@@ -13,6 +23,7 @@ namespace kar
     /// and its duration in milliseconds. If the duration is not specified, a default value of 45 milliseconds is used.
     /// This class is typically used in applications involving speech processing, karaoke timing, or linguistic analysis
     /// where precise timing of syllables is required.</remarks>
+    [Serializable()]
     public class Syllable
     {
         public enum CharTypes
@@ -87,6 +98,7 @@ namespace kar
     /// its own timing and text. The start and end times of the line are determined by the first and last syllables,
     /// respectively. Modifying the collection of syllables will affect the line's timing and text
     /// representation.</remarks>
+    [Serializable()]
     public class kLine
     {
         public List<Syllable> Syllables { get; set; }

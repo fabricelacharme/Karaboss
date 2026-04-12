@@ -117,12 +117,18 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
-  <data name="label1.Size" type="System.Drawing.Size, System.Drawing">
-    <value>95, 13</value>
+  <data name="btnApply.Text" xml:space="preserve">
+    <value>&amp;Appliquer</value>
   </data>
-  <data name="label1.Text" xml:space="preserve">
-    <value>Nombre de lignes :</value>
+  <data name="btnCancel.Text" xml:space="preserve">
+    <value>A&amp;nuuler</value>
+  </data>
+  <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+  <data name="lblNumberOfLines.Size" type="System.Drawing.Size, System.Drawing">
+    <value>104, 14</value>
+  </data>
+  <data name="lblNumberOfLines.Text" xml:space="preserve">
+    <value>Nombre de lignes</value>
   </data>
   <data name="label2.Size" type="System.Drawing.Size, System.Drawing">
     <value>62, 13</value>
@@ -156,12 +162,6 @@
   </data>
   <data name="radioSolidColor.Text" xml:space="preserve">
     <value>Couleur pleine</value>
-  </data>
-  <data name="lblVerticalText.Size" type="System.Drawing.Size, System.Drawing">
-    <value>160, 13</value>
-  </data>
-  <data name="lblVerticalText.Text" xml:space="preserve">
-    <value>Propriétés de texte vertical</value>
   </data>
   <data name="chkDisplayBalls.Size" type="System.Drawing.Size, System.Drawing">
     <value>108, 17</value>
@@ -199,12 +199,6 @@
   <data name="chkForceShowChords.Text" xml:space="preserve">
     <value>Afficher les accords</value>
   </data>
-  <data name="label10.Size" type="System.Drawing.Size, System.Drawing">
-    <value>123, 13</value>
-  </data>
-  <data name="label10.Text" xml:space="preserve">
-    <value>Couleur des accords</value>
-  </data>
   <data name="chkTopMost.Size" type="System.Drawing.Size, System.Drawing">
     <value>191, 17</value>
   </data>
@@ -228,31 +222,6 @@
   </data>
   <data name="grpBoxBackGround.Text" xml:space="preserve">
     <value>Arrière plan</value>
-  </data>
-  <data name="pBox.LyricsTimes" mimetype="application/x-microsoft.net.object.binary.base64">
-    <value>
-        AAEAAAD/////AQAAAAAAAAAMAgAAAJoBbXNjb3JsaWIsIFZlcnNpb249NC4wLjAuMCwgQ3VsdHVyZT1u
-        ZXV0cmFsLCBQdWJsaWNLZXlUb2tlbj1iNzdhNWM1NjE5MzRlMDg5XV0sIG1zY29ybGliLCBWZXJzaW9u
-        PTQuMC4wLjAsIEN1bHR1cmU9bmV1dHJhbCwgUHVibGljS2V5VG9rZW49Yjc3YTVjNTYxOTM0ZTA4OQUB
-        AAAAL1N5c3RlbS5Db2xsZWN0aW9ucy5HZW5lcmljLkxpc3RgMVtbU3lzdGVtLkludDMyAwAAAAZfaXRl
-        bXMFX3NpemUIX3ZlcnNpb24HAAAICAgCAAAACQMAAAAYAAAAGAAAAA8DAAAAIAAAAAgAAAAAAQAAAAIA
-        AAADAAAABAAAAAUAAAAGAAAABwAAAAgAAAAJAAAACgAAAAsAAAAMAAAADQAAAA4AAAAPAAAAEAAAABEA
-        AAASAAAAEwAAABQAAAAVAAAAFgAAABcAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAs=
-</value>
-  </data>
-  <data name="pBox.LyricsWords" mimetype="application/x-microsoft.net.object.binary.base64">
-    <value>
-        AAEAAAD/////AQAAAAAAAAAMAgAAAJoBbXNjb3JsaWIsIFZlcnNpb249NC4wLjAuMCwgQ3VsdHVyZT1u
-        ZXV0cmFsLCBQdWJsaWNLZXlUb2tlbj1iNzdhNWM1NjE5MzRlMDg5XV0sIG1zY29ybGliLCBWZXJzaW9u
-        PTQuMC4wLjAsIEN1bHR1cmU9bmV1dHJhbCwgUHVibGljS2V5VG9rZW49Yjc3YTVjNTYxOTM0ZTA4OQUB
-        AAAAMFN5c3RlbS5Db2xsZWN0aW9ucy5HZW5lcmljLkxpc3RgMVtbU3lzdGVtLlN0cmluZwMAAAAGX2l0
-        ZW1zBV9zaXplCF92ZXJzaW9uBgAACAgCAAAACQMAAAAYAAAAGAAAABEDAAAAIAAAAAYEAAAABkxvcmVt
-        IAYFAAAABmlwc3VtIAYGAAAABmRvbG9yIAYHAAAABHNpdCAGCAAAAAVhbWV0LAYJAAAADGNvbnNlY3Rl
-        dHVyIAYKAAAADGFkaXBpc2ljaW5nIAYLAAAABWVsaXQsBgwAAAAEc2VkIAYNAAAAA2RvIAYOAAAACGVp
-        dXNtb2QgBg8AAAAHdGVtcG9yIAYQAAAACmluY2lkaWR1bnQGEQAAAAN1dCAGEgAAAAdsYWJvcmUgBhMA
-        AAADZXQgBhQAAAAHZG9sb3JlIAYVAAAABm1hZ25hIAYWAAAAB2FsaXF1YS4GFwAAAANVdCAGGAAAAAVl
-        bmltIAYZAAAAA2FkIAYaAAAABm1pbmltIAYbAAAAB3ZlbmlhbSwNCAs=
-</value>
   </data>
   <data name="label9.Size" type="System.Drawing.Size, System.Drawing">
     <value>114, 13</value>
@@ -306,10 +275,16 @@
     <value>Surbrillance</value>
   </data>
   <data name="label12.Size" type="System.Drawing.Size, System.Drawing">
-    <value>52, 13</value>
+    <value>100, 14</value>
   </data>
   <data name="label12.Text" xml:space="preserve">
-    <value>Affichage</value>
+    <value>Position verticale</value>
+  </data>
+  <data name="label1.Size" type="System.Drawing.Size, System.Drawing">
+    <value>101, 14</value>
+  </data>
+  <data name="label1.Text" xml:space="preserve">
+    <value>Type de karaoké :</value>
   </data>
   <data name="$this.Icon" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>

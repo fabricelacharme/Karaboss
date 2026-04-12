@@ -106,6 +106,12 @@ namespace PicControl
         #endregion KaraokeLyrics
 
 
+        #region Karaoke type
+
+
+
+        #endregion Karaoke type
+
         #region Slideshow
 
         /// <summary>

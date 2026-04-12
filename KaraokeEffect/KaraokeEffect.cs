@@ -33,7 +33,6 @@
 #endregion
 using kar;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
@@ -47,143 +46,7 @@ using System.Windows.Forms;
 
 
 namespace keffect
-{
-    /*
-    public class Syllable
-    {
-        public string Text { get; set; }
-        public double StartTime { get; set; }
-        public double Duration { get; set; }    // syllable duration
-
-        public Syllable(string text, double startTime, double duration)
-        {
-            Text = text;
-            StartTime = startTime;
-            Duration = duration;
-        }
-
-        public Syllable(string text, double startTime)
-        {
-            Text = text;
-            StartTime = startTime;
-            Duration = 45;
-        }
-
-    }
-
-    public class KaraokeLine
-    {
-        public List<Syllable> Syllables { get; set; } 
-        public double StartTime => Syllables.First().StartTime;
-        public double EndTime => Syllables.Last().StartTime + Syllables.Last().Duration;
-
-        public KaraokeLine(List<Syllable> syllables)
-        {
-            Syllables = syllables;
-        }
-        public KaraokeLine()
-        {
-            Syllables = new List<Syllable>();
-        }
-        public void Add(Syllable syllable)
-        {
-            Syllables.Add(syllable);
-        }
-    }
-
-
-    public class KaraokeLyrics : IEnumerable
-    {
-        public List<KaraokeLine> Lines { get; set; } 
-
-
-        public double StartTime => Lines.First().StartTime;
-        public double EndTime => Lines.Last().EndTime;
-
-        public KaraokeLyrics(List<KaraokeLine> lines)
-        {
-            Lines = lines;
-        }
-
-        public KaraokeLyrics()
-        {
-            Lines = new List<KaraokeLine>();
-        }
-
-        public void Add(KaraokeLine line)
-        {
-            Lines.Add(line);
-        }
-
-
-        public int IndexOf(KaraokeLine line)
-        {
-            return Lines.IndexOf(line);
-        }
-
-        // Implementation for the GetEnumerator method.
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return (IEnumerator)GetEnumerator();
-        }
-
-        public LineEnum GetEnumerator()
-        {
-            return new LineEnum(Lines);
-        }
-
-    }
-
-    public class LineEnum : IEnumerator
-    {
-        public List<KaraokeLine> Lines;
-
-        // Enumerators are positioned before the first element
-        // until the first MoveNext() call.
-        int position = -1;
-
-        public LineEnum(List<KaraokeLine> list)
-        {
-            Lines = list;
-        }
-
-        public bool MoveNext()
-        {
-            position++;
-            return (position < Lines.Count);
-        }
-
-        public void Reset()
-        {
-            position = -1;
-        }
-
-        object IEnumerator.Current
-        {
-            get
-            {
-                return Current;
-            }
-        }
-
-        public KaraokeLine Current
-        {
-            get
-            {
-                try
-                {
-                    return Lines[position];
-                }
-                catch (IndexOutOfRangeException)
-                {
-                    throw new InvalidOperationException();
-                }
-            }
-        }
-    }
-    */
-
-
+{   
     public partial class KaraokeEffect : UserControl, IMessageFilter
     {
 
@@ -242,34 +105,37 @@ namespace keffect
 
 
         #region Karaoke lyrics
-
-        
-        private kLine _karaokeLine;
-        public kLine mp3KaraokeLine
+       
+        private kLyrics _kLyrics;
+        public kLyrics KLyrics
         {
-            get { return _karaokeLine; }
-            set
-            {
-                if (value == null) return;
-                _karaokeLine = value;
-            }
-        }
-        
-
-        private kLyrics _karaokeLyrics;
-        public kLyrics mp3KaraokeLyrics
-        {
-            get { return _karaokeLyrics; }
+            get { return _kLyrics; }
             set
             {
                 if (value == null) return;
 
-                _karaokeLyrics = value;
+                _kLyrics = value;
                 Init();
             }
         }
 
         #endregion Karaoke lyrics
+
+
+        #region Karaoke display types
+
+        private kar.KaraokeDisplayTypes _karaokeDisplayType = KaraokeDisplayTypes.FixedLines;
+        public kar.KaraokeDisplayTypes KaraokeDisplayType
+        {
+            get { return _karaokeDisplayType; }
+            set
+            {
+                _karaokeDisplayType = value;
+                Invalidate();
+            }
+        }
+
+        #endregion Karaoke display types
 
 
         #region Move form without title bar
@@ -928,9 +794,9 @@ namespace keffect
             _steppercent = 0.01F;
 
             
-            mp3KaraokeLine = new kLine(new List<Syllable> { new Syllable("Hello", 0, 500), new Syllable(" World", 500, 500) });            
-            mp3KaraokeLyrics = new kLyrics();
-            mp3KaraokeLyrics.Add(mp3KaraokeLine);
+            kLine mp3KaraokeLine = new kLine(new List<Syllable> { new Syllable("Hello", 0, 500), new Syllable(" World", 500, 500) });            
+            _kLyrics = new kLyrics();
+            _kLyrics.Add(mp3KaraokeLine);
 
             _nbLyricsLines = 1;
 
@@ -949,11 +815,11 @@ namespace keffect
             long[] t;
             string tx;
          
-            if (_karaokeLyrics == null || _karaokeLyrics.Lines == null) return;
+            if (_kLyrics == null || _kLyrics.Lines == null) return;
             
-            for (int i = 0; i < _karaokeLyrics.Lines.Count; i++)
+            for (int i = 0; i < _kLyrics.Lines.Count; i++)
             {
-                karaokeline = _karaokeLyrics.Lines[i];
+                karaokeline = _kLyrics.Lines[i];
                 t = new long[karaokeline.Syllables.Count];
                 s = new string[karaokeline.Syllables.Count];
 

@@ -615,4 +615,19 @@
   <data name="QuestionSaveDefaults" xml:space="preserve">
     <value>Les paramètres ont été modifiés,  voulez vous les enregistrer ?</value>
   </data>
+  <data name="KTypesFixedLines" xml:space="preserve">
+    <value>Lignes fixes</value>
+  </data>
+  <data name="KTypesScrollingLinesBottomUp" xml:space="preserve">
+    <value>Lignes défilant de bas en haut</value>
+  </data>
+  <data name="KTypesScrollingLinesTopDown" xml:space="preserve">
+    <value>Lignes défilant de haut en bas</value>
+  </data>
+  <data name="KTypesTwoLinesSwapped" xml:space="preserve">
+    <value>Deux lignes (alternées)</value>
+  </data>
+  <data name="KTypesFourLinesSwapped" xml:space="preserve">
+    <value>Quatre lignes (alternées)</value>
+  </data>
 </root>

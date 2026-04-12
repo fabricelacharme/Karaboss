@@ -1678,6 +1678,41 @@ namespace Karaboss.Resources.Localization {
             {
                 return ResourceManager.GetString("QuestionSaveDefaults", resourceCulture);
             }
-        }        
+        }
+        internal static string KTypesFixedLines
+        {
+            get
+            {
+                return ResourceManager.GetString("KTypesFixedLines", resourceCulture);
+            }
+        }
+        internal static string KTypesFourLinesSwapped
+        {
+            get
+            {
+                return ResourceManager.GetString("KTypesFourLinesSwapped", resourceCulture);
+            }
+        }
+        internal static string KTypesTwoLinesSwapped
+        {
+            get
+            {
+                return ResourceManager.GetString("KTypesTwoLinesSwapped", resourceCulture);
+            }
+        }
+        internal static string KTypesScrollingLinesBottomUp
+        {
+            get
+            {
+                return ResourceManager.GetString("KTypesScrollingLinesBottomUp", resourceCulture);
+            }
+        }
+        internal static string KTypesScrollingLinesTopDown
+        {
+            get
+            {
+                return ResourceManager.GetString("KTypesScrollingLinesTopDown", resourceCulture);
+            }
+        }
     }
 }

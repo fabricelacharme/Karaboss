@@ -616,4 +616,19 @@
   <data name="QuestionSaveDefaults" xml:space="preserve">
     <value>The settings have been changed. Would you like to save them?</value>
   </data>
+  <data name="KTypesFixedLines" xml:space="preserve">
+    <value>Fixed lines</value>
+  </data>
+  <data name="KTypesScrollingLinesBottomUp" xml:space="preserve">
+    <value>Scrolling lines bottom up</value>
+  </data>
+  <data name="KTypesScrollingLinesTopDown" xml:space="preserve">
+    <value>Scrolling lines top down</value>
+  </data>
+  <data name="KTypesTwoLinesSwapped" xml:space="preserve">
+    <value>Two lines (swapped)</value>
+  </data>
+  <data name="KTypesFourLinesSwapped" xml:space="preserve">
+    <value>Four lines (swapped)</value>
+  </data>
 </root>
