@@ -516,8 +516,8 @@ namespace Karaboss.MidiLyrics
             if (T.Lines.Count > 0 && T.Lines.First().Syllables.First().CharType != Syllable.CharTypes.Text)
                 T.Lines[0].Syllables.RemoveAt(0);
 
-            if (T.Lines.Count > 0&& T.Lines.Last().Syllables.Last().CharType != Syllable.CharTypes.Text)
-                T.Lines.Last().Syllables.RemoveAt(KLyrics.Lines.Last().Syllables.Count - 1);
+            if (T.Lines.Count > 0 && T.Lines.Last().Syllables.Last().CharType != Syllable.CharTypes.Text)
+                T.Lines.Last().Syllables.RemoveAt(T.Lines.Last().Syllables.Count - 1);
 
 
             for (int i = 0; i < T.Lines.Count - 1; i++)
