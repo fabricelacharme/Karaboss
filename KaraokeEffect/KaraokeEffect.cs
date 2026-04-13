@@ -834,10 +834,32 @@ namespace keffect
                     if (_bforceUppercase)
                         tx = tx.ToUpper();
 
-                    s[j] = tx;
+                    s[j] = tx;                 
                 }
-                Times.Add(t);
-                Lines.Add(s);
+
+                switch (KaraokeDisplayType)
+                {
+                    case KaraokeDisplayTypes.FixedLines:
+                    case KaraokeDisplayTypes.ScrollingLinesBottomUp:
+                    case KaraokeDisplayTypes.ScrollingLinesTopDown:
+                        Times.Add(t);
+                        Lines.Add(s);
+                        break;
+
+                    case KaraokeDisplayTypes.TwoLinesSwapped:
+                    case KaraokeDisplayTypes.FourLinesSwapped:
+                        // Remove paragraphes for TwoLinesSwapped and FourLinesSwapped display types
+
+                        if (!(s.Length == 1 && s[0] == string.Empty))
+                        {
+                            Times.Add(t);
+                            Lines.Add(s);
+                        }
+                        break;
+                }
+
+
+               
             }
             
 
@@ -1132,127 +1154,77 @@ namespace keffect
 
             #region draw text
 
-            switch (FrameType)
+            switch (KaraokeDisplayType)
             {
-                case "NoBorder":                    
-                case "FrameThin":
-                case "Frame1":                    
-                case "Frame2":
-                case "Frame3":
-                case "Frame4":
-                case "Frame5": 
-                    DrawTextWithBorder(e);
+                case KaraokeDisplayTypes.FixedLines:
+                    DrawTextWithFixedLines(e);
                     break;
-
-                case "Shadow":
-                    DrawTextWithShadow(e);
-                    break; ;
-
-                case "Neon":
-                    DrawTextWithNeon(e);
-                    break; ;
-
-                default:
-                    DrawTextWithBorder(e);
+                case KaraokeDisplayTypes.ScrollingLinesBottomUp:
+                    DrawTextWithScrollingLinesBottomUp(e);
                     break;
-            }            
-           
+                case KaraokeDisplayTypes.ScrollingLinesTopDown:
+                    DrawTextWithScrollingLinesTopDown(e);
+                    break;
+                case KaraokeDisplayTypes.TwoLinesSwapped:
+                    DrawTextWithTwoLinesSwapped(e);
+                    break;
+                case KaraokeDisplayTypes.FourLinesSwapped:
+                    DrawTextWithFourLinesSwapped(e);
+                    break;
+            }
+                  
             #endregion draw text
         }
 
 
-        /// <summary>
-        /// Return rectangle for image
-        /// </summary>
-        /// <param name="imgWidth"></param>
-        /// <param name="imgHeight"></param>
-        /// <returns></returns>
-        private Rectangle GetRectangleForSizeMode(int imgWidth, int imgHeight)
+
+        #region Code fragments
+
+        private void DrawActiveLineWithBorders(PaintEventArgs e, int lineIndex, int y1)
         {
-            int x;
-            int y;
 
-            switch (_sizemode)
-            {
-                case PictureBoxSizeMode.Normal:
-                    // coin superieur gauche
-                    return new Rectangle(0, 0, imgWidth, imgHeight);
-
-                case PictureBoxSizeMode.StretchImage:
-                    //  l'image est étirée ou réduite pour s'ajuster à PictureBox.
-                    return new Rectangle(0, 0, this.ClientSize.Width, this.ClientSize.Height);
-
-
-                case PictureBoxSizeMode.CenterImage:
-                    x = (this.ClientSize.Width - imgWidth) / 2;
-                    y = (this.ClientSize.Height - imgHeight) / 2;
-                    return new Rectangle(x, y, imgWidth, imgHeight);
-
-
-                case PictureBoxSizeMode.AutoSize:
-                    x = (this.ClientSize.Width - imgWidth) / 2;
-                    y = (this.ClientSize.Height - imgHeight) / 2;
-                    return new Rectangle(x, y, imgWidth, imgHeight);
-
-                case PictureBoxSizeMode.Zoom:
-                    float zoomFactor = (float)ClientSize.Height / (float)imgHeight;
-                    x = (this.ClientSize.Width - (int)(imgWidth * zoomFactor)) / 2;
-                    y = 0;
-                    return new Rectangle(x, 0, (int)(imgWidth * zoomFactor), this.ClientSize.Height);
-
-                default:
-                    return new Rectangle(0, 0, this.ClientSize.Width, this.ClientSize.Height);
-            }
-        }       
-
-
-        private void DrawTextWithBorder(PaintEventArgs e)
-        {
-            // path made for the portion of a line of lyrics
-            // in order to draw the ActiveBorder color only on it
+            // Create a graphical path
+            var path = new GraphicsPath();
             var pathFragment = new GraphicsPath();
+
             SolidBrush colorBrush;
             Pen penActiveBorder = new Pen(_ActiveBorderColor, _borderthick);    // pen for active border color
             Pen penInactiveBorder = new Pen(_InactiveBorderColor, _borderthick); // pen for inactive border color
 
-            // Center text vertically
-            int y0 = VCenterText();
-            int x0 = 0;
-
             int Wbg;
             RectangleF Rbg;
 
+            int x0;
+
             // =============================================
-            // WHITE
-            // 1. Color the current line in whithe
-            // and than color portions above the white in green (already played) and red (currently played) 
+            // ACTIVE LINE
+            // 1. Color the current line in Inactive color
+            // and than color portions above the white in Active color (already played) and Highlight color (currently played) 
             // =============================================
-            // Create a graphical path
-            var path = new GraphicsPath();
 
             // Add the full text line to the graphical path            
-            if (_FirstLineToShow < Texts.Count())
+            if (lineIndex < Texts.Count())
             {
-                x0 = HCenterText(Texts[_FirstLineToShow]);      // Center horizontally
+                x0 = HCenterText(Texts[lineIndex]);      // Center horizontally
 
                 #region background of syllabe       
-                
+
                 if (_bTextBackGround)
                 {
-                    Wbg = (int)(1.04 * LinesLengths[_FirstLineToShow]);
+                    Wbg = (int)(1.04 * LinesLengths[lineIndex]);
                     // Black background to make text more visible
-                    Rbg = new RectangleF((int)(0.94 * x0), (int)(1.04 * y0), Wbg, _lineHeight);
+                    Rbg = new RectangleF((int)(0.94 * x0), (int)(1.04 * y1), Wbg, _lineHeight);
                     // background
                     e.Graphics.FillRectangle(new SolidBrush(Color.Black), Rbg);
                 }
-                
+
                 #endregion
 
                 // full line in GraphicsPath path
-                path.AddString(Texts[_FirstLineToShow], _karaokeFont.FontFamily, (int)_karaokeFont.Style, _karaokeFont.Size, new Point(x0, y0), sf);
+                path.AddString(Texts[lineIndex], _karaokeFont.FontFamily, (int)_karaokeFont.Style, _karaokeFont.Size, new Point(x0, y1), sf);
 
                 // part of line (sung part) in GraphicsPath pathFragment  
-                pathFragment.AddString(current_fragment + highlight_fragment, _karaokeFont.FontFamily, (int)_karaokeFont.Style, _karaokeFont.Size, new Point(x0, y0), sf);
+                pathFragment.AddString(current_fragment + highlight_fragment, _karaokeFont.FontFamily, (int)_karaokeFont.Style, _karaokeFont.Size, new Point(x0, y1), sf);
             }
 
             // Fill GraphicsPath path in white => full text is white
@@ -1261,7 +1233,7 @@ namespace keffect
 
             // ======================================================
             // GREEN
-            // 2. Color in GREEN (ActiveColor) the syllabes before current syllabe
+            // 2. Color in Active Color the syllabes before current syllabe
             // ======================================================
             #region Color in ActiveColor the syllabes before current syllabe
             // Create a region from the graphical path
@@ -1279,8 +1251,8 @@ namespace keffect
             #endregion Color in ActiveColor the syllabes before current syllabe
 
             // ======================================================
-            // RED
-            // 3. Color in RED (HighlightColor) the current syllabe
+            // HighligtHIT COLOR
+            // 3. Color in Highlight Color the current syllabe
             // ======================================================
             #region Color in HighlightColor the current syllabe
 
@@ -1302,46 +1274,46 @@ namespace keffect
             {
                 e.Graphics.DrawPath(penInactiveBorder, path);                       // Draw the entire line using the inactive border color
                 e.Graphics.DrawPath(penActiveBorder, pathFragment);                 // Next, draw the current fragment of line on top using the active border color
-            }
+            }            
 
-            // Rest of line in white
-
+            #region Clean up resources
             path.Dispose();
+            pathFragment.Dispose();
+            colorBrush.Dispose();
+            penActiveBorder.Dispose();
+            penInactiveBorder.Dispose();
+            #endregion Clean up resources
+        }
 
+        private void DrawInactiveLineWithBorders(PaintEventArgs e, int lineIndex, int y2)
+        {
+            // Create a graphical path
+            var path = new GraphicsPath();
+            SolidBrush colorBrush;
+            int x0;
+            Pen penInactiveBorder = new Pen(_InactiveBorderColor, _borderthick); // pen for inactive border color
+            int Wbg;
+            RectangleF Rbg;
 
-            // ======================================================================================================
-            // NEXT LINES
-            // 4. Draw and color (InactiveColor) all lines from _linedeb + 1 to _linefin in white
-            // We want to display only a few number of lines (variable _nbLyricsLines = number of lines to display)  
-            // linedeb which is the current line is displayed in the previous paragraph
-            // ======================================================================================================
-
-            #region Draw next lines            
-            
-            path = new GraphicsPath();
-
-            for (int i = _FirstLineToShow + 1; i <= _LastLineToShow; i++)
+            if (lineIndex < Texts.Count())
             {
-                if (i < Texts.Count())
+                x0 = HCenterText(Texts[lineIndex]);     // Center text horizontally
+
+                #region background of syllabe  
+
+                if (_bTextBackGround)
                 {
-                    x0 = HCenterText(Texts[i]);     // Center text horizontally
-
-                    #region background of syllabe  
-                    
-                    if (_bTextBackGround)
-                    {
-                        Wbg = (int)(1.04 * LinesLengths[i]);
-                        // Black background to make text more visible
-                        Rbg = new RectangleF((int)(0.94 * x0), (int)(1.04 * y0) + (i - _FirstLineToShow) * _lineHeight, Wbg, _lineHeight);
-                        // background
-                        e.Graphics.FillRectangle(new SolidBrush(Color.Black), Rbg);
-                    }
-                    
-                    #endregion
-
-                    // Draw lines of lyrics
-                    path.AddString(Texts[i], _karaokeFont.FontFamily, (int)_karaokeFont.Style, _karaokeFont.Size, new Point(x0, y0 + (i - _FirstLineToShow) * _lineHeight), sf);
+                    Wbg = (int)(1.04 * LinesLengths[lineIndex]);
+                    // Black background to make text more visible
+                    Rbg = new RectangleF((int)(0.94 * x0), (int)((1.04 * y2)), Wbg, _lineHeight);
+                    // background
+                    e.Graphics.FillRectangle(new SolidBrush(Color.Black), Rbg);
                 }
+
+                #endregion
+
+                // Draw lines of lyrics
+                path.AddString(Texts[lineIndex], _karaokeFont.FontFamily, (int)_karaokeFont.Style, _karaokeFont.Size, new Point(x0, y2), sf);
             }
 
             // _InactiveColor is the color for text not yet sung (typically white)
@@ -1352,24 +1324,390 @@ namespace keffect
             if (_borderthick > 0)
                 e.Graphics.DrawPath(penInactiveBorder, path);
 
-            #endregion Draw next lines
 
+            #region Clean up resources
 
-            #region Clean All
-
-            // Clean all
-            colorBrush.Dispose();
-            penActiveBorder.Dispose();
-            penInactiveBorder.Dispose();
-            r.Dispose();
             path.Dispose();
-            pathFragment.Dispose();
+            colorBrush.Dispose();
+            penInactiveBorder.Dispose();
             
-            #endregion Clean All
-        }
-       
+            #endregion Clean up resources
 
-        private void DrawTextWithShadow(PaintEventArgs e)
+        }
+
+
+        #endregion Code fragments
+
+
+
+        #region Draw text with Scrolling lines bottom up
+        private void DrawTextWithScrollingLinesBottomUp(PaintEventArgs e)
+        {
+            // To be implemented
+            switch (FrameType)
+            {
+                case "NoBorder":
+                case "FrameThin":
+                case "Frame1":
+                case "Frame2":
+                case "Frame3":
+                case "Frame4":
+                case "Frame5":
+                    SbuDrawTextWithBorder(e);
+                    break;
+
+                case "Shadow":
+                    SbuDrawTextWithShadow(e);
+                    break; ;
+
+                case "Neon":
+                    SbuDrawTextWithNeon(e);
+                    break; ;
+
+                default:
+                    SbuDrawTextWithBorder(e);
+                    break;
+            }
+        }
+
+        private void SbuDrawTextWithBorder(PaintEventArgs e)
+        {
+            // To be implemented
+        }
+
+        private void SbuDrawTextWithShadow(PaintEventArgs e)
+        {
+            // To be implemented
+        }
+
+        private void SbuDrawTextWithNeon(PaintEventArgs e)
+        {
+            // To be implemented
+        }
+
+
+        #endregion Draw text with Scrolling lines bottom up
+
+
+        #region Draw text with Scrolling lines top down
+        private void DrawTextWithScrollingLinesTopDown(PaintEventArgs e)
+        {
+            switch (FrameType)
+            {
+                case "NoBorder":
+                case "FrameThin":
+                case "Frame1":
+                case "Frame2":
+                case "Frame3":
+                case "Frame4":
+                case "Frame5":
+                    StdDrawTextWithBorder(e);
+                    break;
+
+                case "Shadow":
+                    StdDrawTextWithShadow(e);
+                    break; ;
+
+                case "Neon":
+                    StdDrawTextWithNeon(e);
+                    break; ;
+
+                default:
+                    StdDrawTextWithBorder(e);
+                    break;
+            }
+        }
+
+        private void StdDrawTextWithBorder(PaintEventArgs e)
+        {
+            // To be implemented
+        }
+
+        private void StdDrawTextWithShadow(PaintEventArgs e)
+        {
+            // To be implemented
+        }
+
+        private void StdDrawTextWithNeon(PaintEventArgs e)
+        {
+            // To be implemented
+        }
+
+        #endregion Draw text with Scrolling lines top down
+
+
+        #region draw text with Two lines swapped
+
+        private void DrawTextWithTwoLinesSwapped(PaintEventArgs e)
+        {
+            switch (FrameType)
+            {
+                case "NoBorder":
+                case "FrameThin":
+                case "Frame1":
+                case "Frame2":
+                case "Frame3":
+                case "Frame4":
+                case "Frame5":
+                    TlsDrawTextWithBorder(e);
+                    break;
+
+                case "Shadow":
+                    TlsDrawTextWithShadow(e);
+                    break; ;
+
+                case "Neon":
+                    TlsDrawTextWithNeon(e);
+                    break; ;
+
+                default:
+                    TlsDrawTextWithBorder(e);
+                    break;
+            }
+        }
+
+        /// <summary>
+        /// Draw two lines swapped with borders
+        /// </summary>
+        /// <param name="e"></param>
+        private void TlsDrawTextWithBorder(PaintEventArgs e)
+        {         
+            // Center text vertically
+            int y0 = VCenterText();
+         
+            int y1;    // y1 is the y coordinate of the active line to display (line _FirstLineToShow)
+            int y2;    // y2 is the y coordinate of the inactive line to display (line _FirstLineToShow + 1)
+
+            // If active line is odd, it is displayed on the first line
+            // if active line is even, it is displayed on the second line
+            if (_FirstLineToShow % 2 != 0)
+            {
+                y1 = y0;
+                y2 = y0 + _lineHeight;
+            }
+            else
+            {
+                y1 = y0 + _lineHeight;
+                y2 = y0;
+            }
+
+            // Draw active line with borders
+            DrawActiveLineWithBorders(e, _FirstLineToShow, y1);
+
+            // Draw Inactive line with borders
+            DrawInactiveLineWithBorders(e, _FirstLineToShow + 1, y2);   
+        }
+
+        private void TlsDrawTextWithShadow(PaintEventArgs e)
+        {
+            // To be implemented
+        }
+
+        private void TlsDrawTextWithNeon(PaintEventArgs e)
+        {
+            // To be implemented
+        }
+
+        #endregion draw text with Two lines swapped
+
+
+        #region draw text with Four lines swapped
+        private void DrawTextWithFourLinesSwapped(PaintEventArgs e)
+        {
+            switch (FrameType)
+            {
+                case "NoBorder":
+                case "FrameThin":
+                case "Frame1":
+                case "Frame2":
+                case "Frame3":
+                case "Frame4":
+                case "Frame5":
+                    FlsDrawTextWithBorder(e);
+                    break;
+
+                case "Shadow":
+                    FlsDrawTextWithShadow(e);
+                    break; ;
+
+                case "Neon":
+                    FlsDrawTextWithNeon(e);
+                    break; ;
+
+                default:
+                    FlsDrawTextWithBorder(e);
+                    break;
+            }
+        }
+
+        private void FlsDrawTextWithBorder(PaintEventArgs e)
+        {
+            // Center text vertically
+            int y0 = VCenterText();
+
+            int y1 = 0;    
+            int y2 = 0;    
+            int y3 = 0;
+            int y4 = 0;
+
+            /*
+            si active % 4 = 2 => afficher en 1ere ligne
+            active, active + 1, active + 2, active + 3
+            
+            si active % 4 = 3 => afficher en 2eme ligne
+            active - 1, active, active + 1, active + 2
+
+            si active % 4 = 0 => afficher en 3 eme ligne
+            active + 2, active + 3, active , active + 1
+
+            si active % 4 = 1 => afficher en 4eme ligne
+            active + 1, active + 1, active - 1, active
+
+            
+            */
+
+            int idx2 = 0;
+            int idx3 = 0;
+            int idx4 = 0;
+
+            if (_FirstLineToShow  % 4 == 2)
+            {
+                // First line is active
+                y1 = y0;                            //_FirstLineToShow
+                y2 = y0 + _lineHeight;              //_FirstLineToShow + 1
+                y3 = y0 + 2 * _lineHeight;          //_FirstLineToShow + 2
+                y4 = y0 + 3 * _lineHeight;          //_FirstLineToShow + 3
+
+                idx2 = _FirstLineToShow + 1;
+                idx3 = _FirstLineToShow + 2;
+                idx4 = _FirstLineToShow + 3;
+
+            }
+            else if (_FirstLineToShow  % 4 == 3)
+            {
+                // 2nd line is active
+                y2 = y0;                            // _FirstLineToShow - 1
+                y1 = y0 + _lineHeight;              // _FirstLineToShow
+                y3 = y0 + 2 * _lineHeight;          // _FirstLineToShow + 1
+                y4 = y0 + 3 * _lineHeight;          // _FirstLineToShow + 2
+
+                idx2 = _FirstLineToShow - 1;
+                idx3 = _FirstLineToShow + 1;
+                idx4 = _FirstLineToShow + 2;
+            }
+            else if (_FirstLineToShow  % 4 == 0)
+            {
+                // 3rd line is active
+                y3 = y0;                            // _FirstLineToShow + 2     
+                y4 = y0 + _lineHeight;              // _FirstLineToShow + 3
+                y1 = y0 + 2 * _lineHeight;          // _FirstLineToShow
+                y2 = y0 + 3 * _lineHeight;          // _FirstLineToShow + 1
+
+                idx2 = _FirstLineToShow + 1;
+                idx3 = _FirstLineToShow + 2;
+                idx4 = _FirstLineToShow + 3;
+            }
+            else if (_FirstLineToShow  % 4 == 1)
+            {
+                // 4th line is active
+                y3 = y0;                            // _FirstLineToShow + 1
+                y4 = y0 + _lineHeight;              // _FirstLineToShow + 2
+                y2 = y0 + 2 * _lineHeight;          // _FirstLineToShow - 1
+                y1 = y0 + 3 * _lineHeight;          // _FirstLineToShow               
+                
+                idx2 = _FirstLineToShow - 1;
+                idx3 = _FirstLineToShow + 1;
+                idx4 = _FirstLineToShow + 2;
+            }
+
+            // Draw active line with borders
+            DrawActiveLineWithBorders(e, _FirstLineToShow, y1);
+
+            // Draw Inactive line with borders
+            if (idx2 >= 0) 
+                DrawInactiveLineWithBorders(e, idx2, y2);
+            
+            if (idx3 >= 0 && _FirstLineToShow > 0)
+                DrawInactiveLineWithBorders(e, idx3, y3);
+            
+            if (idx4 >= 0 && _FirstLineToShow > 0)
+                DrawInactiveLineWithBorders(e, idx4, y4);
+        }
+
+        private void FlsDrawTextWithShadow(PaintEventArgs e)
+        {
+            // To be implemented
+        }
+
+        private void FlsDrawTextWithNeon(PaintEventArgs e)
+        {
+            // To be implemented
+        }
+
+        #endregion draw text with Four lines swapped
+
+
+        #region Draw text with fixed lines
+
+        /// <summary>
+        /// Draw text with fixed lines
+        /// </summary>
+        /// <param name="e"></param>
+        private void DrawTextWithFixedLines(PaintEventArgs e)
+        {
+            switch (FrameType)
+            {
+                case "NoBorder":
+                case "FrameThin":
+                case "Frame1":
+                case "Frame2":
+                case "Frame3":
+                case "Frame4":
+                case "Frame5":
+                    FixDrawTextWithBorder(e);
+                    break;
+
+                case "Shadow":
+                    FixDrawTextWithShadow(e);
+                    break; ;
+
+                case "Neon":
+                    FixDrawTextWithNeon(e);
+                    break; ;
+
+                default:
+                    FixDrawTextWithBorder(e);
+                    break;
+            }
+        }
+        
+        /// <summary>
+        /// Fixed lines: Draw text with various borders 
+        /// </summary>
+        /// <param name="e"></param>
+        private void FixDrawTextWithBorder(PaintEventArgs e)
+        {
+            
+            // Center text vertically
+            int y0 = VCenterText();
+
+            // Draw active line with borders
+            DrawActiveLineWithBorders(e, _FirstLineToShow, y0);
+
+
+            // Draw Inactive lines with borders
+            for (int i = _FirstLineToShow + 1; i <= _LastLineToShow; i++)
+            {
+                DrawInactiveLineWithBorders(e, i, y0 + (i - _FirstLineToShow) * _lineHeight);
+            }
+                      
+        }
+
+        /// <summary>
+        /// Fixed lines: Draw text with Shadow effect
+        /// </summary>
+        /// <param name="e"></param>
+        private void FixDrawTextWithShadow(PaintEventArgs e)
         {
             #region declarations
 
@@ -1632,12 +1970,12 @@ namespace keffect
 
             #endregion Clean all
         }
-     
+
         /// <summary>
-        /// Draw text with neon effect
+        /// Fixed lines: Draw text with neon effect
         /// </summary>
         /// <param name="e"></param>
-        private void DrawTextWithNeon(PaintEventArgs e)
+        private void FixDrawTextWithNeon(PaintEventArgs e)
         {
             #region declarations
                         
@@ -1846,6 +2184,9 @@ namespace keffect
         }
 
 
+        #endregion Draw text with fixed lines
+
+
         #region Effects
 
         /// <summary>
@@ -1940,8 +2281,7 @@ namespace keffect
             //pth.AddString(line, new FontFamily(font.Name), (int)FontStyle.Regular, emSize, new Point(x0, y0), sf);
         }
 
-        #endregion Effects
-
+        
 
         /// <summary>
         /// Apply the beat effect.
@@ -2000,6 +2340,53 @@ namespace keffect
                 speed = (int)(_bpm * hypo / 7000.0F); // Speed depends on the BPM and the size of the screen
                 //speed = (int)(_bpm * hypo / 10400.0F); // Speed depends on the BPM and the size of the screen
                 Console.WriteLine("BPM changed to: " + _bpm + " - Speed: " + speed);
+            }
+        }
+
+        #endregion Effects
+
+
+        /// <summary>
+        /// Return rectangle for image
+        /// </summary>
+        /// <param name="imgWidth"></param>
+        /// <param name="imgHeight"></param>
+        /// <returns></returns>
+        private Rectangle GetRectangleForSizeMode(int imgWidth, int imgHeight)
+        {
+            int x;
+            int y;
+
+            switch (_sizemode)
+            {
+                case PictureBoxSizeMode.Normal:
+                    // coin superieur gauche
+                    return new Rectangle(0, 0, imgWidth, imgHeight);
+
+                case PictureBoxSizeMode.StretchImage:
+                    //  l'image est étirée ou réduite pour s'ajuster à PictureBox.
+                    return new Rectangle(0, 0, this.ClientSize.Width, this.ClientSize.Height);
+
+
+                case PictureBoxSizeMode.CenterImage:
+                    x = (this.ClientSize.Width - imgWidth) / 2;
+                    y = (this.ClientSize.Height - imgHeight) / 2;
+                    return new Rectangle(x, y, imgWidth, imgHeight);
+
+
+                case PictureBoxSizeMode.AutoSize:
+                    x = (this.ClientSize.Width - imgWidth) / 2;
+                    y = (this.ClientSize.Height - imgHeight) / 2;
+                    return new Rectangle(x, y, imgWidth, imgHeight);
+
+                case PictureBoxSizeMode.Zoom:
+                    float zoomFactor = (float)ClientSize.Height / (float)imgHeight;
+                    x = (this.ClientSize.Width - (int)(imgWidth * zoomFactor)) / 2;
+                    y = 0;
+                    return new Rectangle(x, 0, (int)(imgWidth * zoomFactor), this.ClientSize.Height);
+
+                default:
+                    return new Rectangle(0, 0, this.ClientSize.Width, this.ClientSize.Height);
             }
         }
 
