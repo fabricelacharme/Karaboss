@@ -32,7 +32,9 @@
 
 #endregion
 
+using kar;
 using Karaboss.MidiLyrics;
+using keffect;
 using PicControl;
 using System;
 using System.Collections.Generic;
@@ -43,7 +45,6 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
-using kar;
 
 namespace Karaboss
 {
@@ -72,8 +73,7 @@ namespace Karaboss
 
         private int currentTextPos = 0;
         private Point Mouselocation;
-
-        //private frmLyrOptions frmLyrOptions;
+        
         private List<int> LyricsTimes;
 
         #endregion private
@@ -105,7 +105,7 @@ namespace Karaboss
         #endregion balls
 
 
-        #region chords
+        #region Chords
 
         // Chord color
         private Color _chordNextColor;
@@ -142,29 +142,7 @@ namespace Karaboss
         }
 
 
-        #endregion chords
-
-
-        #region text characteristics
-
-        // Force Uppercase
-        //private List<plLyric> _plLyrics;
-
-        private bool _bForceUppercase = false;
-        public bool bForceUppercase
-        {
-            get { return _bForceUppercase; }
-            set
-            {
-
-                if (value != _bForceUppercase)
-                {
-                    _bForceUppercase = value;
-                    pBox.bforceUppercase = _bForceUppercase;
-                    LoadSong(myLyricsMgmt.KLyrics);
-                }
-            }
-        }
+        #endregion Chords
 
 
         #region Font
@@ -191,19 +169,87 @@ namespace Karaboss
         }
 
         #endregion Font
-      
 
+
+        #region Karaoke display types
+
+        // Karaoke display types
+        private string _karaokeDisplayType = "None";
+        public string KaraokeDisplayType
+        {
+            get { return _karaokeDisplayType; }
+            set
+            {
+                _karaokeDisplayType = value;
+
+                switch (_karaokeDisplayType)
+                {
+                    case "None":
+                        pBox.KaraokeDisplayType = kar.KaraokeDisplayTypes.None;
+                        break;
+                    case "FixedLines":
+                        pBox.KaraokeDisplayType = kar.KaraokeDisplayTypes.FixedLines;
+                        break;
+                    case "ScrollingLinesTopDown":
+                        pBox.KaraokeDisplayType = kar.KaraokeDisplayTypes.ScrollingLinesTopDown;
+                        break;
+                    case "ScrollingLinesBottomUp":
+                        pBox.KaraokeDisplayType = kar.KaraokeDisplayTypes.ScrollingLinesBottomUp;
+                        break;
+                    case "TwoLinesSwapped":
+                        pBox.KaraokeDisplayType = kar.KaraokeDisplayTypes.TwoLinesSwapped; break;
+                    case "FourLinesSwapped":
+                        pBox.KaraokeDisplayType = kar.KaraokeDisplayTypes.FourLinesSwapped; break;
+                    default:
+                        pBox.KaraokeDisplayType = kar.KaraokeDisplayTypes.FixedLines;
+                        break;
+                }
+            }
+        }
+
+        #endregion Karaoke display types
+
+
+        #region Frame type
         // Frame type
         private string _frametype = "Frame1";
         public string FrameType
         {
             get { return _frametype; }
-            set { 
-                _frametype = value; 
-                pBox.FrameType = _frametype;                
+            set
+            {
+                _frametype = value;
+                pBox.FrameType = _frametype;
             }
         }
 
+        #endregion Frame type
+
+
+        #region text characteristics
+
+        // Force Uppercase
+        //private List<plLyric> _plLyrics;
+
+        private bool _bForceUppercase = false;
+        public bool bForceUppercase
+        {
+            get { return _bForceUppercase; }
+            set
+            {
+
+                if (value != _bForceUppercase)
+                {
+                    _bForceUppercase = value;
+                    pBox.bforceUppercase = _bForceUppercase;
+                    LoadSong(myLyricsMgmt.KLyrics);
+                }
+            }
+        }
+
+
+
+        #region Display top bottom center
         private Karaclass.OptionsDisplay _OptionDisplay;
         /// <summary>
         /// Display lyrics option: top, Center, Bottom
@@ -217,6 +263,8 @@ namespace Karaboss
                 pBox.OptionDisplay = (PicControl.pictureBoxControl.OptionsDisplay)_OptionDisplay;
             }
         }
+
+        #endregion Display top bottom center
 
         private int _nbLyricsLines = 3;
         // number of lines to display
@@ -537,7 +585,7 @@ namespace Karaboss
 
 
             // colours for text, chords, number of lines etc...
-            LoadKarOptions();
+            LoadOptions();
 
             AddMouseMoveHandler(this);
         }
@@ -548,10 +596,13 @@ namespace Karaboss
         /// <summary>
         /// Load options (text color, 
         /// </summary>
-        public void LoadKarOptions()
+        public void LoadOptions()
         {
             try
             {
+                // Karaoke display type
+                KaraokeDisplayType = Properties.Settings.Default.KaraokeDisplayType;               // setting this property set the karaokeEffect1.KaraokeDisplayType property
+
                 // Lyrics border effect 
                 _frametype = Properties.Settings.Default.FrameType;
                 pBox.FrameType = _frametype;               

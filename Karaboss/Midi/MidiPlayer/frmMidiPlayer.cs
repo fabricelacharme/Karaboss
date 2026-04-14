@@ -8013,7 +8013,7 @@ namespace Karaboss
                 // Restore display options modified by the wait animation
                 if (frmMidiLyric != null)
                 {
-                    frmMidiLyric.LoadKarOptions();
+                    frmMidiLyric.LoadOptions();
                     SetSlideShowOfPlaylist();
                 }
                 PlayPauseMusic();

@@ -159,6 +159,9 @@
   <data name="&gt;&gt;grpBoxKaraokeType.ZOrder" xml:space="preserve">
     <value>2</value>
   </data>
+  <data name="txtInactiveBorderColor.TabIndex" type="System.Int32, mscorlib">
+    <value>67</value>
+  </data>
   <data name="btnResetDir.Text" xml:space="preserve">
     <value>Reset</value>
   </data>
@@ -234,9 +237,6 @@
   <data name="lblBorder.Size" type="System.Drawing.Size, System.Drawing">
     <value>38, 13</value>
   </data>
-  <data name="label11.Font" type="System.Drawing.Font, System.Drawing">
-    <value>Microsoft Sans Serif, 8.25pt</value>
-  </data>
   <data name="lblHighlightColor.Text" xml:space="preserve">
     <value>Highlight color</value>
   </data>
@@ -300,6 +300,9 @@
   <data name="txtInactiveChordColor.Size" type="System.Drawing.Size, System.Drawing">
     <value>60, 20</value>
   </data>
+  <data name="pBox.Location" type="System.Drawing.Point, System.Drawing">
+    <value>180, 84</value>
+  </data>
   <data name="radioDiaporama.Location" type="System.Drawing.Point, System.Drawing">
     <value>8, 25</value>
   </data>
@@ -329,9 +332,6 @@
   </data>
   <data name="&gt;&gt;radioDiaporama.ZOrder" xml:space="preserve">
     <value>8</value>
-  </data>
-  <data name="&gt;&gt;btnResetDir.Parent" xml:space="preserve">
-    <value>grpBoxSlideShow</value>
   </data>
   <data name="picActiveBorderColor.Location" type="System.Drawing.Point, System.Drawing">
     <value>195, 119</value>
@@ -450,8 +450,8 @@
   <data name="cbSizeMode.Items4" xml:space="preserve">
     <value>Zoom</value>
   </data>
-  <data name="txtInactiveBorderColor.TabIndex" type="System.Int32, mscorlib">
-    <value>67</value>
+  <data name="label11.Text" xml:space="preserve">
+    <value>Highlight color</value>
   </data>
   <data name="radioSolidColor.Text" xml:space="preserve">
     <value>Solid Color</value>
@@ -530,6 +530,9 @@
   </data>
   <data name="label8.Size" type="System.Drawing.Size, System.Drawing">
     <value>71, 13</value>
+  </data>
+  <data name="pBox.Size" type="System.Drawing.Size, System.Drawing">
+    <value>385, 226</value>
   </data>
   <data name="&gt;&gt;chkTextUppercase.Name" xml:space="preserve">
     <value>chkTextUppercase</value>
@@ -726,6 +729,9 @@
   <data name="&gt;&gt;btnHighlightColorPicker.ZOrder" xml:space="preserve">
     <value>23</value>
   </data>
+  <data name="pBox.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>4, 4, 4, 4</value>
+  </data>
   <data name="btnInactiveColorPicker.Location" type="System.Drawing.Point, System.Drawing">
     <value>257, 93</value>
   </data>
@@ -837,6 +843,9 @@
   <data name="pBox.TabIndex" type="System.Int32, mscorlib">
     <value>14</value>
   </data>
+  <data name="picHighlightChordColor.TabIndex" type="System.Int32, mscorlib">
+    <value>49</value>
+  </data>
   <data name="&gt;&gt;txtInactiveChordColor.Type" xml:space="preserve">
     <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
@@ -851,6 +860,9 @@
   </data>
   <data name="radioGradient.Location" type="System.Drawing.Point, System.Drawing">
     <value>8, 100</value>
+  </data>
+  <data name="$this.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
   </data>
   <data name="txtBgColor.Size" type="System.Drawing.Size, System.Drawing">
     <value>60, 20</value>
@@ -872,9 +884,6 @@
   </data>
   <data name="picActiveColor.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
-  </data>
-  <data name="btnInactiveBorderColor.Size" type="System.Drawing.Size, System.Drawing">
-    <value>25, 23</value>
   </data>
   <data name="&gt;&gt;btnHighlightChordColor.Parent" xml:space="preserve">
     <value>tabPage2</value>
@@ -901,7 +910,7 @@
     <value>26</value>
   </data>
   <data name="cbKaraokeType.Size" type="System.Drawing.Size, System.Drawing">
-    <value>121, 22</value>
+    <value>182, 22</value>
   </data>
   <data name="&gt;&gt;cbFontName.Type" xml:space="preserve">
     <value>System.Windows.Forms.ComboBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
@@ -1077,8 +1086,8 @@
   <data name="radioDiaporama.Text" xml:space="preserve">
     <value>Diaporama</value>
   </data>
-  <data name="label11.Text" xml:space="preserve">
-    <value>Highlight color</value>
+  <data name="&gt;&gt;cbKaraokeType.ZOrder" xml:space="preserve">
+    <value>0</value>
   </data>
   <data name="chkForceShowChords.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -1154,6 +1163,9 @@
   </data>
   <data name="&gt;&gt;btnInactiveColor.Name" xml:space="preserve">
     <value>btnInactiveColor</value>
+  </data>
+  <data name="&gt;&gt;radioDiaporama.Parent" xml:space="preserve">
+    <value>grpBoxBackGround</value>
   </data>
   <data name="&gt;&gt;radioRhythm.Parent" xml:space="preserve">
     <value>grpBoxBackGround</value>
@@ -1278,8 +1290,8 @@
   <data name="btnInactiveColor.Text" xml:space="preserve">
     <value>...</value>
   </data>
-  <data name="pBox.Location" type="System.Drawing.Point, System.Drawing">
-    <value>180, 84</value>
+  <data name="&gt;&gt;tabPage1.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TabPage, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="pictureBox1.TabIndex" type="System.Int32, mscorlib">
     <value>0</value>
@@ -1641,14 +1653,11 @@
   <data name="&gt;&gt;picInactiveColor.Name" xml:space="preserve">
     <value>picInactiveColor</value>
   </data>
-  <data name="pBox.Size" type="System.Drawing.Size, System.Drawing">
-    <value>385, 226</value>
+  <data name="btnInactiveBorderColor.Size" type="System.Drawing.Size, System.Drawing">
+    <value>25, 23</value>
   </data>
   <data name="txtInactiveColor.Location" type="System.Drawing.Point, System.Drawing">
     <value>132, 94</value>
-  </data>
-  <data name="&gt;&gt;tabPage1.Type" xml:space="preserve">
-    <value>System.Windows.Forms.TabPage, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="lblHighlightColor.TabIndex" type="System.Int32, mscorlib">
     <value>61</value>
@@ -1857,17 +1866,14 @@
   <data name="&gt;&gt;label9.Name" xml:space="preserve">
     <value>label9</value>
   </data>
-  <data name="&gt;&gt;radioDiaporama.Parent" xml:space="preserve">
-    <value>grpBoxBackGround</value>
+  <data name="label11.Size" type="System.Drawing.Size, System.Drawing">
+    <value>74, 13</value>
   </data>
   <data name="txtActiveBorderColor.Text" xml:space="preserve">
     <value>#010101</value>
   </data>
   <data name="&gt;&gt;btnActiveColor.Name" xml:space="preserve">
     <value>btnActiveColor</value>
-  </data>
-  <data name="label11.Size" type="System.Drawing.Size, System.Drawing">
-    <value>74, 13</value>
   </data>
   <data name="btnBgColorPicker.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
@@ -1916,9 +1922,6 @@
   </data>
   <data name="lblFont.Location" type="System.Drawing.Point, System.Drawing">
     <value>8, 19</value>
-  </data>
-  <data name="&gt;&gt;cbKaraokeType.ZOrder" xml:space="preserve">
-    <value>0</value>
   </data>
   <data name="&gt;&gt;cbFrameType.ZOrder" xml:space="preserve">
     <value>22</value>
@@ -2274,8 +2277,8 @@
   <data name="btnInactiveColor.Size" type="System.Drawing.Size, System.Drawing">
     <value>25, 23</value>
   </data>
-  <data name="pBox.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>4, 4, 4, 4</value>
+  <data name="&gt;&gt;btnResetDir.Parent" xml:space="preserve">
+    <value>grpBoxSlideShow</value>
   </data>
   <data name="&gt;&gt;lblActiveColor.ZOrder" xml:space="preserve">
     <value>6</value>
@@ -2352,8 +2355,8 @@
   <data name="&gt;&gt;pictureBox1.Name" xml:space="preserve">
     <value>pictureBox1</value>
   </data>
-  <data name="picHighlightChordColor.TabIndex" type="System.Int32, mscorlib">
-    <value>49</value>
+  <data name="label11.Font" type="System.Drawing.Font, System.Drawing">
+    <value>Microsoft Sans Serif, 8.25pt</value>
   </data>
   <data name="btnInactiveChordColor.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>

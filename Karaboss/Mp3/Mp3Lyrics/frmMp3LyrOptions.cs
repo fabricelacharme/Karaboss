@@ -756,6 +756,7 @@ namespace Karaboss.Mp3
                 // directory for slide show
                 frmMp3Lyrics.DirSlideShow = dirSlideShow;
 
+                // Karaoke display type
                 frmMp3Lyrics.KaraokeDisplayType = KaraokeDisplayType;
 
             }

@@ -32,7 +32,10 @@
 
 #endregion
 using GradientApp;
+using kar;
+using Karaboss.Mp3;
 using Karaboss.Resources.Localization;
+using keffect;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -47,6 +50,8 @@ namespace Karaboss
     {
 
         #region private declarations
+
+        private Dictionary<string, string> KaraokeTypes = new Dictionary<string, string>();
 
         private Karaclass.OptionsDisplay OptionDisplay;        
         private string bgOption = "Diaporama";
@@ -117,8 +122,11 @@ namespace Karaboss
         }
 
         // Number of lines to display
-        private int _nbLyricsLines;        
-        
+        private int _nbLyricsLines;
+
+        // Karaoke display type (FixedLines, ScrollingLinesBottomUp, ScrollingLinesTopDown, TwoLinesSwapped
+        private string KaraokeDisplayType;
+
         #endregion private declarations
 
         public frmLyrOptions()
@@ -177,8 +185,24 @@ namespace Karaboss
                         }
                     }
                 }
-               
-               
+
+
+                // Karaoke display types
+                // karaokeEffect1 is updated by the options form when changing the display type, so we need to set it before setting the selected item in the combo box
+                PopulateKaraokeDisplayTypes();
+                KaraokeDisplayType = Properties.Settings.Default.KaraokeDisplayType;
+                foreach (KeyValuePair<string, string> valuePair in cbKaraokeType.Items)
+                {
+                    if (!string.IsNullOrEmpty(valuePair.Key))
+                    {
+                        if (valuePair.Key == KaraokeDisplayType)
+                        {
+                            cbKaraokeType.SelectedItem = valuePair;
+                            break;
+                        }
+                    }
+                }
+
                 // Force Uppercase
                 bForceUppercase = Karaclass.m_ForceUppercase;
               
@@ -350,6 +374,21 @@ namespace Karaboss
         }
 
 
+        private void PopulateKaraokeDisplayTypes()
+        {
+            // Populate karaoke display types cbKaraokeType         
+            KaraokeTypes = new Dictionary<string, string>();
+            KaraokeTypes.Add("FixedLines", Strings.KTypesFixedLines);
+            KaraokeTypes.Add("ScrollingLinesBottomUp", Strings.KTypesScrollingLinesBottomUp);
+            KaraokeTypes.Add("ScrollingLinesTopDown", Strings.KTypesScrollingLinesTopDown);
+            KaraokeTypes.Add("TwoLinesSwapped", Strings.KTypesTwoLinesSwapped);
+            KaraokeTypes.Add("FourLinesSwapped", Strings.KTypesFourLinesSwapped);
+            cbKaraokeType.DataSource = new BindingSource(KaraokeTypes, null);
+            cbKaraokeType.ValueMember = "Key";
+            cbKaraokeType.DisplayMember = "Value";
+        }
+
+
         private void PopulateFonts()
         {
             // Karafun seems to support only a few fonts
@@ -473,6 +512,8 @@ namespace Karaboss
                 // Lyrics background
                 Properties.Settings.Default.bLyricsBackGround = chkTextBackground.Checked;
 
+                // Karaoke display type
+                Properties.Settings.Default.KaraokeDisplayType = KaraokeDisplayType;
 
                 // Save all
                 Properties.Settings.Default.Save();
@@ -728,7 +769,10 @@ namespace Karaboss
                 frmMidiLyrics.FreqSlideShow = freqSlideShow;
 
                 // directory for slide show
-                frmMidiLyrics.DirSlideShow = dirSlideShow;                
+                frmMidiLyrics.DirSlideShow = dirSlideShow;
+
+                // Karaoke display type
+                frmMidiLyrics.KaraokeDisplayType = KaraokeDisplayType;
             }
          }
 
@@ -1034,6 +1078,56 @@ namespace Karaboss
             pBox.bforceUppercase = bForceUppercase;
             Karaclass.m_ForceUppercase = bForceUppercase;
         }
+
+        /// <summary>
+        /// Karaoke display type
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void cbKaraokeType_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            try
+            {
+                if (cbKaraokeType.SelectedValue.GetType() == typeof(string))
+                {
+                    KaraokeDisplayType = cbKaraokeType.SelectedValue.ToString();
+                }
+                else
+                {
+                    KaraokeDisplayType = ((KeyValuePair<string, string>)cbKaraokeType.SelectedValue).Key.ToString();
+
+                }
+
+                switch (KaraokeDisplayType)
+                {
+                    case "FixedLines":
+                        pBox.KaraokeDisplayType = KaraokeDisplayTypes.FixedLines;
+                        break;
+                    case "ScrollingLinesBottomUp":
+                        pBox.KaraokeDisplayType = KaraokeDisplayTypes.ScrollingLinesBottomUp;
+                        break;
+                    case "ScrollingLinesTopDown":
+                        pBox.KaraokeDisplayType = KaraokeDisplayTypes.ScrollingLinesTopDown;
+                        break;
+                    case "TwoLinesSwapped":
+                        pBox.KaraokeDisplayType = KaraokeDisplayTypes.TwoLinesSwapped;
+                        break;
+                    case "FourLinesSwapped":
+                        pBox.KaraokeDisplayType = KaraokeDisplayTypes.FourLinesSwapped;
+                        break;
+
+                    default:
+                        pBox.KaraokeDisplayType = KaraokeDisplayTypes.FixedLines;
+                        break;
+                }
+
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+        }
+
 
         #endregion events
 
@@ -1384,6 +1478,7 @@ namespace Karaboss
             txb.Text = ToHex(c);            
             this.Show();
         }
+
 
 
         #endregion functions

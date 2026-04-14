@@ -81,7 +81,6 @@
             this.cbGrad0 = new System.Windows.Forms.ComboBox();
             this.radioRhythm = new System.Windows.Forms.RadioButton();
             this.radioGradient = new System.Windows.Forms.RadioButton();
-            this.pBox = new PicControl.pictureBoxControl();
             this.label9 = new System.Windows.Forms.Label();
             this.picInactiveBorderColor = new System.Windows.Forms.PictureBox();
             this.btnInactiveBorderColor = new System.Windows.Forms.Button();
@@ -116,6 +115,7 @@
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.pBox = new PicControl.pictureBoxControl();
             ((System.ComponentModel.ISupportInitialize)(this.UpDownNbLines)).BeginInit();
             this.pnlBalls.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
@@ -517,50 +517,6 @@
             this.radioGradient.UseVisualStyleBackColor = true;
             this.radioGradient.CheckedChanged += new System.EventHandler(this.radioGradient_CheckedChanged);
             // 
-            // pBox
-            // 
-            resources.ApplyResources(this.pBox, "pBox");
-            this.pBox.ActiveBorderColor = System.Drawing.Color.White;
-            this.pBox.ActiveColor = System.Drawing.Color.Red;
-            this.pBox.BackColor = System.Drawing.Color.Black;
-            this.pBox.bDemo = false;
-            this.pBox.Beat = 200;
-            this.pBox.BeatDuration = 0;
-            this.pBox.bforceUppercase = false;
-            this.pBox.BgColor = System.Drawing.Color.Black;
-            this.pBox.BorderThick = 1;
-            this.pBox.bShowChords = false;
-            this.pBox.bShowParagraphs = true;
-            this.pBox.bTextBackGround = true;
-            this.pBox.ChordFont = new System.Drawing.Font("Comic Sans MS", 8.25F);
-            this.pBox.CurrentTextPos = 2;
-            this.pBox.CurrentTime = 30;
-            this.pBox.DirSlideShow = "C:\\Users\\Fabrice\\AppData\\Local\\Microsoft® Visual Studio®";
-            this.pBox.FrameType = "Frame1";
-            this.pBox.FreqDirSlideShow = 0;
-            this.pBox.Grad0Color = System.Drawing.Color.Empty;
-            this.pBox.Grad1Color = System.Drawing.Color.Empty;
-            this.pBox.GradientAngle = 45F;
-            this.pBox.HighlightChordColor = System.Drawing.Color.FromArgb(((int)(((byte)(238)))), ((int)(((byte)(17)))), ((int)(((byte)(17)))));
-            this.pBox.HighlightColor = System.Drawing.Color.Coral;
-            this.pBox.imgLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.pBox.InactiveBorderColor = System.Drawing.Color.Empty;
-            this.pBox.InactiveChordColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(196)))), ((int)(((byte)(13)))));
-            this.pBox.InactiveColor = System.Drawing.Color.YellowGreen;
-            this.pBox.KaraokeFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
-            this.pBox.KLyrics = null;
-            this.pBox.m_CurrentImage = null;
-            this.pBox.m_DisplayRectangle = new System.Drawing.Rectangle(0, 0, 0, 0);
-            this.pBox.Name = "pBox";
-            this.pBox.nbLyricsLines = 3;
-            this.pBox.OptionBackground = null;
-            this.pBox.OptionDisplay = PicControl.pictureBoxControl.OptionsDisplay.Bottom;
-            this.pBox.OptionShowChords = true;
-            this.pBox.Rhythm0Color = System.Drawing.Color.Empty;
-            this.pBox.Rhythm1Color = System.Drawing.Color.Empty;
-            this.pBox.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Normal;
-            this.pBox.TransparencyKey = System.Drawing.Color.Lime;
-            // 
             // label9
             // 
             resources.ApplyResources(this.label9, "label9");
@@ -756,6 +712,7 @@
             resources.GetString("cbKaraokeType.Items2"),
             resources.GetString("cbKaraokeType.Items3")});
             this.cbKaraokeType.Name = "cbKaraokeType";
+            this.cbKaraokeType.SelectedIndexChanged += new System.EventHandler(this.cbKaraokeType_SelectedIndexChanged);
             // 
             // label1
             // 
@@ -837,6 +794,51 @@
             this.tabPage2.Controls.Add(this.label11);
             this.tabPage2.Name = "tabPage2";
             this.tabPage2.UseVisualStyleBackColor = true;
+            // 
+            // pBox
+            // 
+            resources.ApplyResources(this.pBox, "pBox");
+            this.pBox.ActiveBorderColor = System.Drawing.Color.White;
+            this.pBox.ActiveColor = System.Drawing.Color.Red;
+            this.pBox.BackColor = System.Drawing.Color.Black;
+            this.pBox.bDemo = false;
+            this.pBox.Beat = 200;
+            this.pBox.BeatDuration = 0;
+            this.pBox.bforceUppercase = false;
+            this.pBox.BgColor = System.Drawing.Color.Black;
+            this.pBox.BorderThick = 1;
+            this.pBox.bShowChords = false;
+            this.pBox.bShowParagraphs = true;
+            this.pBox.bTextBackGround = true;
+            this.pBox.ChordFont = new System.Drawing.Font("Comic Sans MS", 8.25F);
+            this.pBox.CurrentTextPos = 2;
+            this.pBox.CurrentTime = 30;
+            this.pBox.DirSlideShow = "C:\\Users\\Fabrice\\AppData\\Local\\Microsoft® Visual Studio®";
+            this.pBox.FrameType = "Frame1";
+            this.pBox.FreqDirSlideShow = 0;
+            this.pBox.Grad0Color = System.Drawing.Color.Empty;
+            this.pBox.Grad1Color = System.Drawing.Color.Empty;
+            this.pBox.GradientAngle = 45F;
+            this.pBox.HighlightChordColor = System.Drawing.Color.FromArgb(((int)(((byte)(238)))), ((int)(((byte)(17)))), ((int)(((byte)(17)))));
+            this.pBox.HighlightColor = System.Drawing.Color.Coral;
+            this.pBox.imgLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.pBox.InactiveBorderColor = System.Drawing.Color.Empty;
+            this.pBox.InactiveChordColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(196)))), ((int)(((byte)(13)))));
+            this.pBox.InactiveColor = System.Drawing.Color.YellowGreen;
+            this.pBox.KaraokeDisplayType = kar.KaraokeDisplayTypes.FixedLines;
+            this.pBox.KaraokeFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
+            this.pBox.KLyrics = null;
+            this.pBox.m_CurrentImage = null;
+            this.pBox.m_DisplayRectangle = new System.Drawing.Rectangle(0, 0, 0, 0);
+            this.pBox.Name = "pBox";
+            this.pBox.nbLyricsLines = 3;
+            this.pBox.OptionBackground = null;
+            this.pBox.OptionDisplay = PicControl.pictureBoxControl.OptionsDisplay.Bottom;
+            this.pBox.OptionShowChords = true;
+            this.pBox.Rhythm0Color = System.Drawing.Color.Empty;
+            this.pBox.Rhythm1Color = System.Drawing.Color.Empty;
+            this.pBox.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Normal;
+            this.pBox.TransparencyKey = System.Drawing.Color.Lime;
             // 
             // frmLyrOptions
             // 

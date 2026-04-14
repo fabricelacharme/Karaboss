@@ -43,6 +43,8 @@ using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
+using static PicControl.pictureBoxControl;
+using static System.Windows.Forms.LinkLabel;
 
 namespace PicControl
 {
@@ -107,11 +109,21 @@ namespace PicControl
         #endregion KaraokeLyrics
 
 
-        #region Karaoke type
+        #region Karaoke display type
 
+        private kar.KaraokeDisplayTypes _karaokeDisplayType = KaraokeDisplayTypes.FixedLines;
+        public kar.KaraokeDisplayTypes KaraokeDisplayType
+        {
+            get { return _karaokeDisplayType; }
+            set
+            {
+                _karaokeDisplayType = value;
+                pboxWnd.Invalidate();
+            }
+        }
 
+        #endregion Karaoke display type
 
-        #endregion Karaoke type
 
         #region Slideshow
 
@@ -731,6 +743,12 @@ namespace PicControl
 
         #region Others
 
+        private float[] LinesLengths;
+        private List<string[]> Lines;
+        private List<double[]> Times;
+        private string[] Texts;
+        private int _lines = 0;
+
         public ImageLayout imgLayout { get; set; }
         public Image m_CurrentImage { get; set; }
                        
@@ -987,14 +1005,115 @@ namespace PicControl
             pboxWnd.Invalidate();
         }
         
+
+        private kLyrics RemoveParagraphs(kLyrics kls)
+        {
+            kLyrics klsNoParagraphs = new kLyrics();
+            kLine line;
+            for (int i = 0; i < kls.Lines.Count; i++)
+            {
+                if (kls.Lines[i].Syllables.First().CharType != Syllable.CharTypes.ParagraphSep)
+                {
+                    line = new kLine();
+                    for (int j = 0; j < kls.Lines[i].Syllables.Count; j++)
+                    {
+                        line.Add(kls.Lines[i].Syllables[j]);
+                    }
+                    klsNoParagraphs.Add(line);
+                }
+            }
+
+            return klsNoParagraphs;
+        }
+
+
         /// <summary>
         /// Load text of song
         /// </summary>
         /// <param name="toto"></param>     
         public void LoadSong(bool bDemoMode = false)
         {            
+            
+            if (KaraokeDisplayType == KaraokeDisplayTypes.TwoLinesSwapped || KaraokeDisplayType == KaraokeDisplayTypes.FourLinesSwapped) 
+            {
+                _kLyrics = RemoveParagraphs(_kLyrics);
+            }
+            
             lstLyricsLines = new List<string>();
             lstChordsLines = new List<string>();
+
+            #region Load Lines & Times
+
+            Lines = new List<string[]>();
+            Times = new List<double[]>();
+
+            kLine karaokeline;
+
+            string[] s;
+            double[] t;
+            string tx;
+
+            if (_kLyrics == null || _kLyrics.Lines == null) return;
+
+            for (int i = 0; i < _kLyrics.Lines.Count; i++)
+            {
+                karaokeline = _kLyrics.Lines[i];
+                t = new double[karaokeline.Syllables.Count];
+                s = new string[karaokeline.Syllables.Count];
+
+                for (int j = 0; j < karaokeline.Syllables.Count; j++)
+                {
+                    t[j] = karaokeline.Syllables[j].StartTime;
+
+                    // Clean text
+                    tx = karaokeline.Syllables[j].Text;
+                    tx = tx.Replace(Environment.NewLine, "");
+                    if (bforceUppercase)
+                        tx = tx.ToUpper();
+
+                    s[j] = tx;
+                }
+
+                // If paragraph
+                if (s.Length > 0 && (s.Length == 1 && s[0] == _InternalSepParagraphs))
+                {
+                    if (bShowParagraphs)
+                    {
+                        Times.Add(t);
+                        Lines.Add(s);
+                    }
+                }
+                else
+                {
+                    // not a paragraph
+                    Times.Add(t);
+                    Lines.Add(s);
+                }               
+            }
+
+            _lines = Lines.Count;
+
+            string[] line;
+            string Tx;
+            Texts = new string[Lines.Count];
+            LinesLengths = new float[Lines.Count];
+
+            for (int i = 0; i < Lines.Count; i++)
+            {
+                line = Lines[i];
+                Tx = string.Empty;
+
+                for (int j = 0; j < line.Length; j++)
+                {
+                    Tx += line[j];
+                }
+                Texts[i] = Tx;
+            }
+
+
+            #endregion Load Lines & Times
+
+
             syllabes = new List<syllabe>();
 
             if (_kLyrics != null && _kLyrics.Count > 0)
@@ -1008,6 +1127,10 @@ namespace PicControl
                 }
                 // Number total of lines (offset calculation)
                 _totalLyricsLines = lstLyricsLines.Count - 1;
+
+
+                
+                LinesLengths = new float[lstLyricsLines.Count];
 
                 // ajust font size
                 lineMax = GetMaxLength();
@@ -1337,6 +1460,7 @@ namespace PicControl
             for (int i = 0; i < kl.Lines.Count; i++)
             {
                 string lineContent = kl.Lines[i].ToString();
+
                 if (_bshowparagraphs && lineContent == _InternalSepParagraphs)
                 {
                     // new paragraph = empty line (space)
@@ -1345,7 +1469,7 @@ namespace PicControl
                 else if (lineContent != "")
                 {
                     lstLines.Add(lineContent);
-                }
+                }               
             }
             return lstLines;
         }
@@ -1360,6 +1484,7 @@ namespace PicControl
             for (int i = 0; i < kl.Lines.Count; i++)
             {
                 lineChords = string.Empty;
+
                 for (int j = 0; j < kl.Lines[i].Syllables.Count; j++)
                 {
                     Syllable syll = kl.Lines[i].Syllables[j];
@@ -1392,7 +1517,10 @@ namespace PicControl
         /// <param name="plLyrics"></param>      
         List<syllabe> StoreLyricsSyllabes(kLyrics kl)
         {
-            List<syllabe> lstSyllabes = new List<syllabe>();
+
+            syllabe syl;
+            Syllable kSyl;
+            List <syllabe> lstSyllabes = new List<syllabe>();
 
             for (int i = 0; i < kl.Lines.Count; i++)
             {
@@ -1400,9 +1528,9 @@ namespace PicControl
 
                 for (int j = 0; j < line.Syllables.Count; j++)
                 {
-                    Syllable kSyl = line.Syllables[j];
+                    kSyl = line.Syllables[j];                   
 
-                    syllabe syl = new syllabe();
+                    syl = new syllabe();
 
                     syl.chord = kSyl.Chord;
                     syl.line = i;                                                                   // line number of syllabe
@@ -1418,6 +1546,7 @@ namespace PicControl
                     }
                     syl.offset = 0;
                     lstSyllabes.Add(syl);
+                   
                 }
             }
             return lstSyllabes;
@@ -1512,12 +1641,36 @@ namespace PicControl
                     // Vertical distance between lines
                     _lineHeight = (int)emSize + 10;
                     // Height of the full song
-                    _linesHeight = _nbLyricsLines * _lineHeight;                                        
+                    _linesHeight = _nbLyricsLines * _lineHeight;
+
+                    // Calculate the length of each line
+                    for (int i = 0; i < LinesLengths.Length; i++)
+                    {
+                        LinesLengths[i] = MeasureLine(i);
+                    }
 
                 }
                 g.Dispose();
             }
         }
+
+        /// <summary>
+        /// Measure the length of line "curline"
+        /// </summary>
+        /// <param name="curline"></param>
+        /// <returns></returns>
+        private float MeasureLine(int curline)
+        {
+            float Sum = 0;
+
+            // Calculate the lengh of a line
+            for (int i = 0; i < Lines[curline].Length; i++)
+            {
+                Sum += MeasureString(Lines[curline][i], _karaokeFont.Size);
+            }
+            return Sum;
+        }
+
 
         /// <summary>
         /// Crée une liste de rectangles pour chaque syllable de la ligne en cours 
@@ -1538,7 +1691,7 @@ namespace PicControl
 
                     int line = syllabes[pos].line;
                     string strLine = lstLyricsLines[line];
-                    float Offset = CenterLine(strLine, emSize);           // Offset de la ligne (centré)
+                    float Offset = HCenterText(strLine, emSize);           // Offset de la ligne (centré)
 
                     int idx = -1;                    
                     float x = Offset;
@@ -1671,9 +1824,9 @@ namespace PicControl
         /// </summary>
         /// <param name="tx"></param>
         /// <returns></returns>
-        private int CenterLine(string tx, float femsize)
+        private int HCenterText(string tx, float femsize)
         {
-            float ret; // = 0;
+            float ret; 
             float L = MeasureString(tx, femsize);
             float W = pboxWnd.ClientSize.Width;
 
@@ -1681,7 +1834,6 @@ namespace PicControl
 
             if (ret < 0)
                 ret = 0;
-
 
             return (int)ret;
         }
@@ -2141,7 +2293,7 @@ namespace PicControl
                 lineContent = kline.ToString();
                 lineChords = lstChordsLines[line];          // TODO : à revoir pour les accords directement dans la classe KLyrics
                 
-                x1 = CenterLine(lineContent, emSize);
+                x1 = HCenterText(lineContent, emSize);
 
                 // Draw line content
                 if (_bShowChords)
@@ -2527,7 +2679,27 @@ namespace PicControl
             if (lstLyricsLines is null || lstLyricsLines.Count == 0)
                 return;
 
-            DrawText(e);                    
+            //DrawText(e);
+
+            switch (KaraokeDisplayType)
+            {
+                case KaraokeDisplayTypes.FixedLines:
+                    DrawTextWithFixedLines(e);
+                    break;
+                case KaraokeDisplayTypes.ScrollingLinesBottomUp:
+                    DrawTextWithScrollingLinesBottomUp(e);
+                    break;
+                case KaraokeDisplayTypes.ScrollingLinesTopDown:
+                    DrawTextWithScrollingLinesTopDown(e);
+                    break;
+                case KaraokeDisplayTypes.TwoLinesSwapped:
+                    DrawTextWithTwoLinesSwapped(e);
+                    break;
+                case KaraokeDisplayTypes.FourLinesSwapped:
+                    DrawTextWithFourLinesSwapped(e);
+                    break;
+            }
+
 
             #endregion
 
@@ -2575,7 +2747,811 @@ namespace PicControl
                 Console.Write("Error drawing text on image: " + ep.Message);
             }            
         }
-    
+
+
+        #region Code fragments
+
+        private void DrawActiveLineWithBorders(PaintEventArgs e, int y1)
+        {
+            #region Declarations
+            int x0 = 0;
+            float x1;
+            syllabe syllab;
+            int W;
+            int H;
+            #endregion Declarations
+
+
+            if (syllabes == null) return;
+            if (_currentTextPos >= syllabes.Count)
+                return;
+
+            if (_currentTextPos >= 0)
+                x0 = _currentTextPos - syllabes[_currentTextPos].posline;
+
+            for (int i = x0; i < syllabes.Count; i++)
+            {
+                // dessine la ligne courante en mettant en surbrillance la syllabe correspondante à currentTextPos
+                syllab = syllabes[i];
+
+                // It is the current line
+                if (syllab.line == currentLine)
+                {
+
+                    // Rectangle
+                    x1 = rRect[syllab.posline].X;
+                    W = (int)rRect[syllab.posline].Width;
+                    H = (int)rRect[syllab.posline].Height;
+
+                    if (syllabes[i].pos < _currentTextPos)
+                    {
+                        // syllabes avant celle active
+                        if (_bShowChords)
+                        {
+                            if (syllab.chord != "")
+                                drawChord(_InactiveChordColor, syllab, (int)x1, y1, e);
+
+                            drawSyllabe("Active", _ActiveColor, syllab, (int)x1, y1 + 2 * _lineHeight / 3, W, H, e);                            // déjà chanté
+                        }
+                        else
+                        {
+                            drawSyllabe("Active", _ActiveColor, syllab, (int)x1, y1, W, H, e);                                            // déjà chanté
+                        }
+                    }
+                    else if (syllab.pos == _currentTextPos)
+                    {
+
+                        // Surbrillance normale   
+                        if (bHighLight)
+                        {
+                            if (_bShowChords)
+                            {
+                                if (syllab.chord != "")
+                                    drawChord(_HighlightChordColor, syllab, (int)x1, y1, e);
+
+                                drawSyllabe("Highlight", _HighlightColor, syllab, (int)x1, y1 + 2 * _lineHeight / 3, W, H, e);                       // surbrillance
+                            }
+                            else
+                            {
+                                drawSyllabe("Highlignt", _HighlightColor, syllab, (int)x1, y1, W, H, e);                                         // surbrillance     
+                            }
+                        }
+                        else
+                        {
+                            if (_bShowChords)
+                            {
+                                if (syllab.chord != "")
+                                    drawChord(_InactiveChordColor, syllab, (int)x1, y1, e);
+
+                                drawSyllabe("Inactive", _InactiveColor, syllab, (int)x1, y1 + 2 * _lineHeight / 3, W, H, e);
+                            }
+                            else
+                            {
+                                drawSyllabe("Inactive", _InactiveColor, syllab, (int)x1, y1, W, H, e);
+                            }
+                        }
+
+
+                        #region EndOfLine & calculations
+
+                        // Calculations are made on active syllabe (celle qui correspond à currentpos !)
+
+                        // End of line
+                        if (syllab.SylCount == 1)
+                        {
+                            bEndOfLine = true;
+                        }
+                        else if (syllab.SylCount > 1 && syllab.posline == syllab.SylCount - 1)
+                        {
+                            bEndOfLine = true;
+                        }
+                        else
+                        {
+                            bEndOfLine = false;
+
+
+                            #region calculate next line
+
+                            // Start of line
+                            if (syllab.posline == 0)
+                            {
+                                // calculate next time for next start of line                           
+                                int next = syllab.SylCount;
+                                if (i + next < syllabes.Count)
+                                {
+                                    // Time of start of next line
+                                    // Soit le début de la prochaine ligne, soit la fin de la ligne courante
+                                    int t1 = syllabes[i + next].time;
+                                    int t2 = syllabes[i + next - 1].time + 2 * _beatDuration; // on passe à la ligne au bout de 2 temps
+
+                                    nextStartOfLineTime = t1 < t2 ? t1 : t2;
+
+                                    // Duration until next line 
+                                    TimeToNextLineDuration = nextStartOfLineTime - _currentPosition;
+                                }
+                            }
+                            #endregion
+                        }
+                        #endregion
+                    }
+                    // syllabes après celle active
+                    else
+                    {
+                        if (_bShowChords)
+                        {
+                            if (syllab.chord != "")
+                                drawChord(_InactiveChordColor, syllab, (int)x1, (int)y1, e);
+
+                            drawSyllabe("Inactive", _InactiveColor, syllab, (int)x1, y1 + 2 * _lineHeight / 3, W, H, e);                           // pas encore chanté
+                        }
+                        else
+                        {
+                            drawSyllabe("Inactive", _InactiveColor, syllab, (int)x1, y1, W, H, e);                                      // pas encore chanté
+                        }
+                    }
+                }
+                // Ligne immédiatement suivante
+                else if (syllab.line > currentLine + 1)
+                {
+                    break;
+                }
+            }
+
+        }
+       
+        private void DrawActiveLineWithShadow(PaintEventArgs e, int y1) 
+        {
+            DrawActiveLineWithBorders(e, y1);
+        }
+
+        private void DrawActiveLineWithNeon(PaintEventArgs e, int y1) 
+        {
+            DrawActiveLineWithBorders(e, y1);
+        }
+
+
+
+        private void DrawInactiveLineWithBorders(PaintEventArgs e, int lineIndex, int y2)
+        {
+            GraphicsPath pthc = new GraphicsPath(); // Chords path
+            GraphicsPath pth = new GraphicsPath(); // Lyrics path
+            Pen penInactiveBorder = new Pen(_InactiveBorderColor, _borderthick); // pen for inactive border color
+            
+            string lineContent;
+            string lineChords;
+            int x0;
+            int Wbg;
+            RectangleF Rbg;
+
+            // Line content
+            //kLine kline = _kLyrics.Lines[lineIndex];
+
+            // If there is a paragraph separator, we don't display the line
+            //if (kline.Syllables.First().CharType == Syllable.CharTypes.ParagraphSep) return;
+
+            lineContent = Texts[lineIndex];  // kline.ToString();
+            
+            
+            lineChords = lstChordsLines[lineIndex];          // TODO : à revoir pour les accords directement dans la classe KLyrics
+
+            x0 = HCenterText(lineContent, emSize);
+
+            // Draw line content
+            if (_bShowChords)
+            {
+                #region Draw Chords                
+
+                // Draw chord above
+                // Add lines of lyrics to the Graphics path                                        
+                pthc.AddString(lineChords, _chordFont.FontFamily, (int)_chordFont.Style, 3 * emSize / 4, new Point((int)x0, (int)y2), sf);
+                e.Graphics.FillPath(new SolidBrush(_InactiveChordColor), pthc);
+
+                pthc.Dispose();
+
+                #endregion Draw Chords
+
+                
+                #region draw text
+                
+                // Draw syllabe below at 2 * ChordOffset / 3
+                y2 = y2 + 2 * _lineHeight / 3;
+
+                #region Background of text  
+
+                if (_bTextBackGround)
+                {
+                    Wbg = (int)(1.04 * LinesLengths[lineIndex]);
+                    // Black background to make text more visible
+                    Rbg = new RectangleF((int)(0.94 * x0), (int)(1.04 * y2), Wbg, _lineHeight);
+                    // background
+                    e.Graphics.FillRectangle(new SolidBrush(Color.Black), Rbg);
+                }
+
+                #endregion Background of text
+
+
+                // Add lines of lyrics to the Graphics path
+                pth.AddString(lineContent, m_font.FontFamily, (int)m_font.Style, emSize, new Point((int)x0, (int)y2), sf);
+
+                #region Apply effects               
+
+                if (FrameType == "Neon")
+                    CreateNeonEffect(_InactiveBorderColor, e, pth);
+                else if (FrameType == "Shadow")
+                    CreateShadowEffect(lineContent, _InactiveBorderColor, (int)x0, (int)y2, m_font, emSize, e, pth);
+
+                #endregion Apply effect
+
+                // Draw the text
+                e.Graphics.FillPath(new SolidBrush(_InactiveColor), pth);
+
+                // Outiline the text
+                if (_borderthick > 0)
+                    e.Graphics.DrawPath(penInactiveBorder, pth);
+                #endregion draw text
+            }
+            else
+            {
+                #region draw text
+                // No chords
+
+                #region background of line  
+
+                if (_bTextBackGround)
+                {
+                    Wbg = (int)(1.04 * LinesLengths[lineIndex]);
+                    // Black background to make text more visible
+                    Rbg = new RectangleF((int)(0.94 * x0), (int)(1.04 * y2), Wbg, _lineHeight);
+                    // background
+                    e.Graphics.FillRectangle(new SolidBrush(Color.Black), Rbg);
+                }
+
+                #endregion
+
+                // Add lines of lyrics to the Graphics path
+                pth.AddString(lineContent, m_font.FontFamily, (int)m_font.Style, emSize, new Point((int)x0, (int)y2), sf);
+
+                #region Apply effects               
+
+                if (FrameType == "Neon")
+                    CreateNeonEffect(_InactiveBorderColor, e, pth);
+                else if (FrameType == "Shadow")
+                    CreateShadowEffect(lineContent, _InactiveBorderColor, (int)x0, (int)y2, m_font, emSize, e, pth);
+
+                #endregion Apply effect
+
+
+                // Draw text
+                // Color clr is always InactiveColor for "NextLines"
+                e.Graphics.FillPath(new SolidBrush(_InactiveColor), pth);
+
+                // Outiline the text
+                if (_borderthick > 0)
+                    e.Graphics.DrawPath(penInactiveBorder, pth);
+                
+                #endregion draw text
+
+            }
+
+            #region Clean up resources
+            pth.Dispose();
+            pthc.Dispose();
+            penInactiveBorder.Dispose();
+            #endregion Clean up resources
+        }
+
+        private void DrawInactiveLineWithShadow(PaintEventArgs e, int lineIndex, int y2)
+        {
+            DrawInactiveLineWithBorders(e, lineIndex, y2);
+        }
+
+        private void DrawInactiveLineWithNeon(PaintEventArgs e, int lineIndex, int y2)
+        {
+            DrawInactiveLineWithBorders(e, lineIndex, y2);
+        }
+
+        #endregion Code fragments
+
+
+        #region Draw text with fixed lines
+
+        private void DrawTextWithFixedLines(PaintEventArgs e)
+        {
+            switch (FrameType)
+            {
+                case "NoBorder":
+                case "FrameThin":
+                case "Frame1":
+                case "Frame2":
+                case "Frame3":
+                case "Frame4":
+                case "Frame5":
+                    FixDrawTextWithBorder(e);
+                    break;
+
+                case "Shadow":
+                    FixDrawTextWithShadow(e);
+                    break; ;
+
+                case "Neon":
+                    FixDrawTextWithNeon(e);
+                    break; ;
+
+                default:
+                    FixDrawTextWithBorder(e);
+                    break;
+            }      
+        }
+
+        private void FixDrawTextWithBorder(PaintEventArgs e)
+        {
+            // Antialiasing
+            e.Graphics.SmoothingMode = SmoothingMode.AntiAlias;
+
+            // Create list of rectangles when line changes
+            synchronize(_currentTextPos);
+
+            // Calculate offset to center the text vertically
+            int y0 = getOffsetHeight(emSize);
+            
+            // Draw active line with borders
+            DrawActiveLineWithBorders(e, y0);
+
+            
+            // Draw next  inactives lines with borders
+            int _FirstLineToShow = currentLine + 1;
+            int _LastLineToShow = _FirstLineToShow + _nbLyricsLines - 2;
+
+            int y2;
+            //int y2 = y0;
+            //if (bShowChords)
+            //    y2 = y0 + 2 * _lineHeight / 3 ;
+
+
+            for (int i = _FirstLineToShow; i <= _LastLineToShow; i++)
+            {
+                if (i < lstLyricsLines.Count)
+                {
+                    //if (bShowChords) 
+                    //    y2 += (i - currentLine) * _lineHeight;
+                    //else
+                    //    y2 += (i - currentLine) * _lineHeight;
+
+                    y2 = y0 + (i - currentLine) * _lineHeight;
+
+                    DrawInactiveLineWithBorders(e, i, y2);                    
+                }
+            }          
+        }
+
+        private void FixDrawTextWithShadow(PaintEventArgs e)
+        {
+            // Antialiasing
+            e.Graphics.SmoothingMode = SmoothingMode.AntiAlias;
+
+            // Create list of rectangles when line changes
+            synchronize(_currentTextPos);
+
+            // Calculate offset to center the text vertically
+            int y0 = getOffsetHeight(emSize);
+
+            // Draw active line with borders
+            DrawActiveLineWithBorders(e, y0);
+
+
+            // Draw next  inactives lines with borders
+            int _FirstLineToShow = currentLine + 1;
+            int _LastLineToShow = _FirstLineToShow + _nbLyricsLines - 2;
+
+            int y2; // = y0;
+            //if (bShowChords)
+            //    y2 = y0 + 2 * _lineHeight / 3;
+
+
+            for (int i = _FirstLineToShow; i <= _LastLineToShow; i++)
+            {
+                if (i < lstLyricsLines.Count)
+                {
+                    //if (bShowChords)
+                    //    y2 += (i - currentLine) * _lineHeight;
+                    //else
+                    //    y2 += (i - currentLine) * _lineHeight;
+
+                    y2 = y0 + (i - currentLine) * _lineHeight;
+
+                    DrawInactiveLineWithShadow(e, i, y2);
+                }
+            }
+            /*
+            try
+            {
+                // Create list of rectangles when line changes
+                synchronize(_currentTextPos);
+
+                // Antialiasing
+                e.Graphics.SmoothingMode = SmoothingMode.AntiAlias;
+
+                // Calculate offset to center the text vertically
+                int y0 = getOffsetHeight(emSize);
+
+                if (_nbLyricsLines > 1)
+                {
+                    // Several lines to display
+                    // progressive offset - vOffset increases, so y0 decreases
+                    //y0 = y0 - vOffset;
+
+                    // Draw current line                    
+                    DrawCurrentLine(_currentPosition, y0, e);
+
+                    // Draw next lines                 
+                    DrawNextLines(y0, e);
+                }
+                else
+                {
+                    // A single line to display
+                    // Draw current line until end of line
+                    if (!bEndOfLine)
+                        DrawCurrentLine(_currentPosition, y0, e);
+                    else
+                        DrawNextLines(y0, e);
+                }
+            }
+            catch (Exception ep)
+            {
+                Console.Write("Error drawing text on image: " + ep.Message);
+            }
+            */
+        }
+
+        private void FixDrawTextWithNeon(PaintEventArgs e)
+        {
+            // Antialiasing
+            e.Graphics.SmoothingMode = SmoothingMode.AntiAlias;
+
+            // Create list of rectangles when line changes
+            synchronize(_currentTextPos);
+
+            // Calculate offset to center the text vertically
+            int y0 = getOffsetHeight(emSize);
+
+            // Draw active line with borders
+            DrawActiveLineWithBorders(e, y0);
+
+
+            // Draw next  inactives lines with borders
+            int _FirstLineToShow = currentLine + 1;
+            int _LastLineToShow = _FirstLineToShow + _nbLyricsLines - 2;
+
+            int y2; // = y0;
+            //if (bShowChords)
+            //    y2 = y0 + 2 * _lineHeight / 3;
+
+
+            for (int i = _FirstLineToShow; i <= _LastLineToShow; i++)
+            {
+                if (i < lstLyricsLines.Count)
+                {
+                    //if (bShowChords)
+                    //    y2 += (i - currentLine) * _lineHeight;
+                    //else
+                    //    y2 += (i - currentLine) * _lineHeight;
+
+                    y2 = y0 + (i - currentLine) * _lineHeight;
+                    DrawInactiveLineWithNeon(e, i, y2);
+                }
+            }
+        }
+
+        #endregion Draw text with fixed lines
+
+
+
+        #region Draw text with Four lines swapped
+
+        private void DrawTextWithFourLinesSwapped(PaintEventArgs e)
+        {
+            switch (FrameType)
+            {
+                case "NoBorder":
+                case "FrameThin":
+                case "Frame1":
+                case "Frame2":
+                case "Frame3":
+                case "Frame4":
+                case "Frame5":
+                    FlsDrawTextWithBorder(e);
+                    break;
+
+                case "Shadow":
+                    FlsDrawTextWithShadow(e);
+                    break; ;
+
+                case "Neon":
+                    FlsDrawTextWithNeon(e);
+                    break; ;
+
+                default:
+                    FlsDrawTextWithBorder(e);
+                    break;
+            }
+        }
+        
+        private void FlsDrawTextWithBorder(PaintEventArgs e)
+        {           
+            // Antialiasing
+            e.Graphics.SmoothingMode = SmoothingMode.AntiAlias;
+
+            // Create list of rectangles when line changes
+            synchronize(_currentTextPos);
+
+            // Synchronise can modify currentLine, so we need to recalculate it after synchronize
+            int _FirstLineToShow = currentLine;
+
+            // Calculate offset to center the text vertically
+            int y0 = getOffsetHeight(emSize);
+
+            int y1 = 0;
+            int y2 = 0;
+            int y3 = 0;
+            int y4 = 0;
+            int idx2 = 0;
+            int idx3 = 0;
+            int idx4 = 0;
+
+            int chordOffset = 0;
+            if (bShowChords)
+                chordOffset = 2 * _lineHeight / 3;
+
+
+            // At start, _FirstLineToShow = 0 
+            // 1st line is empty
+            // 2nd is empty
+            // Active line is on the 3rd line
+            // Active line + 1 is on the 4th line
+
+            if (_FirstLineToShow % 4 == 2)
+            {
+                // First line is active
+                y1 = y0;                            //_FirstLineToShow
+                y2 = y0 + chordOffset + _lineHeight;              //_FirstLineToShow + 1
+                y3 = y0 + 2 * chordOffset + 2 * _lineHeight;          //_FirstLineToShow + 2
+                y4 = y0 + 3 * chordOffset + 3 * _lineHeight;          //_FirstLineToShow + 3
+
+                idx2 = _FirstLineToShow + 1;
+                idx3 = _FirstLineToShow + 2;
+                idx4 = _FirstLineToShow + 3;
+
+            }
+            else if (_FirstLineToShow % 4 == 3)
+            {
+                // 2nd line is active
+                y2 = y0;                            // _FirstLineToShow - 1
+                y1 = y0 + chordOffset + _lineHeight;              // _FirstLineToShow
+                y3 = y0 + 2 * chordOffset + 2 * _lineHeight;          // _FirstLineToShow + 1
+                y4 = y0 + 3 * chordOffset + 3 * _lineHeight;          // _FirstLineToShow + 2
+
+                idx2 = _FirstLineToShow - 1;
+                idx3 = _FirstLineToShow + 1;
+                idx4 = _FirstLineToShow + 2;
+            }
+            else if (_FirstLineToShow % 4 == 0)
+            {
+                // 3rd line is active
+                y3 = y0;                            // _FirstLineToShow + 2     
+                y4 = y0 + chordOffset + _lineHeight;              // _FirstLineToShow + 3
+                y1 = y0 + 2 * chordOffset + 2 * _lineHeight;          // _FirstLineToShow
+                y2 = y0 + 3 * chordOffset + 3 * _lineHeight;          // _FirstLineToShow + 1
+
+                idx2 = _FirstLineToShow + 1;
+                idx3 = _FirstLineToShow + 2;
+                idx4 = _FirstLineToShow + 3;
+            }
+            else if (_FirstLineToShow % 4 == 1)
+            {
+                // 4th line is active
+                y3 = y0;                            // _FirstLineToShow + 1
+                y4 = y0 + chordOffset + _lineHeight;              // _FirstLineToShow + 2
+                y2 = y0 + 2 * chordOffset + 2 * _lineHeight;          // _FirstLineToShow - 1
+                y1 = y0 + 3 * chordOffset + 3 * _lineHeight;          // _FirstLineToShow               
+
+                idx2 = _FirstLineToShow - 1;
+                idx3 = _FirstLineToShow + 1;
+                idx4 = _FirstLineToShow + 2;
+            }
+
+            // Draw active line with borders
+            DrawActiveLineWithBorders(e, y1);
+
+            // Draw Inactive line with borders
+            if (idx2 >= 0 && idx2 < KLyrics.Lines.Count)
+                DrawInactiveLineWithBorders(e, idx2, y2);
+
+            if (idx3 >= 0 && idx3 < KLyrics.Lines.Count && _FirstLineToShow > 0)
+                DrawInactiveLineWithBorders(e, idx3, y3);
+
+            if (idx4 >= 0  && idx4 < KLyrics.Lines.Count && _FirstLineToShow > 0)
+                DrawInactiveLineWithBorders(e, idx4, y4);
+        }
+
+        private void FlsDrawTextWithShadow(PaintEventArgs e)
+        {
+            FlsDrawTextWithBorder(e);
+        }
+        
+        private void FlsDrawTextWithNeon(PaintEventArgs e)
+        {
+            FlsDrawTextWithBorder(e);
+        }
+
+        #endregion Draw text with Four lines swapped
+
+
+        #region Draw text with Two lines swapped
+
+        private void DrawTextWithTwoLinesSwapped(PaintEventArgs e)
+        {
+            switch (FrameType)
+            {
+                case "NoBorder":
+                case "FrameThin":
+                case "Frame1":
+                case "Frame2":
+                case "Frame3":
+                case "Frame4":
+                case "Frame5":
+                    TlsDrawTextWithBorder(e);
+                    break;
+
+                case "Shadow":
+                    TlsDrawTextWithShadow(e);
+                    break; ;
+
+                case "Neon":
+                    TlsDrawTextWithNeon(e);
+                    break; ;
+
+                default:
+                    TlsDrawTextWithBorder(e);
+                    break;
+            }
+        }
+
+        private void TlsDrawTextWithBorder(PaintEventArgs e)
+        {            
+            // Antialiasing
+            e.Graphics.SmoothingMode = SmoothingMode.AntiAlias;
+
+            // Create list of rectangles when line changes
+            synchronize(_currentTextPos);
+
+            // Synchronise can modify currentLine, so we need to recalculate it after synchronize
+            int _FirstLineToShow = currentLine;
+
+            // Calculate offset to center the text vertically
+            int y0 = getOffsetHeight(emSize);
+
+            int y1;    // y1 is the y coordinate of the active line to display (line _FirstLineToShow)
+            int y2;    // y2 is the y coordinate of the inactive line to display (line _FirstLineToShow + 1)
+
+            // If active line is odd, it is displayed on the first line
+            // if active line is even, it is displayed on the second line
+            
+            int chordOffset = 0;
+            if (bShowChords)
+                chordOffset = 2 * _lineHeight / 3;            
+            
+            if (_FirstLineToShow % 2 != 0)
+            {
+                y1 = y0;                
+                y2 = y0 + chordOffset + _lineHeight;
+            }
+            else
+            {                
+                y1 = y0 + chordOffset + _lineHeight;                               
+                y2 = y0;
+            }
+
+            // Draw active line with borders
+            DrawActiveLineWithBorders(e,  y1);
+
+            // Draw Inactive line with borders
+            DrawInactiveLineWithBorders(e, _FirstLineToShow + 1, y2);
+        }
+
+        private void TlsDrawTextWithShadow(PaintEventArgs e)
+        {
+            TlsDrawTextWithBorder(e);
+        }
+
+        private void TlsDrawTextWithNeon(PaintEventArgs e)
+        {
+            TlsDrawTextWithBorder(e);
+        }
+
+        #endregion Draw text with Two lines swapped
+
+
+        #region Draw text with Scrolling lines top down
+
+        private void DrawTextWithScrollingLinesTopDown(PaintEventArgs e)
+        {
+        }
+
+        private void SltDrawTextWithBorder(PaintEventArgs e)
+        {
+        }
+
+        private void SltDrawTextWithShadow(PaintEventArgs e)
+        {
+        }
+
+        private void SltDrawTextWithNeon(PaintEventArgs e)
+        {
+        }
+
+        #endregion Draw text with Scrolling lines top down
+
+
+        #region Draw text with Scrolling lines bottom up
+
+        private void DrawTextWithScrollingLinesBottomUp(PaintEventArgs e)
+        {
+            try
+            {
+                // Create list of rectangles when line changes
+                synchronize(_currentTextPos);
+
+                // Antialiasing
+                e.Graphics.SmoothingMode = SmoothingMode.AntiAlias;
+
+                // Calculate offset to center the text vertically
+                int y0 = getOffsetHeight(emSize);
+
+                if (_nbLyricsLines > 1)
+                {
+                    // Several lines to display
+                    // progressive offset - vOffset increases, so y0 decreases
+                    y0 = y0 - vOffset;
+
+                    // Draw current line                    
+                    DrawCurrentLine(_currentPosition, y0, e);
+
+                    // Draw next lines                 
+                    DrawNextLines(y0, e);
+                }
+                else
+                {
+                    // A single line to display
+                    // Draw current line until end of line
+                    if (!bEndOfLine)
+                        DrawCurrentLine(_currentPosition, y0, e);
+                    else
+                        DrawNextLines(y0, e);
+                }
+            }
+            catch (Exception ep)
+            {
+                Console.Write("Error drawing text on image: " + ep.Message);
+            }
+        }
+
+        private void SbuDrawTextWithBorder(PaintEventArgs e)
+        {
+            // To be implemented
+        }
+
+        private void SbuDrawTextWithShadow(PaintEventArgs e)
+        {
+            // To be implemented
+        }
+
+        private void SbuDrawTextWithNeon(PaintEventArgs e)
+        {
+            // To be implemented
+        }
+
+        #endregion Draw text with Scrolling lines bottom up
+
 
         /// <summary>
         /// Return rectangle for image

@@ -63,7 +63,23 @@ namespace Karaboss.Mp3
         private Point Mouselocation;
 
         #endregion
-        
+
+
+        #region balls
+        // Show balls
+        private bool _bShowBalls = true;
+        public bool bShowBalls
+        {
+            get { return _bShowBalls; }
+            set
+            {
+                _bShowBalls = value;
+                pnlTop.Visible = _bShowBalls;
+            }
+        }
+
+        #endregion balls
+
         private long _timerintervall = 50;        
         private int currentTextPos = 0;
              
@@ -150,7 +166,8 @@ namespace Karaboss.Mp3
         #endregion Karaoke display types
 
 
-        // Frame type
+        #region Frame type
+
         private string _frametype = "Frame1";
         public string FrameType
         {
@@ -162,6 +179,9 @@ namespace Karaboss.Mp3
 
             }
         }
+
+        #endregion
+
 
         private int _nbLyricsLines = 3;
         // number of lines to display
@@ -175,6 +195,8 @@ namespace Karaboss.Mp3
             }
         }
 
+        
+        #region Display top center bottom
 
         private Karaclass.OptionsDisplay _OptionDisplay;
         /// <summary>
@@ -189,6 +211,8 @@ namespace Karaboss.Mp3
                 karaokeEffect1.OptionDisplay = (keffect.KaraokeEffect.OptionsDisplay)_OptionDisplay;
             }
         }
+
+        #endregion Display top center bottom
 
 
         #region Text color
@@ -255,7 +279,7 @@ namespace Karaboss.Mp3
         #endregion text color
 
 
-        #region text color
+        #region Background color
 
         private bool _bTextBackGround = false;
         /// <summary>
@@ -283,7 +307,9 @@ namespace Karaboss.Mp3
                 karaokeEffect1.BgColor = _BgColor;
             }
         }
-       
+
+        #endregion Background color
+
 
         #region gradient
         private Color _grad0Color;
@@ -340,10 +366,7 @@ namespace Karaboss.Mp3
         }
 
         #endregion gradient
-
-
-        #endregion
-
+       
 
         #region text characteristics
 
@@ -473,22 +496,7 @@ namespace Karaboss.Mp3
         }
 
         #endregion dirslideshow
-
-
-        #region balls
-        // Show balls
-        private bool _bShowBalls = true;
-        public bool bShowBalls
-        {
-            get { return _bShowBalls; }
-            set
-            {
-                _bShowBalls = value;
-                pnlTop.Visible = _bShowBalls;
-            }
-        }
-
-        #endregion balls
+      
 
         #endregion properties
 

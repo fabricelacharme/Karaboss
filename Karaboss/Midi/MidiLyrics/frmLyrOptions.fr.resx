@@ -121,7 +121,7 @@
     <value>&amp;Appliquer</value>
   </data>
   <data name="btnCancel.Text" xml:space="preserve">
-    <value>A&amp;nuuler</value>
+    <value>A&amp;nnuler</value>
   </data>
   <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
   <data name="lblNumberOfLines.Size" type="System.Drawing.Size, System.Drawing">
@@ -411,5 +411,9 @@
         cA/AMBgDgDAYA4BwHAOAcBwDgDAYA4A4OAfgHvAf8B/wH/gHwB/wAAAf8AAAH/AAAB/wAAAf+AAAP/xw
         Dn//8B////gf///4P///////
 </value>
+  </data>
+  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="$this.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>Inherit</value>
   </data>
 </root>

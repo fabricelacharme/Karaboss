@@ -806,7 +806,9 @@ namespace keffect
 
 
         private void Init()
-        {            
+        {
+            #region Load Lines & Times
+
             Lines = new List<string[]>();
             Times = new List<long[]>();
                        
@@ -842,26 +844,35 @@ namespace keffect
                     case KaraokeDisplayTypes.FixedLines:
                     case KaraokeDisplayTypes.ScrollingLinesBottomUp:
                     case KaraokeDisplayTypes.ScrollingLinesTopDown:
-                        Times.Add(t);
-                        Lines.Add(s);
+
+                        // If paragraph
+                        if (s.Length > 0 && (s.Length == 1 && s[0] == string.Empty))
+                        {
+                            if (bShowParagraphs)
+                            {
+                                Times.Add(t);
+                                Lines.Add(s);
+                            }
+                        }
+                        else
+                        {
+                            // not a paragraph
+                            Times.Add(t);
+                            Lines.Add(s);
+                        }
                         break;
 
                     case KaraokeDisplayTypes.TwoLinesSwapped:
                     case KaraokeDisplayTypes.FourLinesSwapped:
                         // Remove paragraphes for TwoLinesSwapped and FourLinesSwapped display types
-
                         if (!(s.Length == 1 && s[0] == string.Empty))
                         {
                             Times.Add(t);
                             Lines.Add(s);
                         }
                         break;
-                }
-
-
-               
-            }
-            
+                }               
+            }            
 
             _lines = Lines.Count;           
             
@@ -881,6 +892,8 @@ namespace keffect
                 }
                 Texts[i] = Tx;                
             }
+
+            #endregion Load Lines & Times
 
             // Biggest line
             _biggestLine = GetBiggestLine();
@@ -1179,7 +1192,6 @@ namespace keffect
 
 
         #region Code fragments
-
 
         private void DrawActiveLineWithBorders(PaintEventArgs e, int lineIndex, int y1)
         {
@@ -1615,8 +1627,7 @@ namespace keffect
         private void DrawInactiveLineWithBorders(PaintEventArgs e, int lineIndex, int y2)
         {
             // Create a graphical path
-            var path = new GraphicsPath();
-            SolidBrush colorBrush;
+            var path = new GraphicsPath();            
             int x0;
             Pen penInactiveBorder = new Pen(_InactiveBorderColor, _borderthick); // pen for inactive border color
             int Wbg;
@@ -1639,22 +1650,21 @@ namespace keffect
 
                 #endregion
 
-                // Draw lines of lyrics
+                // Add lines of lyrics to the Graphics path
                 path.AddString(Texts[lineIndex], _karaokeFont.FontFamily, (int)_karaokeFont.Style, _karaokeFont.Size, new Point(x0, y2), sf);
             }
 
-            // _InactiveColor is the color for text not yet sung (typically white)
-            colorBrush = new SolidBrush(_InactiveColor);
-            e.Graphics.FillPath(colorBrush, path);
+            // Draw the text            
+            e.Graphics.FillPath(new SolidBrush(_InactiveColor), path);
 
-            // text outline
+            // Outline the text
             if (_borderthick > 0)
                 e.Graphics.DrawPath(penInactiveBorder, path);
 
+
             #region Clean up resources
 
-            path.Dispose();
-            colorBrush.Dispose();
+            path.Dispose();            
             penInactiveBorder.Dispose();
             
             #endregion Clean up resources
@@ -1724,7 +1734,6 @@ namespace keffect
         }
 
         #endregion Code fragments
-
 
 
         #region Draw text with Scrolling lines bottom up
@@ -1823,7 +1832,7 @@ namespace keffect
         #endregion Draw text with Scrolling lines top down
 
 
-        #region draw text with Two lines swapped
+        #region Draw text with Two lines swapped
 
         private void DrawTextWithTwoLinesSwapped(PaintEventArgs e)
         {
@@ -1974,12 +1983,10 @@ namespace keffect
             #endregion Clean up resources
         }
 
-        #endregion draw text with Two lines swapped
+        #endregion Draw text with Two lines swapped
 
 
-
-
-        #region draw text with Four lines swapped
+        #region Draw text with Four lines swapped
         private void DrawTextWithFourLinesSwapped(PaintEventArgs e)
         {
             switch (FrameType)
@@ -2289,8 +2296,7 @@ namespace keffect
             #endregion Clean up resources
         }
 
-        #endregion draw text with Four lines swapped
-
+        #endregion Draw text with Four lines swapped
 
 
         #region Draw text with fixed lines
