@@ -244,6 +244,7 @@
             this.pBox.InactiveBorderColor = System.Drawing.Color.DarkTurquoise;
             this.pBox.InactiveChordColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(196)))), ((int)(((byte)(13)))));
             this.pBox.InactiveColor = System.Drawing.Color.White;
+            this.pBox.KaraokeDisplayType = kar.KaraokeDisplayTypes.FixedLines;
             this.pBox.KaraokeFont = new System.Drawing.Font("Segoe Print", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.pBox.KLyrics = null;
             this.pBox.m_CurrentImage = null;

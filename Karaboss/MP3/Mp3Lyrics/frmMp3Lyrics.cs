@@ -521,11 +521,16 @@ namespace Karaboss.Mp3
 
             Application.AddMessageFilter(this);
             controlsToMove.Add(this);
-            // UserControls picball & pBox manage themselves this move.            
+            // UserControls picball & pBox manage themselves this move.
+            controlsToMove.Add(this.pnlWindow);
             controlsToMove.Add(this.pnlTitle);
             controlsToMove.Add(this.lblTitle);
-            
+
             #endregion
+
+            karaokeEffect1.DoubleClick += new DoubleClickEventHandler(karaokeEffect1_DoubleClick);
+
+
 
             LoadLyrics();
             
@@ -533,7 +538,14 @@ namespace Karaboss.Mp3
             LoadOptions();
             SetOptions();            
         }
-        
+
+        private void karaokeEffect1_DoubleClick(object sender, EventArgs e)
+        {
+            if (WindowState == FormWindowState.Maximized)
+                WindowState = FormWindowState.Normal;
+            else WindowState = FormWindowState.Maximized;
+        }
+
 
         #region initializations
 

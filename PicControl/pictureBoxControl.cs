@@ -43,11 +43,13 @@ using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
-using static PicControl.pictureBoxControl;
-using static System.Windows.Forms.LinkLabel;
 
 namespace PicControl
 {
+
+    public delegate void DoubleClickEventHandler(object sender, EventArgs e);
+
+    
     public partial class pictureBoxControl : UserControl, IMessageFilter, IDisposable
     {
         /*
@@ -71,7 +73,9 @@ namespace PicControl
 
         #endregion
 
-        
+
+        public new event DoubleClickEventHandler DoubleClick;
+
         #region classes
 
         // Syllabes
@@ -118,7 +122,7 @@ namespace PicControl
             set
             {
                 _karaokeDisplayType = value;
-                pboxWnd.Invalidate();
+                pBox.Invalidate();
             }
         }
 
@@ -143,7 +147,7 @@ namespace PicControl
                     dirSlideShow = value;
                     
                     InitSlideShow(dirSlideShow);
-                    pboxWnd.Invalidate();
+                    pBox.Invalidate();
                     
                 }
             }
@@ -212,7 +216,7 @@ namespace PicControl
             set
             {
                 _ActiveColor = value;
-                pboxWnd.Invalidate();
+                pBox.Invalidate();
             }
         }
 
@@ -228,7 +232,7 @@ namespace PicControl
             set
             {
                 _HighlightColor = value;
-                pboxWnd.Invalidate();
+                pBox.Invalidate();
             }
         }
 
@@ -244,7 +248,7 @@ namespace PicControl
             set
             {
                 _InactiveColor = value;
-                pboxWnd.Invalidate();
+                pBox.Invalidate();
             }
         }
 
@@ -257,7 +261,7 @@ namespace PicControl
             set
             {
                 _ActiveBorderColor = value;
-                pboxWnd.Invalidate();
+                pBox.Invalidate();
             }
         }
 
@@ -269,7 +273,7 @@ namespace PicControl
             set
             {
                 _InactiveBorderColor = value;
-                pboxWnd.Invalidate();
+                pBox.Invalidate();
             }
         }
 
@@ -292,7 +296,7 @@ namespace PicControl
             set
             {
                 _InactiveChordColor = value;
-                pboxWnd.Invalidate();
+                pBox.Invalidate();
             }
         }
 
@@ -307,7 +311,7 @@ namespace PicControl
             set
             {
                 _HighlightChordColor = value;
-                pboxWnd.Invalidate();
+                pBox.Invalidate();
             }
         }
 
@@ -320,7 +324,7 @@ namespace PicControl
                 if (value != _bShowChords)
                 {
                     _bShowChords = value;
-                    pboxWnd?.Invalidate();
+                    pBox?.Invalidate();
                 }
             }
         }
@@ -342,7 +346,7 @@ namespace PicControl
             {
                 _nbLyricsLines = value;
                 ajustTextAgain();
-                pboxWnd.Invalidate();
+                pBox.Invalidate();
             }
         }
         
@@ -423,7 +427,7 @@ namespace PicControl
                         _borderthick = 1;
                         break;
                 }
-                pboxWnd?.Invalidate();
+                pBox?.Invalidate();
             }
         }
 
@@ -436,7 +440,7 @@ namespace PicControl
                 try
                 {
                     _borderthick = value;
-                    pboxWnd?.Invalidate();
+                    pBox?.Invalidate();
                 }
                 catch (Exception e)
                 {
@@ -457,7 +461,7 @@ namespace PicControl
             set
             {
                 _Grad0Color = value;
-                pboxWnd.Invalidate();
+                pBox.Invalidate();
             }
         }
         
@@ -468,7 +472,7 @@ namespace PicControl
             set
             {
                 _Grad1Color = value;
-                pboxWnd.Invalidate();
+                pBox.Invalidate();
             }
         }
         
@@ -479,9 +483,9 @@ namespace PicControl
             set
             {
                 _Rhythm0Color = value;
-                pboxWnd.BackColor = _Rhythm0Color;
+                pBox.BackColor = _Rhythm0Color;
                 ResetSize();
-                pboxWnd.Invalidate();
+                pBox.Invalidate();
             }
         }
         
@@ -493,7 +497,7 @@ namespace PicControl
             {
                 _Rhythm1Color = value;
                 ResetSize();
-                pboxWnd.Invalidate();
+                pBox.Invalidate();
             }
         }
         
@@ -518,7 +522,7 @@ namespace PicControl
         }
 
         private float _angle = 45.0f;
-        public float GradientAngle { get { return _angle; } set { _angle = value; pboxWnd.Invalidate(); } }       
+        public float GradientAngle { get { return _angle; } set { _angle = value; pBox.Invalidate(); } }       
 
         #endregion Gradient
 
@@ -537,8 +541,8 @@ namespace PicControl
                 _BgColor = value;
                 if (_optionbackground == "SolidColor")
                 {
-                    pboxWnd.BackColor = _BgColor;
-                    pboxWnd.Invalidate();
+                    pBox.BackColor = _BgColor;
+                    pBox.Invalidate();
                 }
             }
         }
@@ -551,7 +555,7 @@ namespace PicControl
             set
             {
                 _bTextBackGround = value;
-                pboxWnd.Invalidate();
+                pBox.Invalidate();
             }
         }
 
@@ -585,40 +589,40 @@ namespace PicControl
                         //m_Cancel = true;
                         Terminate();
                         _timerGradient.Stop();
-                        pboxWnd.Image = null;
+                        pBox.Image = null;
                         m_CurrentImage = null;
-                        pboxWnd.BackColor = _BgColor;
-                        pboxWnd.Invalidate();
+                        pBox.BackColor = _BgColor;
+                        pBox.Invalidate();
                         break;
 
                     case "Gradient":
                         //m_Cancel = true;
                         Terminate();
-                        pboxWnd.Image = null;
+                        pBox.Image = null;
                         m_CurrentImage = null;
                         _timerGradient.Start();
-                        pboxWnd.Invalidate();
+                        pBox.Invalidate();
                         break;
 
                     case "Rhythm":
                         //m_Cancel = true;
                         Terminate();
                         _timerGradient.Start();
-                        pboxWnd.Image = null;
+                        pBox.Image = null;
                         m_CurrentImage = null;
                         ResetSize();
-                        pboxWnd.BackColor = _Rhythm0Color;
-                        pboxWnd.Invalidate();
+                        pBox.BackColor = _Rhythm0Color;
+                        pBox.Invalidate();
                         break;
 
                     case "Transparent":
                         //m_Cancel = true;
                         Terminate();
                         _timerGradient.Stop();
-                        pboxWnd.Image = null;
+                        pBox.Image = null;
                         m_CurrentImage = null;
-                        pboxWnd.BackColor = _transparencykey;
-                        pboxWnd.Invalidate();
+                        pBox.BackColor = _transparencykey;
+                        pBox.Invalidate();
                         break;
                     default:
                         break;
@@ -646,7 +650,7 @@ namespace PicControl
             set
             {
                 _OptionDisplay = value;
-                pboxWnd.Invalidate();
+                pBox.Invalidate();
             }
         }
 
@@ -666,7 +670,7 @@ namespace PicControl
             set
             {
                 _sizemode = value;
-                pboxWnd.SizeMode = _sizemode;
+                pBox.SizeMode = _sizemode;
             }
         }
 
@@ -690,7 +694,7 @@ namespace PicControl
                 try
                 {
                     _karaokeFont = value;
-                    pboxWnd.Invalidate();
+                    pBox.Invalidate();
                 }
                 catch (Exception e)
                 {
@@ -708,7 +712,7 @@ namespace PicControl
                 try
                 {
                     _chordFont = value;
-                    pboxWnd.Invalidate();
+                    pBox.Invalidate();
                 }
                 catch (Exception e)
                 {
@@ -831,7 +835,7 @@ namespace PicControl
 
             Application.AddMessageFilter(this);
             controlsToMove.Add(this);
-            controlsToMove.Add(this.pboxWnd);
+            controlsToMove.Add(this.pBox);
             
             #endregion
             
@@ -865,7 +869,7 @@ namespace PicControl
                 case "Gradient":
                     // For diagonal gradients, we can use the angle property to set the gradient direction
                     _angle = (_angle + 1) % 360; // Increment the angle by 1 degree, wrapping around if it exceeds 360 degrees
-                    pboxWnd.Invalidate(); // Force the panel to redraw with the new gradient
+                    pBox.Invalidate(); // Force the panel to redraw with the new gradient
                     break;
 
                 case "Rhythm":
@@ -923,13 +927,13 @@ namespace PicControl
             {
                 m_CurrentImage = null;                 
 
-                pboxWnd.Image = null;
-                pboxWnd.Invalidate();
+                pBox.Image = null;
+                pBox.Invalidate();
                 m_ImageFilePaths.Clear();
 
                 if (dirImages == null)
                 {
-                    pboxWnd.BackColor = Color.Black;
+                    pBox.BackColor = Color.Black;
                 }
                 else if (Directory.Exists(dirImages))
                 {
@@ -953,8 +957,8 @@ namespace PicControl
                             //m_Cancel = true;
 
                             m_CurrentImage = Image.FromFile(m_ImageFilePaths[0]);
-                            //pboxWnd.Image = m_CurrentImage; // Image.FromFile(m_ImageFilePaths[0]);
-                            //pboxWnd.Image = pictures[0];
+                            //pBox.Image = m_CurrentImage; // Image.FromFile(m_ImageFilePaths[0]);
+                            //pBox.Image = pictures[0];
                             break;
                         default:
 
@@ -1002,7 +1006,7 @@ namespace PicControl
 
             _currentPosition = 0;
             _currentTextPos = -1;
-            pboxWnd.Invalidate();
+            pBox.Invalidate();
         }
         
 
@@ -1373,15 +1377,15 @@ namespace PicControl
             sf = new StringFormat(StringFormat.GenericTypographic) { FormatFlags = StringFormatFlags.MeasureTrailingSpaces };
 
                         
-            pboxWnd.Font = new Font(Name = _karaokeFont.Name, emSize);
-            pboxWnd.SizeMode = PictureBoxSizeMode.Zoom;            
+            pBox.Font = new Font(Name = _karaokeFont.Name, emSize);
+            pBox.SizeMode = PictureBoxSizeMode.Zoom;            
 
             // Initial conditions
             _currentPosition = 30;
             currentLine = 1;
             _currentTextPos = 2;           
 
-            pboxWnd.Invalidate();
+            pBox.Invalidate();
         }
 
         public void LoadDemoText()
@@ -1431,7 +1435,7 @@ namespace PicControl
             currentLine = 1;
             _currentTextPos = 0;
 
-            pboxWnd.Invalidate();
+            pBox.Invalidate();
         }
 
         #endregion demo wait
@@ -1559,16 +1563,16 @@ namespace PicControl
         /// <param name="S"></param>
         private void AjustText(string S)
         {
-            if (S != "" && pboxWnd != null)
+            if (S != "" && pBox != null)
             {
-                Graphics g = pboxWnd.CreateGraphics();
+                Graphics g = pBox.CreateGraphics();
                 float femsize;
 
-                long inisize = (long)pboxWnd.Font.Size;                
+                long inisize = (long)pBox.Font.Size;                
                 femsize = g.DpiX * inisize / 72;
 
                 float textSize = MeasureString(S, femsize);
-                long comp = (long)(0.94*pboxWnd.ClientSize.Width);                
+                long comp = (long)(0.94*pBox.ClientSize.Width);                
 
                 // Texte trop large
                 if (textSize > comp)
@@ -1608,7 +1612,7 @@ namespace PicControl
                     totaltextHeight = (int)2.5*totaltextHeight;
                 }
 
-                long compHeight = (long)(0.95*pboxWnd.ClientSize.Height);
+                long compHeight = (long)(0.95*pBox.ClientSize.Height);
                 
                 if (totaltextHeight > compHeight)
                 {
@@ -1636,7 +1640,7 @@ namespace PicControl
                 {
                     emSize = g.DpiY * inisize / 72;                    
                     m_font = new Font(_karaokeFont.FontFamily, emSize, FontStyle.Regular, GraphicsUnit.Pixel);                    
-                    pboxWnd.Font = new Font(Name = _karaokeFont.Name, emSize);
+                    pBox.Font = new Font(Name = _karaokeFont.Name, emSize);
 
                     // Vertical distance between lines
                     _lineHeight = (int)emSize + 10;
@@ -1683,7 +1687,7 @@ namespace PicControl
 
             if (pos < syllabes.Count)
             {
-                using (Graphics g = pboxWnd.CreateGraphics())
+                using (Graphics g = pBox.CreateGraphics())
                 {
                     string tx = string.Empty;
                     
@@ -1714,11 +1718,14 @@ namespace PicControl
 
                         if (idx == 0)
                         {
-                            rect.X = Offset - 1;
+                            //rect.X = Offset - 1;
+                            rect.X = Offset;
                         }
                         else
                         {
-                            rect.X = rRect[idx - 1].X + rRect[idx - 1].Width - 1;
+                            //rect.X = rRect[idx - 1].X + rRect[idx - 1].Width - 1;
+                            rect.X = rRect[idx - 1].X + rRect[idx - 1].Width;
+                            
                         }
                         rRect.Add(rect);
                     }
@@ -1828,7 +1835,7 @@ namespace PicControl
         {
             float ret; 
             float L = MeasureString(tx, femsize);
-            float W = pboxWnd.ClientSize.Width;
+            float W = pBox.ClientSize.Width;
 
             ret = (W - L) / 2;
 
@@ -1848,7 +1855,7 @@ namespace PicControl
             float ret = 0;
 
             float h = MeasureStringHeight("ABCDEFGHIJKLMNOPQRSTUVWXYZ", femsize);
-            long H = (long)pboxWnd.ClientSize.Height;
+            long H = (long)pBox.ClientSize.Height;
 
             switch (_OptionDisplay)
             {
@@ -1897,7 +1904,7 @@ namespace PicControl
 
             if (line != "")
             {
-                using (Graphics g = pboxWnd.CreateGraphics())
+                using (Graphics g = pBox.CreateGraphics())
                 {
                     m_font = new Font(_karaokeFont.FontFamily, femSize, FontStyle.Regular, GraphicsUnit.Pixel);
 
@@ -1922,7 +1929,7 @@ namespace PicControl
 
             if (line != "")
             {
-                using (Graphics g = pboxWnd.CreateGraphics())
+                using (Graphics g = pBox.CreateGraphics())
                 {
 
                     if (femSize > 0)
@@ -2385,7 +2392,7 @@ namespace PicControl
         private void CreateNeonEffect(Color clr, PaintEventArgs e, GraphicsPath pth)
         {
             //Create a bitmap in a fixed ratio to the original drawing area.
-            Bitmap bm = new Bitmap(pboxWnd.ClientSize.Width / 5, pboxWnd.ClientSize.Height / 5);
+            Bitmap bm = new Bitmap(pBox.ClientSize.Width / 5, pBox.ClientSize.Height / 5);
             //Get the graphics object for the image. 
             Graphics gimg = Graphics.FromImage(bm);
 
@@ -2420,7 +2427,7 @@ namespace PicControl
             e.Graphics.InterpolationMode = InterpolationMode.HighQualityBicubic;
 
             //expand the halo making the edges nice and fuzzy. 
-            e.Graphics.DrawImage(bm, pboxWnd.ClientRectangle, 0, 0, bm.Width, bm.Height, GraphicsUnit.Pixel);
+            e.Graphics.DrawImage(bm, pBox.ClientRectangle, 0, 0, bm.Width, bm.Height, GraphicsUnit.Pixel);
         }
 
 
@@ -2435,7 +2442,7 @@ namespace PicControl
         /// <param name="pth"></param>
         private void CreateShadowEffect(string line, Color clr, int x0, int y0, Font font, float emSize, PaintEventArgs e, GraphicsPath pth)
         {
-            Bitmap bm = new Bitmap(pboxWnd.ClientSize.Width / 4, pboxWnd.ClientSize.Height / 4);
+            Bitmap bm = new Bitmap(pBox.ClientSize.Width / 4, pBox.ClientSize.Height / 4);
 
             //Get a graphics object for it
             Graphics g = Graphics.FromImage(bm);
@@ -2463,7 +2470,7 @@ namespace PicControl
             ge.TextRenderingHint = TextRenderingHint.AntiAlias;
 
             //The small image is blown up to fill the main client rectangle
-            ge.DrawImage(bm, pboxWnd.ClientRectangle, 0, 0, bm.Width, bm.Height, GraphicsUnit.Pixel);
+            ge.DrawImage(bm, pBox.ClientRectangle, 0, 0, bm.Width, bm.Height, GraphicsUnit.Pixel);
 
             // finally, the text is drawn on top
             //pth.AddString(line, new FontFamily(font.Name), (int)FontStyle.Regular, emSize, new Point(x0, y0), sf);
@@ -2520,7 +2527,7 @@ namespace PicControl
             }
            
             // Redraw the display
-            pboxWnd.Invalidate();
+            pBox.Invalidate();
         }
 
         /// <summary>
@@ -2779,7 +2786,7 @@ namespace PicControl
                 {
 
                     // Rectangle
-                    x1 = rRect[syllab.posline].X;
+                    x1 = rRect[syllab.posline].X;                    
                     W = (int)rRect[syllab.posline].Width;
                     H = (int)rRect[syllab.posline].Height;
 
@@ -2911,52 +2918,57 @@ namespace PicControl
 
 
 
-        private void DrawInactiveLineWithBorders(PaintEventArgs e, int lineIndex, int y2)
+        private void DrawInactiveLineWithBorders(PaintEventArgs e, int lineIndex, int y2, bool IsActive = false)
         {
+            #region Declarations
+            Color BorderColor = _InactiveBorderColor;
+            Color FillColor = _InactiveColor;
+
+            if (IsActive)
+            {
+                BorderColor = _ActiveBorderColor;
+                FillColor = _ActiveColor;
+            }
+
             GraphicsPath pthc = new GraphicsPath(); // Chords path
             GraphicsPath pth = new GraphicsPath(); // Lyrics path
-            Pen penInactiveBorder = new Pen(_InactiveBorderColor, _borderthick); // pen for inactive border color
+            Pen penBorder = new Pen(BorderColor, _borderthick); // pen for inactive border color
             
             string lineContent;
             string lineChords;
             int x0;
             int Wbg;
             RectangleF Rbg;
+            #endregion Declarations
 
-            // Line content
-            //kLine kline = _kLyrics.Lines[lineIndex];
-
-            // If there is a paragraph separator, we don't display the line
-            //if (kline.Syllables.First().CharType == Syllable.CharTypes.ParagraphSep) return;
-
-            lineContent = Texts[lineIndex];  // kline.ToString();
-            
-            
-            lineChords = lstChordsLines[lineIndex];          // TODO : à revoir pour les accords directement dans la classe KLyrics
-
-            x0 = HCenterText(lineContent, emSize);
-
-            // Draw line content
-            if (_bShowChords)
+            if (lineIndex < Texts.Count())
             {
-                #region Draw Chords                
+                lineContent = Texts[lineIndex];  // kline.ToString();                        
+                lineChords = lstChordsLines[lineIndex];          // TODO : à revoir pour les accords directement dans la classe KLyrics
 
-                // Draw chord above
-                // Add lines of lyrics to the Graphics path                                        
-                pthc.AddString(lineChords, _chordFont.FontFamily, (int)_chordFont.Style, 3 * emSize / 4, new Point((int)x0, (int)y2), sf);
-                e.Graphics.FillPath(new SolidBrush(_InactiveChordColor), pthc);
+                x0 = HCenterText(lineContent, emSize);
 
-                pthc.Dispose();
+                // Draw line content
+                if (_bShowChords)
+                {
+                    #region Draw Chords                
 
-                #endregion Draw Chords
+                    // Draw chord above the text                                                         
+                    pthc.AddString(lineChords, _chordFont.FontFamily, (int)_chordFont.Style, 3 * emSize / 4, new Point((int)x0, (int)y2), sf);
+                    e.Graphics.FillPath(new SolidBrush(_InactiveChordColor), pthc);
 
-                
+                    pthc.Dispose();
+
+                    // Draw syllabe below at 2 * ChordOffset / 3
+                    y2 = y2 + 2 * _lineHeight / 3;
+
+                    #endregion Draw Chords
+                  
+                }
+             
                 #region draw text
-                
-                // Draw syllabe below at 2 * ChordOffset / 3
-                y2 = y2 + 2 * _lineHeight / 3;
-
-                #region Background of text  
+               
+                #region background of line  
 
                 if (_bTextBackGround)
                 {
@@ -2967,33 +2979,78 @@ namespace PicControl
                     e.Graphics.FillRectangle(new SolidBrush(Color.Black), Rbg);
                 }
 
-                #endregion Background of text
-
+                #endregion
 
                 // Add lines of lyrics to the Graphics path
                 pth.AddString(lineContent, m_font.FontFamily, (int)m_font.Style, emSize, new Point((int)x0, (int)y2), sf);
 
-                #region Apply effects               
+                // Draw the text                    
+                e.Graphics.FillPath(new SolidBrush(FillColor), pth);
 
-                if (FrameType == "Neon")
-                    CreateNeonEffect(_InactiveBorderColor, e, pth);
-                else if (FrameType == "Shadow")
-                    CreateShadowEffect(lineContent, _InactiveBorderColor, (int)x0, (int)y2, m_font, emSize, e, pth);
-
-                #endregion Apply effect
-
-                // Draw the text
-                e.Graphics.FillPath(new SolidBrush(_InactiveColor), pth);
-
-                // Outiline the text
+                // Outline the text
                 if (_borderthick > 0)
-                    e.Graphics.DrawPath(penInactiveBorder, pth);
+                    e.Graphics.DrawPath(penBorder, pth);
+
                 #endregion draw text
             }
-            else
+
+            #region Clean up resources
+
+            pth.Dispose();
+            pthc.Dispose();
+            penBorder.Dispose();
+            
+            #endregion Clean up resources
+        }
+
+        private void DrawInactiveLineWithShadow(PaintEventArgs e, int lineIndex, int y2, bool IsActive = false)
+        {
+            #region Declarations
+            Color BorderColor = _InactiveBorderColor;
+            Color FillColor = _InactiveColor;
+
+            if (IsActive)
             {
-                #region draw text
-                // No chords
+                BorderColor = _ActiveBorderColor;
+                FillColor = _ActiveColor;
+            }
+
+            GraphicsPath pthc = new GraphicsPath(); // Chords path
+            GraphicsPath pth = new GraphicsPath(); // Lyrics path
+            Pen penBorder = new Pen(BorderColor, _borderthick); // pen for inactive border color
+
+            string lineContent;
+            string lineChords;
+            int x0;
+            int Wbg;
+            RectangleF Rbg;
+            #endregion Declarations
+
+            if (lineIndex < Texts.Count())
+            {
+                lineContent = Texts[lineIndex];  // kline.ToString();                        
+                lineChords = lstChordsLines[lineIndex];          // TODO : à revoir pour les accords directement dans la classe KLyrics
+
+                x0 = HCenterText(lineContent, emSize);
+
+                // Draw line content
+                if (_bShowChords)
+                {
+                    #region Draw Chords                
+
+                    // Draw chord above the text                                                         
+                    pthc.AddString(lineChords, _chordFont.FontFamily, (int)_chordFont.Style, 3 * emSize / 4, new Point((int)x0, (int)y2), sf);
+                    e.Graphics.FillPath(new SolidBrush(_InactiveChordColor), pthc);
+
+                    pthc.Dispose();
+
+                    // Draw syllabe below at 2 * ChordOffset / 3
+                    y2 = y2 + 2 * _lineHeight / 3;
+
+                    #endregion Draw Chords                  
+                }
+
+                #region draw text                
 
                 #region background of line  
 
@@ -3013,41 +3070,120 @@ namespace PicControl
 
                 #region Apply effects               
 
-                if (FrameType == "Neon")
-                    CreateNeonEffect(_InactiveBorderColor, e, pth);
-                else if (FrameType == "Shadow")
-                    CreateShadowEffect(lineContent, _InactiveBorderColor, (int)x0, (int)y2, m_font, emSize, e, pth);
+                CreateShadowEffect(lineContent, _InactiveBorderColor, (int)x0, (int)y2, m_font, emSize, e, pth);
 
                 #endregion Apply effect
 
 
-                // Draw text
-                // Color clr is always InactiveColor for "NextLines"
-                e.Graphics.FillPath(new SolidBrush(_InactiveColor), pth);
+                // Draw the text                    
+                e.Graphics.FillPath(new SolidBrush(FillColor), pth);
 
                 // Outiline the text
                 if (_borderthick > 0)
-                    e.Graphics.DrawPath(penInactiveBorder, pth);
-                
+                    e.Graphics.DrawPath(penBorder, pth);
+
                 #endregion draw text
 
             }
 
             #region Clean up resources
+
             pth.Dispose();
             pthc.Dispose();
-            penInactiveBorder.Dispose();
+            penBorder.Dispose();
+
             #endregion Clean up resources
         }
 
-        private void DrawInactiveLineWithShadow(PaintEventArgs e, int lineIndex, int y2)
+        private void DrawInactiveLineWithNeon(PaintEventArgs e, int lineIndex, int y2, bool IsActive = false)
         {
-            DrawInactiveLineWithBorders(e, lineIndex, y2);
-        }
+            #region Declarations
+            Color BorderColor = _InactiveBorderColor;
+            Color FillColor = _InactiveColor;
 
-        private void DrawInactiveLineWithNeon(PaintEventArgs e, int lineIndex, int y2)
-        {
-            DrawInactiveLineWithBorders(e, lineIndex, y2);
+            if (IsActive)
+            {
+                BorderColor = _ActiveBorderColor;
+                FillColor = _ActiveColor;
+            }
+
+            GraphicsPath pthc = new GraphicsPath(); // Chords path
+            GraphicsPath pth = new GraphicsPath(); // Lyrics path
+            Pen penBorder = new Pen(BorderColor, _borderthick); // pen for inactive border color
+
+            string lineContent;
+            string lineChords;
+            int x0;
+            int Wbg;
+            RectangleF Rbg;
+            #endregion Declarations
+
+            if (lineIndex < Texts.Count())
+            {
+                lineContent = Texts[lineIndex];  // kline.ToString();                        
+                lineChords = lstChordsLines[lineIndex];          // TODO : à revoir pour les accords directement dans la classe KLyrics
+
+                x0 = HCenterText(lineContent, emSize);
+
+                // Draw line content
+                if (_bShowChords)
+                {
+                    #region Draw Chords                
+
+                    // Draw chord above the text                                                         
+                    pthc.AddString(lineChords, _chordFont.FontFamily, (int)_chordFont.Style, 3 * emSize / 4, new Point((int)x0, (int)y2), sf);
+                    e.Graphics.FillPath(new SolidBrush(_InactiveChordColor), pthc);
+
+                    pthc.Dispose();
+
+                    // Draw syllabe below at 2 * ChordOffset / 3
+                    y2 = y2 + 2 * _lineHeight / 3;
+
+                    #endregion Draw Chords               
+                }
+
+                #region draw text            
+
+                #region background of line  
+
+                if (_bTextBackGround)
+                {
+                    Wbg = (int)(1.04 * LinesLengths[lineIndex]);
+                    // Black background to make text more visible
+                    Rbg = new RectangleF((int)(0.94 * x0), (int)(1.04 * y2), Wbg, _lineHeight);
+                    // background
+                    e.Graphics.FillRectangle(new SolidBrush(Color.Black), Rbg);
+                }
+
+                #endregion
+
+                // Add lines of lyrics to the Graphics path
+                pth.AddString(lineContent, m_font.FontFamily, (int)m_font.Style, emSize, new Point((int)x0, (int)y2), sf);
+
+                #region Apply effects               
+
+                CreateNeonEffect(_InactiveBorderColor, e, pth);
+
+                #endregion Apply effect
+
+
+                // Draw the text                    
+                e.Graphics.FillPath(new SolidBrush(FillColor), pth);
+
+                // Outiline the text
+                if (_borderthick > 0)
+                    e.Graphics.DrawPath(penBorder, pth);
+
+                #endregion draw text
+            }
+
+            #region Clean up resources
+
+            pth.Dispose();
+            pthc.Dispose();
+            penBorder.Dispose();
+
+            #endregion Clean up resources
         }
 
         #endregion Code fragments
@@ -3250,6 +3386,8 @@ namespace PicControl
 
         private void DrawTextWithFourLinesSwapped(PaintEventArgs e)
         {
+            _nbLyricsLines = 4;
+
             switch (FrameType)
             {
                 case "NoBorder":
@@ -3312,10 +3450,10 @@ namespace PicControl
             if (_FirstLineToShow % 4 == 2)
             {
                 // First line is active
-                y1 = y0;                            //_FirstLineToShow
-                y2 = y0 + chordOffset + _lineHeight;              //_FirstLineToShow + 1
-                y3 = y0 + 2 * chordOffset + 2 * _lineHeight;          //_FirstLineToShow + 2
-                y4 = y0 + 3 * chordOffset + 3 * _lineHeight;          //_FirstLineToShow + 3
+                y1 = y0;                                            //_FirstLineToShow
+                y2 = y0 + chordOffset + _lineHeight;                //_FirstLineToShow + 1
+                y3 = y0 + 2 * chordOffset + 2 * _lineHeight;        //_FirstLineToShow + 2
+                y4 = y0 + 3 * chordOffset + 3 * _lineHeight;        //_FirstLineToShow + 3
 
                 idx2 = _FirstLineToShow + 1;
                 idx3 = _FirstLineToShow + 2;
@@ -3325,10 +3463,10 @@ namespace PicControl
             else if (_FirstLineToShow % 4 == 3)
             {
                 // 2nd line is active
-                y2 = y0;                            // _FirstLineToShow - 1
-                y1 = y0 + chordOffset + _lineHeight;              // _FirstLineToShow
-                y3 = y0 + 2 * chordOffset + 2 * _lineHeight;          // _FirstLineToShow + 1
-                y4 = y0 + 3 * chordOffset + 3 * _lineHeight;          // _FirstLineToShow + 2
+                y2 = y0;                                            // _FirstLineToShow - 1
+                y1 = y0 + chordOffset + _lineHeight;                // _FirstLineToShow
+                y3 = y0 + 2 * chordOffset + 2 * _lineHeight;        // _FirstLineToShow + 1
+                y4 = y0 + 3 * chordOffset + 3 * _lineHeight;        // _FirstLineToShow + 2
 
                 idx2 = _FirstLineToShow - 1;
                 idx3 = _FirstLineToShow + 1;
@@ -3337,10 +3475,10 @@ namespace PicControl
             else if (_FirstLineToShow % 4 == 0)
             {
                 // 3rd line is active
-                y3 = y0;                            // _FirstLineToShow + 2     
-                y4 = y0 + chordOffset + _lineHeight;              // _FirstLineToShow + 3
-                y1 = y0 + 2 * chordOffset + 2 * _lineHeight;          // _FirstLineToShow
-                y2 = y0 + 3 * chordOffset + 3 * _lineHeight;          // _FirstLineToShow + 1
+                y3 = y0;                                            // _FirstLineToShow + 2     
+                y4 = y0 + chordOffset + _lineHeight;                // _FirstLineToShow + 3
+                y1 = y0 + 2 * chordOffset + 2 * _lineHeight;        // _FirstLineToShow
+                y2 = y0 + 3 * chordOffset + 3 * _lineHeight;        // _FirstLineToShow + 1
 
                 idx2 = _FirstLineToShow + 1;
                 idx3 = _FirstLineToShow + 2;
@@ -3349,22 +3487,27 @@ namespace PicControl
             else if (_FirstLineToShow % 4 == 1)
             {
                 // 4th line is active
-                y3 = y0;                            // _FirstLineToShow + 1
-                y4 = y0 + chordOffset + _lineHeight;              // _FirstLineToShow + 2
-                y2 = y0 + 2 * chordOffset + 2 * _lineHeight;          // _FirstLineToShow - 1
-                y1 = y0 + 3 * chordOffset + 3 * _lineHeight;          // _FirstLineToShow               
+                y3 = y0;                                            // _FirstLineToShow + 1
+                y4 = y0 + chordOffset + _lineHeight;                // _FirstLineToShow + 2
+                y2 = y0 + 2 * chordOffset + 2 * _lineHeight;        // _FirstLineToShow - 1
+                y1 = y0 + 3 * chordOffset + 3 * _lineHeight;        // _FirstLineToShow               
 
                 idx2 = _FirstLineToShow - 1;
                 idx3 = _FirstLineToShow + 1;
                 idx4 = _FirstLineToShow + 2;
             }
 
+
             // Draw active line with borders
             DrawActiveLineWithBorders(e, y1);
 
+
+            // Line y2 must be drawned active when
+            bool IsActive = ((_FirstLineToShow % 4 == 1) || (_FirstLineToShow % 4 == 3)) ? true : false;
+
             // Draw Inactive line with borders
             if (idx2 >= 0 && idx2 < KLyrics.Lines.Count)
-                DrawInactiveLineWithBorders(e, idx2, y2);
+                DrawInactiveLineWithBorders(e, idx2, y2, IsActive);
 
             if (idx3 >= 0 && idx3 < KLyrics.Lines.Count && _FirstLineToShow > 0)
                 DrawInactiveLineWithBorders(e, idx3, y3);
@@ -3375,12 +3518,207 @@ namespace PicControl
 
         private void FlsDrawTextWithShadow(PaintEventArgs e)
         {
-            FlsDrawTextWithBorder(e);
+            // Antialiasing
+            e.Graphics.SmoothingMode = SmoothingMode.AntiAlias;
+
+            // Create list of rectangles when line changes
+            synchronize(_currentTextPos);
+
+            // Synchronise can modify currentLine, so we need to recalculate it after synchronize
+            int _FirstLineToShow = currentLine;
+
+            // Calculate offset to center the text vertically
+            int y0 = getOffsetHeight(emSize);
+
+            int y1 = 0;
+            int y2 = 0;
+            int y3 = 0;
+            int y4 = 0;
+            int idx2 = 0;
+            int idx3 = 0;
+            int idx4 = 0;
+
+            int chordOffset = 0;
+            if (bShowChords)
+                chordOffset = 2 * _lineHeight / 3;
+
+
+            // At start, _FirstLineToShow = 0 
+            // 1st line is empty
+            // 2nd is empty
+            // Active line is on the 3rd line
+            // Active line + 1 is on the 4th line
+
+            if (_FirstLineToShow % 4 == 2)
+            {
+                // First line is active
+                y1 = y0;                                            //_FirstLineToShow
+                y2 = y0 + chordOffset + _lineHeight;                //_FirstLineToShow + 1
+                y3 = y0 + 2 * chordOffset + 2 * _lineHeight;        //_FirstLineToShow + 2
+                y4 = y0 + 3 * chordOffset + 3 * _lineHeight;        //_FirstLineToShow + 3
+
+                idx2 = _FirstLineToShow + 1;
+                idx3 = _FirstLineToShow + 2;
+                idx4 = _FirstLineToShow + 3;
+
+            }
+            else if (_FirstLineToShow % 4 == 3)
+            {
+                // 2nd line is active
+                y2 = y0;                                            // _FirstLineToShow - 1
+                y1 = y0 + chordOffset + _lineHeight;                // _FirstLineToShow
+                y3 = y0 + 2 * chordOffset + 2 * _lineHeight;        // _FirstLineToShow + 1
+                y4 = y0 + 3 * chordOffset + 3 * _lineHeight;        // _FirstLineToShow + 2
+
+                idx2 = _FirstLineToShow - 1;
+                idx3 = _FirstLineToShow + 1;
+                idx4 = _FirstLineToShow + 2;
+            }
+            else if (_FirstLineToShow % 4 == 0)
+            {
+                // 3rd line is active
+                y3 = y0;                                            // _FirstLineToShow + 2     
+                y4 = y0 + chordOffset + _lineHeight;                // _FirstLineToShow + 3
+                y1 = y0 + 2 * chordOffset + 2 * _lineHeight;        // _FirstLineToShow
+                y2 = y0 + 3 * chordOffset + 3 * _lineHeight;        // _FirstLineToShow + 1
+
+                idx2 = _FirstLineToShow + 1;
+                idx3 = _FirstLineToShow + 2;
+                idx4 = _FirstLineToShow + 3;
+            }
+            else if (_FirstLineToShow % 4 == 1)
+            {
+                // 4th line is active
+                y3 = y0;                                            // _FirstLineToShow + 1
+                y4 = y0 + chordOffset + _lineHeight;                // _FirstLineToShow + 2
+                y2 = y0 + 2 * chordOffset + 2 * _lineHeight;        // _FirstLineToShow - 1
+                y1 = y0 + 3 * chordOffset + 3 * _lineHeight;        // _FirstLineToShow               
+
+                idx2 = _FirstLineToShow - 1;
+                idx3 = _FirstLineToShow + 1;
+                idx4 = _FirstLineToShow + 2;
+            }
+
+
+            // Draw active line with borders
+            DrawActiveLineWithShadow(e, y1);
+
+
+            // Line y2 must be drawned active when
+            bool IsActive = ((_FirstLineToShow % 4 == 1) || (_FirstLineToShow % 4 == 3)) ? true : false;
+
+            // Draw Inactive line with borders
+            if (idx2 >= 0 && idx2 < KLyrics.Lines.Count)
+                DrawInactiveLineWithShadow(e, idx2, y2, IsActive);
+
+            if (idx3 >= 0 && idx3 < KLyrics.Lines.Count && _FirstLineToShow > 0)
+                DrawInactiveLineWithShadow(e, idx3, y3);
+
+            if (idx4 >= 0 && idx4 < KLyrics.Lines.Count && _FirstLineToShow > 0)
+                DrawInactiveLineWithShadow(e, idx4, y4);
+
         }
-        
+
         private void FlsDrawTextWithNeon(PaintEventArgs e)
         {
-            FlsDrawTextWithBorder(e);
+            // Antialiasing
+            e.Graphics.SmoothingMode = SmoothingMode.AntiAlias;
+
+            // Create list of rectangles when line changes
+            synchronize(_currentTextPos);
+
+            // Synchronise can modify currentLine, so we need to recalculate it after synchronize
+            int _FirstLineToShow = currentLine;
+
+            // Calculate offset to center the text vertically
+            int y0 = getOffsetHeight(emSize);
+
+            int y1 = 0;
+            int y2 = 0;
+            int y3 = 0;
+            int y4 = 0;
+            int idx2 = 0;
+            int idx3 = 0;
+            int idx4 = 0;
+
+            int chordOffset = 0;
+            if (bShowChords)
+                chordOffset = 2 * _lineHeight / 3;
+
+
+            // At start, _FirstLineToShow = 0 
+            // 1st line is empty
+            // 2nd is empty
+            // Active line is on the 3rd line
+            // Active line + 1 is on the 4th line
+
+            if (_FirstLineToShow % 4 == 2)
+            {
+                // First line is active
+                y1 = y0;                                            //_FirstLineToShow
+                y2 = y0 + chordOffset + _lineHeight;                //_FirstLineToShow + 1
+                y3 = y0 + 2 * chordOffset + 2 * _lineHeight;        //_FirstLineToShow + 2
+                y4 = y0 + 3 * chordOffset + 3 * _lineHeight;        //_FirstLineToShow + 3
+
+                idx2 = _FirstLineToShow + 1;
+                idx3 = _FirstLineToShow + 2;
+                idx4 = _FirstLineToShow + 3;
+
+            }
+            else if (_FirstLineToShow % 4 == 3)
+            {
+                // 2nd line is active
+                y2 = y0;                                            // _FirstLineToShow - 1
+                y1 = y0 + chordOffset + _lineHeight;                // _FirstLineToShow
+                y3 = y0 + 2 * chordOffset + 2 * _lineHeight;        // _FirstLineToShow + 1
+                y4 = y0 + 3 * chordOffset + 3 * _lineHeight;        // _FirstLineToShow + 2
+
+                idx2 = _FirstLineToShow - 1;
+                idx3 = _FirstLineToShow + 1;
+                idx4 = _FirstLineToShow + 2;
+            }
+            else if (_FirstLineToShow % 4 == 0)
+            {
+                // 3rd line is active
+                y3 = y0;                                            // _FirstLineToShow + 2     
+                y4 = y0 + chordOffset + _lineHeight;                // _FirstLineToShow + 3
+                y1 = y0 + 2 * chordOffset + 2 * _lineHeight;        // _FirstLineToShow
+                y2 = y0 + 3 * chordOffset + 3 * _lineHeight;        // _FirstLineToShow + 1
+
+                idx2 = _FirstLineToShow + 1;
+                idx3 = _FirstLineToShow + 2;
+                idx4 = _FirstLineToShow + 3;
+            }
+            else if (_FirstLineToShow % 4 == 1)
+            {
+                // 4th line is active
+                y3 = y0;                                            // _FirstLineToShow + 1
+                y4 = y0 + chordOffset + _lineHeight;                // _FirstLineToShow + 2
+                y2 = y0 + 2 * chordOffset + 2 * _lineHeight;        // _FirstLineToShow - 1
+                y1 = y0 + 3 * chordOffset + 3 * _lineHeight;        // _FirstLineToShow               
+
+                idx2 = _FirstLineToShow - 1;
+                idx3 = _FirstLineToShow + 1;
+                idx4 = _FirstLineToShow + 2;
+            }
+
+
+            // Draw active line with borders
+            DrawActiveLineWithNeon(e, y1);
+
+
+            // Line y2 must be drawned active when
+            bool IsActive = ((_FirstLineToShow % 4 == 1) || (_FirstLineToShow % 4 == 3)) ? true : false;
+
+            // Draw Inactive line with borders
+            if (idx2 >= 0 && idx2 < KLyrics.Lines.Count)
+                DrawInactiveLineWithNeon(e, idx2, y2, IsActive);
+
+            if (idx3 >= 0 && idx3 < KLyrics.Lines.Count && _FirstLineToShow > 0)
+                DrawInactiveLineWithNeon(e, idx3, y3);
+
+            if (idx4 >= 0 && idx4 < KLyrics.Lines.Count && _FirstLineToShow > 0)
+                DrawInactiveLineWithNeon(e, idx4, y4);
         }
 
         #endregion Draw text with Four lines swapped
@@ -3390,6 +3728,8 @@ namespace PicControl
 
         private void DrawTextWithTwoLinesSwapped(PaintEventArgs e)
         {
+            _nbLyricsLines = 2;
+
             switch (FrameType)
             {
                 case "NoBorder":
@@ -3455,17 +3795,94 @@ namespace PicControl
             DrawActiveLineWithBorders(e,  y1);
 
             // Draw Inactive line with borders
-            DrawInactiveLineWithBorders(e, _FirstLineToShow + 1, y2);
+            if (_currentTextPos > -1) 
+                DrawInactiveLineWithBorders(e, _FirstLineToShow + 1, y2);
         }
 
         private void TlsDrawTextWithShadow(PaintEventArgs e)
         {
-            TlsDrawTextWithBorder(e);
+            // Antialiasing
+            e.Graphics.SmoothingMode = SmoothingMode.AntiAlias;
+
+            // Create list of rectangles when line changes
+            synchronize(_currentTextPos);
+
+            // Synchronise can modify currentLine, so we need to recalculate it after synchronize
+            int _FirstLineToShow = currentLine;
+
+            // Calculate offset to center the text vertically
+            int y0 = getOffsetHeight(emSize);
+
+            int y1;    // y1 is the y coordinate of the active line to display (line _FirstLineToShow)
+            int y2;    // y2 is the y coordinate of the inactive line to display (line _FirstLineToShow + 1)
+
+            // If active line is odd, it is displayed on the first line
+            // if active line is even, it is displayed on the second line
+
+            int chordOffset = 0;
+            if (bShowChords)
+                chordOffset = 2 * _lineHeight / 3;
+
+            if (_FirstLineToShow % 2 != 0)
+            {
+                y1 = y0;
+                y2 = y0 + chordOffset + _lineHeight;
+            }
+            else
+            {
+                y1 = y0 + chordOffset + _lineHeight;
+                y2 = y0;
+            }
+
+            // Draw active line with borders
+            DrawActiveLineWithShadow(e, y1);
+
+            // Draw Inactive line with borders
+            if (_currentTextPos > -1)
+                DrawInactiveLineWithShadow(e, _FirstLineToShow + 1, y2);
         }
 
         private void TlsDrawTextWithNeon(PaintEventArgs e)
         {
-            TlsDrawTextWithBorder(e);
+            // Antialiasing
+            e.Graphics.SmoothingMode = SmoothingMode.AntiAlias;
+
+            // Create list of rectangles when line changes
+            synchronize(_currentTextPos);
+
+            // Synchronise can modify currentLine, so we need to recalculate it after synchronize
+            int _FirstLineToShow = currentLine;
+
+            // Calculate offset to center the text vertically
+            int y0 = getOffsetHeight(emSize);
+
+            int y1;    // y1 is the y coordinate of the active line to display (line _FirstLineToShow)
+            int y2;    // y2 is the y coordinate of the inactive line to display (line _FirstLineToShow + 1)
+
+            // If active line is odd, it is displayed on the first line
+            // if active line is even, it is displayed on the second line
+
+            int chordOffset = 0;
+            if (bShowChords)
+                chordOffset = 2 * _lineHeight / 3;
+
+            if (_FirstLineToShow % 2 != 0)
+            {
+                y1 = y0;
+                y2 = y0 + chordOffset + _lineHeight;
+            }
+            else
+            {
+                y1 = y0 + chordOffset + _lineHeight;
+                y2 = y0;
+            }
+
+            // Draw active line with borders
+            DrawActiveLineWithNeon(e, y1);
+
+            // Draw Inactive line with borders
+            if (_currentTextPos > -1)
+                DrawInactiveLineWithNeon(e, _FirstLineToShow + 1, y2);
         }
 
         #endregion Draw text with Two lines swapped
@@ -3699,7 +4116,7 @@ namespace PicControl
                     ResetSize();
                 }
                 
-                pboxWnd.Invalidate(); // Invalidate the panel to force a redraw with the new size
+                pBox.Invalidate(); // Invalidate the panel to force a redraw with the new size
             }
 
 
@@ -3804,7 +4221,7 @@ namespace PicControl
                 _karaokeFont? .Dispose();
                 m_font?.Dispose(); 
                 m_CurrentImage? .Dispose();
-                pboxWnd? .Dispose ();
+                pBox? .Dispose ();
                 
                 timerChangeImage?.Stop();
                 timerTransition?.Stop();
@@ -3827,5 +4244,10 @@ namespace PicControl
         }
 
         #endregion Dispose
+
+        private void pboxWnd_DoubleClick(object sender, EventArgs e)
+        {
+            DoubleClick?.Invoke(this, e);
+        }
     }
 }

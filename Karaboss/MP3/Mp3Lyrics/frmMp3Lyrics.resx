@@ -117,14 +117,14 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
-  <data name="toolTip1.TrayLocation" type="System.Drawing.Point, System.Drawing">
+  <metadata name="toolTip1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>17, 17</value>
-  </data>
+  </metadata>
   <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
   <data name="btnEditLyrics.FlatStyle" type="System.Windows.Forms.FlatStyle, System.Windows.Forms">
     <value>Flat</value>
   </data>
+  <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
   <data name="btnEditLyrics.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAABoAAAAaCAYAAACpSkzOAAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAL
@@ -367,6 +367,57 @@
   <data name="&gt;&gt;btnFrmClose.ZOrder" xml:space="preserve">
     <value>5</value>
   </data>
+  <data name="lblTitle.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="lblTitle.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
+    <value>Fill</value>
+  </data>
+  <data name="lblTitle.Font" type="System.Drawing.Font, System.Drawing">
+    <value>Consolas, 14.25pt, style=Bold</value>
+  </data>
+  <data name="lblTitle.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="lblTitle.Location" type="System.Drawing.Point, System.Drawing">
+    <value>0, 0</value>
+  </data>
+  <data name="lblTitle.Size" type="System.Drawing.Size, System.Drawing">
+    <value>90, 22</value>
+  </data>
+  <data name="lblTitle.TabIndex" type="System.Int32, mscorlib">
+    <value>0</value>
+  </data>
+  <data name="lblTitle.Text" xml:space="preserve">
+    <value>BEE GEES</value>
+  </data>
+  <data name="lblTitle.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
+    <value>MiddleCenter</value>
+  </data>
+  <data name="&gt;&gt;lblTitle.Name" xml:space="preserve">
+    <value>lblTitle</value>
+  </data>
+  <data name="&gt;&gt;lblTitle.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;lblTitle.Parent" xml:space="preserve">
+    <value>pnlTitle</value>
+  </data>
+  <data name="&gt;&gt;lblTitle.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="pnlTitle.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
+    <value>Bottom</value>
+  </data>
+  <data name="pnlTitle.Location" type="System.Drawing.Point, System.Drawing">
+    <value>0, 30</value>
+  </data>
+  <data name="pnlTitle.Size" type="System.Drawing.Size, System.Drawing">
+    <value>584, 30</value>
+  </data>
+  <data name="pnlTitle.TabIndex" type="System.Int32, mscorlib">
+    <value>4</value>
+  </data>
   <data name="&gt;&gt;pnlTitle.Name" xml:space="preserve">
     <value>pnlTitle</value>
   </data>
@@ -378,6 +429,18 @@
   </data>
   <data name="&gt;&gt;pnlTitle.ZOrder" xml:space="preserve">
     <value>0</value>
+  </data>
+  <data name="picBalls.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
+    <value>Top</value>
+  </data>
+  <data name="picBalls.Location" type="System.Drawing.Point, System.Drawing">
+    <value>0, 0</value>
+  </data>
+  <data name="picBalls.Size" type="System.Drawing.Size, System.Drawing">
+    <value>584, 30</value>
+  </data>
+  <data name="picBalls.TabIndex" type="System.Int32, mscorlib">
+    <value>1</value>
   </data>
   <data name="&gt;&gt;picBalls.Name" xml:space="preserve">
     <value>picBalls</value>
@@ -415,71 +478,31 @@
   <data name="&gt;&gt;pnlTop.ZOrder" xml:space="preserve">
     <value>2</value>
   </data>
-  <data name="&gt;&gt;lblTitle.Name" xml:space="preserve">
-    <value>lblTitle</value>
-  </data>
-  <data name="&gt;&gt;lblTitle.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;lblTitle.Parent" xml:space="preserve">
-    <value>pnlTitle</value>
-  </data>
-  <data name="&gt;&gt;lblTitle.ZOrder" xml:space="preserve">
-    <value>0</value>
-  </data>
-  <data name="pnlTitle.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
-    <value>Bottom</value>
-  </data>
-  <data name="pnlTitle.Location" type="System.Drawing.Point, System.Drawing">
-    <value>0, 30</value>
-  </data>
-  <data name="pnlTitle.Size" type="System.Drawing.Size, System.Drawing">
-    <value>584, 30</value>
-  </data>
-  <data name="pnlTitle.TabIndex" type="System.Int32, mscorlib">
-    <value>4</value>
-  </data>
-  <data name="lblTitle.AutoSize" type="System.Boolean, mscorlib">
-    <value>True</value>
-  </data>
-  <data name="lblTitle.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
-    <value>Fill</value>
-  </data>
-  <data name="lblTitle.Font" type="System.Drawing.Font, System.Drawing">
-    <value>Consolas, 14.25pt, style=Bold</value>
-  </data>
-  <data name="lblTitle.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
-    <value>NoControl</value>
-  </data>
-  <data name="lblTitle.Location" type="System.Drawing.Point, System.Drawing">
-    <value>0, 0</value>
-  </data>
-  <data name="lblTitle.Size" type="System.Drawing.Size, System.Drawing">
-    <value>90, 22</value>
-  </data>
-  <data name="lblTitle.TabIndex" type="System.Int32, mscorlib">
-    <value>0</value>
-  </data>
-  <data name="lblTitle.Text" xml:space="preserve">
-    <value>BEE GEES</value>
-  </data>
-  <data name="lblTitle.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
-    <value>MiddleCenter</value>
-  </data>
-  <data name="picBalls.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
-    <value>Top</value>
-  </data>
-  <data name="picBalls.Location" type="System.Drawing.Point, System.Drawing">
-    <value>0, 0</value>
-  </data>
-  <data name="picBalls.Size" type="System.Drawing.Size, System.Drawing">
-    <value>584, 30</value>
-  </data>
-  <data name="picBalls.TabIndex" type="System.Int32, mscorlib">
-    <value>1</value>
-  </data>
   <data name="karaokeEffect1.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
     <value>Fill</value>
+  </data>
+  <data name="kLyrics1.Lines" mimetype="application/x-microsoft.net.object.binary.base64">
+    <value>
+        AAEAAAD/////AQAAAAAAAAAMAgAAAJMBS2FyYW9rZUx5cmljcywgVmVyc2lvbj0xLjAuMC4wLCBDdWx0
+        dXJlPW5ldXRyYWwsIFB1YmxpY0tleVRva2VuPW51bGxdXSwgbXNjb3JsaWIsIFZlcnNpb249NC4wLjAu
+        MCwgQ3VsdHVyZT1uZXV0cmFsLCBQdWJsaWNLZXlUb2tlbj1iNzdhNWM1NjE5MzRlMDg5DAMAAABES2Fy
+        YW9rZUx5cmljcywgVmVyc2lvbj0xLjAuMC4wLCBDdWx0dXJlPW5ldXRyYWwsIFB1YmxpY0tleVRva2Vu
+        PW51bGwFAQAAACxTeXN0ZW0uQ29sbGVjdGlvbnMuR2VuZXJpYy5MaXN0YDFbW2thci5rTGluZQMAAAAG
+        X2l0ZW1zBV9zaXplCF92ZXJzaW9uBAAAC2thci5rTGluZVtdAwAAAAgIAgAAAAkEAAAAAQAAAAEAAAAH
+        BAAAAAABAAAABAAAAAQJa2FyLmtMaW5lAwAAAAkFAAAADQMFBQAAAAlrYXIua0xpbmUBAAAAGjxTeWxs
+        YWJsZXM+a19fQmFja2luZ0ZpZWxkBC9TeXN0ZW0uQ29sbGVjdGlvbnMuR2VuZXJpYy5MaXN0YDFbW2th
+        ci5TeWxsYWJsZQIAAAADAAAACQYAAAAFBgAAAC9TeXN0ZW0uQ29sbGVjdGlvbnMuR2VuZXJpYy5MaXN0
+        YDFbW2thci5TeWxsYWJsZQMAAAAGX2l0ZW1zBV9zaXplCF92ZXJzaW9uBAAADmthci5TeWxsYWJsZVtd
+        AwAAAAgIAgAAAAkHAAAAAgAAAAIAAAAHBwAAAAABAAAABAAAAAQMa2FyLlN5bGxhYmxlAwAAAAkIAAAA
+        CQkAAAANAgUIAAAADGthci5TeWxsYWJsZQgAAAAZPENoYXJUeXBlPmtfX0JhY2tpbmdGaWVsZBU8VGV4
+        dD5rX19CYWNraW5nRmllbGQWPENob3JkPmtfX0JhY2tpbmdGaWVsZBo8U3RhcnRUaW1lPmtfX0JhY2tp
+        bmdGaWVsZBk8RHVyYXRpb24+a19fQmFja2luZ0ZpZWxkGDxUaWNrc09uPmtfX0JhY2tpbmdGaWVsZBk8
+        VGlja3NPZmY+a19fQmFja2luZ0ZpZWxkFTxCZWF0PmtfX0JhY2tpbmdGaWVsZAQBAQAAAAAAFmthci5T
+        eWxsYWJsZStDaGFyVHlwZXMDAAAABgYICAgDAAAABfb///8Wa2FyLlN5bGxhYmxlK0NoYXJUeXBlcwEA
+        AAAHdmFsdWVfXwAIAwAAAAEAAAAGCwAAAAVIZWxsbwYMAAAAAAAAAAAAAAAAAAAAAABAf0AAAAAAAAAA
+        AAAAAAABCQAAAAgAAAAB8/////b///8BAAAABg4AAAAGIFdvcmxkCQwAAAAAAAAAAEB/QAAAAAAAQH9A
+        AAAAAAAAAAAAAAAACw==
+</value>
   </data>
   <data name="karaokeEffect1.Location" type="System.Drawing.Point, System.Drawing">
     <value>0, 60</value>
@@ -529,15 +552,15 @@
   <data name="&gt;&gt;pnlWindow.ZOrder" xml:space="preserve">
     <value>0</value>
   </data>
-  <data name="pnlTimer.TrayLocation" type="System.Drawing.Point, System.Drawing">
+  <metadata name="pnlTimer.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>308, 17</value>
-  </data>
-  <data name="$this.Localizable" type="System.Boolean, mscorlib">
+  </metadata>
+  <metadata name="$this.Localizable" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
-  </data>
-  <data name="$this.TrayHeight" type="System.Int32, mscorlib">
+  </metadata>
+  <metadata name="$this.TrayHeight" type="System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>67</value>
-  </data>
+  </metadata>
   <data name="$this.ClientSize" type="System.Drawing.Size, System.Drawing">
     <value>584, 412</value>
   </data>

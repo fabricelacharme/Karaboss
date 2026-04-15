@@ -47,8 +47,14 @@ using System.Windows.Forms;
 
 namespace keffect
 {   
+    
+    public delegate void DoubleClickEventHandler(object sender, EventArgs e);
+    
     public partial class KaraokeEffect : UserControl, IMessageFilter
     {
+
+        public new event DoubleClickEventHandler DoubleClick;
+
 
         #region Others
 
@@ -132,7 +138,7 @@ namespace keffect
             set
             {
                 _karaokeDisplayType = value;
-                Invalidate();
+                pBox.Invalidate();
             }
         }
 
@@ -724,6 +730,21 @@ namespace keffect
             SetDefaultValues();
             Init();                       
         }
+
+        #region Events
+
+        /// <summary>
+        /// Double click for Windows state of parent form
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void pBox_DoubleClick(object sender, EventArgs e)
+        {
+            DoubleClick?.Invoke(this, e);
+        }
+
+        #endregion Events
+
 
 
         #region Timer gradient
@@ -1624,20 +1645,30 @@ namespace keffect
 
 
 
-        private void DrawInactiveLineWithBorders(PaintEventArgs e, int lineIndex, int y2)
+        private void DrawInactiveLineWithBorders(PaintEventArgs e, int lineIndex, int y2, bool IsActive = false)
         {
+            Color BorderColor = _InactiveBorderColor;
+            Color FillColor = _InactiveColor;
+
+            if (IsActive)
+            {
+                BorderColor = _ActiveBorderColor;
+                FillColor = _ActiveColor;
+            }
+
             // Create a graphical path
-            var path = new GraphicsPath();            
+            var path = new GraphicsPath();
             int x0;
-            Pen penInactiveBorder = new Pen(_InactiveBorderColor, _borderthick); // pen for inactive border color
+            Pen penBorder = new Pen(BorderColor, _borderthick); // pen for border color
             int Wbg;
             RectangleF Rbg;
+
 
             if (lineIndex < Texts.Count())
             {
                 x0 = HCenterText(Texts[lineIndex]);     // Center text horizontally
 
-                #region background of syllabe  
+                #region Background of text  
 
                 if (_bTextBackGround)
                 {
@@ -1648,32 +1679,42 @@ namespace keffect
                     e.Graphics.FillRectangle(new SolidBrush(Color.Black), Rbg);
                 }
 
-                #endregion
+                #endregion Background of text
 
                 // Add lines of lyrics to the Graphics path
                 path.AddString(Texts[lineIndex], _karaokeFont.FontFamily, (int)_karaokeFont.Style, _karaokeFont.Size, new Point(x0, y2), sf);
+            
+                // Draw the text            
+                e.Graphics.FillPath(new SolidBrush(FillColor), path);
+
+                // Outline the text
+                if (_borderthick > 0)
+                    e.Graphics.DrawPath(penBorder, path);
             }
-
-            // Draw the text            
-            e.Graphics.FillPath(new SolidBrush(_InactiveColor), path);
-
-            // Outline the text
-            if (_borderthick > 0)
-                e.Graphics.DrawPath(penInactiveBorder, path);
-
 
             #region Clean up resources
 
             path.Dispose();            
-            penInactiveBorder.Dispose();
+            penBorder.Dispose();
             
             #endregion Clean up resources
         }
 
-        private void DrawInactiveLineWithShadow(PaintEventArgs e, GraphicsPath path, int lineIndex, int y2)
+        private void DrawInactiveLineWithShadow(PaintEventArgs e, int lineIndex, int y2, bool IsActive = false)
         {
+            GraphicsPath path = new GraphicsPath();
+            Color BorderColor = _InactiveBorderColor;
+            Color FillColor = _InactiveColor;
+
+            if (IsActive)
+            {
+                BorderColor = _ActiveBorderColor;
+                FillColor = _ActiveColor;
+            }
+
             int x0;
             int Wbg;
+            Pen penBorder = new Pen(BorderColor, _borderthick); // pen for border color
             RectangleF Rbg;
 
             if (lineIndex < Texts.Count())
@@ -1695,21 +1736,49 @@ namespace keffect
                 path.AddString(Texts[lineIndex], _karaokeFont.FontFamily, (int)_karaokeFont.Style, _karaokeFont.Size, new Point(x0, y2), sf);
 
                 #region Shadow effect
-                CreateShadowEffect(Texts[lineIndex], _InactiveBorderColor, x0, y2, _karaokeFont, _karaokeFont.Size, e, path);
+                
+                CreateShadowEffect(Texts[lineIndex], BorderColor, x0, y2, _karaokeFont, _karaokeFont.Size, e, path);
+
                 #endregion Shadow effect
+
+                // Draw the text            
+                e.Graphics.FillPath(new SolidBrush(FillColor), path);
+
+                // Outline the text
+                if (_borderthick > 0)
+                    e.Graphics.DrawPath(penBorder, path);
             }
-           
+
+            #region Clean up resources
+
+            path.Dispose();
+            penBorder.Dispose();
+            
+            #endregion Clean up resources
+
         }
 
-        private void DrawInactiveLineWithNeon(PaintEventArgs e, GraphicsPath path, int lineIndex, int y2)
+        private void DrawInactiveLineWithNeon(PaintEventArgs e, int lineIndex, int y2, bool IsActive = false)
         {
+            GraphicsPath path = new GraphicsPath();
+            Color BorderColor = _InactiveBorderColor;
+            Color FillColor = _InactiveColor;
+
+            if (IsActive)
+            {
+                BorderColor = _ActiveBorderColor;
+                FillColor = _ActiveColor;
+            }
+
             int x0;
+            Pen penBorder = new Pen(BorderColor, _borderthick); // pen for border color
             int Wbg;
             RectangleF Rbg;
 
             if (lineIndex < Texts.Count())
             {
                 x0 = HCenterText(Texts[lineIndex]);     // Center text horizontally
+                
                 #region background of syllabe                              
                 if (_bTextBackGround)
                 {
@@ -1724,13 +1793,28 @@ namespace keffect
                 // Add lines of lyrics to the Graphics path
                 path.AddString(Texts[lineIndex], _karaokeFont.FontFamily, (int)_karaokeFont.Style, _karaokeFont.Size, new Point(x0, y2), sf);
 
-
                 #region Neon effect
 
-                CreateNeonEffect(_InactiveBorderColor, e, path);
+                CreateNeonEffect(BorderColor, e, path);
 
                 #endregion Neon effect
+
+                // Draw the text            
+                e.Graphics.FillPath(new SolidBrush(FillColor), path);
+
+                // Outline the text
+                if (_borderthick > 0)
+                    e.Graphics.DrawPath(penBorder, path);
+
             }
+
+            #region Clean up resources
+
+            path.Dispose();
+            penBorder.Dispose();
+
+            #endregion Clean up resources
+
         }
 
         #endregion Code fragments
@@ -1836,6 +1920,8 @@ namespace keffect
 
         private void DrawTextWithTwoLinesSwapped(PaintEventArgs e)
         {
+            _nbLyricsLines = 2;
+
             switch (FrameType)
             {
                 case "NoBorder":
@@ -1891,7 +1977,8 @@ namespace keffect
             DrawActiveLineWithBorders(e, _FirstLineToShow, y1);
 
             // Draw Inactive line with borders
-            DrawInactiveLineWithBorders(e, _FirstLineToShow + 1, y2);   
+            if (percent > 0) 
+                DrawInactiveLineWithBorders(e, _FirstLineToShow + 1, y2);   
         }
 
         private void TlsDrawTextWithShadow(PaintEventArgs e)
@@ -1919,23 +2006,8 @@ namespace keffect
             DrawActiveLineWithShadow(e, _FirstLineToShow, y1);
 
             // Draw Inactive line with Shadow
-            GraphicsPath path = new GraphicsPath();
-            Brush InactiveColorBrush = new SolidBrush(InactiveColor);
-            Pen InactiveBorderPen = new Pen(new SolidBrush(InactiveBorderColor), _borderthick);
-
-            DrawInactiveLineWithShadow(e, path, _FirstLineToShow + 1, y2);
-
-            // Draw the text                    
-            e.Graphics.FillPath(InactiveColorBrush, path);
-
-            // Outline the text                    
-            e.Graphics.DrawPath(InactiveBorderPen, path);
-
-            #region Clean up resources
-            path.Dispose();
-            InactiveColorBrush.Dispose();
-            InactiveBorderPen.Dispose();
-            #endregion Clean up resources
+            if (percent > 0)
+                DrawInactiveLineWithShadow(e, _FirstLineToShow + 1, y2);
         }
 
         private void TlsDrawTextWithNeon(PaintEventArgs e)
@@ -1962,25 +2034,9 @@ namespace keffect
             // Draw active line with Neon
             DrawActiveLineWithNeon(e, _FirstLineToShow, y1);
 
-
             // Draw Inactive line with Neon
-            GraphicsPath path = new GraphicsPath();
-            Brush InactiveColorBrush = new SolidBrush(InactiveColor);
-            Pen penInactiveBorder = new Pen(_InactiveBorderColor, _borderthick);
-
-            DrawInactiveLineWithNeon(e, path, _FirstLineToShow + 1, y2);
-
-            // Draw the text            
-            e.Graphics.FillPath(InactiveColorBrush, path);
-
-            // Outline the text                    
-            e.Graphics.DrawPath(penInactiveBorder, path);
-
-            #region Clean up resources
-            path.Dispose();
-            InactiveColorBrush.Dispose();
-            penInactiveBorder.Dispose();
-            #endregion Clean up resources
+            if (percent > 0)
+                DrawInactiveLineWithNeon(e, _FirstLineToShow + 1, y2);
         }
 
         #endregion Draw text with Two lines swapped
@@ -1989,6 +2045,8 @@ namespace keffect
         #region Draw text with Four lines swapped
         private void DrawTextWithFourLinesSwapped(PaintEventArgs e)
         {
+            _nbLyricsLines = 4;
+
             switch (FrameType)
             {
                 case "NoBorder":
@@ -2037,10 +2095,10 @@ namespace keffect
             if (_FirstLineToShow  % 4 == 2)
             {
                 // First line is active
-                y1 = y0;                            //_FirstLineToShow
-                y2 = y0 + _lineHeight;              //_FirstLineToShow + 1
-                y3 = y0 + 2 * _lineHeight;          //_FirstLineToShow + 2
-                y4 = y0 + 3 * _lineHeight;          //_FirstLineToShow + 3
+                y1 = y0;                            //_FirstLineToShow          current         (update 3 & 4)
+                y2 = y0 + _lineHeight;              //_FirstLineToShow + 1      inactive
+                y3 = y0 + 2 * _lineHeight;          //_FirstLineToShow + 2      inactive
+                y4 = y0 + 3 * _lineHeight;          //_FirstLineToShow + 3      inactive
 
                 idx2 = _FirstLineToShow + 1;
                 idx3 = _FirstLineToShow + 2;
@@ -2050,10 +2108,10 @@ namespace keffect
             else if (_FirstLineToShow  % 4 == 3)
             {
                 // 2nd line is active
-                y2 = y0;                            // _FirstLineToShow - 1
-                y1 = y0 + _lineHeight;              // _FirstLineToShow
-                y3 = y0 + 2 * _lineHeight;          // _FirstLineToShow + 1
-                y4 = y0 + 3 * _lineHeight;          // _FirstLineToShow + 2
+                y2 = y0;                            // _FirstLineToShow - 1     * active
+                y1 = y0 + _lineHeight;              // _FirstLineToShow         current         (no update)
+                y3 = y0 + 2 * _lineHeight;          // _FirstLineToShow + 1     inactive
+                y4 = y0 + 3 * _lineHeight;          // _FirstLineToShow + 2     inactive
 
                 idx2 = _FirstLineToShow - 1;
                 idx3 = _FirstLineToShow + 1;
@@ -2062,10 +2120,10 @@ namespace keffect
             else if (_FirstLineToShow  % 4 == 0)
             {
                 // 3rd line is active
-                y3 = y0;                            // _FirstLineToShow + 2     
-                y4 = y0 + _lineHeight;              // _FirstLineToShow + 3
-                y1 = y0 + 2 * _lineHeight;          // _FirstLineToShow
-                y2 = y0 + 3 * _lineHeight;          // _FirstLineToShow + 1
+                y3 = y0;                            // _FirstLineToShow + 2     inactive
+                y4 = y0 + _lineHeight;              // _FirstLineToShow + 3     inactive
+                y1 = y0 + 2 * _lineHeight;          // _FirstLineToShow         current         (update 1 & 2)
+                y2 = y0 + 3 * _lineHeight;          // _FirstLineToShow + 1     inactive
 
                 idx2 = _FirstLineToShow + 1;
                 idx3 = _FirstLineToShow + 2;
@@ -2074,22 +2132,27 @@ namespace keffect
             else if (_FirstLineToShow  % 4 == 1)
             {
                 // 4th line is active
-                y3 = y0;                            // _FirstLineToShow + 1
-                y4 = y0 + _lineHeight;              // _FirstLineToShow + 2
-                y2 = y0 + 2 * _lineHeight;          // _FirstLineToShow - 1
-                y1 = y0 + 3 * _lineHeight;          // _FirstLineToShow               
+                y3 = y0;                            // _FirstLineToShow + 1     inactive
+                y4 = y0 + _lineHeight;              // _FirstLineToShow + 2     inactive
+                y2 = y0 + 2 * _lineHeight;          // _FirstLineToShow - 1     * active
+                y1 = y0 + 3 * _lineHeight;          // _FirstLineToShow         current         (no update)
                 
                 idx2 = _FirstLineToShow - 1;
                 idx3 = _FirstLineToShow + 1;
                 idx4 = _FirstLineToShow + 2;
-            }
+            }            
+
 
             // Draw active line with borders
             DrawActiveLineWithBorders(e, _FirstLineToShow, y1);
 
-            // Draw Inactive line with borders
+            
+            // Line y2 must be drawned active when
+            bool IsActive = ((_FirstLineToShow % 4 == 1) || (_FirstLineToShow % 4 == 3)) ? true : false;
+
+            // Draw Inactive lines with borders
             if (idx2 >= 0) 
-                DrawInactiveLineWithBorders(e, idx2, y2);
+                DrawInactiveLineWithBorders(e, idx2, y2, IsActive);
             
             if (idx3 >= 0 && _FirstLineToShow > 0)
                 DrawInactiveLineWithBorders(e, idx3, y3);
@@ -2169,33 +2232,21 @@ namespace keffect
 
             // Draw active line with Shadow
             DrawActiveLineWithShadow(e, _FirstLineToShow, y1);
+            
 
-            // Draw Inactive line with Shadow
-            GraphicsPath path = new GraphicsPath();
-            Brush InactiveColorBrush = new SolidBrush(InactiveColor);
-            Pen InactiveBorderPen = new Pen(new SolidBrush(InactiveBorderColor), _borderthick);
+            // Line y2 must be drawned active when
+            bool IsActive = ((_FirstLineToShow % 4 == 1) || (_FirstLineToShow % 4 == 3)) ? true : false;
 
+            // Draw Inactive lines with Shadow
             if (idx2 >= 0)
-                DrawInactiveLineWithShadow(e, path, idx2, y2);
+                DrawInactiveLineWithShadow(e, idx2, y2, IsActive);
             
             if (idx3 >= 0 && _FirstLineToShow > 0)
-                DrawInactiveLineWithShadow(e, path, idx3, y3);
+                DrawInactiveLineWithShadow(e, idx3, y3);
 
             if (idx4 >= 0 && _FirstLineToShow > 0)
-                DrawInactiveLineWithShadow(e, path, idx4, y4);
-
-            // Draw the text                    
-            e.Graphics.FillPath(InactiveColorBrush, path);
-
-            // Outline the text                    
-            e.Graphics.DrawPath(InactiveBorderPen, path);
-
-            #region Clean up resources
-            path.Dispose();
-            InactiveColorBrush.Dispose();
-            InactiveBorderPen.Dispose();
-            #endregion Clean up resources
-
+                DrawInactiveLineWithShadow(e, idx4, y4);
+         
         }
 
         private void FlsDrawTextWithNeon(PaintEventArgs e)
@@ -2267,33 +2318,21 @@ namespace keffect
                 idx4 = _FirstLineToShow + 2;
             }
 
-            // Draw active line with borders
+            // Draw active line with Neon
             DrawActiveLineWithNeon(e, _FirstLineToShow, y1);
 
-            // Draw Inactive line with borders
-            GraphicsPath path = new GraphicsPath();
-            Brush InactiveColorBrush = new SolidBrush(InactiveColor);
-            Pen penInactiveBorder = new Pen(_InactiveBorderColor, _borderthick);
+            // Draw inactive lines with Neon
+
+            // Line y2 must be drawned active when
+            bool IsActive = ((_FirstLineToShow % 4 == 1) || (_FirstLineToShow % 4 == 3)) ? true : false;
 
             if (idx2 >= 0)
-                DrawInactiveLineWithNeon(e, path, idx2, y2);
+                DrawInactiveLineWithNeon(e, idx2, y2, IsActive);
             if (idx3 >= 0 && _FirstLineToShow > 0)
-                DrawInactiveLineWithNeon(e, path, idx3, y3);        
+                DrawInactiveLineWithNeon(e, idx3, y3);        
             if (idx4 >= 0 && _FirstLineToShow > 0)
-                DrawInactiveLineWithNeon(e, path, idx4, y4);
+                DrawInactiveLineWithNeon(e, idx4, y4);
 
-            // Draw the text            
-            e.Graphics.FillPath(InactiveColorBrush, path);
-
-            // Outline the text                    
-            e.Graphics.DrawPath(penInactiveBorder, path);
-
-
-            #region Clean up resources
-            path.Dispose();
-            InactiveColorBrush.Dispose();
-            penInactiveBorder.Dispose();
-            #endregion Clean up resources
         }
 
         #endregion Draw text with Four lines swapped
@@ -2374,7 +2413,7 @@ namespace keffect
 
             for (int i = _FirstLineToShow + 1; i <= _LastLineToShow; i++)
             {
-                DrawInactiveLineWithShadow(e, path, i, y0 + (i - _FirstLineToShow) * _lineHeight);               
+                DrawInactiveLineWithShadow(e, i, y0 + (i - _FirstLineToShow) * _lineHeight);               
             }
 
             // Draw the text                    
@@ -2409,7 +2448,7 @@ namespace keffect
 
             for (int i = _FirstLineToShow + 1; i <= _LastLineToShow; i++)
             {                
-                DrawInactiveLineWithNeon(e, path, i, y0 + (i - _FirstLineToShow) * _lineHeight);            
+                DrawInactiveLineWithNeon(e, i, y0 + (i - _FirstLineToShow) * _lineHeight);            
             }
 
             Brush InactiveColorBrush = new SolidBrush(InactiveColor);            
@@ -3217,8 +3256,9 @@ namespace keffect
 
         }
 
+
         #endregion SlideShow
 
-
+      
     }
 }

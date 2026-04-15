@@ -33,35 +33,36 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.pboxWnd = new System.Windows.Forms.PictureBox();
-            ((System.ComponentModel.ISupportInitialize)(this.pboxWnd)).BeginInit();
+            this.pBox = new System.Windows.Forms.PictureBox();
+            ((System.ComponentModel.ISupportInitialize)(this.pBox)).BeginInit();
             this.SuspendLayout();
             // 
-            // pboxWnd
+            // pBox
             // 
-            this.pboxWnd.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.pboxWnd.Location = new System.Drawing.Point(0, 0);
-            this.pboxWnd.Name = "pboxWnd";
-            this.pboxWnd.Size = new System.Drawing.Size(150, 150);
-            this.pboxWnd.TabIndex = 0;
-            this.pboxWnd.TabStop = false;
-            this.pboxWnd.Paint += new System.Windows.Forms.PaintEventHandler(this.pboxWnd_Paint);
-            this.pboxWnd.Resize += new System.EventHandler(this.pboxWnd_Resize);
+            this.pBox.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.pBox.Location = new System.Drawing.Point(0, 0);
+            this.pBox.Name = "pBox";
+            this.pBox.Size = new System.Drawing.Size(150, 150);
+            this.pBox.TabIndex = 0;
+            this.pBox.TabStop = false;
+            this.pBox.Paint += new System.Windows.Forms.PaintEventHandler(this.pboxWnd_Paint);
+            this.pBox.DoubleClick += new System.EventHandler(this.pboxWnd_DoubleClick);
+            this.pBox.Resize += new System.EventHandler(this.pboxWnd_Resize);
             // 
             // pictureBoxControl
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.Controls.Add(this.pboxWnd);
+            this.Controls.Add(this.pBox);
             this.DoubleBuffered = true;
             this.Name = "pictureBoxControl";
-            ((System.ComponentModel.ISupportInitialize)(this.pboxWnd)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pBox)).EndInit();
             this.ResumeLayout(false);
 
         }
 
         #endregion
 
-        private System.Windows.Forms.PictureBox pboxWnd;
+        private System.Windows.Forms.PictureBox pBox;
     }
 }

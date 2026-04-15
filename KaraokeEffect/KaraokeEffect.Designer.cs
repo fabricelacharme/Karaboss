@@ -41,6 +41,7 @@
             this.pBox.TabIndex = 0;
             this.pBox.TabStop = false;
             this.pBox.Paint += new System.Windows.Forms.PaintEventHandler(this.pBox_Paint);
+            this.pBox.DoubleClick += new System.EventHandler(this.pBox_DoubleClick);
             // 
             // KaraokeEffect
             // 

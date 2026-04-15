@@ -34,8 +34,6 @@
 
 using kar;
 using Karaboss.MidiLyrics;
-using keffect;
-using PicControl;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -577,17 +575,28 @@ namespace Karaboss
 
             Application.AddMessageFilter(this);
             controlsToMove.Add(this);
-            // UserControls picball & pBox manage themselves this move.            
+            // UserControls picball & pBox manage themselves this move.
+            controlsToMove.Add(this.pnlWindow);
             controlsToMove.Add(this.pnlTittle);
             controlsToMove.Add(this.lblTittle);
 
             #endregion
+            
+
+            this.pBox.DoubleClick += new PicControl.DoubleClickEventHandler(pBox_DoubleClick);
 
 
             // colours for text, chords, number of lines etc...
             LoadOptions();
 
             AddMouseMoveHandler(this);
+        }
+
+        private void pBox_DoubleClick(object sender, EventArgs e)
+        {
+            if (WindowState == FormWindowState.Maximized)
+                WindowState = FormWindowState.Normal;
+            else WindowState = FormWindowState.Maximized;
         }
 
 
