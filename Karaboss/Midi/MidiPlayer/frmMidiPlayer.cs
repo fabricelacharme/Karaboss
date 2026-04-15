@@ -7884,7 +7884,7 @@ namespace Karaboss
             // et colorier la syllabe à chanter   
             if (PlayerState == PlayerStates.Playing)
             {
-                if (Application.OpenForms.OfType<frmMidiLyrics>().Count() > 0 && myLyricsMgmt.KLyrics.Lines.Count > 0)//if (Application.OpenForms.OfType<frmMidiLyrics>().Count() > 0 && myLyricsMgmt.plLyrics.Count > 0)
+                if (Application.OpenForms.OfType<frmMidiLyrics>().Count() > 0 && myLyricsMgmt.KLyrics.Lines.Count > 0)
                     frmMidiLyric.ColorLyric(sequencer1.Position);
             }
         }

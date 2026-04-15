@@ -815,6 +815,9 @@ namespace PicControl
 
         private int _beatNumber = 1;
 
+        private bool bInstrumentalStarted = false;
+        private int _EndOfInstrumentalTime = 0;
+
         #endregion Others
 
 
@@ -859,6 +862,16 @@ namespace PicControl
 
             SetDefaultValues();
         }
+
+        #region Events
+
+        private void pboxWnd_DoubleClick(object sender, EventArgs e)
+        {
+            DoubleClick?.Invoke(this, e);
+        }
+
+        #endregion Events
+
 
 
         #region Timer gradient
@@ -988,10 +1001,143 @@ namespace PicControl
         /// Color the syllabe according to song position
         /// </summary>
         /// <param name="songposition"></param>
-        public void ColorLyric(int songposition)
-        {                        
-            _currentPosition = songposition;           
+        public void ColorLyric(int sequencerposition)
+        {
+            // songposition = sequencerPosition en ticks
+            _currentPosition = sequencerposition;           
             SetOffset();
+            GuessInstrumental(sequencerposition);
+        }
+
+        private void GuessInstrumental(int sequencerposition)
+        {
+            int t1 = 0;
+            int t2 = 0;
+            
+            for (int i = 0; i < syllabes.Count; i++)
+            {
+                t1 = syllabes[i].time;
+                
+                if (sequencerposition < t1 && i < syllabes.Count - 1 && !bInstrumentalStarted)
+                {
+                    t2 = syllabes[i + 1].time;
+
+                    if (t2 - t1 > 8 * _beatDuration)
+                    {
+                        bInstrumentalStarted = true;
+                        _EndOfInstrumentalTime = t2;
+                        Console.WriteLine("****************************** Instrumental ******************************");
+                        break;
+                    }                    
+                    else 
+                    { 
+                        break; 
+                    }
+                    
+                }
+                else if  (bInstrumentalStarted && _EndOfInstrumentalTime  - sequencerposition < _beatDuration) 
+                {
+                    bInstrumentalStarted = false;
+                    Console.WriteLine("*************************** End of Instrumental ***************************");
+                    break;
+                }
+            }
+        }
+
+
+        /// <summary>
+        /// Guess if picturebox should be paint.
+        /// Paint should be done only if syllable has changed
+        /// </summary>
+        private void SetOffset()
+        {
+            int ctp = findPosition(_currentPosition);  // index syllabe à chanter
+            int newvOffset; // = 0;
+
+            // If vertical Offset change => redraw
+            // Time to next line            
+            float CurrentTimeToNextLineDuration = nextStartOfLineTime - _currentPosition;
+            if (CurrentTimeToNextLineDuration > 0 && TimeToNextLineDuration > 0)
+            {
+                // As time passes, CurrentTimeToNextLineDuration decreases, so newvOffset increases
+                newvOffset = Convert.ToInt32(_lineHeight - (CurrentTimeToNextLineDuration / TimeToNextLineDuration) * _lineHeight);
+                if (newvOffset > vOffset)
+                {
+                    vOffset = newvOffset;
+                }
+            }
+
+            // If syllabe change => redraw
+            if (ctp != _currentTextPos)
+            {
+                if (bEndOfLine)
+                {
+                    bEndOfLine = false;
+                    vOffset = 0;
+                }
+                _currentTextPos = ctp;
+            }
+
+           
+
+            // Redraw the display
+            pBox.Invalidate();
+        }
+
+        /// <summary>
+        /// Find index of syllabe to sing according to time
+        /// TODO : remove chords ?
+        /// </summary>
+        /// <param name="itime"></param>
+        /// <returns></returns>
+        private int findPosition(int itime)
+        {
+            if (syllabes == null)
+                return 0;
+
+            int x0 = 0;
+
+            // optimisation : partir de la dernière position connue si le temps de celle-ci est inférieur au temps actuel
+
+            if (_currentTextPos > 0 && _currentTextPos < syllabes.Count && syllabes[_currentTextPos].time < itime)
+                x0 = _currentTextPos - 1;
+
+            for (int i = x0; i < syllabes.Count; i++)
+            {
+                syllabe syllab = syllabes[i];
+
+                // cherche la première syllabe dont le temps est supérieur à itime
+                // prend la précédente
+                if (itime < syllab.time)
+                {
+
+                    if (i > 0 && syllab.posline == 0 && syllab.SylCount == 1)
+                    {
+                        //  LRC : 1 ligne = 1 seule syllabe                        
+                        bHighLight = true;
+                        return i - 1;
+                    }
+                    else if (i > 0 && syllab.posline == 0 && itime > syllabes[i - 1].time + 2 * _beatDuration)
+                    {
+                        // Cas 1 : La première syllabe dont le temps est supérieur au temps courant est située sur la prochaine ligne
+                        // Cela signifie que l'on vient de jouer la dernière syllabe de la ligne.
+                        // Si "fin de ligne" et temps écoulé supérieur à 2 noires
+                        // prendre la première syllabe dont le temps est supérieur au temps courant, soit l'indice "i"
+                        // indiquer également qu'il ne faut pas encore colorer cette syllabe
+                        // On force le changement de ligne au bout de 2 temps                       
+                        bHighLight = false;   // Ne pas mettre en surbrillance la syllabe tant que son temps n'est pas arrivé
+                        return i;
+                    }
+                    else
+                    {
+                        // Sinon prendre "i - 1" et la syllabe doit être colorée
+                        bHighLight = true;
+                        return i - 1;
+                    }
+                }
+            }
+
+            return syllabes.Count - 1;
         }
 
         /// <summary>
@@ -1000,6 +1146,8 @@ namespace PicControl
         public void ResetTop()
         {            
             bEndOfLine = false;
+
+            bInstrumentalStarted = false;
 
             vOffset = 0;
             nextStartOfLineTime = 0;
@@ -1442,6 +1590,7 @@ namespace PicControl
 
 
         #region Text
+       
 
         /// <summary>
         /// Store lyrics lines in a list called lstLyricsLines
@@ -1657,24 +1806,7 @@ namespace PicControl
                 g.Dispose();
             }
         }
-
-        /// <summary>
-        /// Measure the length of line "curline"
-        /// </summary>
-        /// <param name="curline"></param>
-        /// <returns></returns>
-        private float MeasureLine(int curline)
-        {
-            float Sum = 0;
-
-            // Calculate the lengh of a line
-            for (int i = 0; i < Lines[curline].Length; i++)
-            {
-                Sum += MeasureString(Lines[curline][i], _karaokeFont.Size);
-            }
-            return Sum;
-        }
-
+     
 
         /// <summary>
         /// Crée une liste de rectangles pour chaque syllable de la ligne en cours 
@@ -1734,61 +1866,7 @@ namespace PicControl
             }
         }
     
-        /// <summary>
-        /// Find index of syllabe to sing according to time
-        /// TODO : remove chords ?
-        /// </summary>
-        /// <param name="itime"></param>
-        /// <returns></returns>
-        private int findPosition(int itime)
-        {
-            if (syllabes == null)
-                return 0;
-            
-            int x0 = 0;
-
-            // optimisation : partir de la dernière position connue si le temps de celle-ci est inférieur au temps actuel
-
-            if (_currentTextPos > 0 && _currentTextPos < syllabes.Count && syllabes[_currentTextPos].time < itime)            
-                x0 = _currentTextPos - 1;
-
-            for (int i = x0; i < syllabes.Count; i++)
-            {
-                syllabe syllab = syllabes[i];
-
-                // cherche la première syllabe dont le temps est supérieur à itime
-                // prend la précédente
-                if (itime < syllab.time)
-                {
-                    
-                    if (i > 0 && syllab.posline == 0 && syllab.SylCount == 1)
-                    {
-                        //  LRC : 1 ligne = 1 seule syllabe                        
-                        bHighLight = true;
-                        return i - 1;
-                    }
-                    else if (i > 0 && syllab.posline == 0 && itime > syllabes[i - 1].time + 2 * _beatDuration)
-                    {
-                        // Cas 1 : La première syllabe dont le temps est supérieur au temps courant est située sur la prochaine ligne
-                        // Cela signifie que l'on vient de jouer la dernière syllabe de la ligne.
-                        // Si "fin de ligne" et temps écoulé supérieur à 2 noires
-                        // prendre la première syllabe dont le temps est supérieur au temps courant, soit l'indice "i"
-                        // indiquer également qu'il ne faut pas encore colorer cette syllabe
-                        // On force le changement de ligne au bout de 2 temps                       
-                        bHighLight = false;   // Ne pas mettre en surbrillance la syllabe tant que son temps n'est pas arrivé
-                        return i;                        
-                    }
-                    else
-                    {
-                        // Sinon prendre "i - 1" et la syllabe doit être colorée
-                        bHighLight = true;
-                        return i - 1;
-                    }
-                }
-            }
-            
-            return syllabes.Count - 1;
-        }
+       
 
         /// <summary>
         /// Create rectangles when line changes
@@ -1821,10 +1899,29 @@ namespace PicControl
             }
         }
 
+      
+
         #endregion Text
 
 
         #region measures
+
+        /// <summary>
+        /// Measure the length of line "curline"
+        /// </summary>
+        /// <param name="curline"></param>
+        /// <returns></returns>
+        private float MeasureLine(int curline)
+        {
+            float Sum = 0;
+
+            // Calculate the lengh of a line
+            for (int i = 0; i < Lines[curline].Length; i++)
+            {
+                Sum += MeasureString(Lines[curline][i], _karaokeFont.Size);
+            }
+            return Sum;
+        }
 
         /// <summary>
         /// Get offset to center text
@@ -2481,54 +2578,6 @@ namespace PicControl
       
         #region paint resize
 
-        /// <summary>
-        /// Guess if picturebox should be paint.
-        /// Paint should be done only if syllable has changed
-        /// </summary>
-        private void SetOffset()
-        {                                  
-            int ctp = findPosition(_currentPosition);  // index syllabe à chanter
-            int newvOffset; // = 0;
-
-            // If vertical Offset change => redraw
-            // Time to next line            
-            float CurrentTimeToNextLineDuration = nextStartOfLineTime - _currentPosition;
-            if (CurrentTimeToNextLineDuration > 0 && TimeToNextLineDuration > 0)
-            {
-                // As time passes, CurrentTimeToNextLineDuration decreases, so newvOffset increases
-                newvOffset = Convert.ToInt32(_lineHeight - (CurrentTimeToNextLineDuration / TimeToNextLineDuration) * _lineHeight);
-                if (newvOffset > vOffset) {         
-                    vOffset = newvOffset;
-                }
-            }           
-
-            // If syllabe change => redraw
-            if (ctp != _currentTextPos)
-            {  
-                if (bEndOfLine)
-                {
-                    bEndOfLine = false;                    
-                    vOffset = 0;
-                }
-
-                /*
-                // Check if syllabes[ctp] is a paragraph separator
-                if (syllabes[ctp].SylCount == 1 && syllabes[ctp].text == " ")
-                {
-                    _currentTextPos = ctp - 1; // Skip paragraph separator
-                }
-                else 
-                {                     // Update current text position
-                    _currentTextPos = ctp;
-                }
-                */
-                
-                _currentTextPos = ctp;                
-            }
-           
-            // Redraw the display
-            pBox.Invalidate();
-        }
 
         /// <summary>
         /// picturebox Paint event
@@ -3381,7 +3430,6 @@ namespace PicControl
         #endregion Draw text with fixed lines
 
 
-
         #region Draw text with Four lines swapped
 
         private void DrawTextWithFourLinesSwapped(PaintEventArgs e)
@@ -3509,10 +3557,10 @@ namespace PicControl
             if (idx2 >= 0 && idx2 < KLyrics.Lines.Count)
                 DrawInactiveLineWithBorders(e, idx2, y2, IsActive);
 
-            if (idx3 >= 0 && idx3 < KLyrics.Lines.Count && _FirstLineToShow > 0)
+            if (idx3 >= 0 && idx3 < KLyrics.Lines.Count && _FirstLineToShow > 0 && !bInstrumentalStarted)
                 DrawInactiveLineWithBorders(e, idx3, y3);
 
-            if (idx4 >= 0  && idx4 < KLyrics.Lines.Count && _FirstLineToShow > 0)
+            if (idx4 >= 0  && idx4 < KLyrics.Lines.Count && _FirstLineToShow > 0 && !bInstrumentalStarted)
                 DrawInactiveLineWithBorders(e, idx4, y4);
         }
 
@@ -4245,9 +4293,6 @@ namespace PicControl
 
         #endregion Dispose
 
-        private void pboxWnd_DoubleClick(object sender, EventArgs e)
-        {
-            DoubleClick?.Invoke(this, e);
-        }
+      
     }
 }
