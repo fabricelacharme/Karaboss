@@ -52,8 +52,12 @@ namespace keffect
     
     public partial class KaraokeEffect : UserControl, IMessageFilter
     {
+        #region Events
 
         public new event DoubleClickEventHandler DoubleClick;
+
+        #endregion Events
+
 
         #region MP3
         // Duration in seconds (org Bass)
@@ -969,27 +973,35 @@ namespace keffect
         /// </summary>
         /// <param name="kls"></param>
         /// <returns></returns>
-        private kLyrics SearchForInstrumentals(kLyrics kls, int beatDuration)
+        private kLyrics SearchForInstrumentals(kLyrics kls)
         {
             double tOnPrevious = 0;            
             double duration = 0;
-            double t = 0;
-            double deltaParagraph = 8 * beatDuration;
+            double t = 0;          
+            double deltaInstrumental = 5000;                       // 5000 ms (5 sec) for ans instrumental                        
             kLyrics klsWithinstrumentals = new kLyrics();
             kLine line;
-            string instrutext = "(Instrumental)";
-            string introtext = "(Introduction)";
             string text = string.Empty;
 
+            
+            // Introduction
+            
+            
             for (int i = 0; i < kls.Lines.Count; i++)
-            {
+            {                                                                
                 line = new kLine();
                 for (int j = 0; j < kls.Lines[i].Syllables.Count; j++)
                 {
-                    t = kls.Lines[i].Syllables[j].StartTime;
-                    //duration = kls.Lines[i].Syllables[j].Duration;
 
-                    if (t - tOnPrevious > deltaParagraph)
+                    t = kls.Lines[i].Syllables[j].StartTime;
+
+                    if (i == 0 && j == 0)
+                    {
+                        line.Add(new Syllable() { Text = "(Introduction)", StartTime = 0, CharType = Syllable.CharTypes.Text });
+                        klsWithinstrumentals.Add(line);
+                        line = new kLine();
+                    }
+                    else if (t - tOnPrevious > deltaInstrumental)
                     {
                         // An Instrumental part exists from tPrevious to t
                         // When can add a lyric called "(Instrumental)" a few time after tPrevious
@@ -997,15 +1009,9 @@ namespace keffect
                         if (line.Syllables.Count > 0)
                             klsWithinstrumentals.Add(line);
 
-                        line = new kLine();
-                        if (tOnPrevious == 0)
-                            text = introtext;
-                        else
-                            text = instrutext;
-                        
-                        line.Add(new Syllable() { Text = text, StartTime = tOnPrevious + duration , CharType = Syllable.CharTypes.Text });
+                        line = new kLine();                       
+                        line.Add(new Syllable() { Text = "(Instrumental)", StartTime = tOnPrevious + duration , CharType = Syllable.CharTypes.Text });
                         klsWithinstrumentals.Add(line);
-
                         line = new kLine();
 
                     }
@@ -1016,6 +1022,16 @@ namespace keffect
                 }
                 klsWithinstrumentals.Add(line);
             }
+
+            // Instrumental at the end
+            t = _kLyrics.Lines.Last().Syllables.Last().StartTime;
+            if (_duration * 1000 - t > deltaInstrumental)
+            {                
+                line = new kLine();
+                line.Add(new Syllable() { Text = "(Instrumental)", StartTime = t + duration, CharType = Syllable.CharTypes.Text });
+                klsWithinstrumentals.Add(line);
+            }
+
 
             return klsWithinstrumentals;
         }
@@ -1037,7 +1053,7 @@ namespace keffect
                 _kLyrics = ForceUpperCase(_kLyrics);
 
             // Analyse lyrics to find introduction, instrumentals etc..
-            _kLyrics = SearchForInstrumentals(_kLyrics, 1000);
+            _kLyrics = SearchForInstrumentals(_kLyrics);
 
 
             // Store all lines lengths

@@ -563,7 +563,7 @@ namespace Karaboss.Mp3
 
             karaokeEffect1.DoubleClick += new DoubleClickEventHandler(karaokeEffect1_DoubleClick);
 
-            LoadLyrics();
+            //LoadLyrics();
             
             AddMouseMoveHandler(this);
             LoadOptions();

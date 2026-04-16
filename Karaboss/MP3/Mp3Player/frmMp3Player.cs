@@ -1398,6 +1398,12 @@ namespace Karaboss.Mp3
                     Mp3LyricsMgmtHelper.mp3KaraokeLyrics = Mp3LyricsMgmtHelper.GetLyricsFromLrcFile(FileName);                    
 
                     DisplayFrmMp3Lyrics();
+                    
+                    // Load lyrics in KaraokeEffect of frmMp3Myrics
+                    if (Application.OpenForms.OfType<frmMp3Lyrics>().Count() > 0)
+                    {
+                        frmMp3Lyrics.SetLyrics(Mp3LyricsMgmtHelper.mp3KaraokeLyrics);
+                    }
                     break;
                 
                 case Mp3LyricsTypes.KOKFile:
@@ -1471,6 +1477,9 @@ namespace Karaboss.Mp3
             frmMp3Lyrics.Duration = _duration; // mp3 duration in ms
             frmMp3Lyrics.Frequency = _frequency;
             frmMp3Lyrics.BitRate = _bitrate;
+
+            // Load lyrics from Mp3LyricsMgmtHelper.mp3KaraokeLyrics
+            //frmMp3Lyrics.LoadLyrics();
 
             // cas d'une playlist ou non : met à jour le diaporama
             SetSlideShow();
