@@ -3235,6 +3235,35 @@ namespace PicControl
             #endregion Clean up resources
         }
 
+
+        /// <summary>
+        /// Draw a line of information like (Instrumental) on a single line
+        /// </summary>
+        /// <param name="e"></param>
+        ///  <param name="infotext"</param>
+        /// <param name="y"></param>
+        private void DrawInformation(PaintEventArgs e, string infotext, int y0) 
+        {
+            GraphicsPath path = new GraphicsPath();
+            int x0;
+            Pen penBorder = new Pen(Color.Black);
+            Color FillColor = Color.Gray;
+
+            x0 = HCenterText(infotext, emSize);
+
+            // Add lines of lyrics to the Graphics path
+            path.AddString(infotext, m_font.FontFamily, (int)m_font.Style, emSize, new Point((int)x0, (int)y0), sf);
+
+            // Draw the text                    
+            e.Graphics.FillPath(new SolidBrush(FillColor), path);
+
+            // Outline the text
+            if (_borderthick > 0)
+                e.Graphics.DrawPath(penBorder, path);
+
+        }
+
+        
         #endregion Code fragments
 
 
@@ -3549,7 +3578,6 @@ namespace PicControl
             // Draw active line with borders
             DrawActiveLineWithBorders(e, y1);
 
-
             // Line y2 must be drawned active when
             bool IsActive = ((_FirstLineToShow % 4 == 1) || (_FirstLineToShow % 4 == 3)) ? true : false;
 
@@ -3557,11 +3585,18 @@ namespace PicControl
             if (idx2 >= 0 && idx2 < KLyrics.Lines.Count)
                 DrawInactiveLineWithBorders(e, idx2, y2, IsActive);
 
-            if (idx3 >= 0 && idx3 < KLyrics.Lines.Count && _FirstLineToShow > 0 && !bInstrumentalStarted)
-                DrawInactiveLineWithBorders(e, idx3, y3);
+            if (bInstrumentalStarted)
+            {
+                DrawInformation(e, "(Instrumental)", y3 + _lineHeight / 2);
+            }
+            else
+            {               
+                if (idx3 >= 0 && idx3 < KLyrics.Lines.Count && _FirstLineToShow > 0)
+                    DrawInactiveLineWithBorders(e, idx3, y3);
 
-            if (idx4 >= 0  && idx4 < KLyrics.Lines.Count && _FirstLineToShow > 0 && !bInstrumentalStarted)
-                DrawInactiveLineWithBorders(e, idx4, y4);
+                if (idx4 >= 0 && idx4 < KLyrics.Lines.Count && _FirstLineToShow > 0)
+                    DrawInactiveLineWithBorders(e, idx4, y4);
+            }
         }
 
         private void FlsDrawTextWithShadow(PaintEventArgs e)
