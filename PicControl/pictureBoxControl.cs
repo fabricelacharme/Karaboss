@@ -1003,7 +1003,7 @@ namespace PicControl
         /// <param name="songposition"></param>
         public void ColorLyric(int sequencerposition)
         {
-            // songposition = sequencerPosition en ticks
+            // sequencerPosition en ticks
             _currentPosition = sequencerposition;           
             SetOffset();
             GuessInstrumental(sequencerposition);

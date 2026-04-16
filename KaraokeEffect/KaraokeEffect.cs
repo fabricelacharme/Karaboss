@@ -83,8 +83,8 @@ namespace keffect
         private float CurLength;
         private float lastCurLength;
 
-        long _nexttime;
-        long _lasttime;
+        double _nexttime;
+        double _lasttime;
 
 
         private int _FirstLineToShow = 0;
@@ -104,6 +104,7 @@ namespace keffect
         private float highlight_fragment_length = 0;
         private string inactive_fragment = string.Empty;
         private float inactive_fragment_length = 0;
+
 
         private int _beatNumber = 1;
 
@@ -826,10 +827,44 @@ namespace keffect
          }
 
 
+        /// <summary>
+        /// Remove paragra^hs in some cases
+        /// </summary>
+        /// <param name="kls"></param>
+        /// <returns></returns>
+        private kLyrics RemoveParagraphs(kLyrics kls)
+        {
+            kLyrics klsNoParagraphs = new kLyrics();
+            kLine line;
+            for (int i = 0; i < kls.Lines.Count; i++)
+            {
+                //if (kls.Lines[i].Syllables.First().CharType != Syllable.CharTypes.ParagraphSep)
+                if (! (kls.Lines[i].Syllables.Count == 1 && kls.Lines[i].Syllables.First().Text == string.Empty))
+                {
+                    line = new kLine();
+                    for (int j = 0; j < kls.Lines[i].Syllables.Count; j++)
+                    {
+                        line.Add(kls.Lines[i].Syllables[j]);
+                    }
+                    klsNoParagraphs.Add(line);
+                }
+            }
+
+            return klsNoParagraphs;
+        }
+
+
         private void Init()
         {
             #region Load Lines & Times
 
+            // Do not display paragraphs for some cases
+            if (KaraokeDisplayType == KaraokeDisplayTypes.TwoLinesSwapped || KaraokeDisplayType == KaraokeDisplayTypes.FourLinesSwapped || !bShowParagraphs)
+            {
+                _kLyrics = RemoveParagraphs(_kLyrics);
+            }
+
+            /*
             Lines = new List<string[]>();
             Times = new List<long[]>();
                        
@@ -860,45 +895,15 @@ namespace keffect
                     s[j] = tx;                 
                 }
 
-                switch (KaraokeDisplayType)
-                {
-                    case KaraokeDisplayTypes.FixedLines:
-                    case KaraokeDisplayTypes.ScrollingLinesBottomUp:
-                    case KaraokeDisplayTypes.ScrollingLinesTopDown:
-
-                        // If paragraph
-                        if (s.Length > 0 && (s.Length == 1 && s[0] == string.Empty))
-                        {
-                            if (bShowParagraphs)
-                            {
-                                Times.Add(t);
-                                Lines.Add(s);
-                            }
-                        }
-                        else
-                        {
-                            // not a paragraph
-                            Times.Add(t);
-                            Lines.Add(s);
-                        }
-                        break;
-
-                    case KaraokeDisplayTypes.TwoLinesSwapped:
-                    case KaraokeDisplayTypes.FourLinesSwapped:
-                        // Remove paragraphes for TwoLinesSwapped and FourLinesSwapped display types
-                        if (!(s.Length == 1 && s[0] == string.Empty))
-                        {
-                            Times.Add(t);
-                            Lines.Add(s);
-                        }
-                        break;
-                }               
+                Times.Add(t);
+                Lines.Add(s);         
             }            
 
             _lines = Lines.Count;           
             
             string[] line;
             string Tx;
+            
             Texts = new string[Lines.Count];
             LinesLengths = new float[Lines.Count];
 
@@ -914,7 +919,12 @@ namespace keffect
                 Texts[i] = Tx;                
             }
 
+
+            */
             #endregion Load Lines & Times
+
+            LinesLengths = new float[_kLyrics.Lines.Count];
+
 
             // Biggest line
             _biggestLine = GetBiggestLine();
@@ -991,15 +1001,17 @@ namespace keffect
         /// <returns></returns>
         private float MeasureLine(int curline)
         {
-            float Sum = 0;
-            
-            // Calculate the lengh of a line
-            for (int i = 0; i < Lines[curline].Length; i++)
-            {                
-                Sum += MeasureString(Lines[curline][i], _karaokeFont.Size);
-            }
+            return MeasureString(_kLyrics.Lines[curline].ToString(), _karaokeFont.Size);
 
+            /*
+            float Sum = 0;            
+            // Calculate the lengh of a line            
+            for (int i = 0; i < _kLyrics.Lines[curline].Syllables.Count; i++)
+            {
+                Sum += MeasureString(_kLyrics.Lines[curline].Syllables[i].Text, _karaokeFont.Size);                     
+            }
             return Sum;
+            */
         }
 
         #endregion measures
@@ -1229,6 +1241,7 @@ namespace keffect
             RectangleF Rbg;
 
             int x0;
+            string s;
 
             // =============================================
             // ACTIVE LINE
@@ -1237,9 +1250,10 @@ namespace keffect
             // =============================================
 
             // Add the full text line to the graphical path            
-            if (lineIndex < Texts.Count())
+            if (lineIndex < _kLyrics.Lines.Count) 
             {
-                x0 = HCenterText(Texts[lineIndex]);      // Center horizontally
+                s = _kLyrics.Lines[lineIndex].ToString();
+                x0 = HCenterText(s);       // Center horizontally
 
                 #region background of syllabe       
 
@@ -1255,7 +1269,7 @@ namespace keffect
                 #endregion
 
                 // full line in GraphicsPath path
-                path.AddString(Texts[lineIndex], _karaokeFont.FontFamily, (int)_karaokeFont.Style, _karaokeFont.Size, new Point(x0, y1), sf);
+                path.AddString(s, _karaokeFont.FontFamily, (int)_karaokeFont.Style, _karaokeFont.Size, new Point(x0, y1), sf);
 
                 // part of line (sung part) in GraphicsPath pathFragment  
                 pathFragment.AddString(current_fragment + highlight_fragment, _karaokeFont.FontFamily, (int)_karaokeFont.Style, _karaokeFont.Size, new Point(x0, y1), sf);
@@ -1338,12 +1352,15 @@ namespace keffect
             int x0;
             GraphicsPath pth = new GraphicsPath();
 
+            string s;
+
             #endregion declarations
 
 
-            if (lineIndex < Texts.Count())
+            if (lineIndex < _kLyrics.Lines.Count())
             {
-                x0 = HCenterText(Texts[lineIndex]);      // Center horizontally
+                s = _kLyrics.Lines[lineIndex].ToString();
+                x0 = HCenterText(s);      // Center horizontally
 
                 #region background of syllabe                              
                 if (_bTextBackGround)
@@ -1356,7 +1373,7 @@ namespace keffect
                 }
                 #endregion
 
-                pth.AddString(Texts[lineIndex], _karaokeFont.FontFamily, (int)_karaokeFont.Style, _karaokeFont.Size, new Point(x0, y1), sf);
+                pth.AddString(s, _karaokeFont.FontFamily, (int)_karaokeFont.Style, _karaokeFont.Size, new Point(x0, y1), sf);
 
                 // Draw full line in white if no active and highlight fragments
                 if (current_fragment == string.Empty && highlight_fragment == string.Empty && inactive_fragment == string.Empty)
@@ -1364,7 +1381,7 @@ namespace keffect
                     #region Draw static text (no active and highlight fragments)
 
                     #region apply effect
-                    CreateShadowEffect(Texts[lineIndex], _InactiveBorderColor, x0, y1, _karaokeFont, _karaokeFont.Size, e, pth);
+                    CreateShadowEffect(s, _InactiveBorderColor, x0, y1, _karaokeFont, _karaokeFont.Size, e, pth);
                     #endregion apply effect
 
                     // Fill GraphicsPath path in white => full text is white                    
@@ -1532,14 +1549,17 @@ namespace keffect
             GraphicsPath pathFragment = new GraphicsPath();
             GraphicsPath pathHighlight = new GraphicsPath();
 
+            string s;
+
             #endregion declarations
 
-            if (lineIndex < Texts.Count())
+            if (lineIndex < _kLyrics.Lines.Count())
             {
-                x0 = HCenterText(Texts[lineIndex]);      // Center horizontally
+                s = _kLyrics.Lines[lineIndex].ToString();
+                x0 = HCenterText(s);      // Center horizontally
 
                 // full line in GraphicsPath path
-                pth.AddString(Texts[lineIndex], _karaokeFont.FontFamily, (int)_karaokeFont.Style, _karaokeFont.Size, new Point(x0, y1), sf);
+                pth.AddString(s, _karaokeFont.FontFamily, (int)_karaokeFont.Style, _karaokeFont.Size, new Point(x0, y1), sf);
 
                 #region Draw all Inactive text     
 
@@ -1647,6 +1667,8 @@ namespace keffect
 
         private void DrawInactiveLineWithBorders(PaintEventArgs e, int lineIndex, int y2, bool IsActive = false)
         {
+            #region Declarations
+
             Color BorderColor = _InactiveBorderColor;
             Color FillColor = _InactiveColor;
 
@@ -1662,11 +1684,14 @@ namespace keffect
             Pen penBorder = new Pen(BorderColor, _borderthick); // pen for border color
             int Wbg;
             RectangleF Rbg;
+            string s;
 
+            #endregion Declarations
 
-            if (lineIndex < Texts.Count())
+            if (lineIndex < _kLyrics.Lines.Count())
             {
-                x0 = HCenterText(Texts[lineIndex]);     // Center text horizontally
+                s = _kLyrics.Lines[lineIndex].ToString();
+                x0 = HCenterText(s);     // Center text horizontally
 
                 #region Background of text  
 
@@ -1682,7 +1707,7 @@ namespace keffect
                 #endregion Background of text
 
                 // Add lines of lyrics to the Graphics path
-                path.AddString(Texts[lineIndex], _karaokeFont.FontFamily, (int)_karaokeFont.Style, _karaokeFont.Size, new Point(x0, y2), sf);
+                path.AddString(s, _karaokeFont.FontFamily, (int)_karaokeFont.Style, _karaokeFont.Size, new Point(x0, y2), sf);
             
                 // Draw the text            
                 e.Graphics.FillPath(new SolidBrush(FillColor), path);
@@ -1702,6 +1727,7 @@ namespace keffect
 
         private void DrawInactiveLineWithShadow(PaintEventArgs e, int lineIndex, int y2, bool IsActive = false)
         {
+            #region Declarations
             GraphicsPath path = new GraphicsPath();
             Color BorderColor = _InactiveBorderColor;
             Color FillColor = _InactiveColor;
@@ -1716,10 +1742,14 @@ namespace keffect
             int Wbg;
             Pen penBorder = new Pen(BorderColor, _borderthick); // pen for border color
             RectangleF Rbg;
+            string s;
 
-            if (lineIndex < Texts.Count())
+            #endregion Declarations
+
+            if (lineIndex < _kLyrics.Lines.Count())
             {
-                x0 = HCenterText(Texts[lineIndex]);     // Center text horizontally
+                s = _kLyrics.Lines[lineIndex].ToString();
+                x0 = HCenterText(s);     // Center text horizontally
 
                 #region background of syllabe                              
                 if (_bTextBackGround)
@@ -1733,11 +1763,11 @@ namespace keffect
                 #endregion
 
                 // Add lines of lyrics to the Graphics path
-                path.AddString(Texts[lineIndex], _karaokeFont.FontFamily, (int)_karaokeFont.Style, _karaokeFont.Size, new Point(x0, y2), sf);
+                path.AddString(s, _karaokeFont.FontFamily, (int)_karaokeFont.Style, _karaokeFont.Size, new Point(x0, y2), sf);
 
                 #region Shadow effect
                 
-                CreateShadowEffect(Texts[lineIndex], BorderColor, x0, y2, _karaokeFont, _karaokeFont.Size, e, path);
+                CreateShadowEffect(s, BorderColor, x0, y2, _karaokeFont, _karaokeFont.Size, e, path);
 
                 #endregion Shadow effect
 
@@ -1760,6 +1790,8 @@ namespace keffect
 
         private void DrawInactiveLineWithNeon(PaintEventArgs e, int lineIndex, int y2, bool IsActive = false)
         {
+            #region Declarations
+
             GraphicsPath path = new GraphicsPath();
             Color BorderColor = _InactiveBorderColor;
             Color FillColor = _InactiveColor;
@@ -1774,10 +1806,14 @@ namespace keffect
             Pen penBorder = new Pen(BorderColor, _borderthick); // pen for border color
             int Wbg;
             RectangleF Rbg;
+            string s;
 
-            if (lineIndex < Texts.Count())
+            #endregion Declarations
+
+            if (lineIndex < _kLyrics.Lines.Count())
             {
-                x0 = HCenterText(Texts[lineIndex]);     // Center text horizontally
+                s = _kLyrics.Lines[lineIndex].ToString();
+                x0 = HCenterText(s);     // Center text horizontally
                 
                 #region background of syllabe                              
                 if (_bTextBackGround)
@@ -1791,7 +1827,7 @@ namespace keffect
                 #endregion
 
                 // Add lines of lyrics to the Graphics path
-                path.AddString(Texts[lineIndex], _karaokeFont.FontFamily, (int)_karaokeFont.Style, _karaokeFont.Size, new Point(x0, y2), sf);
+                path.AddString(s, _karaokeFont.FontFamily, (int)_karaokeFont.Style, _karaokeFont.Size, new Point(x0, y2), sf);
 
                 #region Neon effect
 
@@ -2713,8 +2749,8 @@ namespace keffect
         {
             float max = 0;
             string maxline = string.Empty;
-            float L = 0;
-            for (int i = 0; i < Lines.Count; i++)
+            float L = 0;            
+            for (int i = 0; i < _kLyrics.Lines.Count(); i++)
             {
                 L = MeasureLine(i);
 
@@ -2722,7 +2758,7 @@ namespace keffect
                 if (L > max)
                 {
                     max = L;
-                    maxline = Texts[i];
+                    maxline = _kLyrics.Lines[i].ToString();
                 }
             }
             return maxline;
@@ -2733,20 +2769,25 @@ namespace keffect
         /// Retrieve nextindex of current syllabe in the current line
         /// </summary>
         /// <returns></returns>       
-        private int GetNextIndex(int pos)
-        {                      
-            for (int j = Lines.Count - 1; j >= 0; j--)
-            {
-                for (int i = Times[j].Length - 1; i >= 0; i--)
+        private (int line, int index) GetNextIndex(int pos)
+        {                                 
+            // Descending loop for lines
+            for (int j = _kLyrics.Lines.Count - 1; j >= 0; j--)
+            {                
+                // Descending loop for Syllables
+                for (int i = _kLyrics.Lines[j].Syllables.Count - 1; i >=0 ; i--)
                 {
-                    if (Times[j][i] > 0 && pos > Times[j][i])
-                    {                        
-                        _line = j;
-                        return i + 1;
+                    // Search first index of Syllable for which pos is greater then startTime  
+                    if (_kLyrics.Lines[j].Syllables[i].StartTime > 0 && pos > _kLyrics.Lines[j].Syllables[i].StartTime)
+                    {
+                        //_line = j;
+                        //return   i + 1;
+
+                        return (j, i + 1);
                     }
                 }
-            }            
-            return 0;            
+            }
+            return (0, 0);                        
         }
 
        
@@ -2757,7 +2798,7 @@ namespace keffect
         /// <returns></returns>
         private float GetCurLength(int idx)
         {
-            float res = 0;
+            float res = 0;            
 
             current_fragment = string.Empty;
             current_fragment_length = 0;
@@ -2765,42 +2806,31 @@ namespace keffect
             highlight_fragment_length = 0;
             inactive_fragment = string.Empty;
             inactive_fragment_length = 0;
+                     
 
-
-            /*
-            for (int i = 0; i < idx; i++)
-            {
-                if (i < Lines[_line].Count())
-                {
-                    res += MeasureString(Lines[_line][i], _karaokeFont.Size);
-                    current_fragment += Lines[_line][i];
-                }
-            }
-            */
-
-            for (int i = 0; i < Lines[_line].Count(); i++)
+            for (int i = 0; i < _kLyrics.Lines[_line].Syllables.Count(); i++)
             {
                 if (i < idx)
                 {
-                    res += MeasureString(Lines[_line][i], _karaokeFont.Size);
+                    res += MeasureString(_kLyrics.Lines[_line].Syllables[i].Text, _karaokeFont.Size);
 
                     if (idx > 0 && i < idx - 1)
                     {
-                        current_fragment += Lines[_line][i];
-                        current_fragment_length += MeasureString(Lines[_line][i], _karaokeFont.Size);
+                        current_fragment += _kLyrics.Lines[_line].Syllables[i].Text;
+                        current_fragment_length += MeasureString(_kLyrics.Lines[_line].Syllables[i].Text, _karaokeFont.Size);
                     }
                     else if (idx > 0 && i == idx - 1)
                     {
-                        highlight_fragment = Lines[_line][i];
-                        highlight_fragment_length = MeasureString(Lines[_line][i], _karaokeFont.Size);
+                        highlight_fragment = _kLyrics.Lines[_line].Syllables[i].Text;
+                        highlight_fragment_length = MeasureString(_kLyrics.Lines[_line].Syllables[i].Text, _karaokeFont.Size);
                     }
                 }
                 else
                 {
-                    inactive_fragment += Lines[_line][i];
-                    inactive_fragment_length += MeasureString(Lines[_line][i], _karaokeFont.Size);
+                    inactive_fragment += _kLyrics.Lines[_line].Syllables[i].Text;
+                    inactive_fragment_length += MeasureString(_kLyrics.Lines[_line].Syllables[i].Text, _karaokeFont.Size);
                 }
-            }            
+            }
             return res;
         }
 
@@ -2887,7 +2917,8 @@ namespace keffect
 
 
                     // Update horizontal measure of lines
-                    for (int i = 0; i < Lines.Count; i++)
+                    //for (int i = 0; i < Lines.Count; i++)
+                    for (int i = 0; i < _kLyrics.Lines.Count; i++) 
                     {
                         LinesLengths[i] = MeasureLine(i);
                     }
@@ -2971,7 +3002,6 @@ namespace keffect
             highlight_fragment = string.Empty;
             inactive_fragment = string.Empty;
 
-
             pBox.Invalidate();            
         }
 
@@ -2987,8 +3017,8 @@ namespace keffect
 
         private void SetPosition(int pos)
         {       
-            // Search nextindex of lyric to play
-            nextindex = GetNextIndex(pos);
+            // Search _line & nextindex of next lyric to play
+            (_line,  nextindex) = GetNextIndex(pos);
 
             // Length of partial line
             CurLength = GetCurLength(nextindex);
@@ -3013,17 +3043,13 @@ namespace keffect
                 
                 _FirstLineToShow = _line;
                 _LastLineToShow = SetLastLineToShow(_FirstLineToShow, _lines, _nbLyricsLines);
-
-                //Console.WriteLine("nexttime before: " + _nexttime);
-                if (nextindex < Times[_line].Count())
+                
+              
+                if (nextindex < _kLyrics.Lines[_line].Syllables.Count())
                 {
-                    _nexttime = Times[_line][nextindex];                                      
+                    _nexttime = _kLyrics.Lines[_line].Syllables[nextindex].StartTime;
                 }
-                //Console.WriteLine("nexttime after: " + _nexttime);
-                //Console.WriteLine("lasttime: " + _lasttime);
 
-
-                //Console.WriteLine("Line : " + _line + " - nextindex : " + nextindex + " - nexttime : " + _nexttime + " - lasttime " + _lasttime);
 
 
                 // Save last value of percent
@@ -3055,17 +3081,8 @@ namespace keffect
 
                     if (d > 0 && (_nexttime - _lasttime) > 0)
                     {
-                        //Console.WriteLine("_nexttime = " + _nexttime + " - _lasttime = " + _lasttime);
-
-                        //_steppercent = (_nexttime - _lasttime) / (d * _timerintervall);
-                        //_steppercent = (float)(_nexttime - _lasttime) / 1000000*(float)(_timerintervall);
-
-                        _steppercent = (_nexttime - _lasttime) / (d*(float)_timerintervall);
-
-                        //Console.WriteLine("timerintervall = " + _timerintervall);
-                        //Console.WriteLine("_steppercent = " + _steppercent);
-                    }
-                    
+                        _steppercent = (float)(_nexttime - _lasttime) / (d*(float)_timerintervall);
+                    }                    
                 }
                 
                 lastCurLength = CurLength;
@@ -3085,7 +3102,6 @@ namespace keffect
                 }
                 pBox.Invalidate();                
             }
-
         }
 
         #endregion start stop
