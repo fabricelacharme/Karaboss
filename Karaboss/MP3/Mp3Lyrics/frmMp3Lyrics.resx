@@ -117,14 +117,14 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <metadata name="toolTip1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+  <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+  <data name="toolTip1.TrayLocation" type="System.Drawing.Point, System.Drawing">
     <value>17, 17</value>
-  </metadata>
+  </data>
   <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
   <data name="btnEditLyrics.FlatStyle" type="System.Windows.Forms.FlatStyle, System.Windows.Forms">
     <value>Flat</value>
   </data>
-  <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
   <data name="btnEditLyrics.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAABoAAAAaCAYAAACpSkzOAAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAL
@@ -481,29 +481,6 @@
   <data name="karaokeEffect1.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
     <value>Fill</value>
   </data>
-  <data name="kLyrics1.Lines" mimetype="application/x-microsoft.net.object.binary.base64">
-    <value>
-        AAEAAAD/////AQAAAAAAAAAMAgAAAJMBS2FyYW9rZUx5cmljcywgVmVyc2lvbj0xLjAuMC4wLCBDdWx0
-        dXJlPW5ldXRyYWwsIFB1YmxpY0tleVRva2VuPW51bGxdXSwgbXNjb3JsaWIsIFZlcnNpb249NC4wLjAu
-        MCwgQ3VsdHVyZT1uZXV0cmFsLCBQdWJsaWNLZXlUb2tlbj1iNzdhNWM1NjE5MzRlMDg5DAMAAABES2Fy
-        YW9rZUx5cmljcywgVmVyc2lvbj0xLjAuMC4wLCBDdWx0dXJlPW5ldXRyYWwsIFB1YmxpY0tleVRva2Vu
-        PW51bGwFAQAAACxTeXN0ZW0uQ29sbGVjdGlvbnMuR2VuZXJpYy5MaXN0YDFbW2thci5rTGluZQMAAAAG
-        X2l0ZW1zBV9zaXplCF92ZXJzaW9uBAAAC2thci5rTGluZVtdAwAAAAgIAgAAAAkEAAAAAQAAAAEAAAAH
-        BAAAAAABAAAABAAAAAQJa2FyLmtMaW5lAwAAAAkFAAAADQMFBQAAAAlrYXIua0xpbmUBAAAAGjxTeWxs
-        YWJsZXM+a19fQmFja2luZ0ZpZWxkBC9TeXN0ZW0uQ29sbGVjdGlvbnMuR2VuZXJpYy5MaXN0YDFbW2th
-        ci5TeWxsYWJsZQIAAAADAAAACQYAAAAFBgAAAC9TeXN0ZW0uQ29sbGVjdGlvbnMuR2VuZXJpYy5MaXN0
-        YDFbW2thci5TeWxsYWJsZQMAAAAGX2l0ZW1zBV9zaXplCF92ZXJzaW9uBAAADmthci5TeWxsYWJsZVtd
-        AwAAAAgIAgAAAAkHAAAAAgAAAAIAAAAHBwAAAAABAAAABAAAAAQMa2FyLlN5bGxhYmxlAwAAAAkIAAAA
-        CQkAAAANAgUIAAAADGthci5TeWxsYWJsZQgAAAAZPENoYXJUeXBlPmtfX0JhY2tpbmdGaWVsZBU8VGV4
-        dD5rX19CYWNraW5nRmllbGQWPENob3JkPmtfX0JhY2tpbmdGaWVsZBo8U3RhcnRUaW1lPmtfX0JhY2tp
-        bmdGaWVsZBk8RHVyYXRpb24+a19fQmFja2luZ0ZpZWxkGDxUaWNrc09uPmtfX0JhY2tpbmdGaWVsZBk8
-        VGlja3NPZmY+a19fQmFja2luZ0ZpZWxkFTxCZWF0PmtfX0JhY2tpbmdGaWVsZAQBAQAAAAAAFmthci5T
-        eWxsYWJsZStDaGFyVHlwZXMDAAAABgYICAgDAAAABfb///8Wa2FyLlN5bGxhYmxlK0NoYXJUeXBlcwEA
-        AAAHdmFsdWVfXwAIAwAAAAEAAAAGCwAAAAVIZWxsbwYMAAAAAAAAAAAAAAAAAAAAAABAf0AAAAAAAAAA
-        AAAAAAABCQAAAAgAAAAB8/////b///8BAAAABg4AAAAGIFdvcmxkCQwAAAAAAAAAAEB/QAAAAAAAQH9A
-        AAAAAAAAAAAAAAAACw==
-</value>
-  </data>
   <data name="karaokeEffect1.Location" type="System.Drawing.Point, System.Drawing">
     <value>0, 60</value>
   </data>
@@ -552,15 +529,15 @@
   <data name="&gt;&gt;pnlWindow.ZOrder" xml:space="preserve">
     <value>0</value>
   </data>
-  <metadata name="pnlTimer.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+  <data name="pnlTimer.TrayLocation" type="System.Drawing.Point, System.Drawing">
     <value>308, 17</value>
-  </metadata>
-  <metadata name="$this.Localizable" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+  </data>
+  <data name="$this.Localizable" type="System.Boolean, mscorlib">
     <value>True</value>
-  </metadata>
-  <metadata name="$this.TrayHeight" type="System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+  </data>
+  <data name="$this.TrayHeight" type="System.Int32, mscorlib">
     <value>67</value>
-  </metadata>
+  </data>
   <data name="$this.ClientSize" type="System.Drawing.Size, System.Drawing">
     <value>584, 412</value>
   </data>

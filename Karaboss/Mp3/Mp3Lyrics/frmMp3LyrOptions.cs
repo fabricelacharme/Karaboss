@@ -140,6 +140,10 @@ namespace Karaboss.Mp3
 
         private void LoadDefaultOptions()
         {
+            
+            // Control used in settings
+            karaokeEffect1.bIsSettings = true;
+            
             // Nb lines to display
             karaokeEffect1.nbLyricsLines = Properties.Settings.Default.TxtNbLines;
 

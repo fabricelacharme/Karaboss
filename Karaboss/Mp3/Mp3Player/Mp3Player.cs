@@ -60,6 +60,10 @@ namespace Karaboss.Mp3
         private double _seconds;
         public double Seconds { get { return _seconds; } }
 
+        private int _bitrate;   // genre 192
+        public int BitRate { get { return _bitrate; } }
+
+
         // Frequency
         private float _frequency;
         public float Frequency { get { return _frequency; } }
@@ -168,6 +172,8 @@ namespace Karaboss.Mp3
                 _seconds = Bass.BASS_ChannelBytes2Seconds(_stream, _byteslen);
 
                 _tags = GetTagsFromFile(FileName);
+
+                _bitrate = _tags.bitrate;
                 
                 //Console.WriteLine("*** Player initialized");
 

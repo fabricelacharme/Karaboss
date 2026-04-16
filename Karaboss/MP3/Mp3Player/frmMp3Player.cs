@@ -54,7 +54,14 @@ namespace Karaboss.Mp3
      
         private List<(string, string)> lstSaveTimestamps = new List<(string, string)>();
 
+
+        #region MP3
+
         private double _duration = 0;   // mp3 duration in ms
+        private float _frequency = 0;
+        private int _bitrate = 0;
+
+        #endregion MP3
 
 
         #region dgview
@@ -214,7 +221,9 @@ namespace Karaboss.Mp3
             // Create mp3 Player instance, init bass and load file                                    
             Player = new Mp3Player(FileName);
             _duration = Player.Seconds; // * 1000;
-            
+            _bitrate = Player.BitRate;
+            _frequency = Player.Frequency;
+
             // Create event for playing completed
             Player.PlayingCompleted += new EndingSyncHandler(HandlePlayingCompleted);
             
@@ -1457,6 +1466,12 @@ namespace Karaboss.Mp3
 
             frmMp3Lyrics.DisplaySinger(tx);
 
+
+            // MP3 caracteristics
+            frmMp3Lyrics.Duration = _duration; // mp3 duration in ms
+            frmMp3Lyrics.Frequency = _frequency;
+            frmMp3Lyrics.BitRate = _bitrate;
+
             // cas d'une playlist ou non : met à jour le diaporama
             SetSlideShow();
 
@@ -2052,7 +2067,6 @@ namespace Karaboss.Mp3
             if (Application.OpenForms.OfType<frmMp3Lyrics>().Count() > 0)
             {
                 frmMp3Lyrics?.MoveBalls((int)(Player.Position * 1000));
-
             }
         }
 
@@ -4278,34 +4292,7 @@ namespace Karaboss.Mp3
 
 
         #region populate dgView
-        /*
-        /// <summary>
-        /// Returns list of lyrics according to its origin: mp3 or mrc
-        /// </summary>
-        /// <returns></returns>
-        private List<List<keffect.KaraokeEffect.kSyncText>> GetUniqueSource()
-        {
-            switch (Mp3LyricsMgmtHelper.m_mp3lyricstype)
-            {
-                // Synchronized lyrics from mp3
-                case Mp3LyricsTypes.LyricsWithTimeStamps:
-                    return Mp3LyricsMgmtHelper.GetKEffectSyncLyrics(Mp3LyricsMgmtHelper.MySyncLyricsFrame);
-                //break;
-
-                // synchronized lyrics from LRC file
-                case Mp3LyricsTypes.LRCFile:
-                    return Mp3LyricsMgmtHelper.SyncLyrics;
-                //break;
-
-                // Raw text from mp3
-                case Mp3LyricsTypes.LyricsWithoutTimeStamps:
-                    return Mp3LyricsMgmtHelper.SyncLyrics;
-                    //break;
-            }          
-            return null;
-        }
-
-        */
+        
 
         /// <summary>
         /// Populate gridview with lyrics
@@ -4445,66 +4432,7 @@ namespace Karaboss.Mp3
         /// <summary>
         /// Populate DataGridView with SyncLyrics
         /// </summary>
-        /// <param name="SyncLyrics"></param>
-        /*
-        private void PopulateDataGridView(List<List<keffect.KaraokeEffect.kSyncText>> SyncLyrics)
-        {
-            long time;
-            string sTime;
-            string text;
-
-            // Reset DataGridView
-            InitGridView();
-
-            // Tags
-            string TagLyrics = string.Empty;
-            TagLib.Tag Tag = Player.Tag;
-            if (Tag != null)
-                TagLyrics = Tag.Lyrics;
-
-            if (SyncLyrics == null || SyncLyrics.Count == 0)
-            {
-                MessageBox.Show("No Lyrics to display", "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return;
-            }
-            
-            List<keffect.KaraokeEffect.kSyncText> SyncLine;
-            bool bParagraph = false;
-
-            for (int i = 0; i < SyncLyrics.Count; i++)
-            {
-                SyncLine = SyncLyrics[i];
-
-                for (int j = 0; j < SyncLine.Count; j++)
-                {
-                    time = SyncLine[j].Time;
-                    sTime = LyricsUtilities.MsToTime(time, _LrcMillisecondsDigits);
-
-                    text = SyncLine[j].Text;
-                    if (i > 0 && j == 0)
-                    {
-                        if (text.Trim() == "")
-                        {
-                            bParagraph = true;
-                            continue;
-                        }
-
-                        if (bParagraph)
-                        {
-                            text = m_SepParagraph + text;
-                            bParagraph = false;
-                        }
-                        else
-                            text = m_SepLine + text;
-                    }
-
-                    text = text.Replace(" ", "_");
-                    dgView.Rows.Add(time, sTime, text);
-                }
-            }
-            
-        }
-        */
+        /// <param name="SyncLyrics"></param>      
         private void PopulateDataGridView(kLyrics SyncLyrics)
         {
             double time;

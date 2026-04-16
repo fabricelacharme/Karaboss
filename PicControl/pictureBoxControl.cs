@@ -43,6 +43,7 @@ using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
+using static System.Windows.Forms.LinkLabel;
 
 namespace PicControl
 {
@@ -333,8 +334,7 @@ namespace PicControl
 
 
         #region Text transform
-
-        private int _totalLyricsLines;
+        
 
         private int _nbLyricsLines = 3;
         [Description("number of lines to display")]
@@ -350,15 +350,15 @@ namespace PicControl
             }
         }
         
-        private bool _bforceuppercase;
+        private bool _bforceUppercase;
         [Description("force uppercase for lyrics")]
         public bool bforceUppercase
         {
-            get { return _bforceuppercase; }
+            get { return _bforceUppercase; }
             set
             {
-                _bforceuppercase = value;
-                if (_bdemo)
+                _bforceUppercase = value;
+                if (_bIsSettings)
                     LoadDemoText();
             }
         }
@@ -725,16 +725,17 @@ namespace PicControl
         #endregion Font
 
 
-        #region Demo
+        #region Is used for settings
 
-        private bool _bdemo = false;
-        public bool bDemo
+        private bool _bIsSettings = false;
+        [Description("When true, pictureBoxControl is used in a settings window")]
+        public bool bIsSettings
         {
-            get { return _bdemo; }
-            set { _bdemo = value; }
+            get { return _bIsSettings; }
+            set { _bIsSettings = value; }
         }
 
-        #endregion Demo
+        #endregion Is used for settings
 
 
         #region Internal lyrics separators
@@ -748,10 +749,6 @@ namespace PicControl
         #region Others
 
         private float[] LinesLengths;
-        private List<string[]> Lines;
-        private List<double[]> Times;
-        private string[] Texts;
-        private int _lines = 0;
 
         public ImageLayout imgLayout { get; set; }
         public Image m_CurrentImage { get; set; }
@@ -816,7 +813,7 @@ namespace PicControl
         private int _beatNumber = 1;
 
         private bool bInstrumentalStarted = false;
-        private int _EndOfInstrumentalTime = 0;
+        private double _EndOfInstrumentalTime = 0;
 
         #endregion Others
 
@@ -871,7 +868,6 @@ namespace PicControl
         }
 
         #endregion Events
-
 
 
         #region Timer gradient
@@ -1006,18 +1002,18 @@ namespace PicControl
             // sequencerPosition en ticks
             _currentPosition = sequencerposition;           
             SetOffset();
-            GuessInstrumental(sequencerposition);
+            //GuessInstrumental(sequencerposition);
         }
 
         private void GuessInstrumental(int sequencerposition)
         {
             int t1 = 0;
             int t2 = 0;
-            
+
             for (int i = 0; i < syllabes.Count; i++)
             {
                 t1 = syllabes[i].time;
-                
+
                 if (sequencerposition < t1 && i < syllabes.Count - 1 && !bInstrumentalStarted)
                 {
                     t2 = syllabes[i + 1].time;
@@ -1028,14 +1024,14 @@ namespace PicControl
                         _EndOfInstrumentalTime = t2;
                         Console.WriteLine("****************************** Instrumental ******************************");
                         break;
-                    }                    
-                    else 
-                    { 
-                        break; 
                     }
-                    
+                    else
+                    {
+                        break;
+                    }
+
                 }
-                else if  (bInstrumentalStarted && _EndOfInstrumentalTime  - sequencerposition < _beatDuration) 
+                else if (bInstrumentalStarted && _EndOfInstrumentalTime - sequencerposition < _beatDuration)
                 {
                     bInstrumentalStarted = false;
                     Console.WriteLine("*************************** End of Instrumental ***************************");
@@ -1098,7 +1094,6 @@ namespace PicControl
             int x0 = 0;
 
             // optimisation : partir de la dernière position connue si le temps de celle-ci est inférieur au temps actuel
-
             if (_currentTextPos > 0 && _currentTextPos < syllabes.Count && syllabes[_currentTextPos].time < itime)
                 x0 = _currentTextPos - 1;
 
@@ -1157,7 +1152,11 @@ namespace PicControl
             pBox.Invalidate();
         }
         
-
+        /// <summary>
+        /// Remove paragraphs in some cases
+        /// </summary>
+        /// <param name="kls"></param>
+        /// <returns></returns>
         private kLyrics RemoveParagraphs(kLyrics kls)
         {
             kLyrics klsNoParagraphs = new kLyrics();
@@ -1179,110 +1178,114 @@ namespace PicControl
         }
 
 
+        private kLyrics ForceUpperCase(kLyrics kls)
+        {
+            kLyrics klsNoParagraphs = new kLyrics();
+            kLine line;
+            for (int i = 0; i < kls.Lines.Count; i++)
+            {
+                line = new kLine();
+                for (int j = 0; j < kls.Lines[i].Syllables.Count; j++)
+                {
+                    if (kls.Lines[i].Syllables[j].CharType != Syllable.CharTypes.ParagraphSep)
+                        kls.Lines[i].Syllables[j].Text = kls.Lines[i].Syllables[j].Text.ToUpper();
+                    line.Add(kls.Lines[i].Syllables[j]);
+                }
+                klsNoParagraphs.Add(line);
+            }
+
+            return klsNoParagraphs;
+        }
+
+        /// <summary>
+        /// Search for Intruduction, Instrumentals
+        /// </summary>
+        /// <param name="kls"></param>
+        /// <returns></returns>
+        private kLyrics SearchForInstrumentals(kLyrics kls, int beatDuration)
+        {
+            int tOnPrevious = 0;
+            int tOffPrevious = 0;
+            int t = 0;
+            double deltaParagraph = 8 * beatDuration;
+            kLyrics klsWithinstrumentals = new kLyrics();
+            kLine line;
+            string instrutext = "(Instrumental)";
+            string introtext = "(Introduction)";
+            string text = string.Empty;
+
+            for (int i = 0; i < kls.Lines.Count; i++)
+            {
+                line = new kLine();
+                for (int j = 0; j < kls.Lines[i].Syllables.Count; j++)
+                {
+                    t = kls.Lines[i].Syllables[j].TicksOn;
+                    if (t - tOnPrevious > deltaParagraph )
+                    {
+                        // An Instrumental part exists from tPrevious to t
+                        // When can add a lyric called "(Instrumental)" a few time after tPrevious
+                        
+                        if (line.Syllables.Count > 0)
+                            klsWithinstrumentals.Add(line);
+
+                        line = new kLine();
+                        if (tOffPrevious == 0)
+                            text = introtext;
+                        else
+                            text = instrutext;
+                        line.Add(new Syllable() { Text = text, TicksOn = tOffPrevious, TicksOff = t, CharType = Syllable.CharTypes.Text });
+                        klsWithinstrumentals.Add(line);
+
+                        line = new kLine();
+
+                    }                                        
+                    tOnPrevious = t;
+                    tOffPrevious = kls.Lines[i].Syllables[j].TicksOff;
+                    
+                    line.Add(kls.Lines[i].Syllables[j]);
+
+                }
+                klsWithinstrumentals.Add(line);
+            }
+
+            return klsWithinstrumentals;
+        }
+
         /// <summary>
         /// Load text of song
         /// </summary>
         /// <param name="toto"></param>     
         public void LoadSong(bool bDemoMode = false)
-        {            
-            
-            if (KaraokeDisplayType == KaraokeDisplayTypes.TwoLinesSwapped || KaraokeDisplayType == KaraokeDisplayTypes.FourLinesSwapped) 
+        {
+            // Do not display paragraphs for some cases
+            if (KaraokeDisplayType == KaraokeDisplayTypes.TwoLinesSwapped || KaraokeDisplayType == KaraokeDisplayTypes.FourLinesSwapped || !bShowParagraphs) 
             {
                 _kLyrics = RemoveParagraphs(_kLyrics);
             }
-            
+
+            // If Upper case required
+            if (_bforceUppercase)
+                _kLyrics = ForceUpperCase(_kLyrics);
+
+            // Analyse lyrics to find introduction, instrumentals etc..            
+            _kLyrics = SearchForInstrumentals(_kLyrics, _beatDuration);
+
+
             lstLyricsLines = new List<string>();
-            lstChordsLines = new List<string>();
-
-            #region Load Lines & Times
-
-            Lines = new List<string[]>();
-            Times = new List<double[]>();
-
-            kLine karaokeline;
-
-            string[] s;
-            double[] t;
-            string tx;
-
-            if (_kLyrics == null || _kLyrics.Lines == null) return;
-
-            for (int i = 0; i < _kLyrics.Lines.Count; i++)
-            {
-                karaokeline = _kLyrics.Lines[i];
-                t = new double[karaokeline.Syllables.Count];
-                s = new string[karaokeline.Syllables.Count];
-
-                for (int j = 0; j < karaokeline.Syllables.Count; j++)
-                {
-                    t[j] = karaokeline.Syllables[j].StartTime;
-
-                    // Clean text
-                    tx = karaokeline.Syllables[j].Text;
-                    tx = tx.Replace(Environment.NewLine, "");
-                    if (bforceUppercase)
-                        tx = tx.ToUpper();
-
-                    s[j] = tx;
-                }
-
-                // If paragraph
-                if (s.Length > 0 && (s.Length == 1 && s[0] == _InternalSepParagraphs))
-                {
-                    if (bShowParagraphs)
-                    {
-                        Times.Add(t);
-                        Lines.Add(s);
-                    }
-                }
-                else
-                {
-                    // not a paragraph
-                    Times.Add(t);
-                    Lines.Add(s);
-                }               
-            }
-
-            _lines = Lines.Count;
-
-            string[] line;
-            string Tx;
-            Texts = new string[Lines.Count];
-            LinesLengths = new float[Lines.Count];
-
-            for (int i = 0; i < Lines.Count; i++)
-            {
-                line = Lines[i];
-                Tx = string.Empty;
-
-                for (int j = 0; j < line.Length; j++)
-                {
-                    Tx += line[j];
-                }
-                Texts[i] = Tx;
-            }
-
-
-            #endregion Load Lines & Times
-
-
+            lstChordsLines = new List<string>();            
+            LinesLengths = new float[_kLyrics.Lines.Count];
             syllabes = new List<syllabe>();
 
             if (_kLyrics != null && _kLyrics.Count > 0)
-            {
-               
+            {               
                 // store lines in a specific list
                 if (_kLyrics != null)
                 {
                     lstLyricsLines = StoreLyricsLines(_kLyrics);
                     lstChordsLines = StoreChordLines(_kLyrics);
                 }
-                // Number total of lines (offset calculation)
-                _totalLyricsLines = lstLyricsLines.Count - 1;
-
-
                 
-                LinesLengths = new float[lstLyricsLines.Count];
+                LinesLengths = new float[_kLyrics.Lines.Count];
 
                 // ajust font size
                 lineMax = GetMaxLength();
@@ -1303,10 +1306,8 @@ namespace PicControl
                     _currentTextPos = -1;
                 }
 
-                // Create rectangles
+                // Create rectangles for drawing active line
                 createListRectangles(0);
-                //if (syllabes != null && syllabes.Count > 0)
-                //    createListNextRectangles(syllabes[0].last + 1);
             }
 
         }
@@ -1451,8 +1452,7 @@ namespace PicControl
 
 
         /// <summary>
-        /// Store demo text
-        /// '|' are carriage return
+        /// Store demo text        
         /// </summary>
         /// <param name="tx"></param>
         /// <returns></returns>
@@ -1776,7 +1776,7 @@ namespace PicControl
                             totaltextHeight = _nbLyricsLines * (textHeight + 10);
                             if (_bShowChords)
                             {
-                                // FAB CHROD
+                                // FAB CHORD
                                 totaltextHeight = (int)2.5*totaltextHeight;
                             }
 
@@ -1867,7 +1867,6 @@ namespace PicControl
         }
     
        
-
         /// <summary>
         /// Create rectangles when line changes
         /// </summary>
@@ -1898,7 +1897,6 @@ namespace PicControl
                 }
             }
         }
-
       
 
         #endregion Text
@@ -1913,6 +1911,9 @@ namespace PicControl
         /// <returns></returns>
         private float MeasureLine(int curline)
         {
+            
+            return MeasureString(_kLyrics.Lines[curline].ToString(), _karaokeFont.Size);
+            /*
             float Sum = 0;
 
             // Calculate the lengh of a line
@@ -1921,6 +1922,7 @@ namespace PicControl
                 Sum += MeasureString(Lines[curline][i], _karaokeFont.Size);
             }
             return Sum;
+            */
         }
 
         /// <summary>
@@ -2050,12 +2052,14 @@ namespace PicControl
             int max = 0;
             string tx = string.Empty;
 
-            for (int i = 0; i < lstLyricsLines.Count; i++)
+            //for (int i = 0; i < lstLyricsLines.Count; i++)
+            for (int i = 0; i < _kLyrics.Lines.Count; i++)
             {
-                if (lstLyricsLines[i].Length > max)
+                //if (lstLyricsLines[i].Length > max)
+                if (_kLyrics.Lines[i].ToString().Length > max)
                 {
-                    max = lstLyricsLines[i].Length;
-                    tx = lstLyricsLines[i];
+                    max = _kLyrics.Lines[i].ToString().Length; // lstLyricsLines[i].Length;
+                    tx = _kLyrics.Lines[i].ToString();
                 }
             }
             return tx;
@@ -2988,12 +2992,13 @@ namespace PicControl
             int x0;
             int Wbg;
             RectangleF Rbg;
+
             #endregion Declarations
 
-            if (lineIndex < Texts.Count())
+            if (lineIndex < _kLyrics.Lines.Count())
             {
-                lineContent = Texts[lineIndex];  // kline.ToString();                        
-                lineChords = lstChordsLines[lineIndex];          // TODO : à revoir pour les accords directement dans la classe KLyrics
+                lineContent = _kLyrics.Lines[lineIndex].ToString();     // kline.ToString();                        
+                lineChords = lstChordsLines[lineIndex];                 // TODO : à revoir pour les accords directement dans la classe KLyrics
 
                 x0 = HCenterText(lineContent, emSize);
 
@@ -3075,9 +3080,9 @@ namespace PicControl
             RectangleF Rbg;
             #endregion Declarations
 
-            if (lineIndex < Texts.Count())
+            if (lineIndex < _kLyrics.Lines.Count())
             {
-                lineContent = Texts[lineIndex];  // kline.ToString();                        
+                lineContent = _kLyrics.Lines[lineIndex].ToString();  // kline.ToString();                        
                 lineChords = lstChordsLines[lineIndex];          // TODO : à revoir pour les accords directement dans la classe KLyrics
 
                 x0 = HCenterText(lineContent, emSize);
@@ -3167,9 +3172,9 @@ namespace PicControl
             RectangleF Rbg;
             #endregion Declarations
 
-            if (lineIndex < Texts.Count())
+            if (lineIndex < _kLyrics.Lines.Count())
             {
-                lineContent = Texts[lineIndex];  // kline.ToString();                        
+                lineContent = _kLyrics.Lines[lineIndex].ToString();  // kline.ToString();                        
                 lineChords = lstChordsLines[lineIndex];          // TODO : à revoir pour les accords directement dans la classe KLyrics
 
                 x0 = HCenterText(lineContent, emSize);
@@ -3575,6 +3580,14 @@ namespace PicControl
             }
 
 
+            if (_kLyrics.Lines[_FirstLineToShow].ToString() == "(Introduction)" || _kLyrics.Lines[_FirstLineToShow].ToString() == "(Instrumental)")
+            {
+                Console.WriteLine("************** Part ***************");
+                DrawInformation(e, "(Instrumental)", y3 + _lineHeight / 2);
+                return;
+            }
+            
+
             // Draw active line with borders
             DrawActiveLineWithBorders(e, y1);
 
@@ -3585,6 +3598,16 @@ namespace PicControl
             if (idx2 >= 0 && idx2 < KLyrics.Lines.Count)
                 DrawInactiveLineWithBorders(e, idx2, y2, IsActive);
 
+            if (idx3 >= 0 && idx3 < KLyrics.Lines.Count && _FirstLineToShow > 0)
+                DrawInactiveLineWithBorders(e, idx3, y3);
+
+            if (idx4 >= 0 && idx4 < KLyrics.Lines.Count && _FirstLineToShow > 0)
+                DrawInactiveLineWithBorders(e, idx4, y4);
+
+
+           
+
+            /*
             if (bInstrumentalStarted)
             {
                 DrawInformation(e, "(Instrumental)", y3 + _lineHeight / 2);
@@ -3597,6 +3620,7 @@ namespace PicControl
                 if (idx4 >= 0 && idx4 < KLyrics.Lines.Count && _FirstLineToShow > 0)
                     DrawInactiveLineWithBorders(e, idx4, y4);
             }
+            */
         }
 
         private void FlsDrawTextWithShadow(PaintEventArgs e)

@@ -34,6 +34,7 @@
 
 using kar;
 using Karaboss.MidiLyrics;
+using Karaboss.Pages.ABCnotation;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -565,6 +566,8 @@ namespace Karaboss
 
             this.myLyricsMgmt = _myLyricsMgmt;
 
+            BeatDuration = myLyricsMgmt.Division;
+
             // Graphic optimization
             this.SetStyle(ControlStyles.AllPaintingInWmPaint, true);
             this.SetStyle(ControlStyles.ResizeRedraw, true);
@@ -609,6 +612,9 @@ namespace Karaboss
         {
             try
             {
+                // beatDuration
+                
+
                 // Karaoke display type
                 KaraokeDisplayType = Properties.Settings.Default.KaraokeDisplayType;               // setting this property set the karaokeEffect1.KaraokeDisplayType property
 
@@ -625,7 +631,7 @@ namespace Karaboss
                 pBox.bShowChords = Karaclass.m_ShowChords;
 
                 // Force Uppercase
-                _bForceUppercase = Karaclass.m_ForceUppercase;
+                bForceUppercase = Karaclass.m_ForceUppercase;
 
                 // show balls
                 bShowBalls = Karaclass.m_DisplayBalls;

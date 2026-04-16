@@ -139,7 +139,7 @@ namespace Karaboss
             SetOptions();
 
             pBox.DirSlideShow = dirSlideShow;
-            pBox.bDemo = true;
+            pBox.bIsSettings = true;
             pBox.LoadDemoText();
         }
 

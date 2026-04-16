@@ -151,6 +151,7 @@ namespace Karaboss.Mp3
             this.karaokeEffect1.BeatDuration = 0;
             this.karaokeEffect1.bforceUppercase = false;
             this.karaokeEffect1.BgColor = System.Drawing.Color.Empty;
+            this.karaokeEffect1.bIsSettings = false;
             this.karaokeEffect1.BorderThick = 1;
             this.karaokeEffect1.bShowParagraphs = true;
             this.karaokeEffect1.bTextBackGround = false;

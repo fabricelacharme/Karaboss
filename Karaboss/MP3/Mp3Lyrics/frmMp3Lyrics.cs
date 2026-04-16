@@ -82,9 +82,42 @@ namespace Karaboss.Mp3
 
         private long _timerintervall = 50;        
         private int currentTextPos = 0;
-             
+
 
         #region properties
+
+        #region MP3
+
+
+        // Duration in seconds (org Bass)
+        private double _duration;
+        public double Duration { get { return _duration; } 
+            
+            set { 
+                _duration = value;
+                karaokeEffect1.Duration = _duration;
+            
+            } }
+
+        private int _bitrate;   // genre 192
+        public int BitRate { get { return _bitrate; } 
+            set { 
+                
+                _bitrate = value; 
+                karaokeEffect1.BitRate = _bitrate;
+            } }
+
+        // Frequency
+        private float _frequency;
+        public float Frequency { get { return _frequency; }  
+            set { 
+                _frequency = value; 
+                karaokeEffect1.Frequency = _frequency;
+            } }
+
+        #endregion MP3
+
+
 
         #region TopMost
         private bool _bTopMost = false;
@@ -529,8 +562,6 @@ namespace Karaboss.Mp3
             #endregion
 
             karaokeEffect1.DoubleClick += new DoubleClickEventHandler(karaokeEffect1_DoubleClick);
-
-
 
             LoadLyrics();
             

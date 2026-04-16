@@ -72,15 +72,13 @@ namespace Karaboss.Mp3.Mp3Lyrics
         public static string Album;
         public static uint Year;
 
-
         #region kEffect
-       
+
         public static kLine mp3KaraokeLine = new kLine();
         public static kLyrics mp3KaraokeLyrics = new kLyrics();
 
 
         #endregion KEffect
-
 
         /// <summary>
         /// Get lyrics type

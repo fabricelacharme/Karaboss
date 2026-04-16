@@ -801,7 +801,7 @@
             this.pBox.ActiveBorderColor = System.Drawing.Color.White;
             this.pBox.ActiveColor = System.Drawing.Color.Red;
             this.pBox.BackColor = System.Drawing.Color.Black;
-            this.pBox.bDemo = false;
+            this.pBox.bIsSettings = false;
             this.pBox.Beat = 200;
             this.pBox.BeatDuration = 0;
             this.pBox.bforceUppercase = false;
