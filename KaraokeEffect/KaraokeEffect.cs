@@ -131,6 +131,7 @@ namespace keffect
 
         #endregion Others
 
+
         #region Is used for settings
 
         private bool _bIsSettings = false;
@@ -142,6 +143,7 @@ namespace keffect
         }
 
         #endregion Is used for settings
+
 
         #region Karaoke lyrics
 
@@ -177,7 +179,8 @@ namespace keffect
                     if (_kLyrics.Lines.Count > 0)
                     {
                         //Init();
-                        pBox?.Invalidate();
+                        //pBox?.Invalidate();
+                        AjustText(_biggestLine); // pourquoi ? mystère. Mais ça marche
 
                     }
                 }
@@ -432,7 +435,8 @@ namespace keffect
                         _borderthick = 1;
                         break;
                 }
-                pBox?.Invalidate();
+                //pBox?.Invalidate();
+                AjustText(_biggestLine);      // pourquoi ? mystère. Mais ça marche
             }
         }
 
