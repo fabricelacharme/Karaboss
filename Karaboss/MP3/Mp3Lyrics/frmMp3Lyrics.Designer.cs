@@ -152,12 +152,15 @@ namespace Karaboss.Mp3
             this.karaokeEffect1.bforceUppercase = false;
             this.karaokeEffect1.BgColor = System.Drawing.Color.Empty;
             this.karaokeEffect1.bIsSettings = false;
+            this.karaokeEffect1.BitRate = 0;
             this.karaokeEffect1.BorderThick = 1;
             this.karaokeEffect1.bShowParagraphs = true;
             this.karaokeEffect1.bTextBackGround = false;
             resources.ApplyResources(this.karaokeEffect1, "karaokeEffect1");
+            this.karaokeEffect1.Duration = 0D;
             this.karaokeEffect1.FrameType = "Frame1";
             this.karaokeEffect1.FreqDirSlideShow = 10;
+            this.karaokeEffect1.Frequency = 0F;
             this.karaokeEffect1.Grad0Color = System.Drawing.Color.Empty;
             this.karaokeEffect1.Grad1Color = System.Drawing.Color.Empty;
             this.karaokeEffect1.GradientAngle = 45F;

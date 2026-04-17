@@ -209,6 +209,8 @@ namespace Karaboss.Mp3
             {
                 _frametype = value;
                 karaokeEffect1.FrameType = _frametype;
+                //Invalidate();
+                
 
             }
         }
@@ -570,6 +572,8 @@ namespace Karaboss.Mp3
             SetOptions();            
         }
 
+
+        #region Events
         private void karaokeEffect1_DoubleClick(object sender, EventArgs e)
         {
             if (WindowState == FormWindowState.Maximized)
@@ -577,6 +581,7 @@ namespace Karaboss.Mp3
             else WindowState = FormWindowState.Maximized;
         }
 
+        #endregion Events
 
         #region initializations
 

@@ -60,6 +60,7 @@ namespace keffect
 
 
         #region MP3
+
         // Duration in seconds (org Bass)
         private double _duration;
         public double Duration 
@@ -73,9 +74,7 @@ namespace keffect
         private float _frequency;
         public float Frequency { get { return _frequency; } set { _frequency = value; } }
 
-
         #endregion MP3
-
 
 
         #region Others
@@ -120,8 +119,8 @@ namespace keffect
         private string _biggestLine = string.Empty;
 
 
-        private string current_fragment = string.Empty;
-        private float current_fragment_length = 0;
+        private string active_fragment = string.Empty;
+        private float active_fragment_length = 0;
         private string highlight_fragment = string.Empty;
         private float highlight_fragment_length = 0;
         private string inactive_fragment = string.Empty;
@@ -171,8 +170,17 @@ namespace keffect
             get { return _karaokeDisplayType; }
             set
             {
-                _karaokeDisplayType = value;
-                pBox.Invalidate();
+                if (value != _karaokeDisplayType)
+                {
+                    _karaokeDisplayType = value;
+
+                    if (_kLyrics.Lines.Count > 0)
+                    {
+                        //Init();
+                        pBox?.Invalidate();
+
+                    }
+                }
             }
         }
 
@@ -337,7 +345,8 @@ namespace keffect
             set
             {
                 _nbLyricsLines = value;
-                Init();
+                //if (_kLyrics.Lines.Count > 0)
+                //    Init();
                 pBox.Invalidate();
             }
         }
@@ -765,7 +774,9 @@ namespace keffect
             SetStyle(ControlStyles.AllPaintingInWmPaint | ControlStyles.UserPaint | ControlStyles.OptimizedDoubleBuffer, true);
 
             SetDefaultValues();
-            Init();                       
+
+            if (_kLyrics.Lines.Count > 0) 
+                Init();                       
         }
 
         #region Events
@@ -781,7 +792,6 @@ namespace keffect
         }
 
         #endregion Events
-
 
 
         #region Timer gradient
@@ -992,33 +1002,32 @@ namespace keffect
                 line = new kLine();
                 for (int j = 0; j < kls.Lines[i].Syllables.Count; j++)
                 {
-
-                    t = kls.Lines[i].Syllables[j].StartTime;
-
-                    if (i == 0 && j == 0)
+                    if (kls.Lines[i].Syllables[j].CharType != Syllable.CharTypes.ParagraphSep)
                     {
-                        line.Add(new Syllable() { Text = "(Introduction)", StartTime = 0, CharType = Syllable.CharTypes.Text });
-                        klsWithinstrumentals.Add(line);
-                        line = new kLine();
-                    }
-                    else if (t - tOnPrevious > deltaInstrumental)
-                    {
-                        // An Instrumental part exists from tPrevious to t
-                        // When can add a lyric called "(Instrumental)" a few time after tPrevious
 
-                        if (line.Syllables.Count > 0)
+                        t = kls.Lines[i].Syllables[j].StartTime;
+                        if (i == 0 && j == 0)
+                        {
+                            line.Add(new Syllable() { Text = "(Introduction)", StartTime = 0, CharType = Syllable.CharTypes.Text });
                             klsWithinstrumentals.Add(line);
+                            line = new kLine();
+                        }
+                        else if (t - tOnPrevious > deltaInstrumental)
+                        {
+                            // An Instrumental part exists from tPrevious to t
+                            // When can add a lyric called "(Instrumental)" a few time after tPrevious
 
-                        line = new kLine();                       
-                        line.Add(new Syllable() { Text = "(Instrumental)", StartTime = tOnPrevious + duration , CharType = Syllable.CharTypes.Text });
-                        klsWithinstrumentals.Add(line);
-                        line = new kLine();
+                            if (line.Syllables.Count > 0)
+                                klsWithinstrumentals.Add(line);
 
+                            line = new kLine();
+                            line.Add(new Syllable() { Text = "(Instrumental)", StartTime = tOnPrevious + duration, CharType = Syllable.CharTypes.Text });
+                            klsWithinstrumentals.Add(line);
+                            line = new kLine();
+                        }
+                        tOnPrevious = t;
                     }
-                    tOnPrevious = t;                    
-
                     line.Add(kls.Lines[i].Syllables[j]);
-
                 }
                 klsWithinstrumentals.Add(line);
             }
@@ -1036,16 +1045,21 @@ namespace keffect
             return klsWithinstrumentals;
         }
 
+      
+
         private void Init()
         {
             if (_kLyrics == null) return;
             if (_kLyrics.Lines == null) return;
             if (_kLyrics.Lines.Count == 0) return;
             
+            
+            
             // Do not display paragraphs for some cases
             if (KaraokeDisplayType == KaraokeDisplayTypes.TwoLinesSwapped || KaraokeDisplayType == KaraokeDisplayTypes.FourLinesSwapped || !bShowParagraphs)
             {
-                _kLyrics = RemoveParagraphs(_kLyrics);
+                if (!_bIsSettings)
+                    _kLyrics = RemoveParagraphs(_kLyrics);
             }
 
             // If Upper case required
@@ -1053,9 +1067,10 @@ namespace keffect
                 _kLyrics = ForceUpperCase(_kLyrics);
 
             // Analyse lyrics to find introduction, instrumentals etc..
-            _kLyrics = SearchForInstrumentals(_kLyrics);
+           if (!_bIsSettings)
+                _kLyrics = SearchForInstrumentals(_kLyrics);
 
-
+           
             // Store all lines lengths
             LinesLengths = new float[_kLyrics.Lines.Count];
 
@@ -1357,111 +1372,200 @@ namespace keffect
 
 
         #region Code fragments
-
+       
         private void DrawActiveLineWithBorders(PaintEventArgs e, int lineIndex, int y1)
         {
-
-            // Create a graphical path
-            var path = new GraphicsPath();
-            var pathFragment = new GraphicsPath();
-
-            SolidBrush colorBrush;
-            Pen penActiveBorder = new Pen(_ActiveBorderColor, _borderthick);    // pen for active border color
-            Pen penInactiveBorder = new Pen(_InactiveBorderColor, _borderthick); // pen for inactive border color
-
+            #region declarations
             int Wbg;
             RectangleF Rbg;
 
+            Region r;
+            RectangleF rect;
+
+            Brush ActiveColorBrush = new SolidBrush(ActiveColor);
+            Brush HighlightColorBrush = new SolidBrush(HighlightColor);
+            Brush InactiveColorBrush = new SolidBrush(InactiveColor);
+
+            Pen ActiveBorderPen = new Pen(new SolidBrush(ActiveBorderColor), _borderthick);
+            Pen InactiveBorderPen = new Pen(new SolidBrush(InactiveBorderColor), _borderthick);
+
             int x0;
+            GraphicsPath pth = new GraphicsPath();
+
             string s;
 
-            // =============================================
-            // ACTIVE LINE
-            // 1. Color the current line in Inactive color
-            // and than color portions above the white in Active color (already played) and Highlight color (currently played) 
-            // =============================================
+            #endregion declarations
 
-            // Add the full text line to the graphical path            
-            if (lineIndex < _kLyrics.Lines.Count) 
+            if (lineIndex >= _kLyrics.Lines.Count()) return;
+
+
+            s = _kLyrics.Lines[lineIndex].ToString();
+            x0 = HCenterText(s);      // Center horizontally
+
+            #region background of syllabe                              
+            if (_bTextBackGround)
             {
-                s = _kLyrics.Lines[lineIndex].ToString();
-                x0 = HCenterText(s);       // Center horizontally
+                Wbg = (int)(1.04 * LinesLengths[lineIndex]);
+                // Black background to make text more visible
+                Rbg = new RectangleF((int)(0.94 * x0), (int)(1.04 * y1), Wbg, _lineHeight);
+                // background
+                e.Graphics.FillRectangle(new SolidBrush(Color.Black), Rbg);
+            }
+            #endregion
 
-                #region background of syllabe       
+            pth.AddString(s, _karaokeFont.FontFamily, (int)_karaokeFont.Style, _karaokeFont.Size, new Point(x0, y1), sf);
 
-                if (_bTextBackGround)
+            // Draw full line in white if no active and highlight fragments
+            if (active_fragment == string.Empty && highlight_fragment == string.Empty && inactive_fragment == string.Empty)
+            {
+                #region Draw static text (no active and highlight fragments)
+
+                #region apply effect
+                //CreateShadowEffect(s, _InactiveBorderColor, x0, y1, _karaokeFont, _karaokeFont.Size, e, pth);
+                #endregion apply effect
+
+                // Fill GraphicsPath path in white => full text is white                    
+                e.Graphics.FillPath(InactiveColorBrush, pth);
+                // Outline the text                                
+                e.Graphics.DrawPath(InactiveBorderPen, pth);
+
+                #endregion Draw static text (no active and highlight fragments)
+            }
+            else
+            {
+                #region Draw dynamic text (with active and highlight fragments)
+
+                r = new Region(pth);
+                // Create a retangle of the graphical path
+                rect = r.GetBounds(e.Graphics);
+
+                #region draw active text
+                if (active_fragment != string.Empty)
                 {
-                    Wbg = (int)(1.04 * LinesLengths[lineIndex]);
-                    // Black background to make text more visible
-                    Rbg = new RectangleF((int)(0.94 * x0), (int)(1.04 * y1), Wbg, _lineHeight);
-                    // background
-                    e.Graphics.FillRectangle(new SolidBrush(Color.Black), Rbg);
+                    GraphicsPath pathActive = new GraphicsPath();
+
+                    pathActive.AddString(active_fragment, _karaokeFont.FontFamily, (int)_karaokeFont.Style, _karaokeFont.Size, new Point(x0, y1), sf);
+
+                    #region Paint in ActiveColor
+
+                    // Rectangle for text befor highlighted text (rect.Width * lastpercent)
+                    RectangleF intersectRectBefore = new RectangleF(rect.X, rect.Y, rect.Width * lastpercent, rect.Height);
+                    //RectangleF intersectRectBefore = new RectangleF(rect.X, rect.Y, active_fragment_length, rect.Height);
+
+                    // update region on the intersection between region and 2nd rectangle
+                    r.Intersect(intersectRectBefore);
+
+                    // Fill updated region in green
+                    e.Graphics.FillRegion(ActiveColorBrush, r);
+
+                    #endregion Paint in ActiveColor
+
+                    #region apply effect
+
+                    //CreateShadowEffect(active_fragment, _ActiveBorderColor, x0, y1, _karaokeFont, _karaokeFont.Size, e, pathActive);
+
+                    #endregion apply effect
+
+                    // Draw the text               
+                    e.Graphics.FillPath(ActiveColorBrush, pathActive);
+
+                    // Outline the text                                
+                    e.Graphics.DrawPath(ActiveBorderPen, pathActive);
+
+                    pathActive.Dispose();
                 }
+                #endregion Draw active text
 
-                #endregion
 
-                // full line in GraphicsPath path
-                path.AddString(s, _karaokeFont.FontFamily, (int)_karaokeFont.Style, _karaokeFont.Size, new Point(x0, y1), sf);
+                #region draw highlight text      
+                if (highlight_fragment != string.Empty)
+                {
+                    GraphicsPath pathHighlight = new GraphicsPath();
+                    pathHighlight.AddString(highlight_fragment, _karaokeFont.FontFamily, (int)_karaokeFont.Style, _karaokeFont.Size, new Point((int)(x0 + active_fragment_length), y1), sf);
 
-                // part of line (sung part) in GraphicsPath pathFragment  
-                pathFragment.AddString(current_fragment + highlight_fragment, _karaokeFont.FontFamily, (int)_karaokeFont.Style, _karaokeFont.Size, new Point(x0, y1), sf);
+                    #region Paint in HighlightColor    
+
+                    // Create another rectangle shorter than the 1st one (percent of the first)
+                    RectangleF intersectRect = new RectangleF(rect.X + rect.Width * lastpercent, rect.Y, rect.Width * (percent - lastpercent), rect.Height);
+                    //RectangleF intersectRect = new RectangleF(rect.X + active_fragment_length, rect.Y, highlight_fragment_length, rect.Height);
+
+                    // update region on the intersection between region and 2nd rectangle
+                    r.Intersect(intersectRect);
+
+                    // Fill updated region in red => percent portion of text is red            
+                    e.Graphics.FillRegion(HighlightColorBrush, r);
+
+                    #endregion Paint in HighlightColor
+
+
+                    #region apply effect
+
+                    //CreateShadowEffect(highlight_fragment, _ActiveBorderColor, (int)(x0 + active_fragment_length), y1, _karaokeFont, _karaokeFont.Size, e, pathHighlight);
+
+                    #endregion apply effect
+
+                    // Draw the text               
+                    e.Graphics.FillPath(HighlightColorBrush, pathHighlight);
+
+                    // Outline text                
+                    e.Graphics.DrawPath(ActiveBorderPen, pathHighlight);
+
+                    pathHighlight.Dispose();
+                }
+                #endregion draw highlight text
+
+
+                #region Draw inactive text
+
+                if (inactive_fragment != string.Empty)
+                {
+                    GraphicsPath pathInactive = new GraphicsPath();
+                    pathInactive.AddString(inactive_fragment, _karaokeFont.FontFamily, (int)_karaokeFont.Style, _karaokeFont.Size, new Point((int)(x0 + active_fragment_length + highlight_fragment_length), y1), sf);
+
+                    #region Paint in InactiveColor
+
+                    // Create another rectangle shorter than the 1st one (percent of the first)
+                    RectangleF intersectRectAfter = new RectangleF(rect.X + rect.Width * percent, rect.Y, rect.Width - rect.Width * percent, rect.Height);
+                    //RectangleF intersectRectAfter = new RectangleF(rect.X + active_fragment_length + highlight_fragment_length, rect.Y, inactive_fragment_length, rect.Height);
+
+                    // update region on the intersection between region and 2nd rectangle
+                    r.Intersect(intersectRectAfter);
+
+                    // Fill updated region in InactiveColor
+                    e.Graphics.FillRegion(InactiveColorBrush, r);
+
+                    #endregion Paint in InactiveColor
+
+                    #region apply effect
+
+                    //CreateShadowEffect(inactive_fragment, _InactiveBorderColor, (int)(x0 + active_fragment_length + highlight_fragment_length), y1, _karaokeFont, _karaokeFont.Size, e, pathInactive);
+
+                    #endregion apply effect
+
+                    // Draw the text               
+                    e.Graphics.FillPath(InactiveColorBrush, pathInactive);
+
+                    // Outline text                
+                    e.Graphics.DrawPath(InactiveBorderPen, pathInactive);
+
+                    pathInactive.Dispose();
+
+                }
+                #endregion Draw inactive text
+
+
+                r.Dispose();
+
+                #endregion Draw dynamic text (with active and highlight fragments)
             }
 
-            // Fill GraphicsPath path in white => full text is white
-            colorBrush = new SolidBrush(_InactiveColor);
-            e.Graphics.FillPath(colorBrush, path);
-
-            // ======================================================
-            // GREEN
-            // 2. Color in Active Color the syllabes before current syllabe
-            // ======================================================
-            #region Color in ActiveColor the syllabes before current syllabe
-            // Create a region from the graphical path
-            Region r = new Region(path);
-            // Create a retangle of the graphical path
-            RectangleF rect = r.GetBounds(e.Graphics);
-
-            RectangleF intersectRectBefore = new RectangleF(rect.X, rect.Y, rect.Width * lastpercent, rect.Height);
-
-            // update region on the intersection between region and 2nd rectangle
-            r.Intersect(intersectRectBefore);
-
-            colorBrush = new SolidBrush(_ActiveColor);
-            e.Graphics.FillRegion(colorBrush, r);
-            #endregion Color in ActiveColor the syllabes before current syllabe
-
-            // ======================================================
-            // HighligtHIT COLOR
-            // 3. Color in Highlight Color the current syllabe
-            // ======================================================
-            #region Color in HighlightColor the current syllabe
-
-            r = new Region(path);
-
-            // Create another rectangle shorter than the 1st one (percent of the first)                       
-            RectangleF intersectRect = new RectangleF(rect.X + rect.Width * lastpercent, rect.Y, rect.Width * (percent - lastpercent), rect.Height);
-
-            // update region on the intersection between region and 2nd rectangle
-            r.Intersect(intersectRect);
-
-            // Fill updated region in red => percent portion of text is red
-            colorBrush = new SolidBrush(_HighlightColor);
-            e.Graphics.FillRegion(colorBrush, r);
-            #endregion Color in HighlightColor the current syllabe
-
-            // Outline the text
-            if (_borderthick > 0)
-            {
-                e.Graphics.DrawPath(penInactiveBorder, path);                       // Draw the entire line using the inactive border color
-                e.Graphics.DrawPath(penActiveBorder, pathFragment);                 // Next, draw the current fragment of line on top using the active border color
-            }            
-
             #region Clean up resources
-            path.Dispose();
-            pathFragment.Dispose();
-            colorBrush.Dispose();
-            penActiveBorder.Dispose();
-            penInactiveBorder.Dispose();
+            pth.Dispose();
+            ActiveColorBrush.Dispose();
+            HighlightColorBrush.Dispose();
+            InactiveColorBrush.Dispose();
+            ActiveBorderPen.Dispose();
+            InactiveBorderPen.Dispose();
             #endregion Clean up resources
         }
 
@@ -1488,170 +1592,169 @@ namespace keffect
 
             #endregion declarations
 
+            if (lineIndex >= _kLyrics.Lines.Count()) return;
 
-            if (lineIndex < _kLyrics.Lines.Count())
+            
+            s = _kLyrics.Lines[lineIndex].ToString();                            
+            x0 = HCenterText(s);      // Center horizontally
+
+            #region background of syllabe                              
+            if (_bTextBackGround)
             {
-                s = _kLyrics.Lines[lineIndex].ToString();
-                x0 = HCenterText(s);      // Center horizontally
+                Wbg = (int)(1.04 * LinesLengths[lineIndex]);
+                // Black background to make text more visible
+                Rbg = new RectangleF((int)(0.94 * x0), (int)(1.04 * y1), Wbg, _lineHeight);
+                // background
+                e.Graphics.FillRectangle(new SolidBrush(Color.Black), Rbg);
+            }
+            #endregion
 
-                #region background of syllabe                              
-                if (_bTextBackGround)
+            pth.AddString(s, _karaokeFont.FontFamily, (int)_karaokeFont.Style, _karaokeFont.Size, new Point(x0, y1), sf);          
+
+            // Draw full line in white if no active and highlight fragments
+            if (active_fragment == string.Empty && highlight_fragment == string.Empty && inactive_fragment == string.Empty)
+            {
+                #region Draw static text (no active and highlight fragments)
+
+                #region apply effect
+                CreateShadowEffect(s, _InactiveBorderColor, x0, y1, _karaokeFont, _karaokeFont.Size, e, pth);
+                #endregion apply effect
+
+                // Fill GraphicsPath path in white => full text is white                    
+                e.Graphics.FillPath(InactiveColorBrush, pth);
+                // Outline the text                                
+                e.Graphics.DrawPath(InactiveBorderPen, pth);
+
+                #endregion Draw static text (no active and highlight fragments)
+            }
+            else
+            {
+                #region Draw dynamic text (with active and highlight fragments)
+
+                r = new Region(pth);
+                // Create a retangle of the graphical path
+                rect = r.GetBounds(e.Graphics);
+
+                #region draw active text
+                if (active_fragment != string.Empty)
                 {
-                    Wbg = (int)(1.04 * LinesLengths[lineIndex]);
-                    // Black background to make text more visible
-                    Rbg = new RectangleF((int)(0.94 * x0), (int)(1.04 * y1), Wbg, _lineHeight);
-                    // background
-                    e.Graphics.FillRectangle(new SolidBrush(Color.Black), Rbg);
-                }
-                #endregion
+                    GraphicsPath pathActive = new GraphicsPath();
 
-                pth.AddString(s, _karaokeFont.FontFamily, (int)_karaokeFont.Style, _karaokeFont.Size, new Point(x0, y1), sf);
+                    pathActive.AddString(active_fragment, _karaokeFont.FontFamily, (int)_karaokeFont.Style, _karaokeFont.Size, new Point(x0, y1), sf);
 
-                // Draw full line in white if no active and highlight fragments
-                if (current_fragment == string.Empty && highlight_fragment == string.Empty && inactive_fragment == string.Empty)
-                {
-                    #region Draw static text (no active and highlight fragments)
+                    #region Paint in ActiveColor
+
+                    // Rectangle for text befor highlighted text (rect.Width * lastpercent)
+                    RectangleF intersectRectBefore = new RectangleF(rect.X, rect.Y, rect.Width * lastpercent, rect.Height);
+                    //RectangleF intersectRectBefore = new RectangleF(rect.X, rect.Y, active_fragment_length, rect.Height);
+
+                    // update region on the intersection between region and 2nd rectangle
+                    r.Intersect(intersectRectBefore);
+
+                    // Fill updated region in green
+                    e.Graphics.FillRegion(ActiveColorBrush, r);
+
+                    #endregion Paint in ActiveColor
 
                     #region apply effect
-                    CreateShadowEffect(s, _InactiveBorderColor, x0, y1, _karaokeFont, _karaokeFont.Size, e, pth);
+
+                    CreateShadowEffect(active_fragment, _ActiveBorderColor, x0, y1, _karaokeFont, _karaokeFont.Size, e, pathActive);
+
                     #endregion apply effect
 
-                    // Fill GraphicsPath path in white => full text is white                    
-                    e.Graphics.FillPath(InactiveColorBrush, pth);
+                    // Draw the text               
+                    e.Graphics.FillPath(ActiveColorBrush, pathActive);
+
                     // Outline the text                                
-                    e.Graphics.DrawPath(InactiveBorderPen, pth);
+                    e.Graphics.DrawPath(ActiveBorderPen, pathActive);
 
-                    #endregion Draw static text (no active and highlight fragments)
+                    pathActive.Dispose();
                 }
-                else
+                #endregion Draw active text
+
+
+                #region draw highlight text      
+                if (highlight_fragment != string.Empty)
                 {
-                    #region Draw dynamic text (with active and highlight fragments)
+                    GraphicsPath pathHighlight = new GraphicsPath();
+                    pathHighlight.AddString(highlight_fragment, _karaokeFont.FontFamily, (int)_karaokeFont.Style, _karaokeFont.Size, new Point((int)(x0 + active_fragment_length), y1), sf);
 
-                    r = new Region(pth);
-                    // Create a retangle of the graphical path
-                    rect = r.GetBounds(e.Graphics);
+                    #region Paint in HighlightColor    
 
-                    #region draw active text
-                    if (current_fragment != string.Empty)
-                    {
-                        GraphicsPath pathActive = new GraphicsPath();
+                    // Create another rectangle shorter than the 1st one (percent of the first)
+                    RectangleF intersectRect = new RectangleF(rect.X + rect.Width * lastpercent, rect.Y, rect.Width * (percent - lastpercent), rect.Height);
+                    //RectangleF intersectRect = new RectangleF(rect.X + active_fragment_length, rect.Y, highlight_fragment_length, rect.Height);
 
-                        pathActive.AddString(current_fragment, _karaokeFont.FontFamily, (int)_karaokeFont.Style, _karaokeFont.Size, new Point(x0, y1), sf);
+                    // update region on the intersection between region and 2nd rectangle
+                    r.Intersect(intersectRect);
 
-                        #region Paint in ActiveColor
+                    // Fill updated region in red => percent portion of text is red            
+                    e.Graphics.FillRegion(HighlightColorBrush, r);
 
-                        // Rectangle for text befor highlighted text (rect.Width * lastpercent)
-                        RectangleF intersectRectBefore = new RectangleF(rect.X, rect.Y, rect.Width * lastpercent, rect.Height);
-                        //RectangleF intersectRectBefore = new RectangleF(rect.X, rect.Y, current_fragment_length, rect.Height);
-
-                        // update region on the intersection between region and 2nd rectangle
-                        r.Intersect(intersectRectBefore);
-
-                        // Fill updated region in green
-                        e.Graphics.FillRegion(ActiveColorBrush, r);
-
-                        #endregion Paint in ActiveColor
-
-                        #region apply effect
-
-                        CreateShadowEffect(current_fragment, _ActiveBorderColor, x0, y1, _karaokeFont, _karaokeFont.Size, e, pathActive);
-
-                        #endregion apply effect
-
-                        // Draw the text               
-                        e.Graphics.FillPath(ActiveColorBrush, pathActive);
-
-                        // Outline the text                                
-                        e.Graphics.DrawPath(ActiveBorderPen, pathActive);
-
-                        pathActive.Dispose();
-                    }
-                    #endregion Draw active text
+                    #endregion Paint in HighlightColor
 
 
-                    #region draw highlight text      
-                    if (highlight_fragment != string.Empty)
-                    {
-                        GraphicsPath pathHighlight = new GraphicsPath();
-                        pathHighlight.AddString(highlight_fragment, _karaokeFont.FontFamily, (int)_karaokeFont.Style, _karaokeFont.Size, new Point((int)(x0 + current_fragment_length), y1), sf);
+                    #region apply effect
 
-                        #region Paint in HighlightColor    
+                    CreateShadowEffect(highlight_fragment, _ActiveBorderColor, (int)(x0 + active_fragment_length), y1, _karaokeFont, _karaokeFont.Size, e, pathHighlight);
 
-                        // Create another rectangle shorter than the 1st one (percent of the first)
-                        RectangleF intersectRect = new RectangleF(rect.X + rect.Width * lastpercent, rect.Y, rect.Width * (percent - lastpercent), rect.Height);
-                        //RectangleF intersectRect = new RectangleF(rect.X + current_fragment_length, rect.Y, highlight_fragment_length, rect.Height);
+                    #endregion apply effect
 
-                        // update region on the intersection between region and 2nd rectangle
-                        r.Intersect(intersectRect);
+                    // Draw the text               
+                    e.Graphics.FillPath(HighlightColorBrush, pathHighlight);
 
-                        // Fill updated region in red => percent portion of text is red            
-                        e.Graphics.FillRegion(HighlightColorBrush, r);
+                    // Outline text                
+                    e.Graphics.DrawPath(ActiveBorderPen, pathHighlight);
 
-                        #endregion Paint in HighlightColor
-
-
-                        #region apply effect
-
-                        CreateShadowEffect(highlight_fragment, _ActiveBorderColor, (int)(x0 + current_fragment_length), y1, _karaokeFont, _karaokeFont.Size, e, pathHighlight);
-
-                        #endregion apply effect
-
-                        // Draw the text               
-                        e.Graphics.FillPath(HighlightColorBrush, pathHighlight);
-
-                        // Outline text                
-                        e.Graphics.DrawPath(ActiveBorderPen, pathHighlight);
-
-                        pathHighlight.Dispose();
-                    }
-                    #endregion draw highlight text
-
-
-                    #region Draw inactive text
-
-                    if (inactive_fragment != string.Empty)
-                    {
-                        GraphicsPath pathInactive = new GraphicsPath();
-                        pathInactive.AddString(inactive_fragment, _karaokeFont.FontFamily, (int)_karaokeFont.Style, _karaokeFont.Size, new Point((int)(x0 + current_fragment_length + highlight_fragment_length), y1), sf);
-
-                        #region Paint in InactiveColor
-
-                        // Create another rectangle shorter than the 1st one (percent of the first)
-                        RectangleF intersectRectAfter = new RectangleF(rect.X + rect.Width * percent, rect.Y, rect.Width - rect.Width * percent, rect.Height);
-                        //RectangleF intersectRectAfter = new RectangleF(rect.X + current_fragment_length + highlight_fragment_length, rect.Y, inactive_fragment_length, rect.Height);
-
-                        // update region on the intersection between region and 2nd rectangle
-                        r.Intersect(intersectRectAfter);
-
-                        // Fill updated region in InactiveColor
-                        e.Graphics.FillRegion(InactiveColorBrush, r);
-
-                        #endregion Paint in InactiveColor
-
-                        #region apply effect
-
-                        CreateShadowEffect(inactive_fragment, _InactiveBorderColor, (int)(x0 + current_fragment_length + highlight_fragment_length), y1, _karaokeFont, _karaokeFont.Size, e, pathInactive);
-
-                        #endregion apply effect
-
-                        // Draw the text               
-                        e.Graphics.FillPath(InactiveColorBrush, pathInactive);
-
-                        // Outline text                
-                        e.Graphics.DrawPath(InactiveBorderPen, pathInactive);
-
-                        pathInactive.Dispose();
-
-                    }
-                    #endregion Draw inactive text
-
-
-                    r.Dispose();
-
-                    #endregion Draw dynamic text (with active and highlight fragments)
+                    pathHighlight.Dispose();
                 }
-            }
+                #endregion draw highlight text
 
+
+                #region Draw inactive text
+
+                if (inactive_fragment != string.Empty)
+                {
+                    GraphicsPath pathInactive = new GraphicsPath();
+                    pathInactive.AddString(inactive_fragment, _karaokeFont.FontFamily, (int)_karaokeFont.Style, _karaokeFont.Size, new Point((int)(x0 + active_fragment_length + highlight_fragment_length), y1), sf);
+
+                    #region Paint in InactiveColor
+
+                    // Create another rectangle shorter than the 1st one (percent of the first)
+                    RectangleF intersectRectAfter = new RectangleF(rect.X + rect.Width * percent, rect.Y, rect.Width - rect.Width * percent, rect.Height);
+                    //RectangleF intersectRectAfter = new RectangleF(rect.X + active_fragment_length + highlight_fragment_length, rect.Y, inactive_fragment_length, rect.Height);
+
+                    // update region on the intersection between region and 2nd rectangle
+                    r.Intersect(intersectRectAfter);
+
+                    // Fill updated region in InactiveColor
+                    e.Graphics.FillRegion(InactiveColorBrush, r);
+
+                    #endregion Paint in InactiveColor
+
+                    #region apply effect
+
+                    CreateShadowEffect(inactive_fragment, _InactiveBorderColor, (int)(x0 + active_fragment_length + highlight_fragment_length), y1, _karaokeFont, _karaokeFont.Size, e, pathInactive);
+
+                    #endregion apply effect
+
+                    // Draw the text               
+                    e.Graphics.FillPath(InactiveColorBrush, pathInactive);
+
+                    // Outline text                
+                    e.Graphics.DrawPath(InactiveBorderPen, pathInactive);
+
+                    pathInactive.Dispose();
+
+                }
+                #endregion Draw inactive text
+
+
+                r.Dispose();
+
+                #endregion Draw dynamic text (with active and highlight fragments)
+            }
+            
             #region Clean up resources
             pth.Dispose();
             ActiveColorBrush.Dispose();
@@ -1662,7 +1765,121 @@ namespace keffect
             #endregion Clean up resources
         }
 
-        private void DrawActiveLineWithNeon(PaintEventArgs e, int lineIndex, int y1)
+
+        /*
+       private void DrawActiveLineWithBorders2(PaintEventArgs e, int lineIndex, int y1)
+       {
+           #region Declarations
+
+           // Create a graphical path
+           var path = new GraphicsPath();
+           var pathFragment = new GraphicsPath();
+
+           SolidBrush colorBrush;
+           Pen penActiveBorder = new Pen(_ActiveBorderColor, _borderthick);    // pen for active border color
+           Pen penInactiveBorder = new Pen(_InactiveBorderColor, _borderthick); // pen for inactive border color
+
+           int Wbg;
+           RectangleF Rbg;
+
+           int x0;
+           string s;
+
+           #endregion Declarations
+
+           if (lineIndex >= _kLyrics.Lines.Count) return;
+
+           // =============================================
+           // INACTIVE
+           // 1. Color the current line in Inactive color
+           // and than color portions above the white in Active color (already played) and Highlight color (currently played) 
+           // =============================================
+
+           // Add the full text line to the graphical path            
+           s = _kLyrics.Lines[lineIndex].ToString();            
+           x0 = HCenterText(s);       // Center horizontally
+
+           #region background of syllabe       
+
+           if (_bTextBackGround)
+           {
+               Wbg = (int)(1.04 * LinesLengths[lineIndex]);
+               // Black background to make text more visible
+               Rbg = new RectangleF((int)(0.94 * x0), (int)(1.04 * y1), Wbg, _lineHeight);
+               // background
+               e.Graphics.FillRectangle(new SolidBrush(Color.Black), Rbg);
+           }
+
+           #endregion
+
+           // full line in GraphicsPath path
+           path.AddString(s, _karaokeFont.FontFamily, (int)_karaokeFont.Style, _karaokeFont.Size, new Point(x0, y1), sf);
+
+           // part of line (sung part) in GraphicsPath pathFragment  
+           pathFragment.AddString(active_fragment + highlight_fragment, _karaokeFont.FontFamily, (int)_karaokeFont.Style, _karaokeFont.Size, new Point(x0, y1), sf);
+
+           // Fill GraphicsPath path in white => full text is white
+           colorBrush = new SolidBrush(_InactiveColor);
+           e.Graphics.FillPath(colorBrush, path);
+
+           // ======================================================
+           // ACTIVE COLOR
+           // 2. Color in Active Color the syllabes before current syllabe
+           // ======================================================
+           #region Color in ActiveColor the syllabes before current syllabe
+           // Create a region from the graphical path
+           Region r = new Region(path);
+           // Create a retangle of the graphical path
+           RectangleF rect = r.GetBounds(e.Graphics);
+
+           RectangleF intersectRectBefore = new RectangleF(rect.X, rect.Y, rect.Width * lastpercent, rect.Height);
+
+           // update region on the intersection between region and 2nd rectangle
+           r.Intersect(intersectRectBefore);
+
+           colorBrush = new SolidBrush(_ActiveColor);
+           e.Graphics.FillRegion(colorBrush, r);
+           #endregion Color in ActiveColor the syllabes before current syllabe
+
+           // ======================================================
+           // Highligt HIT COLOR
+           // 3. Color in Highlight Color the current syllabe
+           // ======================================================
+           #region Color in HighlightColor the current syllabe
+
+           r = new Region(path);
+
+           // Create another rectangle shorter than the 1st one (percent of the first)                       
+           RectangleF intersectRect = new RectangleF(rect.X + rect.Width * lastpercent, rect.Y, rect.Width * (percent - lastpercent), rect.Height);
+
+           // update region on the intersection between region and 2nd rectangle
+           r.Intersect(intersectRect);
+
+           // Fill updated region in red => percent portion of text is red
+           colorBrush = new SolidBrush(_HighlightColor);
+           e.Graphics.FillRegion(colorBrush, r);
+           #endregion Color in HighlightColor the current syllabe
+
+
+           // Outline the text
+           if (_borderthick > 0)
+           {
+               e.Graphics.DrawPath(penInactiveBorder, path);                       // Draw the entire line using the inactive border color
+               e.Graphics.DrawPath(penActiveBorder, pathFragment);                 // Next, draw the current fragment of line on top using the active border color
+           }            
+
+           #region Clean up resources
+           path.Dispose();
+           pathFragment.Dispose();
+           colorBrush.Dispose();
+           penActiveBorder.Dispose();
+           penInactiveBorder.Dispose();
+           #endregion Clean up resources
+       }
+       */
+
+        /*
+        private void DrawActiveLineWithNeon2(PaintEventArgs e, int lineIndex, int y1)
         {
             #region declarations
             
@@ -1707,7 +1924,7 @@ namespace keffect
 
                 #region draw active text
 
-                pathFragment.AddString(current_fragment, _karaokeFont.FontFamily, (int)_karaokeFont.Style, _karaokeFont.Size, new Point(x0, y1), sf);
+                pathFragment.AddString(active_fragment, _karaokeFont.FontFamily, (int)_karaokeFont.Style, _karaokeFont.Size, new Point(x0, y1), sf);
 
                 #region Paint in ActiveColor
                 // Create a region from the full graphical path
@@ -1744,7 +1961,7 @@ namespace keffect
                 #region draw highlight text
                 // HIGHLIGHT 
 
-                pathHighlight.AddString(highlight_fragment, _karaokeFont.FontFamily, (int)_karaokeFont.Style, _karaokeFont.Size, new Point((int)(x0 + current_fragment_length), y1), sf);
+                pathHighlight.AddString(highlight_fragment, _karaokeFont.FontFamily, (int)_karaokeFont.Style, _karaokeFont.Size, new Point((int)(x0 + active_fragment_length), y1), sf);
 
                 #region Paint in HighlightColor    
 
@@ -1794,8 +2011,207 @@ namespace keffect
                 #endregion Clean up resources
             }
         }
+        */
+        
+        private void DrawActiveLineWithNeon(PaintEventArgs e, int lineIndex, int y1)
+        {
+            #region declarations
+            int Wbg;
+            RectangleF Rbg;
+
+            Region r;
+            RectangleF rect;
+
+            Brush ActiveColorBrush = new SolidBrush(ActiveColor);
+            Brush HighlightColorBrush = new SolidBrush(HighlightColor);
+            Brush InactiveColorBrush = new SolidBrush(InactiveColor);
+
+            Pen ActiveBorderPen = new Pen(new SolidBrush(ActiveBorderColor), _borderthick);
+            Pen InactiveBorderPen = new Pen(new SolidBrush(InactiveBorderColor), _borderthick);
+
+            int x0;
+            GraphicsPath pth = new GraphicsPath();
+
+            string s;
+
+            #endregion declarations
+
+            if (lineIndex >= _kLyrics.Lines.Count()) return;
 
 
+            s = _kLyrics.Lines[lineIndex].ToString();
+            x0 = HCenterText(s);      // Center horizontally
+
+            #region background of syllabe                              
+            if (_bTextBackGround)
+            {
+                Wbg = (int)(1.04 * LinesLengths[lineIndex]);
+                // Black background to make text more visible
+                Rbg = new RectangleF((int)(0.94 * x0), (int)(1.04 * y1), Wbg, _lineHeight);
+                // background
+                e.Graphics.FillRectangle(new SolidBrush(Color.Black), Rbg);
+            }
+            #endregion
+
+            pth.AddString(s, _karaokeFont.FontFamily, (int)_karaokeFont.Style, _karaokeFont.Size, new Point(x0, y1), sf);
+
+            // Draw full line in white if no active and highlight fragments
+            if (active_fragment == string.Empty && highlight_fragment == string.Empty && inactive_fragment == string.Empty)
+            {
+                #region Draw static text (no active and highlight fragments)
+
+                #region apply effect
+                //CreateShadowEffect(s, _InactiveBorderColor, x0, y1, _karaokeFont, _karaokeFont.Size, e, pth);
+                CreateNeonEffect(_InactiveBorderColor, e, pth);
+                #endregion apply effect
+
+                // Fill GraphicsPath path in white => full text is white                    
+                e.Graphics.FillPath(InactiveColorBrush, pth);
+                // Outline the text                                
+                e.Graphics.DrawPath(InactiveBorderPen, pth);
+
+                #endregion Draw static text (no active and highlight fragments)
+            }
+            else
+            {
+                #region Draw dynamic text (with active and highlight fragments)
+
+                r = new Region(pth);
+                // Create a retangle of the graphical path
+                rect = r.GetBounds(e.Graphics);
+
+                #region draw active text
+                if (active_fragment != string.Empty)
+                {
+                    GraphicsPath pathActive = new GraphicsPath();
+
+                    pathActive.AddString(active_fragment, _karaokeFont.FontFamily, (int)_karaokeFont.Style, _karaokeFont.Size, new Point(x0, y1), sf);
+
+                    #region Paint in ActiveColor
+
+                    // Rectangle for text befor highlighted text (rect.Width * lastpercent)
+                    RectangleF intersectRectBefore = new RectangleF(rect.X, rect.Y, rect.Width * lastpercent, rect.Height);
+                    //RectangleF intersectRectBefore = new RectangleF(rect.X, rect.Y, active_fragment_length, rect.Height);
+
+                    // update region on the intersection between region and 2nd rectangle
+                    r.Intersect(intersectRectBefore);
+
+                    // Fill updated region in green
+                    e.Graphics.FillRegion(ActiveColorBrush, r);
+
+                    #endregion Paint in ActiveColor
+
+                    #region apply effect
+
+                    //CreateShadowEffect(active_fragment, _ActiveBorderColor, x0, y1, _karaokeFont, _karaokeFont.Size, e, pathActive);
+                    CreateNeonEffect(_ActiveBorderColor, e, pathActive);
+
+                    #endregion apply effect
+
+                    // Draw the text               
+                    e.Graphics.FillPath(ActiveColorBrush, pathActive);
+
+                    // Outline the text                                
+                    e.Graphics.DrawPath(ActiveBorderPen, pathActive);
+
+                    pathActive.Dispose();
+                }
+                #endregion Draw active text
+
+
+                #region draw highlight text      
+                if (highlight_fragment != string.Empty)
+                {
+                    GraphicsPath pathHighlight = new GraphicsPath();
+                    pathHighlight.AddString(highlight_fragment, _karaokeFont.FontFamily, (int)_karaokeFont.Style, _karaokeFont.Size, new Point((int)(x0 + active_fragment_length), y1), sf);
+
+                    #region Paint in HighlightColor    
+
+                    // Create another rectangle shorter than the 1st one (percent of the first)
+                    RectangleF intersectRect = new RectangleF(rect.X + rect.Width * lastpercent, rect.Y, rect.Width * (percent - lastpercent), rect.Height);
+                    //RectangleF intersectRect = new RectangleF(rect.X + active_fragment_length, rect.Y, highlight_fragment_length, rect.Height);
+
+                    // update region on the intersection between region and 2nd rectangle
+                    r.Intersect(intersectRect);
+
+                    // Fill updated region in red => percent portion of text is red            
+                    e.Graphics.FillRegion(HighlightColorBrush, r);
+
+                    #endregion Paint in HighlightColor
+
+
+                    #region apply effect
+
+                    //CreateShadowEffect(highlight_fragment, _ActiveBorderColor, (int)(x0 + active_fragment_length), y1, _karaokeFont, _karaokeFont.Size, e, pathHighlight);
+                    CreateNeonEffect(_ActiveBorderColor, e, pathHighlight);
+
+                    #endregion apply effect
+
+                    // Draw the text               
+                    e.Graphics.FillPath(HighlightColorBrush, pathHighlight);
+
+                    // Outline text                
+                    e.Graphics.DrawPath(ActiveBorderPen, pathHighlight);
+
+                    pathHighlight.Dispose();
+                }
+                #endregion draw highlight text
+
+
+                #region Draw inactive text
+
+                if (inactive_fragment != string.Empty)
+                {
+                    GraphicsPath pathInactive = new GraphicsPath();
+                    pathInactive.AddString(inactive_fragment, _karaokeFont.FontFamily, (int)_karaokeFont.Style, _karaokeFont.Size, new Point((int)(x0 + active_fragment_length + highlight_fragment_length), y1), sf);
+
+                    #region Paint in InactiveColor
+
+                    // Create another rectangle shorter than the 1st one (percent of the first)
+                    RectangleF intersectRectAfter = new RectangleF(rect.X + rect.Width * percent, rect.Y, rect.Width - rect.Width * percent, rect.Height);
+                    //RectangleF intersectRectAfter = new RectangleF(rect.X + active_fragment_length + highlight_fragment_length, rect.Y, inactive_fragment_length, rect.Height);
+
+                    // update region on the intersection between region and 2nd rectangle
+                    r.Intersect(intersectRectAfter);
+
+                    // Fill updated region in InactiveColor
+                    e.Graphics.FillRegion(InactiveColorBrush, r);
+
+                    #endregion Paint in InactiveColor
+
+                    #region apply effect
+
+                    //CreateShadowEffect(inactive_fragment, _InactiveBorderColor, (int)(x0 + active_fragment_length + highlight_fragment_length), y1, _karaokeFont, _karaokeFont.Size, e, pathInactive);
+                    CreateNeonEffect(_InactiveBorderColor, e, pathInactive);
+
+                    #endregion apply effect
+
+                    // Draw the text               
+                    e.Graphics.FillPath(InactiveColorBrush, pathInactive);
+
+                    // Outline text                
+                    e.Graphics.DrawPath(InactiveBorderPen, pathInactive);
+
+                    pathInactive.Dispose();
+
+                }
+                #endregion Draw inactive text
+
+
+                r.Dispose();
+
+                #endregion Draw dynamic text (with active and highlight fragments)
+            }
+
+            #region Clean up resources
+            pth.Dispose();
+            ActiveColorBrush.Dispose();
+            HighlightColorBrush.Dispose();
+            InactiveColorBrush.Dispose();
+            ActiveBorderPen.Dispose();
+            InactiveBorderPen.Dispose();
+            #endregion Clean up resources
+        }
 
         private void DrawInactiveLineWithBorders(PaintEventArgs e, int lineIndex, int y2, bool IsActive = false)
         {
@@ -1822,7 +2238,7 @@ namespace keffect
 
             if (lineIndex < _kLyrics.Lines.Count())
             {
-                s = _kLyrics.Lines[lineIndex].ToString();
+                s = _kLyrics.Lines[lineIndex].ToString();                
                 x0 = HCenterText(s);     // Center text horizontally
 
                 #region Background of text  
@@ -1880,7 +2296,7 @@ namespace keffect
 
             if (lineIndex < _kLyrics.Lines.Count())
             {
-                s = _kLyrics.Lines[lineIndex].ToString();
+                s = _kLyrics.Lines[lineIndex].ToString();                
                 x0 = HCenterText(s);     // Center text horizontally
 
                 #region background of syllabe                              
@@ -1944,7 +2360,7 @@ namespace keffect
 
             if (lineIndex < _kLyrics.Lines.Count())
             {
-                s = _kLyrics.Lines[lineIndex].ToString();
+                s = _kLyrics.Lines[lineIndex].ToString();                
                 x0 = HCenterText(s);     // Center text horizontally
                 
                 #region background of syllabe                              
@@ -2895,76 +3311,7 @@ namespace keffect
             }
             return maxline;
         }
-      
-
-        /// <summary>
-        /// Retrieve nextindex of current syllabe in the current line
-        /// </summary>
-        /// <returns></returns>       
-        private (int line, int index) GetNextIndex(int pos)
-        {                                 
-            // Descending loop for lines
-            for (int j = _kLyrics.Lines.Count - 1; j >= 0; j--)
-            {                
-                // Descending loop for Syllables
-                for (int i = _kLyrics.Lines[j].Syllables.Count - 1; i >=0 ; i--)
-                {
-                    // Search first index of Syllable for which pos is greater then startTime  
-                    if (_kLyrics.Lines[j].Syllables[i].StartTime > 0 && pos > _kLyrics.Lines[j].Syllables[i].StartTime)
-                    {
-                        //_line = j;
-                        //return   i + 1;
-
-                        return (j, i + 1);
-                    }
-                }
-            }
-            return (0, 0);                        
-        }
-
-       
-        /// <summary>
-        /// Mesure length of a portion of line
-        /// </summary>
-        /// <param name="idx"></param>
-        /// <returns></returns>
-        private float GetCurLength(int idx)
-        {
-            float res = 0;            
-
-            current_fragment = string.Empty;
-            current_fragment_length = 0;
-            highlight_fragment = string.Empty;
-            highlight_fragment_length = 0;
-            inactive_fragment = string.Empty;
-            inactive_fragment_length = 0;
-                     
-
-            for (int i = 0; i < _kLyrics.Lines[_line].Syllables.Count(); i++)
-            {
-                if (i < idx)
-                {
-                    res += MeasureString(_kLyrics.Lines[_line].Syllables[i].Text, _karaokeFont.Size);
-
-                    if (idx > 0 && i < idx - 1)
-                    {
-                        current_fragment += _kLyrics.Lines[_line].Syllables[i].Text;
-                        current_fragment_length += MeasureString(_kLyrics.Lines[_line].Syllables[i].Text, _karaokeFont.Size);
-                    }
-                    else if (idx > 0 && i == idx - 1)
-                    {
-                        highlight_fragment = _kLyrics.Lines[_line].Syllables[i].Text;
-                        highlight_fragment_length = MeasureString(_kLyrics.Lines[_line].Syllables[i].Text, _karaokeFont.Size);
-                    }
-                }
-                else
-                {
-                    inactive_fragment += _kLyrics.Lines[_line].Syllables[i].Text;
-                    inactive_fragment_length += MeasureString(_kLyrics.Lines[_line].Syllables[i].Text, _karaokeFont.Size);
-                }
-            }
-            return res;
-        }
+                
 
         #endregion get infos
 
@@ -3099,7 +3446,198 @@ namespace keffect
 
         #endregion ajust text
 
-                          
+
+        #region Receive pos from player
+
+        /// <summary>
+        ///  player position
+        /// </summary>
+        /// <param name="pos"></param>
+        public void SetPos(double ms)
+        {
+            SetPosition((int)ms);
+
+        }
+
+        private void SetPosition(int pos)
+        {                        
+            // Search _line & nextindex of next lyric to play
+            (_line, nextindex) = GetNextIndex(pos);
+
+            // Length of partial line
+            CurLength = GetCurLength(nextindex);
+
+
+            // New word to highlight
+            // Warning: in case of full lines, nextindex is allways the same and not different than lastIndex
+            if (nextindex != lastindex || _line != _lastLine)
+            {
+                // Line changed
+                if (_line != _lastLine)
+                {
+                    _lastLine = _line;
+                    percent = 0;
+                    lastpercent = 0;
+                    nextindex = 0;
+                    lastindex = 0;
+                    lastCurLength = 0;
+                    CurLength = 0;
+
+                    _lasttime = _nexttime;
+                }
+
+                _FirstLineToShow = _line;
+                _LastLineToShow = SetLastLineToShow(_FirstLineToShow, _lines, _nbLyricsLines);
+
+
+                if (nextindex < _kLyrics.Lines[_line].Syllables.Count())
+                {
+                    _nexttime = _kLyrics.Lines[_line].Syllables[nextindex].StartTime;
+                }
+
+                // Save last value of percent
+                lastpercent = percent;
+
+                // Set new value of percent to the end of the previous word
+                // And after that, add a small progressive increment in order to increase the percentage
+
+                // |--- last word ---|--- new word --------------------------|
+                //                   | percent => percent+pas => percent+pas
+                    
+                if (_line < LinesLengths.Count())
+                    percent = (lastCurLength / LinesLengths[_line]);
+
+                // Caculate distance between LastCurLength et CurLength
+                float d = (float)(CurLength - lastCurLength);
+
+                if (_transitionEffect == TransitionEffects.None)
+                {
+                    _steppercent = d;
+                }
+                else if (_transitionEffect == TransitionEffects.Progressive)
+                {
+
+                    // Set 3000 occurences to reach the end 
+                    //_steppercent = d / 3000;
+
+                    if (d > 0 && (_nexttime - _lasttime) > 0)
+                    {
+                        _steppercent = (float)(_nexttime - _lasttime) / (d * (float)_timerintervall);
+                    }
+                }
+                
+                lastCurLength = CurLength;
+                lastindex = nextindex;
+
+                pBox.Invalidate();
+            }
+            else
+            {
+                // if same nextindex: progressive increase of percent
+                percent += _steppercent;
+
+                if (percent > (CurLength / LinesLengths[_line]))
+                    percent = (CurLength / LinesLengths[_line]);
+                
+                pBox.Invalidate();                
+            }
+        }
+
+
+        /// <summary>
+        /// Retrieve nextindex of current syllabe in the current line
+        /// </summary>
+        /// <returns></returns>       
+        private (int line, int index) GetNextIndex(int pos)
+        {
+            // Descending loop for lines
+            for (int j = _kLyrics.Lines.Count - 1; j >= 0; j--)
+            {
+                // Descending loop for Syllables
+                for (int i = _kLyrics.Lines[j].Syllables.Count - 1; i >= 0; i--)
+                {
+                    // Search first index of Syllable for which pos is greater then startTime  
+                    if (_kLyrics.Lines[j].Syllables[i].StartTime > 0 && pos > _kLyrics.Lines[j].Syllables[i].StartTime)
+                    {
+                        // line 10      1000 1500 2000          index 1 2 3
+                        // line 11      2500 3000 3500          index 4 5 6
+
+                        // For ex pos = 2600 => pos > 2500 (index  4)
+                        // => line = 11 & next index = 5                    OK
+
+                        // For ex pos = 2200 => pos > 2000 (index 3)
+                        // => line == 10 & next index = 3 + 1  = 4 which is not in this line
+                        // => line = 11 & next index = 0
+
+                        if (i + 1 < _kLyrics.Lines[j].Syllables.Count)
+                            return (j, i + 1);
+                        else
+                        {
+                            // End of line
+                            // i + 2 seems to work, but why ?
+                            return (j, i + 2);
+                        }                                                
+                    }
+                }
+            }
+            return (0, 2);
+        }
+
+
+
+        /// <summary>
+        /// Mesure length of a portion of line
+        /// </summary>
+        /// <param name="idx"></param>
+        /// <returns></returns>
+        private float GetCurLength(int nextindex)
+        {
+            float res = 0;
+
+            active_fragment = string.Empty;
+            active_fragment_length = 0;
+            highlight_fragment = string.Empty;
+            highlight_fragment_length = 0;
+            inactive_fragment = string.Empty;
+            inactive_fragment_length = 0;
+
+            // Search for the current line
+            for (int i = 0; i < _kLyrics.Lines[_line].Syllables.Count(); i++)
+            {
+                // Fragments before nextindex
+                if (i < nextindex)
+                {
+                    res += MeasureString(_kLyrics.Lines[_line].Syllables[i].Text, _karaokeFont.Size);
+
+                    if (nextindex >= 0 && i < nextindex - 1)
+                    {
+                        // Already sung
+                        active_fragment += _kLyrics.Lines[_line].Syllables[i].Text;
+                        active_fragment_length += MeasureString(_kLyrics.Lines[_line].Syllables[i].Text, _karaokeFont.Size);
+                    }
+                    else if (nextindex > 0 && i == nextindex - 1)
+                    {
+                        // Being sung
+                        highlight_fragment = _kLyrics.Lines[_line].Syllables[i].Text;
+                        highlight_fragment_length = MeasureString(_kLyrics.Lines[_line].Syllables[i].Text, _karaokeFont.Size);
+                    }
+                }
+                else if (i >= nextindex)
+                {
+                    inactive_fragment += _kLyrics.Lines[_line].Syllables[i].Text;
+                    inactive_fragment_length += MeasureString(_kLyrics.Lines[_line].Syllables[i].Text, _karaokeFont.Size);                    
+                }
+            }
+
+            //if (inactive_fragment.Length > 0) 
+            //    Console.WriteLine("inactive_fragment = " + inactive_fragment);
+
+            return res;
+        }
+
+        #endregion Receive pos from player
+
+
         #region start stop
 
         // Start Display lyrics
@@ -3130,111 +3668,14 @@ namespace keffect
             lastCurLength = 0;
             CurLength = 0;
 
-            current_fragment = string.Empty;
+            active_fragment = string.Empty;
             highlight_fragment = string.Empty;
             inactive_fragment = string.Empty;
 
             pBox.Invalidate();            
         }
 
-        /// <summary>
-        ///  player position
-        /// </summary>
-        /// <param name="pos"></param>
-        public void SetPos(double ms)
-        {            
-            SetPosition((int)ms);            
-
-        }
-
-        private void SetPosition(int pos)
-        {       
-            // Search _line & nextindex of next lyric to play
-            (_line,  nextindex) = GetNextIndex(pos);
-
-            // Length of partial line
-            CurLength = GetCurLength(nextindex);
-
-            // New word to highlight
-            // Warning: in case of full lines, nextindex is allways the same and not different than lastIndex
-            if (nextindex != lastindex || _line != _lastLine)
-            {                                
-                // Line changed
-                if (_line !=  _lastLine)
-                {
-                    _lastLine = _line;
-                    percent = 0;
-                    lastpercent = 0;
-                    nextindex = 0;
-                    lastindex = 0;
-                    lastCurLength = 0;
-                    CurLength = 0;
-
-                    _lasttime = _nexttime;
-                }
-                
-                _FirstLineToShow = _line;
-                _LastLineToShow = SetLastLineToShow(_FirstLineToShow, _lines, _nbLyricsLines);
-                
-              
-                if (nextindex < _kLyrics.Lines[_line].Syllables.Count())
-                {
-                    _nexttime = _kLyrics.Lines[_line].Syllables[nextindex].StartTime;
-                }
-
-
-
-                // Save last value of percent
-                lastpercent = percent;
-
-                // Set new value of percent to the end of the previous word
-                // And after that, add a small progressive increment in order to increase the percentage
-
-                // |--- last word ---|--- new word --------------------------|
-                //                   | percent => percent+pas => percent+pas
-
-                if (_line < LinesLengths.Count())
-                    percent = (lastCurLength / LinesLengths[_line]);
-
-
-
-                // Caculate distance between LastCurLength et CurLength
-                float d = (float)(CurLength - lastCurLength);
-
-                if (_transitionEffect == TransitionEffects.None)
-                {
-                    _steppercent = d;
-                }
-                else if (_transitionEffect == TransitionEffects.Progressive)
-                {
-
-                    // Set 3000 occurences to reach the end 
-                    //_steppercent = d / 3000;
-
-                    if (d > 0 && (_nexttime - _lasttime) > 0)
-                    {
-                        _steppercent = (float)(_nexttime - _lasttime) / (d*(float)_timerintervall);
-                    }                    
-                }
-                
-                lastCurLength = CurLength;
-                lastindex = nextindex;
-                
-                pBox.Invalidate();                
-            }
-            else
-            {
-                // if same nextindex: progressive increase of percent
-                percent += _steppercent;
-                //Console.WriteLine("percent = " + percent);
-
-                if (percent > (CurLength / LinesLengths[_line]))
-                {
-                    percent = (CurLength / LinesLengths[_line]);
-                }
-                pBox.Invalidate();                
-            }
-        }
+     
 
         #endregion start stop
 
@@ -3390,6 +3831,10 @@ namespace keffect
 
         #endregion SlideShow with timer   
 
+        #endregion SlideShow
+
+
+        #region Terminate
 
         /// <summary>
         /// Terminate
@@ -3401,12 +3846,10 @@ namespace keffect
 
             timerChangeImage?.Stop();
             timerTransition?.Stop();
-
         }
 
+        #endregion Terminate
 
-        #endregion SlideShow
 
-      
     }
 }

@@ -117,14 +117,14 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
-  <data name="toolTip1.TrayLocation" type="System.Drawing.Point, System.Drawing">
+  <metadata name="toolTip1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>17, 17</value>
-  </data>
+  </metadata>
   <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
   <data name="btnEditLyrics.FlatStyle" type="System.Windows.Forms.FlatStyle, System.Windows.Forms">
     <value>Flat</value>
   </data>
+  <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
   <data name="btnEditLyrics.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAABoAAAAaCAYAAACpSkzOAAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAL
@@ -481,6 +481,17 @@
   <data name="karaokeEffect1.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
     <value>Fill</value>
   </data>
+  <data name="kLyrics1.Lines" mimetype="application/x-microsoft.net.object.binary.base64">
+    <value>
+        AAEAAAD/////AQAAAAAAAAAMAgAAAJMBS2FyYW9rZUx5cmljcywgVmVyc2lvbj0xLjAuMC4wLCBDdWx0
+        dXJlPW5ldXRyYWwsIFB1YmxpY0tleVRva2VuPW51bGxdXSwgbXNjb3JsaWIsIFZlcnNpb249NC4wLjAu
+        MCwgQ3VsdHVyZT1uZXV0cmFsLCBQdWJsaWNLZXlUb2tlbj1iNzdhNWM1NjE5MzRlMDg5DAMAAABES2Fy
+        YW9rZUx5cmljcywgVmVyc2lvbj0xLjAuMC4wLCBDdWx0dXJlPW5ldXRyYWwsIFB1YmxpY0tleVRva2Vu
+        PW51bGwFAQAAACxTeXN0ZW0uQ29sbGVjdGlvbnMuR2VuZXJpYy5MaXN0YDFbW2thci5rTGluZQMAAAAG
+        X2l0ZW1zBV9zaXplCF92ZXJzaW9uBAAAC2thci5rTGluZVtdAwAAAAgIAgAAAAkEAAAAAAAAAAAAAAAH
+        BAAAAAABAAAAAAAAAAQJa2FyLmtMaW5lAwAAAAs=
+</value>
+  </data>
   <data name="karaokeEffect1.Location" type="System.Drawing.Point, System.Drawing">
     <value>0, 60</value>
   </data>
@@ -529,15 +540,15 @@
   <data name="&gt;&gt;pnlWindow.ZOrder" xml:space="preserve">
     <value>0</value>
   </data>
-  <data name="pnlTimer.TrayLocation" type="System.Drawing.Point, System.Drawing">
+  <metadata name="pnlTimer.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>308, 17</value>
-  </data>
-  <data name="$this.Localizable" type="System.Boolean, mscorlib">
+  </metadata>
+  <metadata name="$this.Localizable" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
-  </data>
-  <data name="$this.TrayHeight" type="System.Int32, mscorlib">
+  </metadata>
+  <metadata name="$this.TrayHeight" type="System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>67</value>
-  </data>
+  </metadata>
   <data name="$this.ClientSize" type="System.Drawing.Size, System.Drawing">
     <value>584, 412</value>
   </data>

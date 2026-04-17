@@ -397,7 +397,12 @@ namespace Karaboss.Mp3
                 Application.OpenForms["frmMp3Lyrics"].Close();
             }
 
-            
+            if (Application.OpenForms.OfType<frmMp3LyrOptions>().Count() > 0)
+            {
+                Application.OpenForms["frmMp3LyrOptions"].Close();
+            }
+
+
             // Active le formulaire frmExplorer
             if (Application.OpenForms.OfType<frmExplorer>().Count() > 0)
             {
