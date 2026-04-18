@@ -96,7 +96,7 @@ namespace PicControl
         #endregion classes
 
 
-        #region KaraokeLyrics
+        #region Karaoke Lyrics
 
         private kLyrics _kLyrics;
         public kLyrics KLyrics 
@@ -104,14 +104,15 @@ namespace PicControl
             get { return _kLyrics; } 
             set 
             {
-                if (value == null) return;                               
+                if (value == null) return;
+                if (value.Lines == null) return;
                 _kLyrics = value; 
-                if (_kLyrics.Lines.Count > 0)
+                if (_kLyrics != null && _kLyrics.Lines.Count > 0)
                     LoadSong();
             } 
         }
 
-        #endregion KaraokeLyrics
+        #endregion Karaoke Lyrics
 
 
         #region Karaoke display type
@@ -146,8 +147,8 @@ namespace PicControl
                 if (value != dirSlideShow)
                 {
                     dirSlideShow = value;
-                    
-                    InitSlideShow(dirSlideShow);
+
+                    SetBackground(dirSlideShow);
                     pBox.Invalidate();
                     
                 }
@@ -582,11 +583,11 @@ namespace PicControl
                 {
                     case "Diaporama":
                         if (dirSlideShow != null && Directory.Exists(dirSlideShow) && freqSlideShow > 0)
-                            InitSlideShow(dirSlideShow);
+                            SetBackground(dirSlideShow);
                         break;
 
-                    case "SolidColor":
-                        //m_Cancel = true;
+                    
+                    case "SolidColor":                        
                         Terminate();
                         _timerGradient.Stop();
                         pBox.Image = null;
@@ -595,6 +596,7 @@ namespace PicControl
                         pBox.Invalidate();
                         break;
 
+                    
                     case "Gradient":
                         //m_Cancel = true;
                         Terminate();
@@ -839,8 +841,7 @@ namespace PicControl
             
             #endregion
             
-            m_ImageFilePaths = new List<string>();
-            //m_Alpha = 255;
+            m_ImageFilePaths = new List<string>();            
             imgLayout = ImageLayout.Stretch;
 
             Beat = 200; // Default speed for rhythm animation
@@ -926,11 +927,12 @@ namespace PicControl
 
         #endregion MoveWindows
 
+
         /// <summary>
         /// Define new slideShow directory and frequency
         /// </summary>
         /// <param name="dirImages"></param>
-        public void InitSlideShow(string dirImages)
+        public void SetBackground(string dirImages)
         {
             try
             {
@@ -980,7 +982,7 @@ namespace PicControl
                             StartBgW();
                             */
 
-                            LaunchSlideShow();
+                            InitSlideShow();
 
                             break;
                     }
@@ -1318,7 +1320,7 @@ namespace PicControl
         #region SlideShow with timer       
 
         // New Slideshow
-        private void LaunchSlideShow()
+        private void InitSlideShow()
         {
             mBlend = 0;
             count = 0;
@@ -1425,7 +1427,7 @@ namespace PicControl
         {
             _nbLyricsLines = 1;
             dirSlideShow = null;
-            InitSlideShow(null);           
+            SetBackground(null);           
 
             // Initial position
             _currentTextPos = -1;
@@ -3582,7 +3584,7 @@ namespace PicControl
 
             if (_kLyrics.Lines[_FirstLineToShow].ToString() == "(Introduction)" || _kLyrics.Lines[_FirstLineToShow].ToString() == "(Instrumental)")
             {
-                Console.WriteLine("************** Part ***************");
+                //Console.WriteLine("************** Part ***************");
                 DrawInformation(e, "(Instrumental)", y3 + _lineHeight / 2);
                 return;
             }

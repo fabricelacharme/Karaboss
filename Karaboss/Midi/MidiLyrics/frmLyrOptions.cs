@@ -138,7 +138,7 @@ namespace Karaboss
             LoadOptions();     
             SetOptions();
 
-            pBox.DirSlideShow = dirSlideShow;
+            
             pBox.bIsSettings = true;
             pBox.LoadDemoText();
         }
@@ -319,10 +319,9 @@ namespace Karaboss
 
                 // SlideShow directory
                 dirSlideShow = Properties.Settings.Default.dirSlideShow;
-
-                if (Directory.Exists(dirSlideShow) == false)
-                    dirSlideShow = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), Application.ProductName);
-
+                if (!Directory.Exists(dirSlideShow))
+                    dirSlideShow = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), Application.ProductName);                
+                pBox.DirSlideShow = dirSlideShow;
 
                 freqSlideShow = Properties.Settings.Default.freqSlideShow;
 

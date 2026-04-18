@@ -566,10 +566,12 @@ namespace Karaboss.Mp3
             karaokeEffect1.DoubleClick += new DoubleClickEventHandler(karaokeEffect1_DoubleClick);
 
             //LoadLyrics();
-            
-            AddMouseMoveHandler(this);
+                                  
             LoadOptions();
-            SetOptions();            
+            //SetOptions();            
+
+            AddMouseMoveHandler(this);
+
         }
 
 
@@ -582,6 +584,7 @@ namespace Karaboss.Mp3
         }
 
         #endregion Events
+
 
         #region initializations
 
@@ -618,26 +621,26 @@ namespace Karaboss.Mp3
                 {
 
                     case "Diaporama":
-                        _optionbackground = "Diaporama";
+                        OptionBackground = "Diaporama";
                         break;
                     case "SolidColor":
-                        _optionbackground = "SolidColor";
+                        OptionBackground = "SolidColor";
                         break;
 
                     case "Gradient":
-                        _optionbackground = "Gradient";
+                        OptionBackground = "Gradient";
                         break;
 
                     case "Rhythm":
-                        _optionbackground = "Rhythm";
+                        OptionBackground = "Rhythm";
                         break;
 
                     case "Transparent":
-                        _optionbackground = "Transparent";
+                        OptionBackground = "Transparent";
                         break;
 
                     default:
-                        _optionbackground = "Diaporama";
+                        OptionBackground = "Diaporama";
                         break;                   
                 }
                 OptionBackground = _optionbackground;
@@ -678,13 +681,20 @@ namespace Karaboss.Mp3
 
 
                 // Number of Lines to display
-                _nbLyricsLines = Properties.Settings.Default.TxtNbLines;
+                nbLyricsLines = Properties.Settings.Default.TxtNbLines;
                 // Frequency of slide show
                 FreqSlideShow = Properties.Settings.Default.freqSlideShow;
                 // Position image
                 SizeMode = Properties.Settings.Default.SizeMode;
                 
                 bTopMost = Properties.Settings.Default.frmMp3LyricsTopMost;
+
+                karaokeEffect1.timerIntervall = _timerintervall;
+
+                // Load balls times
+                if (_bShowBalls)
+                    LoadBallsTimes(Mp3LyricsMgmtHelper.mp3KaraokeLyrics);
+
             }
             catch (Exception e)
             {
@@ -692,6 +702,7 @@ namespace Karaboss.Mp3
             }
         }
 
+      
         #endregion initializations
 
 
@@ -878,16 +889,7 @@ namespace Karaboss.Mp3
         }
 
 
-        private void SetOptions()
-        {
-            karaokeEffect1.nbLyricsLines = _nbLyricsLines;
-            karaokeEffect1.KaraokeFont = _karaokeFont;
-            karaokeEffect1.timerIntervall = _timerintervall;
-
-            // Load balls times
-            if (_bShowBalls)
-                LoadBallsTimes(Mp3LyricsMgmtHelper.mp3KaraokeLyrics);
-        }
+       
 
 
         #endregion options

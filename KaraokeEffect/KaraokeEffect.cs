@@ -81,8 +81,8 @@ namespace keffect
 
         private float percent = 0;
         private float lastpercent = 0;
+        
         private long _timerintervall = 50;      // Intervall of timer of frmMp3Player
-
         public long timerIntervall
         {
             get { return _timerintervall; }
@@ -94,9 +94,6 @@ namespace keffect
             }
         }
 
-        private List<string[]> Lines;
-        private List<long[]> Times;
-        private string[] Texts;
         private float[] LinesLengths;
 
         private int nextindex = 0;
@@ -112,8 +109,7 @@ namespace keffect
         private int _LastLineToShow = 0;
 
         private int _lastLine = -1;
-        private int _line = 0;
-        private int _lines = 0;
+        //private int _line = 0;        
         private int _lineHeight = 0;
         private int _linesHeight = 0;
         private string _biggestLine = string.Empty;
@@ -139,7 +135,10 @@ namespace keffect
         public bool bIsSettings
         {
             get { return _bIsSettings; }
-            set { _bIsSettings = value; }
+            set 
+            { 
+                _bIsSettings = value; 
+            }
         }
 
         #endregion Is used for settings
@@ -178,8 +177,9 @@ namespace keffect
 
                     if (_kLyrics.Lines.Count > 0)
                     {
-                        //Init();
-                        //pBox?.Invalidate();
+                        if (_bIsSettings)                        
+                            Init();
+                        pBox?.Invalidate();
                         AjustText(_biggestLine); // pourquoi ? mystère. Mais ça marche
 
                     }
@@ -237,6 +237,7 @@ namespace keffect
 
 
         #region SlideShow
+
         // Paths of images
         private string[] m_ImageFilePaths;
 
@@ -340,6 +341,7 @@ namespace keffect
 
         #region Text transform
 
+        private int _nbLyricsLinesOrg;
         private int _nbLyricsLines = 3;
         [Description("The number of lines to display")]
         public int nbLyricsLines
@@ -348,8 +350,9 @@ namespace keffect
             set
             {
                 _nbLyricsLines = value;
-                //if (_kLyrics.Lines.Count > 0)
-                //    Init();
+                _nbLyricsLinesOrg = value;
+                if (bIsSettings)
+                    Init();
                 pBox.Invalidate();
             }
         }
@@ -435,7 +438,9 @@ namespace keffect
                         _borderthick = 1;
                         break;
                 }
-                //pBox?.Invalidate();
+                pBox?.Invalidate();
+
+
                 AjustText(_biggestLine);      // pourquoi ? mystère. Mais ça marche
             }
         }
@@ -547,7 +552,7 @@ namespace keffect
 
         // Background color
         private int _bpm;
-        private Color _BgColor = Color.Black;
+        private Color _BgColor; // = Color.Black;
         public Color BgColor
         {
             get
@@ -598,6 +603,7 @@ namespace keffect
                 {
                     case "Diaporama":
                         break;
+                    
                     case "SolidColor":                        
                         Terminate();
                         _timerGradient.Stop();
@@ -615,6 +621,7 @@ namespace keffect
                         pBox.Invalidate();
                         break;
 
+                    
                     case "Rhythm":                        
                         Terminate();
                         _timerGradient.Start();
@@ -783,6 +790,8 @@ namespace keffect
                 Init();                       
         }
 
+       
+
         #region Events
 
         /// <summary>
@@ -860,20 +869,10 @@ namespace keffect
             m_ImageFilePaths = new string[] { };
             m_BitmapsArray = new Bitmap[] { };
 
-
-            sf = new StringFormat(StringFormat.GenericTypographic) { FormatFlags = StringFormatFlags.MeasureTrailingSpaces };
-            //sf.Alignment = StringAlignment.Center;
+            sf = new StringFormat(StringFormat.GenericTypographic) { FormatFlags = StringFormatFlags.MeasureTrailingSpaces };            
             _karaokeFont = new Font("Comic Sans MS", emSize, FontStyle.Regular, GraphicsUnit.Pixel);
             
-            _steppercent = 0.01F;
-
-            // Default text
-            //kLine mp3KaraokeLine = new kLine(new List<Syllable> { new Syllable("Hello", 0, 500), new Syllable(" World", 500, 500) });                        
-            //_kLyrics.Add(mp3KaraokeLine);
-                       
-            
-            _nbLyricsLines = 1;
-
+            _steppercent = 0.01F;          
             _transitionEffect = TransitionEffects.None;
          }
 
@@ -897,6 +896,14 @@ namespace keffect
 
             // Load song with demo text
             Init();
+
+            // needs LinesLengths to be set => so launch Init() before
+
+            this.SetPos(500);   // 
+            this.SetPos(1010);  // after Lorem
+            this.SetPos(1510); // after ipsum
+            this.SetPos(2010); // after dolor     
+            
             pBox.Invalidate();
         }
 
@@ -1056,8 +1063,29 @@ namespace keffect
             if (_kLyrics == null) return;
             if (_kLyrics.Lines == null) return;
             if (_kLyrics.Lines.Count == 0) return;
-            
-            
+
+            // Upadate _nbLyricsLines
+            switch (KaraokeDisplayType)
+            {
+                case KaraokeDisplayTypes.FixedLines:
+                    _nbLyricsLines = _nbLyricsLinesOrg;
+                    break;
+                case KaraokeDisplayTypes.FourLinesSwapped:
+                    _nbLyricsLines = 4;
+                    break;
+                case KaraokeDisplayTypes.TwoLinesSwapped:
+                    _nbLyricsLines = 2;
+                    break;
+                case KaraokeDisplayTypes.ScrollingLinesBottomUp:
+                    _nbLyricsLines = _nbLyricsLinesOrg;
+                    break;
+                case KaraokeDisplayTypes.ScrollingLinesTopDown:
+                    _nbLyricsLines += _nbLyricsLinesOrg;
+                    break;
+                default:
+                    _nbLyricsLines = _nbLyricsLinesOrg;
+                    break;
+            }
             
             // Do not display paragraphs for some cases
             if (KaraokeDisplayType == KaraokeDisplayTypes.TwoLinesSwapped || KaraokeDisplayType == KaraokeDisplayTypes.FourLinesSwapped || !bShowParagraphs)
@@ -1082,7 +1110,7 @@ namespace keffect
             _biggestLine = GetBiggestLine();
             AjustText(_biggestLine);
 
-            _LastLineToShow = SetLastLineToShow(_FirstLineToShow, _lines, _nbLyricsLines);
+            _LastLineToShow = SetLastLineToShow(_FirstLineToShow,  _kLyrics.Lines.Count, _nbLyricsLines);
         }
 
         #endregion
@@ -1220,6 +1248,11 @@ namespace keffect
 
             switch (_optionbackground)
             {
+
+                case "SolidColor":
+                    e.Graphics.FillRectangle(new SolidBrush(_BgColor), new Rectangle(0, 0, this.Width, this.Height));
+                    break;
+
                 case "Diaporama":
                    
                     if (m_BitmapsArray.Length == 1)
@@ -2508,7 +2541,7 @@ namespace keffect
 
         private void DrawTextWithTwoLinesSwapped(PaintEventArgs e)
         {
-            _nbLyricsLines = 2;
+            //_nbLyricsLines = 2;
 
             switch (FrameType)
             {
@@ -2633,7 +2666,7 @@ namespace keffect
         #region Draw text with Four lines swapped
         private void DrawTextWithFourLinesSwapped(PaintEventArgs e)
         {
-            _nbLyricsLines = 4;
+            //_nbLyricsLines = 4;
 
             switch (FrameType)
             {
@@ -3465,21 +3498,26 @@ namespace keffect
 
         private void SetPosition(int pos)
         {                        
-            // Search _line & nextindex of next lyric to play
-            (_line, nextindex) = GetNextIndex(pos);
+            // Search _line & index of the next lyric to play
+            (_FirstLineToShow, nextindex) = GetNextIndex(pos);
 
-            // Length of partial line
-            CurLength = GetCurLength(nextindex);
+            // Mesure length of a portion of line (already sung + being sung)
+            // used to display the percentage of syllables completed in the line
+
+            // active_fragment, active_fragment_length          part of the line already sung
+            // highlight_fragment, highlight_fragment_length    part of the line being sung 
+            // inactive_fragment, inactive_fragment_length      part of the line not yet sung
+            CurLength = GetCurLength(_FirstLineToShow, nextindex);
 
 
             // New word to highlight
             // Warning: in case of full lines, nextindex is allways the same and not different than lastIndex
-            if (nextindex != lastindex || _line != _lastLine)
+            if (nextindex != lastindex || _FirstLineToShow != _lastLine)
             {
                 // Line changed
-                if (_line != _lastLine)
+                if (_FirstLineToShow != _lastLine)
                 {
-                    _lastLine = _line;
+                    _lastLine = _FirstLineToShow;
                     percent = 0;
                     lastpercent = 0;
                     nextindex = 0;
@@ -3490,14 +3528,14 @@ namespace keffect
                     _lasttime = _nexttime;
                 }
 
-                _FirstLineToShow = _line;
-                _LastLineToShow = SetLastLineToShow(_FirstLineToShow, _lines, _nbLyricsLines);
+                //_FirstLineToShow = _line;
+                _LastLineToShow = SetLastLineToShow(_FirstLineToShow, _kLyrics.Lines.Count, _nbLyricsLines);
 
 
-                if (nextindex < _kLyrics.Lines[_line].Syllables.Count())
-                {
-                    _nexttime = _kLyrics.Lines[_line].Syllables[nextindex].StartTime;
-                }
+                // StartTime of nextindex
+                if (nextindex < _kLyrics.Lines[_FirstLineToShow].Syllables.Count())                
+                    _nexttime = _kLyrics.Lines[_FirstLineToShow].Syllables[nextindex].StartTime;
+                
 
                 // Save last value of percent
                 lastpercent = percent;
@@ -3508,9 +3546,11 @@ namespace keffect
                 // |--- last word ---|--- new word --------------------------|
                 //                   | percent => percent+pas => percent+pas
                     
-                if (_line < LinesLengths.Count())
-                    percent = (lastCurLength / LinesLengths[_line]);
+                if (_FirstLineToShow < LinesLengths.Count())
+                    percent = (lastCurLength / LinesLengths[_FirstLineToShow]);
 
+
+                // CurLength is the percentage of syllables completed in the line (already sung + being sung)
                 // Caculate distance between LastCurLength et CurLength
                 float d = (float)(CurLength - lastCurLength);
 
@@ -3540,8 +3580,8 @@ namespace keffect
                 // if same nextindex: progressive increase of percent
                 percent += _steppercent;
 
-                if (percent > (CurLength / LinesLengths[_line]))
-                    percent = (CurLength / LinesLengths[_line]);
+                if (percent > (CurLength / LinesLengths[_FirstLineToShow]))
+                    percent = (CurLength / LinesLengths[_FirstLineToShow]);
                 
                 pBox.Invalidate();                
             }
@@ -3590,11 +3630,11 @@ namespace keffect
 
 
         /// <summary>
-        /// Mesure length of a portion of line
+        /// Mesure length of a portion of line (already sung + being sung)
         /// </summary>
         /// <param name="idx"></param>
         /// <returns></returns>
-        private float GetCurLength(int nextindex)
+        private float GetCurLength(int curline, int nextindex)
         {
             float res = 0;
 
@@ -3606,30 +3646,30 @@ namespace keffect
             inactive_fragment_length = 0;
 
             // Search for the current line
-            for (int i = 0; i < _kLyrics.Lines[_line].Syllables.Count(); i++)
+            for (int i = 0; i < _kLyrics.Lines[curline].Syllables.Count(); i++)
             {
                 // Fragments before nextindex
                 if (i < nextindex)
                 {
-                    res += MeasureString(_kLyrics.Lines[_line].Syllables[i].Text, _karaokeFont.Size);
+                    res += MeasureString(_kLyrics.Lines[curline].Syllables[i].Text, _karaokeFont.Size);
 
                     if (nextindex >= 0 && i < nextindex - 1)
                     {
                         // Already sung
-                        active_fragment += _kLyrics.Lines[_line].Syllables[i].Text;
-                        active_fragment_length += MeasureString(_kLyrics.Lines[_line].Syllables[i].Text, _karaokeFont.Size);
+                        active_fragment += _kLyrics.Lines[curline].Syllables[i].Text;
+                        active_fragment_length += MeasureString(_kLyrics.Lines[curline].Syllables[i].Text, _karaokeFont.Size);
                     }
                     else if (nextindex > 0 && i == nextindex - 1)
                     {
                         // Being sung
-                        highlight_fragment = _kLyrics.Lines[_line].Syllables[i].Text;
-                        highlight_fragment_length = MeasureString(_kLyrics.Lines[_line].Syllables[i].Text, _karaokeFont.Size);
+                        highlight_fragment = _kLyrics.Lines[curline].Syllables[i].Text;
+                        highlight_fragment_length = MeasureString(_kLyrics.Lines[curline].Syllables[i].Text, _karaokeFont.Size);
                     }
                 }
                 else if (i >= nextindex)
                 {
-                    inactive_fragment += _kLyrics.Lines[_line].Syllables[i].Text;
-                    inactive_fragment_length += MeasureString(_kLyrics.Lines[_line].Syllables[i].Text, _karaokeFont.Size);                    
+                    inactive_fragment += _kLyrics.Lines[curline].Syllables[i].Text;
+                    inactive_fragment_length += MeasureString(_kLyrics.Lines[curline].Syllables[i].Text, _karaokeFont.Size);                    
                 }
             }
 
@@ -3647,7 +3687,7 @@ namespace keffect
         // Start Display lyrics
         public void Start()
         {
-            _line = 0;
+            _FirstLineToShow = 0;
             percent = 0;
             lastpercent = 0;
             nextindex = 0;
@@ -3659,10 +3699,9 @@ namespace keffect
         }
 
         public void Stop()
-        {
-            _line = 0;
+        {            
             _FirstLineToShow = 0;
-            _LastLineToShow = SetLastLineToShow(_FirstLineToShow, _lines, _nbLyricsLines);
+            _LastLineToShow = SetLastLineToShow(_FirstLineToShow, _kLyrics.Lines.Count, _nbLyricsLines);
 
             percent = 0;
             lastpercent = 0;
@@ -3711,7 +3750,6 @@ namespace keffect
         /// <param name="dirImages"></param>
         public void SetBackground(string dirImages)
         {
-
             if (dirImages == null || !Directory.Exists(dirImages))
             {
                 pBox.BackColor = Color.Black;
@@ -3720,9 +3758,7 @@ namespace keffect
             
             try
             {
-
                 m_CurrentImage = null;
-
                 pBox.Image = null;
                 pBox.Invalidate();                
                                 
@@ -3739,8 +3775,7 @@ namespace keffect
 
                     if (_optionbackground == "Diaporama")
                     {
-                        LoadImageList(dirImages);
-                        //C = m_ImageFilePaths.Count;
+                        LoadImageList(dirImages);                        
                         C = m_BitmapsArray.Length;
                     }
 
@@ -3755,7 +3790,6 @@ namespace keffect
                             break;
                         default:                            
                             InitSlideShow();
-
                             break;
                     }
                 }
@@ -3831,7 +3865,6 @@ namespace keffect
         {
             timerTransition.Enabled = true;
         }
-
 
         #endregion SlideShow with timer   
 

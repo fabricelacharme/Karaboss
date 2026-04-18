@@ -98,10 +98,16 @@ namespace Karaboss.Mp3
 
             TopMost = true;
 
-            LoadDefaultOptions();
-
             LoadOptions();
             SetOptions();
+
+
+            //LoadDefaultOptions();
+                        
+            // Control used in settings
+            karaokeEffect1.bIsSettings = true;
+            karaokeEffect1.LoadDemoText();
+
         }
 
 
@@ -138,6 +144,7 @@ namespace Karaboss.Mp3
         }
 
 
+      
         private void LoadDefaultOptions()
         {
             
@@ -219,6 +226,8 @@ namespace Karaboss.Mp3
 
                 // Karaoke display types
                 // karaokeEffect1 is updated by the options form when changing the display type, so we need to set it before setting the selected item in the combo box
+                lblNumberOfLines.Visible = UpDownNbLines.Visible = true;
+
                 PopulateKaraokeDisplayTypes();
                 KaraokeDisplayType = Properties.Settings.Default.KaraokeDisplayType;
                 foreach (KeyValuePair<string, string> valuePair in cbKaraokeType.Items)
@@ -232,6 +241,9 @@ namespace Karaboss.Mp3
                         }
                     }
                 }
+
+                           
+
 
                 // Force Uppercase
                 bForceUppercase = Karaclass.m_ForceUppercase;
@@ -335,10 +347,9 @@ namespace Karaboss.Mp3
 
                 // SlideShow directory
                 dirSlideShow = Properties.Settings.Default.dirSlideShow;
-
                 if (Directory.Exists(dirSlideShow) == false)
                     dirSlideShow = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), Application.ProductName);
-
+                
 
                 freqSlideShow = Properties.Settings.Default.freqSlideShow;
 
@@ -544,7 +555,8 @@ namespace Karaboss.Mp3
         private void SetOptions()
         {
             try
-            {
+            {                
+
                 pnlBalls.Visible = chkDisplayBalls.Checked;
 
                 // Nombre de lignes à afficher
@@ -785,6 +797,8 @@ namespace Karaboss.Mp3
         /// <param name="e"></param>
         private void frmMp3LyrOptions_Load(object sender, EventArgs e)
         {
+            lblNumberOfLines.Visible = UpDownNbLines.Visible;
+
             this.TopMost = true;
             cboColor.DisplayKnownColors(cbGrad0);
             cboColor.DisplayKnownColors(cbGrad1);
@@ -1066,7 +1080,8 @@ namespace Karaboss.Mp3
         private void cbKaraokeType_SelectedIndexChanged(object sender, EventArgs e)
         {
             try
-            {
+            {                
+
                 if (cbKaraokeType.SelectedValue.GetType() == typeof(string))
                 {
                     KaraokeDisplayType = cbKaraokeType.SelectedValue.ToString();
@@ -1080,8 +1095,10 @@ namespace Karaboss.Mp3
                 switch (KaraokeDisplayType)
                 {
                 case "FixedLines":
-                    karaokeEffect1.KaraokeDisplayType = KaraokeDisplayTypes.FixedLines;
-                    break;
+                    karaokeEffect1.KaraokeDisplayType = KaraokeDisplayTypes.FixedLines;                        
+                        UpDownNbLines.Visible = true;
+                        lblNumberOfLines.Visible = true;
+                        break;
                 case "ScrollingLinesBottomUp":
                     karaokeEffect1.KaraokeDisplayType = KaraokeDisplayTypes.ScrollingLinesBottomUp;
                     break;
@@ -1090,15 +1107,20 @@ namespace Karaboss.Mp3
                     break;
                 case "TwoLinesSwapped":
                     karaokeEffect1.KaraokeDisplayType = KaraokeDisplayTypes.TwoLinesSwapped;
+                    UpDownNbLines.Visible = false;
                     break;
                 case "FourLinesSwapped":
                     karaokeEffect1.KaraokeDisplayType = KaraokeDisplayTypes.FourLinesSwapped;
-                    break;
+                    UpDownNbLines.Visible = false;
+                        break;
 
                 default:
                     karaokeEffect1.KaraokeDisplayType = KaraokeDisplayTypes.FixedLines;
-                    break;
+                        UpDownNbLines.Visible = true;
+                        break;
                 }
+
+                lblNumberOfLines.Visible = UpDownNbLines.Visible;
 
             } 
             catch (Exception ex)
@@ -1307,6 +1329,7 @@ namespace Karaboss.Mp3
 
         #region select color with picker
 
+       
         private void btnActiveColorPicker_Click(object sender, EventArgs e)
         {
             SelectColorFromPicker(txtActiveColor);
@@ -1413,8 +1436,9 @@ namespace Karaboss.Mp3
 
 
 
+
         #endregion functions
 
-        
+       
     }
 }
