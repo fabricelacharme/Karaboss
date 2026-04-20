@@ -79,6 +79,9 @@ namespace keffect
 
         #region Others
 
+        DateTime _startTime;
+        DateTime _endTime;
+
         private float percent = 0;
         private float lastpercent = 0;
         
@@ -104,7 +107,7 @@ namespace keffect
         double _nexttime;
         double _lasttime;
 
-
+        private bool bInformationLine = false;
         private int _FirstLineToShow = 0;
         private int _LastLineToShow = 0;
 
@@ -1003,7 +1006,7 @@ namespace keffect
             kLyrics klsWithinstrumentals = new kLyrics();
             kLine line;
             string text = string.Empty;
-
+            double tend = 0;
             
             // Introduction
             
@@ -1017,23 +1020,45 @@ namespace keffect
                     {
 
                         t = kls.Lines[i].Syllables[j].StartTime;
+                        
+                        // introduction
                         if (i == 0 && j == 0)
                         {
-                            line.Add(new Syllable() { Text = "(Introduction)", StartTime = 0, CharType = Syllable.CharTypes.Text });
+                            // Start of intro
+                            line.Add(new Syllable() { Text = "(Introduction)", StartTime = 0, CharType = Syllable.CharTypes.Information });
                             klsWithinstrumentals.Add(line);
+
+                            // end of intro = just before first lyric
+                            tend = t;
+                            if (tend -1000 > 0)
+                                tend = tend -1000;
+                            line = new kLine();
+                            line.Add(new Syllable() { Text = "I", StartTime = tend, CharType = Syllable.CharTypes.Information });
+                            klsWithinstrumentals.Add(line);
+
                             line = new kLine();
                         }
                         else if (t - tOnPrevious > deltaInstrumental)
                         {
-                            // An Instrumental part exists from tPrevious to t
+                            // An Instrumental part exists from tOnPrevious to t
                             // When can add a lyric called "(Instrumental)" a few time after tPrevious
 
                             if (line.Syllables.Count > 0)
                                 klsWithinstrumentals.Add(line);
 
                             line = new kLine();
-                            line.Add(new Syllable() { Text = "(Instrumental)", StartTime = tOnPrevious + duration, CharType = Syllable.CharTypes.Text });
+                            line.Add(new Syllable() { Text = "(Instrumental)", StartTime = tOnPrevious + duration, CharType = Syllable.CharTypes.Information });
                             klsWithinstrumentals.Add(line);
+
+                            tend = t;
+                            if (tend - 1000 > 0)
+                                tend = tend -1000;
+                            
+                            line = new kLine();
+                            line.Add(new Syllable() { Text = "I", StartTime = tend, CharType = Syllable.CharTypes.Information });
+                            klsWithinstrumentals.Add(line);
+
+
                             line = new kLine();
                         }
                         tOnPrevious = t;
@@ -1045,11 +1070,20 @@ namespace keffect
 
             // Instrumental at the end
             t = _kLyrics.Lines.Last().Syllables.Last().StartTime;
+            
             if (_duration * 1000 - t > deltaInstrumental)
             {                
                 line = new kLine();
-                line.Add(new Syllable() { Text = "(Instrumental)", StartTime = t + duration, CharType = Syllable.CharTypes.Text });
+                line.Add(new Syllable() { Text = "(Instrumental)", StartTime = t + duration, CharType = Syllable.CharTypes.Information });
                 klsWithinstrumentals.Add(line);
+
+
+                tend = _duration * 1000 - 1000;
+                line = new kLine();
+                line.Add(new Syllable() { Text = "I", StartTime = t + duration, CharType = Syllable.CharTypes.Information });
+                klsWithinstrumentals.Add(line);
+
+
             }
 
 
@@ -1464,7 +1498,8 @@ namespace keffect
                 // Fill GraphicsPath path in white => full text is white                    
                 e.Graphics.FillPath(InactiveColorBrush, pth);
                 // Outline the text                                
-                e.Graphics.DrawPath(InactiveBorderPen, pth);
+                if (_borderthick > 0)
+                    e.Graphics.DrawPath(InactiveBorderPen, pth);
 
                 #endregion Draw static text (no active and highlight fragments)
             }
@@ -1507,7 +1542,8 @@ namespace keffect
                     e.Graphics.FillPath(ActiveColorBrush, pathActive);
 
                     // Outline the text                                
-                    e.Graphics.DrawPath(ActiveBorderPen, pathActive);
+                    if (_borderthick > 0)
+                        e.Graphics.DrawPath(ActiveBorderPen, pathActive);
 
                     pathActive.Dispose();
                 }
@@ -1545,7 +1581,8 @@ namespace keffect
                     e.Graphics.FillPath(HighlightColorBrush, pathHighlight);
 
                     // Outline text                
-                    e.Graphics.DrawPath(ActiveBorderPen, pathHighlight);
+                    if (_borderthick > 0)
+                        e.Graphics.DrawPath(ActiveBorderPen, pathHighlight);
 
                     pathHighlight.Dispose();
                 }
@@ -1582,8 +1619,9 @@ namespace keffect
                     // Draw the text               
                     e.Graphics.FillPath(InactiveColorBrush, pathInactive);
 
-                    // Outline text                
-                    e.Graphics.DrawPath(InactiveBorderPen, pathInactive);
+                    // Outline the text
+                    if (_borderthick > 0)
+                        e.Graphics.DrawPath(InactiveBorderPen, pathInactive);
 
                     pathInactive.Dispose();
 
@@ -2694,7 +2732,7 @@ namespace keffect
             }
         }
 
-        private void FlsDrawTextWithBorder(PaintEventArgs e)
+        private void FlsDrawTextWithBorder2(PaintEventArgs e)
         {
             // Center text vertically
             int y0 = VCenterText();
@@ -2716,7 +2754,7 @@ namespace keffect
             if (_FirstLineToShow  % 4 == 2)
             {
                 // First line is active
-                y1 = y0;                            //_FirstLineToShow          current         (update 3 & 4)
+                y1 = y0;                            //_FirstLineToShow              current         (update 3 & 4)
                 y2 = y0 + _lineHeight;              //_FirstLineToShow + 1      inactive
                 y3 = y0 + 2 * _lineHeight;          //_FirstLineToShow + 2      inactive
                 y4 = y0 + 3 * _lineHeight;          //_FirstLineToShow + 3      inactive
@@ -2730,7 +2768,7 @@ namespace keffect
             {
                 // 2nd line is active
                 y2 = y0;                            // _FirstLineToShow - 1     * active
-                y1 = y0 + _lineHeight;              // _FirstLineToShow         current         (no update)
+                y1 = y0 + _lineHeight;              // _FirstLineToShow             current         (no update)
                 y3 = y0 + 2 * _lineHeight;          // _FirstLineToShow + 1     inactive
                 y4 = y0 + 3 * _lineHeight;          // _FirstLineToShow + 2     inactive
 
@@ -2743,7 +2781,7 @@ namespace keffect
                 // 3rd line is active
                 y3 = y0;                            // _FirstLineToShow + 2     inactive
                 y4 = y0 + _lineHeight;              // _FirstLineToShow + 3     inactive
-                y1 = y0 + 2 * _lineHeight;          // _FirstLineToShow         current         (update 1 & 2)
+                y1 = y0 + 2 * _lineHeight;          // _FirstLineToShow             current         (update 1 & 2)
                 y2 = y0 + 3 * _lineHeight;          // _FirstLineToShow + 1     inactive
 
                 idx2 = _FirstLineToShow + 1;
@@ -2756,12 +2794,47 @@ namespace keffect
                 y3 = y0;                            // _FirstLineToShow + 1     inactive
                 y4 = y0 + _lineHeight;              // _FirstLineToShow + 2     inactive
                 y2 = y0 + 2 * _lineHeight;          // _FirstLineToShow - 1     * active
-                y1 = y0 + 3 * _lineHeight;          // _FirstLineToShow         current         (no update)
+                y1 = y0 + 3 * _lineHeight;          // _FirstLineToShow             current         (no update)
                 
                 idx2 = _FirstLineToShow - 1;
                 idx3 = _FirstLineToShow + 1;
                 idx4 = _FirstLineToShow + 2;
-            }            
+            }
+
+
+            // Display if different if the current line is an information type
+            if (_kLyrics.Lines[_FirstLineToShow].Syllables.Count == 1 && lastindex < _kLyrics.Lines[_FirstLineToShow].Syllables.Count && _kLyrics.Lines[_FirstLineToShow].Syllables[lastindex].CharType == Syllable.CharTypes.Information)
+            {
+                bInformationLine = true;
+                Console.WriteLine("************** Information **********");
+
+                // Information is displayed on top of the window
+                //
+                // Information      _FirstLineToShow
+                // empty
+                //                  _FirstLineToShow + 1
+                //                  _FirstLineToShow + 2
+
+                y1 = y0;                
+                y2 = y0 + 2 * _lineHeight;
+                y3 = y0 + 3 * _lineHeight;
+                // no y4
+
+                idx2 = _FirstLineToShow + 1;
+                idx3 = _FirstLineToShow + 2;
+
+                // Draw active line with borders
+                DrawActiveLineWithBorders(e, _FirstLineToShow, y1);
+
+                DrawInactiveLineWithBorders(e, idx2, y2);
+
+                DrawInactiveLineWithBorders(e, idx3, y3);
+
+                return;
+            }
+            
+
+
 
 
             // Draw active line with borders
@@ -2781,6 +2854,148 @@ namespace keffect
             if (idx4 >= 0 && _FirstLineToShow > 0)
                 DrawInactiveLineWithBorders(e, idx4, y4);
         }
+
+        private void FlsDrawTextWithBorder(PaintEventArgs e)
+        {
+            // Center text vertically
+            int y0 = VCenterText();
+
+            int y1 = 0;
+            int y2 = 0;
+            int y3 = 0;
+            int y4 = 0;
+            int idx2 = 0;
+            int idx3 = 0;
+            int idx4 = 0;
+
+            bool bUpdateNeeded = false;
+           
+            if (_FirstLineToShow % 4 == 0)
+            {
+                // First line is active
+                y1 = y0;                            //_FirstLineToShow              current         (update 3 & 4)
+                y2 = y0 + _lineHeight;              //_FirstLineToShow + 1      inactive
+                y3 = y0 + 2 * _lineHeight;          //_FirstLineToShow + 2      inactive
+                y4 = y0 + 3 * _lineHeight;          //_FirstLineToShow + 3      inactive
+
+                idx2 = _FirstLineToShow + 1;
+                idx3 = _FirstLineToShow + 2;
+                idx4 = _FirstLineToShow + 3;
+              
+                //bUpdateNeeded = true;
+            }
+            else if (_FirstLineToShow % 4 == 1)
+            {
+                // 2nd line is active
+                y2 = y0;                            // _FirstLineToShow - 1     * active
+                y1 = y0 + _lineHeight;              // _FirstLineToShow             current         (no update)
+                y3 = y0 + 2 * _lineHeight;          // _FirstLineToShow + 1     inactive
+                y4 = y0 + 3 * _lineHeight;          // _FirstLineToShow + 2     inactive
+
+                idx2 = _FirstLineToShow - 1;
+                idx3 = _FirstLineToShow + 1;
+                idx4 = _FirstLineToShow + 2;
+                
+            }
+            else if (_FirstLineToShow % 4 == 2)
+            {
+                // 3rd line is active
+                y3 = y0;                            // _FirstLineToShow + 2     inactive
+                y4 = y0 + _lineHeight;              // _FirstLineToShow + 3     inactive
+                y1 = y0 + 2 * _lineHeight;          // _FirstLineToShow             current         (update 1 & 2)
+                y2 = y0 + 3 * _lineHeight;          // _FirstLineToShow + 1     inactive
+
+                idx2 = _FirstLineToShow + 1;
+                idx3 = _FirstLineToShow + 2;
+                idx4 = _FirstLineToShow + 3;
+
+                if (!bUpdateNeeded)
+                {
+                    _startTime = DateTime.Now;
+                    _endTime = _startTime.AddMilliseconds(_kLyrics.Lines[_FirstLineToShow + 2].Syllables.First().StartTime - (_kLyrics.Lines[_FirstLineToShow + 1].Syllables.Last().StartTime + _kLyrics.Lines[_FirstLineToShow + 1].Syllables.Last().Duration));
+                    bUpdateNeeded = true;
+                }
+            }
+            else if (_FirstLineToShow % 4 == 3)
+            {
+                // 4th line is active
+                y3 = y0;                            // _FirstLineToShow + 1     inactive
+                y4 = y0 + _lineHeight;              // _FirstLineToShow + 2     inactive
+                y2 = y0 + 2 * _lineHeight;          // _FirstLineToShow - 1     * active
+                y1 = y0 + 3 * _lineHeight;          // _FirstLineToShow             current         (no update)
+
+                idx2 = _FirstLineToShow - 1;
+                idx3 = _FirstLineToShow + 1;
+                idx4 = _FirstLineToShow + 2;
+
+            }
+
+            /*
+            // Display if different if the current line is an information type
+            if (_kLyrics.Lines[_FirstLineToShow].Syllables.Count == 1 && lastindex < _kLyrics.Lines[_FirstLineToShow].Syllables.Count && _kLyrics.Lines[_FirstLineToShow].Syllables[lastindex].CharType == Syllable.CharTypes.Information)
+            {
+                bInformationLine = true;
+                Console.WriteLine("************** Information **********");
+
+                // Information is displayed on top of the window
+                //
+                // Information      _FirstLineToShow
+                // empty
+                //                  _FirstLineToShow + 1
+                //                  _FirstLineToShow + 2
+
+                y1 = y0;
+                y2 = y0 + 2 * _lineHeight;
+                y3 = y0 + 3 * _lineHeight;
+                // no y4
+
+                idx2 = _FirstLineToShow + 1;
+                idx3 = _FirstLineToShow + 2;
+
+                // Draw active line with borders
+                DrawActiveLineWithBorders(e, _FirstLineToShow, y1);
+
+                DrawInactiveLineWithBorders(e, idx2, y2);
+
+                DrawInactiveLineWithBorders(e, idx3, y3);
+
+                return;
+            }
+            */
+
+
+            // Draw active line with borders
+            DrawActiveLineWithBorders(e, _FirstLineToShow, y1);
+
+
+            // Line y2 must be drawned active when
+            bool IsActive = ((_FirstLineToShow % 4 == 1) || (_FirstLineToShow % 4 == 3)) ? true : false;
+
+            // Draw Inactive lines with borders
+            if (idx2 >= 0)
+                DrawInactiveLineWithBorders(e, idx2, y2, IsActive);
+
+
+            // Draw these lines only if they are less than 1 sec to arrive
+            if (bUpdateNeeded)
+            {
+                var duration = _endTime - DateTime.Now;
+                if (duration.Seconds > 2)
+                {
+                    return;
+                }
+                
+                
+            }
+
+
+            //if (idx3 >= 0 && _FirstLineToShow > 0)
+                DrawInactiveLineWithBorders(e, idx3, y3);
+
+            //if (idx4 >= 0 && _FirstLineToShow > 0)
+                DrawInactiveLineWithBorders(e, idx4, y4);
+        }
+
 
         private void FlsDrawTextWithShadow(PaintEventArgs e)
         {
@@ -3501,6 +3716,8 @@ namespace keffect
             // Search _line & index of the next lyric to play
             (_FirstLineToShow, nextindex) = GetNextIndex(pos);
 
+            
+            // CurLength:
             // Mesure length of a portion of line (already sung + being sung)
             // used to display the percentage of syllables completed in the line
 
@@ -3530,6 +3747,8 @@ namespace keffect
 
                 //_FirstLineToShow = _line;
                 _LastLineToShow = SetLastLineToShow(_FirstLineToShow, _kLyrics.Lines.Count, _nbLyricsLines);
+
+                
 
 
                 // StartTime of nextindex
@@ -3687,6 +3906,7 @@ namespace keffect
         // Start Display lyrics
         public void Start()
         {
+            bInformationLine = false;
             _FirstLineToShow = 0;
             percent = 0;
             lastpercent = 0;
@@ -3699,7 +3919,8 @@ namespace keffect
         }
 
         public void Stop()
-        {            
+        {
+            bInformationLine = false;
             _FirstLineToShow = 0;
             _LastLineToShow = SetLastLineToShow(_FirstLineToShow, _kLyrics.Lines.Count, _nbLyricsLines);
 

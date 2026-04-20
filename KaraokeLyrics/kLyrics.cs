@@ -30,8 +30,9 @@ namespace kar
         public enum CharTypes
         {
             Text = 1,
-            LineFeed = 2,
-            ParagraphSep = 3,
+            Information = 2,
+            LineFeed = 3,
+            ParagraphSep = 4,
         }
         public CharTypes CharType { get; set; }
         public string Text { get; set; }
