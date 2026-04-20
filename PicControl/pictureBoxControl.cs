@@ -1008,8 +1008,8 @@ namespace PicControl
             kLine line;
             for (int i = 0; i < kls.Lines.Count; i++)
             {
-                //if (kls.Lines[i].Syllables.First().CharType != Syllable.CharTypes.ParagraphSep)
-                if (!(kls.Lines[i].Syllables.Count == 1 && kls.Lines[i].Syllables.First().Text == string.Empty))
+                if (kls.Lines[i].Syllables.First().CharType != Syllable.CharTypes.ParagraphSep)
+                //if (!(kls.Lines[i].Syllables.Count == 1 && kls.Lines[i].Syllables.First().Text == string.Empty))
                 {
                     line = new kLine();
                     for (int j = 0; j < kls.Lines[i].Syllables.Count; j++)
@@ -1051,6 +1051,7 @@ namespace PicControl
         {
             int tOnPrevious = 0;
             int tOffPrevious = 0;
+            int tend = 0;
             double duration = 0;
             int t = 0;
             double deltaInstrumental = 8 * beatDuration;           
@@ -1071,9 +1072,19 @@ namespace PicControl
 
                         if (i == 0 && j == 0)
                         {
-                            line.Add(new Syllable() { Text = "(Introduction)", TicksOn = 0, CharType = Syllable.CharTypes.Text });
+                            line.Add(new Syllable() { Text = "(introduction)", TicksOn = 0, CharType = Syllable.CharTypes.Information });
                             klsWithinstrumentals.Add(line);
+
+                            // end of intro = just before first lyric
+                            tend = t;
+                            if (tend - 4 * beatDuration > 0)
+                                tend = tend - 4 * beatDuration;
                             line = new kLine();
+                            line.Add(new Syllable() { Text = "I", TicksOn = tend, CharType = Syllable.CharTypes.Information });
+                            klsWithinstrumentals.Add(line);
+
+                            line = new kLine();
+                            
                         }
                         else if (t - tOnPrevious > deltaInstrumental)
                         {
@@ -1084,8 +1095,18 @@ namespace PicControl
                                 klsWithinstrumentals.Add(line);
 
                             line = new kLine();
-                            line.Add(new Syllable() { Text = "(Instrumental)", TicksOn = tOffPrevious, TicksOff = t, CharType = Syllable.CharTypes.Text });
+                            line.Add(new Syllable() { Text = "(instrumental)", TicksOn = tOffPrevious, TicksOff = t, CharType = Syllable.CharTypes.Information });
                             klsWithinstrumentals.Add(line);
+
+                            tend = t;
+                            if (tend - 4 * beatDuration > 0)
+                                tend = tend - 4 * beatDuration;
+
+                            line = new kLine();
+                            line.Add(new Syllable() { Text = "I", TicksOn = tend, CharType = Syllable.CharTypes.Information });
+                            klsWithinstrumentals.Add(line);
+
+
                             line = new kLine();
                         }
                         tOnPrevious = t;
@@ -1101,7 +1122,12 @@ namespace PicControl
             if (_duration * 1000 - t > deltaInstrumental)
             {
                 line = new kLine();
-                line.Add(new Syllable() { Text = "(Instrumental)", TicksOn = tOffPrevious, TicksOff = t, CharType = Syllable.CharTypes.Text });
+                line.Add(new Syllable() { Text = "(instrumental)", TicksOn = tOffPrevious, TicksOff = t, CharType = Syllable.CharTypes.Text });
+                klsWithinstrumentals.Add(line);
+
+                tend = (int)_duration - 4 * beatDuration;
+                line = new kLine();
+                line.Add(new Syllable() { Text = "I", TicksOn = tend, CharType = Syllable.CharTypes.Information });
                 klsWithinstrumentals.Add(line);
             }
 
@@ -3673,26 +3699,20 @@ namespace PicControl
                 chordOffset = 2 * _lineHeight / 3;
 
 
-            // At start, _FirstLineToShow = 0 
-            // 1st line is empty
-            // 2nd is empty
-            // Active line is on the 3rd line
-            // Active line + 1 is on the 4th line
-
-            if (_FirstLineToShow % 4 == 2)
+            if (_FirstLineToShow % 4 == 0)
             {
                 // First line is active
-                y1 = y0;                                            //_FirstLineToShow
-                y2 = y0 + chordOffset + _lineHeight;                //_FirstLineToShow + 1
-                y3 = y0 + 2 * chordOffset + 2 * _lineHeight;        //_FirstLineToShow + 2
-                y4 = y0 + 3 * chordOffset + 3 * _lineHeight;        //_FirstLineToShow + 3
+                y1 = y0;                                            //_FirstLineToShow              current
+                y2 = y0 + chordOffset + _lineHeight;                //_FirstLineToShow + 1      inactive
+                y3 = y0 + 2 * chordOffset + 2 * _lineHeight;        //_FirstLineToShow + 2      inactive
+                y4 = y0 + 3 * chordOffset + 3 * _lineHeight;        //_FirstLineToShow + 3      inactive
 
                 idx2 = _FirstLineToShow + 1;
                 idx3 = _FirstLineToShow + 2;
                 idx4 = _FirstLineToShow + 3;
 
             }
-            else if (_FirstLineToShow % 4 == 3)
+            else if (_FirstLineToShow % 4 == 1)
             {
                 // 2nd line is active
                 y2 = y0;                                            // _FirstLineToShow - 1
@@ -3704,7 +3724,7 @@ namespace PicControl
                 idx3 = _FirstLineToShow + 1;
                 idx4 = _FirstLineToShow + 2;
             }
-            else if (_FirstLineToShow % 4 == 0)
+            else if (_FirstLineToShow % 4 == 2)
             {
                 // 3rd line is active
                 y3 = y0;                                            // _FirstLineToShow + 2     
@@ -3715,8 +3735,9 @@ namespace PicControl
                 idx2 = _FirstLineToShow + 1;
                 idx3 = _FirstLineToShow + 2;
                 idx4 = _FirstLineToShow + 3;
+
             }
-            else if (_FirstLineToShow % 4 == 1)
+            else if (_FirstLineToShow % 4 == 3)
             {
                 // 4th line is active
                 y3 = y0;                                            // _FirstLineToShow + 1
@@ -3728,14 +3749,8 @@ namespace PicControl
                 idx3 = _FirstLineToShow + 1;
                 idx4 = _FirstLineToShow + 2;
             }
-
-
-            if (_kLyrics.Lines[_FirstLineToShow].ToString() == "(Introduction)" || _kLyrics.Lines[_FirstLineToShow].ToString() == "(Instrumental)")
-            {
-                //Console.WriteLine("************** Part ***************");
-                DrawInformation(e, "(Instrumental)", y3 + _lineHeight / 2);
-                return;
-            }
+           
+            
             
 
             // Draw active line with borders
@@ -3757,20 +3772,7 @@ namespace PicControl
 
            
 
-            /*
-            if (bInstrumentalStarted)
-            {
-                DrawInformation(e, "(Instrumental)", y3 + _lineHeight / 2);
-            }
-            else
-            {               
-                if (idx3 >= 0 && idx3 < KLyrics.Lines.Count && _FirstLineToShow > 0)
-                    DrawInactiveLineWithBorders(e, idx3, y3);
-
-                if (idx4 >= 0 && idx4 < KLyrics.Lines.Count && _FirstLineToShow > 0)
-                    DrawInactiveLineWithBorders(e, idx4, y4);
-            }
-            */
+         
         }
 
         private void FlsDrawTextWithShadow(PaintEventArgs e)

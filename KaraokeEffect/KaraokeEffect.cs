@@ -1026,7 +1026,7 @@ namespace keffect
                         if (i == 0 && j == 0)
                         {
                             // Start of intro
-                            line.Add(new Syllable() { Text = "(Introduction)", StartTime = 0, CharType = Syllable.CharTypes.Information });
+                            line.Add(new Syllable() { Text = "(introduction)", StartTime = 0, CharType = Syllable.CharTypes.Information });
                             klsWithinstrumentals.Add(line);
 
                             // end of intro = just before first lyric
@@ -1034,7 +1034,7 @@ namespace keffect
                             if (tend -1000 > 0)
                                 tend = tend -1000;
                             line = new kLine();
-                            line.Add(new Syllable() { Text = "I", StartTime = tend, CharType = Syllable.CharTypes.Information });
+                            line.Add(new Syllable() { Text = "", StartTime = tend, CharType = Syllable.CharTypes.Information });
                             klsWithinstrumentals.Add(line);
 
                             line = new kLine();
@@ -1048,7 +1048,7 @@ namespace keffect
                                 klsWithinstrumentals.Add(line);
 
                             line = new kLine();
-                            line.Add(new Syllable() { Text = "(Instrumental)", StartTime = tOnPrevious + duration, CharType = Syllable.CharTypes.Information });
+                            line.Add(new Syllable() { Text = "(instrumental)", StartTime = tOnPrevious + duration, CharType = Syllable.CharTypes.Information });
                             klsWithinstrumentals.Add(line);
 
                             tend = t;
@@ -1056,7 +1056,7 @@ namespace keffect
                                 tend = tend -1000;
                             
                             line = new kLine();
-                            line.Add(new Syllable() { Text = "I", StartTime = tend, CharType = Syllable.CharTypes.Information });
+                            line.Add(new Syllable() { Text = "", StartTime = tend, CharType = Syllable.CharTypes.Information });
                             klsWithinstrumentals.Add(line);
 
 
@@ -1078,16 +1078,11 @@ namespace keffect
                 line.Add(new Syllable() { Text = "(Instrumental)", StartTime = t + duration, CharType = Syllable.CharTypes.Information });
                 klsWithinstrumentals.Add(line);
 
-
                 tend = _duration * 1000 - 1000;
                 line = new kLine();
-                line.Add(new Syllable() { Text = "I", StartTime = t + duration, CharType = Syllable.CharTypes.Information });
+                line.Add(new Syllable() { Text = "", StartTime = t + duration, CharType = Syllable.CharTypes.Information });
                 klsWithinstrumentals.Add(line);
-
-
             }
-
-
             return klsWithinstrumentals;
         }
 
@@ -2912,9 +2907,13 @@ namespace keffect
 
                 if (!bUpdateNeeded)
                 {
-                    _startTime = DateTime.Now;
-                    _endTime = _startTime.AddMilliseconds(_kLyrics.Lines[_FirstLineToShow + 2].Syllables.First().StartTime - (_kLyrics.Lines[_FirstLineToShow + 1].Syllables.Last().StartTime + _kLyrics.Lines[_FirstLineToShow + 1].Syllables.Last().Duration));
-                    bUpdateNeeded = true;
+                    if (_FirstLineToShow + 2 < _kLyrics.Lines.Count)
+                    {
+                        _endTime = DateTime.Now.AddMilliseconds(_kLyrics.Lines[_FirstLineToShow + 2].Syllables.First().StartTime - (_kLyrics.Lines[_FirstLineToShow].Syllables.Last().StartTime + _kLyrics.Lines[_FirstLineToShow].Syllables.Last().Duration));
+                        TimeSpan v = _endTime - DateTime.Now;
+                        //Console.WriteLine( string.Format("next  = {0}:{1}",v.Seconds, v.Milliseconds));                    
+                        bUpdateNeeded = true;
+                    }
                 }
             }
             else if (_FirstLineToShow % 4 == 3)
@@ -2982,13 +2981,26 @@ namespace keffect
             // Draw these lines only if they are less than 1 sec to arrive
             if (bUpdateNeeded)
             {
-                var duration = _endTime - DateTime.Now;
-                if (Math.Abs( duration.Seconds) > 2)
+                TimeSpan tm = _endTime - DateTime.Now;
+
+                //var dur = tm.TotalSeconds * 1000 + tm.TotalMilliseconds;                
+
+                if (tm.TotalMilliseconds > 6000)
                 {
+                    bUpdateNeeded = false;
+                    //Console.WriteLine("****** duration = " + tm.TotalMilliseconds);
                     return;
                 }
-                
-                
+
+                //Console.WriteLine("****** duration = " + duration.Seconds);
+                /*
+                if (Math.Abs(tm.Seconds) > 5)
+                {
+                    bUpdateNeeded = false;
+                    Console.WriteLine("****** duration = " + tm.Milliseconds);
+                    return;
+                }      
+                */
             }
 
 

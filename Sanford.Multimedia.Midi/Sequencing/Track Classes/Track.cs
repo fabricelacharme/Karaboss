@@ -3838,6 +3838,7 @@ namespace Sanford.Multimedia.Midi
                 Text = 1,
                 LineFeed = 2,
                 Paragraph = 3,
+                Information = 4,
             }
 
             public Types Type { get; set; }
