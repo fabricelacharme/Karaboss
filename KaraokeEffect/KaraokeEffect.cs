@@ -81,6 +81,7 @@ namespace keffect
 
         DateTime _startTime;
         DateTime _endTime;
+        bool bUpdateNeeded = false;
 
         private float percent = 0;
         private float lastpercent = 0;
@@ -2868,7 +2869,7 @@ namespace keffect
             int idx3 = 0;
             int idx4 = 0;
 
-            bool bUpdateNeeded = false;
+            //bool bUpdateNeeded = false;
            
             if (_FirstLineToShow % 4 == 0)
             {
@@ -2918,6 +2919,8 @@ namespace keffect
             }
             else if (_FirstLineToShow % 4 == 3)
             {
+                bUpdateNeeded = false;
+                
                 // 4th line is active
                 y3 = y0;                            // _FirstLineToShow + 1     inactive
                 y4 = y0 + _lineHeight;              // _FirstLineToShow + 2     inactive
@@ -2980,7 +2983,7 @@ namespace keffect
             if (bUpdateNeeded)
             {
                 var duration = _endTime - DateTime.Now;
-                if (duration.Seconds > 2)
+                if (Math.Abs( duration.Seconds) > 2)
                 {
                     return;
                 }
