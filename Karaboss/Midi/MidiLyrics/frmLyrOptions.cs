@@ -1025,7 +1025,13 @@ namespace Karaboss
             string tx = txtSlideShow.Text;
             tx = tx.Trim();
             dirSlideShow = tx;
-            pBox.DirSlideShow = dirSlideShow;
+            //pBox.DirSlideShow = dirSlideShow;
+            
+            // Only if option Diaporama is selected
+            if (radioDiaporama.Checked)
+                pBox.SetBackground(dirSlideShow);
+
+
         }
 
         private bool IsNumeric(string s)

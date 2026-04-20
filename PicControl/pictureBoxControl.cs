@@ -1047,19 +1047,16 @@ namespace PicControl
         /// </summary>
         /// <param name="kls"></param>
         /// <returns></returns>
-        private kLyrics SearchForInstrumentals(kLyrics kls)
+        private kLyrics SearchForInstrumentals(kLyrics kls, int beatDuration)
         {
-            double tOnPrevious = 0;
+            int tOnPrevious = 0;
+            int tOffPrevious = 0;
             double duration = 0;
-            double t = 0;
-            double deltaInstrumental = 5000;                       // 5000 ms (5 sec) for ans instrumental                        
+            int t = 0;
+            double deltaInstrumental = 8 * beatDuration;           
             kLyrics klsWithinstrumentals = new kLyrics();
             kLine line;
-            string text = string.Empty;
-
-
-            // Introduction
-
+            string text = string.Empty;           
 
             for (int i = 0; i < kls.Lines.Count; i++)
             {
@@ -1069,10 +1066,12 @@ namespace PicControl
                     if (kls.Lines[i].Syllables[j].CharType != Syllable.CharTypes.ParagraphSep)
                     {
 
-                        t = kls.Lines[i].Syllables[j].StartTime;
+                        // Introduction
+                        t = kls.Lines[i].Syllables[j].TicksOn;
+
                         if (i == 0 && j == 0)
                         {
-                            line.Add(new Syllable() { Text = "(Introduction)", StartTime = 0, CharType = Syllable.CharTypes.Text });
+                            line.Add(new Syllable() { Text = "(Introduction)", TicksOn = 0, CharType = Syllable.CharTypes.Text });
                             klsWithinstrumentals.Add(line);
                             line = new kLine();
                         }
@@ -1085,11 +1084,12 @@ namespace PicControl
                                 klsWithinstrumentals.Add(line);
 
                             line = new kLine();
-                            line.Add(new Syllable() { Text = "(Instrumental)", StartTime = tOnPrevious + duration, CharType = Syllable.CharTypes.Text });
+                            line.Add(new Syllable() { Text = "(Instrumental)", TicksOn = tOffPrevious, TicksOff = t, CharType = Syllable.CharTypes.Text });
                             klsWithinstrumentals.Add(line);
                             line = new kLine();
                         }
                         tOnPrevious = t;
+                        tOffPrevious = kls.Lines[i].Syllables[j].TicksOff;
                     }
                     line.Add(kls.Lines[i].Syllables[j]);
                 }
@@ -1097,11 +1097,11 @@ namespace PicControl
             }
 
             // Instrumental at the end
-            t = _kLyrics.Lines.Last().Syllables.Last().StartTime;
+            t = _kLyrics.Lines.Last().Syllables.Last().TicksOn;
             if (_duration * 1000 - t > deltaInstrumental)
             {
                 line = new kLine();
-                line.Add(new Syllable() { Text = "(Instrumental)", StartTime = t + duration, CharType = Syllable.CharTypes.Text });
+                line.Add(new Syllable() { Text = "(Instrumental)", TicksOn = tOffPrevious, TicksOff = t, CharType = Syllable.CharTypes.Text });
                 klsWithinstrumentals.Add(line);
             }
 
@@ -1114,6 +1114,7 @@ namespace PicControl
         /// </summary>
         /// <param name="kls"></param>
         /// <returns></returns>
+        /*
         private kLyrics SearchForInstrumentals(kLyrics kls, int beatDuration)
         {
             int tOnPrevious = 0;
@@ -1162,7 +1163,7 @@ namespace PicControl
 
             return klsWithinstrumentals;
         }
-
+        */
 
         /// <summary>
         /// Load text of song
