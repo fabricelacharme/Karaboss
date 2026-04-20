@@ -786,7 +786,7 @@ namespace keffect
 
             SetDefaultValues();
 
-            if (_kLyrics.Lines.Count > 0) 
+            if (_kLyrics != null && _kLyrics.Lines.Count > 0) 
                 Init();                       
         }
 
