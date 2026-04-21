@@ -78,10 +78,11 @@ namespace keffect
 
 
         #region Others
-
-        DateTime _startTime;
-        DateTime _endTime;
-        bool bUpdateNeeded = false;
+        
+        private DateTime _endTime;
+        private bool bHideLines3And4 = false;
+        private int SecondsBeforeSinging = 0;
+        private bool bCountDown = false;
 
         private float percent = 0;
         private float lastpercent = 0;
@@ -1003,7 +1004,7 @@ namespace keffect
             double tOnPrevious = 0;            
             double duration = 0;
             double t = 0;          
-            double deltaInstrumental = 5000;                       // 5000 ms (5 sec) for ans instrumental                        
+            double InstrumentalDuration = 5000;                       // 5000 ms (5 sec) for an instrumental                        
             kLyrics klsWithinstrumentals = new kLyrics();
             kLine line;
             string text = string.Empty;
@@ -1022,8 +1023,8 @@ namespace keffect
 
                         t = kls.Lines[i].Syllables[j].StartTime;
                         
-                        // introduction
-                        if (i == 0 && j == 0)
+                        // Create two lines for introduction (if no syllable at t = 0)
+                        if (i == 0 && j == 0 && t > 0)
                         {
                             // Start of intro
                             line.Add(new Syllable() { Text = "(introduction)", StartTime = 0, CharType = Syllable.CharTypes.Information });
@@ -1031,29 +1032,32 @@ namespace keffect
 
                             // end of intro = just before first lyric
                             tend = t;
-                            if (tend -1000 > 0)
-                                tend = tend -1000;
+                            if (tend - 1000 > 0)
+                                tend = tend - 1000;
                             line = new kLine();
                             line.Add(new Syllable() { Text = "", StartTime = tend, CharType = Syllable.CharTypes.Information });
                             klsWithinstrumentals.Add(line);
 
                             line = new kLine();
                         }
-                        else if (t - tOnPrevious > deltaInstrumental)
+                        else if (t - tOnPrevious > InstrumentalDuration)
                         {
+                            // Create two lines for instrumental
                             // An Instrumental part exists from tOnPrevious to t
                             // When can add a lyric called "(Instrumental)" a few time after tPrevious
 
                             if (line.Syllables.Count > 0)
                                 klsWithinstrumentals.Add(line);
 
+                            // First line instrumental
                             line = new kLine();
                             line.Add(new Syllable() { Text = "(instrumental)", StartTime = tOnPrevious + duration, CharType = Syllable.CharTypes.Information });
-                            klsWithinstrumentals.Add(line);
+                            klsWithinstrumentals.Add(line);                           
 
+                            // Second line instrumental, 2 seconds before the end
                             tend = t;
-                            if (tend - 1000 > 0)
-                                tend = tend -1000;
+                            if (tend - 2000 > 0)
+                                tend = tend - 2000;
                             
                             line = new kLine();
                             line.Add(new Syllable() { Text = "", StartTime = tend, CharType = Syllable.CharTypes.Information });
@@ -1072,15 +1076,17 @@ namespace keffect
             // Instrumental at the end
             t = _kLyrics.Lines.Last().Syllables.Last().StartTime;
             
-            if (_duration * 1000 - t > deltaInstrumental)
+            if (_duration * 1000 - t > InstrumentalDuration)
             {                
+                // First line
                 line = new kLine();
-                line.Add(new Syllable() { Text = "(Instrumental)", StartTime = t + duration, CharType = Syllable.CharTypes.Information });
+                line.Add(new Syllable() { Text = "(instrumental)", StartTime = t + duration, CharType = Syllable.CharTypes.Information });
                 klsWithinstrumentals.Add(line);
 
+                // 2nd line 1 sec before the end of the song
                 tend = _duration * 1000 - 1000;
                 line = new kLine();
-                line.Add(new Syllable() { Text = "", StartTime = t + duration, CharType = Syllable.CharTypes.Information });
+                line.Add(new Syllable() { Text = "", StartTime = tend, CharType = Syllable.CharTypes.Information });
                 klsWithinstrumentals.Add(line);
             }
             return klsWithinstrumentals;
@@ -2864,7 +2870,7 @@ namespace keffect
             int idx3 = 0;
             int idx4 = 0;
 
-            //bool bUpdateNeeded = false;
+            
            
             if (_FirstLineToShow % 4 == 0)
             {
@@ -2877,11 +2883,29 @@ namespace keffect
                 idx2 = _FirstLineToShow + 1;
                 idx3 = _FirstLineToShow + 2;
                 idx4 = _FirstLineToShow + 3;
-              
-                //bUpdateNeeded = true;
+
+                if (!bHideLines3And4)
+                {
+                    // If 1st line is an instrumental, we have to wait until the end of the instrumental before drawing lines 3 and 4
+                    if (_FirstLineToShow + 2 < _kLyrics.Lines.Count)
+                    {
+                        if (_kLyrics.Lines[_FirstLineToShow].Syllables.Last().CharType == Syllable.CharTypes.Information)
+                        {                            
+                            // Calculate endTime between it and the next Text line located in _FirstLineToShow + 2
+                            // (_FirstLinetoShow is the 2nd line of information)
+                            _endTime = DateTime.Now.AddMilliseconds(_kLyrics.Lines[_FirstLineToShow + 2].Syllables.First().StartTime - (_kLyrics.Lines[_FirstLineToShow].Syllables.Last().StartTime + _kLyrics.Lines[_FirstLineToShow].Syllables.Last().Duration));                            
+                            bHideLines3And4 = true;
+                            SecondsBeforeSinging = 4;
+                            bCountDown = false;
+                        }
+                    }
+                }
             }
             else if (_FirstLineToShow % 4 == 1)
             {
+                // This line can be either a Text line or the 2nd line of an instrumental, so we can always display lines 3 and 4
+                bHideLines3And4 = false;
+
                 // 2nd line is active
                 y2 = y0;                            // _FirstLineToShow - 1     * active
                 y1 = y0 + _lineHeight;              // _FirstLineToShow             current         (no update)
@@ -2905,20 +2929,28 @@ namespace keffect
                 idx3 = _FirstLineToShow + 2;
                 idx4 = _FirstLineToShow + 3;
 
-                if (!bUpdateNeeded)
+                // Check if lines 3 and 4 muts be hiden
+                if (!bHideLines3And4)
                 {
                     if (_FirstLineToShow + 2 < _kLyrics.Lines.Count)
                     {
-                        _endTime = DateTime.Now.AddMilliseconds(_kLyrics.Lines[_FirstLineToShow + 2].Syllables.First().StartTime - (_kLyrics.Lines[_FirstLineToShow].Syllables.Last().StartTime + _kLyrics.Lines[_FirstLineToShow].Syllables.Last().Duration));
-                        TimeSpan v = _endTime - DateTime.Now;
-                        //Console.WriteLine( string.Format("next  = {0}:{1}",v.Seconds, v.Milliseconds));                    
-                        bUpdateNeeded = true;
+                        // If 3rd line is an instrumental, we have to wait until the end of the instrumental before drawing lines 1 and 2
+                        if (_kLyrics.Lines[_FirstLineToShow].Syllables.Last().CharType == Syllable.CharTypes.Information)
+                        {
+                            // Calculate endTime between it and the next Text line located in _FirstLineToShow + 2
+                            // (_FirstLineToShow + 1 cannot be used because it is the 2nd line of information)
+                            _endTime = DateTime.Now.AddMilliseconds(_kLyrics.Lines[_FirstLineToShow + 2].Syllables.First().StartTime - (_kLyrics.Lines[_FirstLineToShow].Syllables.Last().StartTime + _kLyrics.Lines[_FirstLineToShow].Syllables.Last().Duration));                            
+                            bHideLines3And4 = true;
+                            SecondsBeforeSinging = 4;
+                            bCountDown = false;
+                        }                       
                     }
                 }
             }
             else if (_FirstLineToShow % 4 == 3)
             {
-                bUpdateNeeded = false;
+                // This line can be either a Text line or the 2nd line of an instrumental, so we can always display lines 3 and 4                              
+                bHideLines3And4 = false;
                 
                 // 4th line is active
                 y3 = y0;                            // _FirstLineToShow + 1     inactive
@@ -2929,43 +2961,9 @@ namespace keffect
                 idx2 = _FirstLineToShow - 1;
                 idx3 = _FirstLineToShow + 1;
                 idx4 = _FirstLineToShow + 2;
-
             }
 
-            /*
-            // Display if different if the current line is an information type
-            if (_kLyrics.Lines[_FirstLineToShow].Syllables.Count == 1 && lastindex < _kLyrics.Lines[_FirstLineToShow].Syllables.Count && _kLyrics.Lines[_FirstLineToShow].Syllables[lastindex].CharType == Syllable.CharTypes.Information)
-            {
-                bInformationLine = true;
-                Console.WriteLine("************** Information **********");
-
-                // Information is displayed on top of the window
-                //
-                // Information      _FirstLineToShow
-                // empty
-                //                  _FirstLineToShow + 1
-                //                  _FirstLineToShow + 2
-
-                y1 = y0;
-                y2 = y0 + 2 * _lineHeight;
-                y3 = y0 + 3 * _lineHeight;
-                // no y4
-
-                idx2 = _FirstLineToShow + 1;
-                idx3 = _FirstLineToShow + 2;
-
-                // Draw active line with borders
-                DrawActiveLineWithBorders(e, _FirstLineToShow, y1);
-
-                DrawInactiveLineWithBorders(e, idx2, y2);
-
-                DrawInactiveLineWithBorders(e, idx3, y3);
-
-                return;
-            }
-            */
-
-
+         
             // Draw active line with borders
             DrawActiveLineWithBorders(e, _FirstLineToShow, y1);
 
@@ -2978,29 +2976,39 @@ namespace keffect
                 DrawInactiveLineWithBorders(e, idx2, y2, IsActive);
 
 
-            // Draw these lines only if they are less than 1 sec to arrive
-            if (bUpdateNeeded)
+            // Draw lines 3 and 4 only if they are less than 6 sec to arrive
+            if (bHideLines3And4)
+            {
+                TimeSpan tm = _endTime - DateTime.Now;                                                
+                if (tm.TotalMilliseconds > 4000)
+                {                                        
+                    return;
+                }
+                else
+                {
+                    bCountDown = true;                    
+                }
+            }
+
+            if (bCountDown)
             {
                 TimeSpan tm = _endTime - DateTime.Now;
 
-                //var dur = tm.TotalSeconds * 1000 + tm.TotalMilliseconds;                
-
-                if (tm.TotalMilliseconds > 6000)
+                if (tm.TotalSeconds < 0)
                 {
-                    bUpdateNeeded = false;
-                    //Console.WriteLine("****** duration = " + tm.TotalMilliseconds);
+                    bCountDown = false;
                     return;
                 }
 
-                //Console.WriteLine("****** duration = " + duration.Seconds);
-                /*
-                if (Math.Abs(tm.Seconds) > 5)
+                // Time is about 3 sec before next lyric to sing
+                // launch countdown
+
+                int s = (int)tm.TotalSeconds;
+                if (s < SecondsBeforeSinging)
                 {
-                    bUpdateNeeded = false;
-                    Console.WriteLine("****** duration = " + tm.Milliseconds);
-                    return;
-                }      
-                */
+                    SecondsBeforeSinging = s;
+                    Console.WriteLine("Seconds before singing: " + SecondsBeforeSinging);
+                }
             }
 
 
