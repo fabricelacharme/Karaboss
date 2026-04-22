@@ -2478,6 +2478,28 @@ namespace keffect
 
         }
 
+        
+        private void DrawInformation(PaintEventArgs e, string infotext, int y0)
+        {
+            GraphicsPath path = new GraphicsPath();
+            int x0;
+            Pen penBorder = new Pen(Color.Black);
+            Color FillColor = Color.Gray;
+
+            x0 = HCenterText(infotext);
+
+            // Add lines of lyrics to the Graphics path
+            path.AddString(infotext, _karaokeFont.FontFamily, (int)_karaokeFont.Style, _karaokeFont.Size, new Point((int)x0, (int)y0), sf);            
+
+            // Draw the text                    
+            e.Graphics.FillPath(new SolidBrush(FillColor), path);
+
+            // Outline the text
+            if (_borderthick > 0)
+                e.Graphics.DrawPath(penBorder, path);
+        }
+        
+        
         #endregion Code fragments
 
 
@@ -2894,9 +2916,11 @@ namespace keffect
                             // Calculate endTime between it and the next Text line located in _FirstLineToShow + 2
                             // (_FirstLinetoShow is the 2nd line of information)
                             _endTime = DateTime.Now.AddMilliseconds(_kLyrics.Lines[_FirstLineToShow + 2].Syllables.First().StartTime - (_kLyrics.Lines[_FirstLineToShow].Syllables.Last().StartTime + _kLyrics.Lines[_FirstLineToShow].Syllables.Last().Duration));                            
+                            TimeSpan tm = _endTime - DateTime.Now;
+                            SecondsBeforeSinging = (int)tm.TotalSeconds;
                             bHideLines3And4 = true;
-                            SecondsBeforeSinging = 4;
-                            bCountDown = false;
+                            bCountDown = true;
+
                         }
                     }
                 }
@@ -2940,10 +2964,13 @@ namespace keffect
                             // Calculate endTime between it and the next Text line located in _FirstLineToShow + 2
                             // (_FirstLineToShow + 1 cannot be used because it is the 2nd line of information)
                             _endTime = DateTime.Now.AddMilliseconds(_kLyrics.Lines[_FirstLineToShow + 2].Syllables.First().StartTime - (_kLyrics.Lines[_FirstLineToShow].Syllables.Last().StartTime + _kLyrics.Lines[_FirstLineToShow].Syllables.Last().Duration));                            
+                            TimeSpan tm = _endTime - DateTime.Now;
+                            SecondsBeforeSinging = (int)tm.TotalSeconds;
                             bHideLines3And4 = true;
-                            SecondsBeforeSinging = 4;
-                            bCountDown = false;
-                        }                       
+                            bCountDown = true;
+
+
+                        }
                     }
                 }
             }
@@ -2963,55 +2990,70 @@ namespace keffect
                 idx4 = _FirstLineToShow + 2;
             }
 
-         
-            // Draw active line with borders
-            DrawActiveLineWithBorders(e, _FirstLineToShow, y1);
 
 
-            // Line y2 must be drawned active when
-            bool IsActive = ((_FirstLineToShow % 4 == 1) || (_FirstLineToShow % 4 == 3)) ? true : false;
-
-            // Draw Inactive lines with borders
-            if (idx2 >= 0)
-                DrawInactiveLineWithBorders(e, idx2, y2, IsActive);
-
-
-            // Draw lines 3 and 4 only if they are less than 6 sec to arrive
-            if (bHideLines3And4)
-            {
-                TimeSpan tm = _endTime - DateTime.Now;                                                
-                if (tm.TotalMilliseconds > 4000)
-                {                                        
-                    return;
-                }
-                else
-                {
-                    bCountDown = true;                    
-                }
-            }
-
+            // If Countdown active, display seconds before singing
             if (bCountDown)
             {
                 TimeSpan tm = _endTime - DateTime.Now;
 
                 if (tm.TotalSeconds < 0)
                 {
-                    bCountDown = false;
-                    return;
+                    SecondsBeforeSinging = -1;
+                    bCountDown = false;                    
                 }
-
-                // Time is about 3 sec before next lyric to sing
-                // launch countdown
-
-                int s = (int)tm.TotalSeconds;
-                if (s < SecondsBeforeSinging)
+                else
                 {
-                    SecondsBeforeSinging = s;
-                    Console.WriteLine("Seconds before singing: " + SecondsBeforeSinging);
+                    // Time is about 3 sec before next lyric to sing
+                    // launch countdown
+
+                    int s = (int)tm.TotalSeconds;
+                    if (s < SecondsBeforeSinging)
+                    {
+                        SecondsBeforeSinging = s;
+                        Console.WriteLine("Seconds before singing: " + SecondsBeforeSinging);
+                        //DrawInformation(e, (SecondsBeforeSinging + 1).ToString(), y1 + _lineHeight);
+                    }
                 }
             }
 
 
+
+            // Draw instrumental
+            if (_kLyrics.Lines[_FirstLineToShow].Syllables.Last().CharType == Syllable.CharTypes.Information)
+            {
+                DrawInformation(e, _kLyrics.Lines[_FirstLineToShow].Syllables.Last().Text, y1);
+                
+                if (bCountDown && _kLyrics.Lines[_FirstLineToShow].Syllables.Last().Text.Length > 0)
+                    DrawInformation(e, SecondsBeforeSinging.ToString(), y1 + _lineHeight);
+            }
+            else
+            {
+                // Draw active line with borders
+                DrawActiveLineWithBorders(e, _FirstLineToShow, y1);
+
+
+                // Line y2 must be drawned active when
+                bool IsActive = ((_FirstLineToShow % 4 == 1) || (_FirstLineToShow % 4 == 3)) ? true : false;
+
+                // Draw Inactive lines with borders
+                if (idx2 >= 0)
+                    DrawInactiveLineWithBorders(e, idx2, y2, IsActive);
+
+            }
+
+            // Draw lines 3 and 4 only if they are less than 4 sec to arrive
+            if (bHideLines3And4)
+            {
+                TimeSpan tm = _endTime - DateTime.Now;                                                
+                if (tm.TotalMilliseconds > 4000)
+                {                                        
+                    // Do not display next lines
+                    return;
+                }               
+            }
+
+           
             //if (idx3 >= 0 && _FirstLineToShow > 0)
                 DrawInactiveLineWithBorders(e, idx3, y3);
 
