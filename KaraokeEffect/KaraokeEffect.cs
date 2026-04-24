@@ -3159,7 +3159,7 @@ namespace keffect
                     
                     //if (!bInstrumentalStarted)
                     //{
-                        Console.WriteLine("**** not instrumental LineOfInformation on " + LineOfInformation);
+                        //Console.WriteLine("**** not instrumental LineOfInformation on " + LineOfInformation);
                         //DrawInformation(e, _kLyrics.Lines[_FirstLineToShow + 1].Syllables.Last().Text, y3);
                     if (idx2 < _kLyrics.Lines.Count)    
                         DrawInformation(e, _kLyrics.Lines[idx2].Syllables.Last().Text, y2);
@@ -3184,8 +3184,8 @@ namespace keffect
                     // y3
                     // y4 instrumental
                     
-                    if (!bInstrumentalStarted)
-                    {
+                    //if (!bInstrumentalStarted)
+                    //{
                         // PB ICI (instrumental)
                         
                         //Console.WriteLine("**** LineOfInformation on " + LineOfInformation);
@@ -3195,7 +3195,7 @@ namespace keffect
                         //DrawInformation(e, _kLyrics.Lines[_FirstLineToShow + 3].Syllables.Last().Text, y4);
                         if (idx4 < _kLyrics.Lines.Count)
                             DrawInformation(e, _kLyrics.Lines[idx4].Syllables.Last().Text, y4);
-                    }
+                    //}
                     
                     break;
             }
