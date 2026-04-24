@@ -242,7 +242,7 @@ namespace Karaboss.Mp3
                     }
                 }
 
-                           
+                bProgressiveHighlight = Properties.Settings.Default.bProgressiveHighlight;           
 
 
                 // Force Uppercase
