@@ -2897,10 +2897,12 @@ namespace keffect
             for (int i = 0; i < lines.Count(); i++)
             {
                 x = lines[i];
-                if (x >= _kLyrics.Lines.Count) break;
-                if (_kLyrics.Lines[x].Syllables.Last().CharType == Syllable.CharTypes.Information && _kLyrics.Lines[x].Syllables.Last().Text != string.Empty)
+                if (x < _kLyrics.Lines.Count)
                 {
-                    return i;
+                    if (_kLyrics.Lines[x].Syllables.Last().CharType == Syllable.CharTypes.Information && _kLyrics.Lines[x].Syllables.Last().Text != string.Empty)
+                    {
+                        return i;
+                    }
                 }
             }
             return -2;
@@ -3111,7 +3113,7 @@ namespace keffect
            
 
 
-            // If no line of information in the 4 lines
+            // If no line of information in the 4 lines => normal display in 4 lines swapped
             if (LineOfInformationPosition == -2)
             {
                 bInstrumentalStarted = false;
@@ -3147,6 +3149,7 @@ namespace keffect
 
 
                 TimeSpan tm = DateTime.Now - _startTime;
+                
                 switch (LineOfInformationPosition)
                 {
                     case 0:                             // Instrumental is on line 0
@@ -3157,6 +3160,10 @@ namespace keffect
                         switch (LinePosition)
                         {
                             case 0:
+                                // y1 * information1
+                                // y2 information2
+                                // y3 old normal
+                                // y4 old normal
                                 // Draw "(intrumental)" on active line and countdown on next line
                                 DrawInformation(e, _kLyrics.Lines[_FirstLineToShow].Syllables.Last().Text, y1);
                                 DrawInformation(e, SecondsBeforeSinging.ToString(), y1 + _lineHeight);
@@ -3191,6 +3198,11 @@ namespace keffect
                                 break;
 
                             case 1:
+                                // y2 information1
+                                // y1 * information2
+                                // y3 normal
+                                // y4 normal
+                                
                                 // draw ("instrumental") on previous line and countdown on current line
                                 DrawInformation(e, _kLyrics.Lines[_FirstLineToShow - 1].Syllables.Last().Text, y1 - _lineHeight);
                                 DrawInformation(e, SecondsBeforeSinging.ToString(), y1);
@@ -3200,6 +3212,11 @@ namespace keffect
                                 break;
 
                             case 2:
+                                // y3 information1
+                                // y4 information2
+                                // y1 * normal
+                                // y2 normal
+                                
                                 // Draw y1 line: active & highlighted line                
                                 DrawActiveLineWithBorders(e, _FirstLineToShow, y1);                               
                                 // Draw y2 line: inactive line  (before or after y1)                                
@@ -3209,7 +3226,12 @@ namespace keffect
                                 DrawInformation(e, _kLyrics.Lines[idx3].Syllables.Last().Text, y3);
                                 break;
 
-                            case 3:                                
+                            case 3:
+                                // y3 information1
+                                // y4 information2
+                                // y2 normal
+                                // y1 * normal
+                                
                                 // Draw y1 line: active & highlighted line                
                                 DrawActiveLineWithBorders(e, _FirstLineToShow, y1);
                                 // Draw y2 line: inactive line  (before or after y1)                                
