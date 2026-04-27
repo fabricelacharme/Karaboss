@@ -125,7 +125,33 @@ namespace PicControl
             set { _duration = value; }
         }
 
+        private int _TotalTicks;
+        public int TotalTicks
+        {
+            get { return _TotalTicks; }
+            set { _TotalTicks = value; }
+        }
+
         #endregion MID
+
+
+        #region Instrumentals
+
+        private int _endTime;
+        private int _startTime;
+
+        private int PlayerPositionTicks;
+        private int TargetPositionTicks;
+
+        private bool bInstrumentalStarted = false;
+        private int SecondsBeforeSinging = 0;
+        private bool bCountDown = false;
+        private int _DelayBeforeEndOfInstrumental = 4000; // Delay to draw lines before the end of an instrumental: 4 sec
+        private int _MinimumInstrumentalDuration = 5000;  // The minimum duration between two consecutive vocal phrases that mark an instrumental interlude : 5 sec
+        private int LastLineOfInformationPosition = 0;
+
+
+        #endregion Instrumentals
 
 
         #region Karaoke display type
@@ -761,9 +787,47 @@ namespace PicControl
         #endregion
 
 
+        #region Lyrics transition effects
+
+        public enum TransitionEffects
+        {
+            None,
+            Progressive,
+        }
+
+        private TransitionEffects _transitionEffect;
+        public TransitionEffects TransitionEffect
+        {
+            get { return _transitionEffect; }
+            set { _transitionEffect = value; }
+        }
+
+        private int _position = 0;
+
+        /// <summary>
+        /// Player position => highlight lyrics at this position
+        /// </summary>
+        [Description("Position")]
+        public int Position
+        {
+            get { return _position; }
+            set { _position = value; }
+        }
+
+        private float _steppercent = 0.01F;
+        [Description("Increment to display a syllable progressively")]
+        public float StepPercent
+        {
+            get { return _steppercent; }
+            set { _steppercent = value; }
+        }
+
+        #endregion Lyrics transition effects        
+
+
         #region Others
 
-        private float[] LinesLengths;
+        //private float[] LinesLengths;
 
         public ImageLayout imgLayout { get; set; }
         public Image m_CurrentImage { get; set; }
@@ -784,7 +848,14 @@ namespace PicControl
         public int BeatDuration
         {
             get { return _beatDuration; }
-            set { _beatDuration = value; }
+            set 
+            {
+                if (value > 0)
+                {
+                    _beatDuration = value;
+                    _DelayBeforeEndOfInstrumental = 4 * _beatDuration;
+                }
+            }
         }
 
         public int _currentTextPos;
@@ -802,10 +873,8 @@ namespace PicControl
         private bool disposed = false;                  
 
         private int vOffset = 0;
-        private int _lineHeight = 0;
-
-        
-        private int _linesHeight = 0;        // Full song height (number of lines * line height)
+        //private int _lineHeight = 0;        
+        //private int _linesHeight = 0;        // Full song height (number of lines * line height)
 
         private bool bEndOfLine = false;
         private bool bHighLight = false;
@@ -827,8 +896,49 @@ namespace PicControl
 
         private int _beatNumber = 1;
 
-        private bool bInstrumentalStarted = false;
-        private double _EndOfInstrumentalTime = 0;
+
+        private float percent = 0;
+        private float lastpercent = 0;
+
+        private long _timerintervall = 50;      // Intervall of timer of frmMp3Player
+        public long timerIntervall
+        {
+            get { return _timerintervall; }
+            set
+            {
+
+                if (value >= 10)
+                    _timerintervall = value;
+            }
+        }
+
+
+        private float[] LinesLengths;
+
+        private int nextindex = 0;
+        private int lastindex = 0;
+        private float CurLength;
+        private float lastCurLength;
+
+        double _nexttime;
+        double _lasttime;
+
+        private int _FirstLineToShow = 0;
+        private int _LastLineToShow = 0;
+
+        private int _lastLine = -1;
+        private int _lineHeight = 0;
+        private int _linesHeight = 0;
+        private string _biggestLine = string.Empty;
+
+
+        private string active_fragment = string.Empty;
+        private float active_fragment_length = 0;
+        private string highlight_fragment = string.Empty;
+        private float highlight_fragment_length = 0;
+        private string inactive_fragment = string.Empty;
+        private float inactive_fragment_length = 0;
+
 
         #endregion Others
 
@@ -1043,22 +1153,25 @@ namespace PicControl
         }
 
         /// <summary>
-        /// Search for Intruduction, Instrumentals
+        /// Search for Introduction, Instrumentals
         /// </summary>
         /// <param name="kls"></param>
-        /// <returns></returns>
+        /// <returns></returns>       
         private kLyrics SearchForInstrumentals(kLyrics kls, int beatDuration)
         {
             int tOnPrevious = 0;
-            int tOffPrevious = 0;
-            int tend = 0;
-            double duration = 0;
+            int duration = 0;
             int t = 0;
-            double deltaInstrumental = 8 * beatDuration;           
             kLyrics klsWithinstrumentals = new kLyrics();
             kLine line;
-            string text = string.Empty;           
+            string text = string.Empty;
+            int tend = 0;
 
+            int MinimumInstrumentalDuration = 8 * beatDuration;
+            int MinimumIntroduration = 4 * beatDuration;
+
+
+            // Introduction                        
             for (int i = 0; i < kls.Lines.Count; i++)
             {
                 line = new kLine();
@@ -1067,129 +1180,156 @@ namespace PicControl
                     if (kls.Lines[i].Syllables[j].CharType != Syllable.CharTypes.ParagraphSep)
                     {
 
-                        // Introduction
                         t = kls.Lines[i].Syllables[j].TicksOn;
 
-                        if (i == 0 && j == 0)
+                        // Create two lines for introduction (if no syllable at t = 0)
+                        if (i == 0 && j == 0 && t > 0)
                         {
+                            // Start of intro
                             line.Add(new Syllable() { Text = "(introduction)", TicksOn = 0, CharType = Syllable.CharTypes.Information });
                             klsWithinstrumentals.Add(line);
 
-                            // end of intro = just before first lyric
-                            tend = t;
-                            if (tend - 4 * beatDuration > 0)
-                                tend = tend - 4 * beatDuration;
-                            line = new kLine();
-                            line.Add(new Syllable() { Text = "I", TicksOn = tend, CharType = Syllable.CharTypes.Information });
-                            klsWithinstrumentals.Add(line);
+                            if (KaraokeDisplayType != KaraokeDisplayTypes.TwoLinesSwapped)
+                            {
+                                // end of intro = just before first lyric
+                                tend = t;
+                                if (tend  > MinimumIntroduration)
+                                    tend = tend - MinimumIntroduration;
+                                line = new kLine();
+                                line.Add(new Syllable() { Text = "", TicksOn = tend, CharType = Syllable.CharTypes.Information });
+                                klsWithinstrumentals.Add(line);
+                            }
 
                             line = new kLine();
-                            
                         }
-                        else if (t - tOnPrevious > deltaInstrumental)
+                        else if (t - tOnPrevious > MinimumInstrumentalDuration)
                         {
-                            // An Instrumental part exists from tPrevious to t
+                            // Instrumental must be on line 0 or 2
+
+                            // instrumental allowed
+                            // Forbidden
+                            // instrumental allowed
+                            // Forbidden
+
+                            if (KaraokeDisplayType == KaraokeDisplayTypes.FourLinesSwapped)
+                            {
+                                int c = klsWithinstrumentals.Lines.Count;
+                                if (c % 4 == 1)
+                                {
+                                    if (line.Syllables.Count > 0)
+                                        klsWithinstrumentals.Add(line);
+
+                                    // if on line 1
+                                    line = new kLine();
+                                    line.Add(new Syllable() { Text = "", TicksOn = t + 45, CharType = Syllable.CharTypes.Information });
+                                    klsWithinstrumentals.Add(line);
+
+                                    line = new kLine();
+
+                                }
+                                else if (c % 4 == 3)
+                                {
+                                    if (line.Syllables.Count > 0)
+                                        klsWithinstrumentals.Add(line);
+
+                                    // If on line 3
+                                    line = new kLine();
+                                    line.Add(new Syllable() { Text = "", TicksOn = t + 45, CharType = Syllable.CharTypes.Information });
+                                    klsWithinstrumentals.Add(line);
+
+                                    line = new kLine();
+                                }
+                            }
+
+
+
+                            // Create two lines for instrumental
+                            // An Instrumental part exists from tOnPrevious to t
                             // When can add a lyric called "(Instrumental)" a few time after tPrevious
 
                             if (line.Syllables.Count > 0)
                                 klsWithinstrumentals.Add(line);
 
+                            // First line instrumental
                             line = new kLine();
-                            line.Add(new Syllable() { Text = "(instrumental)", TicksOn = tOffPrevious, TicksOff = t, CharType = Syllable.CharTypes.Information });
+                            line.Add(new Syllable() { Text = "(instrumental)", TicksOn = tOnPrevious + duration, CharType = Syllable.CharTypes.Information });
                             klsWithinstrumentals.Add(line);
 
-                            tend = t;
-                            if (tend - 4 * beatDuration > 0)
-                                tend = tend - 4 * beatDuration;
+                            if (KaraokeDisplayType != KaraokeDisplayTypes.TwoLinesSwapped)
+                            {
+                                // Second line instrumental, 2 seconds before the end
+                                tend = t;
+                                if (tend - 2 * beatDuration > 0)
+                                    tend = tend - 2 * beatDuration;
 
-                            line = new kLine();
-                            line.Add(new Syllable() { Text = "I", TicksOn = tend, CharType = Syllable.CharTypes.Information });
-                            klsWithinstrumentals.Add(line);
-
+                                line = new kLine();
+                                line.Add(new Syllable() { Text = "", TicksOn = tend, CharType = Syllable.CharTypes.Information });
+                                klsWithinstrumentals.Add(line);
+                            }
 
                             line = new kLine();
                         }
-                        tOnPrevious = t;
-                        tOffPrevious = kls.Lines[i].Syllables[j].TicksOff;
+
+                        tOnPrevious = t;    // Start time of previous lyric
+                        duration = kls.Lines[i].Syllables[j].TicksOff - kls.Lines[i].Syllables[j].TicksOn; // Duration of previous lyric
+
                     }
                     line.Add(kls.Lines[i].Syllables[j]);
                 }
                 klsWithinstrumentals.Add(line);
             }
 
-            // Instrumental at the end
+            // ENDING
             t = _kLyrics.Lines.Last().Syllables.Last().TicksOn;
-            if (_duration * 1000 - t > deltaInstrumental)
+
+            if (_TotalTicks - t > MinimumInstrumentalDuration)
             {
-                line = new kLine();
-                line.Add(new Syllable() { Text = "(instrumental)", TicksOn = tOffPrevious, TicksOff = t, CharType = Syllable.CharTypes.Text });
-                klsWithinstrumentals.Add(line);
 
-                tend = (int)_duration - 4 * beatDuration;
-                line = new kLine();
-                line.Add(new Syllable() { Text = "I", TicksOn = tend, CharType = Syllable.CharTypes.Information });
-                klsWithinstrumentals.Add(line);
-            }
+                // Instrumental must be on line 0 or 2
 
+                // instrumental allowed
+                // Forbidden
+                // instrumental allowed
+                // Forbidden
 
-            return klsWithinstrumentals;
-        }
-
-        /// <summary>
-        /// Search for Intruduction, Instrumentals
-        /// </summary>
-        /// <param name="kls"></param>
-        /// <returns></returns>
-        /*
-        private kLyrics SearchForInstrumentals(kLyrics kls, int beatDuration)
-        {
-            int tOnPrevious = 0;
-            int tOffPrevious = 0;
-            int t = 0;
-            double deltaParagraph = 8 * beatDuration;
-            kLyrics klsWithinstrumentals = new kLyrics();
-            kLine line;
-            string instrutext = "(Instrumental)";
-            string introtext = "(Introduction)";
-            string text = string.Empty;
-
-            for (int i = 0; i < kls.Lines.Count; i++)
-            {
-                line = new kLine();
-                for (int j = 0; j < kls.Lines[i].Syllables.Count; j++)
+                if (KaraokeDisplayType == KaraokeDisplayTypes.FourLinesSwapped)
                 {
-                    t = kls.Lines[i].Syllables[j].TicksOn;
-                    if (t - tOnPrevious > deltaParagraph)
+                    int c = klsWithinstrumentals.Lines.Count;
+                    if (c % 4 == 1)
                     {
-                        // An Instrumental part exists from tPrevious to t
-                        // When can add a lyric called "(Instrumental)" a few time after tPrevious
 
-                        if (line.Syllables.Count > 0)
-                            klsWithinstrumentals.Add(line);
-
+                        // if on line 1
                         line = new kLine();
-                        if (tOffPrevious == 0)
-                            text = introtext;
-                        else
-                            text = instrutext;
-                        line.Add(new Syllable() { Text = text, TicksOn = tOffPrevious, TicksOff = t, CharType = Syllable.CharTypes.Text });
+                        line.Add(new Syllable() { Text = "", TicksOn = t + 45, CharType = Syllable.CharTypes.Information });
                         klsWithinstrumentals.Add(line);
-
-                        line = new kLine();
-
                     }
-                    tOnPrevious = t;
-                    tOffPrevious = kls.Lines[i].Syllables[j].TicksOff;
-
-                    line.Add(kls.Lines[i].Syllables[j]);
-
+                    else if (c % 4 == 3)
+                    {
+                        // If on line 3
+                        line = new kLine();
+                        line.Add(new Syllable() { Text = "", TicksOn = t + 45, CharType = Syllable.CharTypes.Information });
+                        klsWithinstrumentals.Add(line);
+                    }
                 }
-                klsWithinstrumentals.Add(line);
-            }
 
+
+                // First line
+                line = new kLine();
+                line.Add(new Syllable() { Text = "(ending)", TicksOn = t + duration, CharType = Syllable.CharTypes.Information });
+                klsWithinstrumentals.Add(line);
+
+                if (KaraokeDisplayType != KaraokeDisplayTypes.TwoLinesSwapped)
+                {
+                    // 2nd line 1 sec before the end of the song
+                    tend = _TotalTicks - 2 * beatDuration;
+                    line = new kLine();
+                    line.Add(new Syllable() { Text = "", TicksOn = tend, CharType = Syllable.CharTypes.Information });
+                    klsWithinstrumentals.Add(line);
+                }
+            }
             return klsWithinstrumentals;
         }
-        */
+
 
         /// <summary>
         /// Load text of song
@@ -1253,8 +1393,6 @@ namespace PicControl
             }
 
         }
-
-
 
 
         #endregion Initializations
@@ -1384,55 +1522,255 @@ namespace PicControl
             }
         }
 
-      
+
+        #region Receive pos from player 
+
         /// <summary>
         /// Color the syllabe according to song position
         /// </summary>
         /// <param name="songposition"></param>
-        public void ColorLyric(int sequencerposition)
+        /*
+        public void ColorLyric2(int sequencerposition)
         {
             // sequencerPosition en ticks
-            _currentPosition = sequencerposition;           
+            _currentPosition = sequencerposition;
             SetOffset();
-            //GuessInstrumental(sequencerposition);
-        }
-
-        /*
-        private void GuessInstrumental(int sequencerposition)
-        {
-            int t1 = 0;
-            int t2 = 0;
-
-            for (int i = 0; i < syllabes.Count; i++)
-            {
-                t1 = syllabes[i].time;
-
-                if (sequencerposition < t1 && i < syllabes.Count - 1 && !bInstrumentalStarted)
-                {
-                    t2 = syllabes[i + 1].time;
-
-                    if (t2 - t1 > 8 * _beatDuration)
-                    {
-                        bInstrumentalStarted = true;
-                        _EndOfInstrumentalTime = t2;
-                        Console.WriteLine("****************************** Instrumental ******************************");
-                        break;
-                    }
-                    else
-                    {
-                        break;
-                    }
-
-                }
-                else if (bInstrumentalStarted && _EndOfInstrumentalTime - sequencerposition < _beatDuration)
-                {
-                    bInstrumentalStarted = false;
-                    Console.WriteLine("*************************** End of Instrumental ***************************");
-                    break;
-                }
-            }
         }
         */
+
+
+        /// <summary>
+        ///  player position
+        /// </summary>
+        /// <param name="pos"></param>
+        public void SetPos(int ticks)
+        {
+            // Store player position (ms)
+            _currentPosition = ticks;
+
+            PlayerPositionTicks = ticks;
+
+            // new from mp3 module
+            SetPosition(ticks);
+
+            // old
+            SetOffset();
+        }
+
+        /// <summary>
+        /// Calculate fragments, length of fragments
+        /// </summary>
+        /// <param name="pos"></param>
+        private void SetPosition(int pos)
+        {
+            // Search _line & index of the next lyric to play
+            (_FirstLineToShow, nextindex) = GetNextIndex(pos);
+
+
+            // CurLength:
+            // Mesure length of a portion of line (already sung + being sung)
+            // used to display the percentage of syllables completed in the line
+
+            // active_fragment, active_fragment_length          part of the line already sung
+            // highlight_fragment, highlight_fragment_length    part of the line being sung 
+            // inactive_fragment, inactive_fragment_length      part of the line not yet sung
+            CurLength = GetCurLength(_FirstLineToShow, nextindex);
+
+
+            // New word to highlight
+            // Warning: in case of full lines, nextindex is allways the same and not different than lastIndex
+            if (nextindex != lastindex || _FirstLineToShow != _lastLine)
+            {
+                // Line changed
+                if (_FirstLineToShow != _lastLine)
+                {
+                    _lastLine = _FirstLineToShow;
+                    percent = 0;
+                    lastpercent = 0;
+                    nextindex = 0;
+                    lastindex = 0;
+                    lastCurLength = 0;
+                    CurLength = 0;
+
+                    _lasttime = _nexttime;
+                }
+
+                //_FirstLineToShow = _line;
+                _LastLineToShow = SetLastLineToShow(_FirstLineToShow, _kLyrics.Lines.Count, _nbLyricsLines);
+
+
+
+
+                // StartTime of nextindex
+                if (nextindex < _kLyrics.Lines[_FirstLineToShow].Syllables.Count())
+                    _nexttime = _kLyrics.Lines[_FirstLineToShow].Syllables[nextindex].StartTime;
+
+
+                // Save last value of percent
+                lastpercent = percent;
+
+                // Set new value of percent to the end of the previous word
+                // And after that, add a small progressive increment in order to increase the percentage
+
+                // |--- last word ---|--- new word --------------------------|
+                //                   | percent => percent+pas => percent+pas
+
+                if (_FirstLineToShow < LinesLengths.Count())
+                    percent = (lastCurLength / LinesLengths[_FirstLineToShow]);
+
+
+                // CurLength is the percentage of syllables completed in the line (already sung + being sung)
+                // Caculate distance between LastCurLength et CurLength
+                float d = (float)(CurLength - lastCurLength);
+
+                if (_transitionEffect == TransitionEffects.None)
+                {
+                    _steppercent = d;
+                }
+                else if (_transitionEffect == TransitionEffects.Progressive)
+                {
+
+                    // Set 3000 occurences to reach the end 
+                    //_steppercent = d / 3000;
+
+                    if (d > 0 && (_nexttime - _lasttime) > 0)
+                    {
+                        _steppercent = (float)(_nexttime - _lasttime) / (d * (float)_timerintervall);
+                    }
+                }
+
+                lastCurLength = CurLength;
+                lastindex = nextindex;
+
+                pBox.Invalidate();
+            }
+            else
+            {
+                // if same nextindex: progressive increase of percent
+                percent += _steppercent;
+
+                if (percent > (CurLength / LinesLengths[_FirstLineToShow]))
+                    percent = (CurLength / LinesLengths[_FirstLineToShow]);
+
+                pBox.Invalidate();
+            }
+        }
+
+
+        /// <summary>
+        /// Retrieve nextindex of current syllabe in the current line
+        /// </summary>
+        /// <returns></returns>       
+        private (int line, int index) GetNextIndex(int pos)
+        {
+            // Descending loop for lines
+            for (int j = _kLyrics.Lines.Count - 1; j >= 0; j--)
+            {
+                // Descending loop for Syllables
+                for (int i = _kLyrics.Lines[j].Syllables.Count - 1; i >= 0; i--)
+                {
+                    // Search first index of Syllable for which pos is greater then startTime  
+                    if (_kLyrics.Lines[j].Syllables[i].TicksOn > 0 && pos > _kLyrics.Lines[j].Syllables[i].TicksOn)
+                    {
+                        // line 10      1000 1500 2000          index 1 2 3
+                        // line 11      2500 3000 3500          index 4 5 6
+
+                        // For ex pos = 2600 => pos > 2500 (index  4)
+                        // => line = 11 & next index = 5                    OK
+
+                        // For ex pos = 2200 => pos > 2000 (index 3)
+                        // => line == 10 & next index = 3 + 1  = 4 which is not in this line
+                        // => line = 11 & next index = 0
+
+                        if (i + 1 < _kLyrics.Lines[j].Syllables.Count)
+                            return (j, i + 1);
+                        else
+                        {
+                            // End of line
+                            // i + 2 seems to work, but why ?
+                            return (j, i + 2);
+                        }
+                    }
+                }
+            }
+            return (0, 2);
+        }
+
+        /// <summary>
+        /// Determine the last line that can be displayed according to number of lines, position  of first line
+        /// and how many lines we xant to display
+        /// </summary>
+        /// <param name="FirstLine"></param>
+        /// <param name="nbLines"></param>
+        /// <param name="nbLinesToShow"></param>
+        /// <returns></returns>
+        private int SetLastLineToShow(int FirstLine, int nbLines, int nbLinesToShow)
+        {
+            int LastLine;
+
+            if (nbLines == 0) return FirstLine;
+
+            if (FirstLine + nbLinesToShow <= nbLines)
+                LastLine = FirstLine + nbLinesToShow - 1;
+            else
+                LastLine = nbLines - 1;
+
+            return LastLine;
+
+        }
+
+        /// <summary>
+        /// Mesure length of a portion of line (already sung + being sung)
+        /// </summary>
+        /// <param name="idx"></param>
+        /// <returns></returns>
+        private float GetCurLength(int curline, int nextindex)
+        {
+            float res = 0;
+
+            active_fragment = string.Empty;
+            active_fragment_length = 0;
+            highlight_fragment = string.Empty;
+            highlight_fragment_length = 0;
+            inactive_fragment = string.Empty;
+            inactive_fragment_length = 0;
+
+            // Search for the current line
+            for (int i = 0; i < _kLyrics.Lines[curline].Syllables.Count(); i++)
+            {
+                // Fragments before nextindex
+                if (i < nextindex)
+                {
+                    res += MeasureString(_kLyrics.Lines[curline].Syllables[i].Text, _karaokeFont.Size);
+
+                    if (nextindex >= 0 && i < nextindex - 1)
+                    {
+                        // Already sung
+                        active_fragment += _kLyrics.Lines[curline].Syllables[i].Text;
+                        active_fragment_length += MeasureString(_kLyrics.Lines[curline].Syllables[i].Text, _karaokeFont.Size);
+                    }
+                    else if (nextindex > 0 && i == nextindex - 1)
+                    {
+                        // Being sung
+                        highlight_fragment = _kLyrics.Lines[curline].Syllables[i].Text;
+                        highlight_fragment_length = MeasureString(_kLyrics.Lines[curline].Syllables[i].Text, _karaokeFont.Size);
+                    }
+                }
+                else if (i >= nextindex)
+                {
+                    inactive_fragment += _kLyrics.Lines[curline].Syllables[i].Text;
+                    inactive_fragment_length += MeasureString(_kLyrics.Lines[curline].Syllables[i].Text, _karaokeFont.Size);
+                }
+            }
+
+            //if (inactive_fragment.Length > 0) 
+            //    Console.WriteLine("inactive_fragment = " + inactive_fragment);
+
+            return res;
+        }
+
+        #endregion Receive pos from player   
+       
 
         /// <summary>
         /// Guess if picturebox should be paint.
@@ -1795,7 +2133,7 @@ namespace PicControl
                     // new paragraph = empty line (space)
                     lstLines.Add(" ");
                 }
-                else if (lineContent != "")
+                else //if (lineContent != "")
                 {
                     lstLines.Add(lineContent);
                 }               
@@ -2056,7 +2394,7 @@ namespace PicControl
             // Si retour arriere ou avance
             if (syllabeposition < 0)
                 syllabeposition = 0;
-
+            
             if (syllabeposition >= 0 && syllabeposition < syllabes.Count)
             {
                 if (syllabes[syllabeposition].line != currentLine)
@@ -2072,6 +2410,11 @@ namespace PicControl
                     //createListNextRectangles(syllabes[syllabeposition].last + 1);
                 }
             }
+            
+            
+           
+            
+        
         }
       
 
@@ -2987,7 +3330,7 @@ namespace PicControl
 
         #region Code fragments
 
-        private void DrawActiveLineWithBorders(PaintEventArgs e, int y1)
+        private void DrawActiveLineWithBorders(PaintEventArgs e,int lineIndex, int y1)
         {
             #region Declarations
             int x0 = 0;
@@ -3011,10 +3354,12 @@ namespace PicControl
                 syllab = syllabes[i];
 
                 // It is the current line
-                if (syllab.line == currentLine)
+                if (syllab.line == lineIndex)//currentLine)
                 {
 
                     // Rectangle
+                    if (syllab.posline >= rRect.Count) return;
+
                     x1 = rRect[syllab.posline].X;                    
                     W = (int)rRect[syllab.posline].Width;
                     H = (int)rRect[syllab.posline].Height;
@@ -3127,7 +3472,7 @@ namespace PicControl
                     }
                 }
                 // Ligne immédiatement suivante
-                else if (syllab.line > currentLine + 1)
+                else if (syllab.line > lineIndex + 1)//currentLine + 1)
                 {
                     break;
                 }
@@ -3135,14 +3480,14 @@ namespace PicControl
 
         }
        
-        private void DrawActiveLineWithShadow(PaintEventArgs e, int y1) 
+        private void DrawActiveLineWithShadow(PaintEventArgs e, int lineIndex, int y1) 
         {
-            DrawActiveLineWithBorders(e, y1);
+            DrawActiveLineWithBorders(e, lineIndex, y1);
         }
 
-        private void DrawActiveLineWithNeon(PaintEventArgs e, int y1) 
+        private void DrawActiveLineWithNeon(PaintEventArgs e, int lineIndex, int y1) 
         {
-            DrawActiveLineWithBorders(e, y1);
+            DrawActiveLineWithBorders(e, lineIndex, y1);
         }
 
 
@@ -3490,7 +3835,7 @@ namespace PicControl
             int y0 = getOffsetHeight(emSize);
             
             // Draw active line with borders
-            DrawActiveLineWithBorders(e, y0);
+            DrawActiveLineWithBorders(e, 0, y0);
 
             
             // Draw next  inactives lines with borders
@@ -3531,7 +3876,7 @@ namespace PicControl
             int y0 = getOffsetHeight(emSize);
 
             // Draw active line with borders
-            DrawActiveLineWithBorders(e, y0);
+            DrawActiveLineWithBorders(e, 0, y0);
 
 
             // Draw next  inactives lines with borders
@@ -3610,7 +3955,7 @@ namespace PicControl
             int y0 = getOffsetHeight(emSize);
 
             // Draw active line with borders
-            DrawActiveLineWithBorders(e, y0);
+            DrawActiveLineWithBorders(e, 0, y0);
 
 
             // Draw next  inactives lines with borders
@@ -3638,6 +3983,122 @@ namespace PicControl
         }
 
         #endregion Draw text with fixed lines
+
+
+        #region Instrumental functions
+
+        /// <summary>
+        /// Search for a line containing an instrumental
+        /// </summary>
+        /// <param name="start"></param>
+        /// <param name="end"></param>
+        /// <returns></returns>
+        private int SearchLineOfInformation(int[] lines)
+        {
+            int x;
+            for (int i = 0; i < lines.Count(); i++)
+            {
+                x = lines[i];
+                if (x < _kLyrics.Lines.Count)
+                {
+                    if (_kLyrics.Lines[x].Syllables.Last().CharType == Syllable.CharTypes.Information && _kLyrics.Lines[x].Syllables.Last().Text != string.Empty)
+                    {
+                        return i;
+                    }
+                }
+            }
+            return -2;
+        }
+
+        /// <summary>
+        /// Checks whether an instrumental section has begun and updates the countdown and timing state accordingly.
+        /// </summary>
+        /// <remarks>This method determines if the current lyric line marks the start of an instrumental
+        /// section. If so, it calculates the duration until the next text line and initiates a countdown for when
+        /// singing should resume. This is typically used to manage the display and timing of lyric lines during
+        /// instrumental breaks.</remarks>
+        private void CheckIfInstrumentalBegins()
+        {
+            if (_kLyrics.Lines.Count == 0) return;
+
+            // Check if lines 3 and 4 must be hiden             
+            if (!bInstrumentalStarted)
+            {
+                // If _FirstLineToShow line is an instrumental, we have to wait until the end of the instrumental before drawing lines 1 and 2
+                if (_FirstLineToShow >= 0 && _kLyrics.Lines[_FirstLineToShow].Syllables.Last().CharType == Syllable.CharTypes.Information && _kLyrics.Lines[_FirstLineToShow].Syllables.Last().Text != string.Empty)
+                {
+                    // Calculate endTime between _FirstLineToShow and the next Text line located in _FirstLineToShow + 2 when Four Lines swapped and _FirstLineToShow + 1 for Two lines swapped
+
+                    if (KaraokeDisplayType == KaraokeDisplayTypes.TwoLinesSwapped)
+                    {
+                        if (_FirstLineToShow + 1 < _kLyrics.Lines.Count)
+                            TargetPositionTicks = _kLyrics.Lines[_FirstLineToShow + 1].Syllables.First().TicksOn;   // Position in the song to reach = next real syllable                                                               
+                        else
+                            TargetPositionTicks = _TotalTicks; // _duration * 1000;
+                    }
+                    else if (KaraokeDisplayType == KaraokeDisplayTypes.FourLinesSwapped)
+                    {
+                        // (_FirstLineToShow + 1 cannot be used because it is the 2nd line of information)
+                        if (_FirstLineToShow + 2 < _kLyrics.Lines.Count)
+                            TargetPositionTicks = _kLyrics.Lines[_FirstLineToShow + 2].Syllables.First().TicksOn;   // Position in the song to reach = next real syllable                                                               
+                        else
+                            TargetPositionTicks = _TotalTicks; //_duration * 1000;                                                  // Position in the song to reach = end of song
+
+                    }
+
+                    //_endTime = TargetPositionTicks - _kLyrics.Lines[_FirstLineToShow].Syllables.Last().TicksOff;
+
+                    _startTime = PlayerPositionTicks;
+                    //TimeSpan tm = _endTime - DateTime.Now;
+                    SecondsBeforeSinging = (TargetPositionTicks - PlayerPositionTicks) / BeatDuration; //  (int)tm.TotalSeconds;
+                    bInstrumentalStarted = true;
+                    bCountDown = true;
+                }
+            }
+        }
+
+
+        /// <summary>
+        /// Update the CountDown
+        /// </summary>
+        private void UpdateCountDown()
+        {
+            if (bCountDown)
+            {
+                // Real position:  PlayerPositionMilliseconds
+                // Position to reach: TargetPositionMilliseconds               
+
+                // Recalculates the remaining time with PlayerPosition
+                _endTime = TargetPositionTicks - PlayerPositionTicks;
+                //Console.WriteLine("_endTime = " + _endTime);
+
+                //TimeSpan tm = _endTime - DateTime.Now;
+
+                if (_endTime < 0)
+                {
+                    _endTime = 0;
+                    _startTime = 0;
+                    bInstrumentalStarted = false;
+                    SecondsBeforeSinging = -1;
+                    bCountDown = false;
+
+                    Console.WriteLine("********** End of Countdown");
+                }
+                else
+                {
+                    // Time is about 3 sec before next lyric to sing
+                    // Calculate countdown
+                    int s = _endTime/BeatDuration;
+                    
+                    if (s != SecondsBeforeSinging)
+                    {
+                        SecondsBeforeSinging = s;
+                    }
+                }
+            }
+        }
+
+        #endregion Instrumental functions
 
 
         #region Draw text with Four lines swapped
@@ -3672,7 +4133,7 @@ namespace PicControl
             }
         }
         
-        private void FlsDrawTextWithBorder(PaintEventArgs e)
+        private void FlsDrawTextWithBorder2(PaintEventArgs e)
         {           
             // Antialiasing
             e.Graphics.SmoothingMode = SmoothingMode.AntiAlias;
@@ -3750,11 +4211,9 @@ namespace PicControl
                 idx4 = _FirstLineToShow + 2;
             }
            
-            
-            
-
+                       
             // Draw active line with borders
-            DrawActiveLineWithBorders(e, y1);
+            DrawActiveLineWithBorders(e, 0, y1);
 
             // Line y2 must be drawned active when
             bool IsActive = ((_FirstLineToShow % 4 == 1) || (_FirstLineToShow % 4 == 3)) ? true : false;
@@ -3767,25 +4226,409 @@ namespace PicControl
                 DrawInactiveLineWithBorders(e, idx3, y3);
 
             if (idx4 >= 0 && idx4 < KLyrics.Lines.Count && _FirstLineToShow > 0)
-                DrawInactiveLineWithBorders(e, idx4, y4);
-
-
-           
-
-         
+                DrawInactiveLineWithBorders(e, idx4, y4);                    
         }
 
-        private void FlsDrawTextWithShadow(PaintEventArgs e)
+        /// <summary>
+        /// Draw four lines swapped
+        /// </summary>
+        /// <param name="e"></param>
+        private void FlsDrawTextWithBorder(PaintEventArgs e)
         {
+            if (_kLyrics.Lines.Count == 0) return;
+
             // Antialiasing
             e.Graphics.SmoothingMode = SmoothingMode.AntiAlias;
 
             // Create list of rectangles when line changes
             synchronize(_currentTextPos);
 
-            // Synchronise can modify currentLine, so we need to recalculate it after synchronize
-            int _FirstLineToShow = currentLine;
+            // Calculate offset to center the text vertically
+            int y0 = getOffsetHeight(emSize);
 
+
+            int tm;
+
+            int y1 = 0;
+            int y2 = 0;
+            int y3 = 0;
+            int y4 = 0;
+            int idx2 = 0;
+            int idx3 = 0;
+            int idx4 = 0;
+
+            int LinePosition = -1;
+
+            // Search for information
+            // None                         -2
+            // _FirstLineToShow - 1         -1
+            // _FirstLineToShow              0
+            // _FirstLineToShow + 1          1
+            // _FirstLineToShow + 2          2
+            // _FirstLineToShow + 3          3
+            int LineOfInformationPosition = -2;
+
+            int[] LinesNr = new int[4];
+
+            #region Line layout
+
+            if (_FirstLineToShow % 4 == 0)
+            {
+                // First line is active                
+                LinePosition = 0;
+                // Position possible for LineOfInformationPosition
+
+                y1 = y0;                            //          _FirstLineToShow              current         (update 3 & 4)
+                y2 = y0 + _lineHeight;              // idx2     _FirstLineToShow + 1      inactive
+                y3 = y0 + 2 * _lineHeight;          // idx3     _FirstLineToShow + 2      inactive
+                y4 = y0 + 3 * _lineHeight;          // idx4     _FirstLineToShow + 3      inactive
+
+                idx2 = _FirstLineToShow + 1;
+                idx3 = _FirstLineToShow + 2;
+                idx4 = _FirstLineToShow + 3;
+
+                LinesNr[0] = _FirstLineToShow;
+                LinesNr[1] = _FirstLineToShow + 1;
+                LinesNr[2] = _FirstLineToShow + 2;
+                LinesNr[3] = _FirstLineToShow + 3;
+
+            }
+            else if (_FirstLineToShow % 4 == 1)
+            {
+                // 2nd line is active
+                LinePosition = 1;
+                // Position not possible for LineOfInformationPosition
+
+                y2 = y0;                            // idx2     _FirstLineToShow - 1     * active
+                y1 = y0 + _lineHeight;              //          _FirstLineToShow             current         (no update)
+                y3 = y0 + 2 * _lineHeight;          // idx3     _FirstLineToShow + 1     inactive
+                y4 = y0 + 3 * _lineHeight;          // idx4     _FirstLineToShow + 2     inactive
+
+                idx2 = _FirstLineToShow - 1;
+                idx3 = _FirstLineToShow + 1;
+                idx4 = _FirstLineToShow + 2;
+
+                LinesNr[0] = _FirstLineToShow - 1;
+                LinesNr[1] = _FirstLineToShow;
+                LinesNr[2] = _FirstLineToShow + 1;
+                LinesNr[3] = _FirstLineToShow + 2;
+
+            }
+            else if (_FirstLineToShow % 4 == 2)
+            {
+                // 3rd line is active
+                LinePosition = 2;
+                // Position possible for LineOfInformationPosition
+
+                y3 = y0;                            // idx3     _FirstLineToShow + 2     inactive
+                y4 = y0 + _lineHeight;              // idx4     _FirstLineToShow + 3     inactive
+                y1 = y0 + 2 * _lineHeight;          //          _FirstLineToShow             current         (update 1 & 2)
+                y2 = y0 + 3 * _lineHeight;          // idx2     _FirstLineToShow + 1     inactive
+
+                idx2 = _FirstLineToShow + 1;
+                idx3 = _FirstLineToShow + 2;
+                idx4 = _FirstLineToShow + 3;
+
+                LinesNr[0] = _FirstLineToShow + 2;
+                LinesNr[1] = _FirstLineToShow + 3;
+                LinesNr[2] = _FirstLineToShow;
+                LinesNr[3] = _FirstLineToShow + 1;
+
+
+            }
+            else if (_FirstLineToShow % 4 == 3)
+            {
+                // 4th line is active
+                LinePosition = 3;
+                // Position not possible for LineOfInformationPosition
+
+                y3 = y0;                            // idx3     _FirstLineToShow + 1     inactive
+                y4 = y0 + _lineHeight;              // idx4     _FirstLineToShow + 2     inactive
+                y2 = y0 + 2 * _lineHeight;          // idx2     _FirstLineToShow - 1     * active
+                y1 = y0 + 3 * _lineHeight;          //          _FirstLineToShow             current         (no update)
+
+                idx2 = _FirstLineToShow - 1;
+                idx3 = _FirstLineToShow + 1;
+                idx4 = _FirstLineToShow + 2;
+
+                LinesNr[0] = _FirstLineToShow + 1;
+                LinesNr[1] = _FirstLineToShow + 2;
+                LinesNr[2] = _FirstLineToShow - 1;
+                LinesNr[3] = _FirstLineToShow;
+
+
+            }
+
+            #endregion Line layout
+
+            bool bTooMuch = false;
+            for (int i = 0; i < LinesNr.Length; i++)
+            {
+                if (LinesNr[i] >= _kLyrics.Lines.Count)
+                {
+                    bTooMuch = true;
+                    break;
+                }
+            }
+
+            if (!bTooMuch)
+                LineOfInformationPosition = SearchLineOfInformation(LinesNr);
+            else
+                LineOfInformationPosition = LastLineOfInformationPosition;
+
+
+            // If no line of information in the 4 lines => normal display in 4 lines swapped
+            if (LineOfInformationPosition == -2)
+            {
+                #region Normal drawing
+
+                bInstrumentalStarted = false;
+                bCountDown = false;
+
+
+                // Draw y1 line: active & highlighted line                
+                DrawActiveLineWithBorders(e, _FirstLineToShow, y1);
+
+                // Line y2 must be drawned active when
+                bool IsActive = ((_FirstLineToShow % 4 == 1) || (_FirstLineToShow % 4 == 3)) ? true : false;
+
+                // Draw y2 line: active when before line y1 (already sung), inactive when after line y1 (not yet sung)
+                if (idx2 >= 0)
+                    DrawInactiveLineWithBorders(e, idx2, y2, IsActive);
+
+
+                // Draw lines y3 and y4 (always inactives)
+                if (idx3 < _kLyrics.Lines.Count)
+                    DrawInactiveLineWithBorders(e, idx3, y3);
+                if (idx4 < _kLyrics.Lines.Count)
+                    DrawInactiveLineWithBorders(e, idx4, y4);
+
+                #endregion Normal drawing
+            }
+            else
+            {
+                // Checks whether an instrumental section has begun and updates the countdown and timing state accordingly.
+                CheckIfInstrumentalBegins();
+
+                // Update the CountDown
+                UpdateCountDown();
+
+
+                
+
+                switch (LineOfInformationPosition)
+                {
+                    #region Instrumental on top
+
+                    case 0:                             // Instrumental is on line 0
+                        // y1 * information
+                        // y2 information
+                        // y3 normal
+                        // y4 normal
+                        switch (LinePosition)
+                        {
+                            case 0:
+                                // y1 * information1 new
+                                // y2 information2   new
+                                // y3 normal old than new
+                                // y4 normal old than new
+                                // Draw "(intrumental)" on active line and countdown on next line
+                                DrawInformation(e, _kLyrics.Lines[_FirstLineToShow].Syllables.Last().Text + " " + SecondsBeforeSinging.ToString(), y1);
+
+                                if (bCountDown)
+                                {
+                                    // Keep last actives lines 3 & 4 when instrumental has began for 1 second
+                                    tm = PlayerPositionTicks - _startTime;
+                                    if (tm < 2 * BeatDuration)
+                                    {
+                                        if (_FirstLineToShow - 2 >= 0)
+                                        {
+                                            DrawInactiveLineWithBorders(e, _FirstLineToShow - 2, y3, true);         // keep old line 1 sec
+                                            DrawInactiveLineWithBorders(e, _FirstLineToShow - 1, y4, true);         // keep olf line 1 sec
+
+                                        }
+                                    }
+                                }
+
+                                // Draw lines y3 and y4 only if they are less than 4 sec before the end of an instrumental
+                                // Except if introduction (_FirstLineToShow = 0) show
+                                if (bInstrumentalStarted && _FirstLineToShow > 0)
+                                {
+                                    tm = TargetPositionTicks - PlayerPositionTicks;
+
+                                    if (tm > _DelayBeforeEndOfInstrumental)
+                                    {
+                                        // Do not display next lines until _DelayBeforeEndOfInstrumental
+                                        return;
+                                    }
+                                }
+
+                                DrawInactiveLineWithBorders(e, idx3, y3);      // Draw new line before the end of instrumental         
+                                DrawInactiveLineWithBorders(e, idx4, y4);      // Draw new line before the end of instrumental
+                                break;
+
+                            case 1:
+                                // y2 information1
+                                // y1 * information2 no update
+                                // y3 normal 
+                                // y4 normal 
+
+                                // draw ("instrumental") on previous line and countdown on current line
+                                DrawInformation(e, _kLyrics.Lines[_FirstLineToShow - 1].Syllables.Last().Text + " " + SecondsBeforeSinging.ToString(), y1 - _lineHeight);
+
+                                DrawInactiveLineWithBorders(e, idx3, y3);
+                                DrawInactiveLineWithBorders(e, idx4, y4);
+                                break;
+
+                            case 2:
+                                // y3 information1 new
+                                // y4 information2 new
+                                // y1 * normal old          update y3 & y4 
+                                // y2 normal   old
+
+                                // Draw y1 line: active & highlighted line                
+                                DrawActiveLineWithBorders(e, _FirstLineToShow, y1);
+                                // Draw y2 line: inactive line  (before or after y1)                                
+                                DrawInactiveLineWithBorders(e, idx2, y2, false);
+
+                                // Draw instrumental on line 0 (y3)
+                                DrawInformation(e, _kLyrics.Lines[idx3].Syllables.Last().Text, y3);
+                                break;
+
+                            case 3:
+                                // y3 information1
+                                // y4 information2
+                                // y2 normal
+                                // y1 * normal          no update
+
+                                // Draw y1 line: active & highlighted line                
+                                DrawActiveLineWithBorders(e, _FirstLineToShow, y1);
+                                // Draw y2 line: inactive line  (before or after y1)                                
+                                DrawInactiveLineWithBorders(e, idx2, y2, true);
+
+                                // Draw instrumental on line 0
+                                DrawInformation(e, _kLyrics.Lines[idx3].Syllables.Last().Text, y3);
+                                break;
+                        }
+                        break;
+
+                    #endregion Instrumental on top
+
+
+                    #region Instrumental on bottom
+
+                    case 2:                                                         // instrumental on line 2 (3rd line)
+                        // y1 normal
+                        // y2 normal
+                        // y3 * information1
+                        // y4 information2
+                        switch (LinePosition)
+                        {
+                            case 0:                                                 // LinePosition is 0
+                                // y1 * normal
+                                // y2 normal
+                                // y3 information1
+                                // y4 information2
+
+                                // Draw y1 line: active & highlighted line                
+                                DrawActiveLineWithBorders(e, _FirstLineToShow, y1);
+                                // line y 2 is inactive (not yet played)
+                                DrawInactiveLineWithBorders(e, idx2, y2, false);
+
+                                // Draw "(intrumental)" on 3rd line and countdown on next line
+                                DrawInformation(e, _kLyrics.Lines[idx3].Syllables.Last().Text, y3);
+                                break;
+
+                            case 1:                                                 // LinePosition is 1
+                                // y1 normal
+                                // y2 * normal
+                                // y3 information1
+                                // y4 information2
+
+                                // line y2 is already played
+                                DrawInactiveLineWithBorders(e, idx2, y2, true);
+                                // line y1 : active a highlighted line
+                                DrawActiveLineWithBorders(e, _FirstLineToShow, y1);
+
+                                // Draw "(intrumental)" on 3rd line and countdown on next line
+                                DrawInformation(e, _kLyrics.Lines[idx3].Syllables.Last().Text, y3);
+
+                                break;
+
+                            case 2:                                                 // LinePosition is 2   = LineOfInformationPosition                                                                                                                
+                                // y1 normal
+                                // y2 normal
+                                // y3 * information1
+                                // y4 information2
+                                if (bCountDown)
+                                {
+                                    // Keep last actives lines 3 & 4 when instrumental has began for 1 second
+                                    tm = PlayerPositionTicks - _startTime;
+                                    if (tm < 2 * BeatDuration)
+                                    {
+                                        if (_FirstLineToShow - 2 >= 0)
+                                        {
+                                            DrawInactiveLineWithBorders(e, _FirstLineToShow - 2, y3, true);
+                                            DrawInactiveLineWithBorders(e, _FirstLineToShow - 1, y4, true);
+                                        }
+                                    }
+                                }
+                                // Draw "(intrumental)" on active line and countdown on next line
+                                DrawInformation(e, _kLyrics.Lines[_FirstLineToShow].Syllables.Last().Text + " " + SecondsBeforeSinging.ToString(), y1);
+
+                                // Draw lines y3 and y4 only if they are less than 4 sec before the end of an instrumental
+                                if (bInstrumentalStarted)
+                                {
+                                    tm = TargetPositionTicks - PlayerPositionTicks;
+
+                                    if (tm > _DelayBeforeEndOfInstrumental)
+                                    {
+                                        // Do not display next lines
+                                        return;
+                                    }
+                                }
+                                if (idx3 < _kLyrics.Lines.Count)
+                                    DrawInactiveLineWithBorders(e, idx3, y3);
+                                if (idx4 < _kLyrics.Lines.Count)
+                                    DrawInactiveLineWithBorders(e, idx4, y4);
+
+                                break;
+
+                            case 3:
+                                // y1 normal
+                                // y2 normal
+                                // y3 information1
+                                // y4 * information2
+                                // Draw "(intrumental)" on active line and countdown on next line                                
+                                DrawInformation(e, _kLyrics.Lines[idx2].Syllables.Last().Text + " " + SecondsBeforeSinging.ToString(), y2);
+
+                                DrawInactiveLineWithBorders(e, idx3, y3);
+                                DrawInactiveLineWithBorders(e, idx4, y4);
+
+                                break;
+                        }
+                        break;
+
+                    #endregion Instrumental on bottom
+                }
+            }
+
+            LastLineOfInformationPosition = LineOfInformationPosition;
+
+        }
+
+
+        private void FlsDrawTextWithShadow(PaintEventArgs e)
+        {
+            if (_kLyrics.Lines.Count == 0) return;
+
+            // Antialiasing
+            e.Graphics.SmoothingMode = SmoothingMode.AntiAlias;
+
+            // Create list of rectangles when line changes
+            synchronize(_currentTextPos);
+
+            
             // Calculate offset to center the text vertically
             int y0 = getOffsetHeight(emSize);
 
@@ -3797,98 +4640,375 @@ namespace PicControl
             int idx3 = 0;
             int idx4 = 0;
 
-            int chordOffset = 0;
-            if (bShowChords)
-                chordOffset = 2 * _lineHeight / 3;
+            int LinePosition = -1;
 
+            // Search for information
+            // None                         -2
+            // _FirstLineToShow - 1         -1
+            // _FirstLineToShow              0
+            // _FirstLineToShow + 1          1
+            // _FirstLineToShow + 2          2
+            // _FirstLineToShow + 3          3
+            int LineOfInformationPosition = -2;
 
-            // At start, _FirstLineToShow = 0 
-            // 1st line is empty
-            // 2nd is empty
-            // Active line is on the 3rd line
-            // Active line + 1 is on the 4th line
+            int[] LinesNr = new int[4];
 
-            if (_FirstLineToShow % 4 == 2)
+            #region Line layout
+
+            if (_FirstLineToShow % 4 == 0)
             {
-                // First line is active
-                y1 = y0;                                            //_FirstLineToShow
-                y2 = y0 + chordOffset + _lineHeight;                //_FirstLineToShow + 1
-                y3 = y0 + 2 * chordOffset + 2 * _lineHeight;        //_FirstLineToShow + 2
-                y4 = y0 + 3 * chordOffset + 3 * _lineHeight;        //_FirstLineToShow + 3
+                // First line is active                
+                LinePosition = 0;
+                // Position possible for LineOfInformationPosition
+
+                y1 = y0;                            //          _FirstLineToShow              current         (update 3 & 4)
+                y2 = y0 + _lineHeight;              // idx2     _FirstLineToShow + 1      inactive
+                y3 = y0 + 2 * _lineHeight;          // idx3     _FirstLineToShow + 2      inactive
+                y4 = y0 + 3 * _lineHeight;          // idx4     _FirstLineToShow + 3      inactive
 
                 idx2 = _FirstLineToShow + 1;
                 idx3 = _FirstLineToShow + 2;
                 idx4 = _FirstLineToShow + 3;
+
+                LinesNr[0] = _FirstLineToShow;
+                LinesNr[1] = _FirstLineToShow + 1;
+                LinesNr[2] = _FirstLineToShow + 2;
+                LinesNr[3] = _FirstLineToShow + 3;
+
+            }
+            else if (_FirstLineToShow % 4 == 1)
+            {
+                // 2nd line is active
+                LinePosition = 1;
+                // Position not possible for LineOfInformationPosition
+
+                y2 = y0;                            // idx2     _FirstLineToShow - 1     * active
+                y1 = y0 + _lineHeight;              //          _FirstLineToShow             current         (no update)
+                y3 = y0 + 2 * _lineHeight;          // idx3     _FirstLineToShow + 1     inactive
+                y4 = y0 + 3 * _lineHeight;          // idx4     _FirstLineToShow + 2     inactive
+
+                idx2 = _FirstLineToShow - 1;
+                idx3 = _FirstLineToShow + 1;
+                idx4 = _FirstLineToShow + 2;
+
+                LinesNr[0] = _FirstLineToShow - 1;
+                LinesNr[1] = _FirstLineToShow;
+                LinesNr[2] = _FirstLineToShow + 1;
+                LinesNr[3] = _FirstLineToShow + 2;
+
+            }
+            else if (_FirstLineToShow % 4 == 2)
+            {
+                // 3rd line is active
+                LinePosition = 2;
+                // Position possible for LineOfInformationPosition
+
+                y3 = y0;                            // idx3     _FirstLineToShow + 2     inactive
+                y4 = y0 + _lineHeight;              // idx4     _FirstLineToShow + 3     inactive
+                y1 = y0 + 2 * _lineHeight;          //          _FirstLineToShow             current         (update 1 & 2)
+                y2 = y0 + 3 * _lineHeight;          // idx2     _FirstLineToShow + 1     inactive
+
+                idx2 = _FirstLineToShow + 1;
+                idx3 = _FirstLineToShow + 2;
+                idx4 = _FirstLineToShow + 3;
+
+                LinesNr[0] = _FirstLineToShow + 2;
+                LinesNr[1] = _FirstLineToShow + 3;
+                LinesNr[2] = _FirstLineToShow;
+                LinesNr[3] = _FirstLineToShow + 1;
+
 
             }
             else if (_FirstLineToShow % 4 == 3)
             {
-                // 2nd line is active
-                y2 = y0;                                            // _FirstLineToShow - 1
-                y1 = y0 + chordOffset + _lineHeight;                // _FirstLineToShow
-                y3 = y0 + 2 * chordOffset + 2 * _lineHeight;        // _FirstLineToShow + 1
-                y4 = y0 + 3 * chordOffset + 3 * _lineHeight;        // _FirstLineToShow + 2
-
-                idx2 = _FirstLineToShow - 1;
-                idx3 = _FirstLineToShow + 1;
-                idx4 = _FirstLineToShow + 2;
-            }
-            else if (_FirstLineToShow % 4 == 0)
-            {
-                // 3rd line is active
-                y3 = y0;                                            // _FirstLineToShow + 2     
-                y4 = y0 + chordOffset + _lineHeight;                // _FirstLineToShow + 3
-                y1 = y0 + 2 * chordOffset + 2 * _lineHeight;        // _FirstLineToShow
-                y2 = y0 + 3 * chordOffset + 3 * _lineHeight;        // _FirstLineToShow + 1
-
-                idx2 = _FirstLineToShow + 1;
-                idx3 = _FirstLineToShow + 2;
-                idx4 = _FirstLineToShow + 3;
-            }
-            else if (_FirstLineToShow % 4 == 1)
-            {
                 // 4th line is active
-                y3 = y0;                                            // _FirstLineToShow + 1
-                y4 = y0 + chordOffset + _lineHeight;                // _FirstLineToShow + 2
-                y2 = y0 + 2 * chordOffset + 2 * _lineHeight;        // _FirstLineToShow - 1
-                y1 = y0 + 3 * chordOffset + 3 * _lineHeight;        // _FirstLineToShow               
+                LinePosition = 3;
+                // Position not possible for LineOfInformationPosition
+
+                y3 = y0;                            // idx3     _FirstLineToShow + 1     inactive
+                y4 = y0 + _lineHeight;              // idx4     _FirstLineToShow + 2     inactive
+                y2 = y0 + 2 * _lineHeight;          // idx2     _FirstLineToShow - 1     * active
+                y1 = y0 + 3 * _lineHeight;          //          _FirstLineToShow             current         (no update)
 
                 idx2 = _FirstLineToShow - 1;
                 idx3 = _FirstLineToShow + 1;
                 idx4 = _FirstLineToShow + 2;
+
+                LinesNr[0] = _FirstLineToShow + 1;
+                LinesNr[1] = _FirstLineToShow + 2;
+                LinesNr[2] = _FirstLineToShow - 1;
+                LinesNr[3] = _FirstLineToShow;
+
+
             }
 
-
-            // Draw active line with borders
-            DrawActiveLineWithShadow(e, y1);
+            #endregion Line layout
 
 
-            // Line y2 must be drawned active when
-            bool IsActive = ((_FirstLineToShow % 4 == 1) || (_FirstLineToShow % 4 == 3)) ? true : false;
+            bool bTooMuch = false;
+            for (int i = 0; i < LinesNr.Length; i++)
+            {
+                if (LinesNr[i] >= _kLyrics.Lines.Count)
+                {
+                    bTooMuch = true;
+                    break;
+                }
+            }
 
-            // Draw Inactive line with borders
-            if (idx2 >= 0 && idx2 < KLyrics.Lines.Count)
-                DrawInactiveLineWithShadow(e, idx2, y2, IsActive);
+            if (!bTooMuch)
+                LineOfInformationPosition = SearchLineOfInformation(LinesNr);
+            else
+                LineOfInformationPosition = LastLineOfInformationPosition;
 
-            if (idx3 >= 0 && idx3 < KLyrics.Lines.Count && _FirstLineToShow > 0)
-                DrawInactiveLineWithShadow(e, idx3, y3);
 
-            if (idx4 >= 0 && idx4 < KLyrics.Lines.Count && _FirstLineToShow > 0)
-                DrawInactiveLineWithShadow(e, idx4, y4);
+            // If no line of information in the 4 lines => normal display in 4 lines swapped
+            if (LineOfInformationPosition == -2)
+            {
+                #region Normal drawing
 
+                bInstrumentalStarted = false;
+                bCountDown = false;
+
+
+                // Draw y1 line: active & highlighted line                
+                DrawActiveLineWithShadow(e, _FirstLineToShow, y1);
+
+                // Line y2 must be drawned active when
+                bool IsActive = ((_FirstLineToShow % 4 == 1) || (_FirstLineToShow % 4 == 3)) ? true : false;
+
+                // Draw y2 line: active when before line y1 (already sung), inactive when after line y1 (not yet sung)
+                if (idx2 >= 0)
+                    DrawInactiveLineWithShadow(e, idx2, y2, IsActive);
+
+
+                // Draw lines y3 and y4 (always inactives)
+                if (idx3 < _kLyrics.Lines.Count)
+                    DrawInactiveLineWithShadow(e, idx3, y3);
+                if (idx4 < _kLyrics.Lines.Count)
+                    DrawInactiveLineWithShadow(e, idx4, y4);
+
+                #endregion Normal drawing
+
+            }
+            else
+            {
+                // Checks whether an instrumental section has begun and updates the countdown and timing state accordingly.
+                CheckIfInstrumentalBegins();
+
+                // Update the CountDown
+                UpdateCountDown();
+
+
+                int tm = PlayerPositionTicks - _startTime;
+
+                switch (LineOfInformationPosition)
+                {
+                    #region Instrumental on top
+
+                    case 0:                             // Instrumental is on line 0
+                        // y1 * information
+                        // y2 information
+                        // y3 normal
+                        // y4 normal
+                        switch (LinePosition)
+                        {
+                            case 0:
+                                // y1 * information1 new
+                                // y2 information2   new
+                                // y3 normal old than new
+                                // y4 normal old than new
+                                // Draw "(intrumental)" on active line and countdown on next line
+                                DrawInformation(e, _kLyrics.Lines[_FirstLineToShow].Syllables.Last().Text + " " + SecondsBeforeSinging.ToString(), y1);
+
+                                if (bCountDown)
+                                {
+                                    // Keep last actives lines 3 & 4 when instrumental has began for 1 second
+                                    if (tm < 2 * BeatDuration)
+                                    {
+                                        if (_FirstLineToShow - 2 >= 0)
+                                        {
+                                            DrawInactiveLineWithShadow(e, _FirstLineToShow - 2, y3, true);         // keep old line 1 sec
+                                            DrawInactiveLineWithShadow(e, _FirstLineToShow - 1, y4, true);         // keep olf line 1 sec
+
+                                        }
+                                    }
+                                }
+
+                                // Draw lines y3 and y4 only if they are less than 4 sec before the end of an instrumental
+                                // Except if introduction (_FirstLineToShow = 0) show
+                                if (bInstrumentalStarted && _FirstLineToShow > 0)
+                                {
+                                    tm = TargetPositionTicks - PlayerPositionTicks;
+
+                                    if (tm > _DelayBeforeEndOfInstrumental)
+                                    {
+                                        // Do not display next lines until _DelayBeforeEndOfInstrumental
+                                        return;
+                                    }
+                                }
+
+                                DrawInactiveLineWithShadow(e, idx3, y3);      // Draw new line before the end of instrumental         
+                                DrawInactiveLineWithShadow(e, idx4, y4);      // Draw new line before the end of instrumental
+                                break;
+
+                            case 1:
+                                // y2 information1
+                                // y1 * information2 no update
+                                // y3 normal 
+                                // y4 normal 
+
+                                // draw ("instrumental") on previous line and countdown on current line
+                                DrawInformation(e, _kLyrics.Lines[_FirstLineToShow - 1].Syllables.Last().Text + " " + SecondsBeforeSinging.ToString(), y1 - _lineHeight);
+
+                                DrawInactiveLineWithShadow(e, idx3, y3);
+                                DrawInactiveLineWithShadow(e, idx4, y4);
+                                break;
+
+                            case 2:
+                                // y3 information1 new
+                                // y4 information2 new
+                                // y1 * normal old          update y3 & y4 
+                                // y2 normal   old
+
+                                // Draw y1 line: active & highlighted line                
+                                DrawActiveLineWithShadow(e, _FirstLineToShow, y1);
+                                // Draw y2 line: inactive line  (before or after y1)                                
+                                DrawInactiveLineWithShadow(e, idx2, y2, false);
+
+                                // Draw instrumental on line 0 (y3)
+                                DrawInformation(e, _kLyrics.Lines[idx3].Syllables.Last().Text, y3);
+                                break;
+
+                            case 3:
+                                // y3 information1
+                                // y4 information2
+                                // y2 normal
+                                // y1 * normal          no update
+
+                                // Draw y1 line: active & highlighted line                
+                                DrawActiveLineWithShadow(e, _FirstLineToShow, y1);
+                                // Draw y2 line: inactive line  (before or after y1)                                
+                                DrawInactiveLineWithShadow(e, idx2, y2, true);
+
+                                // Draw instrumental on line 0
+                                DrawInformation(e, _kLyrics.Lines[idx3].Syllables.Last().Text, y3);
+                                break;
+                        }
+                        break;
+
+                    #endregion Instrumental on top
+
+
+                    #region Instrumental on bottom
+
+                    case 2:                                                         // instrumental on line 2 (3rd line)
+                        // y1 normal
+                        // y2 normal
+                        // y3 * information1
+                        // y4 information2
+                        switch (LinePosition)
+                        {
+                            case 0:                                                 // LinePosition is 0
+                                // y1 * normal
+                                // y2 normal
+                                // y3 information1
+                                // y4 information2
+
+                                // Draw y1 line: active & highlighted line                
+                                DrawActiveLineWithShadow(e, _FirstLineToShow, y1);
+                                // line y 2 is inactive (not yet played)
+                                DrawInactiveLineWithShadow(e, idx2, y2, false);
+
+                                // Draw "(intrumental)" on 3rd line and countdown on next line
+                                DrawInformation(e, _kLyrics.Lines[idx3].Syllables.Last().Text, y3);
+                                break;
+
+                            case 1:                                                 // LinePosition is 1
+                                // y1 normal
+                                // y2 * normal
+                                // y3 information1
+                                // y4 information2
+
+                                // line y2 is already played
+                                DrawInactiveLineWithShadow(e, idx2, y2, true);
+                                // line y1 : active a highlighted line
+                                DrawActiveLineWithShadow(e, _FirstLineToShow, y1);
+
+                                // Draw "(intrumental)" on 3rd line and countdown on next line
+                                DrawInformation(e, _kLyrics.Lines[idx3].Syllables.Last().Text, y3);
+
+                                break;
+
+                            case 2:                                                 // LinePosition is 2   = LineOfInformationPosition                                                                                                                
+                                // y1 normal
+                                // y2 normal
+                                // y3 * information1
+                                // y4 information2
+                                if (bCountDown)
+                                {
+                                    // Keep last actives lines 3 & 4 when instrumental has began for 1 second
+                                    if (tm < 2 * BeatDuration)
+                                    {
+                                        if (_FirstLineToShow - 2 >= 0)
+                                        {
+                                            DrawInactiveLineWithShadow(e, _FirstLineToShow - 2, y3, true);
+                                            DrawInactiveLineWithShadow(e, _FirstLineToShow - 1, y4, true);
+                                        }
+                                    }
+                                }
+                                // Draw "(intrumental)" on active line and countdown on next line
+                                DrawInformation(e, _kLyrics.Lines[_FirstLineToShow].Syllables.Last().Text + " " + SecondsBeforeSinging.ToString(), y1);
+
+                                // Draw lines y3 and y4 only if they are less than 4 sec before the end of an instrumental
+                                if (bInstrumentalStarted)
+                                {
+                                    tm = TargetPositionTicks - PlayerPositionTicks;
+
+                                    if (tm > _DelayBeforeEndOfInstrumental)
+                                    {
+                                        // Do not display next lines
+                                        return;
+                                    }
+                                }
+                                if (idx3 < _kLyrics.Lines.Count)
+                                    DrawInactiveLineWithShadow(e, idx3, y3);
+                                if (idx4 < _kLyrics.Lines.Count)
+                                    DrawInactiveLineWithShadow(e, idx4, y4);
+
+                                break;
+
+                            case 3:
+                                // y1 normal
+                                // y2 normal
+                                // y3 information1
+                                // y4 * information2
+                                // Draw "(intrumental)" on active line and countdown on next line                                
+                                DrawInformation(e, _kLyrics.Lines[idx2].Syllables.Last().Text + " " + SecondsBeforeSinging.ToString(), y2);
+
+                                DrawInactiveLineWithShadow(e, idx3, y3);
+                                DrawInactiveLineWithShadow(e, idx4, y4);
+
+                                break;
+                        }
+                        break;
+
+                    #endregion Instrumental on bottom
+                }
+            }
+
+            LastLineOfInformationPosition = LineOfInformationPosition;
         }
 
         private void FlsDrawTextWithNeon(PaintEventArgs e)
         {
+            if (_kLyrics.Lines.Count == 0) return;
+
             // Antialiasing
             e.Graphics.SmoothingMode = SmoothingMode.AntiAlias;
 
             // Create list of rectangles when line changes
             synchronize(_currentTextPos);
-
-            // Synchronise can modify currentLine, so we need to recalculate it after synchronize
-            int _FirstLineToShow = currentLine;
-
+           
             // Calculate offset to center the text vertically
             int y0 = getOffsetHeight(emSize);
 
@@ -3900,84 +5020,370 @@ namespace PicControl
             int idx3 = 0;
             int idx4 = 0;
 
-            int chordOffset = 0;
-            if (bShowChords)
-                chordOffset = 2 * _lineHeight / 3;
+            int LinePosition = -1;
 
+            // Search for information
+            // None                         -2
+            // _FirstLineToShow - 1         -1
+            // _FirstLineToShow              0
+            // _FirstLineToShow + 1          1
+            // _FirstLineToShow + 2          2
+            // _FirstLineToShow + 3          3
+            int LineOfInformationPosition = -2;
 
-            // At start, _FirstLineToShow = 0 
-            // 1st line is empty
-            // 2nd is empty
-            // Active line is on the 3rd line
-            // Active line + 1 is on the 4th line
+            int[] LinesNr = new int[4];
 
-            if (_FirstLineToShow % 4 == 2)
+            #region Line layout
+
+            if (_FirstLineToShow % 4 == 0)
             {
-                // First line is active
-                y1 = y0;                                            //_FirstLineToShow
-                y2 = y0 + chordOffset + _lineHeight;                //_FirstLineToShow + 1
-                y3 = y0 + 2 * chordOffset + 2 * _lineHeight;        //_FirstLineToShow + 2
-                y4 = y0 + 3 * chordOffset + 3 * _lineHeight;        //_FirstLineToShow + 3
+                // First line is active                
+                LinePosition = 0;
+                // Position possible for LineOfInformationPosition
+
+                y1 = y0;                            //          _FirstLineToShow              current         (update 3 & 4)
+                y2 = y0 + _lineHeight;              // idx2     _FirstLineToShow + 1      inactive
+                y3 = y0 + 2 * _lineHeight;          // idx3     _FirstLineToShow + 2      inactive
+                y4 = y0 + 3 * _lineHeight;          // idx4     _FirstLineToShow + 3      inactive
 
                 idx2 = _FirstLineToShow + 1;
                 idx3 = _FirstLineToShow + 2;
                 idx4 = _FirstLineToShow + 3;
+
+                LinesNr[0] = _FirstLineToShow;
+                LinesNr[1] = _FirstLineToShow + 1;
+                LinesNr[2] = _FirstLineToShow + 2;
+                LinesNr[3] = _FirstLineToShow + 3;
+
+            }
+            else if (_FirstLineToShow % 4 == 1)
+            {
+                // 2nd line is active
+                LinePosition = 1;
+                // Position not possible for LineOfInformationPosition
+
+                y2 = y0;                            // idx2     _FirstLineToShow - 1     * active
+                y1 = y0 + _lineHeight;              //          _FirstLineToShow             current         (no update)
+                y3 = y0 + 2 * _lineHeight;          // idx3     _FirstLineToShow + 1     inactive
+                y4 = y0 + 3 * _lineHeight;          // idx4     _FirstLineToShow + 2     inactive
+
+                idx2 = _FirstLineToShow - 1;
+                idx3 = _FirstLineToShow + 1;
+                idx4 = _FirstLineToShow + 2;
+
+                LinesNr[0] = _FirstLineToShow - 1;
+                LinesNr[1] = _FirstLineToShow;
+                LinesNr[2] = _FirstLineToShow + 1;
+                LinesNr[3] = _FirstLineToShow + 2;
+
+            }
+            else if (_FirstLineToShow % 4 == 2)
+            {
+                // 3rd line is active
+                LinePosition = 2;
+                // Position possible for LineOfInformationPosition
+
+                y3 = y0;                            // idx3     _FirstLineToShow + 2     inactive
+                y4 = y0 + _lineHeight;              // idx4     _FirstLineToShow + 3     inactive
+                y1 = y0 + 2 * _lineHeight;          //          _FirstLineToShow             current         (update 1 & 2)
+                y2 = y0 + 3 * _lineHeight;          // idx2     _FirstLineToShow + 1     inactive
+
+                idx2 = _FirstLineToShow + 1;
+                idx3 = _FirstLineToShow + 2;
+                idx4 = _FirstLineToShow + 3;
+
+                LinesNr[0] = _FirstLineToShow + 2;
+                LinesNr[1] = _FirstLineToShow + 3;
+                LinesNr[2] = _FirstLineToShow;
+                LinesNr[3] = _FirstLineToShow + 1;
+
 
             }
             else if (_FirstLineToShow % 4 == 3)
             {
-                // 2nd line is active
-                y2 = y0;                                            // _FirstLineToShow - 1
-                y1 = y0 + chordOffset + _lineHeight;                // _FirstLineToShow
-                y3 = y0 + 2 * chordOffset + 2 * _lineHeight;        // _FirstLineToShow + 1
-                y4 = y0 + 3 * chordOffset + 3 * _lineHeight;        // _FirstLineToShow + 2
-
-                idx2 = _FirstLineToShow - 1;
-                idx3 = _FirstLineToShow + 1;
-                idx4 = _FirstLineToShow + 2;
-            }
-            else if (_FirstLineToShow % 4 == 0)
-            {
-                // 3rd line is active
-                y3 = y0;                                            // _FirstLineToShow + 2     
-                y4 = y0 + chordOffset + _lineHeight;                // _FirstLineToShow + 3
-                y1 = y0 + 2 * chordOffset + 2 * _lineHeight;        // _FirstLineToShow
-                y2 = y0 + 3 * chordOffset + 3 * _lineHeight;        // _FirstLineToShow + 1
-
-                idx2 = _FirstLineToShow + 1;
-                idx3 = _FirstLineToShow + 2;
-                idx4 = _FirstLineToShow + 3;
-            }
-            else if (_FirstLineToShow % 4 == 1)
-            {
                 // 4th line is active
-                y3 = y0;                                            // _FirstLineToShow + 1
-                y4 = y0 + chordOffset + _lineHeight;                // _FirstLineToShow + 2
-                y2 = y0 + 2 * chordOffset + 2 * _lineHeight;        // _FirstLineToShow - 1
-                y1 = y0 + 3 * chordOffset + 3 * _lineHeight;        // _FirstLineToShow               
+                LinePosition = 3;
+                // Position not possible for LineOfInformationPosition
+
+                y3 = y0;                            // idx3     _FirstLineToShow + 1     inactive
+                y4 = y0 + _lineHeight;              // idx4     _FirstLineToShow + 2     inactive
+                y2 = y0 + 2 * _lineHeight;          // idx2     _FirstLineToShow - 1     * active
+                y1 = y0 + 3 * _lineHeight;          //          _FirstLineToShow             current         (no update)
 
                 idx2 = _FirstLineToShow - 1;
                 idx3 = _FirstLineToShow + 1;
                 idx4 = _FirstLineToShow + 2;
+
+                LinesNr[0] = _FirstLineToShow + 1;
+                LinesNr[1] = _FirstLineToShow + 2;
+                LinesNr[2] = _FirstLineToShow - 1;
+                LinesNr[3] = _FirstLineToShow;
+
+
             }
 
-
-            // Draw active line with borders
-            DrawActiveLineWithNeon(e, y1);
+            #endregion Line layout
 
 
-            // Line y2 must be drawned active when
-            bool IsActive = ((_FirstLineToShow % 4 == 1) || (_FirstLineToShow % 4 == 3)) ? true : false;
+            bool bTooMuch = false;
+            for (int i = 0; i < LinesNr.Length; i++)
+            {
+                if (LinesNr[i] >= _kLyrics.Lines.Count)
+                {
+                    bTooMuch = true;
+                    break;
+                }
+            }
 
-            // Draw Inactive line with borders
-            if (idx2 >= 0 && idx2 < KLyrics.Lines.Count)
-                DrawInactiveLineWithNeon(e, idx2, y2, IsActive);
+            if (!bTooMuch)
+                LineOfInformationPosition = SearchLineOfInformation(LinesNr);
+            else
+                LineOfInformationPosition = LastLineOfInformationPosition;
 
-            if (idx3 >= 0 && idx3 < KLyrics.Lines.Count && _FirstLineToShow > 0)
-                DrawInactiveLineWithNeon(e, idx3, y3);
 
-            if (idx4 >= 0 && idx4 < KLyrics.Lines.Count && _FirstLineToShow > 0)
-                DrawInactiveLineWithNeon(e, idx4, y4);
+            // If no line of information in the 4 lines => normal display in 4 lines swapped
+            if (LineOfInformationPosition == -2)
+            {
+                #region Normal drawing
+
+                bInstrumentalStarted = false;
+                bCountDown = false;
+
+
+                // Draw y1 line: active & highlighted line                
+                DrawActiveLineWithNeon(e, _FirstLineToShow, y1);
+
+                // Line y2 must be drawned active when
+                bool IsActive = ((_FirstLineToShow % 4 == 1) || (_FirstLineToShow % 4 == 3)) ? true : false;
+
+                // Draw y2 line: active when before line y1 (already sung), inactive when after line y1 (not yet sung)
+                if (idx2 >= 0)
+                    DrawInactiveLineWithNeon(e, idx2, y2, IsActive);
+
+
+                // Draw lines y3 and y4 (always inactives)
+                if (idx3 < _kLyrics.Lines.Count)
+                    DrawInactiveLineWithNeon(e, idx3, y3);
+                if (idx4 < _kLyrics.Lines.Count)
+                    DrawInactiveLineWithNeon(e, idx4, y4);
+
+                #endregion Normal drawing
+            }
+            else
+            {
+                // Checks whether an instrumental section has begun and updates the countdown and timing state accordingly.
+                CheckIfInstrumentalBegins();
+
+                // Update the CountDown
+                UpdateCountDown();
+
+
+                int tm = PlayerPositionTicks - _startTime;
+
+                switch (LineOfInformationPosition)
+                {
+                    #region instrumental on top
+
+                    case 0:                             // Instrumental is on line 0
+                        // y1 * information
+                        // y2 information
+                        // y3 normal
+                        // y4 normal
+                        switch (LinePosition)
+                        {
+                            case 0:
+                                // y1 * information1 new
+                                // y2 information2   new
+                                // y3 normal old than new
+                                // y4 normal old than new
+                                // Draw "(intrumental)" on active line and countdown on next line
+                                //DrawInformation(e, _kLyrics.Lines[_FirstLineToShow].Syllables.Last().Text, y1);
+                                //DrawInformation(e, SecondsBeforeSinging.ToString(), y1 + _lineHeight);
+                                DrawInformation(e, _kLyrics.Lines[_FirstLineToShow].Syllables.Last().Text + " " + SecondsBeforeSinging.ToString(), y1);
+
+                                if (bCountDown)
+                                {
+                                    // Keep last actives lines 3 & 4 when instrumental has began for 1 second
+                                    if (tm < 2 * BeatDuration)
+                                    {
+                                        if (_FirstLineToShow - 2 >= 0)
+                                        {
+                                            DrawInactiveLineWithNeon(e, _FirstLineToShow - 2, y3, true);         // keep old line 1 sec
+                                            DrawInactiveLineWithNeon(e, _FirstLineToShow - 1, y4, true);         // keep olf line 1 sec
+
+                                        }
+                                    }
+                                }
+
+                                // Draw lines y3 and y4 only if they are less than 4 sec before the end of an instrumental
+                                // Except if introduction (_FirstLineToShow = 0) show
+                                if (bInstrumentalStarted && _FirstLineToShow > 0)
+                                {
+                                    tm = TargetPositionTicks - PlayerPositionTicks;
+
+                                    if (tm > _DelayBeforeEndOfInstrumental)
+                                    {
+                                        // Do not display next lines until _DelayBeforeEndOfInstrumental
+                                        return;
+                                    }
+                                }
+
+                                DrawInactiveLineWithNeon(e, idx3, y3);      // Draw new line before the end of instrumental         
+                                DrawInactiveLineWithNeon(e, idx4, y4);      // Draw new line before the end of instrumental
+                                break;
+
+                            case 1:
+                                // y2 information1
+                                // y1 * information2 no update
+                                // y3 normal 
+                                // y4 normal 
+
+                                // draw ("instrumental") on previous line and countdown on current line
+                                //DrawInformation(e, _kLyrics.Lines[_FirstLineToShow - 1].Syllables.Last().Text, y1 - _lineHeight);
+                                //DrawInformation(e, SecondsBeforeSinging.ToString(), y1);
+                                DrawInformation(e, _kLyrics.Lines[_FirstLineToShow - 1].Syllables.Last().Text + " " + SecondsBeforeSinging.ToString(), y1 - _lineHeight);
+
+                                DrawInactiveLineWithNeon(e, idx3, y3);
+                                DrawInactiveLineWithNeon(e, idx4, y4);
+                                break;
+
+                            case 2:
+                                // y3 information1 new
+                                // y4 information2 new
+                                // y1 * normal old          update y3 & y4 
+                                // y2 normal   old
+
+                                // Draw y1 line: active & highlighted line                
+                                DrawActiveLineWithNeon(e, _FirstLineToShow, y1);
+                                // Draw y2 line: inactive line  (before or after y1)                                
+                                DrawInactiveLineWithNeon(e, idx2, y2, false);
+
+                                // Draw instrumental on line 0 (y3)
+                                DrawInformation(e, _kLyrics.Lines[idx3].Syllables.Last().Text, y3);
+                                break;
+
+                            case 3:
+                                // y3 information1
+                                // y4 information2
+                                // y2 normal
+                                // y1 * normal          no update
+
+                                // Draw y1 line: active & highlighted line                
+                                DrawActiveLineWithNeon(e, _FirstLineToShow, y1);
+                                // Draw y2 line: inactive line  (before or after y1)                                
+                                DrawInactiveLineWithNeon(e, idx2, y2, true);
+
+                                // Draw instrumental on line 0
+                                DrawInformation(e, _kLyrics.Lines[idx3].Syllables.Last().Text, y3);
+                                break;
+                        }
+                        break;
+
+                    #endregion Instrumental on top
+
+
+                    #region Instrumental on bottom
+
+                    case 2:                                                         // instrumental on line 2 (3rd line)
+                        // y1 normal
+                        // y2 normal
+                        // y3 * information1
+                        // y4 information2
+                        switch (LinePosition)
+                        {
+                            case 0:                                                 // LinePosition is 0
+                                // y1 * normal
+                                // y2 normal
+                                // y3 information1
+                                // y4 information2
+
+                                // Draw y1 line: active & highlighted line                
+                                DrawActiveLineWithNeon(e, _FirstLineToShow, y1);
+                                // line y 2 is inactive (not yet played)
+                                DrawInactiveLineWithNeon(e, idx2, y2, false);
+
+                                // Draw "(intrumental)" on 3rd line and countdown on next line
+                                DrawInformation(e, _kLyrics.Lines[idx3].Syllables.Last().Text, y3);
+                                break;
+
+                            case 1:                                                 // LinePosition is 1
+                                // y1 normal
+                                // y2 * normal
+                                // y3 information1
+                                // y4 information2
+
+                                // line y2 is already played
+                                DrawInactiveLineWithNeon(e, idx2, y2, true);
+                                // line y1 : active a highlighted line
+                                DrawActiveLineWithNeon(e, _FirstLineToShow, y1);
+
+                                // Draw "(intrumental)" on 3rd line and countdown on next line
+                                DrawInformation(e, _kLyrics.Lines[idx3].Syllables.Last().Text, y3);
+
+                                break;
+
+                            case 2:                                                 // LinePosition is 2   = LineOfInformationPosition                                                                                                                
+                                // y1 normal
+                                // y2 normal
+                                // y3 * information1
+                                // y4 information2
+                                if (bCountDown)
+                                {
+                                    // Keep last actives lines 3 & 4 when instrumental has began for 1 second
+                                    if (tm < 2 * BeatDuration)
+                                    {
+                                        if (_FirstLineToShow - 2 >= 0)
+                                        {
+                                            DrawInactiveLineWithNeon(e, _FirstLineToShow - 2, y3, true);
+                                            DrawInactiveLineWithNeon(e, _FirstLineToShow - 1, y4, true);
+                                        }
+                                    }
+                                }
+                                // Draw "(intrumental)" on active line and countdown on next line
+                                //DrawInformation(e, _kLyrics.Lines[_FirstLineToShow].Syllables.Last().Text, y1);
+                                //DrawInformation(e, SecondsBeforeSinging.ToString(), y2);
+                                DrawInformation(e, _kLyrics.Lines[_FirstLineToShow].Syllables.Last().Text + " " + SecondsBeforeSinging.ToString(), y1);
+
+                                // Draw lines y3 and y4 only if they are less than 4 sec before the end of an instrumental
+                                if (bInstrumentalStarted)
+                                {
+                                    tm = TargetPositionTicks - PlayerPositionTicks;
+
+                                    if (tm > _DelayBeforeEndOfInstrumental)
+                                    {
+                                        // Do not display next lines
+                                        return;
+                                    }
+                                }
+                                if (idx3 < _kLyrics.Lines.Count)
+                                    DrawInactiveLineWithNeon(e, idx3, y3);
+                                if (idx4 < _kLyrics.Lines.Count)
+                                    DrawInactiveLineWithNeon(e, idx4, y4);
+
+                                break;
+
+                            case 3:
+                                // y1 normal
+                                // y2 normal
+                                // y3 information1
+                                // y4 * information2
+                                // Draw "(intrumental)" on active line and countdown on next line                                
+                                //DrawInformation(e, _kLyrics.Lines[idx2].Syllables.Last().Text, y2);
+                                //DrawInformation(e, SecondsBeforeSinging.ToString(), y1);
+                                DrawInformation(e, _kLyrics.Lines[idx2].Syllables.Last().Text + " " + SecondsBeforeSinging.ToString(), y2);
+
+                                DrawInactiveLineWithNeon(e, idx3, y3);
+                                DrawInactiveLineWithNeon(e, idx4, y4);
+
+                                break;
+                        }
+                        break;
+
+                    #endregion Instrumental on bottom
+                }
+            }
+
+            LastLineOfInformationPosition = LineOfInformationPosition;
         }
 
         #endregion Draw text with Four lines swapped
@@ -4015,7 +5421,575 @@ namespace PicControl
             }
         }
 
+
         private void TlsDrawTextWithBorder(PaintEventArgs e)
+        {
+            if (_kLyrics.Lines.Count == 0) return;
+
+            // Antialiasing
+            e.Graphics.SmoothingMode = SmoothingMode.AntiAlias;
+
+            // Create list of rectangles when line changes
+            synchronize(_currentTextPos);
+                      
+            // Calculate offset to center the text vertically
+            int y0 = getOffsetHeight(emSize);
+           
+
+            int y1;    // y1 is the y coordinate of the active line to display (line _FirstLineToShow)
+            int y2;    // y2 is the y coordinate of the inactive line to display (line _FirstLineToShow + 1)
+
+            int LineOfInformationPosition = -2;
+            int LinePosition = -1;
+
+
+            #region Line layout
+
+            // If active line is odd, it is displayed on the first line
+            // if active line is even, it is displayed on the second line
+            if (_FirstLineToShow % 2 == 0)
+            {
+                LinePosition = 0;
+
+                y1 = y0;                    // active     _FirstLinetoShow
+                y2 = y0 + _lineHeight;      // inactive   _FirstLinetoShow + 1  
+
+                if (_kLyrics.Lines[_FirstLineToShow].Syllables.Last().CharType == Syllable.CharTypes.Information)
+                    LineOfInformationPosition = 0;
+                else if (_FirstLineToShow + 1 < _kLyrics.Lines.Count && _kLyrics.Lines[_FirstLineToShow + 1].Syllables.Last().CharType == Syllable.CharTypes.Information)
+                    LineOfInformationPosition = 1;
+                else if (_FirstLineToShow + 1 >= _kLyrics.Lines.Count)
+                    LineOfInformationPosition = LastLineOfInformationPosition;
+
+            }
+            else
+            {
+                LinePosition = 1;
+
+                y2 = y0;                    // inactive     _FirstLinetoShow + 1
+                y1 = y0 + _lineHeight;      // active       _FirstLinetoShow
+
+                if (_kLyrics.Lines[_FirstLineToShow].Syllables.Last().CharType == Syllable.CharTypes.Information)
+                    LineOfInformationPosition = 1;
+                else if (_FirstLineToShow + 1 < _kLyrics.Lines.Count && _kLyrics.Lines[_FirstLineToShow + 1].Syllables.Last().CharType == Syllable.CharTypes.Information)
+                    LineOfInformationPosition = 0;
+                else if (_FirstLineToShow + 1 >= _kLyrics.Lines.Count)
+                    LineOfInformationPosition = LastLineOfInformationPosition;
+            }
+
+            #endregion Line layout
+
+
+            // No instrumental
+            if (LineOfInformationPosition == -2)
+            {
+                #region Normal drawing
+
+
+                // Draw active line with borders
+                DrawActiveLineWithBorders(e, _FirstLineToShow, y1);                
+
+                // Draw Inactive line with borders
+                //if (_currentTextPos > -1)
+                    DrawInactiveLineWithBorders(e, _FirstLineToShow + 1, y2);                
+
+                #endregion Normal drawing
+            }
+            else
+            {
+                // Checks whether an instrumental section has begun and updates the countdown and timing state accordingly.                
+                CheckIfInstrumentalBegins();
+
+                // Update the CountDown
+                UpdateCountDown();
+
+                int tm = PlayerPositionTicks - _startTime;                
+
+                // Instrumental found
+                switch (LineOfInformationPosition)
+                {
+                    #region Instrumental on top
+                                       
+                    case 0:                         // Instrumental on line 0
+                                                                        
+                        switch (LinePosition)
+                        {
+                            case 0:
+                                // y1 * information
+                                // y2 normal
+                                DrawInformation(e, _kLyrics.Lines[_FirstLineToShow].Syllables.Last().Text + " " + SecondsBeforeSinging.ToString(), y1);                                
+                                
+                                if (bCountDown)
+                                {
+                                    // Keep last active line 2 when instrumental has began for 1 second
+                                    if (tm < 2 * BeatDuration)
+                                    {
+                                        if (_FirstLineToShow - 1 >= 0)
+                                        {
+                                            DrawInactiveLineWithBorders(e, _FirstLineToShow - 1, y2, true);         // keep old line 1 sec                                            
+                                        }
+                                    }
+                                }
+
+                                // Draw line y2 only if it is less than 4 sec before the end of an instrumental
+                                // Except for introduction
+                                if (bInstrumentalStarted && _FirstLineToShow > 0)
+                                {                                    
+                                    tm = TargetPositionTicks - PlayerPositionTicks;
+
+                                    if (tm > _DelayBeforeEndOfInstrumental)
+                                    {
+                                        // Do not display next lines until _DelayBeforeEndOfInstrumental                                        
+                                        return;
+                                    }
+                                }                                
+                                DrawInactiveLineWithBorders(e, _FirstLineToShow + 1, y2);      // Draw new line before the end of instrumental         
+                                break;
+
+                            case 1:
+                                // y2 information
+                                // y1 * normal
+
+                                DrawInformation(e, _kLyrics.Lines[_FirstLineToShow + 1].Syllables.Last().Text, y2);
+                                DrawActiveLineWithBorders(e, _FirstLineToShow, y1);
+                                break;
+
+                        }
+                        break;
+
+                    #endregion Instrumental on top
+
+
+                    #region Instrumental on bottom
+
+                    case 1:                         // Instrumental on line 1                                                
+                        switch (LinePosition)
+                        {
+                            case 0:
+                                // y1 * normal
+                                // y2 information
+                                DrawActiveLineWithBorders(e, _FirstLineToShow, y1);
+                                DrawInformation(e, _kLyrics.Lines[_FirstLineToShow + 1].Syllables.Last().Text, y1 + _lineHeight);
+                                break;
+
+                            case 1:
+                                // y2 normal old than new
+                                // y1 * information
+                                DrawInformation(e, _kLyrics.Lines[_FirstLineToShow].Syllables.Last().Text + " " + SecondsBeforeSinging.ToString(), y1);
+
+                                if (bCountDown)
+                                {
+                                    // Keep last active line 2 when instrumental has began for 1 second
+                                    if (tm  < 2 * BeatDuration)
+                                    {
+                                        if (_FirstLineToShow - 1 >= 0)
+                                        {
+                                            DrawInactiveLineWithBorders(e, _FirstLineToShow - 1, y1 - _lineHeight, true);         // keep old line 1 sec
+                                            //Console.WriteLine(_kLyrics.Lines[_FirstLineToShow - 1].ToString());                                                                                                                                   
+
+                                        }
+                                    }
+                                }
+                                // Draw line y2 only if it is less than 4 sec before the end of an instrumental
+                                if (bInstrumentalStarted)
+                                {
+                                    //tm = _endTime - PlayerPositionTicks;
+                                    tm = TargetPositionTicks - PlayerPositionTicks;
+
+                                    if (tm > _DelayBeforeEndOfInstrumental)
+                                    {
+                                        // Do not display next lines until _DelayBeforeEndOfInstrumental
+                                        return;
+                                    }
+                                }
+                                //Console.WriteLine("Display 2nd line");
+                                DrawInactiveLineWithBorders(e, _FirstLineToShow + 1, y2);      // Draw new line before the end of instrumental   
+                                break;
+                        }
+                        break;
+
+                    #endregion Instrumental on bottom
+                }
+
+            }
+            LastLineOfInformationPosition = LineOfInformationPosition;
+        }
+
+        private void TlsDrawTextWithShadow(PaintEventArgs e)
+        {
+            if (_kLyrics.Lines.Count == 0) return;
+
+            // Antialiasing
+            e.Graphics.SmoothingMode = SmoothingMode.AntiAlias;
+
+            // Create list of rectangles when line changes
+            synchronize(_currentTextPos);
+
+            // Synchronise can modify currentLine, so we need to recalculate it after synchronize
+            //int _FirstLineToShow = currentLine;
+
+            // Calculate offset to center the text vertically
+            int y0 = getOffsetHeight(emSize);
+
+            int y1;    // y1 is the y coordinate of the active line to display (line _FirstLineToShow)
+            int y2;    // y2 is the y coordinate of the inactive line to display (line _FirstLineToShow + 1)
+
+            int LineOfInformationPosition = -2;
+            int LinePosition = -1;
+
+            #region Line layout
+
+            // If active line is odd, it is displayed on the first line
+            // if active line is even, it is displayed on the second line
+            if (_FirstLineToShow % 2 == 0)
+            {
+                LinePosition = 0;
+
+                y1 = y0;
+                y2 = y0 + _lineHeight;
+
+                if (_kLyrics.Lines[_FirstLineToShow].Syllables.Last().CharType == Syllable.CharTypes.Information)
+                    LineOfInformationPosition = 0;
+                else if (_FirstLineToShow + 1 < _kLyrics.Lines.Count && _kLyrics.Lines[_FirstLineToShow + 1].Syllables.Last().CharType == Syllable.CharTypes.Information)
+                    LineOfInformationPosition = 1;
+                else if (_FirstLineToShow + 1 >= _kLyrics.Lines.Count)
+                    LineOfInformationPosition = LastLineOfInformationPosition;
+            }
+            else
+            {
+                LinePosition = 1;
+
+                y2 = y0;
+                y1 = y0 + _lineHeight;
+
+                if (_kLyrics.Lines[_FirstLineToShow].Syllables.Last().CharType == Syllable.CharTypes.Information)
+                    LineOfInformationPosition = 1;
+                else if (_FirstLineToShow + 1 < _kLyrics.Lines.Count && _kLyrics.Lines[_FirstLineToShow + 1].Syllables.Last().CharType == Syllable.CharTypes.Information)
+                    LineOfInformationPosition = 0;
+                else if (_FirstLineToShow + 1 >= _kLyrics.Lines.Count)
+                    LineOfInformationPosition = LastLineOfInformationPosition;
+            }
+
+            #endregion Line layout
+
+
+            // No instrumental
+            if (LineOfInformationPosition == -2)
+            {
+                #region Normal drawing
+
+                // Draw active line with Shadow
+                DrawActiveLineWithShadow(e, _FirstLineToShow, y1);
+
+                // Draw Inactive line with Shadow
+                if (CurrentTextPos > -1)
+                    DrawInactiveLineWithShadow(e, _FirstLineToShow + 1, y2);
+
+                #endregion Normal drawing
+
+            }
+            else
+            {
+                // Checks whether an instrumental section has begun and updates the countdown and timing state accordingly.
+                //CheckIfInstrumentalBegins2();
+                CheckIfInstrumentalBegins();
+
+                // Update the CountDown
+                UpdateCountDown();
+
+                int tm = PlayerPositionTicks - _startTime;
+
+                // Instrumental found
+                switch (LineOfInformationPosition)
+                {
+                    #region Instrumental on top
+
+                    case 0:                         // Instrumental on line 0
+                        switch (LinePosition)
+                        {
+                            case 0:
+                                // y1 * information
+                                // y2 normal
+                                DrawInformation(e, _kLyrics.Lines[_FirstLineToShow].Syllables.Last().Text + " " + SecondsBeforeSinging.ToString(), y1);
+
+                                if (bCountDown)
+                                {
+                                    // Keep last active line 2 when instrumental has began for 1 second
+                                    if (tm < 2 * BeatDuration)
+                                    {
+                                        if (_FirstLineToShow - 1 >= 0)
+                                        {
+                                            DrawInactiveLineWithShadow(e, _FirstLineToShow - 1, y2, true);         // keep old line 1 sec                                            
+                                        }
+                                    }
+                                }
+
+                                // Draw line y2 only if it is less than 4 sec before the end of an instrumental
+                                // Except for introduction
+                                if (bInstrumentalStarted && _FirstLineToShow > 0)
+                                {
+                                    tm = _endTime - PlayerPositionTicks;
+
+                                    if (tm > _DelayBeforeEndOfInstrumental)
+                                    {
+                                        // Do not display next lines until _DelayBeforeEndOfInstrumental
+                                        return;
+                                    }
+                                }
+                                DrawInactiveLineWithShadow(e, _FirstLineToShow + 1, y2);      // Draw new line before the end of instrumental         
+                                break;
+
+                            case 1:
+                                // y2 information
+                                // y1 * normal
+
+                                DrawInformation(e, _kLyrics.Lines[_FirstLineToShow + 1].Syllables.Last().Text, y2);
+                                DrawActiveLineWithShadow(e, _FirstLineToShow, y1);
+                                break;
+                        }
+                        break;
+
+                    #endregion Instrumental on top
+
+                    #region Instrumental on bottom
+
+                    case 1:                         // Instrumental on line 1
+                        switch (LinePosition)
+                        {
+                            case 0:
+                                // y1 * normal
+                                // y2 information
+                                DrawActiveLineWithShadow(e, _FirstLineToShow, y1);
+                                DrawInformation(e, _kLyrics.Lines[_FirstLineToShow + 1].Syllables.Last().Text, y1 + _lineHeight);
+                                break;
+
+                            case 1:
+                                // y2 normal old than new
+                                // y1 * information
+                                DrawInformation(e, _kLyrics.Lines[_FirstLineToShow].Syllables.Last().Text + " " + SecondsBeforeSinging.ToString(), y1);
+
+                                if (bCountDown)
+                                {
+                                    // Keep last active line 2 when instrumental has began for 1 second
+                                    if (tm < 2 * BeatDuration)
+                                    {
+                                        if (_FirstLineToShow - 1 >= 0)
+                                        {
+                                            DrawInactiveLineWithShadow(e, _FirstLineToShow - 1, y1 - _lineHeight, true);         // keep old line 1 sec
+                                            //Console.WriteLine(_kLyrics.Lines[_FirstLineToShow - 1].ToString());                                                                                                                                   
+
+                                        }
+                                    }
+                                }
+                                // Draw line y2 only if it is less than 4 sec before the end of an instrumental
+                                if (bInstrumentalStarted)
+                                {
+                                    tm = _endTime - PlayerPositionTicks;
+
+                                    if (tm > _DelayBeforeEndOfInstrumental)
+                                    {
+                                        // Do not display next lines until _DelayBeforeEndOfInstrumental
+                                        return;
+                                    }
+                                }
+                                DrawInactiveLineWithShadow(e, _FirstLineToShow + 1, y2);      // Draw new line before the end of instrumental   
+                                break;
+                        }
+                        break;
+
+                    #endregion Instrumental on bottom
+                }
+            }
+        }
+
+        private void TlsDrawTextWithNeon(PaintEventArgs e)
+        {
+            if (_kLyrics.Lines.Count == 0) return;
+
+            // Antialiasing
+            e.Graphics.SmoothingMode = SmoothingMode.AntiAlias;
+
+            // Create list of rectangles when line changes
+            synchronize(_currentTextPos);
+
+            // Synchronise can modify currentLine, so we need to recalculate it after synchronize
+            //int _FirstLineToShow = currentLine;
+
+            // Calculate offset to center the text vertically
+            int y0 = getOffsetHeight(emSize);
+
+            int y1;    // y1 is the y coordinate of the active line to display (line _FirstLineToShow)
+            int y2;    // y2 is the y coordinate of the inactive line to display (line _FirstLineToShow + 1)
+
+            int LineOfInformationPosition = -2;
+            int LinePosition = -1;
+
+            #region Line layout
+
+            // If active line is odd, it is displayed on the first line
+            // if active line is even, it is displayed on the second line
+            if (_FirstLineToShow % 2 == 0)
+            {
+                LinePosition = 0;
+
+                y1 = y0;
+                y2 = y0 + _lineHeight;
+
+                if (_kLyrics.Lines[_FirstLineToShow].Syllables.Last().CharType == Syllable.CharTypes.Information)
+                    LineOfInformationPosition = 0;
+                else if (_FirstLineToShow + 1 < _kLyrics.Lines.Count && _kLyrics.Lines[_FirstLineToShow + 1].Syllables.Last().CharType == Syllable.CharTypes.Information)
+                    LineOfInformationPosition = 1;
+                else if (_FirstLineToShow + 1 >= _kLyrics.Lines.Count)
+                    LineOfInformationPosition = LastLineOfInformationPosition;
+            }
+            else
+            {
+                LinePosition = 1;
+
+                y2 = y0;
+                y1 = y0 + _lineHeight;
+
+                if (_kLyrics.Lines[_FirstLineToShow].Syllables.Last().CharType == Syllable.CharTypes.Information)
+                    LineOfInformationPosition = 1;
+                else if (_FirstLineToShow + 1 < _kLyrics.Lines.Count && _kLyrics.Lines[_FirstLineToShow + 1].Syllables.Last().CharType == Syllable.CharTypes.Information)
+                    LineOfInformationPosition = 0;
+                else if (_FirstLineToShow + 1 >= _kLyrics.Lines.Count)
+                    LineOfInformationPosition = LastLineOfInformationPosition;
+            }
+
+            #endregion Line layout
+
+            // No instrumental
+            if (LineOfInformationPosition == -2)
+            {
+                #region Normal drawing
+
+                // Draw active line with Shadow
+                DrawActiveLineWithNeon(e, _FirstLineToShow, y1);
+
+                // Draw Inactive line with Shadow
+                if (CurrentTextPos > -1)
+                    DrawInactiveLineWithNeon(e, _FirstLineToShow + 1, y2);
+
+                #endregion Normal drawing
+            }
+            else
+            {
+                // Checks whether an instrumental section has begun and updates the countdown and timing state accordingly.
+                //CheckIfInstrumentalBegins2();
+                CheckIfInstrumentalBegins();
+
+                // Update the CountDown
+                UpdateCountDown();
+
+                int tm = PlayerPositionTicks - _startTime;
+
+                // Instrumental found
+                switch (LineOfInformationPosition)
+                {
+                    #region Instrumental on top
+
+                    case 0:                         // Instrumental on line 0
+                        switch (LinePosition)
+                        {
+                            case 0:
+                                // y1 * information
+                                // y2 normal
+                                DrawInformation(e, _kLyrics.Lines[_FirstLineToShow].Syllables.Last().Text + " " + SecondsBeforeSinging.ToString(), y1);
+
+                                if (bCountDown)
+                                {
+                                    // Keep last active line 2 when instrumental has began for 1 second
+                                    if (tm < 2 * BeatDuration)
+                                    {
+                                        if (_FirstLineToShow - 1 >= 0)
+                                        {
+                                            DrawInactiveLineWithNeon(e, _FirstLineToShow - 1, y2, true);         // keep old line 1 sec                                            
+                                        }
+                                    }
+                                }
+
+                                // Draw line y2 only if it is less than 4 sec before the end of an instrumental
+                                // Except for introduction
+                                if (bInstrumentalStarted && _FirstLineToShow > 0)
+                                {
+                                    tm = _endTime - PlayerPositionTicks;
+
+                                    if (tm > _DelayBeforeEndOfInstrumental)
+                                    {
+                                        // Do not display next lines until _DelayBeforeEndOfInstrumental
+                                        return;
+                                    }
+                                }
+                                DrawInactiveLineWithNeon(e, _FirstLineToShow + 1, y2);      // Draw new line before the end of instrumental         
+                                break;
+
+                            case 1:
+                                // y2 information
+                                // y1 * normal
+
+                                DrawInformation(e, _kLyrics.Lines[_FirstLineToShow + 1].Syllables.Last().Text, y2);
+                                DrawActiveLineWithNeon(e, _FirstLineToShow, y1);
+                                break;
+                        }
+                        break;
+
+                    #endregion Instrumental on top
+
+                    #region Instrumental on bottom
+
+                    case 1:                         // Instrumental on line 1
+                        switch (LinePosition)
+                        {
+                            case 0:
+                                // y1 * normal
+                                // y2 information
+                                DrawActiveLineWithNeon(e, _FirstLineToShow, y1);
+                                DrawInformation(e, _kLyrics.Lines[_FirstLineToShow + 1].Syllables.Last().Text, y1 + _lineHeight);
+                                break;
+
+                            case 1:
+                                // y2 normal old than new
+                                // y1 * information
+                                DrawInformation(e, _kLyrics.Lines[_FirstLineToShow].Syllables.Last().Text + " " + SecondsBeforeSinging.ToString(), y1);
+
+                                if (bCountDown)
+                                {
+                                    // Keep last active line 2 when instrumental has began for 1 second
+                                    if (tm < 2 * BeatDuration)
+                                    {
+                                        if (_FirstLineToShow - 1 >= 0)
+                                        {
+                                            DrawInactiveLineWithNeon(e, _FirstLineToShow - 1, y1 - _lineHeight, true);         // keep old line 1 sec
+                                            //Console.WriteLine(_kLyrics.Lines[_FirstLineToShow - 1].ToString());                                                                                                                                   
+
+                                        }
+                                    }
+                                }
+                                // Draw line y2 only if it is less than 4 sec before the end of an instrumental
+                                if (bInstrumentalStarted)
+                                {
+                                    tm = _endTime - PlayerPositionTicks;
+
+                                    if (tm > _DelayBeforeEndOfInstrumental)
+                                    {
+                                        // Do not display next lines until _DelayBeforeEndOfInstrumental
+                                        return;
+                                    }
+                                }
+                                DrawInactiveLineWithNeon(e, _FirstLineToShow + 1, y2);      // Draw new line before the end of instrumental   
+                                break;
+                        }
+                        break;
+
+                    #endregion Instrumental on bottom
+                }
+            }
+        }
+
+
+        /*
+        private void TlsDrawTextWithBorder2(PaintEventArgs e)
         {            
             // Antialiasing
             e.Graphics.SmoothingMode = SmoothingMode.AntiAlias;
@@ -4058,7 +6032,7 @@ namespace PicControl
                 DrawInactiveLineWithBorders(e, _FirstLineToShow + 1, y2);
         }
 
-        private void TlsDrawTextWithShadow(PaintEventArgs e)
+        private void TlsDrawTextWithShadow2(PaintEventArgs e)
         {
             // Antialiasing
             e.Graphics.SmoothingMode = SmoothingMode.AntiAlias;
@@ -4101,7 +6075,7 @@ namespace PicControl
                 DrawInactiveLineWithShadow(e, _FirstLineToShow + 1, y2);
         }
 
-        private void TlsDrawTextWithNeon(PaintEventArgs e)
+        private void TlsDrawTextWithNeon2(PaintEventArgs e)
         {
             // Antialiasing
             e.Graphics.SmoothingMode = SmoothingMode.AntiAlias;
@@ -4143,6 +6117,8 @@ namespace PicControl
             if (_currentTextPos > -1)
                 DrawInactiveLineWithNeon(e, _FirstLineToShow + 1, y2);
         }
+
+        */
 
         #endregion Draw text with Two lines swapped
 

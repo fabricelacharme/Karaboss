@@ -63,7 +63,7 @@ namespace Karaboss.MidiLyrics
 
         // Midifile characteristics
         private double _duration = 0;  // en secondes
-        private int _totalTicks = 0;        
+             
         private double _ppqn;
         private int _tempo;
         private int _measurelen = 0;
@@ -89,12 +89,17 @@ namespace Karaboss.MidiLyrics
         // Simple lyrics first extraction in kLyrics format, then more complex with chords in lyrics and/or from xml files
         public kLyrics OrgKLyrics { get; set; }
         // Full lyrics extraction with chords in lyrics and/or from xml files
-        public kLyrics KLyrics { get; set; }         
-        
+        public kLyrics KLyrics { get; set; }
+
         #endregion
 
+        private int _totalTicks = 0;
+        public int TotalTicks
+        {
+            get { return _totalTicks; }
+            
+        }
 
-      
         public int Numerator { get; set; }
         public int Division { get; set; }
         

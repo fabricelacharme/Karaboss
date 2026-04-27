@@ -67,7 +67,7 @@ namespace Karaboss
         #region private declarations
         
 
-        public MidiLyricsMgmt myLyricsMgmt { get; set; }               
+              
 
 
         private int currentTextPos = 0;
@@ -87,6 +87,14 @@ namespace Karaboss
 
         #endregion
 
+
+        #region MIDI
+
+        public MidiLyricsMgmt myLyricsMgmt { get; set; }
+
+
+
+        #endregion MIDI
 
         #region balls
         // Show balls
@@ -428,6 +436,17 @@ namespace Karaboss
             }
         }
 
+        private int _TotalTicks = 0;
+        public int TotalTicks
+        {
+            get { return _TotalTicks; }
+            set
+            {
+                _TotalTicks = value;
+                pBox.TotalTicks = _TotalTicks;
+            }
+        }
+
         #endregion gradient
 
 
@@ -566,7 +585,14 @@ namespace Karaboss
 
             this.myLyricsMgmt = _myLyricsMgmt;
 
+
+            #region MIDI
+
             BeatDuration = myLyricsMgmt.Division;
+            TotalTicks = myLyricsMgmt.TotalTicks;
+
+            #endregion MIDI
+
 
             // Graphic optimization
             this.SetStyle(ControlStyles.AllPaintingInWmPaint, true);
@@ -869,7 +895,8 @@ namespace Karaboss
             // IMPERATIF : calculer ici la position de la syllabe, utilisée pour l'animation des balles
             // drivé par timer_2 de frmMidiPplayer            
             currentTextPos = pBox.CurrentTextPos;
-            pBox.ColorLyric(songposition);
+            //pBox.ColorLyric(songposition);
+            pBox.SetPos(songposition);
         }
 
         /// <summary>
