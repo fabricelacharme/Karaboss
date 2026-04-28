@@ -230,6 +230,13 @@ namespace Karaboss.Mp3
             DisplayMp3Characteristics();
             ExtractMp3Lyrics(Mp3FullPath);
 
+            // Load lyrics into the control
+            if (Application.OpenForms.OfType<frmMp3Lyrics>().Count() > 0)
+            {
+                frmMp3Lyrics.SetLyrics(Mp3LyricsMgmtHelper.mp3KaraokeLyrics);
+            }
+
+
             PopulateMetadataTags();
 
             #region playlists
@@ -4319,9 +4326,7 @@ namespace Karaboss.Mp3
 
             InitGridView();
 
-            // Origine = lrc            
-            //List<List<keffect.KaraokeEffect.kSyncText>> SyncLyrics = Mp3LyricsMgmtHelper.SyncLyrics;
-            // Origine = lrc
+            
             kLyrics myKaraokeLyrics = Mp3LyricsMgmtHelper.mp3KaraokeLyrics;
 
             // Origin = synchronized lyrics frame
@@ -4333,7 +4338,7 @@ namespace Karaboss.Mp3
             if (Tag != null)
                 TagLyrics = Tag.Lyrics;
 
-
+            /*
             // 1. Syncronized lyrics included in the mp3
             if (SynchedLyrics != null && SynchedLyrics.Text.Count() > 0)
             {
@@ -4353,9 +4358,10 @@ namespace Karaboss.Mp3
                     dgView.Rows.Add(time, sTime, text);
                 }
             }
-            
-            // 2. Lyrics coming from a lrc file
             else if (myKaraokeLyrics != null && myKaraokeLyrics.Lines.Count > 0)
+            */
+            // 2. Lyrics coming from a lrc file or internal mp3 synched
+            if (myKaraokeLyrics != null && myKaraokeLyrics.Lines.Count > 0)
             {
                 kLine SyncLine;
                 bool bParagraph = false;
@@ -4387,43 +4393,7 @@ namespace Karaboss.Mp3
                         dgView.Rows.Add(time, sTime, text);
                     }
                 }
-            }
-            /*
-            else if (SyncLyrics != null && SyncLyrics.Count > 0)
-            {
-                List<keffect.KaraokeEffect.kSyncText> SyncLine;
-                bool bParagraph = false;
-
-                for (int i = 0; i < SyncLyrics.Count; i++)
-                {
-                    SyncLine = SyncLyrics[i];
-                    for (int j = 0; j < SyncLine.Count; j++)
-                    {
-                        time = SyncLine[j].Time;
-                        sTime = LyricsUtilities.MsToTime(time, _LrcMillisecondsDigits);
-                        text = SyncLine[j].Text;
-                        if (i > 0 && j == 0)
-                        {
-                            if (text.Trim() == "")
-                            {
-                                bParagraph = true;
-                                continue;
-                            }
-
-                            if (bParagraph)
-                            {
-                                text = m_SepParagraph + text;
-                                bParagraph = false;
-                            }
-                            else
-                                text = m_SepLine + text;                            
-                        }                        
-                        text = text.Replace(" ", "_");
-                        dgView.Rows.Add(time, sTime, text);
-                    }
-                }               
-            }
-            */
+            }           
             // Non synchronized lyrics coming from the mp3 file
             else if (TagLyrics != null && TagLyrics != "")
             {

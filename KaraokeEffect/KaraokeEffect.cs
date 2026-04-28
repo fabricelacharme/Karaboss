@@ -173,6 +173,7 @@ namespace keffect
             {
                 if (value == null) return;
                 if (value.Lines == null) return;
+                if (value.Lines.Count == 0) return;
                 _kLyrics = value;
                 if(_kLyrics != null && _kLyrics.Lines.Count > 0)
                     Init();
@@ -1226,7 +1227,7 @@ namespace keffect
                 _kLyrics = ForceUpperCase(_kLyrics);
 
             // Analyse lyrics to find introduction, instrumentals etc..
-           if (!_bIsSettings)
+           if (!_bIsSettings && (KaraokeDisplayType == KaraokeDisplayTypes.TwoLinesSwapped || KaraokeDisplayType == KaraokeDisplayTypes.FourLinesSwapped))
                 _kLyrics = SearchForInstrumentals(_kLyrics, _MinimumInstrumentalDuration);
 
            
@@ -4836,7 +4837,9 @@ namespace keffect
         /// </summary>
         /// <param name="pos"></param>
         private void SetPosition(int pos)
-        {                        
+        {
+            if (_kLyrics.Lines.Count == 0) return;
+            
             // Search _line & index of the next lyric to play
             (_FirstLineToShow, nextindex) = GetNextIndex(pos);
 
@@ -4937,6 +4940,8 @@ namespace keffect
         /// <returns></returns>       
         private (int line, int index) GetNextIndex(int pos)
         {
+            if (_kLyrics.Lines.Count == 0) return (0, 0);
+            
             // Descending loop for lines
             for (int j = _kLyrics.Lines.Count - 1; j >= 0; j--)
             {
@@ -4987,6 +4992,8 @@ namespace keffect
             highlight_fragment_length = 0;
             inactive_fragment = string.Empty;
             inactive_fragment_length = 0;
+
+            if (_kLyrics.Lines.Count == 0) return 0;
 
             // Search for the current line
             for (int i = 0; i < _kLyrics.Lines[curline].Syllables.Count(); i++)
