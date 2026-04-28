@@ -442,10 +442,28 @@ namespace Karaboss
             get { return _TotalTicks; }
             set
             {
-                _TotalTicks = value;
-                pBox.TotalTicks = _TotalTicks;
+                if (value > 0)
+                {
+                    _TotalTicks = value;
+                    pBox.TotalTicks = _TotalTicks;
+                }
             }
         }
+
+        private double _duration = 0;
+        public double Duration
+        {
+            get { return _duration; }
+            set 
+            {
+                if (value > 0)
+                {
+                    _duration = value;
+                    pBox.Duration = _duration;
+                }
+            }
+        }
+
 
         #endregion gradient
 
@@ -590,6 +608,7 @@ namespace Karaboss
 
             BeatDuration = myLyricsMgmt.Division;
             TotalTicks = myLyricsMgmt.TotalTicks;
+            Duration = myLyricsMgmt.Duration;
 
             #endregion MIDI
 

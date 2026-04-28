@@ -117,6 +117,9 @@ namespace PicControl
 
         #region MID
 
+        // Ticks for 1 sec
+        private int TicksPerSecond = 0; // TotalTicks / Duration
+
         // Duration in seconds 
         private double _duration;
         public double Duration
@@ -1330,13 +1333,56 @@ namespace PicControl
             return klsWithinstrumentals;
         }
 
+        private kLyrics AddTrailingSyllable(kLyrics kls)
+        {
+            kLyrics klsWithTrailingSyllable = new kLyrics();
+            kLine line;
+            Syllable syll;
+            int ticksOn = 0;
+            int ticksOff = 0;
+
+            for (int i = 0; i < kls.Lines.Count; i++)
+            {
+                line = new kLine();
+                
+                for (int j = 0; j < kls.Lines[i].Syllables.Count; j++)
+                {
+                    line.Add(kls.Lines[i].Syllables[j]);    
+                }
+
+                // Add a new syllable when line of Text
+                if (kls.Lines[i].Syllables.Last().CharType == Syllable.CharTypes.Text)
+                {
+                   
+                    if (i + 1 < kls.Lines.Count)
+                    {
+                        if (kls.Lines[i + 1].Syllables.First().TicksOn > kls.Lines[i].Syllables.Last().TicksOff)
+                        {
+
+                            ticksOn = kls.Lines[i].Syllables.Last().TicksOff + 1;
+                            //ticksOff = ticksOn;                                                        
+                            ticksOff = kls.Lines[i + 1].Syllables.First().TicksOn - 1;
+                            
+                            syll = new Syllable() { Text = " ", TicksOn = ticksOn, TicksOff = ticksOff, CharType = Syllable.CharTypes.Text };
+                            line.Add(syll);                        
+                        }
+                       
+                    } 
+                }
+
+                klsWithTrailingSyllable.Add(line);
+            }
+
+            return klsWithTrailingSyllable;
+        }
+
 
         /// <summary>
         /// Load text of song
         /// </summary>
         /// <param name="toto"></param>     
         private void Init(bool bDemoMode = false)
-        {
+        {                                    
             // Do not display paragraphs for some cases
             if (KaraokeDisplayType == KaraokeDisplayTypes.TwoLinesSwapped || KaraokeDisplayType == KaraokeDisplayTypes.FourLinesSwapped || !bShowParagraphs)
             {
@@ -1348,10 +1394,20 @@ namespace PicControl
             if (_bforceUppercase)
                 _kLyrics = ForceUpperCase(_kLyrics);
 
+
+
             // Analyse lyrics to find introduction, instrumentals etc..            
-            if (!_bIsSettings)
+            if (!_bIsSettings && (KaraokeDisplayType == KaraokeDisplayTypes.TwoLinesSwapped || KaraokeDisplayType == KaraokeDisplayTypes.FourLinesSwapped))
                 _kLyrics = SearchForInstrumentals(_kLyrics, _beatDuration);
 
+
+
+            // Add a syllable to each end of lines
+            _kLyrics = AddTrailingSyllable(_kLyrics);
+
+            // Calculate ticks per second
+            if (_duration > 0 && _TotalTicks > 0)
+                TicksPerSecond = (int)(_TotalTicks / _duration);
 
             lstLyricsLines = new List<string>();
             lstChordsLines = new List<string>();
@@ -1524,20 +1580,6 @@ namespace PicControl
 
 
         #region Receive pos from player 
-
-        /// <summary>
-        /// Color the syllabe according to song position
-        /// </summary>
-        /// <param name="songposition"></param>
-        /*
-        public void ColorLyric2(int sequencerposition)
-        {
-            // sequencerPosition en ticks
-            _currentPosition = sequencerposition;
-            SetOffset();
-        }
-        */
-
 
         /// <summary>
         ///  player position
@@ -1804,9 +1846,7 @@ namespace PicControl
                 }
                 _currentTextPos = ctp;
             }
-
-           
-
+          
             // Redraw the display
             pBox.Invalidate();
         }
@@ -1882,54 +1922,7 @@ namespace PicControl
             _currentTextPos = -1;
             pBox.Invalidate();
         }
-        
-
-        /*
-        /// <summary>
-        /// Remove paragraphs in some cases
-        /// </summary>
-        /// <param name="kls"></param>
-        /// <returns></returns>
-        private kLyrics RemoveParagraphs(kLyrics kls)
-        {
-            kLyrics klsNoParagraphs = new kLyrics();
-            kLine line;
-            for (int i = 0; i < kls.Lines.Count; i++)
-            {
-                if (kls.Lines[i].Syllables.First().CharType != Syllable.CharTypes.ParagraphSep)
-                {
-                    line = new kLine();
-                    for (int j = 0; j < kls.Lines[i].Syllables.Count; j++)
-                    {
-                        line.Add(kls.Lines[i].Syllables[j]);
-                    }
-                    klsNoParagraphs.Add(line);
-                }
-            }
-
-            return klsNoParagraphs;
-        }
-
-
-        private kLyrics ForceUpperCase(kLyrics kls)
-        {
-            kLyrics klsNoParagraphs = new kLyrics();
-            kLine line;
-            for (int i = 0; i < kls.Lines.Count; i++)
-            {
-                line = new kLine();
-                for (int j = 0; j < kls.Lines[i].Syllables.Count; j++)
-                {
-                    if (kls.Lines[i].Syllables[j].CharType != Syllable.CharTypes.ParagraphSep)
-                        kls.Lines[i].Syllables[j].Text = kls.Lines[i].Syllables[j].Text.ToUpper();
-                    line.Add(kls.Lines[i].Syllables[j]);
-                }
-                klsNoParagraphs.Add(line);
-            }
-
-            return klsNoParagraphs;
-        }
-        */
+              
         
 
         #endregion public methods
@@ -2400,6 +2393,7 @@ namespace PicControl
                 if (syllabes[syllabeposition].line != currentLine)
                 {
                     currentLine = syllabes[syllabeposition].line;
+                    //currentLine = _FirstLineToShow;
                     
                     // Beginning of line
                     x0 = syllabeposition - syllabes[syllabeposition].posline;
@@ -2409,12 +2403,7 @@ namespace PicControl
                     // Create list of rectangles for next line
                     //createListNextRectangles(syllabes[syllabeposition].last + 1);
                 }
-            }
-            
-            
-           
-            
-        
+            }                                                       
         }
       
 
@@ -3330,7 +3319,7 @@ namespace PicControl
 
         #region Code fragments
 
-        private void DrawActiveLineWithBorders(PaintEventArgs e,int lineIndex, int y1)
+        private void DrawActiveLineWithBorders(PaintEventArgs e, int lineIndex, int y1)
         {
             #region Declarations
             int x0 = 0;
@@ -3354,7 +3343,7 @@ namespace PicControl
                 syllab = syllabes[i];
 
                 // It is the current line
-                if (syllab.line == lineIndex)//currentLine)
+                if (syllab.line == lineIndex)  //currentLine) //
                 {
 
                     // Rectangle
@@ -3472,8 +3461,8 @@ namespace PicControl
                     }
                 }
                 // Ligne immédiatement suivante
-                else if (syllab.line > lineIndex + 1)//currentLine + 1)
-                {
+                else if (syllab.line > lineIndex + 1) //currentLine + 1)
+                {                    
                     break;
                 }
             }
@@ -4066,7 +4055,8 @@ namespace PicControl
             if (bCountDown)
             {
                 // Real position:  PlayerPositionMilliseconds
-                // Position to reach: TargetPositionMilliseconds               
+                // Position to reach: TargetPositionMilliseconds
+                
 
                 // Recalculates the remaining time with PlayerPosition
                 _endTime = TargetPositionTicks - PlayerPositionTicks;
@@ -4088,7 +4078,11 @@ namespace PicControl
                 {
                     // Time is about 3 sec before next lyric to sing
                     // Calculate countdown
-                    int s = _endTime/BeatDuration;
+
+                    //TicksPerSecond = (int)(_TotalTicks / _duration);
+
+                    //int s = _endTime/BeatDuration;
+                    int s = _endTime / TicksPerSecond;
                     
                     if (s != SecondsBeforeSinging)
                     {
@@ -4243,6 +4237,24 @@ namespace PicControl
             // Create list of rectangles when line changes
             synchronize(_currentTextPos);
 
+            
+            /*
+            if (_currentTextPos > -1)
+            {
+                Console.WriteLine("**************************");
+                Console.WriteLine("_currentTextPos = " + _currentTextPos);
+                Console.WriteLine("currentLine = " + syllabes[_currentTextPos].line);
+                Console.WriteLine("_FirstLineToShow = " + _FirstLineToShow);
+                Console.WriteLine("Syllable = " + syllabes[_currentTextPos].text);
+                Console.WriteLine("nextindex = " + nextindex);
+
+            }
+            */
+
+            //_currentTextPos = nextindex;
+            //currentLine = _FirstLineToShow;
+
+
             // Calculate offset to center the text vertically
             int y0 = getOffsetHeight(emSize);
 
@@ -4384,7 +4396,7 @@ namespace PicControl
 
                 bInstrumentalStarted = false;
                 bCountDown = false;
-
+                
 
                 // Draw y1 line: active & highlighted line                
                 DrawActiveLineWithBorders(e, _FirstLineToShow, y1);
@@ -4412,10 +4424,7 @@ namespace PicControl
 
                 // Update the CountDown
                 UpdateCountDown();
-
-
-                
-
+               
                 switch (LineOfInformationPosition)
                 {
                     #region Instrumental on top

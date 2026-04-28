@@ -62,7 +62,7 @@ namespace Karaboss.MidiLyrics
         private readonly Sequence sequence1;
 
         // Midifile characteristics
-        private double _duration = 0;  // en secondes
+        
              
         private double _ppqn;
         private int _tempo;
@@ -92,6 +92,15 @@ namespace Karaboss.MidiLyrics
         public kLyrics KLyrics { get; set; }
 
         #endregion
+
+
+        private double _duration = 0;  // en secondes
+
+        public double Duration
+        {
+            get { return _duration; }
+        }
+
 
         private int _totalTicks = 0;
         public int TotalTicks
@@ -675,7 +684,9 @@ namespace Karaboss.MidiLyrics
         /// Fix ticksoff of lyrics with melody notes
         /// </summary>        
         private void FixTimes()
-        {                                    
+        {
+            int tickson;
+            int ticksoff;
             Syllable syll;
 
             for (int j = KLyrics.Lines.Count - 1; j >= 0; j--)
@@ -689,25 +700,6 @@ namespace Karaboss.MidiLyrics
                    
                 }
             
-
-                // Add a trailing space to the last syllable of a line if missing
-                // WHY ??
-                /*
-                if (_kline != null && _kline.Syllables.Count > 0)
-                {
-                    syll = _kline.Syllables.Last();
-                    if (syll.CharType == Syllable.CharTypes.Text)
-                    {
-                        if (syll.Text.Length > 0)
-                        {
-                            if (!syll.Text.EndsWith(" "))
-                            {
-                                syll.Text = syll.Text + " ";
-                            }
-                        }
-                    }
-                }
-                */
             }                                                                       
 
             // ===============================================
@@ -724,6 +716,7 @@ namespace Karaboss.MidiLyrics
                 for (int i = 0; i < notes.Count; i++)
                 {
                     int starttime = notes[i].StartTime;
+                    int endtime = notes[i].EndTime;
 
                     // Search the syllable corresponding to the note starttime (not always true)
                     for (int j = startline; j < KLyrics.Lines.Count; j++)
@@ -734,7 +727,11 @@ namespace Karaboss.MidiLyrics
                             syll = _kline.Syllables[k];
                             if (syll.CharType == Syllable.CharTypes.Text)
                             {
-                                if (syll.TicksOn == starttime)
+
+                                tickson = syll.TicksOn;
+                                ticksoff = syll.TicksOff;
+                                
+                                if ( Math.Abs(syll.TicksOn - starttime) < 50)
                                 {
                                     // lyric tickoff was already reduced to the next lyric tickson
                                     // Set ticksoff of the lyric to the endtime of the note only if it reduces it again 
@@ -757,8 +754,7 @@ namespace Karaboss.MidiLyrics
             int beat;
             int beatend;
             int beatoff;
-            int tickson;
-            int ticksoff;
+           
             int nbBeatsPerMeasure = sequence1.Numerator;
             int beatDuration = _measurelen / nbBeatsPerMeasure;
             int previousbeat = -1;
@@ -808,9 +804,7 @@ namespace Karaboss.MidiLyrics
                         KLyrics.Lines[i].Syllables.First().TicksOff = KLyrics.Lines[i - 1].Syllables.Last().TicksOff;
                     }
                 }
-            }
-        
-        
+            }                
         }
 
 
@@ -954,7 +948,7 @@ namespace Karaboss.MidiLyrics
         {
             kLyrics l = new kLyrics();
             int plTicksOn; 
-            int plTicksOff;
+            int plTicksOff = 0;
             string plText;
             Syllable.CharTypes plType;
             kLine kline = new kLine();
@@ -974,7 +968,7 @@ namespace Karaboss.MidiLyrics
                     // Set TicksOff to the next lyric TicksOn
                     if (k < track.LyricsText.Count - 1)
                     {
-                        plTicksOff = track.LyricsText[k + 1].TicksOn;
+                        plTicksOff = track.LyricsText[k + 1].TicksOn - 45;
                     }
                     else
                     {
@@ -984,6 +978,7 @@ namespace Karaboss.MidiLyrics
                 else
                     plTicksOff = plTicksOn;
                 
+
                 
                 switch (plType)
                 {
@@ -1072,7 +1067,7 @@ namespace Karaboss.MidiLyrics
                     // Set TicksOff to the next lyric TicksOn
                     if (k < track.Lyrics.Count - 1)
                     {
-                        plTicksOff = track.Lyrics[k + 1].TicksOn;
+                        plTicksOff = track.Lyrics[k + 1].TicksOn - 45;
                     }
                     else
                     {
@@ -3719,8 +3714,6 @@ namespace Karaboss.MidiLyrics
                 _nbMeasures = Convert.ToInt32(Math.Ceiling((double)_totalTicks / _measurelen)); // rounds up to the next full integer
 
                 int nbBeatsPerMeasure = sequence1.Numerator;
-                //int beatDuration = _measurelen / nbBeatsPerMeasure;
-                //_nbBeats = (int)Math.Ceiling(_totalTicks / (float)beatDuration);
                 _nbBeats = _nbMeasures * nbBeatsPerMeasure;
             }
         }     

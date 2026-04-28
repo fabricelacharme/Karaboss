@@ -8914,7 +8914,8 @@ namespace Karaboss
 
             _durationPercent = _tempo * (_totalTicks / _ppqn) / 1000000; // in seconds. For sheetmusic offset
             _duration = TempoUtilities.GetMidiDuration(_totalTicks, _ppqn);  // Real duration according to tempo changes
-            //_durationPercent = _duration;
+
+            
 
             _bpm = GetBPM(_tempo);
 
