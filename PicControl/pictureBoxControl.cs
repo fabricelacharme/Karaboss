@@ -856,7 +856,7 @@ namespace PicControl
                 if (value > 0)
                 {
                     _beatDuration = value;
-                    _DelayBeforeEndOfInstrumental = 4 * _beatDuration;
+                    //_DelayBeforeEndOfInstrumental = 4 * _beatDuration;
                 }
             }
         }
@@ -974,6 +974,11 @@ namespace PicControl
 
             _timerGradient.Interval = 60; // 60 ms
             _timerGradient.Tick += new EventHandler(_timerGradient_Tick);
+
+            
+            
+            _DelayBeforeEndOfInstrumental = 3 * TicksPerSecond;
+
 
             /*
             this.SetStyle(
@@ -1171,7 +1176,7 @@ namespace PicControl
             int tend = 0;
 
             int MinimumInstrumentalDuration = 8 * beatDuration;
-            int MinimumIntroduration = 4 * beatDuration;
+            int MinimumIntroDuration = 4 * beatDuration;
 
 
             // Introduction                        
@@ -1196,8 +1201,8 @@ namespace PicControl
                             {
                                 // end of intro = just before first lyric
                                 tend = t;
-                                if (tend  > MinimumIntroduration)
-                                    tend = tend - MinimumIntroduration;
+                                if (tend  > MinimumIntroDuration)
+                                    tend = tend - MinimumIntroDuration;
                                 line = new kLine();
                                 line.Add(new Syllable() { Text = "", TicksOn = tend, CharType = Syllable.CharTypes.Information });
                                 klsWithinstrumentals.Add(line);
@@ -1408,6 +1413,10 @@ namespace PicControl
             // Calculate ticks per second
             if (_duration > 0 && _TotalTicks > 0)
                 TicksPerSecond = (int)(_TotalTicks / _duration);
+
+            _DelayBeforeEndOfInstrumental = 4 * TicksPerSecond;
+
+
 
             lstLyricsLines = new List<string>();
             lstChordsLines = new List<string>();
@@ -1913,7 +1922,12 @@ namespace PicControl
         {            
             bEndOfLine = false;
 
+            SecondsBeforeSinging = 0;
             bInstrumentalStarted = false;
+            bCountDown = false;
+            _endTime = 0;
+            _startTime = 0;
+            _FirstLineToShow = 0;
 
             vOffset = 0;
             nextStartOfLineTime = 0;
@@ -3334,8 +3348,15 @@ namespace PicControl
             if (_currentTextPos >= syllabes.Count)
                 return;
 
-            if (_currentTextPos >= 0)
+            // Code removed: x0 is wrong
+            //if (_currentTextPos >= 0)
+            //    x0 = _currentTextPos - syllabes[_currentTextPos].posline;
+            if (syllabes[_currentTextPos].line == lineIndex)
+            {
                 x0 = _currentTextPos - syllabes[_currentTextPos].posline;
+            }
+
+
 
             for (int i = x0; i < syllabes.Count; i++)
             {
@@ -3343,11 +3364,13 @@ namespace PicControl
                 syllab = syllabes[i];
 
                 // It is the current line
-                if (syllab.line == lineIndex)  //currentLine) //
+                if (syllab.line == lineIndex)  //currentLine)
                 {
-
-                    // Rectangle
-                    if (syllab.posline >= rRect.Count) return;
+                    
+                    // Bug fixed: force to recreate list of rectangles for the first item of a line
+                    if (syllab.posline == 0)
+                        createListRectangles(i - syllabes[i].posline);
+                    
 
                     x1 = rRect[syllab.posline].X;                    
                     W = (int)rRect[syllab.posline].Width;
@@ -4054,34 +4077,23 @@ namespace PicControl
         {
             if (bCountDown)
             {
-                // Real position:  PlayerPositionMilliseconds
-                // Position to reach: TargetPositionMilliseconds
-                
-
+               
                 // Recalculates the remaining time with PlayerPosition
                 _endTime = TargetPositionTicks - PlayerPositionTicks;
-                //Console.WriteLine("_endTime = " + _endTime);
-
-                //TimeSpan tm = _endTime - DateTime.Now;
-
+               
                 if (_endTime < 0)
                 {
                     _endTime = 0;
                     _startTime = 0;
                     bInstrumentalStarted = false;
-                    SecondsBeforeSinging = -1;
+                    SecondsBeforeSinging = 0;
                     bCountDown = false;
 
-                    Console.WriteLine("********** End of Countdown");
+                    //Console.WriteLine("********** End of Countdown");
                 }
                 else
-                {
-                    // Time is about 3 sec before next lyric to sing
-                    // Calculate countdown
-
-                    //TicksPerSecond = (int)(_TotalTicks / _duration);
-
-                    //int s = _endTime/BeatDuration;
+                {                    
+                    // Calculate countdown                    
                     int s = _endTime / TicksPerSecond;
                     
                     if (s != SecondsBeforeSinging)
@@ -4127,102 +4139,7 @@ namespace PicControl
             }
         }
         
-        private void FlsDrawTextWithBorder2(PaintEventArgs e)
-        {           
-            // Antialiasing
-            e.Graphics.SmoothingMode = SmoothingMode.AntiAlias;
-
-            // Create list of rectangles when line changes
-            synchronize(_currentTextPos);
-
-            // Synchronise can modify currentLine, so we need to recalculate it after synchronize
-            int _FirstLineToShow = currentLine;
-
-            // Calculate offset to center the text vertically
-            int y0 = getOffsetHeight(emSize);
-
-            int y1 = 0;
-            int y2 = 0;
-            int y3 = 0;
-            int y4 = 0;
-            int idx2 = 0;
-            int idx3 = 0;
-            int idx4 = 0;
-
-            int chordOffset = 0;
-            if (bShowChords)
-                chordOffset = 2 * _lineHeight / 3;
-
-
-            if (_FirstLineToShow % 4 == 0)
-            {
-                // First line is active
-                y1 = y0;                                            //_FirstLineToShow              current
-                y2 = y0 + chordOffset + _lineHeight;                //_FirstLineToShow + 1      inactive
-                y3 = y0 + 2 * chordOffset + 2 * _lineHeight;        //_FirstLineToShow + 2      inactive
-                y4 = y0 + 3 * chordOffset + 3 * _lineHeight;        //_FirstLineToShow + 3      inactive
-
-                idx2 = _FirstLineToShow + 1;
-                idx3 = _FirstLineToShow + 2;
-                idx4 = _FirstLineToShow + 3;
-
-            }
-            else if (_FirstLineToShow % 4 == 1)
-            {
-                // 2nd line is active
-                y2 = y0;                                            // _FirstLineToShow - 1
-                y1 = y0 + chordOffset + _lineHeight;                // _FirstLineToShow
-                y3 = y0 + 2 * chordOffset + 2 * _lineHeight;        // _FirstLineToShow + 1
-                y4 = y0 + 3 * chordOffset + 3 * _lineHeight;        // _FirstLineToShow + 2
-
-                idx2 = _FirstLineToShow - 1;
-                idx3 = _FirstLineToShow + 1;
-                idx4 = _FirstLineToShow + 2;
-            }
-            else if (_FirstLineToShow % 4 == 2)
-            {
-                // 3rd line is active
-                y3 = y0;                                            // _FirstLineToShow + 2     
-                y4 = y0 + chordOffset + _lineHeight;                // _FirstLineToShow + 3
-                y1 = y0 + 2 * chordOffset + 2 * _lineHeight;        // _FirstLineToShow
-                y2 = y0 + 3 * chordOffset + 3 * _lineHeight;        // _FirstLineToShow + 1
-
-                idx2 = _FirstLineToShow + 1;
-                idx3 = _FirstLineToShow + 2;
-                idx4 = _FirstLineToShow + 3;
-
-            }
-            else if (_FirstLineToShow % 4 == 3)
-            {
-                // 4th line is active
-                y3 = y0;                                            // _FirstLineToShow + 1
-                y4 = y0 + chordOffset + _lineHeight;                // _FirstLineToShow + 2
-                y2 = y0 + 2 * chordOffset + 2 * _lineHeight;        // _FirstLineToShow - 1
-                y1 = y0 + 3 * chordOffset + 3 * _lineHeight;        // _FirstLineToShow               
-
-                idx2 = _FirstLineToShow - 1;
-                idx3 = _FirstLineToShow + 1;
-                idx4 = _FirstLineToShow + 2;
-            }
-           
-                       
-            // Draw active line with borders
-            DrawActiveLineWithBorders(e, 0, y1);
-
-            // Line y2 must be drawned active when
-            bool IsActive = ((_FirstLineToShow % 4 == 1) || (_FirstLineToShow % 4 == 3)) ? true : false;
-
-            // Draw Inactive line with borders
-            if (idx2 >= 0 && idx2 < KLyrics.Lines.Count)
-                DrawInactiveLineWithBorders(e, idx2, y2, IsActive);
-
-            if (idx3 >= 0 && idx3 < KLyrics.Lines.Count && _FirstLineToShow > 0)
-                DrawInactiveLineWithBorders(e, idx3, y3);
-
-            if (idx4 >= 0 && idx4 < KLyrics.Lines.Count && _FirstLineToShow > 0)
-                DrawInactiveLineWithBorders(e, idx4, y4);                    
-        }
-
+     
         /// <summary>
         /// Draw four lines swapped
         /// </summary>
@@ -4236,25 +4153,7 @@ namespace PicControl
 
             // Create list of rectangles when line changes
             synchronize(_currentTextPos);
-
-            
-            /*
-            if (_currentTextPos > -1)
-            {
-                Console.WriteLine("**************************");
-                Console.WriteLine("_currentTextPos = " + _currentTextPos);
-                Console.WriteLine("currentLine = " + syllabes[_currentTextPos].line);
-                Console.WriteLine("_FirstLineToShow = " + _FirstLineToShow);
-                Console.WriteLine("Syllable = " + syllabes[_currentTextPos].text);
-                Console.WriteLine("nextindex = " + nextindex);
-
-            }
-            */
-
-            //_currentTextPos = nextindex;
-            //currentLine = _FirstLineToShow;
-
-
+          
             // Calculate offset to center the text vertically
             int y0 = getOffsetHeight(emSize);
 
@@ -4396,9 +4295,9 @@ namespace PicControl
 
                 bInstrumentalStarted = false;
                 bCountDown = false;
-                
 
-                // Draw y1 line: active & highlighted line                
+
+                // Draw y1 line: active & highlighted line               
                 DrawActiveLineWithBorders(e, _FirstLineToShow, y1);
 
                 // Line y2 must be drawned active when
@@ -4446,9 +4345,9 @@ namespace PicControl
 
                                 if (bCountDown)
                                 {
-                                    // Keep last actives lines 3 & 4 when instrumental has began for 1 second
+                                    // Keep last actives lines 3 & 4 when instrumental has began for 3 second
                                     tm = PlayerPositionTicks - _startTime;
-                                    if (tm < 2 * BeatDuration)
+                                    if (tm < TicksPerSecond)
                                     {
                                         if (_FirstLineToShow - 2 >= 0)
                                         {
@@ -4573,7 +4472,7 @@ namespace PicControl
                                 {
                                     // Keep last actives lines 3 & 4 when instrumental has began for 1 second
                                     tm = PlayerPositionTicks - _startTime;
-                                    if (tm < 2 * BeatDuration)
+                                    if (tm < TicksPerSecond)
                                     {
                                         if (_FirstLineToShow - 2 >= 0)
                                         {
@@ -4832,7 +4731,7 @@ namespace PicControl
                                 if (bCountDown)
                                 {
                                     // Keep last actives lines 3 & 4 when instrumental has began for 1 second
-                                    if (tm < 2 * BeatDuration)
+                                    if (tm < TicksPerSecond)
                                     {
                                         if (_FirstLineToShow - 2 >= 0)
                                         {
@@ -4956,7 +4855,7 @@ namespace PicControl
                                 if (bCountDown)
                                 {
                                     // Keep last actives lines 3 & 4 when instrumental has began for 1 second
-                                    if (tm < 2 * BeatDuration)
+                                    if (tm < TicksPerSecond)
                                     {
                                         if (_FirstLineToShow - 2 >= 0)
                                         {
@@ -5213,7 +5112,7 @@ namespace PicControl
                                 if (bCountDown)
                                 {
                                     // Keep last actives lines 3 & 4 when instrumental has began for 1 second
-                                    if (tm < 2 * BeatDuration)
+                                    if (tm < TicksPerSecond)
                                     {
                                         if (_FirstLineToShow - 2 >= 0)
                                         {
@@ -5339,7 +5238,7 @@ namespace PicControl
                                 if (bCountDown)
                                 {
                                     // Keep last actives lines 3 & 4 when instrumental has began for 1 second
-                                    if (tm < 2 * BeatDuration)
+                                    if (tm < TicksPerSecond)
                                     {
                                         if (_FirstLineToShow - 2 >= 0)
                                         {
@@ -5531,7 +5430,7 @@ namespace PicControl
                                 if (bCountDown)
                                 {
                                     // Keep last active line 2 when instrumental has began for 1 second
-                                    if (tm < 2 * BeatDuration)
+                                    if (tm < TicksPerSecond)
                                     {
                                         if (_FirstLineToShow - 1 >= 0)
                                         {
@@ -5589,7 +5488,7 @@ namespace PicControl
                                 if (bCountDown)
                                 {
                                     // Keep last active line 2 when instrumental has began for 1 second
-                                    if (tm  < 2 * BeatDuration)
+                                    if (tm  < TicksPerSecond)
                                     {
                                         if (_FirstLineToShow - 1 >= 0)
                                         {
@@ -5724,7 +5623,7 @@ namespace PicControl
                                 if (bCountDown)
                                 {
                                     // Keep last active line 2 when instrumental has began for 1 second
-                                    if (tm < 2 * BeatDuration)
+                                    if (tm < TicksPerSecond)
                                     {
                                         if (_FirstLineToShow - 1 >= 0)
                                         {
@@ -5780,7 +5679,7 @@ namespace PicControl
                                 if (bCountDown)
                                 {
                                     // Keep last active line 2 when instrumental has began for 1 second
-                                    if (tm < 2 * BeatDuration)
+                                    if (tm < TicksPerSecond)
                                     {
                                         if (_FirstLineToShow - 1 >= 0)
                                         {
@@ -5909,7 +5808,7 @@ namespace PicControl
                                 if (bCountDown)
                                 {
                                     // Keep last active line 2 when instrumental has began for 1 second
-                                    if (tm < 2 * BeatDuration)
+                                    if (tm < TicksPerSecond)
                                     {
                                         if (_FirstLineToShow - 1 >= 0)
                                         {
@@ -5965,7 +5864,7 @@ namespace PicControl
                                 if (bCountDown)
                                 {
                                     // Keep last active line 2 when instrumental has began for 1 second
-                                    if (tm < 2 * BeatDuration)
+                                    if (tm < TicksPerSecond)
                                     {
                                         if (_FirstLineToShow - 1 >= 0)
                                         {
@@ -5995,139 +5894,7 @@ namespace PicControl
                 }
             }
         }
-
-
-        /*
-        private void TlsDrawTextWithBorder2(PaintEventArgs e)
-        {            
-            // Antialiasing
-            e.Graphics.SmoothingMode = SmoothingMode.AntiAlias;
-
-            // Create list of rectangles when line changes
-            synchronize(_currentTextPos);
-
-            // Synchronise can modify currentLine, so we need to recalculate it after synchronize
-            int _FirstLineToShow = currentLine;
-
-            // Calculate offset to center the text vertically
-            int y0 = getOffsetHeight(emSize);
-
-            int y1;    // y1 is the y coordinate of the active line to display (line _FirstLineToShow)
-            int y2;    // y2 is the y coordinate of the inactive line to display (line _FirstLineToShow + 1)
-
-            // If active line is odd, it is displayed on the first line
-            // if active line is even, it is displayed on the second line
-            
-            int chordOffset = 0;
-            if (bShowChords)
-                chordOffset = 2 * _lineHeight / 3;            
-            
-            if (_FirstLineToShow % 2 != 0)
-            {
-                y1 = y0;                
-                y2 = y0 + chordOffset + _lineHeight;
-            }
-            else
-            {                
-                y1 = y0 + chordOffset + _lineHeight;                               
-                y2 = y0;
-            }
-
-            // Draw active line with borders
-            DrawActiveLineWithBorders(e,  y1);
-
-            // Draw Inactive line with borders
-            if (_currentTextPos > -1) 
-                DrawInactiveLineWithBorders(e, _FirstLineToShow + 1, y2);
-        }
-
-        private void TlsDrawTextWithShadow2(PaintEventArgs e)
-        {
-            // Antialiasing
-            e.Graphics.SmoothingMode = SmoothingMode.AntiAlias;
-
-            // Create list of rectangles when line changes
-            synchronize(_currentTextPos);
-
-            // Synchronise can modify currentLine, so we need to recalculate it after synchronize
-            int _FirstLineToShow = currentLine;
-
-            // Calculate offset to center the text vertically
-            int y0 = getOffsetHeight(emSize);
-
-            int y1;    // y1 is the y coordinate of the active line to display (line _FirstLineToShow)
-            int y2;    // y2 is the y coordinate of the inactive line to display (line _FirstLineToShow + 1)
-
-            // If active line is odd, it is displayed on the first line
-            // if active line is even, it is displayed on the second line
-
-            int chordOffset = 0;
-            if (bShowChords)
-                chordOffset = 2 * _lineHeight / 3;
-
-            if (_FirstLineToShow % 2 != 0)
-            {
-                y1 = y0;
-                y2 = y0 + chordOffset + _lineHeight;
-            }
-            else
-            {
-                y1 = y0 + chordOffset + _lineHeight;
-                y2 = y0;
-            }
-
-            // Draw active line with borders
-            DrawActiveLineWithShadow(e, y1);
-
-            // Draw Inactive line with borders
-            if (_currentTextPos > -1)
-                DrawInactiveLineWithShadow(e, _FirstLineToShow + 1, y2);
-        }
-
-        private void TlsDrawTextWithNeon2(PaintEventArgs e)
-        {
-            // Antialiasing
-            e.Graphics.SmoothingMode = SmoothingMode.AntiAlias;
-
-            // Create list of rectangles when line changes
-            synchronize(_currentTextPos);
-
-            // Synchronise can modify currentLine, so we need to recalculate it after synchronize
-            int _FirstLineToShow = currentLine;
-
-            // Calculate offset to center the text vertically
-            int y0 = getOffsetHeight(emSize);
-
-            int y1;    // y1 is the y coordinate of the active line to display (line _FirstLineToShow)
-            int y2;    // y2 is the y coordinate of the inactive line to display (line _FirstLineToShow + 1)
-
-            // If active line is odd, it is displayed on the first line
-            // if active line is even, it is displayed on the second line
-
-            int chordOffset = 0;
-            if (bShowChords)
-                chordOffset = 2 * _lineHeight / 3;
-
-            if (_FirstLineToShow % 2 != 0)
-            {
-                y1 = y0;
-                y2 = y0 + chordOffset + _lineHeight;
-            }
-            else
-            {
-                y1 = y0 + chordOffset + _lineHeight;
-                y2 = y0;
-            }
-
-            // Draw active line with borders
-            DrawActiveLineWithNeon(e, y1);
-
-            // Draw Inactive line with borders
-            if (_currentTextPos > -1)
-                DrawInactiveLineWithNeon(e, _FirstLineToShow + 1, y2);
-        }
-
-        */
+     
 
         #endregion Draw text with Two lines swapped
 
