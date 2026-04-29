@@ -98,6 +98,7 @@ namespace PicControl
 
         #region Karaoke Lyrics
 
+        private kLyrics _kLyricsOrg;
         private kLyrics _kLyrics;
         public kLyrics KLyrics 
         { 
@@ -107,6 +108,7 @@ namespace PicControl
                 if (value == null) return;
                 if (value.Lines == null) return;
                 _kLyrics = value; 
+                _kLyricsOrg = _kLyrics.Clone();
                 if (_kLyrics != null && _kLyrics.Lines.Count > 0)
                     Init();
             } 
@@ -166,6 +168,22 @@ namespace PicControl
             set
             {
                 _karaokeDisplayType = value;
+
+                if (_kLyricsOrg != null)
+                {
+                    //SecondsBeforeSinging = 0;
+                    //bInstrumentalStarted = false;
+                    //bCountDown = false;
+                    //_endTime = 0;
+                    //_startTime = 0;
+                    //_FirstLineToShow = 0;
+
+
+                    _kLyrics = _kLyricsOrg.Clone();
+                    Init();
+                }
+
+
                 pBox.Invalidate();
             }
         }
@@ -434,7 +452,7 @@ namespace PicControl
         {
             get { return _frametype; }
             set
-            {
+            {                                  
                 _frametype = value;
 
                 switch (_frametype)
@@ -469,8 +487,8 @@ namespace PicControl
                     default:
                         _borderthick = 1;
                         break;
-                }
-                pBox?.Invalidate();
+                }              
+                pBox?.Invalidate();                                
             }
         }
 
@@ -3289,6 +3307,7 @@ namespace PicControl
             base.OnPaint(e);
         }
 
+        /*
         private void DrawText(PaintEventArgs e)
         {                             
             try
@@ -3329,7 +3348,7 @@ namespace PicControl
                 Console.Write("Error drawing text on image: " + ep.Message);
             }            
         }
-
+        */
 
         #region Code fragments
 
@@ -3351,7 +3370,7 @@ namespace PicControl
             // Code removed: x0 is wrong
             //if (_currentTextPos >= 0)
             //    x0 = _currentTextPos - syllabes[_currentTextPos].posline;
-            if (syllabes[_currentTextPos].line == lineIndex)
+            if (_currentTextPos >= 0 && _currentTextPos < syllabes.Count && syllabes[_currentTextPos].line == lineIndex)
             {
                 x0 = _currentTextPos - syllabes[_currentTextPos].posline;
             }
@@ -3501,7 +3520,6 @@ namespace PicControl
         {
             DrawActiveLineWithBorders(e, lineIndex, y1);
         }
-
 
 
         private void DrawInactiveLineWithBorders(PaintEventArgs e, int lineIndex, int y2, bool IsActive = false)

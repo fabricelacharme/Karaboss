@@ -43,7 +43,6 @@ using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
-using static System.Collections.Specialized.BitVector32;
 
 
 namespace keffect

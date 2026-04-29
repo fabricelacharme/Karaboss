@@ -656,10 +656,8 @@ namespace Karaboss
         public void LoadOptions()
         {
             try
-            {
-                // beatDuration
+            {              
                 
-
                 // Karaoke display type
                 KaraokeDisplayType = Properties.Settings.Default.KaraokeDisplayType;               // setting this property set the karaokeEffect1.KaraokeDisplayType property
 
@@ -908,14 +906,14 @@ namespace Karaboss
         /// Color the syllabe according to song position
         /// </summary>
         /// <param name="songposition"></param>
-        public void ColorLyric(int songposition)
+        public void ColorLyric(int SequencerPosition)
         {
             // déclencheur : timer_2
             // IMPERATIF : calculer ici la position de la syllabe, utilisée pour l'animation des balles
             // drivé par timer_2 de frmMidiPplayer            
             currentTextPos = pBox.CurrentTextPos;
             //pBox.ColorLyric(songposition);
-            pBox.SetPos(songposition);
+            pBox.SetPos(SequencerPosition);
         }
 
         /// <summary>
