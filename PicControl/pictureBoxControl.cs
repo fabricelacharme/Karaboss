@@ -3865,30 +3865,17 @@ namespace PicControl
             int y0 = getOffsetHeight(emSize);
             
             // Draw active line with borders
-            DrawActiveLineWithBorders(e, 0, y0);
-
+            DrawActiveLineWithBorders(e, _FirstLineToShow, y0);
             
             // Draw next  inactives lines with borders
-            int _FirstLineToShow = currentLine + 1;
-            int _LastLineToShow = _FirstLineToShow + _nbLyricsLines - 2;
+            _LastLineToShow = SetLastLineToShow(_FirstLineToShow, _kLyrics.Lines.Count, _nbLyricsLines);
 
             int y2;
-            //int y2 = y0;
-            //if (bShowChords)
-            //    y2 = y0 + 2 * _lineHeight / 3 ;
-
-
-            for (int i = _FirstLineToShow; i <= _LastLineToShow; i++)
+            for (int i = _FirstLineToShow + 1; i <= _LastLineToShow; i++)
             {
                 if (i < lstLyricsLines.Count)
                 {
-                    //if (bShowChords) 
-                    //    y2 += (i - currentLine) * _lineHeight;
-                    //else
-                    //    y2 += (i - currentLine) * _lineHeight;
-
-                    y2 = y0 + (i - currentLine) * _lineHeight;
-
+                    y2 = y0 + (i - _FirstLineToShow) * _lineHeight;
                     DrawInactiveLineWithBorders(e, i, y2);                    
                 }
             }          
@@ -3906,71 +3893,23 @@ namespace PicControl
             int y0 = getOffsetHeight(emSize);
 
             // Draw active line with borders
-            DrawActiveLineWithBorders(e, 0, y0);
+            DrawActiveLineWithBorders(e, _FirstLineToShow, y0);
 
 
-            // Draw next  inactives lines with borders
-            int _FirstLineToShow = currentLine + 1;
-            int _LastLineToShow = _FirstLineToShow + _nbLyricsLines - 2;
+            // Draw next  inactives lines with borders           
+            _LastLineToShow = SetLastLineToShow(_FirstLineToShow, _kLyrics.Lines.Count, _nbLyricsLines);
 
-            int y2; // = y0;
-            //if (bShowChords)
-            //    y2 = y0 + 2 * _lineHeight / 3;
-
+            int y2; 
 
             for (int i = _FirstLineToShow; i <= _LastLineToShow; i++)
             {
                 if (i < lstLyricsLines.Count)
                 {
-                    //if (bShowChords)
-                    //    y2 += (i - currentLine) * _lineHeight;
-                    //else
-                    //    y2 += (i - currentLine) * _lineHeight;
 
-                    y2 = y0 + (i - currentLine) * _lineHeight;
-
-                    DrawInactiveLineWithShadow(e, i, y2);
+                    y2 = y0 + (i - _FirstLineToShow) * _lineHeight;
+                    DrawInactiveLineWithBorders(e, i, y2);
                 }
-            }
-            /*
-            try
-            {
-                // Create list of rectangles when line changes
-                synchronize(_currentTextPos);
-
-                // Antialiasing
-                e.Graphics.SmoothingMode = SmoothingMode.AntiAlias;
-
-                // Calculate offset to center the text vertically
-                int y0 = getOffsetHeight(emSize);
-
-                if (_nbLyricsLines > 1)
-                {
-                    // Several lines to display
-                    // progressive offset - vOffset increases, so y0 decreases
-                    //y0 = y0 - vOffset;
-
-                    // Draw current line                    
-                    DrawCurrentLine(_currentPosition, y0, e);
-
-                    // Draw next lines                 
-                    DrawNextLines(y0, e);
-                }
-                else
-                {
-                    // A single line to display
-                    // Draw current line until end of line
-                    if (!bEndOfLine)
-                        DrawCurrentLine(_currentPosition, y0, e);
-                    else
-                        DrawNextLines(y0, e);
-                }
-            }
-            catch (Exception ep)
-            {
-                Console.Write("Error drawing text on image: " + ep.Message);
-            }
-            */
+            }           
         }
 
         private void FixDrawTextWithNeon(PaintEventArgs e)
@@ -3985,29 +3924,19 @@ namespace PicControl
             int y0 = getOffsetHeight(emSize);
 
             // Draw active line with borders
-            DrawActiveLineWithBorders(e, 0, y0);
+            DrawActiveLineWithBorders(e, _FirstLineToShow, y0);
 
 
             // Draw next  inactives lines with borders
-            int _FirstLineToShow = currentLine + 1;
-            int _LastLineToShow = _FirstLineToShow + _nbLyricsLines - 2;
+            _LastLineToShow = SetLastLineToShow(_FirstLineToShow, _kLyrics.Lines.Count, _nbLyricsLines);
 
-            int y2; // = y0;
-            //if (bShowChords)
-            //    y2 = y0 + 2 * _lineHeight / 3;
-
-
+            int y2;
             for (int i = _FirstLineToShow; i <= _LastLineToShow; i++)
             {
                 if (i < lstLyricsLines.Count)
                 {
-                    //if (bShowChords)
-                    //    y2 += (i - currentLine) * _lineHeight;
-                    //else
-                    //    y2 += (i - currentLine) * _lineHeight;
-
-                    y2 = y0 + (i - currentLine) * _lineHeight;
-                    DrawInactiveLineWithNeon(e, i, y2);
+                    y2 = y0 + (i - _FirstLineToShow) * _lineHeight;
+                    DrawInactiveLineWithBorders(e, i, y2);
                 }
             }
         }
