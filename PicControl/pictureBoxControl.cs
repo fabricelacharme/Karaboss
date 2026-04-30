@@ -127,14 +127,46 @@ namespace PicControl
         public double Duration
         {
             get { return _duration; }
-            set { _duration = value; }
+            set {
+
+                if (value > 0)
+                {
+                    _duration = value;
+                    if (_TotalTicks > 0)
+                    {
+                        TicksPerSecond = (int)(_TotalTicks / _duration);
+                        ResetDefaultTimings();
+                    }
+                }
+            }
         }
 
         private int _TotalTicks;
         public int TotalTicks
         {
             get { return _TotalTicks; }
-            set { _TotalTicks = value; }
+            set 
+            {
+                if (value > 0)
+                {
+                    _TotalTicks = value;
+                    if (_duration > 0)
+                    {
+                        TicksPerSecond = (int)(_TotalTicks / _duration);
+                        ResetDefaultTimings();
+                    }
+                }
+            }
+        }
+
+        private int _FirstMelodyNoteTicksOn = 0;
+        public int FirstMelodyNoteTicksOn
+        {
+            get { return _FirstMelodyNoteTicksOn; }
+            set
+            {
+                _FirstMelodyNoteTicksOn = value;                
+            }
         }
 
         #endregion MID
@@ -151,10 +183,10 @@ namespace PicControl
         private bool bInstrumentalStarted = false;
         private int SecondsBeforeSinging = 0;
         private bool bCountDown = false;
-        private int _DelayBeforeEndOfInstrumental = 4000; // Delay to draw lines before the end of an instrumental: 4 sec
-        private int _MinimumInstrumentalDuration = 5000;  // The minimum duration between two consecutive vocal phrases that mark an instrumental interlude : 5 sec
+        private int _DelayBeforeEndOfInstrumental = 0; // Delay to draw lines before the end of an instrumental: 4 sec
+        private int _MinimumInstrumentalDuration = 0;  // The minimum duration between two consecutive vocal phrases that mark an instrumental interlude : 5 sec
         private int LastLineOfInformationPosition = 0;
-
+        private int _MinimumIntroDuration = 0;
 
         #endregion Instrumentals
 
@@ -170,15 +202,7 @@ namespace PicControl
                 _karaokeDisplayType = value;
 
                 if (_kLyricsOrg != null)
-                {
-                    //SecondsBeforeSinging = 0;
-                    //bInstrumentalStarted = false;
-                    //bCountDown = false;
-                    //_endTime = 0;
-                    //_startTime = 0;
-                    //_FirstLineToShow = 0;
-
-
+                {                   
                     _kLyrics = _kLyricsOrg.Clone();
                     Init();
                 }
@@ -971,12 +995,7 @@ namespace PicControl
         {
             InitializeComponent();
 
-            // Dipslay chords or not            
-            OptionShowChords = true;
-
-            _karaokeFont = new Font("Arial", this.Font.Size);
-            _chordFont = new Font("Comic Sans MS", this._karaokeFont.Size);
-
+           
             #region Move form without title bar
 
             Application.AddMessageFilter(this);
@@ -984,20 +1003,7 @@ namespace PicControl
             controlsToMove.Add(this.pBox);
             
             #endregion
-            
-            m_ImageFilePaths = new List<string>();            
-            imgLayout = ImageLayout.Stretch;
-
-            Beat = 200; // Default speed for rhythm animation
-
-            _timerGradient.Interval = 60; // 60 ms
-            _timerGradient.Tick += new EventHandler(_timerGradient_Tick);
-
-            
-            
-            _DelayBeforeEndOfInstrumental = 3 * TicksPerSecond;
-
-
+                                                   
             /*
             this.SetStyle(
                   System.Windows.Forms.ControlStyles.UserPaint |
@@ -1025,11 +1031,47 @@ namespace PicControl
 
         #region Initializations
 
+        private void ResetDefaultTimings()
+        {
+            // Calculate ticks per second
+            if (_duration > 0 && _TotalTicks > 0)
+            {
+                TicksPerSecond = (int)(_TotalTicks / _duration);
+
+                _DelayBeforeEndOfInstrumental = 4 * TicksPerSecond;
+
+                _DelayBeforeEndOfInstrumental = 3 * TicksPerSecond;
+                _MinimumInstrumentalDuration = 5 * TicksPerSecond;
+                _MinimumIntroDuration = 3 * TicksPerSecond;
+            }
+            else
+            {
+                MessageBox.Show("Invalid Duration", Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+
         /// <summary>
         /// Set default values for demonstration purpose
         /// </summary>
         private void SetDefaultValues()
         {
+
+            // Dipslay chords or not            
+            OptionShowChords = true;
+
+            _karaokeFont = new Font("Arial", this.Font.Size);
+            _chordFont = new Font("Comic Sans MS", this._karaokeFont.Size);
+
+            m_ImageFilePaths = new List<string>();
+            imgLayout = ImageLayout.Stretch;
+
+            Beat = 200; // Default speed for rhythm animation
+
+            _timerGradient.Interval = 60; // 60 ms
+            _timerGradient.Tick += new EventHandler(_timerGradient_Tick);
+
+
             _BgColor = Color.Black;
 
             _ActiveColor = Color.FromArgb(153, 180, 51);      // modern ui light green
@@ -1044,7 +1086,6 @@ namespace PicControl
 
 
             _nbLyricsLines = 3;
-
 
 
             // Default dir for slide show
@@ -1183,7 +1224,7 @@ namespace PicControl
         /// </summary>
         /// <param name="kls"></param>
         /// <returns></returns>       
-        private kLyrics SearchForInstrumentals(kLyrics kls, int beatDuration)
+        private kLyrics SearchForInstrumentals(kLyrics kls)
         {
             int tOnPrevious = 0;
             int duration = 0;
@@ -1193,122 +1234,128 @@ namespace PicControl
             string text = string.Empty;
             int tend = 0;
 
-            int MinimumInstrumentalDuration = 8 * beatDuration;
-            int MinimumIntroDuration = 4 * beatDuration;
-
+            
+            if (TicksPerSecond == 0)
+            {
+                MessageBox.Show("Invalid Duration", Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return kls;
+            }
 
             // Introduction                        
             for (int i = 0; i < kls.Lines.Count; i++)
             {
                 line = new kLine();
                 for (int j = 0; j < kls.Lines[i].Syllables.Count; j++)
-                {
-                    if (kls.Lines[i].Syllables[j].CharType != Syllable.CharTypes.ParagraphSep)
+                {                    
+                    t = kls.Lines[i].Syllables[j].TicksOn;
+
+                    // INTRODUCTION
+                    
+                    // Create two lines for introduction (if no syllable at t = 0)
+                    //if (i == 0 && j == 0 && t > 0)
+                    if (i == 0 && j == 0)
                     {
+                        #region Introduction
+                        // Start of intro
+                        line.Add(new Syllable() { Text = "(introduction)", TicksOn = 0, CharType = Syllable.CharTypes.Information });
+                        klsWithinstrumentals.Add(line);
 
-                        t = kls.Lines[i].Syllables[j].TicksOn;
-
-                        // Create two lines for introduction (if no syllable at t = 0)
-                        if (i == 0 && j == 0 && t > 0)
+                        if (KaraokeDisplayType != KaraokeDisplayTypes.TwoLinesSwapped)
                         {
-                            // Start of intro
-                            line.Add(new Syllable() { Text = "(introduction)", TicksOn = 0, CharType = Syllable.CharTypes.Information });
+                            // end of intro = just before first lyric
+                            tend = t;
+                            if (tend  > _MinimumIntroDuration)
+                                tend = tend - _MinimumIntroDuration;
+                            line = new kLine();
+                            line.Add(new Syllable() { Text = "", TicksOn = tend, CharType = Syllable.CharTypes.Information });
                             klsWithinstrumentals.Add(line);
-
-                            if (KaraokeDisplayType != KaraokeDisplayTypes.TwoLinesSwapped)
-                            {
-                                // end of intro = just before first lyric
-                                tend = t;
-                                if (tend  > MinimumIntroDuration)
-                                    tend = tend - MinimumIntroDuration;
-                                line = new kLine();
-                                line.Add(new Syllable() { Text = "", TicksOn = tend, CharType = Syllable.CharTypes.Information });
-                                klsWithinstrumentals.Add(line);
-                            }
-
-                            line = new kLine();
-                        }
-                        else if (t - tOnPrevious > MinimumInstrumentalDuration)
-                        {
-                            // Instrumental must be on line 0 or 2
-
-                            // instrumental allowed
-                            // Forbidden
-                            // instrumental allowed
-                            // Forbidden
-
-                            if (KaraokeDisplayType == KaraokeDisplayTypes.FourLinesSwapped)
-                            {
-                                int c = klsWithinstrumentals.Lines.Count;
-                                if (c % 4 == 1)
-                                {
-                                    if (line.Syllables.Count > 0)
-                                        klsWithinstrumentals.Add(line);
-
-                                    // if on line 1
-                                    line = new kLine();
-                                    line.Add(new Syllable() { Text = "", TicksOn = t + 45, CharType = Syllable.CharTypes.Information });
-                                    klsWithinstrumentals.Add(line);
-
-                                    line = new kLine();
-
-                                }
-                                else if (c % 4 == 3)
-                                {
-                                    if (line.Syllables.Count > 0)
-                                        klsWithinstrumentals.Add(line);
-
-                                    // If on line 3
-                                    line = new kLine();
-                                    line.Add(new Syllable() { Text = "", TicksOn = t + 45, CharType = Syllable.CharTypes.Information });
-                                    klsWithinstrumentals.Add(line);
-
-                                    line = new kLine();
-                                }
-                            }
-
-
-
-                            // Create two lines for instrumental
-                            // An Instrumental part exists from tOnPrevious to t
-                            // When can add a lyric called "(Instrumental)" a few time after tPrevious
-
-                            if (line.Syllables.Count > 0)
-                                klsWithinstrumentals.Add(line);
-
-                            // First line instrumental
-                            line = new kLine();
-                            line.Add(new Syllable() { Text = "(instrumental)", TicksOn = tOnPrevious + duration, CharType = Syllable.CharTypes.Information });
-                            klsWithinstrumentals.Add(line);
-
-                            if (KaraokeDisplayType != KaraokeDisplayTypes.TwoLinesSwapped)
-                            {
-                                // Second line instrumental, 2 seconds before the end
-                                tend = t;
-                                if (tend - 2 * beatDuration > 0)
-                                    tend = tend - 2 * beatDuration;
-
-                                line = new kLine();
-                                line.Add(new Syllable() { Text = "", TicksOn = tend, CharType = Syllable.CharTypes.Information });
-                                klsWithinstrumentals.Add(line);
-                            }
-
-                            line = new kLine();
                         }
 
-                        tOnPrevious = t;    // Start time of previous lyric
-                        duration = kls.Lines[i].Syllables[j].TicksOff - kls.Lines[i].Syllables[j].TicksOn; // Duration of previous lyric
-
+                        line = new kLine();
                     }
+                    #endregion Introduction
+
+                    // INSTRUMENTALS (only t > _First note)
+                    else if (t > _FirstMelodyNoteTicksOn && t - tOnPrevious > _MinimumInstrumentalDuration)
+                    {
+                        // Instrumental must be on line 0 or 2 => create additional blank lines in order to have instrumental on the right position
+
+                        // instrumental allowed
+                        // Forbidden
+                        // instrumental allowed
+                        // Forbidden
+
+                        if (KaraokeDisplayType == KaraokeDisplayTypes.FourLinesSwapped)
+                        {
+                            int c = klsWithinstrumentals.Lines.Count;
+                            if (c % 4 == 1)
+                            {
+                                if (line.Syllables.Count > 0)
+                                    klsWithinstrumentals.Add(line);
+
+                                // if on line 1
+                                line = new kLine();
+                                line.Add(new Syllable() { Text = "", TicksOn = t + 45, CharType = Syllable.CharTypes.Information });
+                                klsWithinstrumentals.Add(line);
+
+                                line = new kLine();
+
+                            }
+                            else if (c % 4 == 3)
+                            {
+                                if (line.Syllables.Count > 0)
+                                    klsWithinstrumentals.Add(line);
+
+                                // If on line 3
+                                line = new kLine();
+                                line.Add(new Syllable() { Text = "", TicksOn = t + 45, CharType = Syllable.CharTypes.Information });
+                                klsWithinstrumentals.Add(line);
+
+                                line = new kLine();
+                            }
+                        }
+
+                        // Create two lines for instrumental
+                        // An Instrumental part exists from tOnPrevious to t
+                        // When can add a lyric called "(Instrumental)" a few time after tPrevious
+
+                        if (line.Syllables.Count > 0)
+                            klsWithinstrumentals.Add(line);
+
+                        // First line instrumental
+                        line = new kLine();
+                        line.Add(new Syllable() { Text = "(instrumental)", TicksOn = tOnPrevious + duration, CharType = Syllable.CharTypes.Information });
+                        klsWithinstrumentals.Add(line);
+
+                        if (KaraokeDisplayType != KaraokeDisplayTypes.TwoLinesSwapped)
+                        {
+                            // Second line instrumental, 2 seconds before the end
+                            tend = t;
+                            if (tend - 2 * TicksPerSecond > 0)
+                                tend = tend - 2 * TicksPerSecond;
+
+                            line = new kLine();
+                            line.Add(new Syllable() { Text = "", TicksOn = tend, CharType = Syllable.CharTypes.Information });
+                            klsWithinstrumentals.Add(line);
+                        }
+
+                        line = new kLine();
+                    }
+
+                    tOnPrevious = t;    // Start time of previous lyric
+                    duration = kls.Lines[i].Syllables[j].TicksOff - kls.Lines[i].Syllables[j].TicksOn; // Duration of previous lyric
+
+                   
                     line.Add(kls.Lines[i].Syllables[j]);
                 }
                 klsWithinstrumentals.Add(line);
             }
 
             // ENDING
+            #region ENDING
             t = _kLyrics.Lines.Last().Syllables.Last().TicksOn;
 
-            if (_TotalTicks - t > MinimumInstrumentalDuration)
+            if (_TotalTicks - t > _MinimumInstrumentalDuration)
             {
 
                 // Instrumental must be on line 0 or 2
@@ -1347,12 +1394,14 @@ namespace PicControl
                 if (KaraokeDisplayType != KaraokeDisplayTypes.TwoLinesSwapped)
                 {
                     // 2nd line 1 sec before the end of the song
-                    tend = _TotalTicks - 2 * beatDuration;
+                    tend = _TotalTicks - 2 * TicksPerSecond;
                     line = new kLine();
                     line.Add(new Syllable() { Text = "", TicksOn = tend, CharType = Syllable.CharTypes.Information });
                     klsWithinstrumentals.Add(line);
                 }
             }
+            #endregion ENDING
+
             return klsWithinstrumentals;
         }
 
@@ -1406,6 +1455,7 @@ namespace PicControl
         /// <param name="toto"></param>     
         private void Init(bool bDemoMode = false)
         {                                    
+                                    
             // Do not display paragraphs for some cases
             if (KaraokeDisplayType == KaraokeDisplayTypes.TwoLinesSwapped || KaraokeDisplayType == KaraokeDisplayTypes.FourLinesSwapped || !bShowParagraphs)
             {
@@ -1421,20 +1471,12 @@ namespace PicControl
 
             // Analyse lyrics to find introduction, instrumentals etc..            
             if (!_bIsSettings && (KaraokeDisplayType == KaraokeDisplayTypes.TwoLinesSwapped || KaraokeDisplayType == KaraokeDisplayTypes.FourLinesSwapped))
-                _kLyrics = SearchForInstrumentals(_kLyrics, _beatDuration);
-
+                _kLyrics = SearchForInstrumentals(_kLyrics);
 
 
             // Add a syllable to each end of lines
             _kLyrics = AddTrailingSyllable(_kLyrics);
-
-            // Calculate ticks per second
-            if (_duration > 0 && _TotalTicks > 0)
-                TicksPerSecond = (int)(_TotalTicks / _duration);
-
-            _DelayBeforeEndOfInstrumental = 4 * TicksPerSecond;
-
-
+          
 
             lstLyricsLines = new List<string>();
             lstChordsLines = new List<string>();

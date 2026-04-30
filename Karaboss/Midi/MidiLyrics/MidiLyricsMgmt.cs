@@ -46,7 +46,6 @@ namespace Karaboss.MidiLyrics
 {         
     public partial class MidiLyricsMgmt
     {
-
         #region private
 
         private readonly static string m_SepLine = "/";
@@ -61,9 +60,7 @@ namespace Karaboss.MidiLyrics
 
         private readonly Sequence sequence1;
 
-        // Midifile characteristics
-        
-             
+        // Midifile characteristics                     
         private double _ppqn;
         private int _tempo;
         private int _measurelen = 0;
@@ -92,6 +89,13 @@ namespace Karaboss.MidiLyrics
         public kLyrics KLyrics { get; set; }
 
         #endregion
+
+
+        private int _FirstMelodyNoteTicksOn = 0;
+        public int FirstMelodyNoteTicksOn
+        {
+            get { return _FirstMelodyNoteTicksOn; }
+        }
 
 
         private double _duration = 0;  // en secondes
@@ -710,6 +714,9 @@ namespace Karaboss.MidiLyrics
             {
                 Sanford.Multimedia.Midi.Track trk = sequence1.tracks[_melodytracknum];
                 List<MidiNote> notes = trk.Notes;
+
+                _FirstMelodyNoteTicksOn = notes[0].StartTime;
+
 
                 int startline = 0;
 

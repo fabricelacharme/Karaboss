@@ -64,11 +64,7 @@ namespace Karaboss
         #endregion
 
 
-        #region private declarations
-        
-
-              
-
+        #region private declarations                      
 
         private int currentTextPos = 0;
         private Point Mouselocation;
@@ -91,8 +87,6 @@ namespace Karaboss
         #region MIDI
 
         public MidiLyricsMgmt myLyricsMgmt { get; set; }
-
-
 
         #endregion MIDI
 
@@ -303,9 +297,19 @@ namespace Karaboss
                 pBox.bTextBackGround = _bTextBackGround;
             }
         }
+       
 
-
-        #region Text color
+        // Background color
+        private Color _BgColor;
+        public Color BgColor
+        {
+            get { return _BgColor; }
+            set
+            {
+                _BgColor = value;
+                pBox.BgColor = _BgColor;
+            }
+        }        
 
 
         // Text sung color
@@ -342,8 +346,8 @@ namespace Karaboss
                 pBox.InactiveColor = _InactiveColor;
             }
         }
-        
-        
+
+
         // Text border
         private Color _ActiveBorderColor;
         public Color ActiveBorderColor
@@ -366,20 +370,8 @@ namespace Karaboss
                 pBox.InactiveBorderColor = _InactiveBorderColor;
             }
         }
-
-        #endregion text color
-
-        // Background color
-        private Color _BgColor;
-        public Color BgColor
-        {
-            get { return _BgColor; }
-            set
-            {
-                _BgColor = value;
-                pBox.BgColor = _BgColor;
-            }
-        }
+        
+        #endregion Text color
 
 
         #region gradient
@@ -424,6 +416,10 @@ namespace Karaboss
             }
         }
 
+        #endregion gradient
+
+
+        #region MIDI
 
         private int _beatDuration = 0;
         public int BeatDuration
@@ -454,7 +450,7 @@ namespace Karaboss
         public double Duration
         {
             get { return _duration; }
-            set 
+            set
             {
                 if (value > 0)
                 {
@@ -464,11 +460,19 @@ namespace Karaboss
             }
         }
 
+        private int _FirstMelodyNoteTicksOn = 0;
+        public int FirstMelodyNoteTicksOn
+        {
+            get { return _FirstMelodyNoteTicksOn; }
+            set
+            {
+                _FirstMelodyNoteTicksOn = value;
+                pBox.FirstMelodyNoteTicksOn = _FirstMelodyNoteTicksOn;
+            }
+        }
 
-        #endregion gradient
 
-
-        #endregion
+        #endregion MIDI
 
 
         #region dirslideshow
@@ -609,6 +613,7 @@ namespace Karaboss
             BeatDuration = myLyricsMgmt.Division;
             TotalTicks = myLyricsMgmt.TotalTicks;
             Duration = myLyricsMgmt.Duration;
+            FirstMelodyNoteTicksOn = myLyricsMgmt.FirstMelodyNoteTicksOn;
 
             #endregion MIDI
 
