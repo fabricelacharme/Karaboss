@@ -43,7 +43,6 @@ using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
-using static System.Windows.Forms.LinkLabel;
 
 namespace PicControl
 {
@@ -364,6 +363,32 @@ namespace PicControl
         }
 
         #endregion Textcolor       
+
+
+        #region Instrumentals color
+
+        private Color _ActiveInstrumentalColor;
+        public Color ActiveInstrumentalColor
+        {
+            get { return _ActiveInstrumentalColor; }
+            set 
+            { 
+                _ActiveInstrumentalColor = value;
+                pBox.Invalidate();
+            }
+        }
+        private Color _HighlightInstrumentalColor;
+        public Color HighLightInstrumentalColor
+        {
+            get { return _HighlightInstrumentalColor; }
+            set 
+            {  
+                _HighlightInstrumentalColor = value;
+                pBox.Invalidate();
+            }
+        }
+
+        #endregion Instrumentals color
 
 
         #region Chord color
@@ -3840,12 +3865,15 @@ namespace PicControl
         /// <param name="e"></param>
         ///  <param name="infotext"</param>
         /// <param name="y"></param>
-        private void DrawInformation(PaintEventArgs e, string infotext, int y0) 
+        private void DrawInformation(PaintEventArgs e, string infotext, int seconds, int y0) 
         {
             GraphicsPath path = new GraphicsPath();
             int x0;
             Pen penBorder = new Pen(Color.Black);
             Color FillColor = Color.Gray;
+
+            infotext = seconds > 0 ? infotext + " " + seconds.ToString() : infotext; 
+
 
             x0 = HCenterText(infotext, emSize);
 
@@ -4331,7 +4359,7 @@ namespace PicControl
                                 // y4 normal old than new
                                 // Draw "(intrumental)" on active line and countdown on next line
                                 if (_FirstLineToShow < _kLyrics.Lines.Count)
-                                    DrawInformation(e, _kLyrics.Lines[_FirstLineToShow].Syllables.Last().Text + " " + SecondsBeforeSinging.ToString(), y1);
+                                    DrawInformation(e, _kLyrics.Lines[_FirstLineToShow].Syllables.Last().Text, SecondsBeforeSinging, y1);
 
                                 if (bCountDown)
                                 {
@@ -4373,7 +4401,7 @@ namespace PicControl
 
                                 // draw ("instrumental") on previous line and countdown on current line
                                 if (_FirstLineToShow - 1 < _kLyrics.Lines.Count)
-                                    DrawInformation(e, _kLyrics.Lines[_FirstLineToShow - 1].Syllables.Last().Text + " " + SecondsBeforeSinging.ToString(), y1 - _lineHeight);
+                                    DrawInformation(e, _kLyrics.Lines[_FirstLineToShow - 1].Syllables.Last().Text, SecondsBeforeSinging, y1 - _lineHeight);
 
                                 DrawInactiveLineWithBorders(e, idx3, y3);
                                 DrawInactiveLineWithBorders(e, idx4, y4);
@@ -4392,7 +4420,7 @@ namespace PicControl
 
                                 // Draw instrumental on line 0 (y3)
                                 if (idx3 < _kLyrics.Lines.Count)
-                                    DrawInformation(e, _kLyrics.Lines[idx3].Syllables.Last().Text, y3);
+                                    DrawInformation(e, _kLyrics.Lines[idx3].Syllables.Last().Text, 0, y3);
                                 break;
 
                             case 3:
@@ -4408,7 +4436,7 @@ namespace PicControl
 
                                 // Draw instrumental on line 0
                                 if (idx3 < _kLyrics.Lines.Count)
-                                    DrawInformation(e, _kLyrics.Lines[idx3].Syllables.Last().Text, y3);
+                                    DrawInformation(e, _kLyrics.Lines[idx3].Syllables.Last().Text, 0, y3);
                                 break;
                         }
                         break;
@@ -4438,7 +4466,7 @@ namespace PicControl
 
                                 // Draw "(intrumental)" on 3rd line and countdown on next line
                                 if (idx3 < _kLyrics.Lines.Count)
-                                    DrawInformation(e, _kLyrics.Lines[idx3].Syllables.Last().Text, y3);
+                                    DrawInformation(e, _kLyrics.Lines[idx3].Syllables.Last().Text, 0, y3);
                                 break;
 
                             case 1:                                                 // LinePosition is 1
@@ -4454,7 +4482,7 @@ namespace PicControl
 
                                 // Draw "(intrumental)" on 3rd line and countdown on next line
                                 if (idx3 < _kLyrics.Lines.Count)
-                                    DrawInformation(e, _kLyrics.Lines[idx3].Syllables.Last().Text, y3);
+                                    DrawInformation(e, _kLyrics.Lines[idx3].Syllables.Last().Text, 0, y3);
 
                                 break;
 
@@ -4478,7 +4506,7 @@ namespace PicControl
                                 }
                                 // Draw "(intrumental)" on active line and countdown on next line
                                 if (_FirstLineToShow < _kLyrics.Lines.Count)
-                                    DrawInformation(e, _kLyrics.Lines[_FirstLineToShow].Syllables.Last().Text + " " + SecondsBeforeSinging.ToString(), y1);
+                                    DrawInformation(e, _kLyrics.Lines[_FirstLineToShow].Syllables.Last().Text, SecondsBeforeSinging, y1);
 
                                 // Draw lines y3 and y4 only if they are less than 4 sec before the end of an instrumental
                                 if (bInstrumentalStarted)
@@ -4505,7 +4533,7 @@ namespace PicControl
                                 // y4 * information2
                                 // Draw "(intrumental)" on active line and countdown on next line                                
                                 if (idx2 < _kLyrics.Lines.Count)
-                                    DrawInformation(e, _kLyrics.Lines[idx2].Syllables.Last().Text + " " + SecondsBeforeSinging.ToString(), y2);
+                                    DrawInformation(e, _kLyrics.Lines[idx2].Syllables.Last().Text, SecondsBeforeSinging, y2);
 
                                 DrawInactiveLineWithBorders(e, idx3, y3);
                                 DrawInactiveLineWithBorders(e, idx4, y4);
@@ -4724,7 +4752,7 @@ namespace PicControl
                                 // y4 normal old than new
                                 // Draw "(intrumental)" on active line and countdown on next line
                                 if (_FirstLineToShow < _kLyrics.Lines.Count)
-                                    DrawInformation(e, _kLyrics.Lines[_FirstLineToShow].Syllables.Last().Text + " " + SecondsBeforeSinging.ToString(), y1);
+                                    DrawInformation(e, _kLyrics.Lines[_FirstLineToShow].Syllables.Last().Text, SecondsBeforeSinging, y1);
 
                                 if (bCountDown)
                                 {
@@ -4765,7 +4793,7 @@ namespace PicControl
 
                                 // draw ("instrumental") on previous line and countdown on current line
                                 if (_FirstLineToShow - 1 < _kLyrics.Lines.Count)
-                                    DrawInformation(e, _kLyrics.Lines[_FirstLineToShow - 1].Syllables.Last().Text + " " + SecondsBeforeSinging.ToString(), y1 - _lineHeight);
+                                    DrawInformation(e, _kLyrics.Lines[_FirstLineToShow - 1].Syllables.Last().Text, SecondsBeforeSinging, y1 - _lineHeight);
 
                                 DrawInactiveLineWithShadow(e, idx3, y3);
                                 DrawInactiveLineWithShadow(e, idx4, y4);
@@ -4784,7 +4812,7 @@ namespace PicControl
 
                                 // Draw instrumental on line 0 (y3)
                                 if (idx3 <  _kLyrics.Lines.Count)
-                                    DrawInformation(e, _kLyrics.Lines[idx3].Syllables.Last().Text, y3);
+                                    DrawInformation(e, _kLyrics.Lines[idx3].Syllables.Last().Text, 0, y3);
                                 break;
 
                             case 3:
@@ -4800,7 +4828,7 @@ namespace PicControl
 
                                 // Draw instrumental on line 0
                                 if (idx3 < _kLyrics.Lines.Count)
-                                    DrawInformation(e, _kLyrics.Lines[idx3].Syllables.Last().Text, y3);
+                                    DrawInformation(e, _kLyrics.Lines[idx3].Syllables.Last().Text, 0, y3);
                                 break;
                         }
                         break;
@@ -4830,7 +4858,7 @@ namespace PicControl
 
                                 // Draw "(intrumental)" on 3rd line and countdown on next line
                                 if (idx3 < _kLyrics.Lines.Count)
-                                    DrawInformation(e, _kLyrics.Lines[idx3].Syllables.Last().Text, y3);
+                                    DrawInformation(e, _kLyrics.Lines[idx3].Syllables.Last().Text, 0, y3);
                                 break;
 
                             case 1:                                                 // LinePosition is 1
@@ -4846,7 +4874,7 @@ namespace PicControl
 
                                 // Draw "(intrumental)" on 3rd line and countdown on next line
                                 if (idx3 < _kLyrics.Lines.Count)
-                                    DrawInformation(e, _kLyrics.Lines[idx3].Syllables.Last().Text, y3);
+                                    DrawInformation(e, _kLyrics.Lines[idx3].Syllables.Last().Text, 0, y3);
 
                                 break;
 
@@ -4869,7 +4897,7 @@ namespace PicControl
                                 }
                                 // Draw "(intrumental)" on active line and countdown on next line
                                 if (_FirstLineToShow < _kLyrics.Lines.Count)
-                                    DrawInformation(e, _kLyrics.Lines[_FirstLineToShow].Syllables.Last().Text + " " + SecondsBeforeSinging.ToString(), y1);
+                                    DrawInformation(e, _kLyrics.Lines[_FirstLineToShow].Syllables.Last().Text, SecondsBeforeSinging, y1);
 
                                 // Draw lines y3 and y4 only if they are less than 4 sec before the end of an instrumental
                                 if (bInstrumentalStarted)
@@ -4896,7 +4924,7 @@ namespace PicControl
                                 // y4 * information2
                                 // Draw "(intrumental)" on active line and countdown on next line                                
                                 if (idx2 < _kLyrics.Lines.Count)
-                                    DrawInformation(e, _kLyrics.Lines[idx2].Syllables.Last().Text + " " + SecondsBeforeSinging.ToString(), y2);
+                                    DrawInformation(e, _kLyrics.Lines[idx2].Syllables.Last().Text, SecondsBeforeSinging, y2);
 
                                 DrawInactiveLineWithShadow(e, idx3, y3);
                                 DrawInactiveLineWithShadow(e, idx4, y4);
@@ -5110,10 +5138,8 @@ namespace PicControl
                                 // y3 normal old than new
                                 // y4 normal old than new
                                 // Draw "(intrumental)" on active line and countdown on next line
-                                //DrawInformation(e, _kLyrics.Lines[_FirstLineToShow].Syllables.Last().Text, y1);
-                                //DrawInformation(e, SecondsBeforeSinging.ToString(), y1 + _lineHeight);
                                 if (_FirstLineToShow < _kLyrics.Lines.Count)
-                                    DrawInformation(e, _kLyrics.Lines[_FirstLineToShow].Syllables.Last().Text + " " + SecondsBeforeSinging.ToString(), y1);
+                                    DrawInformation(e, _kLyrics.Lines[_FirstLineToShow].Syllables.Last().Text, SecondsBeforeSinging, y1);
 
                                 if (bCountDown)
                                 {
@@ -5153,10 +5179,8 @@ namespace PicControl
                                 // y4 normal 
 
                                 // draw ("instrumental") on previous line and countdown on current line
-                                //DrawInformation(e, _kLyrics.Lines[_FirstLineToShow - 1].Syllables.Last().Text, y1 - _lineHeight);
-                                //DrawInformation(e, SecondsBeforeSinging.ToString(), y1);
                                 if (_FirstLineToShow - 1 < _kLyrics.Lines.Count)
-                                    DrawInformation(e, _kLyrics.Lines[_FirstLineToShow - 1].Syllables.Last().Text + " " + SecondsBeforeSinging.ToString(), y1 - _lineHeight);
+                                    DrawInformation(e, _kLyrics.Lines[_FirstLineToShow - 1].Syllables.Last().Text, SecondsBeforeSinging, y1 - _lineHeight);
 
                                 DrawInactiveLineWithNeon(e, idx3, y3);
                                 DrawInactiveLineWithNeon(e, idx4, y4);
@@ -5175,7 +5199,7 @@ namespace PicControl
 
                                 // Draw instrumental on line 0 (y3)
                                 if (idx3 < _kLyrics.Lines.Count)
-                                    DrawInformation(e, _kLyrics.Lines[idx3].Syllables.Last().Text, y3);
+                                    DrawInformation(e, _kLyrics.Lines[idx3].Syllables.Last().Text, 0, y3);
                                 break;
 
                             case 3:
@@ -5191,7 +5215,7 @@ namespace PicControl
 
                                 // Draw instrumental on line 0
                                 if (idx3 < _kLyrics.Lines.Count)
-                                    DrawInformation(e, _kLyrics.Lines[idx3].Syllables.Last().Text, y3);
+                                    DrawInformation(e, _kLyrics.Lines[idx3].Syllables.Last().Text, 0, y3);
                                 break;
                         }
                         break;
@@ -5221,7 +5245,7 @@ namespace PicControl
 
                                 // Draw "(intrumental)" on 3rd line and countdown on next line
                                 if (idx3 < _kLyrics.Lines.Count)
-                                    DrawInformation(e, _kLyrics.Lines[idx3].Syllables.Last().Text, y3);
+                                    DrawInformation(e, _kLyrics.Lines[idx3].Syllables.Last().Text, 0, y3);
                                 break;
 
                             case 1:                                                 // LinePosition is 1
@@ -5237,7 +5261,7 @@ namespace PicControl
 
                                 // Draw "(intrumental)" on 3rd line and countdown on next line
                                 if (idx3 < _kLyrics.Lines.Count)
-                                    DrawInformation(e, _kLyrics.Lines[idx3].Syllables.Last().Text, y3);
+                                    DrawInformation(e, _kLyrics.Lines[idx3].Syllables.Last().Text, 0, y3);
 
                                 break;
 
@@ -5259,10 +5283,8 @@ namespace PicControl
                                     }
                                 }
                                 // Draw "(intrumental)" on active line and countdown on next line
-                                //DrawInformation(e, _kLyrics.Lines[_FirstLineToShow].Syllables.Last().Text, y1);
-                                //DrawInformation(e, SecondsBeforeSinging.ToString(), y2);
                                 if (_FirstLineToShow < _kLyrics.Lines.Count)
-                                    DrawInformation(e, _kLyrics.Lines[_FirstLineToShow].Syllables.Last().Text + " " + SecondsBeforeSinging.ToString(), y1);
+                                    DrawInformation(e, _kLyrics.Lines[_FirstLineToShow].Syllables.Last().Text, SecondsBeforeSinging, y1);
 
                                 // Draw lines y3 and y4 only if they are less than 4 sec before the end of an instrumental
                                 if (bInstrumentalStarted)
@@ -5288,10 +5310,8 @@ namespace PicControl
                                 // y3 information1
                                 // y4 * information2
                                 // Draw "(intrumental)" on active line and countdown on next line                                
-                                //DrawInformation(e, _kLyrics.Lines[idx2].Syllables.Last().Text, y2);
-                                //DrawInformation(e, SecondsBeforeSinging.ToString(), y1);
                                 if (idx2 < _kLyrics.Lines.Count)
-                                    DrawInformation(e, _kLyrics.Lines[idx2].Syllables.Last().Text + " " + SecondsBeforeSinging.ToString(), y2);
+                                    DrawInformation(e, _kLyrics.Lines[idx2].Syllables.Last().Text, SecondsBeforeSinging, y2);
 
                                 DrawInactiveLineWithNeon(e, idx3, y3);
                                 DrawInactiveLineWithNeon(e, idx4, y4);
@@ -5439,7 +5459,7 @@ namespace PicControl
                                 // y1 * information
                                 // y2 normal
                                 if (_FirstLineToShow < _kLyrics.Lines.Count)
-                                    DrawInformation(e, _kLyrics.Lines[_FirstLineToShow].Syllables.Last().Text + " " + SecondsBeforeSinging.ToString(), y1);                                
+                                    DrawInformation(e, _kLyrics.Lines[_FirstLineToShow].Syllables.Last().Text, SecondsBeforeSinging, y1);                                
                                 
                                 if (bCountDown)
                                 {
@@ -5472,7 +5492,7 @@ namespace PicControl
                                 // y2 information
                                 // y1 * normal
                                 if (_FirstLineToShow + 1 < _kLyrics.Lines.Count)
-                                    DrawInformation(e, _kLyrics.Lines[_FirstLineToShow + 1].Syllables.Last().Text, y2);
+                                    DrawInformation(e, _kLyrics.Lines[_FirstLineToShow + 1].Syllables.Last().Text, 0, y2);
                                 DrawActiveLineWithBorders(e, _FirstLineToShow, y1);
                                 break;
 
@@ -5492,14 +5512,14 @@ namespace PicControl
                                 // y2 information
                                 DrawActiveLineWithBorders(e, _FirstLineToShow, y1);
                                 if (_FirstLineToShow + 1 < _kLyrics.Lines.Count)
-                                    DrawInformation(e, _kLyrics.Lines[_FirstLineToShow + 1].Syllables.Last().Text, y1 + _lineHeight);
+                                    DrawInformation(e, _kLyrics.Lines[_FirstLineToShow + 1].Syllables.Last().Text, 0, y1 + _lineHeight);
                                 break;
 
                             case 1:
                                 // y2 normal old than new
                                 // y1 * information
                                 if (_FirstLineToShow < _kLyrics.Lines.Count)
-                                    DrawInformation(e, _kLyrics.Lines[_FirstLineToShow].Syllables.Last().Text + " " + SecondsBeforeSinging.ToString(), y1);
+                                    DrawInformation(e, _kLyrics.Lines[_FirstLineToShow].Syllables.Last().Text, SecondsBeforeSinging, y1);
 
                                 if (bCountDown)
                                 {
@@ -5635,7 +5655,7 @@ namespace PicControl
                                 // y1 * information
                                 // y2 normal
                                 if (_FirstLineToShow < _kLyrics.Lines.Count)
-                                    DrawInformation(e, _kLyrics.Lines[_FirstLineToShow].Syllables.Last().Text + " " + SecondsBeforeSinging.ToString(), y1);
+                                    DrawInformation(e, _kLyrics.Lines[_FirstLineToShow].Syllables.Last().Text, SecondsBeforeSinging, y1);
 
                                 if (bCountDown)
                                 {
@@ -5668,7 +5688,7 @@ namespace PicControl
                                 // y2 information
                                 // y1 * normal
                                 if (_FirstLineToShow + 1 < _kLyrics.Lines.Count)
-                                    DrawInformation(e, _kLyrics.Lines[_FirstLineToShow + 1].Syllables.Last().Text, y2);
+                                    DrawInformation(e, _kLyrics.Lines[_FirstLineToShow + 1].Syllables.Last().Text, 0, y2);
                                 DrawActiveLineWithShadow(e, _FirstLineToShow, y1);
                                 break;
                         }
@@ -5686,14 +5706,14 @@ namespace PicControl
                                 // y2 information
                                 DrawActiveLineWithShadow(e, _FirstLineToShow, y1);
                                 if (_FirstLineToShow + 1 < _kLyrics.Lines.Count)
-                                    DrawInformation(e, _kLyrics.Lines[_FirstLineToShow + 1].Syllables.Last().Text, y1 + _lineHeight);
+                                    DrawInformation(e, _kLyrics.Lines[_FirstLineToShow + 1].Syllables.Last().Text, 0, y1 + _lineHeight);
                                 break;
 
                             case 1:
                                 // y2 normal old than new
                                 // y1 * information
                                 if (_FirstLineToShow < _kLyrics.Lines.Count)
-                                    DrawInformation(e, _kLyrics.Lines[_FirstLineToShow].Syllables.Last().Text + " " + SecondsBeforeSinging.ToString(), y1);
+                                    DrawInformation(e, _kLyrics.Lines[_FirstLineToShow].Syllables.Last().Text, SecondsBeforeSinging, y1);
 
                                 if (bCountDown)
                                 {
@@ -5823,7 +5843,7 @@ namespace PicControl
                                 // y1 * information
                                 // y2 normal
                                 if (_FirstLineToShow < _kLyrics.Lines.Count)
-                                    DrawInformation(e, _kLyrics.Lines[_FirstLineToShow].Syllables.Last().Text + " " + SecondsBeforeSinging.ToString(), y1);
+                                    DrawInformation(e, _kLyrics.Lines[_FirstLineToShow].Syllables.Last().Text, SecondsBeforeSinging, y1);
 
                                 if (bCountDown)
                                 {
@@ -5856,7 +5876,7 @@ namespace PicControl
                                 // y2 information
                                 // y1 * normal
                                 if (_FirstLineToShow + 1 < _kLyrics.Lines.Count)
-                                    DrawInformation(e, _kLyrics.Lines[_FirstLineToShow + 1].Syllables.Last().Text, y2);
+                                    DrawInformation(e, _kLyrics.Lines[_FirstLineToShow + 1].Syllables.Last().Text, 0, y2);
                                 DrawActiveLineWithNeon(e, _FirstLineToShow, y1);
                                 break;
                         }
@@ -5874,14 +5894,14 @@ namespace PicControl
                                 // y2 information
                                 DrawActiveLineWithNeon(e, _FirstLineToShow, y1);
                                 if (_FirstLineToShow + 1 < _kLyrics.Lines.Count)
-                                    DrawInformation(e, _kLyrics.Lines[_FirstLineToShow + 1].Syllables.Last().Text, y1 + _lineHeight);
+                                    DrawInformation(e, _kLyrics.Lines[_FirstLineToShow + 1].Syllables.Last().Text, 0, y1 + _lineHeight);
                                 break;
 
                             case 1:
                                 // y2 normal old than new
                                 // y1 * information
                                 if (_FirstLineToShow < _kLyrics.Lines.Count)
-                                    DrawInformation(e, _kLyrics.Lines[_FirstLineToShow].Syllables.Last().Text + " " + SecondsBeforeSinging.ToString(), y1);
+                                    DrawInformation(e, _kLyrics.Lines[_FirstLineToShow].Syllables.Last().Text, SecondsBeforeSinging, y1);
 
                                 if (bCountDown)
                                 {

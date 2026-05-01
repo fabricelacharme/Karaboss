@@ -370,8 +370,34 @@ namespace Karaboss
                 pBox.InactiveBorderColor = _InactiveBorderColor;
             }
         }
-        
+
         #endregion Text color
+
+
+        #region Instrumentals color
+
+        private Color _ActiveInstrumentalColor;
+        public Color ActiveInstrumentalColor
+        {
+            get { return _ActiveInstrumentalColor; }
+            set
+            {
+                _ActiveInstrumentalColor = value;
+                pBox.ActiveInstrumentalColor= _ActiveInstrumentalColor;
+            }
+        }
+        private Color _HighlightInstrumentalColor;
+        public Color HighLightInstrumentalColor
+        {
+            get { return _HighlightInstrumentalColor; }
+            set
+            {
+                _HighlightInstrumentalColor = value;
+                pBox.HighLightInstrumentalColor= _HighlightInstrumentalColor;
+            }
+        }
+
+        #endregion Instrumentals color
 
 
         #region gradient
@@ -754,6 +780,9 @@ namespace Karaboss
                 _chordHighlightColor = Parse(Properties.Settings.Default.HighlightChordColor);
                 chkChords.Checked = Karaclass.m_ShowChords;
 
+                // Instrumentals
+                HighLightInstrumentalColor = Parse(Properties.Settings.Default.HighLightInstrumentalColor);
+                ActiveInstrumentalColor = Parse(Properties.Settings.Default.ActiveInstrumentalColor);
 
                 // Number of Lines to display
                 nbLyricsLines = Properties.Settings.Default.TxtNbLines;

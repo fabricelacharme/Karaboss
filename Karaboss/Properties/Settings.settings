@@ -500,5 +500,11 @@
     <Setting Name="KaraokeDisplayType" Type="System.String" Scope="User">
       <Value Profile="(Default)">FixedLines</Value>
     </Setting>
+    <Setting Name="HighLightInstrumentalColor" Type="System.String" Scope="User">
+      <Value Profile="(Default)">#F1C40F</Value>
+    </Setting>
+    <Setting Name="ActiveInstrumentalColor" Type="System.String" Scope="User">
+      <Value Profile="(Default)">#95A5A6</Value>
+    </Setting>
   </Settings>
 </SettingsFile>
