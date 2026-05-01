@@ -81,6 +81,9 @@ namespace Karaboss
             this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
             this.mnuMidiSplitHands = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuHelp = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnuHelpForums = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnuHelpDocumentation = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItem2 = new System.Windows.Forms.ToolStripSeparator();
             this.mnuHelpAbout = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuHelpAboutSong = new System.Windows.Forms.ToolStripMenuItem();
             this.openMidiFileDialog = new System.Windows.Forms.OpenFileDialog();
@@ -151,9 +154,6 @@ namespace Karaboss
             this.sequence1 = new Sanford.Multimedia.Midi.Sequence();
             this.sequencer1 = new Sanford.Multimedia.Midi.Sequencer();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
-            this.toolStripMenuItem2 = new System.Windows.Forms.ToolStripSeparator();
-            this.mnuHelpForums = new System.Windows.Forms.ToolStripMenuItem();
-            this.mnuHelpDocumentation = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.pnlBottom.SuspendLayout();
             this.pnlDisplay.SuspendLayout();
@@ -498,6 +498,23 @@ namespace Karaboss
             this.mnuHelpAboutSong});
             this.mnuHelp.Name = "mnuHelp";
             resources.ApplyResources(this.mnuHelp, "mnuHelp");
+            // 
+            // mnuHelpForums
+            // 
+            this.mnuHelpForums.Name = "mnuHelpForums";
+            resources.ApplyResources(this.mnuHelpForums, "mnuHelpForums");
+            this.mnuHelpForums.Click += new System.EventHandler(this.mnuHelpForums_Click);
+            // 
+            // mnuHelpDocumentation
+            // 
+            this.mnuHelpDocumentation.Name = "mnuHelpDocumentation";
+            resources.ApplyResources(this.mnuHelpDocumentation, "mnuHelpDocumentation");
+            this.mnuHelpDocumentation.Click += new System.EventHandler(this.mnuHelpDocumentation_Click);
+            // 
+            // toolStripMenuItem2
+            // 
+            this.toolStripMenuItem2.Name = "toolStripMenuItem2";
+            resources.ApplyResources(this.toolStripMenuItem2, "toolStripMenuItem2");
             // 
             // mnuHelpAbout
             // 
@@ -1264,23 +1281,6 @@ namespace Karaboss
             this.sequencer1.MetaMessagePlayed += new System.EventHandler<Sanford.Multimedia.Midi.MetaMessageEventArgs>(this.HandleMetaMessagePlayed);
             this.sequencer1.Chased += new System.EventHandler<Sanford.Multimedia.Midi.ChasedEventArgs>(this.HandleChased);
             this.sequencer1.Stopped += new System.EventHandler<Sanford.Multimedia.Midi.StoppedEventArgs>(this.HandleStopped);
-            // 
-            // toolStripMenuItem2
-            // 
-            this.toolStripMenuItem2.Name = "toolStripMenuItem2";
-            resources.ApplyResources(this.toolStripMenuItem2, "toolStripMenuItem2");
-            // 
-            // mnuHelpForums
-            // 
-            this.mnuHelpForums.Name = "mnuHelpForums";
-            resources.ApplyResources(this.mnuHelpForums, "mnuHelpForums");
-            this.mnuHelpForums.Click += new System.EventHandler(this.mnuHelpForums_Click);
-            // 
-            // mnuHelpDocumentation
-            // 
-            this.mnuHelpDocumentation.Name = "mnuHelpDocumentation";
-            resources.ApplyResources(this.mnuHelpDocumentation, "mnuHelpDocumentation");
-            this.mnuHelpDocumentation.Click += new System.EventHandler(this.mnuHelpDocumentation_Click);
             // 
             // frmMidiPlayer
             // 

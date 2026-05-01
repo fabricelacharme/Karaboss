@@ -31,28 +31,31 @@
  */
 
 #endregion
+using kar;
+using Karaboss.MidiLyrics;
+using Karaboss.Resources.Localization;
+using Karaboss.Utilities;
+using keffect;
+using MusicTxt;
+using MusicXml;
+using Sanford.Multimedia.Midi;
+using Sanford.Multimedia.Midi.Score;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Drawing;
-using System.Windows.Forms;
-using Sanford.Multimedia.Midi;
 using System.Diagnostics;
-using Sanford.Multimedia.Midi.Score;
-using Karaboss.Resources.Localization;
+using System.Drawing;
 using System.IO;
-using MusicXml;
-using MusicTxt;
 using System.Linq;
-using Karaboss.MidiLyrics;
-using Karaboss.Utilities;
-using keffect;
-using kar;
+using System.Runtime.InteropServices;
+using System.Windows.Forms;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 namespace Karaboss
 {
     public partial class frmMidiPlayer : Form
-    {       
+    {
+        
         MusicXmlReader MXmlReader; 
         MusicTxtReader MTxtReader; 
         MusicTxtWriter MTxtWriter;
@@ -2143,6 +2146,8 @@ namespace Karaboss
 
 
         #region form load close keydown
+
+       
 
         /// <summary>
         /// Mousewheel : scroll vertically if playing
@@ -9137,6 +9142,8 @@ namespace Karaboss
             sequence1.SaveCompleted += HandleSaveCompleted;
             SaveFile(fileName);
         }
+
+
 
 
 
