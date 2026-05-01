@@ -386,17 +386,7 @@ namespace Karaboss
                 pBox.ActiveInstrumentalColor= _ActiveInstrumentalColor;
             }
         }
-        private Color _HighlightInstrumentalColor;
-        public Color HighLightInstrumentalColor
-        {
-            get { return _HighlightInstrumentalColor; }
-            set
-            {
-                _HighlightInstrumentalColor = value;
-                pBox.HighLightInstrumentalColor= _HighlightInstrumentalColor;
-            }
-        }
-
+        
         #endregion Instrumentals color
 
 
@@ -780,8 +770,7 @@ namespace Karaboss
                 _chordHighlightColor = Parse(Properties.Settings.Default.HighlightChordColor);
                 chkChords.Checked = Karaclass.m_ShowChords;
 
-                // Instrumentals
-                HighLightInstrumentalColor = Parse(Properties.Settings.Default.HighLightInstrumentalColor);
+                // Instrumentals                
                 ActiveInstrumentalColor = Parse(Properties.Settings.Default.ActiveInstrumentalColor);
 
                 // Number of Lines to display

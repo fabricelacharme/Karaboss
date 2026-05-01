@@ -32,7 +32,9 @@
 
 #endregion
 
+using kar;
 using Karaboss.Mp3.Mp3Lyrics;
+using keffect;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -41,8 +43,7 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
-using kar;
-using keffect;
+using TagLib.Mpeg4;
 
 namespace Karaboss.Mp3
 {    
@@ -116,7 +117,6 @@ namespace Karaboss.Mp3
             } }
 
         #endregion MP3
-
 
 
         #region TopMost
@@ -209,9 +209,7 @@ namespace Karaboss.Mp3
             {
                 _frametype = value;
                 karaokeEffect1.FrameType = _frametype;
-                //Invalidate();
-                
-
+                //Invalidate();                
             }
         }
 
@@ -313,6 +311,21 @@ namespace Karaboss.Mp3
 
         #endregion text color
 
+
+        #region Instrumentals color
+
+        private Color _ActiveInstrumentalColor;
+        public Color ActiveInstrumentalColor
+        {
+            get { return _ActiveInstrumentalColor; }
+            set
+            {
+                _ActiveInstrumentalColor = value;
+                karaokeEffect1.ActiveInstrumentalColor = _ActiveInstrumentalColor;
+            }
+        }
+
+        #endregion Instrumentals color
 
         #region Background color
 
@@ -564,11 +577,9 @@ namespace Karaboss.Mp3
             #endregion
 
             karaokeEffect1.DoubleClick += new DoubleClickEventHandler(karaokeEffect1_DoubleClick);
-
-            //LoadLyrics();
+            
                                   
-            LoadOptions();
-            //SetOptions();            
+            LoadOptions();                        
 
             AddMouseMoveHandler(this);
 
@@ -679,6 +690,8 @@ namespace Karaboss.Mp3
                 ActiveBorderColor = Parse(Properties.Settings.Default.ActiveBorderColor);
                 InactiveBorderColor = Parse(Properties.Settings.Default.InactiveBorderColor);
 
+                // Instrumentals                
+                ActiveInstrumentalColor = Parse(Properties.Settings.Default.ActiveInstrumentalColor);
 
                 // Number of Lines to display
                 nbLyricsLines = Properties.Settings.Default.TxtNbLines;

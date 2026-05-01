@@ -221,7 +221,7 @@ namespace Karaboss.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("#FF0000")]
+        [global::System.Configuration.DefaultSettingValueAttribute("#FFFF00")]
         public string HighlightColor {
             get {
                 return ((string)(this["HighlightColor"]));
@@ -233,7 +233,7 @@ namespace Karaboss.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("#9ACD32")]
+        [global::System.Configuration.DefaultSettingValueAttribute("#00ACFF")]
         public string ActiveColor {
             get {
                 return ((string)(this["ActiveColor"]));
@@ -2014,19 +2014,7 @@ namespace Karaboss.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("#F1C40F")]
-        public string HighLightInstrumentalColor {
-            get {
-                return ((string)(this["HighLightInstrumentalColor"]));
-            }
-            set {
-                this["HighLightInstrumentalColor"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("#95A5A6")]
+        [global::System.Configuration.DefaultSettingValueAttribute("#808080")]
         public string ActiveInstrumentalColor {
             get {
                 return ((string)(this["ActiveInstrumentalColor"]));

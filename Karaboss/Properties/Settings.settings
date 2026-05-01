@@ -51,10 +51,10 @@
       <Value Profile="(Default)">#000000</Value>
     </Setting>
     <Setting Name="HighlightColor" Type="System.String" Scope="User">
-      <Value Profile="(Default)">#FF0000</Value>
+      <Value Profile="(Default)">#FFFF00</Value>
     </Setting>
     <Setting Name="ActiveColor" Type="System.String" Scope="User">
-      <Value Profile="(Default)">#9ACD32</Value>
+      <Value Profile="(Default)">#00ACFF</Value>
     </Setting>
     <Setting Name="frmMidiLyricsEditMaximized" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
@@ -500,11 +500,8 @@
     <Setting Name="KaraokeDisplayType" Type="System.String" Scope="User">
       <Value Profile="(Default)">FixedLines</Value>
     </Setting>
-    <Setting Name="HighLightInstrumentalColor" Type="System.String" Scope="User">
-      <Value Profile="(Default)">#F1C40F</Value>
-    </Setting>
     <Setting Name="ActiveInstrumentalColor" Type="System.String" Scope="User">
-      <Value Profile="(Default)">#95A5A6</Value>
+      <Value Profile="(Default)">#808080</Value>
     </Setting>
   </Settings>
 </SettingsFile>
