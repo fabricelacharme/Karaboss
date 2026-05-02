@@ -88,6 +88,13 @@ namespace Karaboss
         #endregion background colors
 
 
+        #region instrumental color
+
+        private Color ActiveInstrumentalColor;  
+
+        #endregion Instrumental color
+
+
         #region Chords
         // Chord color
         private Color InactiveChordColor;
@@ -184,6 +191,9 @@ namespace Karaboss
                 frmMidiLyrics.ChordNextColor = InactiveChordColor;
                 frmMidiLyrics.ChordHighlightColor = HighlightChordColor;
                 frmMidiLyrics.bShowChords = _bShowChords;
+
+                // Instrumental color
+                frmMidiLyrics.ActiveInstrumentalColor = ActiveInstrumentalColor;
 
                 // force uppercase
                 frmMidiLyrics.bForceUppercase = bForceUppercase;
@@ -296,6 +306,8 @@ namespace Karaboss
                 txtInactiveChordColor.Text = Properties.Settings.Default.InactiveChordColor;
                 txtHighlightChordColor.Text = Properties.Settings.Default.HighlightChordColor;
 
+                // Instrumental color
+                txtActiveInstrumentalColor.Text = Properties.Settings.Default.ActiveInstrumentalColor;
 
                 // textBox => pic 
                 picBgColor.BackColor = Parse(txtBgColor.Text);
@@ -308,6 +320,9 @@ namespace Karaboss
                 
                 picInactiveChordColor.BackColor = Parse(txtInactiveChordColor.Text);
                 picHighlightChordColor.BackColor = Parse(txtHighlightChordColor.Text);
+
+                // Instrumental color
+                picActiveInstrumentalColor.BackColor = Parse(txtActiveInstrumentalColor.Text);
 
                 // pic => variables
                 BgColor = picBgColor.BackColor;
@@ -325,6 +340,9 @@ namespace Karaboss
                 HighlightChordColor = picHighlightChordColor.BackColor;
                 _bShowChords = Properties.Settings.Default.bShowChords;
                 
+                // Instrumental Color
+                ActiveInstrumentalColor = picActiveInstrumentalColor.BackColor;
+
 
                 // Window lyris topmost
                 _bTopMost = Properties.Settings.Default.frmMidiLyricsTopMost;
@@ -535,6 +553,10 @@ namespace Karaboss
                 Properties.Settings.Default.HighlightChordColor = ToHex(HighlightChordColor);
                 Properties.Settings.Default.bShowChords = _bShowChords;
 
+
+                // Instrumental Color
+                Properties.Settings.Default.ActiveInstrumentalColor = ToHex(ActiveInstrumentalColor);
+
                 // Contour                
                 Properties.Settings.Default.ActiveBorderColor = ToHex(ActiveBorderColor);
                 Properties.Settings.Default.InactiveBorderColor = ToHex(InactiveBorderColor);
@@ -627,6 +649,9 @@ namespace Karaboss
                 picHighlightChordColor.BackColor = HighlightChordColor;
                 pBox.bShowChords = _bShowChords;
 
+                // Instrumental color
+                picActiveInstrumentalColor.BackColor = ActiveInstrumentalColor;
+
                 // Window Lyrics TopMost
                 chkTopMost.Checked = _bTopMost;
 
@@ -657,6 +682,9 @@ namespace Karaboss
                 pBox.InactiveChordColor = InactiveChordColor;
                 pBox.HighlightChordColor = HighlightChordColor;
                 chkForceShowChords.Checked = _bShowChords;
+
+                // Instrumental color
+                pBox.ActiveInstrumentalColor = ActiveInstrumentalColor;
 
                 // Frame type
                 pBox.FrameType = FrameType;
@@ -699,6 +727,8 @@ namespace Karaboss
             pBox.InactiveChordColor = InactiveChordColor;
             pBox.HighlightChordColor= HighlightChordColor;
 
+            // Instrumental color
+            pBox.ActiveInstrumentalColor= ActiveInstrumentalColor;
 
             //Color of buttons
             picBgColor.BackColor = BgColor;
@@ -712,6 +742,8 @@ namespace Karaboss
 
             picInactiveChordColor.BackColor = InactiveChordColor;
             picHighlightChordColor.BackColor = HighlightChordColor;               
+
+            picActiveInstrumentalColor.BackColor = ActiveInstrumentalColor;
         }
 
 
@@ -1294,6 +1326,12 @@ namespace Karaboss
             ApplyNewColors();
         }
 
+        private void txtActiveInstrumentalColor_TextChanged(object sender, EventArgs e)
+        {
+            ActiveInstrumentalColor = Parse(txtActiveInstrumentalColor.Text);
+            ApplyNewColors();
+        }
+
         #endregion text events
 
 
@@ -1367,6 +1405,15 @@ namespace Karaboss
             ApplyNewColors();
         }
 
+
+        private void btnActiveInstrumentalColor_Click(object sender, EventArgs e)
+        {
+
+            Color clr = SelectColorFromButton(picActiveInstrumentalColor, txtActiveInstrumentalColor);
+            ActiveInstrumentalColor = clr;
+            ApplyNewColors();
+        }
+
         #endregion select color with button
 
 
@@ -1412,6 +1459,10 @@ namespace Karaboss
             SelectColorFromPicker(txtBgColor);
         }
 
+        private void btnActiveInstrumentalColorPicker_Click(object sender, EventArgs e)
+        {
+            SelectColorFromPicker(txtActiveInstrumentalColor);
+        }
 
         #endregion select color with picker
 
@@ -1488,9 +1539,27 @@ namespace Karaboss
         }
 
 
-
         #endregion Color functions
 
-       
+
+        #region Color Themes
+
+
+        private void PopulateThemes()
+        {
+            cbTheme.Items.Add("Default");
+        }
+
+        private void cbTheme_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void btnSaveTheme_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        #endregion Color Themes
     }
 }

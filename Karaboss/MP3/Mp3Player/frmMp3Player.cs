@@ -1472,6 +1472,7 @@ namespace Karaboss.Mp3
                 Application.OpenForms["frmMp3Lyrics"].Close();
             }
             frmMp3Lyrics = new frmMp3Lyrics();
+            frmMp3Lyrics.Owner = this;
             frmMp3Lyrics.Show();
 
             // Display song & current singer on top label

@@ -35,7 +35,6 @@ using kar;
 using Karaboss.MidiLyrics;
 using Karaboss.Resources.Localization;
 using Karaboss.Utilities;
-using keffect;
 using MusicTxt;
 using MusicXml;
 using Sanford.Multimedia.Midi;
@@ -49,13 +48,13 @@ using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 namespace Karaboss
 {
     public partial class frmMidiPlayer : Form
     {
-        
+      
+
         MusicXmlReader MXmlReader; 
         MusicTxtReader MTxtReader; 
         MusicTxtWriter MTxtWriter;
@@ -2148,7 +2147,6 @@ namespace Karaboss
         #region form load close keydown
 
        
-
         /// <summary>
         /// Mousewheel : scroll vertically if playing
         /// </summary>
@@ -2213,7 +2211,7 @@ namespace Karaboss
             }
         }
 
-
+      
         /// <summary>
         /// Override form load event
         /// </summary>
@@ -2402,32 +2400,26 @@ namespace Karaboss
                 }
 
 
-                // Ferme le formulaire frmMidiLyric
-                if (Application.OpenForms.OfType<frmMidiLyrics>().Count() > 0)
-                {
-                    frmMidiLyric.Close();
-                    //frmMidiLyric.Dispose();
-                }
+                // Ferme le formulaire frmMidiLyric                                
+                Application.OpenForms["frmMidiLyric"]?.Close();                    
+                
                 // ferme le formulaire frmMidiLyricsEdit
-                if (Application.OpenForms.OfType<frmMidiLyricsEdit>().Count() > 0)
-                {
-                    Application.OpenForms["frmMidiLyricsEdit"].Close();
-                }
+                Application.OpenForms["frmMidiLyricsEdit"]?.Close();
+                
                 // ferme le formulaire frmPianoRoll
-                if (Application.OpenForms.OfType<frmPianoRoll>().Count() > 0)
-                {
-                    Application.OpenForms["frmPianoRoll"].Close();
-                }
+                Application.OpenForms["frmPianoRoll"]?.Close();
+                
                 // ferme le formulaire frmModifyTempo
-                if (Application.OpenForms.OfType<frmModifyTempo>().Count() > 0)
-                {
-                    Application.OpenForms["frmModifyTempo"].Close();
-                }
+                Application.OpenForms["frmModifyTempo"]?.Close();
+                
                 // ferme le formulaire frmPrint
-                if (Application.OpenForms.OfType<frmPrint>().Count() > 0)
-                {
-                    Application.OpenForms["frmPrint"].Close();
-                }
+                Application.OpenForms["frmPrint"]?.Close();
+                
+                // ferme le formulaire frmLyrOptions                
+                Application.OpenForms["frmLyrOptions"]?.Close();
+                
+
+
                 // Active le formulaire frmExplorer
                 if (Application.OpenForms.OfType<frmExplorer>().Count() > 0)
                 {
@@ -3932,66 +3924,7 @@ namespace Karaboss
         /// LyricsTrackNum: track hosting the lyrics (text or lyric types)
         /// The target is to host the lyrics in the melody track
         /// </summary>
-        /// <param name="pLyrics"></param>
-        /*
-        public void ReplaceLyrics(List<plLyric> newpLyrics, LyricTypes newLyricType, int melodytracknum)
-        {
-            // LyricType has changed => refresh display
-            bool bRefreshDisplay = (newLyricType != myLyricsMgmt.LyricType);
-
-            // Delete all lyrics of all types
-            foreach (Track T in sequence1.tracks)
-            {
-                T.deleteLyrics();
-                T.LyricsText.Clear();
-                T.Lyrics.Clear();
-            }
-            // Tags associated to the sequence have been deleted
-            restoreSequenceTags();
-
-            // By default, insert the lyrics (either text or lyric) into the melodytrack
-            #region guard
-            if (melodytracknum == -1)
-                melodytracknum = 0;
-            #endregion guard
-
-            Track track = sequence1.tracks[melodytracknum];
-
-            // Insert all lyric events
-            TrkInsertLyrics(track, newpLyrics, newLyricType);
-
-            // Reload myLyricMgmt
-            myLyricsMgmt = new MidiLyricsMgmt(sequence1);
-
-
-            // Refresh frmMidiLyric
-            if (myLyricsMgmt.OrgplLyrics.Count > 0)
-            {
-                // Reset display
-                myLyricsMgmt.ResetDisplayChordsOptions(Karaclass.m_ShowChords);
-
-                // Window closed
-                DisplayLyricsForm();
-                frmMidiLyric.LoadSong(myLyricsMgmt.plLyrics, myLyricsMgmt.KLyrics);
-            }
-
-            // Refresh display of lyrics
-            // if switch between Text & Lyric or
-            // if Lyric because we need to display the new lyrics on the scores
-            if (bRefreshDisplay || myLyricsMgmt.LyricType == LyricTypes.Lyric)
-            {
-                if (Karaclass.m_ShowChords)
-                    AddChordsToTrack();
-
-                RefreshDisplay();
-            }
-
-
-            // File was modified
-            FileModified();
-
-        }
-        */
+        /// <param name="pLyrics"></param>     
         public void ReplaceLyrics(kLyrics newpLyrics, LyricTypes newLyricType, int melodytracknum)
         {
             // LyricType has changed => refresh display
@@ -4420,6 +4353,7 @@ namespace Karaboss
             if (frmMidiLyric == null || Application.OpenForms.OfType<frmMidiLyrics>().Count() == 0)
             {
                 frmMidiLyric = new frmMidiLyrics(myLyricsMgmt);
+                frmMidiLyric.Owner = this;
                 frmMidiLyric.Show();
             }
             else
@@ -4444,7 +4378,9 @@ namespace Karaboss
             if (frmMidiLyric.WindowState == FormWindowState.Minimized)
                 frmMidiLyric.WindowState = FormWindowState.Normal;
 
-            frmMidiLyric.Show();
+
+
+            //frmMidiLyric.Show();
             frmMidiLyric.Activate();
 
             // cas d'une playlist ou non : met à jour le diaporama
@@ -6733,6 +6669,7 @@ namespace Karaboss
                 if (Application.OpenForms.OfType<frmMidiLyrics>().Count() == 0)
                 {
                     frmMidiLyric = new frmMidiLyrics(myLyricsMgmt);
+                    frmMidiLyric.Owner = this;
                     frmMidiLyric.Show();
                 }
 
@@ -6813,6 +6750,7 @@ namespace Karaboss
             if (Application.OpenForms.OfType<frmMidiLyrics>().Count() == 0)
             {
                 frmMidiLyric = new frmMidiLyrics(myLyricsMgmt);
+                frmMidiLyric.Owner = this;
                 frmMidiLyric.Show();
             }
 
@@ -9147,11 +9085,17 @@ namespace Karaboss
 
 
 
+
+
+
+
         #endregion Save File
 
         #endregion Utilities
 
-       
+
+      
+
     }
 
 }

@@ -1055,7 +1055,7 @@ namespace PicControl
                 TicksPerSecond = (int)(_TotalTicks / _duration);
 
                 _DelayBeforeEndOfInstrumental = 4 * TicksPerSecond;
-                _MinimumInstrumentalDuration = 5 * TicksPerSecond;
+                _MinimumInstrumentalDuration = 6 * TicksPerSecond;
                 _MinimumIntroDuration = 3 * TicksPerSecond;
             }
             else
