@@ -256,7 +256,7 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;btnApply.ZOrder" xml:space="preserve">
-    <value>12</value>
+    <value>11</value>
   </data>
   <data name="btnOk.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
@@ -283,7 +283,7 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;btnOk.ZOrder" xml:space="preserve">
-    <value>11</value>
+    <value>10</value>
   </data>
   <data name="btnCancel.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
@@ -310,7 +310,7 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;btnCancel.ZOrder" xml:space="preserve">
-    <value>10</value>
+    <value>9</value>
   </data>
   <data name="lblNumberOfLines.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -784,7 +784,7 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;chkDisplayBalls.ZOrder" xml:space="preserve">
-    <value>8</value>
+    <value>7</value>
   </data>
   <data name="pictureBox2.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
@@ -859,7 +859,7 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;pnlBalls.ZOrder" xml:space="preserve">
-    <value>7</value>
+    <value>6</value>
   </data>
   <data name="picBgColor.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
@@ -1273,7 +1273,7 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;chkTopMost.ZOrder" xml:space="preserve">
-    <value>6</value>
+    <value>5</value>
   </data>
   <data name="btnSelectImage.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
@@ -1588,7 +1588,7 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;grpBoxBackGround.ZOrder" xml:space="preserve">
-    <value>5</value>
+    <value>4</value>
   </data>
   <data name="label9.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -2431,7 +2431,7 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;grpBoxKaraokeType.ZOrder" xml:space="preserve">
-    <value>4</value>
+    <value>3</value>
   </data>
   <data name="grpBoxSlideShow.Location" type="System.Drawing.Point, System.Drawing">
     <value>8, 390</value>
@@ -2455,7 +2455,7 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;grpBoxSlideShow.ZOrder" xml:space="preserve">
-    <value>3</value>
+    <value>2</value>
   </data>
   <data name="tabPage1.Location" type="System.Drawing.Point, System.Drawing">
     <value>4, 22</value>
@@ -2689,7 +2689,7 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;tabControl1.ZOrder" xml:space="preserve">
-    <value>2</value>
+    <value>1</value>
   </data>
   <data name="lblTheme.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -2728,7 +2728,7 @@
     <value>187, 15</value>
   </data>
   <data name="btnSaveTheme.Size" type="System.Drawing.Size, System.Drawing">
-    <value>52, 23</value>
+    <value>100, 23</value>
   </data>
   <data name="btnSaveTheme.TabIndex" type="System.Int32, mscorlib">
     <value>86</value>
@@ -2773,10 +2773,10 @@
     <value>NoControl</value>
   </data>
   <data name="btnDeleteTheme.Location" type="System.Drawing.Point, System.Drawing">
-    <value>303, 15</value>
+    <value>399, 15</value>
   </data>
   <data name="btnDeleteTheme.Size" type="System.Drawing.Size, System.Drawing">
-    <value>52, 23</value>
+    <value>100, 23</value>
   </data>
   <data name="btnDeleteTheme.TabIndex" type="System.Int32, mscorlib">
     <value>89</value>
@@ -2800,10 +2800,10 @@
     <value>NoControl</value>
   </data>
   <data name="btnNewTheme.Location" type="System.Drawing.Point, System.Drawing">
-    <value>245, 15</value>
+    <value>293, 16</value>
   </data>
   <data name="btnNewTheme.Size" type="System.Drawing.Size, System.Drawing">
-    <value>52, 23</value>
+    <value>100, 23</value>
   </data>
   <data name="btnNewTheme.TabIndex" type="System.Int32, mscorlib">
     <value>88</value>
@@ -2842,7 +2842,7 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;groupBox1.ZOrder" xml:space="preserve">
-    <value>1</value>
+    <value>0</value>
   </data>
   <metadata name="openFileDialog.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>302, 17</value>
@@ -2869,7 +2869,7 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;pBox.ZOrder" xml:space="preserve">
-    <value>9</value>
+    <value>8</value>
   </data>
   <metadata name="$this.Localizable" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
@@ -3008,9 +3008,6 @@
         cA/AMBgDgDAYA4BwHAOAcBwDgDAYA4A4OAfgHvAf8B/wH/gHwB/wAAAf8AAAH/AAAB/wAAAf+AAAP/xw
         Dn//8B////gf///4P///////
 </value>
-  </data>
-  <data name="$this.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
-    <value>NoControl</value>
   </data>
   <data name="$this.StartPosition" type="System.Windows.Forms.FormStartPosition, System.Windows.Forms">
     <value>CenterScreen</value>

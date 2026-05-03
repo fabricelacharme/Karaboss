@@ -75,8 +75,8 @@ namespace Karaboss
         #region Themes
 
         private ThemesListHelper _ThListHelper = new ThemesListHelper();
-        private ThemesList _ThemesList = new ThemesList();
-        private ThemeItem _currentTheme = new ThemeItem();
+        private ThemesList _ThemesList; // = new ThemesList();
+        private ThemeItem _currentTheme; // = new ThemeItem();
 
 
         #endregion Themes

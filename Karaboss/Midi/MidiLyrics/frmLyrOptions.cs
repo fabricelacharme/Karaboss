@@ -54,7 +54,7 @@ namespace Karaboss
 
         #region Themes
 
-        private ThemesListHelper _ThListHelper = new ThemesListHelper();
+        private ThemesListHelper _ThemesListHelper = new ThemesListHelper();
         private ThemesList _ThemesList = new ThemesList();
         private ThemeItem _currentTheme = new ThemeItem();
 
@@ -251,9 +251,9 @@ namespace Karaboss
         {
             try
             {
-                string fileName = Karaclass.GetThemesListFile(_ThListHelper.File);
-                _ThListHelper.File = fileName;
-                return _ThListHelper.Load(fileName);
+                string fileName = Karaclass.GetThemesListFile(_ThemesListHelper.File);
+                _ThemesListHelper.File = fileName;
+                return _ThemesListHelper.Load(fileName);
 
             }
             catch (Exception ex)
@@ -643,6 +643,11 @@ namespace Karaboss
 
                 // Karaoke display type
                 Properties.Settings.Default.KaraokeDisplayType = KaraokeDisplayType;
+
+
+                Properties.Settings.Default.Theme = cbTheme.SelectedItem.ToString();
+
+                SaveTheme();
 
                 // Save all
                 Properties.Settings.Default.Save();
@@ -1636,17 +1641,11 @@ namespace Karaboss
             _currentTheme = _ThemesList.GetThemeByName(cbTheme.Text);
 
             LoadColorsFromCurrentTheme();
-
         }
 
-        private void btnSaveTheme_Click(object sender, EventArgs e)
-        {
-
-        }
-
+        
         private void LoadColorsFromCurrentTheme()
-        {
-            
+        {            
             if (_currentTheme != null)
             {
                 #region Set colors of current theme
@@ -1682,27 +1681,94 @@ namespace Karaboss
 
         }
 
-        // Create a new theme
-        private void btnNewTheme_Click(object sender, EventArgs e)
+        private void btnSaveTheme_Click(object sender, EventArgs e)
+        {
+            SaveTheme();                                        
+        }
+
+
+        private void SaveTheme()
+        {
+            bool bSaveTheme = false;
+
+            string Name = string.Empty;
+
+            ThemeItem item = _ThemesList.GetThemeByName(cbTheme.SelectedItem.ToString());
+
+            if (item == null) return;
+
+            if (item.Name == "Default")
+            {
+                // If Default was slected => create a new theme
+                Name = GetNameForNewTheme();
+
+                if (Name == null || Name.Length == 0) return;
+
+                // Initialize with current values
+                item = new ThemeItem()
+                {
+                    Name = Name,
+                    ActiveColor = ToHex(ActiveColor),
+                    HighlightColor = ToHex(HighlightColor),
+                    InactiveColor = ToHex(InactiveColor)
+                };
+
+                _ThemesList.Add(item);
+                cbTheme.Items.Add(item.Name);
+                cbTheme.SelectedItem = item.Name;
+
+                bSaveTheme = true;
+            }
+            else
+            {
+                //Check if changes
+                if (item.ActiveColor != ToHex(ActiveColor) ||
+                    item.HighlightColor != ToHex(HighlightColor) ||
+                    item.InactiveColor != ToHex(InactiveColor))
+                    bSaveTheme |= true;
+
+                // Update values of current Theme
+                item.ActiveColor = ToHex(ActiveColor);
+                item.HighlightColor = ToHex(HighlightColor);
+                item.InactiveColor = ToHex(InactiveColor);
+            }
+
+            if (!bSaveTheme) return;
+
+            // Save list
+            if (_ThemesListHelper.Save(_ThemesListHelper.File, _ThemesList))
+                MessageBox.Show(string.Format("The theme <{0}> was successfully saved", item.Name), Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
+
+        private string GetNameForNewTheme()
         {
             // open a dialog asking for a name            
-
             this.TopMost = false;
-            frmDialog frmDialog = new frmDialog("Name of the new theme");
+            frmDialog frmDialog = new frmDialog("Name of the new theme to create");
 
             if (frmDialog.ShowDialog() != DialogResult.OK)
             {
                 this.TopMost = true;
-                return;
+                return null;
             }
             this.TopMost = true;
-            string Name = frmDialog.Response;
-
+            string Name = frmDialog.Response.Trim();
+            
             if (_ThemesList.GetThemeByName(Name) != null)
             {
-                MessageBox.Show( string.Format("The theme {0} already exists!", Name), Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-                return;
+                MessageBox.Show(string.Format("The theme {0} already exists!", Name), Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                return null;
             }
+
+            return Name;
+
+        }
+
+        // Create a new theme
+        private void btnNewTheme_Click(object sender, EventArgs e)
+        {                             
+            string Name = GetNameForNewTheme();
+            if (Name == null || Name.Length == 0) return;
 
             // Initialize with current values
             ThemeItem item = new ThemeItem()
@@ -1721,14 +1787,19 @@ namespace Karaboss
 
 
         private void btnDeleteTheme_Click(object sender, EventArgs e)
-        {
+        {                        
+            if (cbTheme.SelectedItem == null) return;
+            
             ThemeItem item  =  _ThemesList.GetThemeByName(cbTheme.SelectedItem.ToString());
             if (item == null) return;
 
-            if (_ThemesList.Remove(item.Name) )
+            if (MessageBox.Show(string.Format("Delete the theme <{0}>?", item.Name), Application.ProductName ,MessageBoxButtons.OKCancel, MessageBoxIcon.Question) == DialogResult.OK)
             {
-                cbTheme.Items.Remove(item.Name);
-                cbTheme.SelectedIndex = 0;
+                if (_ThemesList.Remove(item.Name))
+                {
+                    cbTheme.Items.Remove(item.Name);
+                    cbTheme.SelectedIndex = 0;
+                }
             }
         }
 

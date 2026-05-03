@@ -111,8 +111,15 @@ namespace Karaboss.Themes
         };
 
         public ThemesList()
+        {            
+            
+        }
+        
+
+        public void AddDefaultTheme()
         {
-            this._themes.Add(Default);
+            if (!ItemExists("Default"))
+                this._themes.Add(Default);
         }
 
 
@@ -136,7 +143,7 @@ namespace Karaboss.Themes
                 return false;
             }            
         }
-
+       
 
         public bool Add(string name, string activecolor, string highlightcolor, string inactivecolor)
         {
@@ -412,6 +419,7 @@ namespace Karaboss.Themes
         public ThemesList Load(string fileName)
         {
             ThemesList thl;
+            
             // Open file containing all playlistGroups "playlistGroup.xml"
             try
             {
@@ -421,30 +429,42 @@ namespace Karaboss.Themes
                     if (fs.Length > 0)
                         thl = (ThemesList)xml.Deserialize(fs);
                     else
+                    {
                         thl = new ThemesList();
-                }
+                    }
+                }               
+
+                thl.AddDefaultTheme();
                 return thl;
 
             }
             catch (Exception ex)
             {
                 MessageBox.Show("Error while loading themes file:\n" + ex.Message, Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-                return new ThemesList();
+                
+                thl = new ThemesList();
+                thl.AddDefaultTheme();
+                return thl;
             }
         }
 
-        public void Save(string fileName, ThemesList thl)
+        public bool Save(string fileName, ThemesList thl)
         {
             try
             {
+                // Remove Default from list
+                //thl.Remove("Default");
+                
                 XmlSerializer serializer = new XmlSerializer(typeof(ThemesList));
                 TextWriter textWriter = new StreamWriter(@fileName);
                 serializer.Serialize(textWriter, thl);
                 textWriter.Close();
+                return true;
             }
             catch (Exception ex)
             {
                 MessageBox.Show("Error while saving themes file:\n" + ex.Message, Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                return false;
             }
         }
 

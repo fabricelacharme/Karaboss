@@ -128,9 +128,9 @@
             this.btnSaveTheme = new System.Windows.Forms.Button();
             this.cbTheme = new System.Windows.Forms.ComboBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.btnDeleteTheme = new System.Windows.Forms.Button();
             this.btnNewTheme = new System.Windows.Forms.Button();
             this.openFileDialog = new System.Windows.Forms.OpenFileDialog();
-            this.btnDeleteTheme = new System.Windows.Forms.Button();
             this.pBox = new PicControl.pictureBoxControl();
             ((System.ComponentModel.ISupportInitialize)(this.UpDownNbLines)).BeginInit();
             this.pnlBalls.SuspendLayout();
@@ -907,6 +907,13 @@
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.TabStop = false;
             // 
+            // btnDeleteTheme
+            // 
+            resources.ApplyResources(this.btnDeleteTheme, "btnDeleteTheme");
+            this.btnDeleteTheme.Name = "btnDeleteTheme";
+            this.btnDeleteTheme.UseVisualStyleBackColor = true;
+            this.btnDeleteTheme.Click += new System.EventHandler(this.btnDeleteTheme_Click);
+            // 
             // btnNewTheme
             // 
             resources.ApplyResources(this.btnNewTheme, "btnNewTheme");
@@ -917,13 +924,6 @@
             // openFileDialog
             // 
             this.openFileDialog.FileName = "openFileDialog1";
-            // 
-            // btnDeleteTheme
-            // 
-            resources.ApplyResources(this.btnDeleteTheme, "btnDeleteTheme");
-            this.btnDeleteTheme.Name = "btnDeleteTheme";
-            this.btnDeleteTheme.UseVisualStyleBackColor = true;
-            this.btnDeleteTheme.Click += new System.EventHandler(this.btnDeleteTheme_Click);
             // 
             // pBox
             // 

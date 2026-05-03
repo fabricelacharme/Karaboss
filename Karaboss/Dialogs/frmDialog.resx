@@ -123,7 +123,7 @@
   </data>
   <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
   <data name="lblQuestion.Location" type="System.Drawing.Point, System.Drawing">
-    <value>12, 31</value>
+    <value>8, 12</value>
   </data>
   <data name="lblQuestion.Size" type="System.Drawing.Size, System.Drawing">
     <value>35, 13</value>
@@ -147,10 +147,10 @@
     <value>3</value>
   </data>
   <data name="txtReply.Location" type="System.Drawing.Point, System.Drawing">
-    <value>87, 28</value>
+    <value>8, 34</value>
   </data>
   <data name="txtReply.Size" type="System.Drawing.Size, System.Drawing">
-    <value>216, 20</value>
+    <value>295, 20</value>
   </data>
   <data name="txtReply.TabIndex" type="System.Int32, mscorlib">
     <value>1</value>
