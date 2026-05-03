@@ -699,6 +699,7 @@
             // 
             this.karaokeEffect1.ActiveBorderColor = System.Drawing.Color.Empty;
             this.karaokeEffect1.ActiveColor = System.Drawing.Color.FromArgb(((int)(((byte)(153)))), ((int)(((byte)(180)))), ((int)(((byte)(51)))));
+            this.karaokeEffect1.ActiveInstrumentalColor = System.Drawing.Color.Empty;
             this.karaokeEffect1.BackColor = System.Drawing.Color.LightGray;
             this.karaokeEffect1.Beat = 200;
             this.karaokeEffect1.BeatDuration = 0;

@@ -34,6 +34,7 @@
 using kar;
 using Karaboss.MidiLyrics;
 using Karaboss.Resources.Localization;
+using Karaboss.Themes;
 using Karaboss.Utilities;
 using MusicTxt;
 using MusicXml;
@@ -46,15 +47,13 @@ using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
-using System.Runtime.InteropServices;
 using System.Windows.Forms;
 
 namespace Karaboss
 {
     public partial class frmMidiPlayer : Form
     {
-      
-
+        
         MusicXmlReader MXmlReader; 
         MusicTxtReader MTxtReader; 
         MusicTxtWriter MTxtWriter;
@@ -343,7 +342,7 @@ namespace Karaboss
             // Display of peak level volume
             Init_peakLevel();          
            
-            // Playlist
+            
             #region playlists
             if (myPlayList != null)
             {
@@ -373,8 +372,10 @@ namespace Karaboss
             {
                 lblPlaylist.Visible = false;
             }
-            #endregion                      
+            #endregion
 
+
+      
             // Volume de chaque piste
             lstTrkReglages = new List<_reglages>();
             lstChannels = new List<_channels>();
@@ -386,6 +387,7 @@ namespace Karaboss
             timer2.Interval = 50;            
 
         }
+
 
 
         #region ani balls

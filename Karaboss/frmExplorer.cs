@@ -815,7 +815,8 @@ namespace Karaboss
             Karaclass.m_lang = Properties.Settings.Default.lang;
             Karaclass.m_MuteMelody = Properties.Settings.Default.MuteMelody;
             Karaclass.m_DisplayBalls = Properties.Settings.Default.DisplayBalls;
-            Karaclass.M_filePlaylistGroups = Properties.Settings.Default.filePlaylistGroups;
+            Karaclass.m_filePlaylistGroups = Properties.Settings.Default.filePlaylistGroups;
+            Karaclass.m_fileThemesList = Properties.Settings.Default.fileThemesList;
             Karaclass.m_drivePlaylists = Properties.Settings.Default.drivePlaylists;
             Karaclass.m_CountdownSongs = Properties.Settings.Default.CountdownSongs;
             Karaclass.m_PauseBetweenSongs = Properties.Settings.Default.bPauseBetweenSongs;

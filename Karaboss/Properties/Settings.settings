@@ -48,7 +48,7 @@
       <Value Profile="(Default)">#FCA903</Value>
     </Setting>
     <Setting Name="InactiveColor" Type="System.String" Scope="User">
-      <Value Profile="(Default)">#000000</Value>
+      <Value Profile="(Default)">#FFFFFF</Value>
     </Setting>
     <Setting Name="HighlightColor" Type="System.String" Scope="User">
       <Value Profile="(Default)">#FFFF00</Value>
@@ -93,7 +93,7 @@
       <Value Profile="(Default)" />
     </Setting>
     <Setting Name="drivePlaylists" Type="System.String" Scope="User">
-      <Value Profile="(Default)">"C:\\"</Value>
+      <Value Profile="(Default)">C:\\</Value>
     </Setting>
     <Setting Name="ShowSequencer" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
@@ -102,7 +102,7 @@
       <Value Profile="(Default)">True</Value>
     </Setting>
     <Setting Name="BackGroundOption" Type="System.String" Scope="User">
-      <Value Profile="(Default)">"Diaporama"</Value>
+      <Value Profile="(Default)">Diaporama</Value>
     </Setting>
     <Setting Name="frmPianoRollMaximized" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
@@ -201,7 +201,7 @@
       <Value Profile="(Default)">True</Value>
     </Setting>
     <Setting Name="LyricsOptionDisplay" Type="System.String" Scope="User">
-      <Value Profile="(Default)">"Center"</Value>
+      <Value Profile="(Default)">Center</Value>
     </Setting>
     <Setting Name="bLyricsBackGround" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
@@ -429,7 +429,7 @@
       <Value Profile="(Default)">DodgerBlue</Value>
     </Setting>
     <Setting Name="DefaultEncoding" Type="System.String" Scope="User">
-      <Value Profile="(Default)">"UTF8</Value>
+      <Value Profile="(Default)">UTF8</Value>
     </Setting>
     <Setting Name="frmKfnViewMaximized" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
@@ -502,6 +502,15 @@
     </Setting>
     <Setting Name="ActiveInstrumentalColor" Type="System.String" Scope="User">
       <Value Profile="(Default)">#808080</Value>
+    </Setting>
+    <Setting Name="Theme" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Default</Value>
+    </Setting>
+    <Setting Name="fileThemesList" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="SingleImagePath" Type="System.String" Scope="User">
+      <Value Profile="(Default)">orange.bmp</Value>
     </Setting>
   </Settings>
 </SettingsFile>

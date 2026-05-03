@@ -34,7 +34,7 @@
 
 using kar;
 using Karaboss.MidiLyrics;
-using Karaboss.Pages.ABCnotation;
+using Karaboss.Themes;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -71,17 +71,29 @@ namespace Karaboss
         
         private List<int> LyricsTimes;
 
-        #endregion private
+
+        #region Themes
+
+        private ThemesListHelper _ThListHelper = new ThemesListHelper();
+        private ThemesList _ThemesList = new ThemesList();
+        private ThemeItem _currentTheme = new ThemeItem();
 
 
-        #region properties
+        #endregion Themes
+
 
         #region Internal lyrics separators
 
         private readonly string _InternalSepLines = "¼";
         private readonly string _InternalSepParagraphs = "½";
 
-        #endregion
+        #endregion Internal lyrics separators
+
+
+        #endregion private
+
+
+        #region properties
 
 
         #region MIDI
@@ -89,6 +101,7 @@ namespace Karaboss
         public MidiLyricsMgmt myLyricsMgmt { get; set; }
 
         #endregion MIDI
+
 
         #region balls
         // Show balls
@@ -493,6 +506,22 @@ namespace Karaboss
 
         #region dirslideshow
 
+        private string _SingleImagePath;
+        public string SingleImagePath
+        {
+            get => _SingleImagePath;
+            set
+            {
+                if (File.Exists(value))
+                {
+                    _SingleImagePath = value;
+                    pBox.SingleImagePath = _SingleImagePath;
+                }
+
+            }
+        }
+
+
         private bool _allowModifyDirSlideShow = true;
         public bool AlloModifyDirSlideShow
         {
@@ -560,6 +589,10 @@ namespace Karaboss
 
                 switch (_optionbackground)
                 {
+                    case "Image":
+                        pBox.OptionBackground = "Image";
+                        break;
+
                     case "Diaporama":
                         pBox.DirSlideShow = DirSlideShow;
                         pBox.OptionBackground = "Diaporama";
@@ -606,9 +639,7 @@ namespace Karaboss
 
        
         #endregion properties
-
-
-        //public List<pictureBoxControl.plLyric> plLyrics;
+        
 
         /// <summary>
         /// Constructor
@@ -632,8 +663,7 @@ namespace Karaboss
             FirstMelodyNoteTicksOn = myLyricsMgmt.FirstMelodyNoteTicksOn;
 
             #endregion MIDI
-
-
+          
             // Graphic optimization
             this.SetStyle(ControlStyles.AllPaintingInWmPaint, true);
             this.SetStyle(ControlStyles.ResizeRedraw, true);
@@ -669,6 +699,29 @@ namespace Karaboss
         }
 
 
+
+        #region Themes Color
+
+        private ThemesList LoadThemes()
+        {
+            try
+            {
+                string fileName = Karaclass.GetThemesListFile(_ThListHelper.File);
+                _ThListHelper.File = fileName;
+                return _ThListHelper.Load(fileName);
+
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return null;
+            }
+        }
+
+        #endregion Themes Color
+
+
+
         #region initializations
 
         /// <summary>
@@ -677,8 +730,11 @@ namespace Karaboss
         public void LoadOptions()
         {
             try
-            {              
-                
+            {
+
+                LoadColorsFromCurrentTheme();
+          
+
                 // Karaoke display type
                 KaraokeDisplayType = Properties.Settings.Default.KaraokeDisplayType;               // setting this property set the karaokeEffect1.KaraokeDisplayType property
 
@@ -703,6 +759,11 @@ namespace Karaboss
                 string bgOption = Properties.Settings.Default.BackGroundOption;
                 switch (bgOption)
                 {
+                    case "Image":
+                        SingleImagePath = Properties.Settings.Default.SingleImagePath;
+                        OptionBackground = "Image";
+                        break;
+                    
                     case "Diaporama":
                         // Frequency of slide show
                         FreqSlideShow = Properties.Settings.Default.freqSlideShow;
@@ -729,49 +790,22 @@ namespace Karaboss
                         OptionBackground = "Diaporama";
                         break;
                 }
-                //OptionBackground = _optionbackground;
+                
 
                 switch (Properties.Settings.Default.LyricsOptionDisplay)
                 {
                     case "Top":
-                        _OptionDisplay = Karaclass.OptionsDisplay.Top;
-                        break;
+                        _OptionDisplay = Karaclass.OptionsDisplay.Top; break;
                     case "Center":
-                        _OptionDisplay = Karaclass.OptionsDisplay.Center;
-                        break;
+                        _OptionDisplay = Karaclass.OptionsDisplay.Center; break;
                     case "Bottom":
-                        _OptionDisplay = Karaclass.OptionsDisplay.Bottom;
-                        break;
+                        _OptionDisplay = Karaclass.OptionsDisplay.Bottom; break;
                     default:
-                        _OptionDisplay = Karaclass.OptionsDisplay.Center;
-                        break;
+                        _OptionDisplay = Karaclass.OptionsDisplay.Center; break;
                 }
                 OptionDisplay = _OptionDisplay;
 
-                bTextBackGround = Properties.Settings.Default.bLyricsBackGround;
-
-                // Background colors
-                BgColor = Parse(Properties.Settings.Default.BgColor);
-
-                Grad0Color = Properties.Settings.Default.Grad0Color;
-                Grad1Color = Properties.Settings.Default.Grad1Color;
-                Rhythm0Color = Properties.Settings.Default.Rhythm0Color;
-                Rhythm1Color = Properties.Settings.Default.Rhythm1Color;
-                               
-                // Text colors
-                InactiveColor = Parse(Properties.Settings.Default.InactiveColor);
-                HighlightColor = Parse(Properties.Settings.Default.HighlightColor);
-                ActiveColor = Parse(Properties.Settings.Default.ActiveColor);                
-                ActiveBorderColor = Parse(Properties.Settings.Default.ActiveBorderColor);
-                InactiveBorderColor = Parse(Properties.Settings.Default.InactiveBorderColor);
-
-                // Chords
-                _chordNextColor = Parse(Properties.Settings.Default.InactiveChordColor);
-                _chordHighlightColor = Parse(Properties.Settings.Default.HighlightChordColor);
-                chkChords.Checked = Karaclass.m_ShowChords;
-
-                // Instrumentals                
-                ActiveInstrumentalColor = Parse(Properties.Settings.Default.ActiveInstrumentalColor);
+                bTextBackGround = Properties.Settings.Default.bLyricsBackGround;               
 
                 // Number of Lines to display
                 nbLyricsLines = Properties.Settings.Default.TxtNbLines;
@@ -786,6 +820,62 @@ namespace Karaboss
                 MessageBox.Show(e.Message, Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
+
+
+        private void LoadColorsFromCurrentTheme()
+        {
+            #region Retrieve theme
+
+            // Load all available color themes
+            _ThemesList = LoadThemes();
+
+            // Load default Theme name
+            string currentThemeName = Properties.Settings.Default.Theme;
+
+            // Retrieve Theme from ThList with its name
+            _currentTheme = _ThemesList.GetThemeByName(currentThemeName);
+
+            #endregion Retrieve theme
+
+
+            if (_currentTheme != null)
+            {
+                #region Set colors of current theme
+
+                // Background colors
+                BgColor = Parse(Properties.Settings.Default.BgColor);
+
+                Grad0Color = Properties.Settings.Default.Grad0Color;
+                Grad1Color = Properties.Settings.Default.Grad1Color;
+                Rhythm0Color = Properties.Settings.Default.Rhythm0Color;
+                Rhythm1Color = Properties.Settings.Default.Rhythm1Color;
+
+                // Text colors
+                ActiveColor = Parse(_currentTheme.ActiveColor);             //Parse(Properties.Settings.Default.ActiveColor);
+                HighlightColor = Parse(_currentTheme.HighlightColor);       //Parse(Properties.Settings.Default.HighlightColor);
+                InactiveColor = Parse(_currentTheme.InactiveColor);         //Parse(Properties.Settings.Default.InactiveColor);
+
+
+                ActiveBorderColor = Parse(Properties.Settings.Default.ActiveBorderColor);
+                InactiveBorderColor = Parse(Properties.Settings.Default.InactiveBorderColor);
+
+                // Chords
+                _chordNextColor = Parse(Properties.Settings.Default.InactiveChordColor);
+                _chordHighlightColor = Parse(Properties.Settings.Default.HighlightChordColor);
+                chkChords.Checked = Karaclass.m_ShowChords;
+
+                // Instrumentals                
+                ActiveInstrumentalColor = Parse(Properties.Settings.Default.ActiveInstrumentalColor);
+
+                #endregion Set colors of current theme
+            }
+            else
+            {
+                MessageBox.Show("Theme not found for colors", Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error) ;
+            }
+
+        }
+
 
         #endregion initializations
 

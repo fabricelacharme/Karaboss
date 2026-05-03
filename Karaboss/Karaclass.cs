@@ -103,7 +103,7 @@ namespace Karaboss
         }
 
         private static string _m_fileplaylistGroups;
-        public static string M_filePlaylistGroups
+        public static string m_filePlaylistGroups
         {
             //Playlists file & path
             get
@@ -117,6 +117,23 @@ namespace Karaboss
                 Properties.Settings.Default.Save();
             }
         }
+
+        private static string _m_fileThemesList;
+        public static string m_fileThemesList
+        {
+            // Themes file & path
+            get
+            {
+                return _m_fileThemesList;
+            }
+            set
+            {
+                _m_fileThemesList = value;
+                Properties.Settings.Default.fileThemesList = _m_fileThemesList;
+                Properties.Settings.Default.Save();
+            }
+        }
+
 
 
         public static string m_drivePlaylists; // usual drive Playlists
@@ -199,7 +216,52 @@ namespace Karaboss
                 _m_fileplaylistGroups = fileName;
             }
 
-            M_filePlaylistGroups = _m_fileplaylistGroups;
+            m_filePlaylistGroups = _m_fileplaylistGroups;
+            return fileName;
+        }
+
+
+        public static string GetThemesListFile(string defFileName)
+        {
+            string fileName; // = string.Empty;
+
+            if (_m_fileThemesList != null && _m_fileThemesList != "")
+            {
+                string newfileName = _m_fileThemesList;
+                string drivePlaylists = Directory.GetDirectoryRoot(newfileName);         // drive of playlists file
+
+                DriveInfo drvinfo = new DriveInfo(newfileName);
+
+                // If current drive is not fixed, update drive   
+                if (drvinfo.DriveType != DriveType.Fixed)
+                {
+                    string MyPath = @newfileName;
+                    string MyPathWithoutDriveOrNetworkShare = MyPath.Substring(Path.GetPathRoot(MyPath).Length);
+
+                    // Replace drive on playlists file path
+                    newfileName = drivePlaylists + MyPathWithoutDriveOrNetworkShare;
+                    _m_fileThemesList = newfileName;
+                }
+
+                if (File.Exists(_m_fileThemesList) == true)
+                {
+                    fileName = _m_fileThemesList;
+                }
+                else
+                {
+                    string folder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), Application.ProductName);
+                    fileName = folder + "\\" + defFileName;
+                    _m_fileThemesList = fileName;
+                }
+            }
+            else
+            {
+                string folder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), Application.ProductName);
+                fileName = folder + "\\" + defFileName;
+                _m_fileThemesList = fileName;
+            }
+
+            m_fileThemesList = _m_fileThemesList;
             return fileName;
         }
 

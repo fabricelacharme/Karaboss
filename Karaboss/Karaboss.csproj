@@ -181,6 +181,12 @@
     <Compile Include="Dialogs\frmColorDialog.Designer.cs">
       <DependentUpon>frmColorDialog.cs</DependentUpon>
     </Compile>
+    <Compile Include="Dialogs\frmDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Dialogs\frmDialog.Designer.cs">
+      <DependentUpon>frmDialog.cs</DependentUpon>
+    </Compile>
     <Compile Include="Display\PanelPlayer.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -631,6 +637,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Dialogs\frmColorDialog.resx">
       <DependentUpon>frmColorDialog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Dialogs\frmDialog.resx">
+      <DependentUpon>frmDialog.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Display\PanelPlayer.resx">
       <DependentUpon>PanelPlayer.cs</DependentUpon>

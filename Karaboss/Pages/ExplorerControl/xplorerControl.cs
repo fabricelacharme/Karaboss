@@ -1678,18 +1678,9 @@ namespace Karaboss.xplorer
         /// </summary>
         private void SaveAllPlaylist()
         {
-            string fName = Karaclass.M_filePlaylistGroups;
+            string fName = Karaclass.m_filePlaylistGroups;
             PlGroupHelper.Save(fName, PlGroup);                        
         }
-
-
-
-
-
-
-
-
-
 
 
         #endregion playlists

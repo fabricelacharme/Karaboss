@@ -35,6 +35,7 @@ using GradientApp;
 using kar;
 using Karaboss.Mp3;
 using Karaboss.Resources.Localization;
+using Karaboss.Themes;
 using keffect;
 using System;
 using System.Collections.Generic;
@@ -50,6 +51,16 @@ namespace Karaboss
     {
 
         #region private declarations
+
+        #region Themes
+
+        private ThemesListHelper _ThListHelper = new ThemesListHelper();
+        private ThemesList _ThemesList = new ThemesList();
+        private ThemeItem _currentTheme = new ThemeItem();
+
+
+        #endregion Themes
+
 
         private Dictionary<string, string> KaraokeTypes = new Dictionary<string, string>();
 
@@ -115,6 +126,10 @@ namespace Karaboss
         private string dirSlideShow;
         // Frequency
         private int freqSlideShow;
+
+        // Single image as background
+        private string SingleImagePath;
+
 
         // Size mode of the picture background
         private PictureBoxSizeMode _sizeMode;
@@ -214,6 +229,9 @@ namespace Karaboss
 
                 frmMidiLyrics.bTextBackGround = chkTextBackground.Checked;
 
+                // Display single image as background
+                frmMidiLyrics.SingleImagePath = SingleImagePath;
+
                 // SlideShow frequency
                 frmMidiLyrics.FreqSlideShow = freqSlideShow;
 
@@ -224,6 +242,29 @@ namespace Karaboss
                 frmMidiLyrics.KaraokeDisplayType = KaraokeDisplayType;
             }
         }
+
+
+
+        #region Themes Color
+
+        private ThemesList LoadThemes()
+        {
+            try
+            {
+                string fileName = Karaclass.GetThemesListFile(_ThListHelper.File);
+                _ThListHelper.File = fileName;
+                return _ThListHelper.Load(fileName);
+
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return null;
+            }
+        }
+
+        #endregion Themes Color
+
 
 
         /// <summary>
@@ -289,26 +330,10 @@ namespace Karaboss
                 // Display balls on lyrics
                 chkDisplayBalls.Checked = Karaclass.m_DisplayBalls;
 
-                // Background type (Diaporama, Solidcolor, Transparent)                
-                Grad0Color = Properties.Settings.Default.Grad0Color;
-                Grad1Color = Properties.Settings.Default.Grad1Color;
-                Rhythm0Color = Properties.Settings.Default.Rhythm0Color;
-                Rhythm1Color = Properties.Settings.Default.Rhythm1Color;
 
-                // Colors: Properties => textBox                
-                txtBgColor.Text = Properties.Settings.Default.BgColor;
-                txtActiveColor.Text = Properties.Settings.Default.ActiveColor;
-                txtHighlightColor.Text = Properties.Settings.Default.HighlightColor;
-                txtInactiveColor.Text = Properties.Settings.Default.InactiveColor;
-                txtActiveBorderColor.Text = Properties.Settings.Default.ActiveBorderColor;
-                txtInactiveBorderColor.Text = Properties.Settings.Default.InactiveBorderColor;
-
-                txtInactiveChordColor.Text = Properties.Settings.Default.InactiveChordColor;
-                txtHighlightChordColor.Text = Properties.Settings.Default.HighlightChordColor;
-
-                // Instrumental color
-                txtActiveInstrumentalColor.Text = Properties.Settings.Default.ActiveInstrumentalColor;
-
+                // Load colors from theme
+                PopulateThemes();                
+               
                 // textBox => pic 
                 picBgColor.BackColor = Parse(txtBgColor.Text);
 
@@ -375,29 +400,35 @@ namespace Karaboss
                         break;
                 }
 
+
+                SingleImagePath = Properties.Settings.Default.SingleImagePath;
+                if (File.Exists(SingleImagePath))
+                {
+                    txtImage.Text =  Path.GetFileName(SingleImagePath);
+                    pBox.SingleImagePath = SingleImagePath;
+                }
+
+
                 // Background
                 string bgOption = Properties.Settings.Default.BackGroundOption;
 
                 switch (bgOption)
                 {
+                    case "Image":
+                        radioImage.Checked = true; break;
+                    
                     case "Diaporama":
-                        radioDiaporama.Checked = true;
-                        break;
+                        radioDiaporama.Checked = true; break;
                     case "SolidColor":
-                        radioSolidColor.Checked = true;
-                        break;
+                        radioSolidColor.Checked = true; break;
                     case "Gradient":
-                        radioGradient.Checked = true;
-                        break;
+                        radioGradient.Checked = true; break;
                     case "Rhythm":
-                        radioRhythm.Checked = true;
-                        break;
+                        radioRhythm.Checked = true; break;
                     case "Transparent":
-                        radioTransparent.Checked = true;
-                        break;
+                        radioTransparent.Checked = true; break;
                     default:
-                        bgOption = "Diaporama";
-                        break;
+                        bgOption = "Diaporama"; break;
                 }
 
 
@@ -459,7 +490,7 @@ namespace Karaboss
                 SizeMode = PictureBoxSizeMode.Zoom;
             }
         }
-
+           
 
         private void PopulateKaraokeDisplayTypes()
         {
@@ -575,6 +606,13 @@ namespace Karaboss
                 // Number of lines to display
                 Properties.Settings.Default.TxtNbLines = NbLines;
 
+
+                // Display single Image
+                if (File.Exists(SingleImagePath))
+                {
+                    Properties.Settings.Default.SingleImagePath = SingleImagePath;
+                }
+                
                 // SlideShow
                 dirSlideShow = txtSlideShow.Text.Trim();
                 if (Directory.Exists(dirSlideShow) == false)
@@ -659,7 +697,10 @@ namespace Karaboss
                 chkTextUppercase.Checked = bForceUppercase;
                 pBox.bforceUppercase = bForceUppercase;
 
-                // picturebox            
+                // SingleImage
+                pBox.SingleImagePath = SingleImagePath;
+
+                // SlideShow
                 pBox.FreqDirSlideShow = freqSlideShow;
                 pBox.nbLyricsLines = NbLines;
                 pBox.CurrentTime = 30;
@@ -748,9 +789,22 @@ namespace Karaboss
 
 
         #endregion option form settings
-     
+
 
         #region buttons
+
+        private void btnSelectImage_Click(object sender, EventArgs e)
+        {
+            if (openFileDialog.ShowDialog() == DialogResult.OK)
+            {
+                radioImage.Checked = true;
+                SingleImagePath = openFileDialog.FileName;
+                txtImage.Text = Path.GetFileName(SingleImagePath);
+                pBox.SingleImagePath = SingleImagePath;
+            }
+        }
+
+
         /// <summary>
         /// Select directory for slideshow
         /// </summary>
@@ -881,9 +935,21 @@ namespace Karaboss
 
 
         #endregion form load close
-    
+
 
         #region Background selection
+
+        private void radioImage_CheckedChanged(object sender, EventArgs e)
+        {
+            txtImage.Visible = radioImage.Checked;
+            btnSelectImage.Visible = radioImage.Checked;
+
+            if (radioImage.Checked)
+            {
+                pBox.OptionBackground = "Image";
+                bgOption = "Image";
+            }
+        }
 
         /// <summary>
         /// Background selection:
@@ -897,10 +963,10 @@ namespace Karaboss
         {
             if (radioDiaporama.Checked)
             {
-                btnBgColor.Visible = false;
-                btnBgColorPicker.Visible = false;
-                picBgColor.Visible = false;
-                txtBgColor.Visible = false;
+                //btnBgColor.Visible = false;
+                //btnBgColorPicker.Visible = false;
+                //picBgColor.Visible = false;
+                //txtBgColor.Visible = false;
 
                 pBox.OptionBackground = "Diaporama";
                 bgOption = "Diaporama";
@@ -910,12 +976,17 @@ namespace Karaboss
 
         private void RadioSolidColor_CheckedChanged(object sender, EventArgs e)
         {
+            txtBgColor.Visible = radioSolidColor.Checked;
+            picBgColor.Visible = radioSolidColor.Checked;
+            btnBgColor.Visible = radioSolidColor.Checked;
+            btnBgColorPicker.Visible = radioSolidColor.Checked;
+            
             if (radioSolidColor.Checked)
             {
-                btnBgColor.Visible = true;
-                btnBgColorPicker.Visible = true;
-                picBgColor.Visible = true;
-                txtBgColor.Visible = true;
+                //btnBgColor.Visible = true;
+                //btnBgColorPicker.Visible = true;
+                //picBgColor.Visible = true;
+                //txtBgColor.Visible = true;
                 
 
                 pBox.OptionBackground = "SolidColor";
@@ -927,10 +998,10 @@ namespace Karaboss
         {
             if(radioGradient.Checked)
             {
-                btnBgColor.Visible = false;
-                btnBgColorPicker.Visible = false;
-                picBgColor.Visible = false;
-                txtBgColor.Visible = false;
+                //btnBgColor.Visible = false;
+                //btnBgColorPicker.Visible = false;
+                //picBgColor.Visible = false;
+                //txtBgColor.Visible = false;
 
                 pBox.OptionBackground = "Gradient";
                 bgOption = "Gradient";
@@ -942,10 +1013,10 @@ namespace Karaboss
         {
             if (radioRhythm.Checked)
             {
-                btnBgColor.Visible = false;
-                btnBgColorPicker.Visible = false;
-                picBgColor.Visible = false;
-                txtBgColor.Visible = false;
+                //btnBgColor.Visible = false;
+                //btnBgColorPicker.Visible = false;
+                //picBgColor.Visible = false;
+                //txtBgColor.Visible = false;
 
                 pBox.OptionBackground = "Rhythm";
                 bgOption = "Rhythm";
@@ -956,10 +1027,10 @@ namespace Karaboss
         {
             if (radioTransparent.Checked)
             {
-                btnBgColor.Visible = false;
-                btnBgColorPicker.Visible = false;
-                picBgColor.Visible = false;
-                txtBgColor.Visible = false;
+                //btnBgColor.Visible = false;
+                //btnBgColorPicker.Visible = false;
+                //picBgColor.Visible = false;
+                //txtBgColor.Visible = false;
 
                 pBox.OptionBackground = "Transparent";
                 bgOption = "Transparent";
@@ -1064,7 +1135,7 @@ namespace Karaboss
             
             // Only if option Diaporama is selected
             if (radioDiaporama.Checked)
-                pBox.SetBackground(dirSlideShow);
+                pBox.SetDirectoryBackground(dirSlideShow);
 
 
         }
@@ -1544,14 +1615,27 @@ namespace Karaboss
 
         #region Color Themes
 
-
         private void PopulateThemes()
         {
-            cbTheme.Items.Add("Default");
+            // Load all available color themes
+            _ThemesList = LoadThemes();
+
+            // Load default Theme name
+            string currentThemeName = Properties.Settings.Default.Theme;
+
+            foreach (ThemeItem theme in _ThemesList.Themes)
+            {
+                cbTheme.Items.Add(theme.Name);
+            }
+            cbTheme.SelectedItem = currentThemeName;
         }
 
+
         private void cbTheme_SelectedIndexChanged(object sender, EventArgs e)
-        {
+        {            
+            _currentTheme = _ThemesList.GetThemeByName(cbTheme.Text);
+
+            LoadColorsFromCurrentTheme();
 
         }
 
@@ -1560,6 +1644,97 @@ namespace Karaboss
 
         }
 
+        private void LoadColorsFromCurrentTheme()
+        {
+            
+            if (_currentTheme != null)
+            {
+                #region Set colors of current theme
+
+                // Background type (Diaporama, Solidcolor, Transparent)                
+                Grad0Color = Properties.Settings.Default.Grad0Color;
+                Grad1Color = Properties.Settings.Default.Grad1Color;
+                Rhythm0Color = Properties.Settings.Default.Rhythm0Color;
+                Rhythm1Color = Properties.Settings.Default.Rhythm1Color;
+
+                // Colors: Properties => textBox                
+                txtBgColor.Text = Properties.Settings.Default.BgColor;
+
+                txtActiveColor.Text = _currentTheme.ActiveColor;                        // Properties.Settings.Default.ActiveColor;
+                txtHighlightColor.Text = _currentTheme.HighlightColor;                  // Properties.Settings.Default.HighlightColor;
+                txtInactiveColor.Text = _currentTheme.InactiveColor;                   // Properties.Settings.Default.InactiveColor;
+
+                txtActiveBorderColor.Text = Properties.Settings.Default.ActiveBorderColor;
+                txtInactiveBorderColor.Text = Properties.Settings.Default.InactiveBorderColor;
+
+                txtInactiveChordColor.Text = Properties.Settings.Default.InactiveChordColor;
+                txtHighlightChordColor.Text = Properties.Settings.Default.HighlightChordColor;
+
+                // Instrumental color
+                txtActiveInstrumentalColor.Text = Properties.Settings.Default.ActiveInstrumentalColor;
+
+                #endregion Set colors of current theme
+            }
+            else
+            {
+                MessageBox.Show("Theme not found for colors", Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+
+        }
+
+        // Create a new theme
+        private void btnNewTheme_Click(object sender, EventArgs e)
+        {
+            // open a dialog asking for a name            
+
+            this.TopMost = false;
+            frmDialog frmDialog = new frmDialog("Name of the new theme");
+
+            if (frmDialog.ShowDialog() != DialogResult.OK)
+            {
+                this.TopMost = true;
+                return;
+            }
+            this.TopMost = true;
+            string Name = frmDialog.Response;
+
+            if (_ThemesList.GetThemeByName(Name) != null)
+            {
+                MessageBox.Show( string.Format("The theme {0} already exists!", Name), Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                return;
+            }
+
+            // Initialize with current values
+            ThemeItem item = new ThemeItem()
+            {
+                Name = Name,
+                ActiveColor =  ToHex(ActiveColor),
+                HighlightColor = ToHex(HighlightColor),
+                InactiveColor = ToHex(InactiveColor)
+            };
+
+            _ThemesList.Add(item);
+            cbTheme.Items.Add(item.Name);
+            cbTheme.SelectedItem = item.Name;
+            
+        }
+
+
+        private void btnDeleteTheme_Click(object sender, EventArgs e)
+        {
+            ThemeItem item  =  _ThemesList.GetThemeByName(cbTheme.SelectedItem.ToString());
+            if (item == null) return;
+
+            if (_ThemesList.Remove(item.Name) )
+            {
+                cbTheme.Items.Remove(item.Name);
+                cbTheme.SelectedIndex = 0;
+            }
+        }
+
+
         #endregion Color Themes
+
+
     }
 }

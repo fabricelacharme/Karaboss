@@ -918,6 +918,9 @@
   <data name="grpBoxBackGround.TabIndex" type="System.Int32, mscorlib">
     <value>76</value>
   </data>
+  <data name="grpBoxBackGround.Text" xml:space="preserve">
+    <value>Background</value>
+  </data>
   <data name="&gt;&gt;grpBoxBackGround.Name" xml:space="preserve">
     <value>grpBoxBackGround</value>
   </data>
@@ -1630,7 +1633,7 @@
     <value>106</value>
   </data>
   <data name="txtInactiveColor.Text" xml:space="preserve">
-    <value>#000000</value>
+    <value>#FFFFFF</value>
   </data>
   <data name="&gt;&gt;txtInactiveColor.Name" xml:space="preserve">
     <value>txtInactiveColor</value>

@@ -216,6 +216,25 @@ namespace PicControl
 
         #region Slideshow
 
+        
+        /// <summary>
+        /// Display a single image as background
+        /// </summary>
+        private string _SingleImagePath = string.Empty;
+        public string SingleImagePath
+        {
+            get => _SingleImagePath;
+            set
+            {
+                if (File.Exists(value) && value != _SingleImagePath)
+                {
+                    _SingleImagePath = value;
+                    SetImageBackground(_SingleImagePath);
+                    pBox.Invalidate();
+                }
+            }
+        }
+
         /// <summary>
         /// SlideShow directory
         /// </summary>
@@ -231,9 +250,8 @@ namespace PicControl
                 {
                     dirSlideShow = value;
 
-                    SetBackground(dirSlideShow);
-                    pBox.Invalidate();
-                    
+                    SetDirectoryBackground(dirSlideShow);
+                    pBox.Invalidate();                    
                 }
             }
         }
@@ -681,9 +699,14 @@ namespace PicControl
 
                 switch (_optionbackground)
                 {
+                    case "Image":
+                        SetImageBackground(_SingleImagePath);
+                        pBox.Invalidate();
+                        break;
+                    
                     case "Diaporama":
                         if (dirSlideShow != null && Directory.Exists(dirSlideShow) && freqSlideShow > 0)
-                            SetBackground(dirSlideShow);
+                            SetDirectoryBackground(dirSlideShow);
                         break;
 
                     
@@ -1595,15 +1618,38 @@ namespace PicControl
         #endregion MoveWindows
 
 
+        public void SetImageBackground(string ImagePath)
+        {
+            try
+            {
+                if (!File.Exists(ImagePath))
+                {
+                    pBox.BackColor = Color.Black;
+                    return;
+                }
+
+               
+                m_ImageFilePaths.Clear();
+                m_ImageFilePaths.Add(ImagePath);
+                m_CurrentImage = Image.FromFile(m_ImageFilePaths[0]);
+
+            }
+            catch (Exception e)
+            {
+                Console.Write("Error: " + e.Message);
+            }
+        }
+
+
         /// <summary>
         /// Define new slideShow directory and frequency
         /// </summary>
         /// <param name="dirImages"></param>
-        public void SetBackground(string dirImages)
+        public void SetDirectoryBackground(string dirImages)
         {
             try
             {
-                m_CurrentImage = null;                 
+               // m_CurrentImage = null;                 
 
                 pBox.Image = null;
                 pBox.Invalidate();
@@ -1619,8 +1665,7 @@ namespace PicControl
 
                     if (_optionbackground == "Diaporama")
                     {
-                        LoadImageList(dirImages);                        
-                        //C = m_ImageFilePaths.Count;
+                        LoadImageList(dirImages);                                                
                         C = pictures.Length;
                     }
 
@@ -1628,29 +1673,12 @@ namespace PicControl
                     {
                         case 0:
                             // No image, just background color
-                            //m_Cancel = true;
                             break;
                         case 1:
-                            // Single image
-                            //m_Cancel = true;
-
                             m_CurrentImage = Image.FromFile(m_ImageFilePaths[0]);
-                            //pBox.Image = m_CurrentImage; // Image.FromFile(m_ImageFilePaths[0]);
-                            //pBox.Image = pictures[0];
                             break;
                         default:
-
-                            /*                            
-                            // Slideshow => backgroundworker                            
-                            m_Cancel = false;
-                            // Initialize backgroundworker
-                            InitBackGroundWorker();
-                            random = new Random();
-                            StartBgW();
-                            */
-
                             InitSlideShow();
-
                             break;
                     }
                 }
@@ -2126,7 +2154,7 @@ namespace PicControl
         {
             _nbLyricsLines = 1;
             dirSlideShow = null;
-            SetBackground(null);           
+            SetDirectoryBackground(null);           
 
             // Initial position
             _currentTextPos = -1;
@@ -3193,8 +3221,23 @@ namespace PicControl
             GraphicsPath gp;
 
             switch (_optionbackground) 
-            {                
-            
+            {
+
+                case "Image":
+                    if (m_CurrentImage != null)
+                    {
+                        try
+                        {
+                            m_DisplayRectangle = GetRectangleForSizeMode(m_CurrentImage.Width, m_CurrentImage.Height);
+                            e.Graphics.DrawImage(m_CurrentImage, m_DisplayRectangle, 0, 0, m_CurrentImage.Width, m_CurrentImage.Height, GraphicsUnit.Pixel);
+                        }
+                        catch (Exception dr)
+                        {
+                            Console.Write("Error drawing image: " + dr.Message);
+                        }
+                    }
+                    break;
+
                 case "SolidColor":                    
                     e.Graphics.FillRectangle(new SolidBrush(_BgColor), new Rectangle(0, 0, this.Width, this.Height));
                     break;
@@ -6238,7 +6281,7 @@ namespace PicControl
 
                 _karaokeFont? .Dispose();
                 m_font?.Dispose(); 
-                m_CurrentImage? .Dispose();
+                //m_CurrentImage? .Dispose();
                 pBox? .Dispose ();
                 
                 timerChangeImage?.Stop();
