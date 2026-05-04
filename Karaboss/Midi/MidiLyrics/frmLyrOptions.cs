@@ -1,6 +1,6 @@
 ﻿#region License
 
-/* Copyright (c) 2025 Fabrice Lacharme
+/* Copyright (c) 2026 Fabrice Lacharme
  * 
  * Permission is hereby granted, free of charge, to any person obtaining a copy 
  * of this software and associated documentation files (the "Software"), to 
@@ -33,15 +33,14 @@
 #endregion
 using GradientApp;
 using kar;
-using Karaboss.Mp3;
 using Karaboss.Resources.Localization;
 using Karaboss.Themes;
-using keffect;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 
@@ -159,7 +158,6 @@ namespace Karaboss
 
             LoadOptions();     
             SetOptions();
-
             
             pBox.bIsSettings = true;
             pBox.LoadDemoText();
@@ -203,8 +201,8 @@ namespace Karaboss
                 frmMidiLyrics.InactiveBorderColor = InactiveBorderColor;
 
                 // Chords
-                frmMidiLyrics.ChordNextColor = InactiveChordColor;
-                frmMidiLyrics.ChordHighlightColor = HighlightChordColor;
+                frmMidiLyrics.InactiveChordColor = InactiveChordColor;
+                frmMidiLyrics.HighlightChordColor = HighlightChordColor;
                 frmMidiLyrics.bShowChords = _bShowChords;
 
                 // Instrumental color
@@ -221,7 +219,7 @@ namespace Karaboss
 
                 frmMidiLyrics.SizeMode = SizeMode;
 
-                // Diaporam, Backcolor ou transparent
+                // Iamage, Diaporama, Backcolor ou transparent
                 frmMidiLyrics.OptionBackground = bgOption;
 
                 // Text display: Center, Top, Bottom
@@ -238,11 +236,10 @@ namespace Karaboss
                 // directory for slide show
                 frmMidiLyrics.DirSlideShow = dirSlideShow;
 
-                // Karaoke display type
+                // Karaoke display type (FixedLines, ScrollingLinesBottomUp, ScrollingLinesTopDown, TwoLinesSwapped ..)
                 frmMidiLyrics.KaraokeDisplayType = KaraokeDisplayType;
             }
         }
-
 
 
         #region Themes Color
@@ -266,15 +263,16 @@ namespace Karaboss
         #endregion Themes Color
 
 
-
         /// <summary>
         /// Load options stored in properties
         /// </summary>
         private void LoadOptions()
         {
             try
-            {               
+            {
                 // Fonts
+                #region Fonts
+                
                 PopulateFonts();
                                                 
                 string f = Properties.Settings.Default.KaraokeFontName;
@@ -288,9 +286,12 @@ namespace Karaboss
                 }
                 _karaokeFont = new Font(ftName, ftSize, FontStyle.Regular);                
                 pBox.KaraokeFont = _karaokeFont;
+                
+                #endregion Fonts
 
 
-                // Frames
+                // Frames (no border, 1 pixel border, neon etc)
+                #region Frames
                 PopulateLyricBorders();
                 
                 // Lyrics border effect 
@@ -306,10 +307,12 @@ namespace Karaboss
                         }
                     }
                 }
+                #endregion Frames
 
 
-                // Karaoke display types
+                // Karaoke display types (FixedLines, ScrollingLinesBottomUp, ScrollingLinesTopDown, TwoLinesSwapped
                 // karaokeEffect1 is updated by the options form when changing the display type, so we need to set it before setting the selected item in the combo box
+                #region Layout
                 PopulateKaraokeDisplayTypes();
                 KaraokeDisplayType = Properties.Settings.Default.KaraokeDisplayType;
                 foreach (KeyValuePair<string, string> valuePair in cbKaraokeType.Items)
@@ -323,6 +326,14 @@ namespace Karaboss
                         }
                     }
                 }
+                #endregion Layout
+
+
+                cboColor.DisplayKnownColors(cbGrad0);
+                cboColor.DisplayKnownColors(cbGrad1);
+                cboColor.DisplayKnownColors(cbRhythm0);
+                cboColor.DisplayKnownColors(cbRhythm1);
+
 
                 // Force Uppercase
                 bForceUppercase = Karaclass.m_ForceUppercase;
@@ -410,13 +421,13 @@ namespace Karaboss
 
 
                 // Background
+                #region Backgrounds
                 string bgOption = Properties.Settings.Default.BackGroundOption;
 
                 switch (bgOption)
                 {
                     case "Image":
-                        radioImage.Checked = true; break;
-                    
+                        radioImage.Checked = true; break;                    
                     case "Diaporama":
                         radioDiaporama.Checked = true; break;
                     case "SolidColor":
@@ -430,7 +441,7 @@ namespace Karaboss
                     default:
                         bgOption = "Diaporama"; break;
                 }
-
+                #endregion Backgrounds
 
                 // Nb lines to display
                 NbLines = Properties.Settings.Default.TxtNbLines;
@@ -490,8 +501,10 @@ namespace Karaboss
                 SizeMode = PictureBoxSizeMode.Zoom;
             }
         }
-           
 
+        /// <summary>
+        /// FixedLines, ScrollingLinesBottomUp, ScrollingLinesTopDown, TwoLinesSwapped
+        /// </summary>
         private void PopulateKaraokeDisplayTypes()
         {
             // Populate karaoke display types cbKaraokeType         
@@ -560,39 +573,14 @@ namespace Karaboss
                 // Display balls
                 Properties.Settings.Default.DisplayBalls = Karaclass.m_DisplayBalls;
 
-                // Background type (Diaporama, Solidcolor, Transparent
-                Properties.Settings.Default.BackGroundOption = bgOption;
-
-                // Font                
-                Properties.Settings.Default.KaraokeFontName = ftName;                
-
-
-                // Background colors
-                Properties.Settings.Default.BgColor = ToHex(BgColor);
-                Properties.Settings.Default.Grad0Color = Grad0Color;
-                Properties.Settings.Default.Grad1Color = Grad1Color;
-                Properties.Settings.Default.Rhythm0Color = Rhythm0Color;
-                Properties.Settings.Default.Rhythm1Color = Rhythm1Color;
-
-
-                Properties.Settings.Default.ActiveColor = ToHex(ActiveColor);
-                Properties.Settings.Default.HighlightColor = ToHex(HighlightColor);
-                Properties.Settings.Default.InactiveColor = ToHex(InactiveColor);
-
-                // chords
-                Properties.Settings.Default.InactiveChordColor = ToHex(InactiveChordColor);
-                Properties.Settings.Default.HighlightChordColor = ToHex(HighlightChordColor);
-                Properties.Settings.Default.bShowChords = _bShowChords;
-
-
-                // Instrumental Color
-                Properties.Settings.Default.ActiveInstrumentalColor = ToHex(ActiveInstrumentalColor);
-
-                // Contour                
-                Properties.Settings.Default.ActiveBorderColor = ToHex(ActiveBorderColor);
-                Properties.Settings.Default.InactiveBorderColor = ToHex(InactiveBorderColor);
-
                 
+                // Font                
+                Properties.Settings.Default.KaraokeFontName = ftName;
+
+                // Show chords
+                Properties.Settings.Default.bShowChords = _bShowChords;
+           
+
                 // FrameType
                 Properties.Settings.Default.FrameType = FrameType;
 
@@ -641,13 +629,21 @@ namespace Karaboss
                 // Lyrics background
                 Properties.Settings.Default.bLyricsBackGround = chkTextBackground.Checked;
 
-                // Karaoke display type
+                // Karaoke display type (FixedLines, ScrollingLinesBottomUp, ScrollingLinesTopDown, TwoLinesSwapped
                 Properties.Settings.Default.KaraokeDisplayType = KaraokeDisplayType;
 
-
+                // Save theme name
                 Properties.Settings.Default.Theme = cbTheme.SelectedItem.ToString();
 
-                SaveTheme();
+                // Save colors of lyrics, backgrounds, chords in themes (not if theme Default is active)
+                ThemeItem item = _ThemesList.GetThemeByName(cbTheme.SelectedItem.ToString());
+                if (item != null && item.Name != "Default")
+                    SaveTheme();
+
+                
+                // Background option (Image, diaporama, transperent, gradient etc...)
+                Properties.Settings.Default.BackGroundOption = bgOption;
+
 
                 // Save all
                 Properties.Settings.Default.Save();
@@ -712,10 +708,14 @@ namespace Karaboss
 
                 // Backgrounds
                 pBox.BgColor = BgColor;
+
+                
+                // Gradients
                 pBox.Grad0Color = Grad0Color;
                 pBox.Grad1Color = Grad1Color;
                 pBox.Rhythm0Color = Rhythm0Color;
                 pBox.Rhythm1Color = Rhythm1Color;
+                
                 
                 pBox.ActiveBorderColor = ActiveBorderColor;
                 pBox.InactiveBorderColor = InactiveBorderColor;
@@ -892,18 +892,7 @@ namespace Karaboss
         /// <param name="e"></param>
         private void FrmLyrOptions_Load(object sender, EventArgs e)
         {
-            this.TopMost = true;
-            cboColor.DisplayKnownColors(cbGrad0);
-            cboColor.DisplayKnownColors(cbGrad1);
-            cboColor.DisplayKnownColors(cbRhythm0);
-            cboColor.DisplayKnownColors(cbRhythm1);
-
-            // Select the selected color in the ComboBox
-            cbGrad0.SelectedIndex = cbGrad0.Items.IndexOf(Grad0Color);
-            cbGrad1.SelectedIndex = cbGrad1.Items.IndexOf(Grad1Color);
-            cbRhythm0.SelectedIndex = cbRhythm0.Items.IndexOf(Rhythm0Color);
-            cbRhythm1.SelectedIndex = cbRhythm1.Items.IndexOf(Rhythm1Color);
-
+            this.TopMost = true;                       
         }
 
         /// <summary>
@@ -967,12 +956,7 @@ namespace Karaboss
         private void RadioDiaporama_CheckedChanged(object sender, EventArgs e)
         {
             if (radioDiaporama.Checked)
-            {
-                //btnBgColor.Visible = false;
-                //btnBgColorPicker.Visible = false;
-                //picBgColor.Visible = false;
-                //txtBgColor.Visible = false;
-
+            {                
                 pBox.OptionBackground = "Diaporama";
                 bgOption = "Diaporama";
                 pBox.DirSlideShow = dirSlideShow;
@@ -987,13 +971,7 @@ namespace Karaboss
             btnBgColorPicker.Visible = radioSolidColor.Checked;
             
             if (radioSolidColor.Checked)
-            {
-                //btnBgColor.Visible = true;
-                //btnBgColorPicker.Visible = true;
-                //picBgColor.Visible = true;
-                //txtBgColor.Visible = true;
-                
-
+            {               
                 pBox.OptionBackground = "SolidColor";
                 bgOption = "SolidColor";
             }
@@ -1002,12 +980,7 @@ namespace Karaboss
         private void radioGradient_CheckedChanged(object sender, EventArgs e)
         {
             if(radioGradient.Checked)
-            {
-                //btnBgColor.Visible = false;
-                //btnBgColorPicker.Visible = false;
-                //picBgColor.Visible = false;
-                //txtBgColor.Visible = false;
-
+            {               
                 pBox.OptionBackground = "Gradient";
                 bgOption = "Gradient";
             }
@@ -1018,11 +991,6 @@ namespace Karaboss
         {
             if (radioRhythm.Checked)
             {
-                //btnBgColor.Visible = false;
-                //btnBgColorPicker.Visible = false;
-                //picBgColor.Visible = false;
-                //txtBgColor.Visible = false;
-
                 pBox.OptionBackground = "Rhythm";
                 bgOption = "Rhythm";
             }
@@ -1031,12 +999,7 @@ namespace Karaboss
         private void RadioTransparent_CheckedChanged(object sender, EventArgs e)
         {
             if (radioTransparent.Checked)
-            {
-                //btnBgColor.Visible = false;
-                //btnBgColorPicker.Visible = false;
-                //picBgColor.Visible = false;
-                //txtBgColor.Visible = false;
-
+            {                
                 pBox.OptionBackground = "Transparent";
                 bgOption = "Transparent";
             }
@@ -1078,7 +1041,6 @@ namespace Karaboss
                 {
                     Console.Write(eee.Message);
                 }
-
             }
         }
 
@@ -1106,8 +1068,6 @@ namespace Karaboss
 
             }
             pBox.SizeMode = SizeMode;
-
-
         }
 
         /// <summary>
@@ -1141,8 +1101,6 @@ namespace Karaboss
             // Only if option Diaporama is selected
             if (radioDiaporama.Checked)
                 pBox.SetDirectoryBackground(dirSlideShow);
-
-
         }
 
         private bool IsNumeric(string s)
@@ -1155,8 +1113,6 @@ namespace Karaboss
         {
             Karaclass.m_DisplayBalls = chkDisplayBalls.Checked;
             pnlBalls.Visible = chkDisplayBalls.Checked;
-
-
         }
 
         private void cbOptionsTextDisplay_SelectedIndexChanged(object sender, EventArgs e)
@@ -1556,6 +1512,9 @@ namespace Karaboss
         /// <exception cref="ArgumentException"></exception>
         public static Color Parse(string input)
         {
+            if (input == null)
+                return Color.Black;
+            
             input = input.Trim();
             string strColorRegex = @"^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$";
             Regex re = new Regex(strColorRegex);
@@ -1628,6 +1587,10 @@ namespace Karaboss
             // Load default Theme name
             string currentThemeName = Properties.Settings.Default.Theme;
 
+            ThemeItem thi = _ThemesList.GetThemeByName(currentThemeName);
+            if (thi == null || thi.Name != currentThemeName)
+                currentThemeName = "Default";
+            
             foreach (ThemeItem theme in _ThemesList.Themes)
             {
                 cbTheme.Items.Add(theme.Name);
@@ -1641,36 +1604,93 @@ namespace Karaboss
             _currentTheme = _ThemesList.GetThemeByName(cbTheme.Text);
 
             LoadColorsFromCurrentTheme();
+
+            // Apply colors to combos gradient
+            UpdateGradientCombosToTheme();
+
         }
 
-        
+        private void UpdateGradientCombosToTheme()
+        {
+            // Select the gradient colors of the current theme in the ComboBox
+            int argb;
+            argb = Grad0Color.ToArgb();
+            foreach (var item in cbGrad0.Items)
+            {
+                if (((Color)item).ToArgb() == argb)
+                {
+                    cbGrad0.SelectedItem = item;
+                    break;
+                }
+            }
+            argb = Grad1Color.ToArgb();
+            foreach (var item in cbGrad1.Items)
+            {
+                if (((Color)item).ToArgb() == argb)
+                {
+                    cbGrad1.SelectedItem = item;
+                    break;
+                }
+            }
+            argb = Rhythm0Color.ToArgb();
+            foreach (var item in cbRhythm0.Items)
+            {
+                if (((Color)item).ToArgb() == argb)
+                {
+                    cbRhythm0.SelectedItem = item;
+                    break;
+                }
+            }
+            argb = Rhythm1Color.ToArgb();
+            foreach (var item in cbRhythm1.Items)
+            {
+                if (((Color)item).ToArgb() == argb)
+                {
+                    cbRhythm1.SelectedItem = item;
+                    break;
+                }
+            }
+           
+
+            /*
+             *  This is no more working with themes
+            cbGrad0.SelectedIndex = cbGrad0.Items.IndexOf(Grad0Color);
+            cbGrad1.SelectedIndex = cbGrad1.Items.IndexOf(Grad1Color);
+            cbRhythm0.SelectedIndex = cbRhythm0.Items.IndexOf(Rhythm0Color);
+            cbRhythm1.SelectedIndex = cbRhythm1.Items.IndexOf(Rhythm1Color);
+            */
+        }
+
+
         private void LoadColorsFromCurrentTheme()
         {            
             if (_currentTheme != null)
             {
                 #region Set colors of current theme
 
+                txtActiveColor.Text = _currentTheme.ActiveColor;
+                txtHighlightColor.Text = _currentTheme.HighlightColor;
+                txtInactiveColor.Text = _currentTheme.InactiveColor;
+
+
                 // Background type (Diaporama, Solidcolor, Transparent)                
-                Grad0Color = Properties.Settings.Default.Grad0Color;
-                Grad1Color = Properties.Settings.Default.Grad1Color;
-                Rhythm0Color = Properties.Settings.Default.Rhythm0Color;
-                Rhythm1Color = Properties.Settings.Default.Rhythm1Color;
+                Grad0Color = Parse(_currentTheme.Grad0Color);
+                Grad1Color = Parse(_currentTheme.Grad1Color);
+                Rhythm0Color = Parse(_currentTheme.Rhythm0Color);
+                Rhythm1Color = Parse(_currentTheme.Rhythm1Color);
 
                 // Colors: Properties => textBox                
-                txtBgColor.Text = Properties.Settings.Default.BgColor;
+                txtBgColor.Text = _currentTheme.BgColor;
 
-                txtActiveColor.Text = _currentTheme.ActiveColor;                        // Properties.Settings.Default.ActiveColor;
-                txtHighlightColor.Text = _currentTheme.HighlightColor;                  // Properties.Settings.Default.HighlightColor;
-                txtInactiveColor.Text = _currentTheme.InactiveColor;                   // Properties.Settings.Default.InactiveColor;
 
-                txtActiveBorderColor.Text = Properties.Settings.Default.ActiveBorderColor;
-                txtInactiveBorderColor.Text = Properties.Settings.Default.InactiveBorderColor;
+                txtActiveBorderColor.Text = _currentTheme.ActiveBorderColor;
+                txtInactiveBorderColor.Text = _currentTheme.InactiveBorderColor;
 
-                txtInactiveChordColor.Text = Properties.Settings.Default.InactiveChordColor;
-                txtHighlightChordColor.Text = Properties.Settings.Default.HighlightChordColor;
+                txtInactiveChordColor.Text = _currentTheme.InactiveChordColor;
+                txtHighlightChordColor.Text = _currentTheme.HighlightChordColor;
 
                 // Instrumental color
-                txtActiveInstrumentalColor.Text = Properties.Settings.Default.ActiveInstrumentalColor;
+                txtActiveInstrumentalColor.Text = _currentTheme.ActiveInstrumentalColor;
 
                 #endregion Set colors of current theme
             }
@@ -1699,7 +1719,9 @@ namespace Karaboss
 
             if (item.Name == "Default")
             {
-                // If Default was slected => create a new theme
+                // If closing and selected theme is default, do not change
+                
+                // If Default was selected => create a new theme
                 Name = GetNameForNewTheme();
 
                 if (Name == null || Name.Length == 0) return;
@@ -1707,11 +1729,10 @@ namespace Karaboss
                 // Initialize with current values
                 item = new ThemeItem()
                 {
-                    Name = Name,
-                    ActiveColor = ToHex(ActiveColor),
-                    HighlightColor = ToHex(HighlightColor),
-                    InactiveColor = ToHex(InactiveColor)
+                    Name = Name,                                       
                 };
+
+                item = UpdateThemeWithCurrentValues(item);
 
                 _ThemesList.Add(item);
                 cbTheme.Items.Add(item.Name);
@@ -1721,24 +1742,58 @@ namespace Karaboss
             }
             else
             {
-                //Check if changes
+                // Item is not default.
+
+                // 1. Check if changes
                 if (item.ActiveColor != ToHex(ActiveColor) ||
                     item.HighlightColor != ToHex(HighlightColor) ||
-                    item.InactiveColor != ToHex(InactiveColor))
-                    bSaveTheme |= true;
+                    item.InactiveColor != ToHex(InactiveColor) ||
+                    item.ActiveBorderColor != ToHex(ActiveBorderColor) ||
+                    item.InactiveBorderColor != ToHex(InactiveBorderColor) ||
+                    item.ActiveInstrumentalColor != ToHex(ActiveInstrumentalColor) ||
+                    item.BgColor != ToHex(BgColor) ||
+                    item.Grad0Color != ToHex(Grad0Color) ||
+                    item.Grad1Color != ToHex(Grad1Color) ||
+                    item.Rhythm0Color != ToHex(Rhythm0Color) ||
+                    item.Rhythm1Color != ToHex(Rhythm1Color) ||
+                    item.InactiveChordColor != ToHex(InactiveChordColor) ||
+                    item.HighlightChordColor != ToHex(HighlightChordColor) ) 
+                    
+                    
+                    bSaveTheme = true;
 
                 // Update values of current Theme
-                item.ActiveColor = ToHex(ActiveColor);
-                item.HighlightColor = ToHex(HighlightColor);
-                item.InactiveColor = ToHex(InactiveColor);
+                item = UpdateThemeWithCurrentValues(item);               
             }
 
             if (!bSaveTheme) return;
 
-            // Save list
+            // Save list of themes
             if (_ThemesListHelper.Save(_ThemesListHelper.File, _ThemesList))
                 MessageBox.Show(string.Format("The theme <{0}> was successfully saved", item.Name), Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
+
+
+        private ThemeItem UpdateThemeWithCurrentValues(ThemeItem item)
+        {
+            // Update values of current Theme
+            item.ActiveColor = ToHex(ActiveColor);
+            item.HighlightColor = ToHex(HighlightColor);
+            item.InactiveColor = ToHex(InactiveColor);
+            item.ActiveBorderColor = ToHex(ActiveBorderColor);
+            item.InactiveBorderColor = ToHex(InactiveBorderColor);
+            item.ActiveInstrumentalColor = ToHex(ActiveInstrumentalColor);
+            item.BgColor = ToHex(BgColor);
+            item.Grad0Color = ToHex(Grad0Color);
+            item.Grad1Color = ToHex(Grad1Color);
+            item.Rhythm0Color = ToHex(Rhythm0Color);
+            item.Rhythm1Color = ToHex(Rhythm1Color);
+            item.InactiveChordColor = ToHex(InactiveChordColor);
+            item.HighlightChordColor = ToHex(HighlightChordColor);
+
+            return item;
+        }
+
 
         private string GetNameForNewTheme()
         {
@@ -1774,15 +1829,13 @@ namespace Karaboss
             ThemeItem item = new ThemeItem()
             {
                 Name = Name,
-                ActiveColor =  ToHex(ActiveColor),
-                HighlightColor = ToHex(HighlightColor),
-                InactiveColor = ToHex(InactiveColor)
             };
+
+            item = UpdateThemeWithCurrentValues(item);
 
             _ThemesList.Add(item);
             cbTheme.Items.Add(item.Name);
-            cbTheme.SelectedItem = item.Name;
-            
+            cbTheme.SelectedItem = item.Name;            
         }
 
 

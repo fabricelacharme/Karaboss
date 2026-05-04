@@ -90,9 +90,6 @@ namespace GradientApp
             
         }
 
-
-
-
         // Images with different sizes can be displayed in a ComboBox.
         #region Images with Different Sizes
 

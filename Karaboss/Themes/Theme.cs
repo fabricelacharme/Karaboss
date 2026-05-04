@@ -21,6 +21,9 @@ namespace Karaboss.Themes
         [DataMember]
         public string Name { get; set; }
 
+
+        #region lyrics colors
+
         [DataMember]
         public string ActiveColor { get; set; }
 
@@ -30,67 +33,52 @@ namespace Karaboss.Themes
         [DataMember]
         public string InactiveColor { get; set; }
 
-        /*
-        public string Name { get; set; }
+        [DataMember]
+        public string ActiveBorderColor { get; set; }
+        
+        [DataMember]
+        public string InactiveBorderColor { get; set; }
 
-        public Color ActiveColor { get; set; }
-        public Color HighlightColor { get; set; }
-        public Color InactiveColor { get; set; }
+        [DataMember]
+        public string ActiveInstrumentalColor { get; set; }
+
+        #endregion lyrics colors
+
+
+        #region static background color
+
+        [DataMember]
+        public string BgColor { get; set; }
+
+        #endregion static background color
+
+
+        #region dynamic backgrounds
+
+        [DataMember]
+        public string Grad0Color { get; set; }
+
+        [DataMember]
+        public string Grad1Color { get; set; }
+
+        [DataMember]
+        public string Rhythm0Color { get; set; }
+
+        [DataMember]
+        public string Rhythm1Color { get; set; }
+
+        #endregion dynamic backgrounds
 
         
-        public Color ActiveBorderColor { get; set; }
-        public Color InactiveBorderColor { get; set; }
+        #region chord color
 
-        public Color BgColor { get; set; }
-        public Color Grad0Color { get; set; }
-        public Color Grad1Color { get; set; }
-        public Color Rhythm0Color { get; set; }
-        public Color Rhythm1Color { get; set; }
+        [DataMember]
+        public string InactiveChordColor { get; set; }
 
-        public Color ActiveInstrumentalColor { get; set; }
+        [DataMember]
+        public string HighlightChordColor { get; set; }
 
-        public Color InactiveChordColor { get; set; }
-        public Color HighlightChordColor { get; set; }
-
-        public Theme (string name)
-        {
-            Name = name;
-        }
-        
-        public Theme(
-            string name,
-            Color activecolor, 
-            Color highlightcolor, 
-            Color inactivecolor, 
-            Color activebordercolor, 
-            Color inactivebordercolor, 
-            Color bgcolor, 
-            Color grad0color, 
-            Color grad1color, 
-            Color rhythm0color, 
-            Color rhythm1color,
-            Color activeinstrumentalcolor,
-            Color inactivechordcolor,
-            Color highlightchordcolor) 
-        { 
-            
-            Name = name;
-            ActiveColor = activecolor;
-            HighlightColor = highlightcolor;
-            InactiveColor = inactivecolor;
-            ActiveBorderColor = activebordercolor;
-            InactiveChordColor = inactivebordercolor;
-            BgColor = bgcolor;
-            Grad0Color = grad0color;
-            Grad1Color = grad1color;
-            Rhythm0Color = rhythm0color;
-            Rhythm1Color = rhythm1color;
-            ActiveInstrumentalColor = activeinstrumentalcolor;
-            InactiveChordColor = inactivechordcolor;
-            HighlightChordColor = highlightchordcolor;
-        }
-        */
-
+        #endregion chord color       
     }
 
 
@@ -98,17 +86,32 @@ namespace Karaboss.Themes
     public class ThemesList
     {
 
-        public string Name { get; set; }
+        //public string Name { get; set; }
 
 
         private ThemeItem Default = new ThemeItem()
         {
             Name = "Default",
+
             ActiveColor = "#00ACFF",
             HighlightColor = "#FFFF00",
             InactiveColor = "#FFFFFF",
+            ActiveBorderColor = "#010101",
+            InactiveBorderColor = "#8000FF",
+            
+            ActiveInstrumentalColor = "#808080",
 
-        };
+            BgColor = "#FCA903",
+
+            Grad0Color = "#48D1CC", //Color.MediumTurquoise,
+            Grad1Color = "#ADFF2F", //Color.GreenYellow,
+            Rhythm0Color = "#000000", //Color.Black,
+            Rhythm1Color = "#1E90FF", //Color.DodgerBlue,
+
+            InactiveChordColor = "#FF8C00",
+            HighlightChordColor = "#8B0000",
+
+        }; 
 
         public ThemesList()
         {            
@@ -219,122 +222,11 @@ namespace Karaboss.Themes
             }
         }
 
-
         public ThemeItem GetThemeByName(string Name)
         {
             ThemeItem thtarget = Themes.Where(z => z.Name == Name).FirstOrDefault();
             return thtarget;
-        }
-
-
-        /*
-        #region properties
-      
-        private static string file = string.Empty;
-        public static string File
-        {
-            get
-            {
-                if (file == "")
-                    file = "Themes.xml";
-                return file;
-            }
-            set
-            {
-                file = value;
-            }
-        }
-             
-        #endregion
-
-
-        private static Theme Default = new Theme("Default")
-        {            
-            ActiveColor = Color.FromArgb(255, 0, 172, 255),
-            HighlightColor = Color.FromArgb(255, 255, 255, 0),
-            InactiveColor = Color.FromArgb(255, 255, 255),
-            ActiveBorderColor = Color.FromArgb(255, 0, 0, 0),
-            InactiveBorderColor = Color.FromArgb(255, 128, 0, 255),
-            BgColor = Color.FromArgb(255, 252, 169, 3),
-            Grad0Color = Color.FromArgb(255, 72, 209, 204),
-            Grad1Color = Color.FromArgb(255, 173, 255, 47),
-            Rhythm0Color = Color.FromArgb(255, 0, 0, 0),
-            Rhythm1Color = Color.FromArgb(255, 30, 144, 255),
-            ActiveInstrumentalColor = Color.FromArgb(255, 128, 128, 128),
-            InactiveChordColor = Color.FromArgb(255, 128, 0, 255),
-            HighlightChordColor = Color.FromArgb(255, 255, 0, 0),
-
-        };       
-        
-        
-        public static List<Theme> AvailableThemes;
-
-
-        public static List<Theme> Load()
-        {
-            List<Theme> list = new List<Theme>();
-
-            return list;
-        }
-
-
-        public static int Count
-        {
-            get { return AvailableThemes.Count; }
-        }
-
-
-        public static bool ThemeExists(string themename)
-        {
-            Theme thtarget = AvailableThemes.Where(z => z.Name.Equals(themename)).FirstOrDefault();
-            return thtarget == null ? false : true;
-        }
-
-        public static Theme getTheme(string themename)
-        {
-            Theme thtarget = AvailableThemes.Where(z => z.Name == themename).FirstOrDefault();
-            return thtarget;
-        }
-
-
-        public static int SelectedIndex(Theme curItem)
-        {
-            return AvailableThemes.IndexOf(curItem);
-        }
-
-
-        public static void Add(Theme theme)
-        {
-            if (theme.Name == "Default")
-            {
-                MessageBox.Show("Default theme already exists", Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return;
-            }
-            AvailableThemes.Add(theme);
-            // Sort list with theme name
-            AvailableThemes.Sort();
-            
-        }
-
-        public static void Remove(Theme theme)
-        {
-            if (theme.Name == "Default")
-            {
-                MessageBox.Show("Default theme cannot be removed", Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return;
-            }
-            AvailableThemes.Remove(theme);
-        }
-
-        
-        public static void Clear()
-        {
-            AvailableThemes.Clear();
-            AvailableThemes.Add(Default);
-
-        }
-        */
-
+        }     
     }
 
     public class ThemesListEnum : IEnumerator
@@ -393,7 +285,6 @@ namespace Karaboss.Themes
 
     public class ThemesListHelper
     {
-
         #region properties
         /// <summary>
         /// Usual file
@@ -474,8 +365,6 @@ namespace Karaboss.Themes
             ThemeItem thtarget = tls.Where(z => z.Name.ToLower() == name).FirstOrDefault();
             return thtarget == null ? false : true;
         }
-
-
     }
 
 

@@ -122,25 +122,26 @@ namespace Karaboss
         #region Chords
 
         // Chord color
-        private Color _chordNextColor;
-        public Color ChordNextColor
+        private Color _InactiveChordColor;
+        public Color InactiveChordColor
         {
-            get { return _chordNextColor; }
+            get { return _InactiveChordColor; }
             set
             {
-                _chordNextColor = value;
-                pBox.InactiveChordColor = _chordNextColor;
+                _InactiveChordColor = value;
+                pBox.InactiveChordColor = _InactiveChordColor;
             }
         }
+
         // Chord highlight color
-        private Color _chordHighlightColor;
-        public Color ChordHighlightColor
+        private Color _HighlightchordColor;
+        public Color HighlightChordColor
         {
-            get { return _chordHighlightColor; }
+            get { return _HighlightchordColor; }
             set
             {
-                _chordHighlightColor = value;
-                pBox.HighlightChordColor = _chordHighlightColor;
+                _HighlightchordColor = value;
+                pBox.HighlightChordColor = _HighlightchordColor;
             }
         }
 
@@ -732,8 +733,9 @@ namespace Karaboss
             try
             {
 
+                // Load colors lyrics, backgrounds from current Theme
                 LoadColorsFromCurrentTheme();
-          
+                
 
                 // Karaoke display type
                 KaraokeDisplayType = Properties.Settings.Default.KaraokeDisplayType;               // setting this property set the karaokeEffect1.KaraokeDisplayType property
@@ -748,6 +750,9 @@ namespace Karaboss
                 pBox.KaraokeFont = _karaokeFont;
 
                 pBox.bShowParagraphs = Karaclass.m_ShowParagraph;
+
+                // Display chords ?
+                chkChords.Checked = Karaclass.m_ShowChords;
                 pBox.bShowChords = Karaclass.m_ShowChords;
 
                 // Force Uppercase
@@ -770,6 +775,7 @@ namespace Karaboss
                         DirSlideShow = Properties.Settings.Default.dirSlideShow;                        
                         OptionBackground = "Diaporama";
                         break;
+
                     case "SolidColor":
                         OptionBackground = "SolidColor";
                         break;
@@ -837,43 +843,44 @@ namespace Karaboss
 
             #endregion Retrieve theme
 
-
-            if (_currentTheme != null)
+            if (_currentTheme == null)
             {
-                #region Set colors of current theme
-
-                // Background colors
-                BgColor = Parse(Properties.Settings.Default.BgColor);
-
-                Grad0Color = Properties.Settings.Default.Grad0Color;
-                Grad1Color = Properties.Settings.Default.Grad1Color;
-                Rhythm0Color = Properties.Settings.Default.Rhythm0Color;
-                Rhythm1Color = Properties.Settings.Default.Rhythm1Color;
+                // If null (file themes.xml lost for ex) => Default
+                _currentTheme = _ThemesList.Themes[0];
+            }
+                                       
+                // Get colors from the current theme
+                #region Get colors from them
 
                 // Text colors
-                ActiveColor = Parse(_currentTheme.ActiveColor);             //Parse(Properties.Settings.Default.ActiveColor);
-                HighlightColor = Parse(_currentTheme.HighlightColor);       //Parse(Properties.Settings.Default.HighlightColor);
-                InactiveColor = Parse(_currentTheme.InactiveColor);         //Parse(Properties.Settings.Default.InactiveColor);
+                ActiveColor = Parse(_currentTheme.ActiveColor);             
+                HighlightColor = Parse(_currentTheme.HighlightColor);       
+                InactiveColor = Parse(_currentTheme.InactiveColor);         
+                ActiveBorderColor = Parse(_currentTheme.ActiveBorderColor);
+                InactiveBorderColor = Parse(_currentTheme.InactiveBorderColor);
+                
+                // Instrumental
+                ActiveInstrumentalColor = Parse(_currentTheme.ActiveInstrumentalColor);
 
+                // Static background
+                BgColor = Parse(_currentTheme.BgColor);
 
-                ActiveBorderColor = Parse(Properties.Settings.Default.ActiveBorderColor);
-                InactiveBorderColor = Parse(Properties.Settings.Default.InactiveBorderColor);
+                // Dynamic background
+                Grad0Color = Parse(_currentTheme.Grad0Color);
+                Grad1Color = Parse(_currentTheme.Grad1Color);
+                Rhythm0Color = Parse(_currentTheme.Rhythm0Color);
+                Rhythm1Color = Parse(_currentTheme.Rhythm1Color);
 
                 // Chords
-                _chordNextColor = Parse(Properties.Settings.Default.InactiveChordColor);
-                _chordHighlightColor = Parse(Properties.Settings.Default.HighlightChordColor);
-                chkChords.Checked = Karaclass.m_ShowChords;
+                InactiveChordColor = Parse(_currentTheme.InactiveChordColor);
+                HighlightChordColor = Parse(_currentTheme.HighlightChordColor);
 
-                // Instrumentals                
-                ActiveInstrumentalColor = Parse(Properties.Settings.Default.ActiveInstrumentalColor);
-
-                #endregion Set colors of current theme
-            }
-            else
-            {
-                MessageBox.Show("Theme not found for colors", Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error) ;
-            }
-
+                #endregion Get colors from theme                                              
+            
+            
+            
+              //  MessageBox.Show("Theme not found for colors", Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error) ;
+            
         }
 
 
@@ -1530,6 +1537,7 @@ namespace Karaboss
 
         #endregion panel events
 
+
         #endregion pnlWindow        
 
 
@@ -1541,6 +1549,9 @@ namespace Karaboss
         /// <exception cref="ArgumentException"></exception>
         public static Color Parse(string input)
         {
+            if (input == null)
+                return Color.Black;
+            
             input = input.Trim();
             string strColorRegex = @"^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$";
             Regex re = new Regex(strColorRegex);
