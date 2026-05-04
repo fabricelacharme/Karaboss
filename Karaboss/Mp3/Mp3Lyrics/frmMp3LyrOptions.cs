@@ -284,7 +284,7 @@ namespace Karaboss.Mp3
                 #endregion Layout
 
 
-                lblNumberOfLines.Visible = UpDownNbLines.Visible = true;
+
                 bProgressiveHighlight = Properties.Settings.Default.bProgressiveHighlight;
 
                 // Populate Combos with known colors

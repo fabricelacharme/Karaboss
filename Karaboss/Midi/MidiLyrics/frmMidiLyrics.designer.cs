@@ -218,12 +218,13 @@
             // 
             this.pBox.ActiveBorderColor = System.Drawing.Color.DarkTurquoise;
             this.pBox.ActiveColor = System.Drawing.Color.YellowGreen;
+            this.pBox.ActiveInstrumentalColor = System.Drawing.Color.Empty;
             this.pBox.BackColor = System.Drawing.Color.White;
-            this.pBox.bIsSettings = false;
             this.pBox.Beat = 200;
             this.pBox.BeatDuration = 0;
             this.pBox.bforceUppercase = false;
             this.pBox.BgColor = System.Drawing.Color.Black;
+            this.pBox.bIsSettings = false;
             this.pBox.BorderThick = 1;
             this.pBox.bShowChords = false;
             this.pBox.bShowParagraphs = true;
@@ -231,8 +232,10 @@
             this.pBox.ChordFont = new System.Drawing.Font("Comic Sans MS", 8.25F);
             this.pBox.CurrentTextPos = 2;
             this.pBox.CurrentTime = 3;
-            this.pBox.DirSlideShow = "C:\\Users\\Fabrice\\AppData\\Local\\Microsoft® Visual Studio®";
+            this.pBox.DirSlideShow = "";
             resources.ApplyResources(this.pBox, "pBox");
+            this.pBox.Duration = 0D;
+            this.pBox.FirstMelodyNoteTicksOn = 0;
             this.pBox.FrameType = "Frame1";
             this.pBox.FreqDirSlideShow = 0;
             this.pBox.Grad0Color = System.Drawing.Color.Empty;
@@ -254,9 +257,15 @@
             this.pBox.OptionBackground = "SolidColor";
             this.pBox.OptionDisplay = PicControl.pictureBoxControl.OptionsDisplay.Top;
             this.pBox.OptionShowChords = true;
+            this.pBox.Position = 0;
             this.pBox.Rhythm0Color = System.Drawing.Color.Empty;
             this.pBox.Rhythm1Color = System.Drawing.Color.Empty;
+            this.pBox.SingleImagePath = "";
             this.pBox.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Normal;
+            this.pBox.StepPercent = 0.01F;
+            this.pBox.timerIntervall = ((long)(50));
+            this.pBox.TotalTicks = 0;
+            this.pBox.TransitionEffect = PicControl.pictureBoxControl.TransitionEffects.None;
             this.pBox.TransparencyKey = System.Drawing.Color.Lime;
             // 
             // timer1

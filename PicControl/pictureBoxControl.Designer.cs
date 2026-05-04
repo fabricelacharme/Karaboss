@@ -47,6 +47,7 @@
             this.pBox.TabStop = false;
             this.pBox.Paint += new System.Windows.Forms.PaintEventHandler(this.pboxWnd_Paint);
             this.pBox.DoubleClick += new System.EventHandler(this.pboxWnd_DoubleClick);
+            this.pBox.MouseDown += new System.Windows.Forms.MouseEventHandler(this.pBox_MouseDown);
             this.pBox.Resize += new System.EventHandler(this.pboxWnd_Resize);
             // 
             // pictureBoxControl

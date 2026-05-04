@@ -324,10 +324,11 @@ namespace Karaboss
                             break;
                         }
                     }
-                }
+                }                
+
                 #endregion Layout
 
-                lblNumberOfLines.Visible = UpDownNbLines.Visible = true;
+
 
                 // Populate Combos with known colors
                 cboColor.DisplayKnownColors(cbGrad0);
@@ -421,7 +422,7 @@ namespace Karaboss
                 }
 
 
-                // Background
+                // Background (Image, Diaporama, SolidColor...)
                 #region Backgrounds
                 string bgOption = Properties.Settings.Default.BackGroundOption;
 

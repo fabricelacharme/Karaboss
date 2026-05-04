@@ -48,7 +48,9 @@ namespace PicControl
 {
 
     public delegate void DoubleClickEventHandler(object sender, EventArgs e);
-
+    public delegate void CloseEventHandler(object sender, EventArgs e);
+    public delegate void FullScreenEventHandler(object sender, EventArgs e);
+    public delegate void OptionsEventHandler(object sender, EventArgs e);
     
     public partial class pictureBoxControl : UserControl, IMessageFilter, IDisposable
     {
@@ -74,7 +76,14 @@ namespace PicControl
         #endregion
 
 
+        #region Events
+        
         public new event DoubleClickEventHandler DoubleClick;
+        public event CloseEventHandler Close;
+        public event FullScreenEventHandler FullScreen;
+        public event OptionsEventHandler Options;
+
+        #endregion Events
 
         #region classes
 
@@ -911,7 +920,7 @@ namespace PicControl
 
         #region Others
 
-        //private float[] LinesLengths;
+        private ContextMenu picContextMenu;
 
         public ImageLayout imgLayout { get; set; }
         public Image m_CurrentImage { get; set; }
@@ -6304,8 +6313,55 @@ namespace PicControl
             Dispose(false);
         }
 
+
         #endregion Dispose
 
-      
+
+        #region Context menu
+        private void pBox_MouseDown(object sender, MouseEventArgs e)
+        {
+            if (_bIsSettings) return;
+            
+            
+            if (e.Button == MouseButtons.Right)
+            {
+                picContextMenu = new ContextMenu();
+                picContextMenu.MenuItems.Clear();
+
+                // Close
+                MenuItem mnuClose = new MenuItem("Close");
+                mnuClose.Click += new System.EventHandler(this.mnuClose_Click);                
+                picContextMenu.MenuItems.Add(mnuClose);
+
+                // Full screen
+                MenuItem mnuFullScreen = new MenuItem("FullScreen");
+                mnuFullScreen.Click += new System.EventHandler(this.mnuFullScreen_Click);
+                picContextMenu.MenuItems.Add(mnuFullScreen);
+
+                // Options
+                MenuItem mnuOptions = new MenuItem("Options");
+                mnuOptions.Click += new System.EventHandler(this.mnuOptions_Click);
+                picContextMenu.MenuItems.Add(mnuOptions);
+
+                this.ContextMenu = picContextMenu;
+            }
+        }
+
+        private void mnuOptions_Click(object sender, EventArgs e)
+        {
+            Options?.Invoke(this, e);
+        }
+
+        private void mnuFullScreen_Click(object sender, EventArgs e)
+        {
+            FullScreen?.Invoke(this, e);
+        }
+
+        private void mnuClose_Click(object sender, EventArgs e)
+        {
+            Close?.Invoke(this, e);
+        }
+
+        #endregion Context menu
     }
 }

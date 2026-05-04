@@ -35,6 +35,7 @@
 using kar;
 using Karaboss.MidiLyrics;
 using Karaboss.Themes;
+using PicControl;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -77,7 +78,6 @@ namespace Karaboss
         private ThemesListHelper _ThListHelper = new ThemesListHelper();
         private ThemesList _ThemesList; // = new ThemesList();
         private ThemeItem _currentTheme; // = new ThemeItem();
-
 
         #endregion Themes
 
@@ -681,10 +681,16 @@ namespace Karaboss
             controlsToMove.Add(this.lblTittle);
 
             #endregion
-            
 
-            this.pBox.DoubleClick += new PicControl.DoubleClickEventHandler(pBox_DoubleClick);
 
+            #region Events
+
+            this.pBox.DoubleClick += new DoubleClickEventHandler(pBox_DoubleClick);
+            this.pBox.Close += new CloseEventHandler(pBox_Close);
+            this.pBox.FullScreen += new FullScreenEventHandler(pBox_FullScreen);
+            this.pBox.Options += new OptionsEventHandler(pBox_Options);
+
+            #endregion Events
 
             // colours for text, chords, number of lines etc...
             LoadOptions();
@@ -692,6 +698,9 @@ namespace Karaboss
             AddMouseMoveHandler(this);
         }
 
+       
+
+        #region Events
         private void pBox_DoubleClick(object sender, EventArgs e)
         {
             if (WindowState == FormWindowState.Maximized)
@@ -699,6 +708,29 @@ namespace Karaboss
             else WindowState = FormWindowState.Maximized;
         }
 
+        private void pBox_Options(object sender, EventArgs e)
+        {
+            Cursor.Current = Cursors.WaitCursor;
+
+            if (Application.OpenForms.OfType<frmLyrOptions>().Count() == 0)
+            {
+                frmLyrOptions frmLyrOptions = new frmLyrOptions();
+                frmLyrOptions.Show();
+            }
+        }
+
+        private void pBox_FullScreen(object sender, EventArgs e)
+        {
+            WindowState = FormWindowState.Maximized;
+        }
+
+        private void pBox_Close(object sender, EventArgs e)
+        {
+            Close();
+        }
+
+
+        #endregion Events
 
 
         #region Themes Color
@@ -732,7 +764,6 @@ namespace Karaboss
         {
             try
             {
-
                 // Load colors lyrics, backgrounds from current Theme
                 LoadColorsFromCurrentTheme();
                 
@@ -761,6 +792,7 @@ namespace Karaboss
                 // show balls
                 bShowBalls = Karaclass.m_DisplayBalls;
 
+                #region Backgrounds
                 string bgOption = Properties.Settings.Default.BackGroundOption;
                 switch (bgOption)
                 {
@@ -796,7 +828,9 @@ namespace Karaboss
                         OptionBackground = "Diaporama";
                         break;
                 }
-                
+                #endregion Backgrounds
+
+
 
                 switch (Properties.Settings.Default.LyricsOptionDisplay)
                 {
@@ -1438,8 +1472,7 @@ namespace Karaboss
 
             if (Application.OpenForms.OfType<frmLyrOptions>().Count() == 0)
             {
-                frmLyrOptions frmLyrOptions = new frmLyrOptions();
-                //frmLyrOptions.ShowDialog();
+                frmLyrOptions frmLyrOptions = new frmLyrOptions();                
                 frmLyrOptions.Show();
             }
         }

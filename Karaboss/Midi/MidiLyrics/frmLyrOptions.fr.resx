@@ -205,6 +205,12 @@
   <data name="chkTopMost.Text" xml:space="preserve">
     <value>Fenêtre des paroles toujours visible</value>
   </data>
+  <data name="grpBoxBackGround.Font" type="System.Drawing.Font, System.Drawing">
+    <value>Microsoft Sans Serif, 8.25pt</value>
+  </data>
+  <data name="grpBoxBackGround.Text" xml:space="preserve">
+    <value>Arrière plan</value>
+  </data>
   <data name="radioRhythm.Size" type="System.Drawing.Size, System.Drawing">
     <value>67, 17</value>
   </data>
@@ -216,12 +222,6 @@
   </data>
   <data name="radioGradient.Text" xml:space="preserve">
     <value>Gradient couleur</value>
-  </data>
-  <data name="grpBoxBackGround.Font" type="System.Drawing.Font, System.Drawing">
-    <value>Microsoft Sans Serif, 8.25pt</value>
-  </data>
-  <data name="grpBoxBackGround.Text" xml:space="preserve">
-    <value>Arrière plan</value>
   </data>
   <data name="label9.Size" type="System.Drawing.Size, System.Drawing">
     <value>114, 13</value>
@@ -280,14 +280,23 @@
   <data name="label12.Text" xml:space="preserve">
     <value>Position verticale</value>
   </data>
+  <data name="grpBoxKaraokeType.Text" xml:space="preserve">
+    <value>Disposition</value>
+  </data>
   <data name="label1.Size" type="System.Drawing.Size, System.Drawing">
     <value>101, 14</value>
   </data>
   <data name="label1.Text" xml:space="preserve">
     <value>Type de karaoké :</value>
   </data>
+  <data name="label5.Size" type="System.Drawing.Size, System.Drawing">
+    <value>75, 13</value>
+  </data>
+  <data name="label5.Text" xml:space="preserve">
+    <value>Couleur active</value>
+  </data>
   <data name="btnSaveTheme.Text" xml:space="preserve">
-    <value>Sauver</value>
+    <value>Enregistrer</value>
   </data>
   <data name="btnDeleteTheme.Text" xml:space="preserve">
     <value>Supprimer</value>

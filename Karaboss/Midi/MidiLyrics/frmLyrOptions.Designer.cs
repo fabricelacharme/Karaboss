@@ -943,7 +943,7 @@
             this.pBox.ChordFont = new System.Drawing.Font("Comic Sans MS", 8.25F);
             this.pBox.CurrentTextPos = 2;
             this.pBox.CurrentTime = 30;
-            this.pBox.DirSlideShow = "C:\\Users\\Fabrice\\AppData\\Local\\Microsoft® Visual Studio®";
+            this.pBox.DirSlideShow = "";
             this.pBox.Duration = 0D;
             this.pBox.FirstMelodyNoteTicksOn = 0;
             this.pBox.FrameType = "Frame1";

@@ -29,7 +29,7 @@
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmMp3LyrOptions));
-            kar.kLyrics kLyrics1 = new kar.kLyrics();
+            kar.kLyrics kLyrics2 = new kar.kLyrics();
             this.picBgColor = new System.Windows.Forms.PictureBox();
             this.radioTransparent = new System.Windows.Forms.RadioButton();
             this.radioSolidColor = new System.Windows.Forms.RadioButton();
@@ -718,8 +718,8 @@
             this.karaokeEffect1.InactiveColor = System.Drawing.Color.White;
             this.karaokeEffect1.KaraokeDisplayType = kar.KaraokeDisplayTypes.FixedLines;
             this.karaokeEffect1.KaraokeFont = new System.Drawing.Font("Comic Sans MS", 61.33333F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel);
-            kLyrics1.Lines = ((System.Collections.Generic.List<kar.kLine>)(resources.GetObject("kLyrics1.Lines")));
-            this.karaokeEffect1.KLyrics = kLyrics1;
+            kLyrics2.Lines = ((System.Collections.Generic.List<kar.kLine>)(resources.GetObject("kLyrics2.Lines")));
+            this.karaokeEffect1.KLyrics = kLyrics2;
             resources.ApplyResources(this.karaokeEffect1, "karaokeEffect1");
             this.karaokeEffect1.m_CurrentImage = null;
             this.karaokeEffect1.m_DisplayRectangle = new System.Drawing.Rectangle(0, 0, 0, 0);
@@ -730,6 +730,7 @@
             this.karaokeEffect1.Position = 0;
             this.karaokeEffect1.Rhythm0Color = System.Drawing.Color.Empty;
             this.karaokeEffect1.Rhythm1Color = System.Drawing.Color.Empty;
+            this.karaokeEffect1.SingleImagePath = "";
             this.karaokeEffect1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Normal;
             this.karaokeEffect1.StepPercent = 0.01F;
             this.karaokeEffect1.timerIntervall = ((long)(50));

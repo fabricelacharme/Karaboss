@@ -34,6 +34,7 @@
 
 using kar;
 using Karaboss.Mp3.Mp3Lyrics;
+using Karaboss.Themes;
 using keffect;
 using System;
 using System.Collections.Generic;
@@ -64,6 +65,15 @@ namespace Karaboss.Mp3
         private Point Mouselocation;
 
         #endregion
+
+
+        #region Themes
+
+        private ThemesListHelper _ThListHelper = new ThemesListHelper();
+        private ThemesList _ThemesList; // = new ThemesList();
+        private ThemeItem _currentTheme; // = new ThemeItem();
+
+        #endregion Themes
 
 
         #region balls
@@ -449,6 +459,20 @@ namespace Karaboss.Mp3
 
         #region dirslideshow
 
+        private string _SingleImagePath;
+        public string SingleImagePath
+        {
+            get => _SingleImagePath;
+            set
+            {
+                if (System.IO.File.Exists(value))
+                {
+                    _SingleImagePath = value;
+                    karaokeEffect1.SingleImagePath = _SingleImagePath;
+                }
+            }
+        }
+
         private bool _allowModifyDirSlideShow = true;
         public bool AlloModifyDirSlideShow
         {
@@ -576,9 +600,16 @@ namespace Karaboss.Mp3
 
             #endregion
 
+
+            #region Events
+
             karaokeEffect1.DoubleClick += new DoubleClickEventHandler(karaokeEffect1_DoubleClick);
-            
-                                  
+            this.karaokeEffect1.Close += new CloseEventHandler(karaokeEffect1_Close);
+            this.karaokeEffect1.FullScreen += new FullScreenEventHandler(karaokeEffect1_FullScreen);
+            this.karaokeEffect1.Options += new OptionsEventHandler(karaokeEffect1_Options);
+
+            #endregion Events
+
             LoadOptions();                        
 
             AddMouseMoveHandler(this);
@@ -594,7 +625,49 @@ namespace Karaboss.Mp3
             else WindowState = FormWindowState.Maximized;
         }
 
+        private void karaokeEffect1_Options(object sender, EventArgs e)
+        {
+            Cursor.Current = Cursors.WaitCursor;
+
+            if (Application.OpenForms.OfType<frmMp3LyrOptions>().Count() == 0)
+            {
+                frmMp3LyrOptions frmMp3LyrOptions = new frmMp3LyrOptions();
+                frmMp3LyrOptions.Show();
+            }
+        }
+
+        private void karaokeEffect1_FullScreen(object sender, EventArgs e)
+        {
+            WindowState = FormWindowState.Maximized;
+        }
+
+        private void karaokeEffect1_Close(object sender, EventArgs e)
+        {
+            Close();
+        }
+
         #endregion Events
+
+
+        #region Themes Color
+
+        private ThemesList LoadThemes()
+        {
+            try
+            {
+                string fileName = Karaclass.GetThemesListFile(_ThListHelper.File);
+                _ThListHelper.File = fileName;
+                return _ThListHelper.Load(fileName);
+
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return null;
+            }
+        }
+
+        #endregion Themes Color
 
 
         #region initializations
@@ -606,6 +679,10 @@ namespace Karaboss.Mp3
         {
             try
             {
+                // Load colors lyrics, backgrounds from current Theme
+                LoadColorsFromCurrentTheme();
+
+
                 // Karaoke display type
                 KaraokeDisplayType = Properties.Settings.Default.KaraokeDisplayType;               // setting this property set the karaokeEffect1.KaraokeDisplayType property
 
@@ -617,7 +694,10 @@ namespace Karaboss.Mp3
                 ftName = Properties.Settings.Default.KaraokeFontName;
                 _karaokeFont = new Font(ftName, ftSize, FontStyle.Regular, GraphicsUnit.Pixel);                
                 karaokeEffect1.KaraokeFont = _karaokeFont;
-                
+
+                karaokeEffect1.bShowParagraphs = Karaclass.m_ShowParagraph;
+
+
                 // Progressive highlight
                 bProgressiveHighlight = Properties.Settings.Default.bProgressiveHighlight;
 
@@ -627,9 +707,14 @@ namespace Karaboss.Mp3
                 // show balls
                 bShowBalls = Karaclass.m_DisplayBalls;
 
+                #region Backgrounds
                 string bgOption = Properties.Settings.Default.BackGroundOption;
                 switch (bgOption)
                 {
+                    case "Image":
+                        SingleImagePath = Properties.Settings.Default.SingleImagePath;
+                        OptionBackground = "Image";
+                        break;
 
                     case "Diaporama":
                         OptionBackground = "Diaporama";
@@ -654,7 +739,9 @@ namespace Karaboss.Mp3
                         OptionBackground = "Diaporama";
                         break;                   
                 }
-                OptionBackground = _optionbackground;
+                //OptionBackground = _optionbackground;
+                #endregion Backgrounds
+
 
                 switch (Properties.Settings.Default.LyricsOptionDisplay)
                 {
@@ -675,23 +762,6 @@ namespace Karaboss.Mp3
 
                 bTextBackGround = Properties.Settings.Default.bLyricsBackGround;
 
-                // Background                
-                BgColor = Parse(Properties.Settings.Default.BgColor);
-
-                Grad0Color = Properties.Settings.Default.Grad0Color;
-                Grad1Color = Properties.Settings.Default.Grad1Color;
-                Rhythm0Color = Properties.Settings.Default.Rhythm0Color;
-                Rhythm1Color = Properties.Settings.Default.Rhythm1Color;
-
-                // Text colors
-                InactiveColor = Parse(Properties.Settings.Default.InactiveColor);
-                HighlightColor = Parse(Properties.Settings.Default.HighlightColor);
-                ActiveColor = Parse(Properties.Settings.Default.ActiveColor);
-                ActiveBorderColor = Parse(Properties.Settings.Default.ActiveBorderColor);
-                InactiveBorderColor = Parse(Properties.Settings.Default.InactiveBorderColor);
-
-                // Instrumentals                
-                ActiveInstrumentalColor = Parse(Properties.Settings.Default.ActiveInstrumentalColor);
 
                 // Number of Lines to display
                 nbLyricsLines = Properties.Settings.Default.TxtNbLines;
@@ -715,7 +785,63 @@ namespace Karaboss.Mp3
             }
         }
 
-      
+
+        private void LoadColorsFromCurrentTheme()
+        {
+            #region Retrieve theme
+
+            // Load all available color themes
+            _ThemesList = LoadThemes();
+
+            // Load default Theme name
+            string currentThemeName = Properties.Settings.Default.Theme;
+
+            // Retrieve Theme from ThList with its name
+            _currentTheme = _ThemesList.GetThemeByName(currentThemeName);
+
+            #endregion Retrieve theme
+            
+            if (_currentTheme == null)
+            {
+                // If null (file themes.xml lost for ex) => Default
+                _currentTheme = _ThemesList.Themes[0];
+            }
+
+            // Get colors from the current theme
+            #region Get colors from them
+
+            // Text colors
+            ActiveColor = Parse(_currentTheme.ActiveColor);
+            HighlightColor = Parse(_currentTheme.HighlightColor);
+            InactiveColor = Parse(_currentTheme.InactiveColor);
+            ActiveBorderColor = Parse(_currentTheme.ActiveBorderColor);
+            InactiveBorderColor = Parse(_currentTheme.InactiveBorderColor);
+
+            // Instrumental
+            ActiveInstrumentalColor = Parse(_currentTheme.ActiveInstrumentalColor);
+
+            // Static background
+            BgColor = Parse(_currentTheme.BgColor);
+
+            // Dynamic background
+            Grad0Color = Parse(_currentTheme.Grad0Color);
+            Grad1Color = Parse(_currentTheme.Grad1Color);
+            Rhythm0Color = Parse(_currentTheme.Rhythm0Color);
+            Rhythm1Color = Parse(_currentTheme.Rhythm1Color);
+
+            // Chords
+            //InactiveChordColor = Parse(_currentTheme.InactiveChordColor);
+            //HighlightChordColor = Parse(_currentTheme.HighlightChordColor);
+
+            #endregion Get colors from theme                                              
+
+
+
+            //  MessageBox.Show("Theme not found for colors", Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error) ;
+
+        }
+
+
         #endregion initializations
 
 
