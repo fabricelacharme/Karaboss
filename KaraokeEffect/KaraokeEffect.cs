@@ -258,8 +258,29 @@ namespace keffect
 
         #region SlideShow
 
-        // Paths of images
-        private string[] m_ImageFilePaths;
+        private string[] bgFiles;
+
+        /// <summary>
+        /// Display a single image as background
+        /// </summary>
+        private string _SingleImagePath = string.Empty;
+        public string SingleImagePath
+        {
+            get => _SingleImagePath;
+            set
+            {
+                if (File.Exists(value) && value != _SingleImagePath)
+                {
+                    _SingleImagePath = value;
+                    SetImageBackground(_SingleImagePath);
+                    pBox.Invalidate();
+                }
+            }
+        }
+
+
+        // Paths of images        
+        private List<string> m_ImageFilePaths;
 
         private string DefaultDirSlideShow;
         public Rectangle m_DisplayRectangle { get; set; }
@@ -637,6 +658,11 @@ namespace keffect
 
                 switch (_optionbackground)
                 {
+                    case "Image":
+                        SetImageBackground(_SingleImagePath);
+                        pBox.Invalidate();
+                        break;
+
                     case "Diaporama":
                         break;
                     
@@ -875,6 +901,89 @@ namespace keffect
         #endregion Timer gradient
 
 
+        #region Public methods
+
+        public void SetImageBackground(string ImagePath)
+        {
+            try
+            {
+                if (!File.Exists(ImagePath))
+                {
+                    pBox.BackColor = Color.Black;
+                    return;
+                }
+
+
+                m_ImageFilePaths.Clear();
+                m_ImageFilePaths.Add(ImagePath);
+                m_CurrentImage = Image.FromFile(m_ImageFilePaths[0]);
+
+            }
+            catch (Exception e)
+            {
+                Console.Write("Error: " + e.Message);
+            }
+        }
+
+        /// <summary>
+        /// Define new slideShow directory and frequency
+        /// </summary>
+        /// <param name="dirImages"></param>
+        public void SetDirectoryBackground(string dirImages)
+        {
+            if (dirImages == null || !Directory.Exists(dirImages))
+            {
+                pBox.BackColor = Color.Black;
+                return;
+            }
+
+            try
+            {
+                //m_CurrentImage = null;
+                pBox.Image = null;
+                pBox.Invalidate();
+
+                m_ImageFilePaths.Clear();                
+                m_BitmapsArray = new Bitmap[] { };
+
+                if (dirImages == null)
+                {
+                    pBox.BackColor = Color.Black;
+                }
+                else if (Directory.Exists(dirImages))
+                {
+                    int C = 0;
+
+                    if (_optionbackground == "Diaporama")
+                    {
+                        LoadImageList(dirImages);
+                        C = m_BitmapsArray.Length;
+                    }
+
+                    switch (C)
+                    {
+                        case 0:
+                            // No image, just background color                            
+                            break;
+                        case 1:
+                            // Single image                            
+                            //pBox.Image = m_BitmapsArray[0]; //  Image.FromFile(m_ImageFilePaths[0]);
+                            m_CurrentImage = Image.FromFile(m_ImageFilePaths[0]);
+                            break;
+                        default:
+                            InitSlideShow();
+                            break;
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("Error: " + e.Message);
+            }
+
+        }
+
+
         #region Move Window
 
         /// <summary>
@@ -898,11 +1007,114 @@ namespace keffect
         #endregion Move Window
 
 
+        #endregion Public methods
+
+
+        #region SlideShow with timer 
+
+        // New Slideshow
+        private void InitSlideShow()
+        {
+            mBlend = 0;
+            count = 0;
+
+            timerChangeImage?.Dispose();
+            timerChangeImage = new System.Timers.Timer();
+            timerChangeImage.Interval = _freqdirslideshow * 1000;
+            timerChangeImage.Elapsed += (sender, e) => OnTimerChangeImage();
+
+            timerTransition?.Dispose();
+            timerTransition = new System.Timers.Timer();
+            timerTransition.Interval = 50;
+            timerTransition.Elapsed += (sender, e) => OnTimerTransition();
+
+            try
+            {
+                Image1 = m_BitmapsArray[count];
+                Image2 = m_BitmapsArray[++count];
+            }
+            catch
+            {
+
+            }
+            timerTransition.Enabled = false;
+            timerChangeImage.Enabled = true;
+        }
+
+        private void OnTimerTransition()
+        {
+            mBlend += mDir * 0.02F;
+
+            if (mBlend > 1)
+            {
+                // When mBlend is greater than 1, we change the images
+                // and stop the timer "timerTransition" to prevent a new change before time elapse of "timerChangeImage"
+                mBlend = 0.0F;
+
+
+                if ((count + 1) < m_BitmapsArray.Length)
+                {
+                    Image1 = m_BitmapsArray[count];
+                    Image2 = m_BitmapsArray[++count];
+                }
+                else
+                {
+                    Image1 = m_BitmapsArray[count];
+                    Image2 = m_BitmapsArray[0];
+                    count = 0;
+                }
+
+                timerTransition.Enabled = false;
+            }
+
+            m_Blend = mBlend;
+        }
+
+        private void OnTimerChangeImage()
+        {
+            timerTransition.Enabled = true;
+        }
+
+
+        #region SlideShow functions
+
+        private void LoadImageList(string dir)
+        {
+
+            // Add to m_ImageFilePaths string array the list of paths of images in the directory
+            bgFiles = Directory.GetFiles(@dir, "*.jpg");
+
+            m_ImageFilePaths.Clear();
+            for (int i = 0; i < bgFiles.Length; ++i)
+            {
+                string file = bgFiles[i];
+                m_ImageFilePaths.Add(file);
+            }
+
+            count = 0;
+
+            // Add to m_BitmapsArray array the list of images in the directory
+            // Initialize the array of images with the size of the number of images in the directory
+            m_BitmapsArray = new Bitmap[bgFiles.Length];
+            for (int i = 0; i < bgFiles.Length; ++i)
+            {
+                m_BitmapsArray[i] = new Bitmap(bgFiles[i]);
+            }
+
+        }
+
+        #endregion SlideShow functions
+
+
+        #endregion SlideShow with timer   
+
+
+
         #region Initializations
 
         private void SetDefaultValues()
         {
-            m_ImageFilePaths = new string[] { };
+            m_ImageFilePaths = new List<string>();
             m_BitmapsArray = new Bitmap[] { };
 
             sf = new StringFormat(StringFormat.GenericTypographic) { FormatFlags = StringFormatFlags.MeasureTrailingSpaces };            
@@ -1386,7 +1598,21 @@ namespace keffect
 
             switch (_optionbackground)
             {
-
+                case "Image":
+                    if (m_CurrentImage != null)
+                    {
+                        try
+                        {
+                            m_DisplayRectangle = GetRectangleForSizeMode(m_CurrentImage.Width, m_CurrentImage.Height);
+                            e.Graphics.DrawImage(m_CurrentImage, m_DisplayRectangle, 0, 0, m_CurrentImage.Width, m_CurrentImage.Height, GraphicsUnit.Pixel);
+                        }
+                        catch (Exception dr)
+                        {
+                            Console.Write("Error drawing image: " + dr.Message);
+                        }
+                    }
+                    break;
+                
                 case "SolidColor":
                     e.Graphics.FillRectangle(new SolidBrush(_BgColor), new Rectangle(0, 0, this.Width, this.Height));
                     break;
@@ -5134,152 +5360,7 @@ namespace keffect
         #endregion start stop
 
 
-        #region SlideShow
-
-        private void LoadImageList(string dir)
-        {
-
-            // Add to m_ImageFilePaths string array the list of paths of images in the directory
-            m_ImageFilePaths = Directory.GetFiles(@dir, "*.jpg");           
-
-            count = 0;
-            //mBlend = 0.0F;
-
-            // Add to m_BitmapsArray array the list of images in the directory
-            // Initialize the array of images with the size of the number of images in the directory
-            m_BitmapsArray = new Bitmap[m_ImageFilePaths.Length];
-            for (int i = 0; i < m_ImageFilePaths.Length; ++i)
-            {
-                m_BitmapsArray[i] = new Bitmap(m_ImageFilePaths[i]);
-            }
-
-        }
-
-        /// <summary>
-        /// Define new slideShow directory and frequency
-        /// </summary>
-        /// <param name="dirImages"></param>
-        public void SetBackground(string dirImages)
-        {
-            if (dirImages == null || !Directory.Exists(dirImages))
-            {
-                pBox.BackColor = Color.Black;
-                return;
-            }
-            
-            try
-            {
-                m_CurrentImage = null;
-                pBox.Image = null;
-                pBox.Invalidate();                
-                                
-                m_ImageFilePaths = new string[] { };
-                m_BitmapsArray = new Bitmap[] { };
-
-                if (dirImages == null)
-                {
-                    pBox.BackColor = Color.Black;
-                }
-                else if (Directory.Exists(dirImages))
-                {
-                    int C = 0;
-
-                    if (_optionbackground == "Diaporama")
-                    {
-                        LoadImageList(dirImages);                        
-                        C = m_BitmapsArray.Length;
-                    }
-
-                    switch (C)
-                    {
-                        case 0:
-                            // No image, just background color                            
-                            break;
-                        case 1:
-                            // Single image                            
-                            pBox.Image = m_BitmapsArray[0]; //  Image.FromFile(m_ImageFilePaths[0]);
-                            break;
-                        default:                            
-                            InitSlideShow();
-                            break;
-                    }
-                }
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine("Error: " + e.Message);
-            }
-
-        }
-
-        #region SlideShow with timer 
-
-        // New Slideshow
-        private void InitSlideShow()
-        {
-            mBlend = 0;
-            count = 0;
-
-            timerChangeImage?.Dispose();
-            timerChangeImage = new System.Timers.Timer();
-            timerChangeImage.Interval = _freqdirslideshow * 1000;
-            timerChangeImage.Elapsed += (sender, e) => OnTimerChangeImage();
-
-            timerTransition?.Dispose();
-            timerTransition = new System.Timers.Timer();
-            timerTransition.Interval = 50;
-            timerTransition.Elapsed += (sender, e) => OnTimerTransition();
-
-            try
-            {
-                Image1 = m_BitmapsArray[count];
-                Image2 = m_BitmapsArray[++count];
-            }
-            catch
-            {
-
-            }
-            timerTransition.Enabled = false;
-            timerChangeImage.Enabled = true;
-        }
-
-        private void OnTimerTransition()
-        {
-            mBlend += mDir * 0.02F;
-
-            if (mBlend > 1)
-            {
-                // When mBlend is greater than 1, we change the images
-                // and stop the timer "timerTransition" to prevent a new change before time elapse of "timerChangeImage"
-                mBlend = 0.0F;
-
-
-                if ((count + 1) < m_BitmapsArray.Length)
-                {
-                    Image1 = m_BitmapsArray[count];
-                    Image2 = m_BitmapsArray[++count];
-                }
-                else
-                {
-                    Image1 = m_BitmapsArray[count];
-                    Image2 = m_BitmapsArray[0];
-                    count = 0;
-                }
-
-                timerTransition.Enabled = false;
-            }
-
-            m_Blend = mBlend;
-        }
-
-        private void OnTimerChangeImage()
-        {
-            timerTransition.Enabled = true;
-        }
-
-        #endregion SlideShow with timer   
-
-        #endregion SlideShow
+       
 
 
         #region Terminate
@@ -5289,7 +5370,7 @@ namespace keffect
         /// </summary>
         public void Terminate()
         {
-            m_ImageFilePaths = new string[] { };
+            m_ImageFilePaths = new List<string>();
             m_BitmapsArray = new Bitmap[] { };
 
             timerChangeImage?.Stop();

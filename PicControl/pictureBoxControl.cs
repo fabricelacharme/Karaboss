@@ -300,7 +300,7 @@ namespace PicControl
             get { return mBlend; }
             set { mBlend = value; Invalidate(); }
         }
-        private Bitmap[] pictures;
+        private Bitmap[] m_BitmapsArray;
 
         #endregion slideshow
 
@@ -1560,7 +1560,6 @@ namespace PicControl
         #endregion Initializations
 
 
-
         #region Timer gradient
         private void _timerGradient_Tick(object sender, EventArgs e)
         {
@@ -1653,6 +1652,7 @@ namespace PicControl
 
                 pBox.Image = null;
                 pBox.Invalidate();
+
                 m_ImageFilePaths.Clear();
 
                 if (dirImages == null)
@@ -1666,7 +1666,7 @@ namespace PicControl
                     if (_optionbackground == "Diaporama")
                     {
                         LoadImageList(dirImages);                                                
-                        C = pictures.Length;
+                        C = m_BitmapsArray.Length;
                     }
 
                     switch (C)
@@ -2064,8 +2064,8 @@ namespace PicControl
 
             try
             {
-                Image1 = pictures[count];
-                Image2 = pictures[++count];
+                Image1 = m_BitmapsArray[count];
+                Image2 = m_BitmapsArray[++count];
             }
             catch (Exception ex) 
             {
@@ -2085,15 +2085,15 @@ namespace PicControl
                 // and stop the timer "timerTransition" to prevent a new change before time elapse of "timerChangeImage"
                 mBlend = 0.0F;
 
-                if ((count + 1) < pictures.Length)
+                if ((count + 1) < m_BitmapsArray.Length)
                 {
-                    Image1 = pictures[count];
-                    Image2 = pictures[++count];
+                    Image1 = m_BitmapsArray[count];
+                    Image2 = m_BitmapsArray[++count];
                 }
-                else if (count < pictures.Length)
+                else if (count < m_BitmapsArray.Length)
                 {
-                    Image1 = pictures[count];
-                    Image2 = pictures[0];
+                    Image1 = m_BitmapsArray[count];
+                    Image2 = m_BitmapsArray[0];
                     count = 0;
                 }
 
@@ -2118,6 +2118,7 @@ namespace PicControl
         {
 
             bgFiles = Directory.GetFiles(@dir, "*.jpg");
+            
             m_ImageFilePaths.Clear();
             for (int i = 0; i < bgFiles.Length; ++i)
             {
@@ -2127,13 +2128,12 @@ namespace PicControl
 
 
             // new slideshow
-
             count = 0;
-            //mBlend = 0.0F;
-            pictures = new Bitmap[bgFiles.Length];
+            
+            m_BitmapsArray = new Bitmap[bgFiles.Length];
             for (int i = 0; i < bgFiles.Length; ++i)
             {
-                pictures[i] = new Bitmap(bgFiles[i]);
+                m_BitmapsArray[i] = new Bitmap(bgFiles[i]);
             }
 
         }
@@ -3243,7 +3243,7 @@ namespace PicControl
                     break;
 
                 case "Diaporama":                                                                             
-                    if (pictures != null && pictures.Length == 1)
+                    if (m_BitmapsArray != null && m_BitmapsArray.Length == 1)
                     {                        
                         if (m_CurrentImage != null)
                         {                            

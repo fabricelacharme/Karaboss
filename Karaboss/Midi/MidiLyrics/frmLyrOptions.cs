@@ -243,7 +243,6 @@ namespace Karaboss
 
 
         #region Themes Color
-
         private ThemesList LoadThemes()
         {
             try
@@ -328,7 +327,9 @@ namespace Karaboss
                 }
                 #endregion Layout
 
+                lblNumberOfLines.Visible = UpDownNbLines.Visible = true;
 
+                // Populate Combos with known colors
                 cboColor.DisplayKnownColors(cbGrad0);
                 cboColor.DisplayKnownColors(cbGrad1);
                 cboColor.DisplayKnownColors(cbRhythm0);
@@ -411,7 +412,7 @@ namespace Karaboss
                         break;
                 }
 
-
+                // Display single image
                 SingleImagePath = Properties.Settings.Default.SingleImagePath;
                 if (File.Exists(SingleImagePath))
                 {
@@ -455,7 +456,7 @@ namespace Karaboss
 
                 freqSlideShow = Properties.Settings.Default.freqSlideShow;
 
-
+                #region SizeMode
                 switch (Properties.Settings.Default.SizeMode)
                 {
                     case PictureBoxSizeMode.Normal:
@@ -479,6 +480,7 @@ namespace Karaboss
                         cbSizeMode.Text = "Zoom";
                         break;
                 }
+                #endregion SizeMode
             }
             catch (Exception e)
             {
@@ -573,7 +575,9 @@ namespace Karaboss
                 // Display balls
                 Properties.Settings.Default.DisplayBalls = Karaclass.m_DisplayBalls;
 
-                
+                // Background option (Image, diaporama, transperent, gradient etc...)
+                Properties.Settings.Default.BackGroundOption = bgOption;
+
                 // Font                
                 Properties.Settings.Default.KaraokeFontName = ftName;
 
@@ -638,12 +642,7 @@ namespace Karaboss
                 // Save colors of lyrics, backgrounds, chords in themes (not if theme Default is active)
                 ThemeItem item = _ThemesList.GetThemeByName(cbTheme.SelectedItem.ToString());
                 if (item != null && item.Name != "Default")
-                    SaveTheme();
-
-                
-                // Background option (Image, diaporama, transperent, gradient etc...)
-                Properties.Settings.Default.BackGroundOption = bgOption;
-
+                    SaveTheme();                
 
                 // Save all
                 Properties.Settings.Default.Save();
@@ -675,7 +674,6 @@ namespace Karaboss
                 // Background buttons
                 picBgColor.BackColor = BgColor;
                                        
-
                 picActiveColor.BackColor = ActiveColor;
                 picHighlightColor.BackColor = HighlightColor;
                 picInactiveColor.BackColor = InactiveColor;
@@ -708,7 +706,6 @@ namespace Karaboss
 
                 // Backgrounds
                 pBox.BgColor = BgColor;
-
                 
                 // Gradients
                 pBox.Grad0Color = Grad0Color;
@@ -892,6 +889,7 @@ namespace Karaboss
         /// <param name="e"></param>
         private void FrmLyrOptions_Load(object sender, EventArgs e)
         {
+            lblNumberOfLines.Visible = UpDownNbLines.Visible;
             this.TopMost = true;                       
         }
 
@@ -1174,6 +1172,8 @@ namespace Karaboss
                 {
                     case "FixedLines":
                         pBox.KaraokeDisplayType = KaraokeDisplayTypes.FixedLines;
+                        UpDownNbLines.Visible = true;
+                        lblNumberOfLines.Visible = true;
                         break;
                     case "ScrollingLinesBottomUp":
                         pBox.KaraokeDisplayType = KaraokeDisplayTypes.ScrollingLinesBottomUp;
@@ -1183,15 +1183,19 @@ namespace Karaboss
                         break;
                     case "TwoLinesSwapped":
                         pBox.KaraokeDisplayType = KaraokeDisplayTypes.TwoLinesSwapped;
+                        UpDownNbLines.Visible = false;
                         break;
                     case "FourLinesSwapped":
                         pBox.KaraokeDisplayType = KaraokeDisplayTypes.FourLinesSwapped;
+                        UpDownNbLines.Visible = false;
                         break;
 
                     default:
                         pBox.KaraokeDisplayType = KaraokeDisplayTypes.FixedLines;
                         break;
                 }
+
+                lblNumberOfLines.Visible = UpDownNbLines.Visible;
 
             }
             catch (Exception ex)
@@ -1440,7 +1444,6 @@ namespace Karaboss
 
         private void btnActiveInstrumentalColor_Click(object sender, EventArgs e)
         {
-
             Color clr = SelectColorFromButton(picActiveInstrumentalColor, txtActiveInstrumentalColor);
             ActiveInstrumentalColor = clr;
             ApplyNewColors();

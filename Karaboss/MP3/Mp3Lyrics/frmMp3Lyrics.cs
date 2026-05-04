@@ -476,7 +476,7 @@ namespace Karaboss.Mp3
                 else
                     _dirSlideShow = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), Application.ProductName);
 
-                karaokeEffect1.SetBackground(_dirSlideShow);
+                karaokeEffect1.SetDirectoryBackground(_dirSlideShow);
             }
         }
 
