@@ -34,7 +34,9 @@
 
 using kar;
 using Karaboss.MidiLyrics;
+using Karaboss.Mp3;
 using Karaboss.Themes;
+using Karaboss.Utilities;
 using PicControl;
 using System;
 using System.Collections.Generic;
@@ -689,6 +691,7 @@ namespace Karaboss
             this.pBox.Close += new CloseEventHandler(pBox_Close);
             this.pBox.FullScreen += new FullScreenEventHandler(pBox_FullScreen);
             this.pBox.Options += new OptionsEventHandler(pBox_Options);
+            this.pBox.TopMost += new TopMostEventHandler(pBox_TopMost);
 
             #endregion Events
 
@@ -698,9 +701,26 @@ namespace Karaboss
             AddMouseMoveHandler(this);
         }
 
-       
 
         #region Events
+
+        private void pBox_TopMost(object sender, bool bTopMost, EventArgs e)
+        {
+            if (Application.OpenForms.OfType<frmMidiPlayer>().Count() > 0)
+            {
+                frmMidiPlayer frmMidiPlayer = FormUtilities.GetForm<frmMidiPlayer>();
+                if (bTopMost)
+                {
+                    frmMidiPlayer.RemoveOwnedForms();
+                }
+                else
+                {
+                    frmMidiPlayer.RestoreOwnedForms();
+                }
+
+            }
+        }
+
         private void pBox_DoubleClick(object sender, EventArgs e)
         {
             if (WindowState == FormWindowState.Maximized)

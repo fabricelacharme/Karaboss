@@ -53,6 +53,7 @@ namespace keffect
     public delegate void CloseEventHandler(object sender, EventArgs e);
     public delegate void FullScreenEventHandler(object sender, EventArgs e);
     public delegate void OptionsEventHandler(object sender, EventArgs e);
+    public delegate void TopMostEventHandler(object sender, bool bTopMost, EventArgs e);
 
     public partial class KaraokeEffect : UserControl, IMessageFilter
     {
@@ -62,6 +63,7 @@ namespace keffect
         public event CloseEventHandler Close;
         public event FullScreenEventHandler FullScreen;
         public event OptionsEventHandler Options;
+        public event TopMostEventHandler TopMost;
 
         #endregion Events
 
@@ -107,6 +109,7 @@ namespace keffect
         #region Others
 
         private ContextMenu picContextMenu;
+        private bool bTopMostChecked = true;
 
         private float percent = 0;
         private float lastpercent = 0;
@@ -304,8 +307,6 @@ namespace keffect
             get { return _freqdirslideshow; }
             set { _freqdirslideshow = value; }
         }
-
-
 
         #endregion SlideShow
 
@@ -5411,6 +5412,12 @@ namespace keffect
                 mnuFullScreen.Click += new System.EventHandler(this.mnuFullScreen_Click);
                 picContextMenu.MenuItems.Add(mnuFullScreen);
 
+                // Top most
+                MenuItem mnuTopMost = new MenuItem("TopMost");
+                mnuTopMost.Click += new System.EventHandler(this.mnuTopMost_Click);
+                mnuTopMost.Checked = bTopMostChecked;
+                picContextMenu.MenuItems.Add(mnuTopMost);
+
                 // Options
                 MenuItem mnuOptions = new MenuItem("Options");
                 mnuOptions.Click += new System.EventHandler(this.mnuOptions_Click);
@@ -5418,6 +5425,12 @@ namespace keffect
 
                 this.ContextMenu = picContextMenu;
             }
+        }
+
+        private void mnuTopMost_Click(object sender, EventArgs e)
+        {            
+            TopMost?.Invoke(this, bTopMostChecked,  e);
+            bTopMostChecked = !bTopMostChecked;
         }
 
         private void mnuOptions_Click(object sender, EventArgs e)

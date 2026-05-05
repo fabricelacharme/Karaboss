@@ -51,7 +51,8 @@ namespace PicControl
     public delegate void CloseEventHandler(object sender, EventArgs e);
     public delegate void FullScreenEventHandler(object sender, EventArgs e);
     public delegate void OptionsEventHandler(object sender, EventArgs e);
-    
+    public delegate void TopMostEventHandler(object sender, bool bTopMost, EventArgs e);
+
     public partial class pictureBoxControl : UserControl, IMessageFilter, IDisposable
     {
         /*
@@ -82,6 +83,7 @@ namespace PicControl
         public event CloseEventHandler Close;
         public event FullScreenEventHandler FullScreen;
         public event OptionsEventHandler Options;
+        public event TopMostEventHandler TopMost;
 
         #endregion Events
 
@@ -920,6 +922,7 @@ namespace PicControl
 
         #region Others
 
+        private bool bTopMostChecked = true;
         private ContextMenu picContextMenu;
 
         public ImageLayout imgLayout { get; set; }
@@ -6338,6 +6341,14 @@ namespace PicControl
                 mnuFullScreen.Click += new System.EventHandler(this.mnuFullScreen_Click);
                 picContextMenu.MenuItems.Add(mnuFullScreen);
 
+
+                // Top most
+                MenuItem mnuTopMost = new MenuItem("TopMost");
+                mnuTopMost.Click += new System.EventHandler(this.mnuTopMost_Click);
+                mnuTopMost.Checked = bTopMostChecked;
+                picContextMenu.MenuItems.Add(mnuTopMost);
+
+
                 // Options
                 MenuItem mnuOptions = new MenuItem("Options");
                 mnuOptions.Click += new System.EventHandler(this.mnuOptions_Click);
@@ -6345,6 +6356,13 @@ namespace PicControl
 
                 this.ContextMenu = picContextMenu;
             }
+        }
+
+
+        private void mnuTopMost_Click(object sender, EventArgs e)
+        {
+            TopMost?.Invoke(this, bTopMostChecked, e);
+            bTopMostChecked = !bTopMostChecked;
         }
 
         private void mnuOptions_Click(object sender, EventArgs e)

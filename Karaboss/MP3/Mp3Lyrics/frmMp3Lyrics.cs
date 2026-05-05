@@ -35,6 +35,7 @@
 using kar;
 using Karaboss.Mp3.Mp3Lyrics;
 using Karaboss.Themes;
+using Karaboss.Utilities;
 using keffect;
 using System;
 using System.Collections.Generic;
@@ -607,6 +608,7 @@ namespace Karaboss.Mp3
             this.karaokeEffect1.Close += new CloseEventHandler(karaokeEffect1_Close);
             this.karaokeEffect1.FullScreen += new FullScreenEventHandler(karaokeEffect1_FullScreen);
             this.karaokeEffect1.Options += new OptionsEventHandler(karaokeEffect1_Options);
+            this.karaokeEffect1.TopMost += new TopMostEventHandler(karaokeEffect1_TopMost);
 
             #endregion Events
 
@@ -618,6 +620,24 @@ namespace Karaboss.Mp3
 
 
         #region Events
+
+        private void karaokeEffect1_TopMost(object sender, bool bTopMost, EventArgs e)
+        {
+            if (Application.OpenForms.OfType<frmMp3Player>().Count() > 0)
+            {
+                frmMp3Player frmMp3Player = FormUtilities.GetForm<frmMp3Player>();
+                if (bTopMost)
+                {                    
+                    frmMp3Player.RemoveOwnedForms();
+                }
+                else
+                {
+                    frmMp3Player.RestoreOwnedForms();
+                }
+                                
+            }
+        }
+
         private void karaokeEffect1_DoubleClick(object sender, EventArgs e)
         {
             if (WindowState == FormWindowState.Maximized)
@@ -1254,7 +1274,7 @@ namespace Karaboss.Mp3
         #endregion Form Events
 
 
-        #region Images
+        #region SlideShow
 
         /// <summary>
         /// Remet les options courante pour le cas des playlists
@@ -1265,20 +1285,7 @@ namespace Karaboss.Mp3
         {
             DirSlideShow = dirSlideShow;
         }
-
-      
-        /*
-        private void LoadImageList(string dir)
-        {
-            bgFiles = Directory.GetFiles(@dir, "*.jpg");
-            m_ImageFilePaths.Clear();
-            for (int i = 0; i < bgFiles.Length; ++i)
-            {
-                string file = bgFiles[i];
-                m_ImageFilePaths.Add(file);
-            }
-        }
-        */
+             
 
         #endregion Images
        

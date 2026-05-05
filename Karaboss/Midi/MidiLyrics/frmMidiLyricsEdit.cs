@@ -34,11 +34,8 @@
 
 using kar;
 using Karaboss.MidiLyrics;
-using Karaboss.Mp3.Mp3Lyrics;
 using Karaboss.Resources.Localization;
-using Karaboss.SRT;
 using Karaboss.Utilities;
-using keffect;
 using Sanford.Multimedia.Midi;
 using System;
 using System.Collections.Generic;
@@ -48,10 +45,6 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
-using System.Xml;
-using System.Xml.Linq;
-using TagLib.Riff;
-using static System.Windows.Forms.LinkLabel;
 
 namespace Karaboss
 {
@@ -460,10 +453,21 @@ namespace Karaboss
 
         private void DeleteLine()
         {
+            // Include rows of selected cells into the row selection
+            foreach (var cell in dgView.SelectedCells)
+            {
+                dgView.Rows[((DataGridViewTextBoxCell)cell).RowIndex].Selected = true;
+            }
+
             try
             {
-                int row = dgView.CurrentRow.Index;
-                dgView.Rows.RemoveAt(row);
+                foreach (DataGridViewRow row in dgView.SelectedRows)
+                {
+                    dgView.Rows.RemoveAt(row.Index);
+                }
+
+                //int row = dgView.CurrentRow.Index;
+                //dgView.Rows.RemoveAt(row);
 
                 //Load modification into local list of lyrics
                 localplLyrics = LoadModifiedLyrics();
