@@ -57,6 +57,190 @@ namespace keffect
 
     public partial class KaraokeEffect : UserControl, IMessageFilter
     {
+
+        #region Color
+
+        #region Gradient color
+
+        private Color _Grad0Color;
+        public Color Grad0Color
+        {
+            get { return _Grad0Color; }
+            set
+            {
+                _Grad0Color = value;
+                pBox.Invalidate();
+            }
+        }
+
+        private Color _Grad1Color;
+        public Color Grad1Color
+        {
+            get { return _Grad1Color; }
+            set
+            {
+                _Grad1Color = value;
+                pBox.Invalidate();
+            }
+        }
+
+        private Color _Rhythm0Color;
+        public Color Rhythm0Color
+        {
+            get { return _Rhythm0Color; }
+            set
+            {
+                _Rhythm0Color = value;
+                pBox.BackColor = _Rhythm0Color;
+                ResetSize();
+                pBox.Invalidate();
+            }
+        }
+
+        private Color _Rhythm1Color;
+        public Color Rhythm1Color
+        {
+            get { return _Rhythm1Color; }
+            set
+            {
+                _Rhythm1Color = value;
+                ResetSize();
+                pBox.Invalidate();
+            }
+        }
+
+
+        private int _beatDuration = 0;
+        public int BeatDuration
+        {
+            get { return _beatDuration; }
+            set { _beatDuration = value; }
+        }
+
+
+        readonly System.Windows.Forms.Timer _timerGradient = new System.Windows.Forms.Timer();
+
+        // Default angle for the gradient
+        private int W;
+        private int H;
+        private int speed;
+
+        private int _beat;
+        public int Beat
+        {
+            get { return _beat; }
+            set
+            {
+                _beat = value;
+                speed = (int)(_beat / 12.0);
+            }
+        }
+
+        private float _angle = 45.0f;
+        public float GradientAngle { get { return _angle; } set { _angle = value; pBox.Invalidate(); } }
+
+        #endregion Gradient color
+
+
+        #region Instrumentals color
+
+        private Color _ActiveInstrumentalColor;
+        public Color ActiveInstrumentalColor
+        {
+            get { return _ActiveInstrumentalColor; }
+            set
+            {
+                _ActiveInstrumentalColor = value;
+                pBox.Invalidate();
+            }
+        }
+
+        #endregion Instrumental color
+
+
+        #region Text color
+
+        /// <summary>
+        /// Text sung color
+        /// </summary>
+        private Color _ActiveColor = Color.FromArgb(153, 180, 51);
+        [Description("text color for lyrics that have already been sung")]
+        public Color ActiveColor
+        {
+            get
+            { return _ActiveColor; }
+            set
+            {
+                _ActiveColor = value;
+                pBox.Invalidate();
+            }
+        }
+
+        /// <summary>
+        /// Text color
+        /// </summary>
+        private Color _HighlightColor;
+        [Description("the color of the lyrics currently being sung")]
+        public Color HighlightColor
+        {
+            get
+            { return _HighlightColor; }
+            set
+            {
+                _HighlightColor = value;
+                pBox.Invalidate();
+            }
+        }
+
+        /// <summary>
+        /// Text to sing color
+        /// </summary>
+        private Color _InactiveColor;
+        [Description("text color for the remaining lyrics")]
+        public Color InactiveColor
+        {
+            get
+            { return _InactiveColor; }
+            set
+            {
+                _InactiveColor = value;
+                pBox.Invalidate();
+            }
+        }
+
+        // Border Color
+        private Color _ActiveBorderColor;
+        public Color ActiveBorderColor
+        {
+            get
+            { return _ActiveBorderColor; }
+            set
+            {
+                _ActiveBorderColor = value;
+                pBox.Invalidate();
+            }
+        }
+
+        private Color _InactiveBorderColor;
+        public Color InactiveBorderColor
+        {
+            get
+            { return _InactiveBorderColor; }
+            set
+            {
+                _InactiveBorderColor = value;
+                pBox.Invalidate();
+            }
+        }
+
+
+        #endregion Text color
+
+
+
+        #endregion Color
+
+
         #region Events
 
         public new event DoubleClickEventHandler DoubleClick;
@@ -311,99 +495,10 @@ namespace keffect
         #endregion SlideShow
 
         
-        #region Text color
-
-        /// <summary>
-        /// Text sung color
-        /// </summary>
-        private Color _ActiveColor = Color.FromArgb(153, 180, 51);
-        [Description("text color for lyrics that have already been sung")]
-        public Color ActiveColor
-        {
-            get
-            { return _ActiveColor; }
-            set
-            {
-                _ActiveColor = value;
-                pBox.Invalidate();
-            }
-        }
-
-        /// <summary>
-        /// Text color
-        /// </summary>
-        private Color _HighlightColor;
-        [Description("the color of the lyrics currently being sung")]
-        public Color HighlightColor
-        {
-            get
-            { return _HighlightColor; }
-            set
-            {
-                _HighlightColor = value;
-                pBox.Invalidate();
-            }
-        }
-
-        /// <summary>
-        /// Text to sing color
-        /// </summary>
-        private Color _InactiveColor;
-        [Description("text color for the remaining lyrics")]
-        public Color InactiveColor
-        {
-            get
-            { return _InactiveColor; }
-            set
-            {
-                _InactiveColor = value;
-                pBox.Invalidate();
-            }
-        }
-
-        // Border Color
-        private Color _ActiveBorderColor;
-        public Color ActiveBorderColor
-        {
-            get
-            { return _ActiveBorderColor; }
-            set
-            {
-                _ActiveBorderColor = value;
-                pBox.Invalidate();
-            }
-        }
-
-        private Color _InactiveBorderColor;
-        public Color InactiveBorderColor
-        {
-            get
-            { return _InactiveBorderColor; }
-            set
-            {
-                _InactiveBorderColor = value;
-                pBox.Invalidate();
-            }
-        }
+       
 
 
-        #endregion Text color
-
-
-        #region Instrumentals color
-
-        private Color _ActiveInstrumentalColor;
-        public Color ActiveInstrumentalColor
-        {
-            get { return _ActiveInstrumentalColor; }
-            set
-            {
-                _ActiveInstrumentalColor = value;
-                pBox.Invalidate();
-            }
-        }
-
-        #endregion Instrumental color
+       
 
 
         #region Text transform
@@ -533,86 +628,7 @@ namespace keffect
         #endregion Frame type
      
 
-        #region Gradient
-
-        private Color _Grad0Color;
-        public Color Grad0Color
-        {
-            get { return _Grad0Color; }
-            set
-            {
-                _Grad0Color = value;
-                pBox.Invalidate();
-            }
-        }
-        
-        private Color _Grad1Color;
-        public Color Grad1Color
-        {
-            get { return _Grad1Color; }
-            set
-            {
-                _Grad1Color = value;
-                pBox.Invalidate();
-            }
-        }
-        
-        private Color _Rhythm0Color;
-        public Color Rhythm0Color
-        {
-            get { return _Rhythm0Color; }
-            set
-            {
-                _Rhythm0Color = value;
-                pBox.BackColor = _Rhythm0Color;
-                ResetSize();
-                pBox.Invalidate();
-            }
-        }
-        
-        private Color _Rhythm1Color;
-        public Color Rhythm1Color
-        {
-            get { return _Rhythm1Color; }
-            set
-            {
-                _Rhythm1Color = value;
-                ResetSize();
-                pBox.Invalidate();
-            }
-        }
-
-
-        private int _beatDuration = 0;
-        public int BeatDuration
-        {
-            get { return _beatDuration; }
-            set { _beatDuration = value; }
-        }
        
-
-        readonly System.Windows.Forms.Timer _timerGradient = new System.Windows.Forms.Timer();
-
-        // Default angle for the gradient
-        private int W;
-        private int H;
-        private int speed;
-        
-        private int _beat;
-        public int Beat
-        {
-            get { return _beat; }
-            set
-            {
-                _beat = value;
-                speed = (int)(_beat / 12.0);
-            }
-        }
-
-        private float _angle = 45.0f;
-        public float GradientAngle { get { return _angle; } set { _angle = value; pBox.Invalidate(); } }
-                                
-        #endregion Gradient
 
 
         #region Background

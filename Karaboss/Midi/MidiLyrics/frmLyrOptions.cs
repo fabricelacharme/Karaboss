@@ -55,7 +55,7 @@ namespace Karaboss
 
         #region Backgrounds SlideShow
 
-        private string bgOption = "Diaporama";
+        private string bgOption = "Image";
 
         // Single image as background
         private string SingleImagePath;

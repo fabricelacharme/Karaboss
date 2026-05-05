@@ -45,37 +45,12 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
-using TagLib.Mpeg4;
 
 namespace Karaboss.Mp3
 {    
     public partial class frmMp3Lyrics : Form, IMessageFilter
     {
-        #region Move form without title bar
-        public const int WM_NCLBUTTONDOWN = 0xA1;
-        public const int HT_CAPTION = 0x2;
-        public const int WM_LBUTTONDOWN = 0x0201;
-
-        [DllImportAttribute("user32.dll")]
-        public static extern int SendMessage(IntPtr hWnd, int Msg, int wParam, int lParam);
-        [DllImportAttribute("user32.dll")]
-        public static extern bool ReleaseCapture();
-
-        private readonly HashSet<Control> controlsToMove = new HashSet<Control>();
-
-        private Point Mouselocation;
-
-        #endregion
-
-
-        #region Themes
-
-        private ThemesListHelper _ThListHelper = new ThemesListHelper();
-        private ThemesList _ThemesList; // = new ThemesList();
-        private ThemeItem _currentTheme; // = new ThemeItem();
-
-        #endregion Themes
-
+        #region Declarations
 
         #region balls
         // Show balls
@@ -92,253 +67,10 @@ namespace Karaboss.Mp3
 
         #endregion balls
 
-        private long _timerintervall = 50;        
-        private int currentTextPos = 0;
 
+        #region Colors            
 
-        #region properties
-
-        #region MP3
-
-
-        // Duration in seconds (org Bass)
-        private double _duration;
-        public double Duration { get { return _duration; } 
-            
-            set { 
-                _duration = value;
-                karaokeEffect1.Duration = _duration;
-            
-            } }
-
-        private int _bitrate;   // genre 192
-        public int BitRate { get { return _bitrate; } 
-            set { 
-                
-                _bitrate = value; 
-                karaokeEffect1.BitRate = _bitrate;
-            } }
-
-        // Frequency
-        private float _frequency;
-        public float Frequency { get { return _frequency; }  
-            set { 
-                _frequency = value; 
-                karaokeEffect1.Frequency = _frequency;
-            } }
-
-        #endregion MP3
-
-
-        #region TopMost
-        private bool _bTopMost = false;
-        public bool bTopMost
-        {
-            get { return _bTopMost; }
-            set
-            {
-                _bTopMost = value;
-                this.TopMost = _bTopMost;
-            }
-        }
-
-        #endregion TopMost
-
-
-        #region Font
-        private string ftName = "Arial Black";
-        private uint ftSize = 20;
-
-        private Font _karaokeFont;
-        public Font KaraokeFont
-        {
-            get { return _karaokeFont; }
-            set
-            {
-                try
-                {
-                    _karaokeFont = value;
-                    // Redraw
-                    karaokeEffect1.KaraokeFont = _karaokeFont;
-                }
-                catch (Exception e)
-                {
-                    Console.Write("Error: " + e.Message);
-                }
-            }
-        }
-
-        #endregion Font
-
-
-        #region Karaoke display types
-        
-        // Karaoke display types
-        private string _karaokeDisplayType = "None";
-        public string KaraokeDisplayType
-        {
-            get { return _karaokeDisplayType; }
-            set
-            {
-                _karaokeDisplayType = value;    
-                
-                switch (_karaokeDisplayType)
-                {
-                    case "None":
-                        karaokeEffect1.KaraokeDisplayType = kar.KaraokeDisplayTypes.None;
-                        break;
-                    case "FixedLines":
-                        karaokeEffect1.KaraokeDisplayType = kar.KaraokeDisplayTypes.FixedLines;
-                        break;
-                    case "ScrollingLinesTopDown":
-                        karaokeEffect1.KaraokeDisplayType = kar.KaraokeDisplayTypes.ScrollingLinesTopDown;
-                        break;
-                    case "ScrollingLinesBottomUp":
-                        karaokeEffect1.KaraokeDisplayType = kar.KaraokeDisplayTypes.ScrollingLinesBottomUp;
-                        break;
-                    case "TwoLinesSwapped":
-                            karaokeEffect1.KaraokeDisplayType = kar.KaraokeDisplayTypes.TwoLinesSwapped; break;
-                    case "FourLinesSwapped":
-                            karaokeEffect1.KaraokeDisplayType = kar.KaraokeDisplayTypes.FourLinesSwapped; break;
-                    default:
-                        karaokeEffect1.KaraokeDisplayType = kar.KaraokeDisplayTypes.FixedLines;
-                        break;
-                }               
-            }
-        }
-
-        #endregion Karaoke display types
-
-
-        #region Frame type
-
-        private string _frametype = "Frame1";
-        public string FrameType
-        {
-            get { return _frametype; }
-            set
-            {
-                _frametype = value;
-                karaokeEffect1.FrameType = _frametype;
-                //Invalidate();                
-            }
-        }
-
-        #endregion
-
-
-        private int _nbLyricsLines = 3;
-        // number of lines to display
-        public int nbLyricsLines
-        {
-            get { return _nbLyricsLines; }
-            set
-            {
-                _nbLyricsLines = value;
-                karaokeEffect1.nbLyricsLines = _nbLyricsLines;
-            }
-        }
-
-        
-        #region Display top center bottom
-
-        private Karaclass.OptionsDisplay _OptionDisplay;
-        /// <summary>
-        /// Display lyrics option: top, Center, Bottom
-        /// </summary>
-        public Karaclass.OptionsDisplay OptionDisplay
-        {
-            get { return _OptionDisplay; }
-            set
-            {
-                _OptionDisplay = value;
-                karaokeEffect1.OptionDisplay = (keffect.KaraokeEffect.OptionsDisplay)_OptionDisplay;
-            }
-        }
-
-        #endregion Display top center bottom
-
-
-        #region Text color
-
-        // Text sung color
-        private Color _ActiveColor;
-        public Color ActiveColor
-        {
-            get { return _ActiveColor; }
-            set
-            {
-                _ActiveColor = value;
-                karaokeEffect1.ActiveColor = _ActiveColor;
-            }
-        }
-
-        private Color _HighlightColor;
-        public Color HighlightColor
-        {
-            get { return _HighlightColor; }
-            set
-            {
-                _HighlightColor = value;
-                karaokeEffect1.HighlightColor = _HighlightColor;
-            }
-        }
-
-        // Text to sing color
-        private Color _InactiveColor;
-        public Color InactiveColor
-        {
-            get { return _InactiveColor; }
-            set
-            {
-                _InactiveColor = value;
-                karaokeEffect1.InactiveColor = _InactiveColor;
-            }
-        }
-        
-        
-        // Text border
-        private Color _ActiveBorderColor;
-        public Color ActiveBorderColor
-        {
-            get { return _ActiveBorderColor; }
-            set
-            {
-                _ActiveBorderColor = value;
-                karaokeEffect1.ActiveBorderColor = _ActiveBorderColor;
-            }
-        }
-
-        private Color _InactiveBorderColor;
-        public Color InactiveBorderColor
-        {
-            get { return _InactiveBorderColor; }
-            set
-            {
-                _InactiveBorderColor = value;
-                karaokeEffect1.InactiveBorderColor = _InactiveBorderColor;
-            }
-        }
-
-        #endregion text color
-
-
-        #region Instrumentals color
-
-        private Color _ActiveInstrumentalColor;
-        public Color ActiveInstrumentalColor
-        {
-            get { return _ActiveInstrumentalColor; }
-            set
-            {
-                _ActiveInstrumentalColor = value;
-                karaokeEffect1.ActiveInstrumentalColor = _ActiveInstrumentalColor;
-            }
-        }
-
-        #endregion Instrumentals color
-
-        #region Background color
+        #region Background & text background color
 
         private bool _bTextBackGround = false;
         /// <summary>
@@ -353,7 +85,7 @@ namespace Karaboss.Mp3
                 karaokeEffect1.bTextBackGround = _bTextBackGround;
             }
         }
-                     
+
 
         // Background color
         private Color _BgColor;
@@ -367,10 +99,11 @@ namespace Karaboss.Mp3
             }
         }
 
-        #endregion Background color
+        #endregion Background & text background color
+        
 
+        #region Gradient color
 
-        #region gradient
         private Color _grad0Color;
         public Color Grad0Color
         {
@@ -424,41 +157,249 @@ namespace Karaboss.Mp3
             }
         }
 
-        #endregion gradient
-       
+        #endregion Gradient color
 
-        #region text characteristics
 
-        private bool _bForceUppercase = false;
-        public bool bForceUppercase
+        #region Instrumentals color
+
+        private Color _ActiveInstrumentalColor;
+        public Color ActiveInstrumentalColor
         {
-            get { return _bForceUppercase; }
+            get { return _ActiveInstrumentalColor; }
             set
             {
+                _ActiveInstrumentalColor = value;
+                karaokeEffect1.ActiveInstrumentalColor = _ActiveInstrumentalColor;
+            }
+        }
 
-                if (value != _bForceUppercase)
+        #endregion Instrumentals color
+
+
+        #region Text color
+
+        // Text sung color
+        private Color _ActiveColor;
+        public Color ActiveColor
+        {
+            get { return _ActiveColor; }
+            set
+            {
+                _ActiveColor = value;
+                karaokeEffect1.ActiveColor = _ActiveColor;
+            }
+        }
+
+        private Color _HighlightColor;
+        public Color HighlightColor
+        {
+            get { return _HighlightColor; }
+            set
+            {
+                _HighlightColor = value;
+                karaokeEffect1.HighlightColor = _HighlightColor;
+            }
+        }
+
+        // Text to sing color
+        private Color _InactiveColor;
+        public Color InactiveColor
+        {
+            get { return _InactiveColor; }
+            set
+            {
+                _InactiveColor = value;
+                karaokeEffect1.InactiveColor = _InactiveColor;
+            }
+        }
+
+
+        // Text border
+        private Color _ActiveBorderColor;
+        public Color ActiveBorderColor
+        {
+            get { return _ActiveBorderColor; }
+            set
+            {
+                _ActiveBorderColor = value;
+                karaokeEffect1.ActiveBorderColor = _ActiveBorderColor;
+            }
+        }
+
+        private Color _InactiveBorderColor;
+        public Color InactiveBorderColor
+        {
+            get { return _InactiveBorderColor; }
+            set
+            {
+                _InactiveBorderColor = value;
+                karaokeEffect1.InactiveBorderColor = _InactiveBorderColor;
+            }
+        }
+
+        #endregion text color
+
+        #endregion Colors
+
+
+        #region Font
+        private string ftName = "Arial Black";
+        private uint ftSize = 20;
+
+        private Font _karaokeFont;
+        public Font KaraokeFont
+        {
+            get { return _karaokeFont; }
+            set
+            {
+                try
                 {
-                    _bForceUppercase = value;
-                    karaokeEffect1.bforceUppercase = _bForceUppercase;                    
+                    _karaokeFont = value;
+                    // Redraw
+                    karaokeEffect1.KaraokeFont = _karaokeFont;
+                }
+                catch (Exception e)
+                {
+                    Console.Write("Error: " + e.Message);
                 }
             }
         }
 
-        private bool _bprogressivehighlight = false;
-        public bool bProgressiveHighlight
+        #endregion Font
+
+
+        #region Form 
+
+        private bool _bTopMost = false;
+        public bool bTopMost
         {
-            get { return _bprogressivehighlight; }
-            set 
-            {  
-                _bprogressivehighlight= value;
-                karaokeEffect1.TransitionEffect = _bprogressivehighlight? keffect.KaraokeEffect.TransitionEffects.Progressive : keffect.KaraokeEffect.TransitionEffects.None;
+            get { return _bTopMost; }
+            set
+            {
+                _bTopMost = value;
+                this.TopMost = _bTopMost;
             }
         }
 
-        #endregion text characteristics
+        #region Move form 
+
+        public const int WM_NCLBUTTONDOWN = 0xA1;
+        public const int HT_CAPTION = 0x2;
+        public const int WM_LBUTTONDOWN = 0x0201;
+
+        [DllImportAttribute("user32.dll")]
+        public static extern int SendMessage(IntPtr hWnd, int Msg, int wParam, int lParam);
+        [DllImportAttribute("user32.dll")]
+        public static extern bool ReleaseCapture();
+
+        private readonly HashSet<Control> controlsToMove = new HashSet<Control>();
+
+        private Point Mouselocation;
+
+        #endregion Move form
+
+        #endregion Form
 
 
-        #region dirslideshow
+        #region Karaoke display layout
+
+        // Karaoke display types
+        private string _karaokeDisplayType = "None";
+        public string KaraokeDisplayType
+        {
+            get { return _karaokeDisplayType; }
+            set
+            {
+                _karaokeDisplayType = value;
+
+                switch (_karaokeDisplayType)
+                {
+                    case "None":
+                        karaokeEffect1.KaraokeDisplayType = kar.KaraokeDisplayTypes.None;
+                        break;
+                    case "FixedLines":
+                        karaokeEffect1.KaraokeDisplayType = kar.KaraokeDisplayTypes.FixedLines;
+                        break;
+                    case "ScrollingLinesTopDown":
+                        karaokeEffect1.KaraokeDisplayType = kar.KaraokeDisplayTypes.ScrollingLinesTopDown;
+                        break;
+                    case "ScrollingLinesBottomUp":
+                        karaokeEffect1.KaraokeDisplayType = kar.KaraokeDisplayTypes.ScrollingLinesBottomUp;
+                        break;
+                    case "TwoLinesSwapped":
+                        karaokeEffect1.KaraokeDisplayType = kar.KaraokeDisplayTypes.TwoLinesSwapped; break;
+                    case "FourLinesSwapped":
+                        karaokeEffect1.KaraokeDisplayType = kar.KaraokeDisplayTypes.FourLinesSwapped; break;
+                    default:
+                        karaokeEffect1.KaraokeDisplayType = kar.KaraokeDisplayTypes.FixedLines;
+                        break;
+                }
+            }
+        }
+
+        #endregion Karaoke display layout
+
+
+        #region MP3
+
+        // Duration in seconds (org Bass)
+        private double _duration;
+        public double Duration
+        {
+            get { return _duration; }
+
+            set
+            {
+                _duration = value;
+                karaokeEffect1.Duration = _duration;
+
+            }
+        }
+
+        private int _bitrate;   // genre 192
+        public int BitRate
+        {
+            get { return _bitrate; }
+            set
+            {
+
+                _bitrate = value;
+                karaokeEffect1.BitRate = _bitrate;
+            }
+        }
+
+        // Frequency
+        private float _frequency;
+        public float Frequency
+        {
+            get { return _frequency; }
+            set
+            {
+                _frequency = value;
+                karaokeEffect1.Frequency = _frequency;
+            }
+        }
+
+        #endregion MP3
+
+
+        #region Picture
+
+        private PictureBoxSizeMode _sizeMode;
+        public PictureBoxSizeMode SizeMode
+        {
+            get { return _sizeMode; }
+            set
+            {
+                _sizeMode = value;
+                karaokeEffect1.SizeMode = _sizeMode;
+            }
+        }
+
+        #endregion Picture
+
+
+        #region Slideshow
 
         private string _SingleImagePath;
         public string SingleImagePath
@@ -518,21 +459,10 @@ namespace Karaboss.Mp3
         }
 
 
-        private PictureBoxSizeMode _sizeMode;
-        public PictureBoxSizeMode SizeMode
-        {
-            get { return _sizeMode; }
-            set
-            {
-                _sizeMode = value;
-                karaokeEffect1.SizeMode = _sizeMode;
-            }
-        }
-
         /// <summary>
-        /// Background option : Diaporam, SolidColor, Transparent
+        /// Background option : Diaporama, SolidColor, Transparent
         /// </summary>
-        private string _optionbackground = "Diaporama";
+        private string _optionbackground = "Image";
         public string OptionBackground
         {
             get { return _optionbackground; }
@@ -542,6 +472,10 @@ namespace Karaboss.Mp3
 
                 switch (_optionbackground)
                 {
+                    case "Image":
+                        karaokeEffect1.OptionBackground = "Image";
+                        break;
+
                     case "Diaporama":
                         karaokeEffect1.OptionBackground = "Diaporama";
                         break;
@@ -569,9 +503,96 @@ namespace Karaboss.Mp3
         }
 
         #endregion dirslideshow
-      
 
-        #endregion properties
+
+        #region Themes
+
+        private ThemesListHelper _ThListHelper = new ThemesListHelper();
+        private ThemesList _ThemesList; // = new ThemesList();
+        private ThemeItem _currentTheme; // = new ThemeItem();
+
+        #endregion Themes
+
+
+        #region Text transform
+
+        private long _timerintervall = 50;
+        private int currentTextPos = 0;
+
+        #region Frame type
+
+        // lyrics non border, border 1px, 2px ... shadow, neon
+        private string _frametype = "Frame1";
+        public string FrameType
+        {
+            get { return _frametype; }
+            set
+            {
+                _frametype = value;
+                karaokeEffect1.FrameType = _frametype;                                
+            }
+        }
+
+        #endregion
+
+
+        #region Text position
+        // Display lyrics top center bottom
+        private Karaclass.OptionsDisplay _OptionDisplay;
+        public Karaclass.OptionsDisplay OptionDisplay
+        {
+            get { return _OptionDisplay; }
+            set
+            {
+                _OptionDisplay = value;
+                karaokeEffect1.OptionDisplay = (keffect.KaraokeEffect.OptionsDisplay)_OptionDisplay;
+            }
+        }
+        #endregion Text position
+
+        // Force Uppercase
+        private bool _bForceUppercase = false;
+        public bool bForceUppercase
+        {
+            get { return _bForceUppercase; }
+            set
+            {
+
+                if (value != _bForceUppercase)
+                {
+                    _bForceUppercase = value;
+                    karaokeEffect1.bforceUppercase = _bForceUppercase;                    
+                }
+            }
+        }
+
+        private bool _bprogressivehighlight = false;
+        public bool bProgressiveHighlight
+        {
+            get { return _bprogressivehighlight; }
+            set 
+            {  
+                _bprogressivehighlight= value;
+                karaokeEffect1.TransitionEffect = _bprogressivehighlight? keffect.KaraokeEffect.TransitionEffects.Progressive : keffect.KaraokeEffect.TransitionEffects.None;
+            }
+        }
+
+        private int _nbLyricsLines = 3;
+        // number of lines to display
+        public int nbLyricsLines
+        {
+            get { return _nbLyricsLines; }
+            set
+            {
+                _nbLyricsLines = value;
+                karaokeEffect1.nbLyricsLines = _nbLyricsLines;
+            }
+        }
+
+        #endregion Text transform
+            
+
+        #endregion Declarations
 
 
         /// <summary>
