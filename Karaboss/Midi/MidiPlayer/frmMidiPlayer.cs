@@ -520,8 +520,8 @@ namespace Karaboss
                 // Update display
                 SetTitle(MIDIfileFullPath);
 
-                // Unload frmMidiLyric
-                // Ferme le formulaire frmMidiLyric
+                // Unload frmMidiLyrics
+                // Ferme le formulaire frmMidiLyrics
                 if (Application.OpenForms.OfType<frmMidiLyrics>().Count() > 0)
                 {
                     frmMidiLyrics.Close();                
@@ -2416,8 +2416,8 @@ namespace Karaboss
                 }
 
 
-                // Ferme le formulaire frmMidiLyric                                
-                Application.OpenForms["frmMidiLyric"]?.Close();                    
+                // Ferme le formulaire frmMidiLyrics                                
+                Application.OpenForms["frmMidiLyrics"]?.Close();                    
                 
                 // ferme le formulaire frmMidiLyricsEdit
                 Application.OpenForms["frmMidiLyricsEdit"]?.Close();
@@ -2935,7 +2935,7 @@ namespace Karaboss
             // Reset tracks stuff
             InitTracksStuff();
 
-            // Recherche si des lyrics existent et affiche la forme frmMidiLyric
+            // Recherche si des lyrics existent et affiche la forme frmMidiLyrics
             mnuDisplayLyricsWindows.Checked = bKaraokeAlwaysOn;
 
             if (bKaraokeAlwaysOn && myLyricsMgmt.bHasLyrics)
@@ -3550,7 +3550,7 @@ namespace Karaboss
 
 
                 #region display lyrics
-                // Recherche si des lyrics existent et affiche la forme frmMidiLyric
+                // Recherche si des lyrics existent et affiche la forme frmMidiLyrics
                 mnuDisplayLyricsWindows.Checked = bKaraokeAlwaysOn;
 
                 DisplayLyricsInfos();
@@ -3705,7 +3705,7 @@ namespace Karaboss
                 DisplayFileInfos();
 
                 #region display lyrics
-                // Recherche si des lyrics existent et affiche la forme frmMidiLyric
+                // Recherche si des lyrics existent et affiche la forme frmMidiLyrics
                 mnuDisplayLyricsWindows.Checked = bKaraokeAlwaysOn;
 
                 DisplayLyricsInfos();
@@ -3847,7 +3847,7 @@ namespace Karaboss
 
                 #region display lyrics
 
-                // Recherche si des lyrics existent et affiche la forme frmMidiLyric
+                // Recherche si des lyrics existent et affiche la forme frmMidiLyrics
                 mnuDisplayLyricsWindows.Checked = bKaraokeAlwaysOn;
 
                 // Display log file
@@ -3972,7 +3972,7 @@ namespace Karaboss
             myLyricsMgmt = new MidiLyricsMgmt(sequence1);
 
 
-            // Refresh frmMidiLyric
+            // Refresh frmMidiLyrics
             if (myLyricsMgmt.OrgKLyrics.Lines.Count > 0)
             {
                 // Reset display
@@ -4277,7 +4277,7 @@ namespace Karaboss
 
             myLyricsMgmt.OrgKLyrics.Lines.Clear();            
 
-            // Ferme le formulaire frmMidiLyric
+            // Ferme le formulaire frmMidiLyrics
             if (Application.OpenForms.OfType<frmMidiLyrics>().Count() > 0)
             {
                 frmMidiLyrics.Close();
@@ -4393,10 +4393,7 @@ namespace Karaboss
             // Show window
             if (frmMidiLyrics.WindowState == FormWindowState.Minimized)
                 frmMidiLyrics.WindowState = FormWindowState.Normal;
-
-
-
-            //frmMidiLyric.Show();
+            
             frmMidiLyrics.Activate();
 
             // cas d'une playlist ou non : met à jour le diaporama
@@ -4674,7 +4671,7 @@ namespace Karaboss
             if (!Utilities.CreateNewMidiFile.New(""))
                 return;
 
-            // Ferme le formulaire frmMidiLyric
+            // Ferme le formulaire frmMidiLyrics
             if (Application.OpenForms.OfType<frmMidiLyrics>().Count() > 0)
             {
                 frmMidiLyrics.Close();
@@ -5024,7 +5021,7 @@ namespace Karaboss
                 // ferme le formulaire frmMidiLyricsEdit
                 if (Application.OpenForms.OfType<frmMidiLyrics>().Count() > 0)
                 {
-                    Application.OpenForms["frmMidiLyric"].Close();
+                    Application.OpenForms["frmMidiLyrics"].Close();
                 }
                 mnuDisplayLyricsWindows.Checked = false;
             }
@@ -6803,7 +6800,7 @@ namespace Karaboss
             MIDIfileName = currentPlaylistItem.Song;
             UpdatePlayListsForm(currentPlaylistItem.Song);
 
-            // Ferme le formulaire frmMidiLyric
+            // Ferme le formulaire frmMidiLyrics
             if (Application.OpenForms.OfType<frmMidiLyrics>().Count() > 0)
             {
                 frmMidiLyrics.Close();
@@ -7749,8 +7746,8 @@ namespace Karaboss
                 DisplayTimeElapse(dpercent);              
 
                 //Eteint la boule fixe;
-                //if (Application.OpenForms.OfType<frmMidiLyric>().Count() > 0)
-                //    frmMidiLyric.UnlightFixedBall();
+                //if (Application.OpenForms.OfType<frmMidiLyrics>().Count() > 0)
+                //    frmMidiLyrics.UnlightFixedBall();
                 
                 switch (PlayerState)
                 {
@@ -7926,10 +7923,10 @@ namespace Karaboss
                 DisplayFileInfos(_tempo);
 
 
-            // display beat in frmMidiLyric if visible
+            // display beat in frmMidiLyrics if visible
             if (Application.OpenForms.OfType<frmMidiLyrics>().Count() > 0)
             {
-                // Send beat number and division to frmMidiLyric
+                // Send beat number and division to frmMidiLyrics
                 frmMidiLyrics?.DisplayBeat(beat, _bpm);
             }
 
@@ -7950,16 +7947,16 @@ namespace Karaboss
             if (w_tick < w_wait)
             {
                 // color each second
-                //if (frmMidiLyric != null)
-                //    frmMidiLyric.ColorLyric(w_tick * 10);
+                //if (frmMidiLyrics != null)
+                //    frmMidiLyrics.ColorLyric(w_tick * 10);
                 frmMidiLyrics?.ColorLyric(w_tick * 10);
 
             }
             else if (w_tick == w_wait)
             {
                 // set syllabes to null
-                //if (frmMidiLyric!= null)
-                //    frmMidiLyric.EndWaitSong();
+                //if (frmMidiLyrics!= null)
+                //    frmMidiLyrics.EndWaitSong();
                 frmMidiLyrics?.EndWaitSong();
 
             }
