@@ -582,7 +582,7 @@
             // 
             resources.ApplyResources(this.txtActiveColor, "txtActiveColor");
             this.txtActiveColor.Name = "txtActiveColor";
-            this.txtActiveColor.TextChanged += new System.EventHandler(this.txtActiveColor_TextChanged);
+            this.txtActiveColor.TextChanged += new System.EventHandler(this.txtActiveColor_TextChanged);            
             // 
             // cbFontName
             // 

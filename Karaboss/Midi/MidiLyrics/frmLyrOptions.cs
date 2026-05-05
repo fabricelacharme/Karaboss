@@ -41,6 +41,7 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Reflection;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 
@@ -49,30 +50,54 @@ namespace Karaboss
     public partial class frmLyrOptions : Form
     {
 
-        #region private declarations
-
-        #region Themes
-
-        private ThemesListHelper _ThemesListHelper = new ThemesListHelper();
-        private ThemesList _ThemesList = new ThemesList();
-        private ThemeItem _currentTheme = new ThemeItem();
+        #region Declarations
 
 
-        #endregion Themes
+        #region Backgrounds SlideShow
 
-
-        private Dictionary<string, string> KaraokeTypes = new Dictionary<string, string>();
-
-        private Karaclass.OptionsDisplay OptionDisplay;        
         private string bgOption = "Diaporama";
-        
-        // Font
-        private Font _karaokeFont;
-        private string ftName = "Arial Black";
-        private uint ftSize = 20;
 
-        // Frame
-        private string FrameType;        
+        // Single image as background
+        private string SingleImagePath;
+
+        //Slideshow
+        private string dirSlideShow;
+        // Frequency
+        private int freqSlideShow;
+
+        #endregion Backgrounds SlideShow
+
+
+        #region Colors
+
+        #region Chords color
+        // Chord color
+        private Color InactiveChordColor;
+        private Color HighlightChordColor;
+
+        #endregion Chords color
+
+        // Background color
+        private Color BgColor;
+
+        #region Gradient colors
+
+        private Color Grad0Color;
+        private Color Grad1Color;
+        private Color Rhythm0Color;
+        private Color Rhythm1Color;
+
+        #endregion Gradient colors
+
+
+        #region Instrumental color
+
+        private Color ActiveInstrumentalColor;
+
+        #endregion Instrumental color
+
+
+        #region Lyrics color
 
         // Text color
         private Color InactiveColor;
@@ -85,50 +110,42 @@ namespace Karaboss
         private Color ActiveBorderColor;
         private Color InactiveBorderColor;
 
+        #endregion Lyrics color
 
-        #region background colors
-
-        // Background colors
-        private Color BgColor;        
-        private Color Grad0Color;
-        private Color Grad1Color;
-        private Color Rhythm0Color;
-        private Color Rhythm1Color;
-
-        #endregion background colors
+        #endregion Colors
 
 
-        #region instrumental color
+        #region Form
 
-        private Color ActiveInstrumentalColor;  
-
-        #endregion Instrumental color
-
-
-        #region Chords
-        // Chord color
-        private Color InactiveChordColor;
-        private Color HighlightChordColor;
-        private bool _bShowChords = false;
-
-        #endregion Chords
-
-        // Lyrics TopMost
+        // Form TopMost
         private bool _bTopMost = false;
 
-        // Force Uppercase
-        private bool bForceUppercase = false;
+        // Display chords with lyrics
+        private bool _bShowChords = false;
 
-        // Number of lines to display
-        private int NbLines;
-        //Slideshow
-        private string dirSlideShow;
-        // Frequency
-        private int freqSlideShow;
+        #endregion Form
 
-        // Single image as background
-        private string SingleImagePath;
 
+        #region Fonts
+
+        private Font _karaokeFont;
+        private string ftName = "Arial Black";
+        private uint ftSize = 20;
+
+        #endregion Fonts
+                                  
+
+        #region Karaoke display Layout
+
+        private Dictionary<string, string> KaraokeTypes = new Dictionary<string, string>();
+
+        // Karaoke display Layout (FixedLines, ScrollingLinesBottomUp, ScrollingLinesTopDown, TwoLinesSwapped
+        private string KaraokeDisplayType;
+
+        #endregion Karaoke display Layout
+
+
+        #region Picture
 
         // Size mode of the picture background
         private PictureBoxSizeMode _sizeMode;
@@ -142,18 +159,50 @@ namespace Karaboss
             }
         }
 
+        #endregion Picture
+        
+
+        #region Text transform
+
+        // Display Top, Center, Bottom
+        private Karaclass.OptionsDisplay OptionDisplay;
+
+        // Text decoration (No border, border 1px, 2px, .. Shadow, Neon ...) 
+        private string FrameType;
+
+        // Force Uppercase
+        private bool bForceUppercase = false;
+
+        // Number of lines to display
+        private int NbLines;
+
         // Number of lines to display
         private int _nbLyricsLines;
 
-        // Karaoke display type (FixedLines, ScrollingLinesBottomUp, ScrollingLinesTopDown, TwoLinesSwapped
-        private string KaraokeDisplayType;
+        #endregion Text transform                  
 
-        #endregion private declarations
 
+        #region Themes
+
+        // Track changes
+        bool bColorModified = false;
+
+        private ThemesListHelper _ThemesListHelper = new ThemesListHelper();
+        private ThemesList _ThemesList = new ThemesList();
+        private ThemeItem _currentTheme = new ThemeItem();
+
+        #endregion Themes
+
+        #endregion Declarations
+
+
+        /// <summary>
+        /// Constructor
+        /// </summary>
         public frmLyrOptions()
         {
-            InitializeComponent();  
-            
+            InitializeComponent();
+           
             TopMost = true;
 
             LoadOptions();     
@@ -163,15 +212,17 @@ namespace Karaboss
             pBox.LoadDemoText();
         }
 
+        
 
         #region option form settings
-
 
         // Apply changes to frmMidiLyrics
         private void ApplyChanges()
         {
+            // Save first
             SaveOptions();
 
+            // Apply
             if (Application.OpenForms.OfType<frmMidiLyrics>().Count() > 0)
             {
                 Cursor.Current = Cursors.WaitCursor;
@@ -482,6 +533,11 @@ namespace Karaboss
                         break;
                 }
                 #endregion SizeMode
+
+
+                // Cancel changes
+                ThemeModified(false);
+            
             }
             catch (Exception e)
             {
@@ -643,7 +699,7 @@ namespace Karaboss
                 // Save colors of lyrics, backgrounds, chords in themes (not if theme Default is active)
                 ThemeItem item = _ThemesList.GetThemeByName(cbTheme.SelectedItem.ToString());
                 if (item != null && item.Name != "Default")
-                    SaveTheme();                
+                    SaveTheme(item.Name);                
 
                 // Save all
                 Properties.Settings.Default.Save();
@@ -901,6 +957,31 @@ namespace Karaboss
         /// <param name="e"></param>
         private void FrmLyrOptions_FormClosing(object sender, FormClosingEventArgs e)
         {
+            #region save current theme
+            if (bColorModified == true && _currentTheme.Name != "Default")
+            {
+                //string tx = "Le fichier a été modifié, voulez-vous l'enregistrer ?";
+                string tx = Karaboss.Resources.Localization.Strings.QuestionSavefile;
+                DialogResult dr = MessageBox.Show(tx, "Karaboss", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Warning);
+
+                if (dr == DialogResult.Cancel)
+                {
+                    // Do not save but cancel close
+                    e.Cancel = true;
+                    return;
+                }
+                else if (dr == DialogResult.Yes)
+                {
+                    // Save and close                    
+                    SaveTheme(_currentTheme.Name);                                        
+                }
+                else if (dr == DialogResult.No) 
+                {
+                    // Do not save and close
+                }
+            }
+            #endregion save current theme
+
             pBox.Terminate();
 
             // Active le formulaire frmMidiPlayer
@@ -1242,6 +1323,7 @@ namespace Karaboss
             {                               
                 Grad0Color = selectedColor; // Update the Grad0Color variable
                 pBox.Grad0Color = Grad0Color; // Update the gradient panel color
+                ThemeModified(true);
             }
         }
 
@@ -1252,6 +1334,7 @@ namespace Karaboss
             {                
                 Grad1Color = selectedColor; // Update the Grad1Color variable
                 pBox.Grad1Color = Grad1Color; // Update the gradient panel color
+                ThemeModified(true);
             }
         }
 
@@ -1262,6 +1345,7 @@ namespace Karaboss
             {
                 Rhythm0Color = selectedColor; // Update the Rhythm0Color variable
                 pBox.Rhythm0Color = Rhythm0Color; // Update the gradient panel color
+                ThemeModified(true);
             }
         }
 
@@ -1272,6 +1356,7 @@ namespace Karaboss
             {
                 Rhythm1Color = selectedColor; // Update the Rhythm1Color variable
                 pBox.Rhythm1Color = Rhythm1Color; // Update the gradient panel color
+                ThemeModified(true);
             }
         }
 
@@ -1315,58 +1400,69 @@ namespace Karaboss
 
         #region text events
 
+        
         private void txtBgColor_TextChanged(object sender, EventArgs e)
         {
             BgColor = Parse(txtBgColor.Text);
             ApplyNewColors();
+            ThemeModified(true);
         }
+
 
         private void txtActiveColor_TextChanged(object sender, EventArgs e)
         {
             ActiveColor = Parse(txtActiveColor.Text);
             ApplyNewColors();
+            ThemeModified(true);
         }
 
         private void txtHighlightColor_TextChanged(object sender, EventArgs e)
         {
             HighlightColor = Parse(txtHighlightColor.Text);
             ApplyNewColors();
+            ThemeModified(true);
         }
 
         private void txtInactiveColor_TextChanged(object sender, EventArgs e)
         {
             InactiveColor = Parse(txtInactiveColor.Text);
             ApplyNewColors();
+            ThemeModified(true);
         }
 
         private void txtActiveBorderColor_TextChanged(object sender, EventArgs e)
         {
             ActiveBorderColor = Parse(txtActiveBorderColor.Text);
             ApplyNewColors();
+            ThemeModified(true);
         }
 
         private void txtInactiveBorderColor_TextChanged(object sender, EventArgs e)
         {
             InactiveBorderColor = Parse(txtInactiveBorderColor.Text);
             ApplyNewColors();
+            ThemeModified(true);
         }
 
         private void txtInactiveChordColor_TextChanged(object sender, EventArgs e)
         {
             InactiveChordColor = Parse(txtInactiveChordColor.Text);
             ApplyNewColors();
+            ThemeModified(true);
         }
 
         private void txtHighlightChordColor_TextChanged(object sender, EventArgs e)
         {            
             HighlightChordColor = Parse(txtHighlightChordColor.Text); ;
             ApplyNewColors();
+            ThemeModified(true);
         }
 
         private void txtActiveInstrumentalColor_TextChanged(object sender, EventArgs e)
         {
             ActiveInstrumentalColor = Parse(txtActiveInstrumentalColor.Text);
             ApplyNewColors();
+            ThemeModified(true);
         }
 
         #endregion text events
@@ -1552,6 +1648,8 @@ namespace Karaboss
 
             picBox.BackColor = dlg.Color;
             textBox.Text = ToHex(dlg.Color);
+            
+            ThemeModified(true);
 
             return dlg.Color;
 
@@ -1572,7 +1670,8 @@ namespace Karaboss
         }
       
         public void GetColorFromPicker(Color c, TextBox txb)
-        {
+        {            
+            ThemeModified(true);
             txb.Text = ToHex(c);            
             this.Show();
         }
@@ -1582,6 +1681,29 @@ namespace Karaboss
 
 
         #region Color Themes
+
+        private void ThemeModified(bool bModified)
+        {
+            if (_currentTheme.Name == "Default")
+            {
+                bModified = false;
+            }
+            
+            
+            bColorModified = bModified;
+
+            string Title = "Karaboss - Lyrics options";
+            if (bModified)
+            {
+                this.Text = Title + " *";
+            }
+            else
+            {
+                this.Text = Title;
+            }
+
+        }
+
 
         private void PopulateThemes()
         {
@@ -1604,13 +1726,37 @@ namespace Karaboss
 
 
         private void cbTheme_SelectedIndexChanged(object sender, EventArgs e)
-        {            
+        {
+            #region Save previous theme
+            // the user has selected another theme in the combo,
+            // but the previous theme was modified            
+            if (bColorModified && _currentTheme.Name != "Default")
+            {                
+                switch (MessageBox.Show(string.Format("The theme <{0}>was modified, do you want to save it?", _currentTheme.Name), Application.ProductName, MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question)) 
+                {
+                    case DialogResult.Yes:
+                        // Save previous theme and continue
+                        SaveTheme(_currentTheme.Name);
+                        break;
+                    case DialogResult.No:
+                        // Do not save previous theme and continue
+                        ThemeModified(false);
+                        break;
+                    case DialogResult.Cancel:
+                        // Cancel select a new theme                        
+                        return;                        
+                }                
+            }
+            #endregion Save previous theme
+
             _currentTheme = _ThemesList.GetThemeByName(cbTheme.Text);
 
             LoadColorsFromCurrentTheme();
 
             // Apply colors to combos gradient
             UpdateGradientCombosToTheme();
+
+            ThemeModified(false);
 
         }
 
@@ -1707,17 +1853,19 @@ namespace Karaboss
 
         private void btnSaveTheme_Click(object sender, EventArgs e)
         {
-            SaveTheme();                                        
+            ThemeItem item = _ThemesList.GetThemeByName(cbTheme.SelectedItem.ToString());            
+            SaveTheme(item.Name);
         }
 
 
-        private void SaveTheme()
+        private void SaveTheme(string ThemeName)
         {
             bool bSaveTheme = false;
 
             string Name = string.Empty;
 
-            ThemeItem item = _ThemesList.GetThemeByName(cbTheme.SelectedItem.ToString());
+            //ThemeItem item = _ThemesList.GetThemeByName(cbTheme.SelectedItem.ToString());
+            ThemeItem item = _ThemesList.GetThemeByName(ThemeName);
 
             if (item == null) return;
 
@@ -1730,7 +1878,7 @@ namespace Karaboss
 
                 if (Name == null || Name.Length == 0) return;
 
-                // Initialize with current values
+                // Initialize the new theme with current values
                 item = new ThemeItem()
                 {
                     Name = Name,                                       
@@ -1742,7 +1890,8 @@ namespace Karaboss
                 cbTheme.Items.Add(item.Name);
                 cbTheme.SelectedItem = item.Name;
 
-                bSaveTheme = true;
+                //bSaveTheme = true;
+                ThemeModified(true);
             }
             else
             {
@@ -1770,11 +1919,20 @@ namespace Karaboss
                 item = UpdateThemeWithCurrentValues(item);               
             }
 
-            if (!bSaveTheme) return;
+            if (!bSaveTheme)
+            {
+                ThemeModified(false);
+                return;
+            }
 
             // Save list of themes
             if (_ThemesListHelper.Save(_ThemesListHelper.File, _ThemesList))
+            {
                 MessageBox.Show(string.Format("The theme <{0}> was successfully saved", item.Name), Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Information);
+                
+                // Reset changes                
+                ThemeModified(false);
+            }
         }
 
 
@@ -1825,7 +1983,31 @@ namespace Karaboss
 
         // Create a new theme
         private void btnNewTheme_Click(object sender, EventArgs e)
-        {                             
+        {
+
+            #region Save previous theme
+            // the user has selected another theme in the combo,
+            // but the previous theme was modified            
+            if (bColorModified && _currentTheme.Name != "Default")
+            {
+                switch (MessageBox.Show(string.Format("The theme <{0}>was modified, do you want to save it?", _currentTheme.Name), Application.ProductName, MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question))
+                {
+                    case DialogResult.Yes:
+                        // Save previous theme and continue
+                        SaveTheme(_currentTheme.Name);
+                        break;
+                    case DialogResult.No:
+                        // Do not save previous theme and continue
+                        ThemeModified(false);
+                        break;
+                    case DialogResult.Cancel:
+                        // Cancel select a new theme                        
+                        return;
+                }
+            }
+            #endregion Save previous theme
+
+
             string Name = GetNameForNewTheme();
             if (Name == null || Name.Length == 0) return;
 
@@ -1861,8 +2043,9 @@ namespace Karaboss
         }
 
 
+
         #endregion Color Themes
 
-
+       
     }
 }
