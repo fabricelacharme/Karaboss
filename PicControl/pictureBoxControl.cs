@@ -573,6 +573,7 @@ namespace PicControl
             {
                 if (value == null) return;
                 if (value.Lines == null) return;
+                if (value.Lines.Count == 0) return;
                 _kLyrics = value;
                 _kLyricsOrg = _kLyrics.Clone();
                 if (_kLyrics != null && _kLyrics.Lines.Count > 0)
@@ -1068,9 +1069,11 @@ namespace PicControl
             Application.AddMessageFilter(this);
             controlsToMove.Add(this);
             controlsToMove.Add(this.pBox);
-            
+
             #endregion
-                                                   
+
+
+            #region Graphic optimization 
             /*
             this.SetStyle(
                   System.Windows.Forms.ControlStyles.UserPaint |
@@ -1079,6 +1082,8 @@ namespace PicControl
                   true);
             */
             SetStyle(ControlStyles.AllPaintingInWmPaint | ControlStyles.UserPaint | ControlStyles.OptimizedDoubleBuffer, true);
+
+            #endregion Graphic optimization
 
             SetDefaultValues();
 
