@@ -48,10 +48,10 @@ namespace Karaboss.MidiLyrics
     {
         #region private
 
-        private readonly static string m_SepLine = "/";
-        private readonly static string m_SepParagraph = "\\";
+        //private readonly static string m_SepLine = "/";
+        //private readonly static string m_SepParagraph = "\\";
         private static readonly string _InternalSepLines = "¼";
-        private static string _InternalSepParagraphs = "½";
+        private static readonly string _InternalSepParagraphs = "½";
 
         private Dictionary<int, string> LyricsLines = new Dictionary<int, string>();
         private Dictionary<int, int> LyricsTimes = new Dictionary<int, int>();
@@ -527,7 +527,7 @@ namespace Karaboss.MidiLyrics
         /// </summary>
         private kLyrics RemoveExecessiveLinebreaks(kLyrics T)
         {
-            bool bFound = false;
+            bool bFound; // = false;
 
 
             // Remove first and last linefeed/paragraph if exists
@@ -723,7 +723,7 @@ namespace Karaboss.MidiLyrics
                 for (int i = 0; i < notes.Count; i++)
                 {
                     int starttime = notes[i].StartTime;
-                    int endtime = notes[i].EndTime;
+                    //int endtime = notes[i].EndTime;
 
                     // Search the syllable corresponding to the note starttime (not always true)
                     for (int j = startline; j < KLyrics.Lines.Count; j++)
@@ -735,8 +735,8 @@ namespace Karaboss.MidiLyrics
                             if (syll.CharType == Syllable.CharTypes.Text)
                             {
 
-                                tickson = syll.TicksOn;
-                                ticksoff = syll.TicksOff;
+                                //tickson = syll.TicksOn;
+                                //ticksoff = syll.TicksOff;
                                 
                                 if ( Math.Abs(syll.TicksOn - starttime) < 50)
                                 {
@@ -821,16 +821,9 @@ namespace Karaboss.MidiLyrics
         /// </summary>
         private void FixLinefeeds()
         {
-            int nbBeatsPerMeasure = sequence1.Numerator;
-            int beatDuration = _measurelen / nbBeatsPerMeasure;
-            int TicksOn;
-            int TicksOff;
-            int EndBeatTicks;
-            int beat;
-
-            int measure;
-            int ticks;
-
+            //int nbBeatsPerMeasure = sequence1.Numerator;
+            //int beatDuration = _measurelen / nbBeatsPerMeasure;
+            
             
             for (int i = 0; i < KLyrics.Lines.Count; i++)
             {
@@ -1529,7 +1522,7 @@ namespace Karaboss.MidiLyrics
         {
             int nbChords = 0;
             kLyrics lstKL = new kLyrics();
-            kLine kline = new kLine();
+            kLine kline; // = new kLine();
             Syllable syll;            
 
             for (int i = 0; i < l.Lines.Count; i++)
@@ -1586,7 +1579,7 @@ namespace Karaboss.MidiLyrics
         {
             int nbChords = 0;
             kLyrics lstKL = new kLyrics();
-            kLine kline = new kLine();
+            kLine kline; // = new kLine();
             Syllable syll;
             Syllable nextsyll;
 
@@ -1638,8 +1631,8 @@ namespace Karaboss.MidiLyrics
         /// <param name="l"></param>
         /// <returns></returns>        
         private kLyrics AddLineFeedBeforeInstrumental(kLyrics l)
-        {                       
-            int nbChords = 0;
+        {
+            int nbChords; // = 0;
             kLyrics lstKl = new kLyrics();
             kLine kline;
             kLine tmpline;
@@ -2400,8 +2393,8 @@ namespace Karaboss.MidiLyrics
 
         public void PopulateUpdatedChords(Dictionary<int, (string, int)> gbc)
         {
-            int nbBeatsPerMeasure = sequence1.Numerator;
-            int beatDuration = _measurelen / nbBeatsPerMeasure;
+            //int nbBeatsPerMeasure = sequence1.Numerator;
+            //int beatDuration = _measurelen / nbBeatsPerMeasure;
            
             // Beat
             // (chord, ticks)

@@ -61,32 +61,7 @@ namespace PicControl
          * Si songposition <> currenttextpos (syllabe active a changé) => redessine
          */
 
-       
-        #region Move form without title bar
-
-        public const int WM_NCLBUTTONDOWN = 0xA1;
-        public const int HT_CAPTION = 0x2;
-        public const int WM_LBUTTONDOWN = 0x0201;
-
-        [DllImportAttribute("user32.dll")]
-        public static extern int SendMessage(IntPtr hWnd, int Msg, int wParam, int lParam);
-        [DllImportAttribute("user32.dll")]
-        public static extern bool ReleaseCapture();
-        private HashSet<Control> controlsToMove = new HashSet<Control>();
-
-        #endregion
-
-
-        #region Events
-        
-        public new event DoubleClickEventHandler DoubleClick;
-        public event CloseEventHandler Close;
-        public event FullScreenEventHandler FullScreen;
-        public event OptionsEventHandler Options;
-        public event TopMostEventHandler TopMost;
-
-        #endregion Events
-
+                      
         #region classes
 
         // Syllabes
@@ -106,214 +81,158 @@ namespace PicControl
         #endregion classes
 
 
-        #region Karaoke Lyrics
+        #region Colors
 
-        private kLyrics _kLyricsOrg;
-        private kLyrics _kLyrics;
-        public kLyrics KLyrics 
-        { 
-            get { return _kLyrics; } 
-            set 
-            {
-                if (value == null) return;
-                if (value.Lines == null) return;
-                _kLyrics = value; 
-                _kLyricsOrg = _kLyrics.Clone();
-                if (_kLyrics != null && _kLyrics.Lines.Count > 0)
-                    Init();
-            } 
-        }
+        #region Background color
 
-        #endregion Karaoke Lyrics
-
-
-        #region MID
-
-        // Ticks for 1 sec
-        private int TicksPerSecond = 0; // TotalTicks / Duration
-
-        // Duration in seconds 
-        private double _duration;
-        public double Duration
+        // Background color        
+        private Color _BgColor;
+        public Color BgColor
         {
-            get { return _duration; }
-            set {
-
-                if (value > 0)
-                {
-                    _duration = value;
-                    if (_TotalTicks > 0)
-                    {
-                        TicksPerSecond = (int)(_TotalTicks / _duration);
-                        ResetDefaultTimings();
-                    }
-                }
-            }
-        }
-
-        private int _TotalTicks;
-        public int TotalTicks
-        {
-            get { return _TotalTicks; }
-            set 
-            {
-                if (value > 0)
-                {
-                    _TotalTicks = value;
-                    if (_duration > 0)
-                    {
-                        TicksPerSecond = (int)(_TotalTicks / _duration);
-                        ResetDefaultTimings();
-                    }
-                }
-            }
-        }
-
-        private int _FirstMelodyNoteTicksOn = 0;
-        public int FirstMelodyNoteTicksOn
-        {
-            get { return _FirstMelodyNoteTicksOn; }
+            get
+            { return _BgColor; }
             set
             {
-                _FirstMelodyNoteTicksOn = value;                
-            }
-        }
-
-        #endregion MID
-
-
-        #region Instrumentals
-
-        private int _endTime;
-        private int _startTime;
-
-        private int PlayerPositionTicks;
-        private int TargetPositionTicks;
-
-        private bool bInstrumentalStarted = false;
-        private int SecondsBeforeSinging = 0;
-        private bool bCountDown = false;
-        private int _DelayBeforeEndOfInstrumental = 0; // Delay to draw lines before the end of an instrumental: 4 sec
-        private int _MinimumInstrumentalDuration = 0;  // The minimum duration between two consecutive vocal phrases that mark an instrumental interlude : 5 sec
-        private int LastLineOfInformationPosition = 0;
-        private int _MinimumIntroDuration = 0;
-
-        #endregion Instrumentals
-
-
-        #region Karaoke display type
-
-        private kar.KaraokeDisplayTypes _karaokeDisplayType = KaraokeDisplayTypes.FixedLines;
-        public kar.KaraokeDisplayTypes KaraokeDisplayType
-        {
-            get { return _karaokeDisplayType; }
-            set
-            {
-                _karaokeDisplayType = value;
-
-                if (_kLyricsOrg != null)
-                {                   
-                    _kLyrics = _kLyricsOrg.Clone();
-                    Init();
-                }
-
-
-                pBox.Invalidate();
-            }
-        }
-
-        #endregion Karaoke display type
-
-
-        #region Slideshow
-
-        
-        /// <summary>
-        /// Display a single image as background
-        /// </summary>
-        private string _SingleImagePath = string.Empty;
-        public string SingleImagePath
-        {
-            get => _SingleImagePath;
-            set
-            {
-                if (File.Exists(value) && value != _SingleImagePath)
+                _BgColor = value;
+                if (_optionbackground == "SolidColor")
                 {
-                    _SingleImagePath = value;
-                    SetImageBackground(_SingleImagePath);
+                    pBox.BackColor = _BgColor;
                     pBox.Invalidate();
                 }
             }
         }
 
         /// <summary>
-        /// SlideShow directory
+        /// Transparency color
         /// </summary>
-        private string dirSlideShow;
-        public string DirSlideShow
+        private Color _transparencykey = Color.Lime;
+        public Color TransparencyKey
+        {
+            get { return _transparencykey; }
+            set { _transparencykey = value; }
+        }
+
+        #endregion Background color
+
+
+        #region Chord color
+
+        // Display chords or not
+        public bool OptionShowChords { get; set; }
+
+        /// <summary>
+        /// Text to sing color
+        /// </summary>
+        private Color _InactiveChordColor;
+        public Color InactiveChordColor
         {
             get
-            { return dirSlideShow; }
+            { return _InactiveChordColor; }
             set
             {
-                if (value == null) return;
-                if (value != dirSlideShow)
-                {
-                    dirSlideShow = value;
-
-                    SetDirectoryBackground(dirSlideShow);
-                    pBox.Invalidate();                    
-                }
+                _InactiveChordColor = value;
+                pBox.Invalidate();
             }
         }
 
         /// <summary>
-        /// SlideShow frequency
+        /// Chord Highligt color
         /// </summary>
-        private int freqSlideShow;
-        public int FreqDirSlideShow
+        private Color _HighlightChordColor;
+        public Color HighlightChordColor
         {
             get
-            { return freqSlideShow; }
+            { return _HighlightChordColor; }
             set
             {
-                freqSlideShow = value;                
+                _HighlightChordColor = value;
+                pBox.Invalidate();
             }
         }
 
-
-        private string[] bgFiles;
-        private string DefaultDirSlideShow;
-
-        private List<string> m_ImageFilePaths;
-
-        System.Timers.Timer  timerTransition; 
-        System.Timers.Timer timerChangeImage;
-
-        private float mBlend;
-        private int mDir = 1;
-        private int count = 0;
-
-        private Image mImg1;
-        private Image mImg2;
-        private Image Image1
+        private bool _bShowChords = false;
+        public bool bShowChords
         {
-            get { return mImg1; }
-            set { mImg1 = value; Invalidate(); }
+            get { return _bShowChords; }
+            set
+            {
+                if (value != _bShowChords)
+                {
+                    _bShowChords = value;
+                    pBox?.Invalidate();
+                }
+            }
         }
-        private Image Image2
-        {
-            get { return mImg2; }
-            set { mImg2 = value; Invalidate(); }
-        }
-        private float m_Blend
-        {
-            get { return mBlend; }
-            set { mBlend = value; Invalidate(); }
-        }
-        private Bitmap[] m_BitmapsArray;
 
-        #endregion slideshow
+        #endregion Chord color
+
+
+        #region Gradient color
+
+        private Color _Grad0Color;
+        public Color Grad0Color
+        {
+            get { return _Grad0Color; }
+            set
+            {
+                _Grad0Color = value;
+                pBox.Invalidate();
+            }
+        }
+
+        private Color _Grad1Color;
+        public Color Grad1Color
+        {
+            get { return _Grad1Color; }
+            set
+            {
+                _Grad1Color = value;
+                pBox.Invalidate();
+            }
+        }
+
+        private Color _Rhythm0Color;
+        public Color Rhythm0Color
+        {
+            get { return _Rhythm0Color; }
+            set
+            {
+                _Rhythm0Color = value;
+                pBox.BackColor = _Rhythm0Color;
+                ResetSize();
+                pBox.Invalidate();
+            }
+        }
+
+        private Color _Rhythm1Color;
+        public Color Rhythm1Color
+        {
+            get { return _Rhythm1Color; }
+            set
+            {
+                _Rhythm1Color = value;
+                ResetSize();
+                pBox.Invalidate();
+            }
+        }
+       
+        #endregion Gradient color
+
+
+        #region Instrumentals color
+
+        private Color _ActiveInstrumentalColor;
+        public Color ActiveInstrumentalColor
+        {
+            get { return _ActiveInstrumentalColor; }
+            set
+            {
+                _ActiveInstrumentalColor = value;
+                pBox.Invalidate();
+            }
+        }
+
+        #endregion Instrumentals color
 
 
         #region TextColor
@@ -393,428 +312,95 @@ namespace PicControl
 
         #endregion Textcolor       
 
-
-        #region Instrumentals color
-
-        private Color _ActiveInstrumentalColor;
-        public Color ActiveInstrumentalColor
-        {
-            get { return _ActiveInstrumentalColor; }
-            set 
-            { 
-                _ActiveInstrumentalColor = value;
-                pBox.Invalidate();
-            }
-        }
-       
-
-        #endregion Instrumentals color
+        #endregion Colors
 
 
-        #region Chord color
+        #region Draw syllables
+        public Rectangle m_DisplayRectangle { get; set; }
 
-        // Display chords or not
-        public bool OptionShowChords { get; set; }
+        private List<RectangleF> rRect;
+        //private List<RectangleF> rNextRect;
 
-        /// <summary>
-        /// Text to sing color
-        /// </summary>
-        private Color _InactiveChordColor;
-        public Color InactiveChordColor
+        private int _currentPosition;
+        public int CurrentTime
         {
             get
-            { return _InactiveChordColor; }
+            { return _currentPosition; }
             set
             {
-                _InactiveChordColor = value;
-                pBox.Invalidate();
+                _currentPosition = value;
             }
         }
 
-        /// <summary>
-        /// Chord Highligt color
-        /// </summary>
-        private Color _HighlightChordColor;
-        public Color HighlightChordColor
+        public int _currentTextPos;
+        public int CurrentTextPos
         {
             get
-            { return _HighlightChordColor; }
+            { return _currentTextPos; }
             set
             {
-                _HighlightChordColor = value;
-                pBox.Invalidate();
+                _currentTextPos = value;
             }
         }
 
-        private bool _bShowChords = false;
-        public bool bShowChords
-        {
-            get { return _bShowChords; }
-            set
-            {
-                if (value != _bShowChords)
-                {
-                    _bShowChords = value;
-                    pBox?.Invalidate();
-                }
-            }
-        }
+        private int vOffset = 0;
 
-        #endregion Chord color
+        private bool bEndOfLine = false;
+        private bool bHighLight = false;
+        private int nextStartOfLineTime = 0;
+        private int TimeToNextLineDuration = 0;
 
 
-        #region Text transform
-        
-
-        private int _nbLyricsLines = 3;
-        [Description("number of lines to display")]
-        public int nbLyricsLines
-        {
-            get
-            { return _nbLyricsLines; }
-            set
-            {
-                _nbLyricsLines = value;
-                ajustTextAgain();
-                pBox.Invalidate();
-            }
-        }
-        
-        private bool _bforceUppercase;
-        [Description("force uppercase for lyrics")]
-        public bool bforceUppercase
-        {
-            get { return _bforceUppercase; }
-            set
-            {
-                _bforceUppercase = value;
-                if (_bIsSettings)
-                    LoadDemoText();
-            }
-        }
-             
-        private bool _bshowparagraphs = true;
-        [Description("show a blank line between paragraphs")]
-        public bool bShowParagraphs
-        {
-            get { return _bshowparagraphs; }
-            set { _bshowparagraphs = value; }
-        }
+        private List<syllabe> syllabes;
+        private List<string> lstLyricsLines;    // Liste de lignes
+        private List<string> lstChordsLines;    // List of lines of chords (same number of lines as lstLyricsLines but with chords instead of lyrics)
 
 
-        #endregion Text transform
+        private int currentLine = 0;
+        private string lineMax; // Ligne longueur max
 
 
-        #region Frame type
+        private float[] LinesLengths;
 
-        // "NoBorder":
-        // "FrameThin":
-        // "Frame1":
-        // "Frame2":
-        // "Frame3":
-        // "Frame4":
-        // "Frame5":
-        // "Shadow":
-        // "Neon":
-        private string _frametype = "Frame1";
-        public string FrameType
-        {
-            get { return _frametype; }
-            set
-            {                                  
-                _frametype = value;
+        private int nextindex = 0;
+        private int lastindex = 0;
+        private float CurLength;
+        private float lastCurLength;
 
-                switch (_frametype)
-                {
-                    case "NoBorder":
-                        _borderthick = 0;
-                        break;
-                    case "FrameThin":
-                        _borderthick = 0;
-                        break;
-                    case "Frame1":
-                        _borderthick = 1;
-                        break;
-                    case "Frame2":
-                        _borderthick = 2;
-                        break;
-                    case "Frame3":
-                        _borderthick = 3;
-                        break;
-                    case "Frame4":
-                        _borderthick = 4;
-                        break;
-                    case "Frame5":
-                        _borderthick = 5;
-                        break;
-                    case "Shadow":
-                        _borderthick = 2;
-                        break;
-                    case "Neon":
-                        _borderthick = 2;
-                        break;
-                    default:
-                        _borderthick = 1;
-                        break;
-                }              
-                pBox?.Invalidate();                                
-            }
-        }
+        double _nexttime;
+        double _lasttime;
 
-        private int _borderthick = 1;
-        public int BorderThick
-        {
-            get { return _borderthick; }
-            set
-            {
-                try
-                {
-                    _borderthick = value;
-                    pBox?.Invalidate();
-                }
-                catch (Exception e)
-                {
-                    Console.Write("Error: " + e.Message);
-                }
-            }
-        }
+        private int _FirstLineToShow = 0;
+        private int _LastLineToShow = 0;
 
-        #endregion Frame type
-       
-
-        #region Gradient
-
-        private Color _Grad0Color;
-        public Color Grad0Color
-        {
-            get { return _Grad0Color; }
-            set
-            {
-                _Grad0Color = value;
-                pBox.Invalidate();
-            }
-        }
-        
-        private Color _Grad1Color;
-        public Color Grad1Color
-        {
-            get { return _Grad1Color; }
-            set
-            {
-                _Grad1Color = value;
-                pBox.Invalidate();
-            }
-        }
-        
-        private Color _Rhythm0Color;
-        public Color Rhythm0Color
-        {
-            get { return _Rhythm0Color; }
-            set
-            {
-                _Rhythm0Color = value;
-                pBox.BackColor = _Rhythm0Color;
-                ResetSize();
-                pBox.Invalidate();
-            }
-        }
-        
-        private Color _Rhythm1Color;
-        public Color Rhythm1Color
-        {
-            get { return _Rhythm1Color; }
-            set
-            {
-                _Rhythm1Color = value;
-                ResetSize();
-                pBox.Invalidate();
-            }
-        }
-        
-
-        readonly System.Windows.Forms.Timer _timerGradient = new System.Windows.Forms.Timer();
-
-        // Default angle for the gradient
-        
-        private int W;
-        private int H;
-        private int speed;
-        
-        private int _beat;
-        public int Beat
-        {
-            get { return _beat; }
-            set
-            {
-                _beat = value;
-                speed = (int)(_beat / 12.0);
-            }
-        }
-
-        private float _angle = 45.0f;
-        public float GradientAngle { get { return _angle; } set { _angle = value; pBox.Invalidate(); } }       
-
-        #endregion Gradient
+        private int _lastLine = -1;
+        private int _lineHeight = 0;
+        private int _linesHeight = 0;
+        private string _biggestLine = string.Empty;
 
 
-        #region Background
+        private string active_fragment = string.Empty;
+        private float active_fragment_length = 0;
+        private string highlight_fragment = string.Empty;
+        private float highlight_fragment_length = 0;
+        private string inactive_fragment = string.Empty;
+        private float inactive_fragment_length = 0;
 
-        // Background color
-        private int _bpm;
-        private Color _BgColor;
-        public Color BgColor
-        {
-            get
-            { return _BgColor; }
-            set
-            {
-                _BgColor = value;
-                if (_optionbackground == "SolidColor")
-                {
-                    pBox.BackColor = _BgColor;
-                    pBox.Invalidate();
-                }
-            }
-        }
-
-        // Color beside text (background of text)
-        private bool _bTextBackGround = true;
-        public bool bTextBackGround
-        {
-            get { return _bTextBackGround; }
-            set
-            {
-                _bTextBackGround = value;
-                pBox.Invalidate();
-            }
-        }
-
-        /// <summary>
-        /// Transparency color
-        /// </summary>
-        private Color _transparencykey = Color.Lime;
-        public Color TransparencyKey
-        {
-            get { return _transparencykey; }
-            set { _transparencykey = value; }
-        }
+        #endregion Draw syllables
 
 
-        private string _optionbackground;
-        public string OptionBackground
-        {
-            get { return _optionbackground; }
-            set
-            {
-                _optionbackground = value;
+        #region Events
 
-                switch (_optionbackground)
-                {
-                    case "Image":
-                        SetImageBackground(_SingleImagePath);
-                        pBox.Invalidate();
-                        break;
-                    
-                    case "Diaporama":
-                        if (dirSlideShow != null && Directory.Exists(dirSlideShow) && freqSlideShow > 0)
-                            SetDirectoryBackground(dirSlideShow);
-                        break;
+        public new event DoubleClickEventHandler DoubleClick;
+        public event CloseEventHandler Close;
+        public event FullScreenEventHandler FullScreen;
+        public event OptionsEventHandler Options;
+        public event TopMostEventHandler TopMost;
 
-                    
-                    case "SolidColor":                        
-                        Terminate();
-                        _timerGradient.Stop();
-                        pBox.Image = null;
-                        m_CurrentImage = null;
-                        pBox.BackColor = _BgColor;
-                        pBox.Invalidate();
-                        break;
-
-                    
-                    case "Gradient":
-                        //m_Cancel = true;
-                        Terminate();
-                        pBox.Image = null;
-                        m_CurrentImage = null;
-                        _timerGradient.Start();
-                        pBox.Invalidate();
-                        break;
-
-                    case "Rhythm":
-                        //m_Cancel = true;
-                        Terminate();
-                        _timerGradient.Start();
-                        pBox.Image = null;
-                        m_CurrentImage = null;
-                        ResetSize();
-                        pBox.BackColor = _Rhythm0Color;
-                        pBox.Invalidate();
-                        break;
-
-                    case "Transparent":
-                        //m_Cancel = true;
-                        Terminate();
-                        _timerGradient.Stop();
-                        pBox.Image = null;
-                        m_CurrentImage = null;
-                        pBox.BackColor = _transparencykey;
-                        pBox.Invalidate();
-                        break;
-                    default:
-                        break;
-                }
-            }
-        }
-
-
-        /// <summary>
-        /// Display lyrics option: top, Center, Bottom
-        /// </summary>
-        public enum OptionsDisplay
-        {
-            Top = 0,
-            Center = 1,
-            Bottom = 2,
-        }
-        private OptionsDisplay _OptionDisplay;
-        /// <summary>
-        /// Display lyrics option: top, Center, Bottom
-        /// </summary>
-        public OptionsDisplay OptionDisplay
-        {
-            get { return _OptionDisplay; }
-            set
-            {
-                _OptionDisplay = value;
-                pBox.Invalidate();
-            }
-        }
-
-
-        #endregion Background
-
-
-        #region Image display
-
-        /// <summary>
-        /// Size mode of picturebox
-        /// </summary>
-        private PictureBoxSizeMode _sizemode;
-        public PictureBoxSizeMode SizeMode
-        {
-            get { return _sizemode; }
-            set
-            {
-                _sizemode = value;
-                pBox.SizeMode = _sizemode;
-            }
-        }
-
-        #endregion Image display
+        #endregion Events
 
 
         #region Font
-
 
         private Font m_font;
         private float emSize; // Size of the font
@@ -861,7 +447,17 @@ namespace PicControl
         #endregion Font
 
 
-        #region Is used for settings
+        #region Form
+
+        private bool bTopMostChecked = true;
+        private bool disposed = false;
+
+        #region Context menus
+        private ContextMenu picContextMenu;
+        #endregion Context menus
+
+
+        #region Is used for settings?
 
         private bool _bIsSettings = false;
         [Description("When true, pictureBoxControl is used in a settings window")]
@@ -871,7 +467,479 @@ namespace PicControl
             set { _bIsSettings = value; }
         }
 
-        #endregion Is used for settings
+        #endregion Is used for settings?
+
+
+        #region Move form without title bar
+
+        public const int WM_NCLBUTTONDOWN = 0xA1;
+        public const int HT_CAPTION = 0x2;
+        public const int WM_LBUTTONDOWN = 0x0201;
+
+        [DllImportAttribute("user32.dll")]
+        public static extern int SendMessage(IntPtr hWnd, int Msg, int wParam, int lParam);
+        [DllImportAttribute("user32.dll")]
+        public static extern bool ReleaseCapture();
+        private HashSet<Control> controlsToMove = new HashSet<Control>();
+
+        #endregion
+
+        #endregion Form
+
+
+        #region Gradients
+
+        readonly System.Windows.Forms.Timer _timerGradient = new System.Windows.Forms.Timer();
+
+        // Default angle for the gradient
+
+        private int W;
+        private int H;
+        private int speed;
+
+        private int _beat;
+        public int Beat
+        {
+            get { return _beat; }
+            set
+            {
+                _beat = value;
+                speed = (int)(_beat / 12.0);
+            }
+        }
+
+        private float _angle = 45.0f;
+        public float GradientAngle { get { return _angle; } set { _angle = value; pBox.Invalidate(); } }
+
+
+        // Used by Rhythm to display different effect according to beat number
+        private int _beatNumber = 1;
+
+        // Used by beat effect
+        private int _bpm;
+
+        #endregion Gradients
+
+
+        #region Instrumentals
+
+        private int _endTime;               // used by countdown
+        private int _startTime;             // used by countdown
+
+        private int PlayerPositionTicks;    // current player position in ticks
+        private int TargetPositionTicks;    // position to reach in ticks
+
+        private bool bInstrumentalStarted = false;
+        private int SecondsBeforeSinging = 0;
+        private bool bCountDown = false;
+        private int _DelayBeforeEndOfInstrumental = 0; // Delay to draw lines before the end of an instrumental: 4 sec
+        private int _MinimumInstrumentalDuration = 0;  // The minimum duration between two consecutive vocal phrases that mark an instrumental interlude : 5 sec
+        private int LastLineOfInformationPosition = 0; // Used to store the last valid Instrumental line position (to manage end of song)
+        private int _MinimumIntroDuration = 0;
+
+        #endregion Instrumentals
+       
+
+        #region Karaoke display layout
+
+        private kar.KaraokeDisplayTypes _karaokeDisplayType = KaraokeDisplayTypes.FixedLines;
+        public kar.KaraokeDisplayTypes KaraokeDisplayType
+        {
+            get { return _karaokeDisplayType; }
+            set
+            {
+                _karaokeDisplayType = value;
+
+                if (_kLyricsOrg != null)
+                {
+                    _kLyrics = _kLyricsOrg.Clone();
+                    Init();
+                }
+                pBox.Invalidate();
+            }
+        }
+
+        #endregion Karaoke display layout
+
+
+        #region Karaoke Lyrics
+
+        private kLyrics _kLyricsOrg;
+        private kLyrics _kLyrics;
+        public kLyrics KLyrics
+        {
+            get { return _kLyrics; }
+            set
+            {
+                if (value == null) return;
+                if (value.Lines == null) return;
+                _kLyrics = value;
+                _kLyricsOrg = _kLyrics.Clone();
+                if (_kLyrics != null && _kLyrics.Lines.Count > 0)
+                    Init();
+            }
+        }
+
+        #endregion Karaoke Lyrics
+
+
+        #region MIDI
+
+        // Ticks for 1 sec
+        private int TicksPerSecond = 0; // TotalTicks / Duration
+
+        // Duration in seconds 
+        private double _duration;
+        public double Duration
+        {
+            get { return _duration; }
+            set {
+
+                if (value > 0)
+                {
+                    _duration = value;
+                    if (_TotalTicks > 0)
+                    {
+                        TicksPerSecond = (int)(_TotalTicks / _duration);
+                        ResetDefaultTimings();
+                    }
+                }
+            }
+        }
+
+        private int _TotalTicks;
+        public int TotalTicks
+        {
+            get { return _TotalTicks; }
+            set 
+            {
+                if (value > 0)
+                {
+                    _TotalTicks = value;
+                    if (_duration > 0)
+                    {
+                        TicksPerSecond = (int)(_TotalTicks / _duration);
+                        ResetDefaultTimings();
+                    }
+                }
+            }
+        }
+
+        private int _FirstMelodyNoteTicksOn = 0;
+        public int FirstMelodyNoteTicksOn
+        {
+            get { return _FirstMelodyNoteTicksOn; }
+            set
+            {
+                _FirstMelodyNoteTicksOn = value;                
+            }
+        }
+
+
+        private int _beatDuration = 0;
+        public int BeatDuration
+        {
+            get { return _beatDuration; }
+            set
+            {
+                if (value > 0)
+                {
+                    _beatDuration = value;
+                }
+            }
+        }
+
+        #endregion MIDI
+
+
+        #region Picture
+
+        /// <summary>
+        /// Size mode of picturebox
+        /// </summary>
+        private PictureBoxSizeMode _sizemode;
+        public PictureBoxSizeMode SizeMode
+        {
+            get { return _sizemode; }
+            set
+            {
+                _sizemode = value;
+                pBox.SizeMode = _sizemode;
+            }
+        }
+
+        public ImageLayout imgLayout { get; set; }
+        public Image m_CurrentImage { get; set; }
+
+        #endregion Picture
+
+
+        #region Slideshow
+
+        private string[] bgFiles;
+        private string DefaultDirSlideShow;
+        private List<string> m_ImageFilePaths;
+        private Bitmap[] m_BitmapsArray;
+
+        #region Single image
+        // Display a single image as background        
+        private string _SingleImagePath = string.Empty;
+        public string SingleImagePath
+        {
+            get => _SingleImagePath;
+            set
+            {
+                if (File.Exists(value) && value != _SingleImagePath)
+                {
+                    _SingleImagePath = value;
+                    SetImageBackground(_SingleImagePath);
+                    pBox.Invalidate();
+                }
+            }
+        }
+
+        #endregion Single image
+
+
+        #region SlideShow
+        // SlideShow directory        
+        private string dirSlideShow;
+        public string DirSlideShow
+        {
+            get
+            { return dirSlideShow; }
+            set
+            {
+                if (value == null) return;
+                if (value != dirSlideShow)
+                {
+                    dirSlideShow = value;
+
+                    SetDirectoryBackground(dirSlideShow);
+                    pBox.Invalidate();                    
+                }
+            }
+        }
+
+        
+        // SlideShow frequency        
+        private int freqSlideShow;
+        public int FreqDirSlideShow
+        {
+            get
+            { return freqSlideShow; }
+            set
+            {
+                freqSlideShow = value;                
+            }
+        }
+
+        #endregion SlideShow
+
+        
+        #region Transition effect
+
+        System.Timers.Timer  timerTransition; 
+        System.Timers.Timer timerChangeImage;
+
+        private float mBlend;
+        private int mDir = 1;
+        private int count = 0;
+
+        private Image mImg1;
+        private Image mImg2;
+        private Image Image1
+        {
+            get { return mImg1; }
+            set { mImg1 = value; Invalidate(); }
+        }
+        private Image Image2
+        {
+            get { return mImg2; }
+            set { mImg2 = value; Invalidate(); }
+        }
+        private float m_Blend
+        {
+            get { return mBlend; }
+            set { mBlend = value; Invalidate(); }
+        }
+
+        #endregion Transition effect
+
+        
+        // Background option : image, diaporama, solidColor, transparent 
+        private string _optionbackground;
+        public string OptionBackground
+        {
+            get { return _optionbackground; }
+            set
+            {
+                _optionbackground = value;
+
+                switch (_optionbackground)
+                {
+                    case "Image":
+                        SetImageBackground(_SingleImagePath);
+                        pBox.Invalidate();
+                        break;
+
+                    case "Diaporama":
+                        if (dirSlideShow != null && Directory.Exists(dirSlideShow) && freqSlideShow > 0)
+                            SetDirectoryBackground(dirSlideShow);
+                        break;
+
+
+                    case "SolidColor":
+                        Terminate();
+                        _timerGradient.Stop();
+                        pBox.Image = null;
+                        m_CurrentImage = null;
+                        pBox.BackColor = _BgColor;
+                        pBox.Invalidate();
+                        break;
+
+
+                    case "Gradient":
+                        //m_Cancel = true;
+                        Terminate();
+                        pBox.Image = null;
+                        m_CurrentImage = null;
+                        _timerGradient.Start();
+                        pBox.Invalidate();
+                        break;
+
+                    case "Rhythm":
+                        //m_Cancel = true;
+                        Terminate();
+                        _timerGradient.Start();
+                        pBox.Image = null;
+                        m_CurrentImage = null;
+                        ResetSize();
+                        pBox.BackColor = _Rhythm0Color;
+                        pBox.Invalidate();
+                        break;
+
+                    case "Transparent":
+                        //m_Cancel = true;
+                        Terminate();
+                        _timerGradient.Stop();
+                        pBox.Image = null;
+                        m_CurrentImage = null;
+                        pBox.BackColor = _transparencykey;
+                        pBox.Invalidate();
+                        break;
+                    default:
+                        break;
+                }
+            }
+        }
+
+
+        #endregion slideshow
+
+
+        #region Text transform
+
+        #region Frame type
+
+        // "NoBorder":
+        // "FrameThin":
+        // "Frame1":
+        // "Frame2":
+        // "Frame3":
+        // "Frame4":
+        // "Frame5":
+        // "Shadow":
+        // "Neon":
+        private string _frametype = "Frame1";
+        public string FrameType
+        {
+            get { return _frametype; }
+            set
+            {
+                _frametype = value;
+
+                switch (_frametype)
+                {
+                    case "NoBorder":
+                        _borderthick = 0;
+                        break;
+                    case "FrameThin":
+                        _borderthick = 0;
+                        break;
+                    case "Frame1":
+                        _borderthick = 1;
+                        break;
+                    case "Frame2":
+                        _borderthick = 2;
+                        break;
+                    case "Frame3":
+                        _borderthick = 3;
+                        break;
+                    case "Frame4":
+                        _borderthick = 4;
+                        break;
+                    case "Frame5":
+                        _borderthick = 5;
+                        break;
+                    case "Shadow":
+                        _borderthick = 2;
+                        break;
+                    case "Neon":
+                        _borderthick = 2;
+                        break;
+                    default:
+                        _borderthick = 1;
+                        break;
+                }
+                pBox?.Invalidate();
+            }
+        }
+
+        private int _borderthick = 1;
+        public int BorderThick
+        {
+            get { return _borderthick; }
+            set
+            {
+                try
+                {
+                    _borderthick = value;
+                    pBox?.Invalidate();
+                }
+                catch (Exception e)
+                {
+                    Console.Write("Error: " + e.Message);
+                }
+            }
+        }
+
+        #endregion Frame type
+
+
+        #region Text position        
+        // Display lyrics option: top, Center, Bottom        
+        public enum OptionsDisplay
+        {
+            Top = 0,
+            Center = 1,
+            Bottom = 2,
+        }
+        private OptionsDisplay _OptionDisplay;
+        /// <summary>
+        /// Display lyrics option: top, Center, Bottom
+        /// </summary>
+        public OptionsDisplay OptionDisplay
+        {
+            get { return _OptionDisplay; }
+            set
+            {
+                _OptionDisplay = value;
+                pBox.Invalidate();
+            }
+        }
+
+        #endregion Text position
 
 
         #region Internal lyrics separators
@@ -881,8 +949,58 @@ namespace PicControl
 
         #endregion
 
+        private int _nbLyricsLines = 3;
+        [Description("number of lines to display")]
+        public int nbLyricsLines
+        {
+            get
+            { return _nbLyricsLines; }
+            set
+            {
+                _nbLyricsLines = value;
+                ajustTextAgain();
+                pBox.Invalidate();
+            }
+        }
+        
+        private bool _bforceUppercase;
+        [Description("force uppercase for lyrics")]
+        public bool bforceUppercase
+        {
+            get { return _bforceUppercase; }
+            set
+            {
+                _bforceUppercase = value;
+                if (_bIsSettings)
+                    LoadDemoText();
+            }
+        }
+             
+        private bool _bshowparagraphs = true;
+        [Description("show a blank line between paragraphs")]
+        public bool bShowParagraphs
+        {
+            get { return _bshowparagraphs; }
+            set { _bshowparagraphs = value; }
+        }
+
+        // Draw a black background beside text?
+        private bool _bTextBackGround = true;
+        public bool bTextBackGround
+        {
+            get { return _bTextBackGround; }
+            set
+            {
+                _bTextBackGround = value;
+                pBox.Invalidate();
+            }
+        }
+
 
         #region Lyrics transition effects
+
+        private float percent = 0;
+        private float lastpercent = 0;
 
         public enum TransitionEffects
         {
@@ -917,86 +1035,8 @@ namespace PicControl
             set { _steppercent = value; }
         }
 
-        #endregion Lyrics transition effects        
-
-
-        #region Others
-
-        private bool bTopMostChecked = true;
-        private ContextMenu picContextMenu;
-
-        public ImageLayout imgLayout { get; set; }
-        public Image m_CurrentImage { get; set; }
-                       
-        public Rectangle m_DisplayRectangle { get; set; }        
-                        
-        private int _currentPosition;
-        public int CurrentTime {
-            get
-            { return _currentPosition; }
-            set
-            {
-                _currentPosition = value;
-            }
-        }
-
-        private int _beatDuration = 0;
-        public int BeatDuration
-        {
-            get { return _beatDuration; }
-            set 
-            {
-                if (value > 0)
-                {
-                    _beatDuration = value;
-                    //_DelayBeforeEndOfInstrumental = 4 * _beatDuration;
-                }
-            }
-        }
-
-        public int _currentTextPos;
-        public int CurrentTextPos
-        {
-            get
-            { return _currentTextPos; }
-            set
-            {
-                _currentTextPos = value;
-            }
-        }
-                              
-
-        private bool disposed = false;                  
-
-        private int vOffset = 0;
-        //private int _lineHeight = 0;        
-        //private int _linesHeight = 0;        // Full song height (number of lines * line height)
-
-        private bool bEndOfLine = false;
-        private bool bHighLight = false;
-        private int nextStartOfLineTime = 0;        
-        private int TimeToNextLineDuration = 0;
-
-
-        private List<syllabe> syllabes;
-        private List<string> lstLyricsLines;    // Liste de lignes
-        private List<string> lstChordsLines;    // List of lines of chords (same number of lines as lstLyricsLines but with chords instead of lyrics)
-
-
-        private int currentLine = 0;
-        private string lineMax; // Ligne longueur max
-        
-        
-        private List<RectangleF> rRect;
-        private List<RectangleF> rNextRect;        
-
-        private int _beatNumber = 1;
-
-
-        private float percent = 0;
-        private float lastpercent = 0;
-
-        private long _timerintervall = 50;      // Intervall of timer of frmMp3Player
+        // Speed of progressive color of lyric being sung used by _steppercent
+        private long _timerintervall = 50;      
         public long timerIntervall
         {
             get { return _timerintervall; }
@@ -1009,36 +1049,12 @@ namespace PicControl
         }
 
 
-        private float[] LinesLengths;
+        #endregion Lyrics transition effects        
 
-        private int nextindex = 0;
-        private int lastindex = 0;
-        private float CurLength;
-        private float lastCurLength;
-
-        double _nexttime;
-        double _lasttime;
-
-        private int _FirstLineToShow = 0;
-        private int _LastLineToShow = 0;
-
-        private int _lastLine = -1;
-        private int _lineHeight = 0;
-        private int _linesHeight = 0;
-        private string _biggestLine = string.Empty;
+        #endregion Text transform       
 
 
-        private string active_fragment = string.Empty;
-        private float active_fragment_length = 0;
-        private string highlight_fragment = string.Empty;
-        private float highlight_fragment_length = 0;
-        private string inactive_fragment = string.Empty;
-        private float inactive_fragment_length = 0;
-
-
-        #endregion Others
-
-
+       
         /// <summary>
         /// Constructor of pictureBoxControl
         /// </summary>
@@ -1166,20 +1182,21 @@ namespace PicControl
 
         public void LoadDemoText()
         {
-            List<string> lines = new List<string>();
-            lines.Add("Lorem ipsum dolor sit amet,");
-            lines.Add("consectetur adipisicing elit,");
-            lines.Add("sed do eiusmod tempor incididunt");
-            lines.Add("ut labore et dolore magna aliqua.");
-            lines.Add("Ut enim ad minim veniam,");
-            lines.Add("quis nostrud exercitation ullamco");
-            lines.Add("laboris nisi ut aliquip");
-            lines.Add("ex ea commodo consequat.");
-            lines.Add("Duis aute irure dolor in reprehenderit");
-            lines.Add("in voluptate velit esse cillum dolore");
-            lines.Add("eu fugiat nulla pariatur.");
-
-            // Do not use KLyrics but _kLyrics to be able to use the same LoadSong method for demo and real text
+            List<string> lines = new List<string>
+            {
+                "Lorem ipsum dolor sit amet,",
+                "consectetur adipisicing elit,",
+                "sed do eiusmod tempor incididunt",
+                "ut labore et dolore magna aliqua.",
+                "Ut enim ad minim veniam,",
+                "quis nostrud exercitation ullamco",
+                "laboris nisi ut aliquip",
+                "ex ea commodo consequat.",
+                "Duis aute irure dolor in reprehenderit",
+                "in voluptate velit esse cillum dolore",
+                "eu fugiat nulla pariatur.",
+            };
+            
             _kLyrics = StoreDemoText(lines, 500);
 
             // Load song with demo text
@@ -1195,7 +1212,7 @@ namespace PicControl
         {
             int ticks = 0;
             Syllable syll;
-            kLine kLine = new kLine();
+            kLine kLine; // = new kLine();
             kLyrics KL = new kLyrics();
 
             for (int i = 0; i < lines.Count; i++)
@@ -1277,11 +1294,11 @@ namespace PicControl
         {
             int tOnPrevious = 0;
             int duration = 0;
-            int t = 0;
+            int t; // = 0;
             kLyrics klsWithinstrumentals = new kLyrics();
             kLine line;
-            string text = string.Empty;
-            int tend = 0;
+            //string text = string.Empty;
+            int tend; // = 0;
 
             
             if (TicksPerSecond == 0)
@@ -1459,8 +1476,8 @@ namespace PicControl
             kLyrics klsWithTrailingSyllable = new kLyrics();
             kLine line;
             Syllable syll;
-            int ticksOn = 0;
-            int ticksOff = 0;
+            int ticksOn; // = 0;
+            int ticksOff; // = 0;
 
             for (int i = 0; i < kls.Lines.Count; i++)
             {
@@ -2065,13 +2082,17 @@ namespace PicControl
             count = 0;
 
             timerChangeImage?.Dispose();
-            timerChangeImage = new System.Timers.Timer();
-            timerChangeImage.Interval = freqSlideShow * 1000;
+            timerChangeImage = new System.Timers.Timer()
+            {
+                Interval = freqSlideShow * 1000
+            };
             timerChangeImage.Elapsed += (sender, e) => OnTimerChangeImage();
 
             timerTransition?.Dispose();
-            timerTransition = new System.Timers.Timer();
-            timerTransition.Interval = 50;
+            timerTransition = new System.Timers.Timer()
+            {
+                Interval = 50
+            };
             timerTransition.Elapsed += (sender, e) => OnTimerTransition();
 
             try
@@ -2266,7 +2287,7 @@ namespace PicControl
         {
             string chord;
             string lyric;
-            string lineChords = string.Empty;
+            string lineChords; // = string.Empty;
             List<string> lstChords = new List<string>();
 
             for (int i = 0; i < kl.Lines.Count; i++)
@@ -2316,23 +2337,27 @@ namespace PicControl
 
                 for (int j = 0; j < line.Syllables.Count; j++)
                 {
-                    kSyl = line.Syllables[j];                   
+                    kSyl = line.Syllables[j];
 
-                    syl = new syllabe();
+                    syl = new syllabe() {
 
-                    syl.chord = kSyl.Chord;
-                    syl.line = i;                                                                   // line number of syllabe
-                    syl.posline = j;                                                                // position dans la ligne
-                    syl.pos = lstSyllabes.Count;                                                    // position dans la chanson
-                    syl.text = kSyl.CharType == Syllable.CharTypes.ParagraphSep ? " " : kSyl.Text;           // text of syllabe, space if paragraph
-                    syl.time = kSyl.TicksOn;                                                        // time of syllabe
-                    syl.SylCount = line.Syllables.Count;                                            // number of syllabes in this line                      
-                    syl.last = line.Syllables.Count - 1;                                            // position of last syllabe
+                        chord = kSyl.Chord,
+                        line = i,                                                                   // line number of syllabe
+                        posline = j,                                                                // position dans la ligne
+                        pos = lstSyllabes.Count,                                                    // position dans la chanson
+                        text = kSyl.CharType == Syllable.CharTypes.ParagraphSep ? " " : kSyl.Text,           // text of syllabe, space if paragraph
+                        time = kSyl.TicksOn,                                                        // time of syllabe
+                        SylCount = line.Syllables.Count,                                            // number of syllabes in this line                      
+                        last = line.Syllables.Count - 1,
+                        offset = 0,
+                    };
+                    
+                    // position of last syllabe
                     for (int k = 0; k < i; k++)
                     {
                         syl.last += kl.Lines[k].Syllables.Count;
                     }
-                    syl.offset = 0;
+                    
                     lstSyllabes.Add(syl);
                    
                 }
@@ -2986,8 +3011,8 @@ namespace PicControl
             int x0;            
             int offset = _lineHeight;
 
-            int W;
-            int H;
+            //int W;
+            //int H;
 
             float x1;
             float y1;
@@ -4214,7 +4239,7 @@ namespace PicControl
             // _FirstLineToShow + 1          1
             // _FirstLineToShow + 2          2
             // _FirstLineToShow + 3          3
-            int LineOfInformationPosition = -2;
+            int LineOfInformationPosition; // = -2;
 
             int[] LinesNr = new int[4];
 
@@ -4338,7 +4363,7 @@ namespace PicControl
                 DrawActiveLineWithBorders(e, _FirstLineToShow, y1);
 
                 // Line y2 must be drawned active when
-                bool IsActive = ((_FirstLineToShow % 4 == 1) || (_FirstLineToShow % 4 == 3)) ? true : false;
+                bool IsActive = ((_FirstLineToShow % 4 == 1) || (_FirstLineToShow % 4 == 3)); // ? true : false;
 
                 // Draw y2 line: active when before line y1 (already sung), inactive when after line y1 (not yet sung)
                 if (idx2 >= 0)
@@ -4602,7 +4627,7 @@ namespace PicControl
             // _FirstLineToShow + 1          1
             // _FirstLineToShow + 2          2
             // _FirstLineToShow + 3          3
-            int LineOfInformationPosition = -2;
+            int LineOfInformationPosition; // = -2;
 
             int[] LinesNr = new int[4];
 
@@ -4727,7 +4752,7 @@ namespace PicControl
                 DrawActiveLineWithShadow(e, _FirstLineToShow, y1);
 
                 // Line y2 must be drawned active when
-                bool IsActive = ((_FirstLineToShow % 4 == 1) || (_FirstLineToShow % 4 == 3)) ? true : false;
+                bool IsActive = ((_FirstLineToShow % 4 == 1) || (_FirstLineToShow % 4 == 3)); // ? true : false;
 
                 // Draw y2 line: active when before line y1 (already sung), inactive when after line y1 (not yet sung)
                 if (idx2 >= 0)
@@ -4990,7 +5015,7 @@ namespace PicControl
             // _FirstLineToShow + 1          1
             // _FirstLineToShow + 2          2
             // _FirstLineToShow + 3          3
-            int LineOfInformationPosition = -2;
+            int LineOfInformationPosition; // = -2;
 
             int[] LinesNr = new int[4];
 
@@ -5115,7 +5140,7 @@ namespace PicControl
                 DrawActiveLineWithNeon(e, _FirstLineToShow, y1);
 
                 // Line y2 must be drawned active when
-                bool IsActive = ((_FirstLineToShow % 4 == 1) || (_FirstLineToShow % 4 == 3)) ? true : false;
+                bool IsActive = (_FirstLineToShow % 4 == 1) || (_FirstLineToShow % 4 == 3); // ? true : false;
 
                 // Draw y2 line: active when before line y1 (already sung), inactive when after line y1 (not yet sung)
                 if (idx2 >= 0)
@@ -5401,7 +5426,7 @@ namespace PicControl
             int y2;    // y2 is the y coordinate of the inactive line to display (line _FirstLineToShow + 1)
 
             int LineOfInformationPosition = -2;
-            int LinePosition = -1;
+            int LinePosition; // = -1;
 
 
             #region Line layout
@@ -5599,7 +5624,7 @@ namespace PicControl
             int y2;    // y2 is the y coordinate of the inactive line to display (line _FirstLineToShow + 1)
 
             int LineOfInformationPosition = -2;
-            int LinePosition = -1;
+            int LinePosition; // = -1;
 
             #region Line layout
 
@@ -5789,7 +5814,7 @@ namespace PicControl
             int y2;    // y2 is the y coordinate of the inactive line to display (line _FirstLineToShow + 1)
 
             int LineOfInformationPosition = -2;
-            int LinePosition = -1;
+            int LinePosition; // = -1;
 
             #region Line layout
 
@@ -6079,7 +6104,7 @@ namespace PicControl
                 case PictureBoxSizeMode.Zoom:
                     float zoomFactor = (float)ClientSize.Height / (float)imgHeight;
                     x = (this.ClientSize.Width - (int)(imgWidth * zoomFactor)) / 2;
-                    y = 0;
+                    //y = 0;
                     return new Rectangle(x, 0, (int)(imgWidth * zoomFactor), this.ClientSize.Height);
                    
                 default:
@@ -6145,6 +6170,7 @@ namespace PicControl
                 {
                     // Rectangles of current line
                     createListRectangles(0);
+                    /*
                     // Rectangles of next line
                     if (syllabes != null && syllabes.Count > 0)
                     {
@@ -6152,6 +6178,7 @@ namespace PicControl
                         // Rectangles for other lines
                         //createListNextRectangles(pos);
                     }
+                    */
                 }
                 else
                 {
@@ -6159,10 +6186,12 @@ namespace PicControl
                     pos = _currentTextPos - syllabes[_currentTextPos].posline;
                     createListRectangles(pos);
                     
+                    /*
                     // Rectangles of next line
                     pos = syllabes[_currentTextPos].last + 1;
                     // Rectangles for other lines 
                     //createListNextRectangles(pos);
+                    */
                 }
             }
 

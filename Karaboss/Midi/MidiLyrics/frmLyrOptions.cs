@@ -174,9 +174,6 @@ namespace Karaboss
         private bool bForceUppercase = false;
 
         // Number of lines to display
-        private int NbLines;
-
-        // Number of lines to display
         private int _nbLyricsLines;
 
         #endregion Text transform                  
@@ -206,8 +203,8 @@ namespace Karaboss
             TopMost = true;
 
             LoadOptions();     
-            SetOptions();
-            
+            SetOptions();            
+
             pBox.bIsSettings = true;
             pBox.LoadDemoText();
         }
@@ -265,8 +262,8 @@ namespace Karaboss
                 //Window lyrics TopMost
                 frmMidiLyrics.bTopMost = _bTopMost;
 
-                NbLines = Convert.ToInt32(UpDownNbLines.Value);
-                frmMidiLyrics.nbLyricsLines = NbLines;
+                _nbLyricsLines = Convert.ToInt32(UpDownNbLines.Value);
+                frmMidiLyrics.nbLyricsLines = _nbLyricsLines;
 
                 frmMidiLyrics.SizeMode = SizeMode;
 
@@ -497,7 +494,7 @@ namespace Karaboss
                 #endregion Backgrounds
 
                 // Nb lines to display
-                NbLines = Properties.Settings.Default.TxtNbLines;
+                _nbLyricsLines = Properties.Settings.Default.TxtNbLines;
 
 
                 // SlideShow directory
@@ -552,7 +549,7 @@ namespace Karaboss
                 HighlightColor = Color.Red;
                 InactiveColor = Color.YellowGreen;
                 ActiveBorderColor = Color.Black;
-                NbLines = 3;                
+                _nbLyricsLines = 3;                
                 
                 dirSlideShow = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), Application.ProductName) + "\\slideshow";
 
@@ -567,12 +564,14 @@ namespace Karaboss
         private void PopulateKaraokeDisplayTypes()
         {
             // Populate karaoke display types cbKaraokeType         
-            KaraokeTypes = new Dictionary<string, string>();
-            KaraokeTypes.Add("FixedLines", Strings.KTypesFixedLines);
-            KaraokeTypes.Add("ScrollingLinesBottomUp", Strings.KTypesScrollingLinesBottomUp);
-            KaraokeTypes.Add("ScrollingLinesTopDown", Strings.KTypesScrollingLinesTopDown);
-            KaraokeTypes.Add("TwoLinesSwapped", Strings.KTypesTwoLinesSwapped);
-            KaraokeTypes.Add("FourLinesSwapped", Strings.KTypesFourLinesSwapped);
+            KaraokeTypes = new Dictionary<string, string>()
+            {
+                { "FixedLines", Strings.KTypesFixedLines },
+                { "ScrollingLinesBottomUp", Strings.KTypesScrollingLinesBottomUp },
+                {"ScrollingLinesTopDown", Strings.KTypesScrollingLinesTopDown },
+                { "TwoLinesSwapped", Strings.KTypesTwoLinesSwapped },
+                { "FourLinesSwapped", Strings.KTypesFourLinesSwapped },
+            };
             cbKaraokeType.DataSource = new BindingSource(KaraokeTypes, null);
             cbKaraokeType.ValueMember = "Key";
             cbKaraokeType.DisplayMember = "Value";
@@ -602,16 +601,18 @@ namespace Karaboss
         /// </summary>
         private void PopulateLyricBorders()
         {
-            Dictionary<string, string> Frames = new Dictionary<string, string>();
-            Frames.Add("NoBorder", Strings.KfnBorderNoBorder);
-            Frames.Add("FrameThin", Strings.KfnBorderFrameThin);
-            Frames.Add("Frame1", Strings.KfnBorderFrame1);
-            Frames.Add("Frame2", Strings.KfnBorderFrame2);
-            Frames.Add("Frame3", Strings.KfnBorderFrame3);
-            Frames.Add("Frame4", Strings.KfnBorderFrame4);
-            Frames.Add("Frame5", Strings.KfnBorderFrame5);
-            Frames.Add("Shadow", Strings.KfnBorderShadow);
-            Frames.Add("Neon", Strings.KfnBorderNeon);
+            Dictionary<string, string> Frames = new Dictionary<string, string>()
+            {
+                { "NoBorder", Strings.KfnBorderNoBorder },
+                { "FrameThin", Strings.KfnBorderFrameThin },
+                { "Frame1", Strings.KfnBorderFrame1 },
+                { "Frame2", Strings.KfnBorderFrame2 },
+                { "Frame3", Strings.KfnBorderFrame3 },
+                { "Frame4", Strings.KfnBorderFrame4 },
+                { "Frame5", Strings.KfnBorderFrame5 },
+                { "Shadow", Strings.KfnBorderShadow },
+                { "Neon", Strings.KfnBorderNeon }
+            };
 
         
             cbFrameType.DataSource = new BindingSource(Frames, null);
@@ -653,7 +654,7 @@ namespace Karaboss
                 Properties.Settings.Default.bForceUppercase = bForceUppercase;
 
                 // Number of lines to display
-                Properties.Settings.Default.TxtNbLines = NbLines;
+                Properties.Settings.Default.TxtNbLines = _nbLyricsLines;
 
 
                 // Display single Image
@@ -722,7 +723,7 @@ namespace Karaboss
                 pnlBalls.Visible = chkDisplayBalls.Checked;
 
                 // Nombre de lignes à afficher
-                UpDownNbLines.Value = NbLines;
+                UpDownNbLines.Value = _nbLyricsLines;
 
                 // Slideshow
                 txtSlideShow.Text = dirSlideShow;
@@ -758,7 +759,7 @@ namespace Karaboss
 
                 // SlideShow
                 pBox.FreqDirSlideShow = freqSlideShow;
-                pBox.nbLyricsLines = NbLines;
+                pBox.nbLyricsLines = _nbLyricsLines;
                 pBox.CurrentTime = 30;
 
                 // Backgrounds
@@ -1167,8 +1168,8 @@ namespace Karaboss
         /// <param name="e"></param>
         private void UpDownNbLines_ValueChanged(object sender, EventArgs e)
         {
-            NbLines = (int)UpDownNbLines.Value;
-            pBox.nbLyricsLines = NbLines;
+            _nbLyricsLines = (int)UpDownNbLines.Value;
+            pBox.nbLyricsLines = _nbLyricsLines;
         }
 
         private void TxtSlideShow_TextChanged(object sender, EventArgs e)
@@ -1185,8 +1186,8 @@ namespace Karaboss
 
         private bool IsNumeric(string s)
         {
-            float output;
-            return float.TryParse(s, out output);
+            //float output;
+            return float.TryParse(s, out float output);
         }
 
         private void chkDisplayBalls_CheckedChanged(object sender, EventArgs e)
@@ -1638,11 +1639,13 @@ namespace Karaboss
         /// <param name="textBox"></param>
         private Color SelectColorFromButton(PictureBox picBox, TextBox textBox)
         {
-            ColorDialog dlg = new ColorDialog();
-            dlg.FullOpen = true;
-            dlg.ShowHelp = true;
-            // Sets the initial color select to the current text color.
-            dlg.Color = picBox.BackColor;
+            ColorDialog dlg = new ColorDialog 
+            {
+                FullOpen = true,
+                ShowHelp = true,
+                Color = picBox.BackColor,       // Sets the initial color select to the current text color.
+            };
+                        
 
             if (dlg.ShowDialog() != DialogResult.OK) return picBox.BackColor;
 
@@ -1731,8 +1734,11 @@ namespace Karaboss
             // the user has selected another theme in the combo,
             // but the previous theme was modified            
             if (bColorModified && _currentTheme.Name != "Default")
-            {                
-                switch (MessageBox.Show(string.Format("The theme <{0}>was modified, do you want to save it?", _currentTheme.Name), Application.ProductName, MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question)) 
+            {
+                // Theme <{0}> has been modified, save changes?
+                string tx = Strings.SaveThemeQuestion;
+                
+                switch (MessageBox.Show(string.Format(tx, _currentTheme.Name), Application.ProductName, MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question)) 
                 {
                     case DialogResult.Yes:
                         // Save previous theme and continue
@@ -1846,7 +1852,9 @@ namespace Karaboss
             }
             else
             {
-                MessageBox.Show("Theme not found for colors", Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                // Error: no color theme was found
+                string tx = Strings.ErrorNoThemeFound;
+                MessageBox.Show(tx, Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
 
         }
@@ -1861,10 +1869,8 @@ namespace Karaboss
         private void SaveTheme(string ThemeName)
         {
             bool bSaveTheme = false;
-
-            string Name = string.Empty;
-
-            //ThemeItem item = _ThemesList.GetThemeByName(cbTheme.SelectedItem.ToString());
+            string Name; // = string.Empty;
+            
             ThemeItem item = _ThemesList.GetThemeByName(ThemeName);
 
             if (item == null) return;
@@ -1926,12 +1932,29 @@ namespace Karaboss
             }
 
             // Save list of themes
-            if (_ThemesListHelper.Save(_ThemesListHelper.File, _ThemesList))
+            //if (_ThemesListHelper.Save(_ThemesListHelper.File, _ThemesList))
+            if (SaveThemesList())
             {
-                MessageBox.Show(string.Format("The theme <{0}> was successfully saved", item.Name), Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Information);
+                // The theme <{0}> was successfully saved
+                string tx = Strings.ThemeSuccessfullySaved;
+                MessageBox.Show(string.Format(tx, item.Name), Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Information);
                 
                 // Reset changes                
                 ThemeModified(false);
+            }
+        }
+
+        private bool SaveThemesList()
+        {
+            try
+            {
+                _ThemesListHelper.Save(_ThemesListHelper.File, _ThemesList);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, Application.ProductName,MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return false;
             }
         }
 
@@ -1960,8 +1983,12 @@ namespace Karaboss
         private string GetNameForNewTheme()
         {
             // open a dialog asking for a name            
+
+            // Enter a name for the new theme
+            string tx = Strings.NameForNewTheme;
+
             this.TopMost = false;
-            frmDialog frmDialog = new frmDialog("Name of the new theme to create");
+            frmDialog frmDialog = new frmDialog(tx);
 
             if (frmDialog.ShowDialog() != DialogResult.OK)
             {
@@ -1973,7 +2000,10 @@ namespace Karaboss
             
             if (_ThemesList.GetThemeByName(Name) != null)
             {
-                MessageBox.Show(string.Format("The theme {0} already exists!", Name), Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                // Error: the theme <{0}> already exists!
+                tx = Strings.ErrorThemeAlreadyExists;
+
+                MessageBox.Show(string.Format(tx, Name), Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                 return null;
             }
 
@@ -1990,7 +2020,10 @@ namespace Karaboss
             // but the previous theme was modified            
             if (bColorModified && _currentTheme.Name != "Default")
             {
-                switch (MessageBox.Show(string.Format("The theme <{0}>was modified, do you want to save it?", _currentTheme.Name), Application.ProductName, MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question))
+                // Theme <{0}> has been modified, save changes?
+                string tx = Strings.SaveThemeQuestion;
+
+                switch (MessageBox.Show(string.Format(tx, _currentTheme.Name), Application.ProductName, MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question))
                 {
                     case DialogResult.Yes:
                         // Save previous theme and continue
@@ -2032,12 +2065,16 @@ namespace Karaboss
             ThemeItem item  =  _ThemesList.GetThemeByName(cbTheme.SelectedItem.ToString());
             if (item == null) return;
 
-            if (MessageBox.Show(string.Format("Delete the theme <{0}>?", item.Name), Application.ProductName ,MessageBoxButtons.OKCancel, MessageBoxIcon.Question) == DialogResult.OK)
+            // Delete the theme <{0}>?
+            string tx = Strings.DeleteThemeQuestion;
+
+            if (MessageBox.Show(string.Format(tx, item.Name), Application.ProductName ,MessageBoxButtons.OKCancel, MessageBoxIcon.Question) == DialogResult.OK)
             {
                 if (_ThemesList.Remove(item.Name))
                 {
                     cbTheme.Items.Remove(item.Name);
                     cbTheme.SelectedIndex = 0;
+                    SaveThemesList();
                 }
             }
         }

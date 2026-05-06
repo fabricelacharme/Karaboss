@@ -416,9 +416,6 @@
   <data name="cbOptionsTextDisplay.Text" xml:space="preserve">
     <value>Center</value>
   </data>
-  <data name="grpBoxKaraokeType.Text" xml:space="preserve">
-    <value>Disposition</value>
-  </data>
   <data name="cbKaraokeType.Font" type="System.Drawing.Font, System.Drawing">
     <value>Calibri, 9pt</value>
   </data>
@@ -434,7 +431,10 @@
   <data name="label1.Text" xml:space="preserve">
     <value>Type de karaoké</value>
   </data>
-  <data name="kLyrics2.Lines" mimetype="application/x-microsoft.net.object.binary.base64">
+  <data name="grpBoxKaraokeType.Text" xml:space="preserve">
+    <value>Disposition</value>
+  </data>
+  <data name="kLyrics1.Lines" mimetype="application/x-microsoft.net.object.binary.base64">
     <value>
         AAEAAAD/////AQAAAAAAAAAMAgAAAJMBS2FyYW9rZUx5cmljcywgVmVyc2lvbj0xLjAuMC4wLCBDdWx0
         dXJlPW5ldXRyYWwsIFB1YmxpY0tleVRva2VuPW51bGxdXSwgbXNjb3JsaWIsIFZlcnNpb249NC4wLjAu
@@ -448,11 +448,17 @@
   <data name="karaokeEffect1.Size" type="System.Drawing.Size, System.Drawing">
     <value>385, 226</value>
   </data>
+  <data name="tabPage1.Text" xml:space="preserve">
+    <value>Couleur texte</value>
+  </data>
   <data name="label5.Size" type="System.Drawing.Size, System.Drawing">
     <value>75, 13</value>
   </data>
   <data name="label5.Text" xml:space="preserve">
     <value>Couleur active</value>
+  </data>
+  <data name="tabPage2.Text" xml:space="preserve">
+    <value>Couleur instrumentaux</value>
   </data>
   <data name="btnDeleteTheme.Text" xml:space="preserve">
     <value>Supprimer</value>

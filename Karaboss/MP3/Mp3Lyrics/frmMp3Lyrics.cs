@@ -146,17 +146,6 @@ namespace Karaboss.Mp3
         }
 
 
-        private int _beatDuration = 0;
-        public int BeatDuration
-        {
-            get { return _beatDuration; }
-            set
-            {
-                _beatDuration = value;
-                karaokeEffect1.BeatDuration = _beatDuration;
-            }
-        }
-
         #endregion Gradient color
 
 
@@ -401,6 +390,8 @@ namespace Karaboss.Mp3
 
         #region Slideshow
 
+        #region Single image
+        
         private string _SingleImagePath;
         public string SingleImagePath
         {
@@ -415,6 +406,10 @@ namespace Karaboss.Mp3
             }
         }
 
+        #endregion Single image
+
+
+        #region SlideShow
         private bool _allowModifyDirSlideShow = true;
         public bool AlloModifyDirSlideShow
         {
@@ -428,12 +423,7 @@ namespace Karaboss.Mp3
         {
             get { return _dirSlideShow; }
             set
-            {
-
-                // Change only if not in playlist mode
-                //if (_bplaylist)
-                //    return;
-
+            {                
                 if (value == null || value == "")
                     value = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), Application.ProductName);
 
@@ -458,10 +448,9 @@ namespace Karaboss.Mp3
             }
         }
 
+        #endregion SlideShow
 
-        /// <summary>
-        /// Background option : Diaporama, SolidColor, Transparent
-        /// </summary>
+        // Background option : Diaporama, SolidColor, Transparent        
         private string _optionbackground = "Image";
         public string OptionBackground
         {

@@ -1714,5 +1714,47 @@ namespace Karaboss.Resources.Localization {
                 return ResourceManager.GetString("KTypesScrollingLinesTopDown", resourceCulture);
             }
         }
+        internal static string ErrorThemeAlreadyExists
+        {
+            get
+            {
+                return ResourceManager.GetString("ErrorThemeAlreadyExists", resourceCulture);
+            }
+        }
+        internal static string NameForNewTheme
+        {
+            get
+            {
+                return ResourceManager.GetString("NameForNewTheme", resourceCulture);
+            }
+        }
+        internal static string ThemeSuccessfullySaved
+        {
+            get
+            {
+                return ResourceManager.GetString("ThemeSuccessfullySaved", resourceCulture);
+            }
+        }
+        internal static string ErrorNoThemeFound
+        {
+            get
+            {
+                return ResourceManager.GetString("ErrorNoThemeFound", resourceCulture);
+            }
+        }
+        internal static string SaveThemeQuestion
+        {
+            get
+            {
+                return ResourceManager.GetString("SaveThemeQuestion", resourceCulture);
+            }
+        }
+        internal static string DeleteThemeQuestion
+        {
+            get
+            {
+                return ResourceManager.GetString("DeleteThemeQuestion", resourceCulture);
+            }
+        }
     }
 }

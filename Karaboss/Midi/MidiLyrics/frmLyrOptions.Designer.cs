@@ -582,7 +582,7 @@
             // 
             resources.ApplyResources(this.txtActiveColor, "txtActiveColor");
             this.txtActiveColor.Name = "txtActiveColor";
-            this.txtActiveColor.TextChanged += new System.EventHandler(this.txtActiveColor_TextChanged);            
+            this.txtActiveColor.TextChanged += new System.EventHandler(this.txtActiveColor_TextChanged);
             // 
             // cbFontName
             // 
@@ -983,6 +983,7 @@
             // 
             resources.ApplyResources(this, "$this");
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.BackColor = System.Drawing.SystemColors.Control;
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.tabControl1);
             this.Controls.Add(this.grpBoxSlideShow);

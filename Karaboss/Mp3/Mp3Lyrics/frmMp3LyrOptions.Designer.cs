@@ -29,7 +29,7 @@
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmMp3LyrOptions));
-            kar.kLyrics kLyrics2 = new kar.kLyrics();
+            kar.kLyrics kLyrics1 = new kar.kLyrics();
             this.picBgColor = new System.Windows.Forms.PictureBox();
             this.radioTransparent = new System.Windows.Forms.RadioButton();
             this.radioSolidColor = new System.Windows.Forms.RadioButton();
@@ -329,6 +329,7 @@
             resources.ApplyResources(this.radioImage, "radioImage");
             this.radioImage.Name = "radioImage";
             this.radioImage.UseVisualStyleBackColor = true;
+            this.radioImage.CheckedChanged += new System.EventHandler(this.radioImage_CheckedChanged);
             // 
             // txtImage
             // 
@@ -697,8 +698,7 @@
             this.karaokeEffect1.ActiveColor = System.Drawing.Color.FromArgb(((int)(((byte)(153)))), ((int)(((byte)(180)))), ((int)(((byte)(51)))));
             this.karaokeEffect1.ActiveInstrumentalColor = System.Drawing.Color.Empty;
             this.karaokeEffect1.BackColor = System.Drawing.Color.LightGray;
-            this.karaokeEffect1.Beat = 200;
-            this.karaokeEffect1.BeatDuration = 0;
+            this.karaokeEffect1.Beat = 200;            
             this.karaokeEffect1.bforceUppercase = false;
             this.karaokeEffect1.BgColor = System.Drawing.Color.Empty;
             this.karaokeEffect1.bIsSettings = false;
@@ -718,8 +718,8 @@
             this.karaokeEffect1.InactiveColor = System.Drawing.Color.White;
             this.karaokeEffect1.KaraokeDisplayType = kar.KaraokeDisplayTypes.FixedLines;
             this.karaokeEffect1.KaraokeFont = new System.Drawing.Font("Comic Sans MS", 61.33333F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel);
-            kLyrics2.Lines = ((System.Collections.Generic.List<kar.kLine>)(resources.GetObject("kLyrics2.Lines")));
-            this.karaokeEffect1.KLyrics = kLyrics2;
+            kLyrics1.Lines = ((System.Collections.Generic.List<kar.kLine>)(resources.GetObject("kLyrics1.Lines")));
+            this.karaokeEffect1.KLyrics = kLyrics1;
             resources.ApplyResources(this.karaokeEffect1, "karaokeEffect1");
             this.karaokeEffect1.m_CurrentImage = null;
             this.karaokeEffect1.m_DisplayRectangle = new System.Drawing.Rectangle(0, 0, 0, 0);

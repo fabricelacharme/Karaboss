@@ -41,6 +41,7 @@ using System.Drawing.Imaging;
 using System.Drawing.Text;
 using System.IO;
 using System.Linq;
+using System.Net.NetworkInformation;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.ToolTip;
@@ -58,7 +59,37 @@ namespace keffect
     public partial class KaraokeEffect : UserControl, IMessageFilter
     {
 
-        #region Color
+        #region Colors
+
+        #region Background color
+
+        // Background color
+        private Color _BgColor; // = Color.Black;
+        public Color BgColor
+        {
+            get
+            { return _BgColor; }
+            set
+            {
+                _BgColor = value;
+                if (_optionbackground == "SolidColor")
+                {
+                    pBox.BackColor = _BgColor;
+                    pBox.Invalidate();
+                }
+            }
+        }
+
+        // Transparency color        
+        private Color _transparencykey = Color.Lime;
+        public Color TransparencyKey
+        {
+            get { return _transparencykey; }
+            set { _transparencykey = value; }
+        }
+
+        #endregion Background color
+
 
         #region Gradient color
 
@@ -107,38 +138,8 @@ namespace keffect
                 ResetSize();
                 pBox.Invalidate();
             }
-        }
-
-
-        private int _beatDuration = 0;
-        public int BeatDuration
-        {
-            get { return _beatDuration; }
-            set { _beatDuration = value; }
-        }
-
-
-        readonly System.Windows.Forms.Timer _timerGradient = new System.Windows.Forms.Timer();
-
-        // Default angle for the gradient
-        private int W;
-        private int H;
-        private int speed;
-
-        private int _beat;
-        public int Beat
-        {
-            get { return _beat; }
-            set
-            {
-                _beat = value;
-                speed = (int)(_beat / 12.0);
-            }
-        }
-
-        private float _angle = 45.0f;
-        public float GradientAngle { get { return _angle; } set { _angle = value; pBox.Invalidate(); } }
-
+        }       
+       
         #endregion Gradient color
 
 
@@ -236,9 +237,38 @@ namespace keffect
 
         #endregion Text color
 
+        #endregion Colors
 
 
-        #endregion Color
+        #region Draw syllables
+
+        private float[] LinesLengths;
+
+        private int nextindex = 0;
+        private int lastindex = 0;
+        private float CurLength;
+        private float lastCurLength;
+
+        double _nexttime;
+        double _lasttime;
+
+        private int _FirstLineToShow = 0;
+        private int _LastLineToShow = 0;
+
+        private int _lastLine = -1;
+        private int _lineHeight = 0;
+        private int _linesHeight = 0;
+        private string _biggestLine = string.Empty;
+
+
+        private string active_fragment = string.Empty;
+        private float active_fragment_length = 0;
+        private string highlight_fragment = string.Empty;
+        private float highlight_fragment_length = 0;
+        private string inactive_fragment = string.Empty;
+        private float inactive_fragment_length = 0;
+
+        #endregion Draw syllables
 
 
         #region Events
@@ -252,95 +282,36 @@ namespace keffect
         #endregion Events
 
 
-        #region MP3
+        #region Font
 
-        // Duration in seconds (org Bass)
-        private double _duration;
-        public double Duration 
-        { get { return _duration; } 
-            set { _duration = value; } }
+        private Font m_font;   // used to measure strings without changing _karaokeFont
+        private float emSize = 40;
 
-        private int _bitrate;   // genre 192
-        public int BitRate { get { return _bitrate; } set { _bitrate = value; } }
-
-        // Frequency
-        private float _frequency;
-        public float Frequency { get { return _frequency; } set { _frequency = value; } }
-
-        #endregion MP3
-        
-
-        #region Instrumentals
-
-        private DateTime _endTime;
-        private DateTime _startTime;
-        
-        private double PlayerPositionMilliseconds;
-        private double TargetPositionMilliseconds;
-
-        private bool bInstrumentalStarted = false;
-        private int SecondsBeforeSinging = 0;
-        private bool bCountDown = false;
-        private int _DelayBeforeEndOfInstrumental = 4000; // Delay to draw lines before the end of an instrumental: 4 sec
-        private int _MinimumInstrumentalDuration = 5000;  // The minimum duration between two consecutive vocal phrases that mark an instrumental interlude : 5 sec
-        private int LastLineOfInformationPosition = 0;
-
-        private int _MinimumIntroDuration = 3000;
-
-        #endregion Instrumentals
+        private StringFormat sf;
 
 
-        #region Others
-
-        private ContextMenu picContextMenu;
-        private bool bTopMostChecked = true;
-
-        private float percent = 0;
-        private float lastpercent = 0;
-        
-        private long _timerintervall = 50;      // Intervall of timer of frmMp3Player
-        public long timerIntervall
+        private Font _karaokeFont;
+        [Description("Karaoke font")]
+        public Font KaraokeFont
         {
-            get { return _timerintervall; }
+            get { return _karaokeFont; }
             set
             {
-
-                if (value >= 10)
-                    _timerintervall = value;
+                _karaokeFont = value;
+                pBox.Invalidate();
             }
         }
 
-        private float[] LinesLengths;
-
-        private int nextindex = 0;
-        private int lastindex = 0;
-        private float CurLength;
-        private float lastCurLength;
-
-        double _nexttime;
-        double _lasttime;
-
-        
-        private int _FirstLineToShow = 0;
-        private int _LastLineToShow = 0;
-
-        private int _lastLine = -1;               
-        private int _lineHeight = 0;
-        private int _linesHeight = 0;
-        private string _biggestLine = string.Empty;
+        #endregion Font
 
 
-        private string active_fragment = string.Empty;
-        private float active_fragment_length = 0;
-        private string highlight_fragment = string.Empty;
-        private float highlight_fragment_length = 0;
-        private string inactive_fragment = string.Empty;
-        private float inactive_fragment_length = 0;
+        #region Form
 
+        private bool bTopMostChecked = true;
 
-        private int _beatNumber = 1;
-
-        #endregion Others
+        #region Context menus
+        private ContextMenu picContextMenu;
+        #endregion Context menus
 
 
         #region Is used for settings
@@ -350,13 +321,109 @@ namespace keffect
         public bool bIsSettings
         {
             get { return _bIsSettings; }
-            set 
-            { 
-                _bIsSettings = value; 
+            set
+            {
+                _bIsSettings = value;
             }
         }
 
         #endregion Is used for settings
+
+
+        #region Move form without title bar
+
+        public const int WM_NCLBUTTONDOWN = 0xA1;
+        public const int HT_CAPTION = 0x2;
+        public const int WM_LBUTTONDOWN = 0x0201;
+
+        [DllImportAttribute("user32.dll")]
+        public static extern int SendMessage(IntPtr hWnd, int Msg, int wParam, int lParam);
+        [DllImportAttribute("user32.dll")]
+        public static extern bool ReleaseCapture();
+        private HashSet<Control> controlsToMove = new HashSet<Control>();
+        
+        #endregion Move form without title bar
+
+        #endregion Form
+
+
+        #region Gradients
+
+        readonly System.Windows.Forms.Timer _timerGradient = new System.Windows.Forms.Timer();
+
+        // Default angle for the gradient
+        private int W;
+        private int H;
+        private int speed;
+
+        private int _beat;
+        public int Beat
+        {
+            get { return _beat; }
+            set
+            {
+                _beat = value;
+                speed = (int)(_beat / 12.0);
+            }
+        }
+
+        private float _angle = 45.0f;
+        public float GradientAngle { get { return _angle; } set { _angle = value; pBox.Invalidate(); } }
+
+        // Used by Rhythm to display different effect according to beat number
+        private int _beatNumber = 1;
+
+        // Used by beat effect
+        private int _bpm;
+
+        #endregion Gradients
+
+
+        #region Instrumentals
+
+        private DateTime _endTime;                      // used by countdown
+        private DateTime _startTime;                    // used by countdown
+
+        private double PlayerPositionMilliseconds;      // current player position in ms
+        private double TargetPositionMilliseconds;      // position to reach in ms
+
+        private bool bInstrumentalStarted = false;
+        private int SecondsBeforeSinging = 0;
+        private bool bCountDown = false;
+        private readonly int _DelayBeforeEndOfInstrumental = 4000; // Delay to draw lines before the end of an instrumental: 4 sec
+        private readonly int _MinimumInstrumentalDuration = 5000;  // The minimum duration between two consecutive vocal phrases that mark an instrumental interlude : 5 sec
+        private int LastLineOfInformationPosition = 0;    // Used to store the last valid Instrumental line position (to manage end of song)
+
+        private readonly int _MinimumIntroDuration = 3000;
+
+        #endregion Instrumentals
+
+
+        #region Karaoke display layout
+
+        private kar.KaraokeDisplayTypes _karaokeDisplayType = KaraokeDisplayTypes.FixedLines;
+        public kar.KaraokeDisplayTypes KaraokeDisplayType
+        {
+            get { return _karaokeDisplayType; }
+            set
+            {
+                if (value != _karaokeDisplayType)
+                {
+                    _karaokeDisplayType = value;
+
+                    if (_kLyrics.Lines.Count > 0)
+                    {
+                        if (_bIsSettings)
+                            Init();
+                        pBox?.Invalidate();
+                        AjustText(_biggestLine); // pourquoi ? mystère. Mais ça marche
+
+                    }
+                }
+            }
+        }
+
+        #endregion Karaoke display layout
 
 
         #region Karaoke lyrics
@@ -371,7 +438,7 @@ namespace keffect
                 if (value.Lines == null) return;
                 if (value.Lines.Count == 0) return;
                 _kLyrics = value;
-                if(_kLyrics != null && _kLyrics.Lines.Count > 0)
+                if (_kLyrics != null && _kLyrics.Lines.Count > 0)
                     Init();
             }
         }
@@ -379,44 +446,85 @@ namespace keffect
         #endregion Karaoke lyrics
 
 
-        #region Karaoke display types
+        #region MP3
 
-        private kar.KaraokeDisplayTypes _karaokeDisplayType = KaraokeDisplayTypes.FixedLines;
-        public kar.KaraokeDisplayTypes KaraokeDisplayType
+        // Duration in seconds (org Bass)
+        private double _duration;
+        public double Duration
         {
-            get { return _karaokeDisplayType; }
+            get { return _duration; }
+            set { _duration = value; }
+        }
+
+        private int _bitrate;   // genre 192
+        public int BitRate { get { return _bitrate; } set { _bitrate = value; } }
+
+        // Frequency
+        private float _frequency;
+        public float Frequency { get { return _frequency; } set { _frequency = value; } }
+
+        #endregion MP3
+
+
+        #region Picture
+
+        /// <summary>
+        /// Size mode of picturebox
+        /// </summary>
+        private PictureBoxSizeMode _sizemode;
+        public PictureBoxSizeMode SizeMode
+        {
+            get { return _sizemode; }
             set
             {
-                if (value != _karaokeDisplayType)
-                {
-                    _karaokeDisplayType = value;
-
-                    if (_kLyrics.Lines.Count > 0)
-                    {
-                        if (_bIsSettings)                        
-                            Init();
-                        pBox?.Invalidate();
-                        AjustText(_biggestLine); // pourquoi ? mystère. Mais ça marche
-
-                    }
-                }
+                _sizemode = value;
+                pBox.SizeMode = _sizemode;
             }
         }
 
-        #endregion Karaoke display types
+        #endregion Picture
 
 
-        #region Move form without title bar
-        public const int WM_NCLBUTTONDOWN = 0xA1;
-        public const int HT_CAPTION = 0x2;
-        public const int WM_LBUTTONDOWN = 0x0201;
+        #region SlideShow
 
-        [DllImportAttribute("user32.dll")]
-        public static extern int SendMessage(IntPtr hWnd, int Msg, int wParam, int lParam);
-        [DllImportAttribute("user32.dll")]
-        public static extern bool ReleaseCapture();
-        private HashSet<Control> controlsToMove = new HashSet<Control>();
-        #endregion
+        private string[] bgFiles;
+        public Rectangle m_DisplayRectangle { get; set; }
+        public Image m_CurrentImage { get; set; }
+        private string DefaultDirSlideShow;
+        // Paths of images        
+        private List<string> m_ImageFilePaths;
+
+        #region Single image
+        // Display a single image as background        
+        private string _SingleImagePath = string.Empty;
+        public string SingleImagePath
+        {
+            get => _SingleImagePath;
+            set
+            {
+                if (File.Exists(value) && value != _SingleImagePath)
+                {
+                    _SingleImagePath = value;
+                    SetImageBackground(_SingleImagePath);
+                    pBox.Invalidate();
+                }
+            }
+        }
+        #endregion Single image
+
+
+        #region SlideShow
+                
+        /// <summary>
+        /// SlideShow frequency
+        /// </summary>
+        private int _freqdirslideshow = 10;
+        public int FreqDirSlideShow
+        {
+            get { return _freqdirslideshow; }
+            set { _freqdirslideshow = value; }
+        }
+        #endregion SlideShow
 
 
         #region Transition effect
@@ -445,108 +553,78 @@ namespace keffect
             get { return mBlend; }
             set { mBlend = value; Invalidate(); }
         }
-        
+
         // Array of bitmaps (images as backgound image)
         private Bitmap[] m_BitmapsArray;
 
         #endregion Transition effect       
 
 
-        #region SlideShow
-
-        private string[] bgFiles;
-
-        /// <summary>
-        /// Display a single image as background
-        /// </summary>
-        private string _SingleImagePath = string.Empty;
-        public string SingleImagePath
+        // Background option : image, diaporama, solidColor, transparent 
+        private string _optionbackground;
+        public string OptionBackground
         {
-            get => _SingleImagePath;
+            get { return _optionbackground; }
             set
             {
-                if (File.Exists(value) && value != _SingleImagePath)
+                _optionbackground = value;
+
+                switch (_optionbackground)
                 {
-                    _SingleImagePath = value;
-                    SetImageBackground(_SingleImagePath);
-                    pBox.Invalidate();
+                    case "Image":
+                        SetImageBackground(_SingleImagePath);
+                        pBox.Invalidate();
+                        break;
+
+                    case "Diaporama":
+                        break;
+
+                    case "SolidColor":
+                        Terminate();
+                        _timerGradient.Stop();
+                        pBox.Image = null;
+                        m_CurrentImage = null;
+                        pBox.BackColor = _BgColor;
+                        pBox.Invalidate();
+                        break;
+
+                    case "Gradient":
+                        Terminate();
+                        pBox.Image = null;
+                        m_CurrentImage = null;
+                        _timerGradient.Start();
+                        pBox.Invalidate();
+                        break;
+
+
+                    case "Rhythm":
+                        Terminate();
+                        _timerGradient.Start();
+                        pBox.Image = null;
+                        m_CurrentImage = null;
+                        ResetSize();
+                        pBox.BackColor = _Rhythm0Color;
+                        pBox.Invalidate();
+                        break;
+
+                    case "Transparent":
+                        Terminate();
+                        _timerGradient.Stop();
+                        pBox.Image = null;
+                        m_CurrentImage = null;
+                        pBox.BackColor = _transparencykey;
+                        pBox.Invalidate();
+                        break;
+                    default:
+                        break;
                 }
             }
         }
 
-
-        // Paths of images        
-        private List<string> m_ImageFilePaths;
-
-        private string DefaultDirSlideShow;
-        public Rectangle m_DisplayRectangle { get; set; }
-        public Image m_CurrentImage { get; set; }
-
-        /// <summary>
-        /// SlideShow frequency
-        /// </summary>
-        private int _freqdirslideshow = 10;
-        public int FreqDirSlideShow
-        {
-            get { return _freqdirslideshow; }
-            set { _freqdirslideshow = value; }
-        }
-
         #endregion SlideShow
-
-        
-       
-
-
-       
 
 
         #region Text transform
-
-        private int _nbLyricsLinesOrg;
-        private int _nbLyricsLines = 3;
-        [Description("The number of lines to display")]
-        public int nbLyricsLines
-        {
-            get { return _nbLyricsLines; }
-            set
-            {
-                _nbLyricsLines = value;
-                _nbLyricsLinesOrg = value;
-                if (bIsSettings)
-                    Init();
-                pBox.Invalidate();
-            }
-        }
-
-        private bool _bforceUppercase = false;
-        [Description("Force uppercase for lyrics")]
-        public bool bforceUppercase
-        {
-            get { return _bforceUppercase; }
-            set 
-            {
-                if (value != _bforceUppercase)
-                {
-                    _bforceUppercase = value;
-                    if (_bIsSettings)
-                        LoadDemoText();
-                                      
-                }            
-            }
-        }
-
-        private bool _bshowparagraphs = true;
-        [Description("show a blank line between paragraphs")]
-        public bool bShowParagraphs
-        {
-            get { return _bshowparagraphs; }
-            set { _bshowparagraphs = value; }
-        }
-
-
-        #endregion Text transform
-
 
         #region Frame type
 
@@ -626,117 +704,11 @@ namespace keffect
         }
 
         #endregion Frame type
-     
-
-       
 
 
-        #region Background
+        #region Text position
 
-        // Background color
-        private int _bpm;
-        private Color _BgColor; // = Color.Black;
-        public Color BgColor
-        {
-            get
-            { return _BgColor; }
-            set
-            {
-                _BgColor = value;
-                if (_optionbackground == "SolidColor")
-                {
-                    pBox.BackColor = _BgColor;
-                    pBox.Invalidate();
-                }
-            }
-        }
-
-        // Color beside text (background of text)
-        private bool _bTextBackGround = false;
-        public bool bTextBackGround
-        {
-            get { return _bTextBackGround; }
-            set 
-            {                 
-                _bTextBackGround = value;
-                pBox.Invalidate();                
-            }
-        }
-       
-
-        /// <summary>
-        /// Transparency color
-        /// </summary>
-        private Color _transparencykey = Color.Lime;
-        public Color TransparencyKey
-        {
-            get { return _transparencykey; }
-            set { _transparencykey = value; }
-        }
-
-        private string _optionbackground;
-        public string OptionBackground
-        {
-            get { return _optionbackground; }
-            set
-            {
-                _optionbackground = value;
-
-                switch (_optionbackground)
-                {
-                    case "Image":
-                        SetImageBackground(_SingleImagePath);
-                        pBox.Invalidate();
-                        break;
-
-                    case "Diaporama":
-                        break;
-                    
-                    case "SolidColor":                        
-                        Terminate();
-                        _timerGradient.Stop();
-                        pBox.Image = null;
-                        m_CurrentImage = null;
-                        pBox.BackColor = _BgColor;
-                        pBox.Invalidate();
-                        break;
-
-                    case "Gradient":                        
-                        Terminate();
-                        pBox.Image = null;
-                        m_CurrentImage = null;
-                        _timerGradient.Start();
-                        pBox.Invalidate();
-                        break;
-
-                    
-                    case "Rhythm":                        
-                        Terminate();
-                        _timerGradient.Start();
-                        pBox.Image = null;
-                        m_CurrentImage = null;
-                        ResetSize();
-                        pBox.BackColor = _Rhythm0Color;
-                        pBox.Invalidate();
-                        break;
-
-                    case "Transparent":                        
-                        Terminate();
-                        _timerGradient.Stop();
-                        pBox.Image = null;
-                        m_CurrentImage = null;
-                        pBox.BackColor = _transparencykey;
-                        pBox.Invalidate();
-                        break;
-                    default:
-                        break;
-                }
-            }
-        }
-
-        /// <summary>
-        /// Display lyrics option: top, Center, Bottom
-        /// </summary>
+        // Display lyrics option: top, Center, Bottom        
         public enum OptionsDisplay
         {
             Top = 0,
@@ -754,34 +726,71 @@ namespace keffect
             set
             {
                 _OptionDisplay = value;
-                pBox.Invalidate();                
+                pBox.Invalidate();
             }
         }
 
-        #endregion Background
+        #endregion Text position
 
-
-        #region Image display
-
-        /// <summary>
-        /// Size mode of picturebox
-        /// </summary>
-        private PictureBoxSizeMode _sizemode;
-        public PictureBoxSizeMode SizeMode
+        private int _nbLyricsLinesOrg;
+        private int _nbLyricsLines = 3;
+        [Description("The number of lines to display")]
+        public int nbLyricsLines
         {
-            get { return _sizemode; }
+            get { return _nbLyricsLines; }
             set
             {
-                _sizemode = value;
-                pBox.SizeMode = _sizemode;
+                _nbLyricsLines = value;
+                _nbLyricsLinesOrg = value;
+                if (bIsSettings)
+                    Init();
+                pBox.Invalidate();
             }
         }
 
-        #endregion Image display
+        private bool _bforceUppercase = false;
+        [Description("Force uppercase for lyrics")]
+        public bool bforceUppercase
+        {
+            get { return _bforceUppercase; }
+            set
+            {
+                if (value != _bforceUppercase)
+                {
+                    _bforceUppercase = value;
+                    if (_bIsSettings)
+                        LoadDemoText();
+
+                }
+            }
+        }
+
+        private bool _bshowparagraphs = true;
+        [Description("show a blank line between paragraphs")]
+        public bool bShowParagraphs
+        {
+            get { return _bshowparagraphs; }
+            set { _bshowparagraphs = value; }
+        }
+
+
+        // Draw a black background beside text?        
+        private bool _bTextBackGround = false;
+        public bool bTextBackGround
+        {
+            get { return _bTextBackGround; }
+            set
+            {
+                _bTextBackGround = value;
+                pBox.Invalidate();
+            }
+        }
 
 
         #region Lyrics transition effects
 
+        private float percent = 0;
+        private float lastpercent = 0;
         public enum TransitionEffects
         {
             None,
@@ -789,12 +798,12 @@ namespace keffect
         }
 
         private TransitionEffects _transitionEffect;
-        public TransitionEffects TransitionEffect 
-        { 
-            get { return _transitionEffect; } 
+        public TransitionEffects TransitionEffect
+        {
+            get { return _transitionEffect; }
             set { _transitionEffect = value; }
         }
-                
+
         private int _position = 0;
 
         /// <summary>
@@ -806,7 +815,7 @@ namespace keffect
             get { return _position; }
             set { _position = value; }
         }
-      
+
         private float _steppercent = 0.01F;
         [Description("Increment to display a syllable progressively")]
         public float StepPercent
@@ -815,31 +824,25 @@ namespace keffect
             set { _steppercent = value; }
         }
 
-        #endregion Lyrics transition effects        
-
-
-        #region Font
-
-        private Font m_font;   // used to measure strings without changing _karaokeFont
-        private float emSize = 40;
-
-        private StringFormat sf;
-
-
-        private Font _karaokeFont;
-        [Description("Karaoke font")]
-        public Font KaraokeFont
+        // Speed of progressive color of lyric being sung used by _steppercent
+        private long _timerintervall = 50;      
+        public long timerIntervall
         {
-            get { return _karaokeFont; }
-            set { 
-                _karaokeFont = value; 
-                pBox.Invalidate();
+            get { return _timerintervall; }
+            set
+            {
+
+                if (value >= 10)
+                    _timerintervall = value;
             }
         }
 
-        #endregion Font
-      
-             
+        #endregion Lyrics transition effects        
+
+
+        #endregion Text transform
+
+                                              
 
         /// <summary>
         /// Constructor
@@ -1045,13 +1048,17 @@ namespace keffect
             count = 0;
 
             timerChangeImage?.Dispose();
-            timerChangeImage = new System.Timers.Timer();
-            timerChangeImage.Interval = _freqdirslideshow * 1000;
+            timerChangeImage = new System.Timers.Timer()
+            {
+                Interval = _freqdirslideshow * 1000
+            };
             timerChangeImage.Elapsed += (sender, e) => OnTimerChangeImage();
 
             timerTransition?.Dispose();
-            timerTransition = new System.Timers.Timer();
-            timerTransition.Interval = 50;
+            timerTransition = new System.Timers.Timer()
+            {
+                Interval = 50
+            };
             timerTransition.Elapsed += (sender, e) => OnTimerTransition();
 
             try
@@ -1152,19 +1159,20 @@ namespace keffect
 
         public void LoadDemoText()
         {
-            List<string> lines = new List<string>();
-            lines.Add("Lorem ipsum dolor sit amet,");
-            lines.Add("consectetur adipisicing elit,");
-            lines.Add("sed do eiusmod tempor incididunt");
-            lines.Add("ut labore et dolore magna aliqua.");
-            lines.Add("Ut enim ad minim veniam,");
-            lines.Add("quis nostrud exercitation ullamco");
-            lines.Add("laboris nisi ut aliquip");
-            lines.Add("ex ea commodo consequat.");
-            lines.Add("Duis aute irure dolor in reprehenderit");
-            lines.Add("in voluptate velit esse cillum dolore");
-            lines.Add("eu fugiat nulla pariatur.");
-
+            List<string> lines = new List<string>
+            {
+                "Lorem ipsum dolor sit amet,",
+                "consectetur adipisicing elit,",
+                "sed do eiusmod tempor incididunt",
+                "ut labore et dolore magna aliqua.",
+                "Ut enim ad minim veniam,",
+                "quis nostrud exercitation ullamco",
+                "laboris nisi ut aliquip",
+                "ex ea commodo consequat.",
+                "Duis aute irure dolor in reprehenderit",
+                "in voluptate velit esse cillum dolore",
+                "eu fugiat nulla pariatur.",
+            };
             // Do not use KLyrics but _kLyrics to be able to use the same LoadSong method for demo and real text
             _kLyrics = StoreDemoText(lines, 500);
 
@@ -1190,7 +1198,7 @@ namespace keffect
         {
             int ticks = 0;
             Syllable syll;
-            kLine kLine = new kLine();
+            kLine kLine; // = new kLine();
             kLyrics KL = new kLyrics();
 
             for (int i = 0; i < lines.Count; i++)
@@ -1274,11 +1282,11 @@ namespace keffect
             double tOnPrevious = 0;
             double duration = 0;
             //double introDurationMinimum = 1000;
-            double t = 0;
+            double t; // = 0;
             kLyrics klsWithinstrumentals = new kLyrics();
             kLine line;
-            string text = string.Empty;
-            double tend = 0;
+            //string text; // = string.Empty;
+            double tend; // = 0;
 
             // Introduction                        
             for (int i = 0; i < kls.Lines.Count; i++)
@@ -2775,7 +2783,7 @@ namespace keffect
             int y2;    // y2 is the y coordinate of the inactive line to display (line _FirstLineToShow + 1)
 
             int LineOfInformationPosition = -2;
-            int LinePosition = -1;
+            int LinePosition; // = -1;
 
 
             #region Line layout
@@ -2960,7 +2968,7 @@ namespace keffect
             int y2;    // y2 is the y coordinate of the inactive line to display (line _FirstLineToShow + 1)
 
             int LineOfInformationPosition = -2;
-            int LinePosition = -1;
+            int LinePosition; // = -1;
 
             #region Line layout
 
@@ -3138,7 +3146,7 @@ namespace keffect
             int y2;    // y2 is the y coordinate of the inactive line to display (line _FirstLineToShow + 1)
 
             int LineOfInformationPosition = -2;
-            int LinePosition = -1;
+            int LinePosition; // = -1;
 
             #region Line layout
 
@@ -3478,7 +3486,7 @@ namespace keffect
             // _FirstLineToShow + 1          1
             // _FirstLineToShow + 2          2
             // _FirstLineToShow + 3          3
-            int LineOfInformationPosition = -2;
+            int LineOfInformationPosition; // = -2;
 
             int[] LinesNr = new int[4];
 
@@ -3602,7 +3610,7 @@ namespace keffect
                 DrawActiveLineWithBorders(e, _FirstLineToShow, y1);
 
                 // Line y2 must be drawned active when
-                bool IsActive = ((_FirstLineToShow % 4 == 1) || (_FirstLineToShow % 4 == 3)) ? true : false;
+                bool IsActive = ((_FirstLineToShow % 4 == 1) || (_FirstLineToShow % 4 == 3)); // ? true : false;
 
                 // Draw y2 line: active when before line y1 (already sung), inactive when after line y1 (not yet sung)
                 if (idx2 >= 0)
@@ -3851,7 +3859,7 @@ namespace keffect
             // _FirstLineToShow + 1          1
             // _FirstLineToShow + 2          2
             // _FirstLineToShow + 3          3
-            int LineOfInformationPosition = -2;
+            int LineOfInformationPosition; // = -2;
 
             int[] LinesNr = new int[4];
 
@@ -3976,7 +3984,7 @@ namespace keffect
                 DrawActiveLineWithShadow(e, _FirstLineToShow, y1);
 
                 // Line y2 must be drawned active when
-                bool IsActive = ((_FirstLineToShow % 4 == 1) || (_FirstLineToShow % 4 == 3)) ? true : false;
+                bool IsActive = (_FirstLineToShow % 4 == 1) || (_FirstLineToShow % 4 == 3); // ? true : false;
 
                 // Draw y2 line: active when before line y1 (already sung), inactive when after line y1 (not yet sung)
                 if (idx2 >= 0)
@@ -4226,7 +4234,7 @@ namespace keffect
             // _FirstLineToShow + 1          1
             // _FirstLineToShow + 2          2
             // _FirstLineToShow + 3          3
-            int LineOfInformationPosition = -2;
+            int LineOfInformationPosition; // = -2;
 
             int[] LinesNr = new int[4];
 
@@ -4351,7 +4359,7 @@ namespace keffect
                 DrawActiveLineWithNeon(e, _FirstLineToShow, y1);
 
                 // Line y2 must be drawned active when
-                bool IsActive = ((_FirstLineToShow % 4 == 1) || (_FirstLineToShow % 4 == 3)) ? true : false;
+                bool IsActive = ((_FirstLineToShow % 4 == 1) || (_FirstLineToShow % 4 == 3)); // ? true : false;
 
                 // Draw y2 line: active when before line y1 (already sung), inactive when after line y1 (not yet sung)
                 if (idx2 >= 0)
@@ -4917,7 +4925,7 @@ namespace keffect
                 case PictureBoxSizeMode.Zoom:
                     float zoomFactor = (float)ClientSize.Height / (float)imgHeight;
                     x = (this.ClientSize.Width - (int)(imgWidth * zoomFactor)) / 2;
-                    y = 0;
+                    //y = 0;
                     return new Rectangle(x, 0, (int)(imgWidth * zoomFactor), this.ClientSize.Height);
 
                 default:
@@ -4962,7 +4970,7 @@ namespace keffect
         {
             float max = 0;
             string maxline = string.Empty;
-            float L = 0;            
+            float L; // = 0;            
             for (int i = 0; i < _kLyrics.Lines.Count(); i++)
             {
                 L = MeasureLine(i);

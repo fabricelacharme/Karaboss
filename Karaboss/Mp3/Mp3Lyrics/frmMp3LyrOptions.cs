@@ -1022,13 +1022,13 @@ namespace Karaboss.Mp3
 
         private void radioSolidColor_CheckedChanged(object sender, EventArgs e)
         {
-            if (radioSolidColor.Checked)
-            {
-                txtBgColor.Visible = radioSolidColor.Checked;
-                picBgColor.Visible = radioSolidColor.Checked;
-                btnBgColor.Visible = radioSolidColor.Checked;
-                btnBgColorPicker.Visible = radioSolidColor.Checked;
+            txtBgColor.Visible = radioSolidColor.Checked;
+            picBgColor.Visible = radioSolidColor.Checked;
+            btnBgColor.Visible = radioSolidColor.Checked;
+            btnBgColorPicker.Visible = radioSolidColor.Checked;
 
+            if (radioSolidColor.Checked)
+            {                
                 karaokeEffect1.OptionBackground = "SolidColor";
                 bgOption = "SolidColor";
             }
@@ -1653,7 +1653,10 @@ namespace Karaboss.Mp3
             // but the previous theme was modified            
             if (bColorModified && _currentTheme.Name != "Default")
             {
-                switch (MessageBox.Show(string.Format("The theme <{0}>was modified, do you want to save it?", _currentTheme.Name), Application.ProductName, MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question))
+                // Theme <{0}> has been modified, save changes?
+                string tx = Strings.SaveThemeQuestion;
+
+                switch (MessageBox.Show(string.Format(tx, _currentTheme.Name), Application.ProductName, MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question))
                 {
                     case DialogResult.Yes:
                         // Save previous theme and continue
@@ -1764,7 +1767,10 @@ namespace Karaboss.Mp3
             }
             else
             {
-                MessageBox.Show("Theme not found for colors", Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                // Error: no color theme was found
+                string tx = Strings.ErrorNoThemeFound;
+
+                MessageBox.Show(tx, Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
 
         }
@@ -1779,10 +1785,8 @@ namespace Karaboss.Mp3
         private void SaveTheme(string ThemeName)
         {
             bool bSaveTheme = false;
-
             string Name = string.Empty;
-
-            //ThemeItem item = _ThemesList.GetThemeByName(cbTheme.SelectedItem.ToString());
+            
             ThemeItem item = _ThemesList.GetThemeByName(ThemeName);
 
             if (item == null) return;
@@ -1846,10 +1850,28 @@ namespace Karaboss.Mp3
             // Save list of themes
             if (_ThemesListHelper.Save(_ThemesListHelper.File, _ThemesList))
             {
-                MessageBox.Show(string.Format("The theme <{0}> was successfully saved", item.Name), Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Information);
+                // The theme <{0}> was successfully saved
+                string tx = Strings.ThemeSuccessfullySaved;
+
+                MessageBox.Show(string.Format(tx, item.Name), Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Information);
 
                 // Reset changes                
                 ThemeModified(false);
+            }
+        }
+
+
+        private bool SaveThemesList()
+        {
+            try
+            {
+                _ThemesListHelper.Save(_ThemesListHelper.File, _ThemesList);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return false;
             }
         }
 
@@ -1875,9 +1897,13 @@ namespace Karaboss.Mp3
 
         private string GetNameForNewTheme()
         {
-            // open a dialog asking for a name            
+            // open a dialog asking for a name
+
+            // Enter a name for the new theme
+            string tx = Strings.NameForNewTheme;
+
             this.TopMost = false;
-            frmDialog frmDialog = new frmDialog("Name of the new theme to create");
+            frmDialog frmDialog = new frmDialog(tx);
 
             if (frmDialog.ShowDialog() != DialogResult.OK)
             {
@@ -1889,7 +1915,10 @@ namespace Karaboss.Mp3
 
             if (_ThemesList.GetThemeByName(Name) != null)
             {
-                MessageBox.Show(string.Format("The theme {0} already exists!", Name), Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                // Error: the theme <{0}> already exists!
+                tx = Strings.ErrorThemeAlreadyExists;
+
+                MessageBox.Show(string.Format(tx, Name), Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                 return null;
             }
 
@@ -1905,7 +1934,11 @@ namespace Karaboss.Mp3
             // but the previous theme was modified            
             if (bColorModified && _currentTheme.Name != "Default")
             {
-                switch (MessageBox.Show(string.Format("The theme <{0}>was modified, do you want to save it?", _currentTheme.Name), Application.ProductName, MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question))
+
+                // Theme <{0}> has been modified, save changes?
+                string tx = Strings.SaveThemeQuestion;
+
+                switch (MessageBox.Show(string.Format(tx, _currentTheme.Name), Application.ProductName, MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question))
                 {
                     case DialogResult.Yes:
                         // Save previous theme and continue
@@ -1947,12 +1980,16 @@ namespace Karaboss.Mp3
             ThemeItem item = _ThemesList.GetThemeByName(cbTheme.SelectedItem.ToString());
             if (item == null) return;
 
-            if (MessageBox.Show(string.Format("Delete the theme <{0}>?", item.Name), Application.ProductName, MessageBoxButtons.OKCancel, MessageBoxIcon.Question) == DialogResult.OK)
+            // Delete the theme <{0}>?
+            string tx = Strings.DeleteThemeQuestion;
+
+            if (MessageBox.Show(string.Format(tx, item.Name), Application.ProductName, MessageBoxButtons.OKCancel, MessageBoxIcon.Question) == DialogResult.OK)
             {
                 if (_ThemesList.Remove(item.Name))
                 {
                     cbTheme.Items.Remove(item.Name);
                     cbTheme.SelectedIndex = 0;
+                    SaveThemesList();
                 }
             }
         }

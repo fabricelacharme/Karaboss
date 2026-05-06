@@ -631,4 +631,22 @@
   <data name="KTypesFourLinesSwapped" xml:space="preserve">
     <value>Four lines (swapped)</value>
   </data>
+  <data name="ErrorThemeAlreadyExists" xml:space="preserve">
+    <value>Error: the theme &lt;{0}&gt; already exists!</value>
+  </data>
+  <data name="NameForNewTheme" xml:space="preserve">
+    <value>Enter a name for the new theme</value>
+  </data>
+  <data name="ThemeSuccessfullySaved" xml:space="preserve">
+    <value>The theme &lt;{0}&gt; was successfully saved</value>
+  </data>
+  <data name="ErrorNoThemeFound" xml:space="preserve">
+    <value>Error: no color theme was found</value>
+  </data>
+  <data name="SavethemeQuestion" xml:space="preserve">
+    <value>Theme &lt;{0}&gt; has been modified, save changes?</value>
+  </data>
+  <data name="DeleteThemeQuestion" xml:space="preserve">
+    <value>Delete the theme &lt;{0}&gt;?</value>
+  </data>
 </root>
