@@ -231,6 +231,9 @@ namespace Karaboss.Mp3
 
                 frmMp3Lyrics.bTextBackGround = chkTextBackground.Checked;
 
+                // Display single image as background
+                frmMp3Lyrics.SingleImagePath = SingleImagePath;
+
                 // SlideShow frequency
                 frmMp3Lyrics.FreqSlideShow = freqSlideShow;
 

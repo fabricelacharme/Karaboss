@@ -542,6 +542,7 @@ namespace PicControl
 
         #region Karaoke display layout
 
+        // Fixed lines, scrolling lines, 4 lines swapped, 2 lines swapped
         private kar.KaraokeDisplayTypes _karaokeDisplayType = KaraokeDisplayTypes.FixedLines;
         public kar.KaraokeDisplayTypes KaraokeDisplayType
         {
@@ -682,6 +683,76 @@ namespace PicControl
         private List<string> m_ImageFilePaths;
         private Bitmap[] m_BitmapsArray;
 
+
+        #region Select background  
+
+        // Background option : image, diaporama, solidColor, transparent 
+        private string _optionbackground;
+        public string OptionBackground
+        {
+            get { return _optionbackground; }
+            set
+            {
+                _optionbackground = value;
+
+                switch (_optionbackground)
+                {
+                    case "Image":
+                        SetImageBackground(_SingleImagePath);
+                        pBox.Invalidate();
+                        break;
+
+                    case "Diaporama":
+                        if (dirSlideShow != null && Directory.Exists(dirSlideShow) && freqSlideShow > 0)
+                            SetDirectoryBackground(dirSlideShow);
+                        break;
+
+
+                    case "SolidColor":
+                        Terminate();
+                        _timerGradient.Stop();
+                        pBox.Image = null;
+                        m_CurrentImage = null;
+                        pBox.BackColor = _BgColor;
+                        pBox.Invalidate();
+                        break;
+
+
+                    case "Gradient":                        
+                        Terminate();
+                        pBox.Image = null;
+                        m_CurrentImage = null;
+                        _timerGradient.Start();
+                        pBox.Invalidate();
+                        break;
+
+                    case "Rhythm":                        
+                        Terminate();
+                        _timerGradient.Start();
+                        pBox.Image = null;
+                        m_CurrentImage = null;
+                        ResetSize();
+                        pBox.BackColor = _Rhythm0Color;
+                        pBox.Invalidate();
+                        break;
+
+                    case "Transparent":                        
+                        Terminate();
+                        _timerGradient.Stop();
+                        pBox.Image = null;
+                        m_CurrentImage = null;
+                        pBox.BackColor = _transparencykey;
+                        pBox.Invalidate();
+                        break;
+                    default:
+                        break;
+                }
+            }
+        }
+
+        #endregion Select background
+
+
         #region Single image
         // Display a single image as background        
         private string _SingleImagePath = string.Empty;
@@ -767,73 +838,7 @@ namespace PicControl
 
         #endregion Transition effect
 
-        
-        // Background option : image, diaporama, solidColor, transparent 
-        private string _optionbackground;
-        public string OptionBackground
-        {
-            get { return _optionbackground; }
-            set
-            {
-                _optionbackground = value;
-
-                switch (_optionbackground)
-                {
-                    case "Image":
-                        SetImageBackground(_SingleImagePath);
-                        pBox.Invalidate();
-                        break;
-
-                    case "Diaporama":
-                        if (dirSlideShow != null && Directory.Exists(dirSlideShow) && freqSlideShow > 0)
-                            SetDirectoryBackground(dirSlideShow);
-                        break;
-
-
-                    case "SolidColor":
-                        Terminate();
-                        _timerGradient.Stop();
-                        pBox.Image = null;
-                        m_CurrentImage = null;
-                        pBox.BackColor = _BgColor;
-                        pBox.Invalidate();
-                        break;
-
-
-                    case "Gradient":
-                        //m_Cancel = true;
-                        Terminate();
-                        pBox.Image = null;
-                        m_CurrentImage = null;
-                        _timerGradient.Start();
-                        pBox.Invalidate();
-                        break;
-
-                    case "Rhythm":
-                        //m_Cancel = true;
-                        Terminate();
-                        _timerGradient.Start();
-                        pBox.Image = null;
-                        m_CurrentImage = null;
-                        ResetSize();
-                        pBox.BackColor = _Rhythm0Color;
-                        pBox.Invalidate();
-                        break;
-
-                    case "Transparent":
-                        //m_Cancel = true;
-                        Terminate();
-                        _timerGradient.Stop();
-                        pBox.Image = null;
-                        m_CurrentImage = null;
-                        pBox.BackColor = _transparencykey;
-                        pBox.Invalidate();
-                        break;
-                    default:
-                        break;
-                }
-            }
-        }
+       
 
 
         #endregion slideshow
@@ -950,6 +955,7 @@ namespace PicControl
 
         #endregion
 
+        private int _nbLyricsLinesOrg;
         private int _nbLyricsLines = 3;
         [Description("number of lines to display")]
         public int nbLyricsLines
@@ -959,6 +965,9 @@ namespace PicControl
             set
             {
                 _nbLyricsLines = value;
+                _nbLyricsLinesOrg = value;
+                if (bIsSettings)
+                    Init();
                 ajustTextAgain();
                 pBox.Invalidate();
             }
@@ -1525,8 +1534,36 @@ namespace PicControl
         /// </summary>
         /// <param name="toto"></param>     
         private void Init(bool bDemoMode = false)
-        {                                    
-                                    
+        {
+            if (_kLyrics == null) return;
+            if (_kLyrics.Lines == null) return;
+            if (_kLyrics.Lines.Count == 0) return;
+
+
+            // Update _nbLyricsLines if layout changed in options            
+            switch (KaraokeDisplayType)
+            {
+                case KaraokeDisplayTypes.FixedLines:
+                    _nbLyricsLines = _nbLyricsLinesOrg;
+                    break;
+                case KaraokeDisplayTypes.FourLinesSwapped:
+                    _nbLyricsLines = 4;
+                    break;
+                case KaraokeDisplayTypes.TwoLinesSwapped:
+                    _nbLyricsLines = 2;
+                    break;
+                case KaraokeDisplayTypes.ScrollingLinesBottomUp:
+                    _nbLyricsLines = _nbLyricsLinesOrg;
+                    break;
+                case KaraokeDisplayTypes.ScrollingLinesTopDown:
+                    _nbLyricsLines += _nbLyricsLinesOrg;
+                    break;
+                default:
+                    _nbLyricsLines = _nbLyricsLinesOrg;
+                    break;
+            }
+
+
             // Do not display paragraphs for some cases
             if (KaraokeDisplayType == KaraokeDisplayTypes.TwoLinesSwapped || KaraokeDisplayType == KaraokeDisplayTypes.FourLinesSwapped || !bShowParagraphs)
             {
@@ -1651,7 +1688,7 @@ namespace PicControl
         #endregion MoveWindows
 
 
-        public void SetImageBackground(string ImagePath)
+        private void SetImageBackground(string ImagePath)
         {
             try
             {
@@ -1660,7 +1697,6 @@ namespace PicControl
                     pBox.BackColor = Color.Black;
                     return;
                 }
-
                
                 m_ImageFilePaths.Clear();
                 m_ImageFilePaths.Add(ImagePath);
@@ -1681,9 +1717,7 @@ namespace PicControl
         public void SetDirectoryBackground(string dirImages)
         {
             try
-            {
-               // m_CurrentImage = null;                 
-
+            {                           
                 pBox.Image = null;
                 pBox.Invalidate();
 
@@ -4159,7 +4193,7 @@ namespace PicControl
                     SecondsBeforeSinging = -1;
                     bCountDown = false;
 
-                    Console.WriteLine("********** End of Countdown");
+                    //Console.WriteLine("********** End of Countdown");
                 }
                 else
                 {                    
@@ -4239,6 +4273,8 @@ namespace PicControl
             int idx4 = 0;
 
             int LinePosition = -1;
+            float lineSpacing = 1.2f;
+
 
             // Search for information
             // None                         -2
@@ -4261,8 +4297,8 @@ namespace PicControl
 
                 y1 = y0;                            //          _FirstLineToShow              current         (update 3 & 4)
                 y2 = y0 + _lineHeight;              // idx2     _FirstLineToShow + 1      inactive
-                y3 = y0 + 2 * _lineHeight;          // idx3     _FirstLineToShow + 2      inactive
-                y4 = y0 + 3 * _lineHeight;          // idx4     _FirstLineToShow + 3      inactive
+                y3 = y2 + (int)(lineSpacing * _lineHeight);          // idx3     _FirstLineToShow + 2      inactive
+                y4 = y3 + _lineHeight;          // idx4     _FirstLineToShow + 3      inactive
 
                 idx2 = _FirstLineToShow + 1;
                 idx3 = _FirstLineToShow + 2;
@@ -4282,8 +4318,8 @@ namespace PicControl
 
                 y2 = y0;                            // idx2     _FirstLineToShow - 1     * active
                 y1 = y0 + _lineHeight;              //          _FirstLineToShow             current         (no update)
-                y3 = y0 + 2 * _lineHeight;          // idx3     _FirstLineToShow + 1     inactive
-                y4 = y0 + 3 * _lineHeight;          // idx4     _FirstLineToShow + 2     inactive
+                y3 = y1 + (int)(lineSpacing * _lineHeight);          // idx3     _FirstLineToShow + 1     inactive
+                y4 = y3 + _lineHeight;          // idx4     _FirstLineToShow + 2     inactive
 
                 idx2 = _FirstLineToShow - 1;
                 idx3 = _FirstLineToShow + 1;
@@ -4303,8 +4339,8 @@ namespace PicControl
 
                 y3 = y0;                            // idx3     _FirstLineToShow + 2     inactive
                 y4 = y0 + _lineHeight;              // idx4     _FirstLineToShow + 3     inactive
-                y1 = y0 + 2 * _lineHeight;          //          _FirstLineToShow             current         (update 1 & 2)
-                y2 = y0 + 3 * _lineHeight;          // idx2     _FirstLineToShow + 1     inactive
+                y1 = y4 + (int)(lineSpacing * _lineHeight);          //          _FirstLineToShow             current         (update 1 & 2)
+                y2 = y1 + _lineHeight;          // idx2     _FirstLineToShow + 1     inactive
 
                 idx2 = _FirstLineToShow + 1;
                 idx3 = _FirstLineToShow + 2;
@@ -4325,8 +4361,8 @@ namespace PicControl
 
                 y3 = y0;                            // idx3     _FirstLineToShow + 1     inactive
                 y4 = y0 + _lineHeight;              // idx4     _FirstLineToShow + 2     inactive
-                y2 = y0 + 2 * _lineHeight;          // idx2     _FirstLineToShow - 1     * active
-                y1 = y0 + 3 * _lineHeight;          //          _FirstLineToShow             current         (no update)
+                y2 = y4 + (int)(lineSpacing * _lineHeight);          // idx2     _FirstLineToShow - 1     * active
+                y1 = y2 + _lineHeight;          //          _FirstLineToShow             current         (no update)
 
                 idx2 = _FirstLineToShow - 1;
                 idx3 = _FirstLineToShow + 1;

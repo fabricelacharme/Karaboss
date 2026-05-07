@@ -399,6 +399,7 @@ namespace keffect
 
         #region Karaoke display layout
 
+        // Fixed lines, scrolling lines, 4 lines swapped, 2 lines swapped
         private kar.KaraokeDisplayTypes _karaokeDisplayType = KaraokeDisplayTypes.FixedLines;
         public kar.KaraokeDisplayTypes KaraokeDisplayType
         {
@@ -490,6 +491,73 @@ namespace keffect
         // Paths of images        
         private List<string> m_ImageFilePaths;
 
+
+        #region Select background
+
+        // Background option : image, diaporama, solidColor, transparent 
+        private string _optionbackground;
+        public string OptionBackground
+        {
+            get { return _optionbackground; }
+            set
+            {
+                _optionbackground = value;
+
+                switch (_optionbackground)
+                {
+                    case "Image":
+                        SetImageBackground(_SingleImagePath);
+                        pBox.Invalidate();
+                        break;
+
+                    case "Diaporama":
+                        break;
+
+                    case "SolidColor":
+                        Terminate();
+                        _timerGradient.Stop();
+                        pBox.Image = null;
+                        m_CurrentImage = null;
+                        pBox.BackColor = _BgColor;
+                        pBox.Invalidate();
+                        break;
+
+                    case "Gradient":
+                        Terminate();
+                        pBox.Image = null;
+                        m_CurrentImage = null;
+                        _timerGradient.Start();
+                        pBox.Invalidate();
+                        break;
+
+
+                    case "Rhythm":
+                        Terminate();
+                        _timerGradient.Start();
+                        pBox.Image = null;
+                        m_CurrentImage = null;
+                        ResetSize();
+                        pBox.BackColor = _Rhythm0Color;
+                        pBox.Invalidate();
+                        break;
+
+                    case "Transparent":
+                        Terminate();
+                        _timerGradient.Stop();
+                        pBox.Image = null;
+                        m_CurrentImage = null;
+                        pBox.BackColor = _transparencykey;
+                        pBox.Invalidate();
+                        break;
+                    default:
+                        break;
+                }
+            }
+        }
+
+        #endregion Select background
+
+
         #region Single image
         // Display a single image as background        
         private string _SingleImagePath = string.Empty;
@@ -556,66 +624,6 @@ namespace keffect
         #endregion Transition effect       
 
 
-        // Background option : image, diaporama, solidColor, transparent 
-        private string _optionbackground;
-        public string OptionBackground
-        {
-            get { return _optionbackground; }
-            set
-            {
-                _optionbackground = value;
-
-                switch (_optionbackground)
-                {
-                    case "Image":
-                        SetImageBackground(_SingleImagePath);
-                        pBox.Invalidate();
-                        break;
-
-                    case "Diaporama":
-                        break;
-
-                    case "SolidColor":
-                        Terminate();
-                        _timerGradient.Stop();
-                        pBox.Image = null;
-                        m_CurrentImage = null;
-                        pBox.BackColor = _BgColor;
-                        pBox.Invalidate();
-                        break;
-
-                    case "Gradient":
-                        Terminate();
-                        pBox.Image = null;
-                        m_CurrentImage = null;
-                        _timerGradient.Start();
-                        pBox.Invalidate();
-                        break;
-
-
-                    case "Rhythm":
-                        Terminate();
-                        _timerGradient.Start();
-                        pBox.Image = null;
-                        m_CurrentImage = null;
-                        ResetSize();
-                        pBox.BackColor = _Rhythm0Color;
-                        pBox.Invalidate();
-                        break;
-
-                    case "Transparent":
-                        Terminate();
-                        _timerGradient.Stop();
-                        pBox.Image = null;
-                        m_CurrentImage = null;
-                        pBox.BackColor = _transparencykey;
-                        pBox.Invalidate();
-                        break;
-                    default:
-                        break;
-                }
-            }
-        }
 
         #endregion SlideShow
 
@@ -932,7 +940,7 @@ namespace keffect
 
         #region Public methods
 
-        public void SetImageBackground(string ImagePath)
+        private void SetImageBackground(string ImagePath)
         {
             try
             {
@@ -960,15 +968,16 @@ namespace keffect
         /// <param name="dirImages"></param>
         public void SetDirectoryBackground(string dirImages)
         {
+            /*
             if (dirImages == null || !Directory.Exists(dirImages))
             {
                 pBox.BackColor = Color.Black;
                 return;
             }
+            */
 
             try
-            {
-                //m_CurrentImage = null;
+            {                
                 pBox.Image = null;
                 pBox.Invalidate();
 
@@ -995,8 +1004,7 @@ namespace keffect
                             // No image, just background color                            
                             break;
                         case 1:
-                            // Single image                            
-                            //pBox.Image = m_BitmapsArray[0]; //  Image.FromFile(m_ImageFilePaths[0]);
+                            // Single image                                                        
                             m_CurrentImage = Image.FromFile(m_ImageFilePaths[0]);
                             break;
                         default:
@@ -1009,7 +1017,6 @@ namespace keffect
             {
                 Console.WriteLine("Error: " + e.Message);
             }
-
         }
 
 
@@ -1459,8 +1466,7 @@ namespace keffect
             if (_kLyrics.Lines.Count == 0) return;
 
             
-            // Upadate _nbLyricsLines
-            // Different code than MIDI, but mandatory because no center work without it
+            // Update _nbLyricsLines if layout changed in options           
             switch (KaraokeDisplayType)
             {
                 case KaraokeDisplayTypes.FixedLines:
@@ -3496,6 +3502,7 @@ namespace keffect
             int idx4 = 0;
 
             int LinePosition = -1;
+            float lineSpacing = 1.2f;
 
             // Search for information
             // None                         -2
@@ -3516,10 +3523,10 @@ namespace keffect
                 LinePosition = 0;
                 // Position possible for LineOfInformationPosition
 
-                y1 = y0;                            //          _FirstLineToShow              current         (update 3 & 4)
-                y2 = y0 + _lineHeight;              // idx2     _FirstLineToShow + 1      inactive
-                y3 = y0 + 2 * _lineHeight;          // idx3     _FirstLineToShow + 2      inactive
-                y4 = y0 + 3 * _lineHeight;          // idx4     _FirstLineToShow + 3      inactive
+                y1 = y0;                                    //          _FirstLineToShow              current         (update 3 & 4)
+                y2 = y0 + _lineHeight;                      // idx2     _FirstLineToShow + 1      inactive
+                y3 = y2 + (int)(lineSpacing * _lineHeight);         // idx3     _FirstLineToShow + 2      inactive                                           // y3 = y0 + 2 * _lineHeight;
+                y4 = y3 + _lineHeight;                      // idx4     _FirstLineToShow + 3      inactive                                           // y0 + 3 * _lineHeight;
 
                 idx2 = _FirstLineToShow + 1;
                 idx3 = _FirstLineToShow + 2;
@@ -3537,10 +3544,10 @@ namespace keffect
                 LinePosition = 1;
                 // Position not possible for LineOfInformationPosition
 
-                y2 = y0;                            // idx2     _FirstLineToShow - 1     * active
-                y1 = y0 + _lineHeight;              //          _FirstLineToShow             current         (no update)
-                y3 = y0 + 2 * _lineHeight;          // idx3     _FirstLineToShow + 1     inactive
-                y4 = y0 + 3 * _lineHeight;          // idx4     _FirstLineToShow + 2     inactive
+                y2 = y0;                                    // idx2     _FirstLineToShow - 1     active
+                y1 = y0 + _lineHeight;                      //          _FirstLineToShow             current         (no update)
+                y3 = y1 + (int)(lineSpacing * _lineHeight);         // idx3     _FirstLineToShow + 1     inactive                                           // y0 + 2 * _lineHeight;
+                y4 = y3 + _lineHeight;                      // idx4     _FirstLineToShow + 2     inactive                                           // y0 + 3 * _lineHeight
 
                 idx2 = _FirstLineToShow - 1;
                 idx3 = _FirstLineToShow + 1;
@@ -3560,8 +3567,8 @@ namespace keffect
 
                 y3 = y0;                            // idx3     _FirstLineToShow + 2     inactive
                 y4 = y0 + _lineHeight;              // idx4     _FirstLineToShow + 3     inactive
-                y1 = y0 + 2 * _lineHeight;          //          _FirstLineToShow             current         (update 1 & 2)
-                y2 = y0 + 3 * _lineHeight;          // idx2     _FirstLineToShow + 1     inactive
+                y1 = y4 + (int)(lineSpacing * _lineHeight);          //          _FirstLineToShow             current         (update 1 & 2)                         // y0 + 2 * _lineHeight;
+                y2 = y1 + _lineHeight;          // idx2     _FirstLineToShow + 1     inactive                                                   // y0 + 3 * _lineHeight;
 
                 idx2 = _FirstLineToShow + 1;
                 idx3 = _FirstLineToShow + 2;
@@ -3580,10 +3587,10 @@ namespace keffect
                 LinePosition = 3;
                 // Position not possible for LineOfInformationPosition
 
-                y3 = y0;                            // idx3     _FirstLineToShow + 1     inactive
-                y4 = y0 + _lineHeight;              // idx4     _FirstLineToShow + 2     inactive
-                y2 = y0 + 2 * _lineHeight;          // idx2     _FirstLineToShow - 1     * active
-                y1 = y0 + 3 * _lineHeight;          //          _FirstLineToShow             current         (no update)
+                y3 = y0;                                    // idx3     _FirstLineToShow + 1     inactive
+                y4 = y0 + _lineHeight;                      // idx4     _FirstLineToShow + 2     inactive
+                y2 = y4 + (int)(lineSpacing * _lineHeight);         // idx2     _FirstLineToShow - 1      active                                                // y0 + 2 * _lineHeight
+                y1 = y2 + _lineHeight;                      //          _FirstLineToShow             current         (no update)                        // y0 + 3 * _lineHeight
 
                 idx2 = _FirstLineToShow - 1;
                 idx3 = _FirstLineToShow + 1;
@@ -3593,8 +3600,6 @@ namespace keffect
                 LinesNr[1] = _FirstLineToShow + 2;
                 LinesNr[2] = _FirstLineToShow - 1;
                 LinesNr[3] = _FirstLineToShow;
-
-
             }
 
             #endregion Line layout
