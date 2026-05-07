@@ -406,22 +406,16 @@ namespace keffect
         {
             get { return _karaokeDisplayType; }
             set
-            {
-                //if (value != _karaokeDisplayType)
-                //{
+            {                
                 _karaokeDisplayType = value;
-
-                    //if (_kLyrics.Lines.Count > 0)
+                    
                 if (_kLyricsOrg != null)
                 {
-                        _kLyrics = _kLyricsOrg.Clone();
-                        //if (_bIsSettings)
-                            Init();
-                        //pBox?.Invalidate();
-                        //AjustText(_biggestLine); // pourquoi ? mystère. Mais ça marche
+                    _kLyrics = _kLyricsOrg.Clone();                        
+                    Init();
+                        
                 }
-                pBox?.Invalidate();
-                //}
+                pBox?.Invalidate();                
             }
         }
 
@@ -2602,7 +2596,13 @@ namespace keffect
 
         }
 
-        
+        /// <summary>
+        /// Draw a line of information like (introduction, instrumental, ending) on a single line
+        /// </summary>
+        /// <param name="e"></param>
+        /// <param name="infotext"></param>
+        /// <param name="seconds"></param>
+        /// <param name="y0"></param>
         private void DrawInformation(PaintEventArgs e, string infotext, int seconds, int y0)
         {
             // Seconds
@@ -3505,7 +3505,7 @@ namespace keffect
             // _FirstLineToShow + 1          1
             // _FirstLineToShow + 2          2
             // _FirstLineToShow + 3          3
-            int LineOfInformationPosition; // = -2;
+            int LineOfInformationPosition; 
 
             int[] LinesNr = new int[4];
 
@@ -5098,7 +5098,7 @@ namespace keffect
                     _karaokeFont = new Font(_karaokeFont.FontFamily, emSize, FontStyle.Regular, GraphicsUnit.Pixel);
 
                     // Vertical distance between lines                    
-                    _lineHeight = (int)(1.2 * emSize);
+                    _lineHeight = (int)(1.45 * emSize);
                     // Height of the full song
                     _linesHeight = _nbLyricsLines * _lineHeight;
 
@@ -5427,10 +5427,7 @@ namespace keffect
      
 
         #endregion start stop
-
-
-       
-
+      
 
         #region Terminate
 

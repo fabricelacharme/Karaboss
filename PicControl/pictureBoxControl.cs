@@ -2457,7 +2457,11 @@ namespace PicControl
                     pBox.Font = new Font(Name = _karaokeFont.Name, emSize);
 
                     // Vertical distance between lines
-                    _lineHeight = (int)emSize + 10;
+                    
+                    // FAB 06/05/2026
+                    //_lineHeight = (int)emSize + 10;                    
+                    _lineHeight = (int)(1.45 * emSize);
+
                     // Height of the full song
                     _linesHeight = _nbLyricsLines * _lineHeight;
 
@@ -3892,7 +3896,7 @@ namespace PicControl
 
 
         /// <summary>
-        /// Draw a line of information like (Instrumental) on a single line
+        /// Draw a line of information like (introduction, instrumental, ending) on a single line
         /// </summary>
         /// <param name="e"></param>
         ///  <param name="infotext"</param>
