@@ -2678,7 +2678,12 @@ namespace PicControl
                         if (_bShowChords)
                             ret = (H - ((2 * _nbLyricsLines - 1) * (h + 10))) / 2;
                         else
-                            ret = (H - ((_nbLyricsLines - 1) * (h + 10))) / 2;
+                        {
+                            //ret = (H - ((_nbLyricsLines - 1) * (h + 10))) / 2;
+
+                            ret = (H - (_nbLyricsLines * _lineHeight)) /2 ;
+
+                        }
                     }
                     break;
 
