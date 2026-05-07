@@ -2457,10 +2457,9 @@ namespace PicControl
                     pBox.Font = new Font(Name = _karaokeFont.Name, emSize);
 
                     // Vertical distance between lines
-                    
-                    // FAB 06/05/2026
+                    // https://pimpmytype.com/line-length-line-height/ they say 1.6 is the best                         
                     //_lineHeight = (int)emSize + 10;                    
-                    _lineHeight = (int)(1.45 * emSize);
+                    _lineHeight = (int)(1.55 * emSize);
 
                     // Height of the full song
                     _linesHeight = _nbLyricsLines * _lineHeight;

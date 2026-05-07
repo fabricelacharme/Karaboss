@@ -41,10 +41,8 @@ using System.Drawing.Imaging;
 using System.Drawing.Text;
 using System.IO;
 using System.Linq;
-using System.Net.NetworkInformation;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement.ToolTip;
 
 
 namespace keffect
@@ -1460,8 +1458,9 @@ namespace keffect
             if (_kLyrics.Lines == null) return;
             if (_kLyrics.Lines.Count == 0) return;
 
-            /*
+            
             // Upadate _nbLyricsLines
+            // Different code than MIDI, but mandatory because no center work without it
             switch (KaraokeDisplayType)
             {
                 case KaraokeDisplayTypes.FixedLines:
@@ -1483,7 +1482,7 @@ namespace keffect
                     _nbLyricsLines = _nbLyricsLinesOrg;
                     break;
             }
-            */
+            
 
             // Do not display paragraphs for some cases
             if (KaraokeDisplayType == KaraokeDisplayTypes.TwoLinesSwapped || KaraokeDisplayType == KaraokeDisplayTypes.FourLinesSwapped || !bShowParagraphs)
@@ -5097,8 +5096,9 @@ namespace keffect
                     emSize = g.DpiY * inisize / 72;
                     _karaokeFont = new Font(_karaokeFont.FontFamily, emSize, FontStyle.Regular, GraphicsUnit.Pixel);
 
-                    // Vertical distance between lines                    
-                    _lineHeight = (int)(1.45 * emSize);
+                    // Vertical distance between lines          1.6 is
+                    // https://pimpmytype.com/line-length-line-height/ they say 1.6 is the best 
+                    _lineHeight = (int)(1.55 * emSize);
                     // Height of the full song
                     _linesHeight = _nbLyricsLines * _lineHeight;
 
