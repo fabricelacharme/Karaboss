@@ -4663,6 +4663,7 @@ namespace PicControl
             int idx4 = 0;
 
             int LinePosition = -1;
+            float lineSpacing = 1.2f;
 
             // Search for information
             // None                         -2
@@ -4685,8 +4686,8 @@ namespace PicControl
 
                 y1 = y0;                            //          _FirstLineToShow              current         (update 3 & 4)
                 y2 = y0 + _lineHeight;              // idx2     _FirstLineToShow + 1      inactive
-                y3 = y0 + 2 * _lineHeight;          // idx3     _FirstLineToShow + 2      inactive
-                y4 = y0 + 3 * _lineHeight;          // idx4     _FirstLineToShow + 3      inactive
+                y3 = y2 + (int)(lineSpacing * _lineHeight);          // idx3     _FirstLineToShow + 2      inactive
+                y4 = y3 + _lineHeight;          // idx4     _FirstLineToShow + 3      inactive
 
                 idx2 = _FirstLineToShow + 1;
                 idx3 = _FirstLineToShow + 2;
@@ -4706,8 +4707,8 @@ namespace PicControl
 
                 y2 = y0;                            // idx2     _FirstLineToShow - 1     * active
                 y1 = y0 + _lineHeight;              //          _FirstLineToShow             current         (no update)
-                y3 = y0 + 2 * _lineHeight;          // idx3     _FirstLineToShow + 1     inactive
-                y4 = y0 + 3 * _lineHeight;          // idx4     _FirstLineToShow + 2     inactive
+                y3 = y1 + (int)(lineSpacing * _lineHeight);          // idx3     _FirstLineToShow + 1     inactive
+                y4 = y3 + _lineHeight;          // idx4     _FirstLineToShow + 2     inactive
 
                 idx2 = _FirstLineToShow - 1;
                 idx3 = _FirstLineToShow + 1;
@@ -4727,8 +4728,8 @@ namespace PicControl
 
                 y3 = y0;                            // idx3     _FirstLineToShow + 2     inactive
                 y4 = y0 + _lineHeight;              // idx4     _FirstLineToShow + 3     inactive
-                y1 = y0 + 2 * _lineHeight;          //          _FirstLineToShow             current         (update 1 & 2)
-                y2 = y0 + 3 * _lineHeight;          // idx2     _FirstLineToShow + 1     inactive
+                y1 = y4 + (int)(lineSpacing * _lineHeight);          //          _FirstLineToShow             current         (update 1 & 2)
+                y2 = y1 + _lineHeight;          // idx2     _FirstLineToShow + 1     inactive
 
                 idx2 = _FirstLineToShow + 1;
                 idx3 = _FirstLineToShow + 2;
@@ -4749,8 +4750,8 @@ namespace PicControl
 
                 y3 = y0;                            // idx3     _FirstLineToShow + 1     inactive
                 y4 = y0 + _lineHeight;              // idx4     _FirstLineToShow + 2     inactive
-                y2 = y0 + 2 * _lineHeight;          // idx2     _FirstLineToShow - 1     * active
-                y1 = y0 + 3 * _lineHeight;          //          _FirstLineToShow             current         (no update)
+                y2 = y4 + (int)(lineSpacing * _lineHeight);          // idx2     _FirstLineToShow - 1     * active
+                y1 = y2 + _lineHeight;          //          _FirstLineToShow             current         (no update)
 
                 idx2 = _FirstLineToShow - 1;
                 idx3 = _FirstLineToShow + 1;
@@ -5051,6 +5052,7 @@ namespace PicControl
             int idx4 = 0;
 
             int LinePosition = -1;
+            float lineSpacing = 1.2f;
 
             // Search for information
             // None                         -2
@@ -5073,8 +5075,8 @@ namespace PicControl
 
                 y1 = y0;                            //          _FirstLineToShow              current         (update 3 & 4)
                 y2 = y0 + _lineHeight;              // idx2     _FirstLineToShow + 1      inactive
-                y3 = y0 + 2 * _lineHeight;          // idx3     _FirstLineToShow + 2      inactive
-                y4 = y0 + 3 * _lineHeight;          // idx4     _FirstLineToShow + 3      inactive
+                y3 = y2 + (int)(lineSpacing * _lineHeight);          // idx3     _FirstLineToShow + 2      inactive
+                y4 = y3 + _lineHeight;          // idx4     _FirstLineToShow + 3      inactive
 
                 idx2 = _FirstLineToShow + 1;
                 idx3 = _FirstLineToShow + 2;
@@ -5094,8 +5096,8 @@ namespace PicControl
 
                 y2 = y0;                            // idx2     _FirstLineToShow - 1     * active
                 y1 = y0 + _lineHeight;              //          _FirstLineToShow             current         (no update)
-                y3 = y0 + 2 * _lineHeight;          // idx3     _FirstLineToShow + 1     inactive
-                y4 = y0 + 3 * _lineHeight;          // idx4     _FirstLineToShow + 2     inactive
+                y3 = y1 + (int)(lineSpacing * _lineHeight);          // idx3     _FirstLineToShow + 1     inactive
+                y4 = y3 + _lineHeight;          // idx4     _FirstLineToShow + 2     inactive
 
                 idx2 = _FirstLineToShow - 1;
                 idx3 = _FirstLineToShow + 1;
@@ -5115,8 +5117,8 @@ namespace PicControl
 
                 y3 = y0;                            // idx3     _FirstLineToShow + 2     inactive
                 y4 = y0 + _lineHeight;              // idx4     _FirstLineToShow + 3     inactive
-                y1 = y0 + 2 * _lineHeight;          //          _FirstLineToShow             current         (update 1 & 2)
-                y2 = y0 + 3 * _lineHeight;          // idx2     _FirstLineToShow + 1     inactive
+                y1 = y4 + (int)(lineSpacing * _lineHeight);          //          _FirstLineToShow             current         (update 1 & 2)
+                y2 = y1 + _lineHeight;          // idx2     _FirstLineToShow + 1     inactive
 
                 idx2 = _FirstLineToShow + 1;
                 idx3 = _FirstLineToShow + 2;
@@ -5137,8 +5139,8 @@ namespace PicControl
 
                 y3 = y0;                            // idx3     _FirstLineToShow + 1     inactive
                 y4 = y0 + _lineHeight;              // idx4     _FirstLineToShow + 2     inactive
-                y2 = y0 + 2 * _lineHeight;          // idx2     _FirstLineToShow - 1     * active
-                y1 = y0 + 3 * _lineHeight;          //          _FirstLineToShow             current         (no update)
+                y2 = y4 + (int)(lineSpacing * _lineHeight);          // idx2     _FirstLineToShow - 1     * active
+                y1 = y2 + _lineHeight;          //          _FirstLineToShow             current         (no update)
 
                 idx2 = _FirstLineToShow - 1;
                 idx3 = _FirstLineToShow + 1;
