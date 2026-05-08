@@ -1055,31 +1055,12 @@ namespace Karaboss.Mp3
                 return named;
             }
             throw new ArgumentException($"Unsupported color value: {input}", nameof(input));
-        }
-
-
-       
-
+        }      
 
         #endregion options
 
 
-        #region lyrics
-        /// <summary>
-        /// Load lyrics from Mp3LyricsMgmtHelper.SyncTexts
-        /// They must begin with \r\n because of PictureBox1_Paint
-        /// </summary>
-        private void LoadLyrics()
-        {           
-            if (Mp3LyricsMgmtHelper.mp3KaraokeLyrics == null) return;
-
-            // Karaoke Effect
-            karaokeEffect1.TransitionEffect = keffect.KaraokeEffect.TransitionEffects.None;                                                            
-            karaokeEffect1.KLyrics = Mp3LyricsMgmtHelper.mp3KaraokeLyrics;
-
-            karaokeEffect1.nbLyricsLines = 3;
-        }
-
+        #region lyrics        
 
         /// <summary>
         /// Load lyrics into karaokeEffect1.KLyrics

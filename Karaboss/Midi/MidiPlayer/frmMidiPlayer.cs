@@ -4369,7 +4369,7 @@ namespace Karaboss
             if (frmMidiLyrics == null || Application.OpenForms.OfType<frmMidiLyrics>().Count() == 0)
             {
                 frmMidiLyrics = new frmMidiLyrics(myLyricsMgmt);
-                frmMidiLyrics.Owner = this;
+                //frmMidiLyrics.Owner = this;
                 frmMidiLyrics.Show();
             }
             else

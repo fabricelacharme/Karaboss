@@ -1139,7 +1139,7 @@ namespace PicControl
             // Dipslay chords or not            
             OptionShowChords = true;
 
-            _karaokeFont = new Font("Arial", this.Font.Size);
+            _karaokeFont = new Font("Arial Black", this.Font.Size);
             _chordFont = new Font("Comic Sans MS", this._karaokeFont.Size);
 
             m_ImageFilePaths = new List<string>();

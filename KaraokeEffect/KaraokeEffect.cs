@@ -1158,7 +1158,7 @@ namespace keffect
             m_BitmapsArray = new Bitmap[] { };
 
             sf = new StringFormat(StringFormat.GenericTypographic) { FormatFlags = StringFormatFlags.MeasureTrailingSpaces };            
-            _karaokeFont = new Font("Comic Sans MS", emSize, FontStyle.Regular, GraphicsUnit.Pixel);
+            _karaokeFont = new Font("Arial Black", emSize, FontStyle.Regular, GraphicsUnit.Pixel);
             
             _steppercent = 0.01F;          
             _transitionEffect = TransitionEffects.None;
@@ -2457,6 +2457,9 @@ namespace keffect
                 // Add lines of lyrics to the Graphics path
                 path.AddString(s, _karaokeFont.FontFamily, (int)_karaokeFont.Style, _karaokeFont.Size, new Point(x0, y2), sf);
             
+                // ************************ Reduce the size of the text
+                //e.Graphics.ScaleTransform(0.7f , 1);
+
                 // Draw the text            
                 e.Graphics.FillPath(new SolidBrush(FillColor), path);
 

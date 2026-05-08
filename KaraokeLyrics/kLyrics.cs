@@ -134,6 +134,12 @@ namespace kar
         {
             return string.Join("", Syllables.Select(s => s.Text));
         }
+
+        public int Length()
+        {
+            return ToString().Length;
+        }
+
     }
 
     /// <summary>

@@ -1437,6 +1437,20 @@ namespace Karaboss.Mp3
         /// <param name="Times"></param>
         private void DisplayFrmMp3Lyrics()
         {
+            #region tests
+
+            if (Application.OpenForms.OfType<frmTest>().Count() > 0)
+                Application.OpenForms["frmTest"].Close();
+
+            frmTest frmTest = new frmTest();
+            frmTest.Show();
+
+            frmTest.SetLyrics(Mp3LyricsMgmtHelper.mp3KaraokeLyrics);
+
+            return;
+            #endregion tests
+
+
             string sSong = string.Empty;
             string sSinger = string.Empty;
 
@@ -1450,14 +1464,13 @@ namespace Karaboss.Mp3
                 sSong = Mp3FullPath;
             }
 
-            if (Application.OpenForms.OfType<frmMp3Lyrics>().Count() > 0)
-            {
+            if (Application.OpenForms.OfType<frmMp3Lyrics>().Count() > 0)            
                 Application.OpenForms["frmMp3Lyrics"].Close();
-            }
+            
             
             // Open and add to owners (will be closed/minimized together and will be on top)
             frmMp3Lyrics = new frmMp3Lyrics();                        
-            frmMp3Lyrics.Owner = this;
+            //frmMp3Lyrics.Owner = this;
             frmMp3Lyrics.Show();
 
             // Display song & current singer on top label

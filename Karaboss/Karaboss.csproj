@@ -278,6 +278,12 @@
     <Compile Include="Mp3\Mp3Lyrics\frmMp3LyrOptions.Designer.cs">
       <DependentUpon>frmMp3LyrOptions.cs</DependentUpon>
     </Compile>
+    <Compile Include="Mp3\Mp3Lyrics\frmTest.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Mp3\Mp3Lyrics\frmTest.Designer.cs">
+      <DependentUpon>frmTest.cs</DependentUpon>
+    </Compile>
     <Compile Include="Mp3\Mp3Player\frmMp3Player.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -753,6 +759,9 @@
     <EmbeddedResource Include="Mp3\Mp3Lyrics\frmMp3LyrOptions.resx">
       <DependentUpon>frmMp3LyrOptions.cs</DependentUpon>
       <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Mp3\Mp3Lyrics\frmTest.resx">
+      <DependentUpon>frmTest.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Mp3\Mp3Player\frmMp3Player.fr.resx">
       <DependentUpon>frmMp3Player.cs</DependentUpon>
