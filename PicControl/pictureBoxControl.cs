@@ -1556,7 +1556,7 @@ namespace PicControl
                     _nbLyricsLines = _nbLyricsLinesOrg;
                     break;
                 case KaraokeDisplayTypes.ScrollingLinesTopDown:
-                    _nbLyricsLines += _nbLyricsLinesOrg;
+                    _nbLyricsLines = _nbLyricsLinesOrg;
                     break;
                 default:
                     _nbLyricsLines = _nbLyricsLinesOrg;

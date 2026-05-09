@@ -184,6 +184,7 @@ namespace Karaboss.Mp3
         //forms
         private frmMp3LyricsSimple frmMp3LyricsSimple;
         private frmMp3Lyrics frmMp3Lyrics;
+        private frmTest frmTest;
 
 
         #endregion forms
@@ -1442,9 +1443,10 @@ namespace Karaboss.Mp3
             if (Application.OpenForms.OfType<frmTest>().Count() > 0)
                 Application.OpenForms["frmTest"].Close();
 
-            frmTest frmTest = new frmTest();
+            frmTest = new frmTest();
             frmTest.Show();
 
+            frmTest.Duration = _duration;
             frmTest.SetLyrics(Mp3LyricsMgmtHelper.mp3KaraokeLyrics);
 
             return;
@@ -2097,6 +2099,11 @@ namespace Karaboss.Mp3
 
             if (Application.OpenForms.OfType<frmMp3Lyrics>().Count() > 0)
                 frmMp3Lyrics.GetPositionFromPlayer(pos);
+
+
+            // ************************************************************************* TEST *************************************************************************
+            if (Application.OpenForms.OfType<frmTest>().Count() > 0 )
+                frmTest.SetPos(pos * 1000);
 
         }
 

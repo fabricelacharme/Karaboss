@@ -490,7 +490,8 @@ namespace keffect
         private string DefaultDirSlideShow;
         // Paths of images        
         private List<string> m_ImageFilePaths;
-
+        // Array of bitmaps (images as backgound image)
+        private Bitmap[] m_BitmapsArray;
 
         #region Select background
 
@@ -616,13 +617,9 @@ namespace keffect
         {
             get { return mBlend; }
             set { mBlend = value; Invalidate(); }
-        }
-
-        // Array of bitmaps (images as backgound image)
-        private Bitmap[] m_BitmapsArray;
+        }        
 
         #endregion Transition effect       
-
 
 
         #endregion SlideShow
@@ -1287,12 +1284,10 @@ namespace keffect
         private kLyrics SearchForInstrumentals(kLyrics kls)
         {
             double tOnPrevious = 0;
-            double duration = 0;
-            //double introDurationMinimum = 1000;
+            double duration = 0;            
             double t; // = 0;
             kLyrics klsWithinstrumentals = new kLyrics();
-            kLine line;
-            //string text; // = string.Empty;
+            kLine line;            
             double tend; // = 0;
 
             // Introduction                        
@@ -1482,7 +1477,7 @@ namespace keffect
                     _nbLyricsLines = _nbLyricsLinesOrg;
                     break;
                 case KaraokeDisplayTypes.ScrollingLinesTopDown:
-                    _nbLyricsLines += _nbLyricsLinesOrg;
+                    _nbLyricsLines = _nbLyricsLinesOrg;
                     break;
                 default:
                     _nbLyricsLines = _nbLyricsLinesOrg;
@@ -3343,8 +3338,7 @@ namespace keffect
 
         #region Draw text with Four lines swapped
         private void DrawTextWithFourLinesSwapped(PaintEventArgs e)
-        {
-            //_nbLyricsLines = 4;
+        {            
 
             switch (FrameType)
             {
@@ -3515,7 +3509,6 @@ namespace keffect
             // _FirstLineToShow + 2          2
             // _FirstLineToShow + 3          3
             int LineOfInformationPosition; 
-
             int[] LinesNr = new int[4];
 
             #region Line layout
@@ -3607,6 +3600,9 @@ namespace keffect
 
             #endregion Line layout
 
+
+            #region Search for instrumental in the 4 lines
+
             bool bTooMuch = false;
             for (int i = 0; i < LinesNr.Length; i++)
             {
@@ -3620,7 +3616,9 @@ namespace keffect
             if (!bTooMuch)
                 LineOfInformationPosition = SearchLineOfInformation(LinesNr);
             else
-                LineOfInformationPosition = LastLineOfInformationPosition;            
+                LineOfInformationPosition = LastLineOfInformationPosition;
+
+            #endregion Search for instrumental in the 4 lines
 
 
             // If no line of information in the 4 lines => normal display in 4 lines swapped
