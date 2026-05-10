@@ -213,6 +213,7 @@ namespace Karaboss.Mp3
             this.KeyPreview = true;
 
             Mp3FullPath = FileName;
+            Mp3FileName = Path.GetFileName(FileName);
             SetTitle(FileName);
 
             // Init controls
@@ -1442,12 +1443,9 @@ namespace Karaboss.Mp3
 
             if (Application.OpenForms.OfType<frmTest>().Count() > 0)
                 Application.OpenForms["frmTest"].Close();
-
-            frmTest = new frmTest();
+                        
+            frmTest = new frmTest(Path.GetFileNameWithoutExtension(Mp3FullPath), _duration, Mp3LyricsMgmtHelper.mp3KaraokeLyrics);
             frmTest.Show();
-
-            frmTest.Duration = _duration;
-            frmTest.SetLyrics(Mp3LyricsMgmtHelper.mp3KaraokeLyrics);
 
             return;
             #endregion tests

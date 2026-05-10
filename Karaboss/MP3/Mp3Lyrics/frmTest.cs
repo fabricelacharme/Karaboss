@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics.Eventing.Reader;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Text;
@@ -56,29 +57,22 @@ namespace Karaboss.Mp3
         #endregion Instrumentals
 
 
-        #region Karaoke display layout
+        #region Draw filename
 
-        // Fixed lines, scrolling lines, 4 lines swapped, 2 lines swapped
-        private kar.KaraokeDisplayTypes _karaokeDisplayType = KaraokeDisplayTypes.FixedLines;
-        public kar.KaraokeDisplayTypes KaraokeDisplayType
+        public bool bDrawFileName = true;
+
+        private string _fileName;
+        public string FileName
         {
-            get { return _karaokeDisplayType; }
+            get { return _fileName; }
             set
             {
-                _karaokeDisplayType = value;
-
-                if (_kLyricsOrg != null)
-                {
-                    _kLyrics = _kLyricsOrg.Clone();
-                    //Init();
-
-                }
-                pBox?.Invalidate();
+                _fileName = value;
+                pBox.Invalidate();
             }
         }
 
-        #endregion Karaoke display layout
-
+        #endregion Draw filename
 
 
         #region Draw syllables
@@ -112,6 +106,30 @@ namespace Karaboss.Mp3
         private float inactive_fragment_length = 0;
 
         #endregion Draw syllables
+
+
+        #region Karaoke display layout
+
+        // Fixed lines, scrolling lines, 4 lines swapped, 2 lines swapped
+        private kar.KaraokeDisplayTypes _karaokeDisplayType = KaraokeDisplayTypes.FixedLines;
+        public kar.KaraokeDisplayTypes KaraokeDisplayType
+        {
+            get { return _karaokeDisplayType; }
+            set
+            {
+                _karaokeDisplayType = value;
+
+                if (_kLyricsOrg != null)
+                {
+                    _kLyrics = _kLyricsOrg.Clone();
+                    //Init();
+
+                }
+                pBox?.Invalidate();
+            }
+        }
+
+        #endregion Karaoke display layout
 
 
         #region Karaoke lyrics
@@ -415,9 +433,14 @@ namespace Karaboss.Mp3
 
         #endregion Text transform
 
-        public frmTest()
+        public frmTest(string fileName, double duration, kLyrics kls)
         {
             InitializeComponent();
+
+            FileName = fileName;
+            Duration = duration;
+            KLyrics = kls;
+            bDrawFileName = true;
 
             SetDefaultValues();
         }
@@ -436,6 +459,29 @@ namespace Karaboss.Mp3
             _steppercent = 0.01F;
             _transitionEffect = TransitionEffects.None;
         }
+
+
+        private kLyrics RemoveParagraphs(kLyrics kls)
+        {
+            kLyrics klsNoParagraphs = new kLyrics();
+            kLine line;
+            for (int i = 0; i < kls.Lines.Count; i++)
+            {
+                //if (kls.Lines[i].Syllables.First().CharType != Syllable.CharTypes.ParagraphSep)
+                if (!(kls.Lines[i].Syllables.Count == 1 && kls.Lines[i].Syllables.First().Text == string.Empty))
+                {
+                    line = new kLine();
+                    for (int j = 0; j < kls.Lines[i].Syllables.Count; j++)
+                    {
+                        line.Add(kls.Lines[i].Syllables[j]);
+                    }
+                    klsNoParagraphs.Add(line);
+                }
+            }
+
+            return klsNoParagraphs;
+        }
+
 
         private kLyrics SearchForInstrumentals(kLyrics kls)
         {
@@ -660,6 +706,16 @@ namespace Karaboss.Mp3
            
 
             _bIsSettings = false;
+
+
+            // Do not display paragraphs for some cases
+            if (KaraokeDisplayType == KaraokeDisplayTypes.TwoLinesSwapped || KaraokeDisplayType == KaraokeDisplayTypes.FourLinesSwapped || !bShowParagraphs)
+            {
+                if (!_bIsSettings)
+                    _kLyrics = RemoveParagraphs(_kLyrics);
+            }
+
+
             // Analyse lyrics to find introduction, instrumentals etc..
             if (!_bIsSettings && (KaraokeDisplayType == KaraokeDisplayTypes.TwoLinesSwapped || KaraokeDisplayType == KaraokeDisplayTypes.FourLinesSwapped))
                 _kLyrics = SearchForInstrumentals(_kLyrics);
@@ -688,6 +744,9 @@ namespace Karaboss.Mp3
 
         public void SetPos(double ms)
         {
+            // Store player position (ms)
+            PlayerPositionMilliseconds = ms;
+
             // Store player position (ms)            
             SetPosition((int)ms);
         }
@@ -978,7 +1037,7 @@ namespace Karaboss.Mp3
                 // Recalculates the remaining time with PlayerPosition
                 _endTime = DateTime.Now.AddMilliseconds(TargetPositionMilliseconds - PlayerPositionMilliseconds);
 
-                TimeSpan tm = _endTime - DateTime.Now;
+                TimeSpan tm = _endTime - DateTime.Now;                
 
                 if (tm.TotalSeconds < 0)
                 {
@@ -989,13 +1048,14 @@ namespace Karaboss.Mp3
                     bCountDown = false;
                 }
                 else
-                {
+                {                    
                     // Time is about 3 sec before next lyric to sing
                     // Calculate countdown
                     int s = (int)tm.TotalSeconds;
+
                     if (s != SecondsBeforeSinging)
                     {
-                        SecondsBeforeSinging = s;
+                        SecondsBeforeSinging = s;                        
                     }
                 }
             }
@@ -1036,7 +1096,7 @@ namespace Karaboss.Mp3
         }
               
       
-        private void DrawFileName(PaintEventArgs e, string FileName, int y2, float femSize)
+        private void DrawFileName(PaintEventArgs e, string FileName, float femSize)
         {
             sf = null;
             int x0 = 0;
@@ -1044,6 +1104,9 @@ namespace Karaboss.Mp3
             Color FillColor = _InactiveColor;
             Pen penBorder = new Pen(BorderColor, 2);
             var path = new GraphicsPath();
+
+
+            int y0 = (int)MeasureStringHeight(FileName, 0.038f * _karaokeFont.Size);
 
             // Measure FileName
             float w = MeasureString( FileName, femSize);
@@ -1053,15 +1116,13 @@ namespace Karaboss.Mp3
             // Allow to adapt the length of the text to the width allowed 
             // If the width of the text is greater than maxLength, ScaleTransform reduce it
             float scale = maxLength / w;    // Ratio maxLength vs  width of text
-
-
             e.Graphics.ScaleTransform(scale, 1);
 
             // Left position of the text                        
             x0 = (int)(0.58f * pBox.Width / scale);
 
             // Add string to path
-            path.AddString(FileName, _karaokeFont.FontFamily, (int)_karaokeFont.Style, femSize, new Point(x0, y2), sf);
+            path.AddString(FileName, _karaokeFont.FontFamily, (int)_karaokeFont.Style, femSize, new Point(x0, y0), sf);
 
 
             // Draw the text            
@@ -1100,16 +1161,27 @@ namespace Karaboss.Mp3
             int Wbg;
             RectangleF Rbg;
             string s;
-
-            float w = MeasureString(_kLyrics.Lines[lineIndex].ToString(), _karaokeFont.Size);
-
+            
             #endregion Declarations
 
             if (lineIndex < _kLyrics.Lines.Count())
-            {
+            {                
                 s = _kLyrics.Lines[lineIndex].ToString();
-                //x0 = HCenterText(pBox, s);     // Center text horizontally
-                //x0 = (int)((pBox.Width - w) / 2);
+                float w = MeasureString(s, _karaokeFont.Size);
+
+                // ************************  Set ScaleTransform
+                // Example: if the text is greater than the width of the picture box, we reduce the size of the text to fit it in the picture box
+                float scale = (pBox.Width - 50) / w;
+                if (w > 0 && w > pBox.Width - 50)
+                {
+                    // No need to center text, it is already centered by ScaleTransform
+                    e.Graphics.ScaleTransform(scale, 1);
+                }
+                else
+                {
+                    // Center text horizontally
+                    x0 = (int)((pBox.Width - w) / 2);
+                }
 
                 #region Background of text  
 
@@ -1128,12 +1200,6 @@ namespace Karaboss.Mp3
                 path.AddString(s, _karaokeFont.FontFamily, (int)_karaokeFont.Style, _karaokeFont.Size, new Point(x0, y2), sf);
 
 
-                // ************************ Reduce the size of the text
-                float scale = (pBox.Width - 50) / w;
-                if (w > 0)
-                    e.Graphics.ScaleTransform(scale, 1);
-
-
                 // Draw the text            
                 e.Graphics.FillPath(new SolidBrush(FillColor), path);
 
@@ -1143,7 +1209,6 @@ namespace Karaboss.Mp3
 
                 // ************************  Reset ScaleTransform
                 e.Graphics.ResetTransform();
-
             }
 
             #region Clean up resources
@@ -1154,7 +1219,7 @@ namespace Karaboss.Mp3
             #endregion Clean up resources
         }
 
-        private void DrawInformation(PaintEventArgs e, string infotext, int seconds, int y0, float w)
+        private void DrawInformation(PaintEventArgs e, int lineIndex, int seconds, int y0)
         {
             // Seconds
             // value    Display                     Color
@@ -1162,11 +1227,14 @@ namespace Karaboss.Mp3
             //  = 0:    (instrumental)              highlight
             // = -1:    (instrumental)              Active
 
+            if (lineIndex < 0 || lineIndex >= _kLyrics.Lines.Count()) return;
+
+
             GraphicsPath path = new GraphicsPath();
             int x0 = 0;
             Pen penBorder = new Pen(_ActiveBorderColor);
             Color FillColor;
-
+            string s = _kLyrics.Lines[lineIndex].Syllables.Last().Text;
 
             switch (seconds)
             {
@@ -1182,12 +1250,24 @@ namespace Karaboss.Mp3
             }
 
             // if 0 or -1, do not display seconds
-            infotext = seconds > 0 ? infotext + " " + seconds.ToString() : infotext;
+            s = seconds > 0 ? s + " " + seconds.ToString() : s;
 
-            //x0 = HCenterText(infotext);
+            // ************************  Set ScaleTransform
+            float w = MeasureString(s, _karaokeFont.Size);            
+            float scale = (pBox.Width - 50) / w;
+            if (w > 0 && w > pBox.Width - 50)
+            {
+                // No need to center text, it is already centered by ScaleTransform
+                e.Graphics.ScaleTransform(scale, 1);
+            }
+            else
+            {
+                // Center text horizontally
+                x0 = (int)((pBox.Width - w) / 2);
+            }            
 
             // Add lines of lyrics to the Graphics path
-            path.AddString(infotext, _karaokeFont.FontFamily, (int)_karaokeFont.Style, _karaokeFont.Size, new Point((int)x0, (int)y0), sf);
+            path.AddString(s, _karaokeFont.FontFamily, (int)_karaokeFont.Style, _karaokeFont.Size, new Point((int)x0, (int)y0), sf);
 
             // Draw the text                    
             e.Graphics.FillPath(new SolidBrush(FillColor), path);
@@ -1195,6 +1275,10 @@ namespace Karaboss.Mp3
             // Outline the text
             if (_borderthick > 0)
                 e.Graphics.DrawPath(penBorder, path);
+
+            // ************************  Reset ScaleTransform
+            e.Graphics.ResetTransform();
+
         }
 
 
@@ -1231,49 +1315,18 @@ namespace Karaboss.Mp3
                     break;
             }
         }
-
-        private void DrawTextWithFourLinesSwapped2(PaintEventArgs e)
-        {
-            float lineSpacing = 1.17f;
-
-            float w;            
-            int y2 = 0;
-
-            string FileName = "Chuck Berry - Johnny B Goode.kar";
-
-            // Draw file name if required
-            y2 = (int)MeasureStringHeight(FileName, 0.038f * _karaokeFont.Size);               
-            DrawFileName(e, FileName, y2, 0.33f * _karaokeFont.Size);
-
-            // Draw lines starting from this position
-            y2 = (int)(0.36f * _lineHeight);
-
-            int i;
-
-            i = 2;                        
-            DrawInactiveLineWithBorders(e, i, y2);
-            y2 += _lineHeight;
-
-            i = 3;            
-            DrawInactiveLineWithBorders(e, i, y2);
-            y2 += (int)(lineSpacing * _lineHeight);
-
-            i = 0;            
-            DrawInactiveLineWithBorders(e, i, y2);
-            y2 += _lineHeight;
-
-            i = 1;            
-            DrawInactiveLineWithBorders( e, i, y2);
-        }
-
-
+            
+        
         private void FlsDrawTextWithBorder(PaintEventArgs e)
         {
             if (_kLyrics.Lines.Count == 0) return;
 
+            #region Declarations
+
             float lineSpacing = 1.17f;
             int LineOfInformationPosition;
             int[] LinesNr = new int[4];
+            float w;
 
             int y0;
             int y1 = 0;
@@ -1285,97 +1338,94 @@ namespace Karaboss.Mp3
             int idx3 = 0;
             int idx4 = 0;
 
+            #endregion Declarations
+
+
             #region Draw FileName
-            string FileName = "Chuck Berry - Johnny B Goode.kar";
+
+           
 
             // Draw file name if required
-            y2 = (int)MeasureStringHeight(FileName, 0.038f * _karaokeFont.Size);
-            DrawFileName(e, FileName, y2, 0.33f * _karaokeFont.Size);
+            //y0 = (int)MeasureStringHeight(FileName, 0.038f * _karaokeFont.Size);
+
+            if (bDrawFileName)
+                DrawFileName(e, FileName, 0.33f * _karaokeFont.Size);
+
             #endregion Draw FileName
 
-            
-            int LinePosition = _FirstLineToShow % 4;
-            // Draw lines starting from this position
-            y0 = (int)(0.36f * _lineHeight);
-
-            // 1 2 3 4
-            // 2 1 3 4
-            // 3 4 1 2
-            // 3 4 2 1
 
             #region Line layout
 
+            // Draw lines starting from this position
+            y0 = (int)(0.36f * _lineHeight);
+
+            // 4 lines positioning depending on the value of _FirstLineToShow % 4          
+            int l = _FirstLineToShow;
+
+            int a1 = y0;
+            int a2 = y0 + _lineHeight;
+            int a3 = y0 + (int)(_lineHeight * (1 + lineSpacing));   //_lineHeight + (int)(lineSpacing * _lineHeight);
+            int a4 = y0 + (int)(_lineHeight * (2 + lineSpacing));   //_lineHeight + (int)(lineSpacing * _lineHeight) + _lineHeight;
+
+            int LinePosition = _FirstLineToShow % 4;
+
             switch (LinePosition)
-            {
+            {                
                 case 0:
-                    y1 = y0;                                        // idx1     _FirstLineToShow              current         (update 3 & 4)
-                    y2 = y1 + _lineHeight;                          // idx2     _FirstLineToShow + 1      inactive
-                    y3 = y2 + (int)(lineSpacing * _lineHeight);     // idx3     _FirstLineToShow + 2      inactive   
-                    y4 = y3 + _lineHeight;                          // idx4     _FirstLineToShow + 3      inactive   
-                    
-                    idx1 = _FirstLineToShow;
-                    idx2 = idx1 + 1;
-                    idx3 = idx2 + 1;
-                    idx4 = idx3 + 1;
-                    
-                    LinesNr[0] = idx1;
-                    LinesNr[1] = idx2;
-                    LinesNr[2] = idx3;
-                    LinesNr[3] = idx4;
-                    break;
 
+                    (y1, y2, y3, y4) = (a1, a2, a3, a4);
+                    (idx1, idx2, idx3, idx4) = (l, l + 1, l + 2, l + 3);
+                    LinesNr = new int[] { idx1, idx2, idx3, idx4 };
+
+                    /*
+                    y1 = y0;                                        // idx1     _FirstLineToShow              current         (update 3 & 4)                
+                    y2 = y0 + _lineHeight;                          // idx2     _FirstLineToShow + 1      inactive
+                    y3 = y2 + (int)(lineSpacing * _lineHeight);     // idx3     _FirstLineToShow + 2      inactive                                           
+                    y4 = y3 + _lineHeight;                          // idx4     _FirstLineToShow + 3      inactive                                           
+                    */
+                    break;
+                
                 case 1:
+                    (y1, y2, y3, y4) = (a2, a1, a3, a4);
+                    (idx1, idx2, idx3, idx4) = (l, l - 1, l + 1, l + 2);
+                    LinesNr = new int[] { idx2, idx1, idx3, idx4 };
+
+                    /*
                     y2 = y0;                                        // idx2     _FirstLineToShow - 1     active
-                    y1 = y2 + _lineHeight;                          // idx1     _FirstLineToShow             current         (no update)
-                    y3 = y1 + (int)(lineSpacing * _lineHeight);     // idx3     _FirstLineToShow + 1     inactive
-                    y4 = y3 + _lineHeight;                          // idx4     _FirstLineToShow + 2     inactive
-
-                    idx2 = _FirstLineToShow - 1;
-                    idx1 = idx2 + 1;
-                    idx3 = idx1 + 1;
-                    idx4 = idx3 + 1;
-
-                    LinesNr[0] = idx2;
-                    LinesNr[1] = idx1;
-                    LinesNr[2] = idx3;
-                    LinesNr[3] = idx4;
+                    y1 = y0 + _lineHeight;                          // idx1     _FirstLineToShow             current         (no update)
+                    y3 = y1 + (int)(lineSpacing * _lineHeight);     // idx3     _FirstLineToShow + 1     inactive                                          
+                    y4 = y3 + _lineHeight;                          // idx4     _FirstLineToShow + 2     inactive                                          
+                    */
                     break;
-
+                
                 case 2:
+                    (y1, y2, y3, y4) = (a3, a4, a1, a2);
+                    (idx1, idx2, idx3, idx4) = (l, l + 1, l + 2, l + 3);                    
+                    LinesNr = new int[] { idx3, idx4, idx1, idx2 };
+
+                    /*
                     y3 = y0;                                        // idx3     _FirstLineToShow + 2     inactive
-                    y4 = y3 + _lineHeight;                          // idx4     _FirstLineToShow + 3     inactive
-                    y1 = y4 + (int)(lineSpacing * _lineHeight);     // idx1     _FirstLineToShow             current         (update 1 & 2)  
-                    y2 = y1 + _lineHeight;                          // idx2     _FirstLineToShow + 1     inactive                            
-
-                    idx3 = _FirstLineToShow + 2;
-                    idx4 = idx3 + 1;                                                            
-                    idx1 = idx4 - 3;
-                    idx2 = idx1 + 1;
-
-                    LinesNr[0] = idx3;
-                    LinesNr[1] = idx4;
-                    LinesNr[2] = idx1;
-                    LinesNr[3] = idx2;
+                    y4 = y0 + _lineHeight;                          // idx4     _FirstLineToShow + 3     inactive
+                    y1 = y4 + (int)(lineSpacing * _lineHeight);     // idx1     _FirstLineToShow             current         (update 1 & 2)                        
+                    y2 = y1 + _lineHeight;                          // idx2     _FirstLineToShow + 1     inactive                                                  
+                   
+                    */
                     break;
                 
                 case 3:
-                    y3 = y0;                                        // idx3     _FirstLineToShow + 1     inactive                                   5
-                    y4 = y3 + _lineHeight;                          // idx4     _FirstLineToShow + 2     inactive                                   6
-                    y2 = y4 + (int)(lineSpacing * _lineHeight);     // idx2     _FirstLineToShow - 1      active                                    3
-                    y1 = y2 + _lineHeight;                          // idx1     _FirstLineToShow             current         (no update)            4
+                    (y1, y2, y3, y4) = (a4, a3, a1, a2);
+                    (idx1, idx2, idx3, idx4) = (l, l - 1, l + 1, l + 2);                    
+                    LinesNr = new int[] { idx3, idx4, idx2, idx1 };
 
-                    idx3 = _FirstLineToShow + 1;
-                    idx4 = idx3 + 1;
-                    idx2 = idx4 - 3;
-                    idx1 = idx2 + 1;                    
-
-                    LinesNr[0] = idx3;
-                    LinesNr[1] = idx4;
-                    LinesNr[2] = idx2;
-                    LinesNr[3] = idx1;
+                    /*
+                    y3 = y0;                                        // idx3     _FirstLineToShow + 1     inactive
+                    y4 = y0 + _lineHeight;                          // idx4     _FirstLineToShow + 2     inactive
+                    y2 = y4 + (int)(lineSpacing * _lineHeight);     // idx2     _FirstLineToShow - 1      active                                                
+                    y1 = y2 + _lineHeight;                          // idx1     _FirstLineToShow             current         (no update)                        
+                    */
                     break;
+                
             }
-
             #endregion Line layout
 
 
@@ -1397,9 +1447,6 @@ namespace Karaboss.Mp3
             #endregion Search line of information
 
 
-            float w; 
-
-
             if (LineOfInformationPosition == -2)
             {
                 #region Normal drawing
@@ -1416,25 +1463,26 @@ namespace Karaboss.Mp3
 
                 // Draw y2 line: active when before line y1 (already sung), inactive when after line y1 (not yet sung)
                 if (idx2 >= 0)
-                {                    
+                {
                     DrawInactiveLineWithBorders(e, idx2, y2, IsActive);
                 }
 
                 // Draw lines y3 and y4 (always inactives)
                 if (idx3 < _kLyrics.Lines.Count)
-                {                    
+                {
                     DrawInactiveLineWithBorders(e, idx3, y3);
                 }
                 if (idx4 < _kLyrics.Lines.Count)
-                {                    
+                {
                     DrawInactiveLineWithBorders(e, idx4, y4);
                 }
-                    
+
                 #endregion Normal drwaing
             }
             else
             {
-
+                #region Instrumental drawing
+                
                 // Checks whether an instrumental section has begun and updates the countdown and timing state accordingly.
                 CheckIfInstrumentalBegins();
                 // Update the CountDown
@@ -1444,33 +1492,27 @@ namespace Karaboss.Mp3
 
                 switch (LineOfInformationPosition)
                 {
-                    #region Instrumental on top
-
+                    #region Instrumental on top                        
                     case 0:                             // Instrumental is on line 0
-                        // y1 * information
-                        // y2 information
-                        // y3 normal
-                        // y4 normal
+                                                                              
                         switch (LinePosition)
                         {
-                            case 0:
+                            case 0:                                
                                 // y1 * information1 new
                                 // y2 information2   new
                                 // y3 normal old than new
                                 // y4 normal old than new
                                 // Draw "(intrumental)" on active line and countdown on next line
-                                if (_FirstLineToShow < _kLyrics.Lines.Count)
-                                {
-                                    w = MeasureString(_kLyrics.Lines[_FirstLineToShow].ToString(), _karaokeFont.Size);
-                                    DrawInformation(e, _kLyrics.Lines[_FirstLineToShow].Syllables.Last().Text, SecondsBeforeSinging, y1, w);
-                                }
+                                                                                                                              
+                                DrawInformation(e, _FirstLineToShow, SecondsBeforeSinging, y1);                                
+
                                 if (bCountDown)
                                 {
                                     // Keep last actives lines 3 & 4 when instrumental has began for 1 second
                                     if (tm.TotalMilliseconds < 1000)
                                     {
                                         if (_FirstLineToShow - 2 >= 0)
-                                        {                                            
+                                        {
                                             DrawInactiveLineWithBorders(e, _FirstLineToShow - 2, y3, true);         // keep old line 1 sec                                            
                                             DrawInactiveLineWithBorders(e, _FirstLineToShow - 1, y4, true);         // keep olf line 1 sec
 
@@ -1490,7 +1532,7 @@ namespace Karaboss.Mp3
                                         return;
                                     }
                                 }
-                                
+
                                 DrawInactiveLineWithBorders(e, idx3, y3);      // Draw new line before the end of instrumental                                         
                                 DrawInactiveLineWithBorders(e, idx4, y4);      // Draw new line before the end of instrumental
                                 break;
@@ -1500,15 +1542,11 @@ namespace Karaboss.Mp3
                                 // y1 * information2 no update
                                 // y3 normal 
                                 // y4 normal 
-
-                                // draw ("instrumental") on previous line and countdown on current line
-                                if (_FirstLineToShow - 1 < _kLyrics.Lines.Count)
-                                {
-                                    w = MeasureString(_kLyrics.Lines[_FirstLineToShow - 1].ToString(), _karaokeFont.Size);
-                                    DrawInformation(e, _kLyrics.Lines[_FirstLineToShow - 1].Syllables.Last().Text, SecondsBeforeSinging, y1 - _lineHeight, w);
-                                }
                                 
-                                DrawInactiveLineWithBorders(e, idx3, y3);                                
+                                // draw ("instrumental") on previous line and countdown on current line                                                               
+                                DrawInformation(e, _FirstLineToShow - 1, SecondsBeforeSinging, y1 - _lineHeight);
+                                
+                                DrawInactiveLineWithBorders(e, idx3, y3);
                                 DrawInactiveLineWithBorders(e, idx4, y4);
                                 break;
 
@@ -1517,18 +1555,14 @@ namespace Karaboss.Mp3
                                 // y4 information2 new
                                 // y1 * normal old          update y3 & y4 
                                 // y2 normal   old
-
+                                
                                 // Draw y1 line: active & highlighted line                                                
                                 DrawActiveLineWithBorders(e, _FirstLineToShow, y1);
                                 // Draw y2 line: inactive line  (before or after y1)                                
                                 DrawInactiveLineWithBorders(e, idx2, y2, false);
 
-                                // Draw instrumental on line 0 (y3)
-                                if (idx3 < _kLyrics.Lines.Count)
-                                {
-                                    w = MeasureString(_kLyrics.Lines[idx3].ToString(), _karaokeFont.Size);
-                                    DrawInformation(e, _kLyrics.Lines[idx3].Syllables.Last().Text, -1, y3, w);
-                                }
+                                // Draw instrumental on line 0 (y3)                                                                                                
+                                DrawInformation(e, idx3, -1, y3);                                
                                 break;
 
                             case 3:
@@ -1536,18 +1570,14 @@ namespace Karaboss.Mp3
                                 // y4 information2
                                 // y2 normal
                                 // y1 * normal          no update
-
+                                
                                 // Draw y1 line: active & highlighted line                                
                                 DrawActiveLineWithBorders(e, _FirstLineToShow, y1);
                                 // Draw y2 line: inactive line  (before or after y1)                                
                                 DrawInactiveLineWithBorders(e, idx2, y2, true);
 
                                 // Draw instrumental on line 0
-                                if (idx3 < _kLyrics.Lines.Count)
-                                {
-                                    w = MeasureString(_kLyrics.Lines[idx3].ToString(), _karaokeFont.Size);
-                                    DrawInformation(e, _kLyrics.Lines[idx3].Syllables.Last().Text, -1, y3, w);
-                                }
+                                DrawInformation(e, idx3, -1, y3);                                
                                 break;
                         }
                         break;
@@ -1558,74 +1588,59 @@ namespace Karaboss.Mp3
                     #region Instrumental on bottom
 
                     case 2:                                                         // instrumental on line 2 (3rd line)
-                        // y1 normal
-                        // y2 normal
-                        // y3 * information1
-                        // y4 information2
+                                                                                   
                         switch (LinePosition)
                         {
                             case 0:                                                 // LinePosition is 0
                                 // y1 * normal
                                 // y2 normal
                                 // y3 information1
-                                // y4 information2
+                                // y4 information2                                
 
                                 // Draw y1 line: active & highlighted line                                                
                                 DrawActiveLineWithBorders(e, _FirstLineToShow, y1);
                                 // line y 2 is inactive (not yet played)                                
                                 DrawInactiveLineWithBorders(e, idx2, y2, false);
 
-                                // Draw "(intrumental)" on 3rd line and countdown on next line
-                                if (idx3 < _kLyrics.Lines.Count)
-                                {
-                                    w = MeasureString(_kLyrics.Lines[idx3].ToString(), _karaokeFont.Size);
-                                    DrawInformation(e, _kLyrics.Lines[idx3].Syllables.Last().Text, -1, y3, w);
-                                }
+                                // Draw "(intrumental)" on 3rd line and countdown on next line                                                                                                    
+                                DrawInformation(e, idx3, -1, y3);                                
                                 break;
 
                             case 1:                                                 // LinePosition is 1
                                 // y1 normal
                                 // y2 * normal
                                 // y3 information1
-                                // y4 information2
-
+                                // y4 information2                                                                
+                                
                                 // line y2 is already played                                
                                 DrawInactiveLineWithBorders(e, idx2, y2, true);
                                 // line y1 : active a highlighted line                                
                                 DrawActiveLineWithBorders(e, _FirstLineToShow, y1);
 
-                                // Draw "(intrumental)" on 3rd line and countdown on next line
-                                if (idx3 < _kLyrics.Lines.Count)
-                                {
-                                    w = MeasureString(_kLyrics.Lines[idx3].ToString(), _karaokeFont.Size);
-                                    DrawInformation(e, _kLyrics.Lines[idx3].Syllables.Last().Text, -1, y3, w);
-                                }
-
+                                // Draw "(intrumental)" on 3rd line and countdown on next line                                                                    
+                                DrawInformation(e, idx3, -1, y3);                                
                                 break;
 
                             case 2:                                                 // LinePosition is 2   = LineOfInformationPosition                                                                                                                
                                 // y1 normal
                                 // y2 normal
                                 // y3 * information1
-                                // y4 information2
+                                // y4 information2                                                                
+
                                 if (bCountDown)
                                 {
                                     // Keep last actives lines 3 & 4 when instrumental has began for 1 second
                                     if (tm.TotalMilliseconds < 1000)
                                     {
                                         if (_FirstLineToShow - 2 >= 0)
-                                        {                                            
-                                            DrawInactiveLineWithBorders(e, _FirstLineToShow - 2, y3, true);                                            
+                                        {
+                                            DrawInactiveLineWithBorders(e, _FirstLineToShow - 2, y3, true);
                                             DrawInactiveLineWithBorders(e, _FirstLineToShow - 1, y4, true);
                                         }
                                     }
                                 }
-                                // Draw "(intrumental)" on active line and countdown on next line
-                                if (_FirstLineToShow < _kLyrics.Lines.Count)
-                                {
-                                    w = MeasureString(_kLyrics.Lines[_FirstLineToShow].ToString(), _karaokeFont.Size);
-                                    DrawInformation(e, _kLyrics.Lines[_FirstLineToShow].Syllables.Last().Text, SecondsBeforeSinging, y1, w);
-                                }
+                                // Draw "(intrumental)" on active line and countdown on next line                                                                                                
+                                DrawInformation(e, _FirstLineToShow, SecondsBeforeSinging, y1);                                
 
                                 // Draw lines y3 and y4 only if they are less than 4 sec before the end of an instrumental
                                 if (bInstrumentalStarted)
@@ -1638,44 +1653,39 @@ namespace Karaboss.Mp3
                                         return;
                                     }
                                 }
-                                if (idx3 < _kLyrics.Lines.Count)
-                                {                                    
-                                    DrawInactiveLineWithBorders(e, idx3, y3);
-                                }
-                                if (idx4 < _kLyrics.Lines.Count)
-                                {                                    
-                                    DrawInactiveLineWithBorders(e, idx4, y4);
-                                }
-
+                                                                
+                                DrawInactiveLineWithBorders(e, idx3, y3);                                                                                                
+                                DrawInactiveLineWithBorders(e, idx4, y4);                                
                                 break;
 
                             case 3:
                                 // y1 normal
                                 // y2 normal
                                 // y3 information1
-                                // y4 * information2
-                                // Draw "(intrumental)" on active line and countdown on next line                                
-                                if (idx2 < _kLyrics.Lines.Count)
-                                {
-                                    w = MeasureString(_kLyrics.Lines[idx2].ToString(), _karaokeFont.Size);
-                                    DrawInformation(e, _kLyrics.Lines[idx2].Syllables.Last().Text, SecondsBeforeSinging, y2, w);
-                                }
-                                
-                                DrawInactiveLineWithBorders(e, idx3, y3);                                
-                                DrawInactiveLineWithBorders(e, idx4, y4);
+                                // y4 * information2                                
 
+                                // Draw "(intrumental)" on active line and countdown on next line                                                                                                                                
+                                DrawInformation(e, idx2, SecondsBeforeSinging, y2);
+                                
+                                DrawInactiveLineWithBorders(e, idx3, y3);
+                                DrawInactiveLineWithBorders(e, idx4, y4);
                                 break;
                         }
                         break;
 
                     #endregion Instrumental on bottom
                 }
+
+                #endregion Instrumental drawing
+
             }
+
+            // Save last line of information position for end of song
+            LastLineOfInformationPosition = LineOfInformationPosition;
         }
 
 
         #endregion Draw text with Four lines swapped
-
 
 
         #endregion Paint

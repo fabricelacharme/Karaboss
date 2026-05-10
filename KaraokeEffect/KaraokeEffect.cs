@@ -903,6 +903,373 @@ namespace keffect
         #endregion Events
 
 
+        #region Initializations
+
+        private void SetDefaultValues()
+        {
+            m_ImageFilePaths = new List<string>();
+            m_BitmapsArray = new Bitmap[] { };
+
+            sf = new StringFormat(StringFormat.GenericTypographic) { FormatFlags = StringFormatFlags.MeasureTrailingSpaces };
+            _karaokeFont = new Font("Arial Black", emSize, FontStyle.Regular, GraphicsUnit.Pixel);
+
+            _steppercent = 0.01F;
+            _transitionEffect = TransitionEffects.None;
+        }
+
+        public void LoadDemoText()
+        {
+            List<string> lines = new List<string>
+            {
+                "Lorem ipsum dolor sit amet,",
+                "consectetur adipisicing elit,",
+                "sed do eiusmod tempor incididunt",
+                "ut labore et dolore magna aliqua.",
+                "Ut enim ad minim veniam,",
+                "quis nostrud exercitation ullamco",
+                "laboris nisi ut aliquip",
+                "ex ea commodo consequat.",
+                "Duis aute irure dolor in reprehenderit",
+                "in voluptate velit esse cillum dolore",
+                "eu fugiat nulla pariatur.",
+            };
+            // Do not use KLyrics but _kLyrics to be able to use the same LoadSong method for demo and real text
+            _kLyrics = StoreDemoText(lines, 500);
+
+            // Load song with demo text
+            Init();
+
+            // needs LinesLengths to be set => so launch Init() before
+
+            this.SetPos(500);   // 
+            this.SetPos(1010);  // after Lorem
+            this.SetPos(1510); // after ipsum
+            this.SetPos(2010); // after dolor     
+
+            pBox.Invalidate();
+        }
+
+        /// <summary>
+        /// Store demo text        
+        /// </summary>
+        /// <param name="tx"></param>
+        /// <returns></returns>
+        private kLyrics StoreDemoText(List<string> lines, int step, int tcks = 0)
+        {
+            int ticks = 0;
+            Syllable syll;
+            kLine kLine; // = new kLine();
+            kLyrics KL = new kLyrics();
+
+            for (int i = 0; i < lines.Count; i++)
+            {
+                string l = lines[i];
+                string[] words = l.Split(new Char[] { ' ' });
+
+                kLine = new kLine();
+                for (int j = 0; j < words.Length; j++)
+                {
+                    if (bforceUppercase)
+                        words[j] = words[j].ToUpper();
+
+                    string w = words[j] + " ";
+                    //ticks = tcks + (i + 1) * (j + 1) * 10;
+                    syll = new Syllable() { Text = w, TicksOn = ticks };
+                    ticks += step;
+
+                    kLine.Add(syll);
+                }
+                KL.Add(kLine);
+            }
+
+            return KL;
+        }
+
+
+        /// <summary>
+        /// Remove paragra^hs in some cases
+        /// </summary>
+        /// <param name="kls"></param>
+        /// <returns></returns>
+        private kLyrics RemoveParagraphs(kLyrics kls)
+        {
+            kLyrics klsNoParagraphs = new kLyrics();
+            kLine line;
+            for (int i = 0; i < kls.Lines.Count; i++)
+            {
+                //if (kls.Lines[i].Syllables.First().CharType != Syllable.CharTypes.ParagraphSep)
+                if (!(kls.Lines[i].Syllables.Count == 1 && kls.Lines[i].Syllables.First().Text == string.Empty))
+                {
+                    line = new kLine();
+                    for (int j = 0; j < kls.Lines[i].Syllables.Count; j++)
+                    {
+                        line.Add(kls.Lines[i].Syllables[j]);
+                    }
+                    klsNoParagraphs.Add(line);
+                }
+            }
+
+            return klsNoParagraphs;
+        }
+
+        private kLyrics ForceUpperCase(kLyrics kls)
+        {
+            kLyrics klsNoParagraphs = new kLyrics();
+            kLine line;
+            for (int i = 0; i < kls.Lines.Count; i++)
+            {
+                line = new kLine();
+                for (int j = 0; j < kls.Lines[i].Syllables.Count; j++)
+                {
+                    if (kls.Lines[i].Syllables[j].CharType != Syllable.CharTypes.ParagraphSep)
+                        kls.Lines[i].Syllables[j].Text = kls.Lines[i].Syllables[j].Text.ToUpper();
+                    line.Add(kls.Lines[i].Syllables[j]);
+                }
+                klsNoParagraphs.Add(line);
+            }
+
+            return klsNoParagraphs;
+        }
+
+        /// <summary>
+        /// Search for introduction and instrumentals in a song
+        /// The minimum duration between two consecutive vocal phrases that mark an instrumental interlude
+        /// </summary>
+        /// <param name="kls"></param>
+        /// <returns></returns>
+        private kLyrics SearchForInstrumentals(kLyrics kls)
+        {
+            double tOnPrevious = 0;
+            double duration = 0;
+            double t; // = 0;
+            kLyrics klsWithinstrumentals = new kLyrics();
+            kLine line;
+            double tend; // = 0;
+
+            // Introduction                        
+            for (int i = 0; i < kls.Lines.Count; i++)
+            {
+                line = new kLine();
+                for (int j = 0; j < kls.Lines[i].Syllables.Count; j++)
+                {
+                    if (kls.Lines[i].Syllables[j].CharType != Syllable.CharTypes.ParagraphSep)
+                    {
+
+                        t = kls.Lines[i].Syllables[j].StartTime;
+
+                        // Create two lines for introduction (if no syllable at t = 0)
+                        if (i == 0 && j == 0)
+                        {
+                            #region Introduction
+                            // Start of intro
+                            line.Add(new Syllable() { Text = "(introduction)", StartTime = 0, CharType = Syllable.CharTypes.Information });
+                            klsWithinstrumentals.Add(line);
+
+                            if (KaraokeDisplayType != KaraokeDisplayTypes.TwoLinesSwapped)
+                            {
+                                // end of intro = just before first lyric
+                                tend = t;
+                                if (tend > _MinimumIntroDuration)
+                                    tend = tend - _MinimumIntroDuration;
+                                line = new kLine();
+                                line.Add(new Syllable() { Text = "", StartTime = tend, CharType = Syllable.CharTypes.Information });
+                                klsWithinstrumentals.Add(line);
+                            }
+
+                            line = new kLine();
+                            #endregion Introduction
+                        }
+                        else if (t - tOnPrevious > _MinimumInstrumentalDuration)
+                        {
+                            // Instrumental must be on line 0 or 2
+
+                            // instrumental allowed
+                            // Forbidden
+                            // instrumental allowed
+                            // Forbidden
+
+                            if (KaraokeDisplayType == KaraokeDisplayTypes.FourLinesSwapped)
+                            {
+                                int c = klsWithinstrumentals.Lines.Count;
+                                if (c % 4 == 1)
+                                {
+                                    if (line.Syllables.Count > 0)
+                                        klsWithinstrumentals.Add(line);
+
+                                    // if on line 1
+                                    line = new kLine();
+                                    line.Add(new Syllable() { Text = "", StartTime = t + 45, CharType = Syllable.CharTypes.Information });
+                                    klsWithinstrumentals.Add(line);
+
+                                    line = new kLine();
+
+                                }
+                                else if (c % 4 == 3)
+                                {
+                                    if (line.Syllables.Count > 0)
+                                        klsWithinstrumentals.Add(line);
+
+                                    // If on line 3
+                                    line = new kLine();
+                                    line.Add(new Syllable() { Text = "", StartTime = t + 45, CharType = Syllable.CharTypes.Information });
+                                    klsWithinstrumentals.Add(line);
+
+                                    line = new kLine();
+                                }
+                            }
+
+
+
+                            // Create two lines for instrumental
+                            // An Instrumental part exists from tOnPrevious to t
+                            // When can add a lyric called "(Instrumental)" a few time after tPrevious
+
+                            if (line.Syllables.Count > 0)
+                                klsWithinstrumentals.Add(line);
+
+                            // First line instrumental
+                            line = new kLine();
+                            line.Add(new Syllable() { Text = "(instrumental)", StartTime = tOnPrevious + duration, CharType = Syllable.CharTypes.Information });
+                            klsWithinstrumentals.Add(line);
+
+                            if (KaraokeDisplayType != KaraokeDisplayTypes.TwoLinesSwapped)
+                            {
+                                // Second line instrumental, 2 seconds before the end   => NOT USEFUL ????
+                                tend = t;
+                                if (tend - 2000 > 0)
+                                    tend = tend - 2000;
+
+                                line = new kLine();
+                                line.Add(new Syllable() { Text = "", StartTime = tend, CharType = Syllable.CharTypes.Information });
+                                klsWithinstrumentals.Add(line);
+                            }
+
+                            line = new kLine();
+                        }
+
+                        tOnPrevious = t;    // Start time of previous lyric
+                        duration = kls.Lines[i].Syllables[j].Duration; // Duration of previous lyric
+
+                    }
+                    line.Add(kls.Lines[i].Syllables[j]);
+                }
+                klsWithinstrumentals.Add(line);
+            }
+
+            // ENDING
+            t = _kLyrics.Lines.Last().Syllables.Last().StartTime;
+
+            if (_duration * 1000 - t > _MinimumInstrumentalDuration)
+            {
+
+                // Instrumental must be on line 0 or 2
+
+                // instrumental allowed
+                // Forbidden
+                // instrumental allowed
+                // Forbidden
+
+                if (KaraokeDisplayType == KaraokeDisplayTypes.FourLinesSwapped)
+                {
+                    int c = klsWithinstrumentals.Lines.Count;
+                    if (c % 4 == 1)
+                    {
+
+                        // if on line 1
+                        line = new kLine();
+                        line.Add(new Syllable() { Text = "", StartTime = t + 45, CharType = Syllable.CharTypes.Information });
+                        klsWithinstrumentals.Add(line);
+                    }
+                    else if (c % 4 == 3)
+                    {
+                        // If on line 3
+                        line = new kLine();
+                        line.Add(new Syllable() { Text = "", StartTime = t + 45, CharType = Syllable.CharTypes.Information });
+                        klsWithinstrumentals.Add(line);
+                    }
+                }
+
+                #region ENDING
+                // First line
+                line = new kLine();
+                line.Add(new Syllable() { Text = "(ending)", StartTime = t + duration, CharType = Syllable.CharTypes.Information });
+                klsWithinstrumentals.Add(line);
+
+                if (KaraokeDisplayType != KaraokeDisplayTypes.TwoLinesSwapped)
+                {
+                    // 2nd line 1 sec before the end of the song
+                    tend = _duration * 1000 - 1000;
+                    line = new kLine();
+                    line.Add(new Syllable() { Text = "", StartTime = tend, CharType = Syllable.CharTypes.Information });
+                    klsWithinstrumentals.Add(line);
+                }
+                #endregion ENDING
+
+            }
+            return klsWithinstrumentals;
+        }
+
+
+        private void Init()
+        {
+            if (_kLyrics == null) return;
+            if (_kLyrics.Lines == null) return;
+            if (_kLyrics.Lines.Count == 0) return;
+
+
+            // Update _nbLyricsLines if layout changed in options           
+            switch (KaraokeDisplayType)
+            {
+                case KaraokeDisplayTypes.FixedLines:
+                    _nbLyricsLines = _nbLyricsLinesOrg;
+                    break;
+                case KaraokeDisplayTypes.FourLinesSwapped:
+                    _nbLyricsLines = 4;
+                    break;
+                case KaraokeDisplayTypes.TwoLinesSwapped:
+                    _nbLyricsLines = 2;
+                    break;
+                case KaraokeDisplayTypes.ScrollingLinesBottomUp:
+                    _nbLyricsLines = _nbLyricsLinesOrg;
+                    break;
+                case KaraokeDisplayTypes.ScrollingLinesTopDown:
+                    _nbLyricsLines = _nbLyricsLinesOrg;
+                    break;
+                default:
+                    _nbLyricsLines = _nbLyricsLinesOrg;
+                    break;
+            }
+
+
+            // Do not display paragraphs for some cases
+            if (KaraokeDisplayType == KaraokeDisplayTypes.TwoLinesSwapped || KaraokeDisplayType == KaraokeDisplayTypes.FourLinesSwapped || !bShowParagraphs)
+            {
+                if (!_bIsSettings)
+                    _kLyrics = RemoveParagraphs(_kLyrics);
+            }
+
+            // If Upper case required
+            if (_bforceUppercase)
+                _kLyrics = ForceUpperCase(_kLyrics);
+
+            // Analyse lyrics to find introduction, instrumentals etc..
+            if (!_bIsSettings && (KaraokeDisplayType == KaraokeDisplayTypes.TwoLinesSwapped || KaraokeDisplayType == KaraokeDisplayTypes.FourLinesSwapped))
+                _kLyrics = SearchForInstrumentals(_kLyrics);
+
+
+            // Store all lines lengths
+            LinesLengths = new float[_kLyrics.Lines.Count];
+
+            // Biggest line
+            _biggestLine = GetBiggestLine();
+            AjustText(_biggestLine);
+
+            _LastLineToShow = SetLastLineToShow(_FirstLineToShow, _kLyrics.Lines.Count, _nbLyricsLines);
+        }
+
+        #endregion
+
+
         #region Timer gradient
         private void _timerGradient_Tick(object sender, EventArgs e)
         {
@@ -1145,375 +1512,7 @@ namespace keffect
 
         #endregion SlideShow with timer   
 
-
-
-        #region Initializations
-
-        private void SetDefaultValues()
-        {
-            m_ImageFilePaths = new List<string>();
-            m_BitmapsArray = new Bitmap[] { };
-
-            sf = new StringFormat(StringFormat.GenericTypographic) { FormatFlags = StringFormatFlags.MeasureTrailingSpaces };            
-            _karaokeFont = new Font("Arial Black", emSize, FontStyle.Regular, GraphicsUnit.Pixel);
-            
-            _steppercent = 0.01F;          
-            _transitionEffect = TransitionEffects.None;
-         }
-
-        public void LoadDemoText()
-        {
-            List<string> lines = new List<string>
-            {
-                "Lorem ipsum dolor sit amet,",
-                "consectetur adipisicing elit,",
-                "sed do eiusmod tempor incididunt",
-                "ut labore et dolore magna aliqua.",
-                "Ut enim ad minim veniam,",
-                "quis nostrud exercitation ullamco",
-                "laboris nisi ut aliquip",
-                "ex ea commodo consequat.",
-                "Duis aute irure dolor in reprehenderit",
-                "in voluptate velit esse cillum dolore",
-                "eu fugiat nulla pariatur.",
-            };
-            // Do not use KLyrics but _kLyrics to be able to use the same LoadSong method for demo and real text
-            _kLyrics = StoreDemoText(lines, 500);
-
-            // Load song with demo text
-            Init();
-
-            // needs LinesLengths to be set => so launch Init() before
-
-            this.SetPos(500);   // 
-            this.SetPos(1010);  // after Lorem
-            this.SetPos(1510); // after ipsum
-            this.SetPos(2010); // after dolor     
-            
-            pBox.Invalidate();
-        }
-
-        /// <summary>
-        /// Store demo text        
-        /// </summary>
-        /// <param name="tx"></param>
-        /// <returns></returns>
-        private kLyrics StoreDemoText(List<string> lines, int step, int tcks = 0)
-        {
-            int ticks = 0;
-            Syllable syll;
-            kLine kLine; // = new kLine();
-            kLyrics KL = new kLyrics();
-
-            for (int i = 0; i < lines.Count; i++)
-            {
-                string l = lines[i];
-                string[] words = l.Split(new Char[] { ' ' });
-
-                kLine = new kLine();
-                for (int j = 0; j < words.Length; j++)
-                {
-                    if (bforceUppercase)
-                        words[j] = words[j].ToUpper();
-
-                    string w = words[j] + " ";
-                    //ticks = tcks + (i + 1) * (j + 1) * 10;
-                    syll = new Syllable() { Text = w, TicksOn = ticks };
-                    ticks += step;
-
-                    kLine.Add(syll);
-                }
-                KL.Add(kLine);
-            }
-
-            return KL;
-        }
-
-
-        /// <summary>
-        /// Remove paragra^hs in some cases
-        /// </summary>
-        /// <param name="kls"></param>
-        /// <returns></returns>
-        private kLyrics RemoveParagraphs(kLyrics kls)
-        {
-            kLyrics klsNoParagraphs = new kLyrics();
-            kLine line;
-            for (int i = 0; i < kls.Lines.Count; i++)
-            {
-                //if (kls.Lines[i].Syllables.First().CharType != Syllable.CharTypes.ParagraphSep)
-                if (! (kls.Lines[i].Syllables.Count == 1 && kls.Lines[i].Syllables.First().Text == string.Empty))
-                {
-                    line = new kLine();
-                    for (int j = 0; j < kls.Lines[i].Syllables.Count; j++)
-                    {
-                        line.Add(kls.Lines[i].Syllables[j]);
-                    }
-                    klsNoParagraphs.Add(line);
-                }
-            }
-
-            return klsNoParagraphs;
-        }
-
-        private kLyrics ForceUpperCase(kLyrics kls)
-        {
-            kLyrics klsNoParagraphs = new kLyrics();
-            kLine line;
-            for (int i = 0; i < kls.Lines.Count; i++)
-            {                
-                line = new kLine();
-                for (int j = 0; j < kls.Lines[i].Syllables.Count; j++)
-                {
-                    if (kls.Lines[i].Syllables[j].CharType != Syllable.CharTypes.ParagraphSep)
-                        kls.Lines[i].Syllables[j].Text = kls.Lines[i].Syllables[j].Text.ToUpper();
-                    line.Add(kls.Lines[i].Syllables[j]);
-                }
-                klsNoParagraphs.Add(line);                
-            }
-
-            return klsNoParagraphs;
-        }
-
-        /// <summary>
-        /// Search for introduction and instrumentals in a song
-        /// The minimum duration between two consecutive vocal phrases that mark an instrumental interlude
-        /// </summary>
-        /// <param name="kls"></param>
-        /// <returns></returns>
-        private kLyrics SearchForInstrumentals(kLyrics kls)
-        {
-            double tOnPrevious = 0;
-            double duration = 0;            
-            double t; // = 0;
-            kLyrics klsWithinstrumentals = new kLyrics();
-            kLine line;            
-            double tend; // = 0;
-
-            // Introduction                        
-            for (int i = 0; i < kls.Lines.Count; i++)
-            {
-                line = new kLine();
-                for (int j = 0; j < kls.Lines[i].Syllables.Count; j++)
-                {
-                    if (kls.Lines[i].Syllables[j].CharType != Syllable.CharTypes.ParagraphSep)
-                    {
-
-                        t = kls.Lines[i].Syllables[j].StartTime;
-
-                        // Create two lines for introduction (if no syllable at t = 0)
-                        if (i == 0 && j == 0)
-                        {
-                            #region Introduction
-                            // Start of intro
-                            line.Add(new Syllable() { Text = "(introduction)", StartTime = 0, CharType = Syllable.CharTypes.Information });
-                            klsWithinstrumentals.Add(line);
-
-                            if (KaraokeDisplayType != KaraokeDisplayTypes.TwoLinesSwapped)
-                            {
-                                // end of intro = just before first lyric
-                                tend = t;
-                                if (tend > _MinimumIntroDuration)
-                                    tend = tend - _MinimumIntroDuration;
-                                line = new kLine();
-                                line.Add(new Syllable() { Text = "", StartTime = tend, CharType = Syllable.CharTypes.Information });
-                                klsWithinstrumentals.Add(line);
-                            }
-
-                            line = new kLine();
-                            #endregion Introduction
-                        }
-                        else if (t - tOnPrevious > _MinimumInstrumentalDuration)
-                        {
-                            // Instrumental must be on line 0 or 2
-
-                            // instrumental allowed
-                            // Forbidden
-                            // instrumental allowed
-                            // Forbidden
-
-                            if (KaraokeDisplayType == KaraokeDisplayTypes.FourLinesSwapped)
-                            {
-                                int c = klsWithinstrumentals.Lines.Count;
-                                if (c % 4 == 1)
-                                {
-                                    if (line.Syllables.Count > 0)
-                                        klsWithinstrumentals.Add(line);
-
-                                    // if on line 1
-                                    line = new kLine();
-                                    line.Add(new Syllable() { Text = "", StartTime = t + 45, CharType = Syllable.CharTypes.Information });
-                                    klsWithinstrumentals.Add(line);
-
-                                    line = new kLine();
-
-                                }
-                                else if (c % 4 == 3)
-                                {
-                                    if (line.Syllables.Count > 0)
-                                        klsWithinstrumentals.Add(line);
-
-                                    // If on line 3
-                                    line = new kLine();
-                                    line.Add(new Syllable() { Text = "", StartTime = t + 45, CharType = Syllable.CharTypes.Information });
-                                    klsWithinstrumentals.Add(line);
-
-                                    line = new kLine();
-                                }
-                            }
-
-
-
-                            // Create two lines for instrumental
-                            // An Instrumental part exists from tOnPrevious to t
-                            // When can add a lyric called "(Instrumental)" a few time after tPrevious
-
-                            if (line.Syllables.Count > 0)
-                                klsWithinstrumentals.Add(line);
-
-                            // First line instrumental
-                            line = new kLine();
-                            line.Add(new Syllable() { Text = "(instrumental)", StartTime = tOnPrevious + duration, CharType = Syllable.CharTypes.Information });
-                            klsWithinstrumentals.Add(line);
-
-                            if (KaraokeDisplayType != KaraokeDisplayTypes.TwoLinesSwapped)
-                            {
-                                // Second line instrumental, 2 seconds before the end   => NOT USEFUL ????
-                                tend = t;
-                                if (tend - 2000 > 0)
-                                    tend = tend - 2000;
-
-                                line = new kLine();
-                                line.Add(new Syllable() { Text = "", StartTime = tend, CharType = Syllable.CharTypes.Information });
-                                klsWithinstrumentals.Add(line);
-                            }
-
-                            line = new kLine();
-                        }
-
-                        tOnPrevious = t;    // Start time of previous lyric
-                        duration = kls.Lines[i].Syllables[j].Duration; // Duration of previous lyric
-
-                    }
-                    line.Add(kls.Lines[i].Syllables[j]);
-                }
-                klsWithinstrumentals.Add(line);
-            }
-
-            // ENDING
-            t = _kLyrics.Lines.Last().Syllables.Last().StartTime;
-
-            if (_duration * 1000 - t > _MinimumInstrumentalDuration)
-            {
-
-                // Instrumental must be on line 0 or 2
-
-                // instrumental allowed
-                // Forbidden
-                // instrumental allowed
-                // Forbidden
-
-                if (KaraokeDisplayType == KaraokeDisplayTypes.FourLinesSwapped)
-                {
-                    int c = klsWithinstrumentals.Lines.Count;
-                    if (c % 4 == 1)
-                    {
-
-                        // if on line 1
-                        line = new kLine();
-                        line.Add(new Syllable() { Text = "", StartTime = t + 45, CharType = Syllable.CharTypes.Information });
-                        klsWithinstrumentals.Add(line);
-                    }
-                    else if (c % 4 == 3)
-                    {
-                        // If on line 3
-                        line = new kLine();
-                        line.Add(new Syllable() { Text = "", StartTime = t + 45, CharType = Syllable.CharTypes.Information });
-                        klsWithinstrumentals.Add(line);
-                    }
-                }
-
-                #region ENDING
-                // First line
-                line = new kLine();
-                line.Add(new Syllable() { Text = "(ending)", StartTime = t + duration, CharType = Syllable.CharTypes.Information });
-                klsWithinstrumentals.Add(line);
-
-                if (KaraokeDisplayType != KaraokeDisplayTypes.TwoLinesSwapped)
-                {
-                    // 2nd line 1 sec before the end of the song
-                    tend = _duration * 1000 - 1000;
-                    line = new kLine();
-                    line.Add(new Syllable() { Text = "", StartTime = tend, CharType = Syllable.CharTypes.Information });
-                    klsWithinstrumentals.Add(line);
-                }
-                #endregion ENDING
-
-            }
-            return klsWithinstrumentals;
-        }
-           
-
-        private void Init()
-        {
-            if (_kLyrics == null) return;
-            if (_kLyrics.Lines == null) return;
-            if (_kLyrics.Lines.Count == 0) return;
-
-            
-            // Update _nbLyricsLines if layout changed in options           
-            switch (KaraokeDisplayType)
-            {
-                case KaraokeDisplayTypes.FixedLines:
-                    _nbLyricsLines = _nbLyricsLinesOrg;
-                    break;
-                case KaraokeDisplayTypes.FourLinesSwapped:
-                    _nbLyricsLines = 4;
-                    break;
-                case KaraokeDisplayTypes.TwoLinesSwapped:
-                    _nbLyricsLines = 2;
-                    break;
-                case KaraokeDisplayTypes.ScrollingLinesBottomUp:
-                    _nbLyricsLines = _nbLyricsLinesOrg;
-                    break;
-                case KaraokeDisplayTypes.ScrollingLinesTopDown:
-                    _nbLyricsLines = _nbLyricsLinesOrg;
-                    break;
-                default:
-                    _nbLyricsLines = _nbLyricsLinesOrg;
-                    break;
-            }
-            
-
-            // Do not display paragraphs for some cases
-            if (KaraokeDisplayType == KaraokeDisplayTypes.TwoLinesSwapped || KaraokeDisplayType == KaraokeDisplayTypes.FourLinesSwapped || !bShowParagraphs)
-            {
-                if (!_bIsSettings)
-                    _kLyrics = RemoveParagraphs(_kLyrics);
-            }
-
-            // If Upper case required
-            if (_bforceUppercase) 
-                _kLyrics = ForceUpperCase(_kLyrics);
-
-            // Analyse lyrics to find introduction, instrumentals etc..
-           if (!_bIsSettings && (KaraokeDisplayType == KaraokeDisplayTypes.TwoLinesSwapped || KaraokeDisplayType == KaraokeDisplayTypes.FourLinesSwapped))
-                _kLyrics = SearchForInstrumentals(_kLyrics);
-
-           
-            // Store all lines lengths
-            LinesLengths = new float[_kLyrics.Lines.Count];
-
-            // Biggest line
-            _biggestLine = GetBiggestLine();
-            AjustText(_biggestLine);
-
-            _LastLineToShow = SetLastLineToShow(_FirstLineToShow,  _kLyrics.Lines.Count, _nbLyricsLines);
-        }
-
-        #endregion
-      
-
+             
         #region measures
 
         /// <summary>
@@ -3540,10 +3539,10 @@ namespace keffect
                 LinePosition = 1;
                 // Position not possible for LineOfInformationPosition
 
-                y2 = y0;                                    // idx2     _FirstLineToShow - 1     active
-                y1 = y0 + _lineHeight;                      //          _FirstLineToShow             current         (no update)
-                y3 = y1 + (int)(lineSpacing * _lineHeight);         // idx3     _FirstLineToShow + 1     inactive                                           // y0 + 2 * _lineHeight;
-                y4 = y3 + _lineHeight;                      // idx4     _FirstLineToShow + 2     inactive                                           // y0 + 3 * _lineHeight
+                y2 = y0;                                        // idx2     _FirstLineToShow - 1     active
+                y1 = y0 + _lineHeight;                          //          _FirstLineToShow             current         (no update)
+                y3 = y1 + (int)(lineSpacing * _lineHeight);     // idx3     _FirstLineToShow + 1     inactive                                           // y0 + 2 * _lineHeight;
+                y4 = y3 + _lineHeight;                          // idx4     _FirstLineToShow + 2     inactive                                           // y0 + 3 * _lineHeight
 
                 idx2 = _FirstLineToShow - 1;
                 idx3 = _FirstLineToShow + 1;
@@ -3561,10 +3560,10 @@ namespace keffect
                 LinePosition = 2;
                 // Position possible for LineOfInformationPosition
 
-                y3 = y0;                            // idx3     _FirstLineToShow + 2     inactive
-                y4 = y0 + _lineHeight;              // idx4     _FirstLineToShow + 3     inactive
-                y1 = y4 + (int)(lineSpacing * _lineHeight);          //          _FirstLineToShow             current         (update 1 & 2)                         // y0 + 2 * _lineHeight;
-                y2 = y1 + _lineHeight;          // idx2     _FirstLineToShow + 1     inactive                                                   // y0 + 3 * _lineHeight;
+                y3 = y0;                                            // idx3     _FirstLineToShow + 2     inactive
+                y4 = y0 + _lineHeight;                              // idx4     _FirstLineToShow + 3     inactive
+                y1 = y4 + (int)(lineSpacing * _lineHeight);         //          _FirstLineToShow             current         (update 1 & 2)                         // y0 + 2 * _lineHeight;
+                y2 = y1 + _lineHeight;                              // idx2     _FirstLineToShow + 1     inactive                                                   // y0 + 3 * _lineHeight;
 
                 idx2 = _FirstLineToShow + 1;
                 idx3 = _FirstLineToShow + 2;
@@ -3583,10 +3582,10 @@ namespace keffect
                 LinePosition = 3;
                 // Position not possible for LineOfInformationPosition
 
-                y3 = y0;                                    // idx3     _FirstLineToShow + 1     inactive
-                y4 = y0 + _lineHeight;                      // idx4     _FirstLineToShow + 2     inactive
-                y2 = y4 + (int)(lineSpacing * _lineHeight);         // idx2     _FirstLineToShow - 1      active                                                // y0 + 2 * _lineHeight
-                y1 = y2 + _lineHeight;                      //          _FirstLineToShow             current         (no update)                        // y0 + 3 * _lineHeight
+                y3 = y0;                                                // idx3     _FirstLineToShow + 1     inactive
+                y4 = y0 + _lineHeight;                                  // idx4     _FirstLineToShow + 2     inactive
+                y2 = y4 + (int)(lineSpacing * _lineHeight);             // idx2     _FirstLineToShow - 1      active                                                // y0 + 2 * _lineHeight
+                y1 = y2 + _lineHeight;                                  //          _FirstLineToShow             current         (no update)                        // y0 + 3 * _lineHeight
 
                 idx2 = _FirstLineToShow - 1;
                 idx3 = _FirstLineToShow + 1;
