@@ -454,6 +454,7 @@ namespace Karaboss.Mp3
             m_BitmapsArray = new Bitmap[] { };
 
             sf = new StringFormat(StringFormat.GenericTypographic) { FormatFlags = StringFormatFlags.MeasureTrailingSpaces };
+            
             _karaokeFont = new Font("Arial Black", emSize, FontStyle.Regular, GraphicsUnit.Pixel);
 
             _steppercent = 0.01F;
@@ -910,24 +911,28 @@ namespace Karaboss.Mp3
                     {
                         // Already sung
                         active_fragment += _kLyrics.Lines[curline].Syllables[i].Text;
-                        active_fragment_length += MeasureString(_kLyrics.Lines[curline].Syllables[i].Text, _karaokeFont.Size);
+                        //active_fragment_length += MeasureString(_kLyrics.Lines[curline].Syllables[i].Text, _karaokeFont.Size);
                     }
                     else if (nextindex > 0 && i == nextindex - 1)
                     {
                         // Being sung
                         highlight_fragment = _kLyrics.Lines[curline].Syllables[i].Text;
-                        highlight_fragment_length = MeasureString(_kLyrics.Lines[curline].Syllables[i].Text, _karaokeFont.Size);
+                        //highlight_fragment_length = MeasureString(_kLyrics.Lines[curline].Syllables[i].Text, _karaokeFont.Size);
                     }
                 }
                 else if (i >= nextindex)
                 {
                     inactive_fragment += _kLyrics.Lines[curline].Syllables[i].Text;
-                    inactive_fragment_length += MeasureString(_kLyrics.Lines[curline].Syllables[i].Text, _karaokeFont.Size);
+                    //inactive_fragment_length += MeasureString(_kLyrics.Lines[curline].Syllables[i].Text, _karaokeFont.Size);
                 }
             }
 
             //if (inactive_fragment.Length > 0) 
             //    Console.WriteLine("inactive_fragment = " + inactive_fragment);
+
+            active_fragment_length = MeasureString(active_fragment, _karaokeFont.Size);
+            highlight_fragment_length = MeasureString(highlight_fragment, _karaokeFont.Size);
+            inactive_fragment_length = MeasureString(inactive_fragment, _karaokeFont.Size);
 
             return res;
         }
@@ -1098,7 +1103,7 @@ namespace Karaboss.Mp3
       
         private void DrawFileName(PaintEventArgs e, string FileName, float femSize)
         {
-            sf = null;
+            //sf = null;
             int x0 = 0;
             Color BorderColor = _ActiveBorderColor;
             Color FillColor = _InactiveColor;
@@ -1136,9 +1141,217 @@ namespace Karaboss.Mp3
 
 
         #region fragments
-        private void DrawActiveLineWithBorders(PaintEventArgs e, int lineIndex, int y2)
+        private void DrawActiveLineWithBorders(PaintEventArgs e, int lineIndex, int y1)
         {
-            DrawInactiveLineWithBorders(e, lineIndex, y2, true);
+            #region declarations
+
+            int Wbg;
+            RectangleF Rbg;
+
+            Region r;
+            RectangleF rect;
+
+            Brush ActiveColorBrush = new SolidBrush(_ActiveColor);
+            Brush HighlightColorBrush = new SolidBrush(_HighlightColor);
+            Brush InactiveColorBrush = new SolidBrush(_InactiveColor);
+
+            Pen ActiveBorderPen = new Pen(new SolidBrush(_ActiveBorderColor), _borderthick);
+            Pen InactiveBorderPen = new Pen(new SolidBrush(_InactiveBorderColor), _borderthick);
+
+            int x0 = 0;
+            GraphicsPath pth = new GraphicsPath();
+
+            string s;
+
+            #endregion declarations
+
+
+            if (lineIndex >= _kLyrics.Lines.Count()) return;
+            s = _kLyrics.Lines[lineIndex].ToString();
+
+
+            #region Scale font size to fit text in picture box
+
+            // ************************  Set ScaleTransform
+            float w = MeasureString(s, _karaokeFont.Size);            
+            // Example: if the text is greater than the width of the picture box, we reduce the size of the text to fit it in the picture box
+            float scale = (pBox.Width - 50) / w;
+            if (w > 0 && w > pBox.Width - 50)
+            {
+                // No need to center text, it is already centered by ScaleTransform
+                e.Graphics.ScaleTransform(scale, 1);
+            }
+            else
+            {
+                scale = 1;
+                // Center text horizontally
+                x0 = (int)((pBox.Width - w) / 2);
+            }            
+
+            #endregion Scale font size to fit text in picture box
+
+
+            #region background of syllabe                              
+            if (_bTextBackGround)
+            {
+                Wbg = (int)(1.04 * LinesLengths[lineIndex]);
+                // Black background to make text more visible
+                Rbg = new RectangleF((int)(0.94 * x0), (int)(1.04 * y1), Wbg, _lineHeight);
+                // background
+                e.Graphics.FillRectangle(new SolidBrush(Color.Black), Rbg);
+            }
+            #endregion
+
+            pth.AddString(s, _karaokeFont.FontFamily, (int)_karaokeFont.Style, _karaokeFont.Size, new Point(x0 , y1), sf);
+
+            // Draw full line in white if no active and highlight fragments
+            if (active_fragment == string.Empty && highlight_fragment == string.Empty && inactive_fragment == string.Empty)
+            {
+                #region Draw static text (no active and highlight fragments)
+
+                // Fill GraphicsPath path in white => full text is white                    
+                e.Graphics.FillPath(InactiveColorBrush, pth);
+                
+                // Outline the text                                
+                if (_borderthick > 0)
+                    e.Graphics.DrawPath(InactiveBorderPen, pth);
+
+                #endregion Draw static text (no active and highlight fragments)
+            }
+            else
+            {
+
+                #region Draw dynamic text (with active and highlight fragments)
+
+
+                r = new Region(pth);
+                // Create a rectangle of the graphical path
+                rect = r.GetBounds(e.Graphics);
+
+                
+                #region draw active text
+                
+                if (active_fragment != string.Empty)
+                {
+                    GraphicsPath pathActive = new GraphicsPath();                    
+
+                    pathActive.AddString(active_fragment, _karaokeFont.FontFamily, (int)_karaokeFont.Style, _karaokeFont.Size, new Point(x0, y1), sf);
+
+                    #region Paint in ActiveColor
+
+                    // Rectangle for text before highlighted text (rect.Width * lastpercent)
+                    //RectangleF intersectRectBefore = new RectangleF(rect.X / scale, rect.Y, rect.Width * lastpercent * scale, rect.Height);                    
+
+                    // update region on the intersection between region and 2nd rectangle
+                    //r.Intersect(intersectRectBefore);
+
+                    // Fill updated region in green
+                    //e.Graphics.FillRegion(ActiveColorBrush, r);
+
+                    #endregion Paint in ActiveColor
+
+                   
+                    // Draw the text               
+                    e.Graphics.FillPath(ActiveColorBrush, pathActive);
+
+                    // Outline the text                                
+                    if (_borderthick > 0)
+                        e.Graphics.DrawPath(ActiveBorderPen, pathActive);
+
+                    pathActive.Dispose();
+                                    
+
+                }
+                #endregion Draw active text
+                
+                
+                
+                #region draw highlight text      
+                
+                if (highlight_fragment != string.Empty)
+                {                    
+                    GraphicsPath pathHighlight = new GraphicsPath();                                                            
+                    pathHighlight.AddString(highlight_fragment, _karaokeFont.FontFamily, (int)_karaokeFont.Style, _karaokeFont.Size, new Point((int)(x0 + active_fragment_length), y1), sf);
+
+                    #region Paint in HighlightColor    
+
+                    // Create another rectangle shorter than the 1st one (percent of the first)
+                    //RectangleF intersectRect = new RectangleF( (rect.X + rect.Width * lastpercent)/scale, rect.Y, rect.Width * (percent - lastpercent) * scale, rect.Height);                    
+
+                    // update region on the intersection between region and 2nd rectangle
+                    //r.Intersect(intersectRect);
+
+                    // Fill updated region in highlight color => percent portion of text is highlighted            
+                    //e.Graphics.FillRegion(HighlightColorBrush, r);
+
+                    #endregion Paint in HighlightColor
+
+                    // Draw the text               
+                    e.Graphics.FillPath(HighlightColorBrush, pathHighlight);
+
+                    // Outline text                
+                    if (_borderthick > 0)
+                        e.Graphics.DrawPath(ActiveBorderPen, pathHighlight);
+
+                    pathHighlight.Dispose();
+                    
+                }
+                #endregion draw highlight text
+                
+                
+                
+                
+                #region Draw inactive text
+
+                if (inactive_fragment != string.Empty)
+                {
+                    GraphicsPath pathInactive = new GraphicsPath();
+                    pathInactive.AddString(inactive_fragment, _karaokeFont.FontFamily, (int)_karaokeFont.Style, _karaokeFont.Size, new Point((int)(x0 + active_fragment_length + highlight_fragment_length), y1), sf);
+
+                    #region Paint in InactiveColor
+
+                    // Create another rectangle shorter than the 1st one (percent of the first)
+                    //RectangleF intersectRectAfter = new RectangleF( (rect.X + rect.Width * percent)/scale, rect.Y, rect.Width - rect.Width * percent * scale, rect.Height);                   
+
+                    // update region on the intersection between region and 2nd rectangle
+                    //r.Intersect(intersectRectAfter);
+
+                    // Fill updated region in InactiveColor
+                    //e.Graphics.FillRegion(InactiveColorBrush, r);
+
+                    #endregion Paint in InactiveColor
+
+                   
+                    // Draw the text               
+                    e.Graphics.FillPath(InactiveColorBrush, pathInactive);
+
+                    // Outline the text
+                    if (_borderthick > 0)
+                        e.Graphics.DrawPath(InactiveBorderPen, pathInactive);
+
+                    pathInactive.Dispose();
+
+                }
+                #endregion Draw inactive text
+                
+
+                r.Dispose();
+
+
+                // ************************  Reset ScaleTransform
+                e.Graphics.ResetTransform();
+
+                #endregion Draw dynamic text (with active and highlight fragments)
+            }
+
+            #region Clean up resources
+            pth.Dispose();
+            ActiveColorBrush.Dispose();
+            HighlightColorBrush.Dispose();
+            InactiveColorBrush.Dispose();
+            ActiveBorderPen.Dispose();
+            InactiveBorderPen.Dispose();
+            #endregion Clean up resources
         }
 
         private void DrawInactiveLineWithBorders(PaintEventArgs e, int lineIndex, int y2, bool IsActive = false)
@@ -1708,9 +1921,7 @@ namespace Karaboss.Mp3
                 using (Graphics g = pBox.CreateGraphics())
                 {
                     g.TextRenderingHint = TextRenderingHint.AntiAlias;
-                    g.PageUnit = GraphicsUnit.Pixel;
-
-                    //StringFormat sf = new StringFormat(StringFormat.GenericTypographic) { FormatFlags = StringFormatFlags.MeasureTrailingSpaces };
+                    g.PageUnit = GraphicsUnit.Pixel;                    
 
                     m_font = new Font(_karaokeFont.FontFamily, femSize, FontStyle.Regular, GraphicsUnit.Pixel);
                     SizeF sz = g.MeasureString(fragment, m_font, new Point(0, 0), sf);
@@ -1754,16 +1965,18 @@ namespace Karaboss.Mp3
 
             Graphics g = pBox.CreateGraphics();
             float femsize;
-            long inisize = (long)_karaokeFont.Size;
+            float inisize = _karaokeFont.Size;            
             femsize = g.DpiY * inisize / 72;
 
             // Try to fit inside 90% of client Height
-            long comp = (long)(0.90 * pBox.ClientSize.Height);
-            
-            float textHeight = MeasureStringHeight( S, femsize);
-            textHeight = textHeight * NbLines;
+            float ClientHeight = pBox.ClientSize.Height;
 
-            if (textHeight > comp)
+            float mult = 1.3f; // 1.2 is the default line spacing in Windows Forms
+            float textHeight = MeasureStringHeight( S, femsize);
+            float linesHeight = mult * textHeight * NbLines;
+            
+
+            if (linesHeight > ClientHeight)
             {
                 do
                 {
@@ -1771,10 +1984,10 @@ namespace Karaboss.Mp3
                     if (inisize > 0)
                     {
                         femsize = g.DpiY * inisize / 72;
-                        textHeight = NbLines * MeasureStringHeight( S, femsize);
+                        linesHeight =  mult * MeasureStringHeight(S, femsize) * NbLines;
 
                     }
-                } while (textHeight > comp && inisize > 0);
+                } while (linesHeight > ClientHeight && inisize > 0);
             }
             else
             {
@@ -1782,17 +1995,17 @@ namespace Karaboss.Mp3
                 {
                     inisize++;                         
                     femsize = g.DpiY * inisize / 72;
-                    textHeight = NbLines * MeasureStringHeight( S, femsize);
-                } while (textHeight < comp);
+                    linesHeight = mult * MeasureStringHeight( S, femsize) * NbLines;
+                } while (linesHeight < ClientHeight);
             }
 
             // ------------------------------
             // Ajustement in width with AverageWidth
             // ------------------------------            
-            long compWidth = (long)(0.95 * pBox.ClientSize.Width);
+            float ClientWidth = 0.95f * pBox.ClientSize.Width;
             float textWidth = averageWidth;
 
-            if (averageWidth > compWidth)
+            if (averageWidth > ClientWidth)
             {
                 do
                 {
@@ -1802,7 +2015,7 @@ namespace Karaboss.Mp3
                         femsize = g.DpiX * inisize / 72;
                         textWidth = GetAverageWidth(_kLyrics, femsize);                        
                     }
-                } while (textWidth > compWidth && inisize > 0);
+                } while (textWidth > ClientWidth && inisize > 0);
             }
 
 
