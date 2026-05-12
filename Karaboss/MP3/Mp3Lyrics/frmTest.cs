@@ -2625,11 +2625,8 @@ namespace Karaboss.Mp3
 
                     #endregion Instrumental on bottom
                 }
-
             }
-
             LastLineOfInformationPosition = LineOfInformationPosition;
-
         }
 
         #endregion Draw text with two lines swapped
@@ -2667,6 +2664,18 @@ namespace Karaboss.Mp3
 
         private void FixDrawTextWithBorder(PaintEventArgs e)
         {
+
+            if (_kLyrics.Lines.Count == 0) return;
+
+            #region Draw FileName
+
+            // Draw file name if required
+
+            if (bDrawFileName)
+                DrawFileName(e, FileName, 0.33f * _karaokeFont.Size);
+
+            #endregion Draw FileName
+
 
             // Center text vertically
             int y0 = VCenterText();
