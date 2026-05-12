@@ -1,38 +1,175 @@
-﻿using GradientApp;
-using kar;
-using MusicXml.Domain;
+﻿using kar;
+using Karaboss.Themes;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Data;
-using System.Diagnostics.Eventing.Reader;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Text;
+using System.IO;
 using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using TagLib.Mpeg4;
 
 namespace Karaboss.Mp3
 {
     public partial class frmTest : Form
     {
 
+        #region Balls
+        // Show balls
+        private bool _bShowBalls = true;
+        public bool bShowBalls
+        {
+            get { return _bShowBalls; }
+            set
+            {
+                _bShowBalls = value;
+                //pnlTop.Visible = _bShowBalls;
+            }
+        }
+        #endregion Balls
+
+
         #region Colors
 
-        Color _BgColor;
 
-        Color _ActiveColor;
-        Color _HighlightColor;
-        Color _InactiveColor;
+        #region Background & text background color
 
-        Color _ActiveBorderColor;
-        Color _InactiveBorderColor;
+        // Background color
+        private Color _BgColor;
+        public Color BgColor
+        {
+            get { return _BgColor; }
+            set
+            {
+                _BgColor = value;                
+            }
+        }
+
+        #endregion Background & text background color
+
+
        
-        Color _ActiveInstrumentalColor;
+
+        #region Gradient color
+
+        private Color _grad0Color;
+        public Color Grad0Color
+        {
+            get { return _grad0Color; }
+            set
+            {
+                _grad0Color = value;                
+            }
+        }
+        private Color _grad1Color;
+        public Color Grad1Color
+        {
+            get { return _grad1Color; }
+            set
+            {
+                _grad1Color = value;                
+            }
+        }
+        private Color _Rhythm0Color;
+        public Color Rhythm0Color
+        {
+            get { return _Rhythm0Color; }
+            set
+            {
+                _Rhythm0Color = value;                
+            }
+        }
+        private Color _rhythm1Color;
+        public Color Rhythm1Color
+        {
+            get { return _rhythm1Color; }
+            set
+            {
+                _rhythm1Color = value;                
+            }
+        }
+
+
+        #endregion Gradient color
+
+
+
+        #region Instrumentals color
+
+        private Color _ActiveInstrumentalColor;
+        public Color ActiveInstrumentalColor
+        {
+            get { return _ActiveInstrumentalColor; }
+            set
+            {
+                _ActiveInstrumentalColor = value;                
+            }
+        }
+
+        #endregion Instrumentals color
+
+
+        #region Text color
+
+        // Text sung color
+        private Color _ActiveColor;
+        public Color ActiveColor
+        {
+            get { return _ActiveColor; }
+            set
+            {
+                _ActiveColor = value;               
+            }
+        }
+
+        private Color _HighlightColor;
+        public Color HighlightColor
+        {
+            get { return _HighlightColor; }
+            set
+            {
+                _HighlightColor = value;                
+            }
+        }
+
+        // Text to sing color
+        private Color _InactiveColor;
+        public Color InactiveColor
+        {
+            get { return _InactiveColor; }
+            set
+            {
+                _InactiveColor = value;                
+            }
+        }
+
+
+        // Text border
+        private Color _ActiveBorderColor;
+        public Color ActiveBorderColor
+        {
+            get { return _ActiveBorderColor; }
+            set
+            {
+                _ActiveBorderColor = value;                
+            }
+        }
+
+        private Color _InactiveBorderColor;
+        public Color InactiveBorderColor
+        {
+            get { return _InactiveBorderColor; }
+            set
+            {
+                _InactiveBorderColor = value;                
+            }
+        }
+
+        #endregion text color
+
+
 
         #endregion Colors
 
@@ -110,7 +247,6 @@ namespace Karaboss.Mp3
 
         #region Karaoke display layout
 
-        // Fixed lines, scrolling lines, 4 lines swapped, 2 lines swapped
         private kar.KaraokeDisplayTypes _karaokeDisplayType = KaraokeDisplayTypes.FixedLines;
         public kar.KaraokeDisplayTypes KaraokeDisplayType
         {
@@ -126,6 +262,40 @@ namespace Karaboss.Mp3
 
                 }
                 pBox?.Invalidate();
+            }
+        }
+
+
+        private string _strkaraokeDisplayType = "None";
+        public string strKaraokeDisplayType
+        {
+            get { return _strkaraokeDisplayType; }
+            set
+            {
+                _strkaraokeDisplayType = value;
+
+                switch (_strkaraokeDisplayType)
+                {
+                    case "None":
+                        KaraokeDisplayType = kar.KaraokeDisplayTypes.None;
+                        break;
+                    case "FixedLines":
+                        KaraokeDisplayType = kar.KaraokeDisplayTypes.FixedLines;
+                        break;
+                    case "ScrollingLinesTopDown":
+                        KaraokeDisplayType = kar.KaraokeDisplayTypes.ScrollingLinesTopDown;
+                        break;
+                    case "ScrollingLinesBottomUp":
+                        KaraokeDisplayType = kar.KaraokeDisplayTypes.ScrollingLinesBottomUp;
+                        break;
+                    case "TwoLinesSwapped":
+                        KaraokeDisplayType = kar.KaraokeDisplayTypes.TwoLinesSwapped; break;
+                    case "FourLinesSwapped":
+                        KaraokeDisplayType = kar.KaraokeDisplayTypes.FourLinesSwapped; break;
+                    default:
+                        KaraokeDisplayType = kar.KaraokeDisplayTypes.FixedLines;
+                        break;
+                }
             }
         }
 
@@ -155,6 +325,8 @@ namespace Karaboss.Mp3
 
 
         #region Font
+        private string ftName = "Arial Black";
+        private uint ftSize = 20;
 
         Font m_font;
         private float emSize = 40; // Size of the font
@@ -165,6 +337,17 @@ namespace Karaboss.Mp3
 
 
         #region Form
+
+        private bool _bTopMost = false;
+        public bool bTopMost
+        {
+            get { return _bTopMost; }
+            set
+            {
+                _bTopMost = value;
+                this.TopMost = _bTopMost;
+            }
+        }
 
         #region Is used for settings
 
@@ -182,6 +365,24 @@ namespace Karaboss.Mp3
         #endregion Is used for settings
 
         #endregion Form
+
+
+        #region Margins
+
+        // Margins and spacing. General margins are defined as a ratio of the control size to be adaptable to all sizes of control. Some specific margins are defined in pixels to be more precise when needed
+        private float _lineHeightMultiplier = 1.55f;   // Ration between line spacing and font size. 1.55 is the default value for a single line, but it can be increased to have more space between lines when several lines are displayed        
+        private float _marginLeft = 0.03f;   // Margin left for lyrics (ratio of the width of the control)
+        private float _marginTop = 0.36f;    // Margin top for lyrics when 4 lines swapped are displayed (ratio of the height of the control)
+
+        // Only used for FourLinesSwapped layout: Additional line spacing between 2 firsts lines and 2 last lines
+        private float _fourLinesSpacing = 1.17f;   // Multiplier to apply to line spacing when 4 lines swapped are displayed (instead of 1.55) to avoid too much space between lines. 
+
+        // Positioning for drawing the FileName if option selected.
+        private float _titleMaxLength = 0.41f;
+        private float _titleMarginLeft = 0.58f;
+        private float _titleMarginTop = 0.038f;
+
+        #endregion Margins
 
 
         #region MP3
@@ -204,6 +405,22 @@ namespace Karaboss.Mp3
         #endregion MP3
 
 
+        #region Picture
+
+        private PictureBoxSizeMode _sizeMode;
+        public PictureBoxSizeMode SizeMode
+        {
+            get { return _sizeMode; }
+            set
+            {
+                _sizeMode = value;
+                //karaokeEffect1.SizeMode = _sizeMode;
+            }
+        }
+
+        #endregion Picture
+
+
         #region SlideShow
 
         // Paths of images        
@@ -212,7 +429,117 @@ namespace Karaboss.Mp3
         private Bitmap[] m_BitmapsArray;
 
 
+        #region Single image
+
+        private string _SingleImagePath;
+        public string SingleImagePath
+        {
+            get => _SingleImagePath;
+            set
+            {
+                if (System.IO.File.Exists(value))
+                {
+                    _SingleImagePath = value;                   
+                }
+            }
+        }
+
+        #endregion Single image
+
+
+        #region SlideShow
+        private bool _allowModifyDirSlideShow = true;
+        public bool AlloModifyDirSlideShow
+        {
+            get { return _allowModifyDirSlideShow; }
+            set { _allowModifyDirSlideShow = value; }
+        }
+
+        // SlideShow directory
+        private string _dirSlideShow = string.Empty;
+        public string DirSlideShow
+        {
+            get { return _dirSlideShow; }
+            set
+            {
+                if (value == null || value == "")
+                    value = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), Application.ProductName);
+
+                if (Directory.Exists(value))
+                    _dirSlideShow = value;
+                else
+                    _dirSlideShow = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), Application.ProductName);
+
+                //karaokeEffect1.SetDirectoryBackground(_dirSlideShow);
+            }
+        }
+
+        // SlideShow frequency
+        private int _freqSlideShow;
+        public int FreqSlideShow
+        {
+            get { return _freqSlideShow; }
+            set
+            {
+                _freqSlideShow = value;
+                //karaokeEffect1.FreqDirSlideShow = _freqSlideShow;
+            }
+        }
+
         #endregion SlideShow
+
+
+        // Background option : Diaporama, SolidColor, Transparent        
+        private string _optionbackground = "Image";
+        public string OptionBackground
+        {
+            get { return _optionbackground; }
+            set
+            {
+                _optionbackground = value;
+
+                switch (_optionbackground)
+                {
+                    case "Image":
+                        //karaokeEffect1.OptionBackground = "Image";
+                        break;
+
+                    case "Diaporama":
+                        //karaokeEffect1.OptionBackground = "Diaporama";
+                        break;
+                    case "SolidColor":
+                        //karaokeEffect1.OptionBackground = "SolidColor";
+                        break;
+
+                    case "Gradient":
+                        //karaokeEffect1.OptionBackground = "Gradient";
+                        break;
+                    case "Rhythm":
+                        //karaokeEffect1.OptionBackground = "Rhythm";
+                        break;
+
+                    case "Transparent":
+                        //TransparencyKey = karaokeEffect1.TransparencyKey;
+                        //BackColor = karaokeEffect1.TransparencyKey;
+                        //karaokeEffect1.OptionBackground = "Transparent";
+                        break;
+                    default:
+                        //karaokeEffect1.OptionBackground = "Diaporama";
+                        break;
+                }
+            }
+        }
+
+        #endregion SlideShow
+
+
+        #region Themes
+
+        private ThemesListHelper _ThListHelper = new ThemesListHelper();
+        private ThemesList _ThemesList; // = new ThemesList();
+        private ThemeItem _currentTheme; // = new ThemeItem();
+
+        #endregion Themes
 
 
         #region Text transform
@@ -299,19 +626,11 @@ namespace Karaboss.Mp3
 
         #region Text position
 
-        // Display lyrics option: top, Center, Bottom        
-        public enum OptionsDisplay
-        {
-            Top = 0,
-            Center = 1,
-            Bottom = 2,
-        }
-
-        private OptionsDisplay _OptionDisplay;
+        private Karaclass.OptionsDisplay _OptionDisplay;
         /// <summary>
         /// Display lyrics option: top, Center, Bottom
         /// </summary>
-        public OptionsDisplay OptionDisplay
+        public Karaclass.OptionsDisplay OptionDisplay
         {
             get { return _OptionDisplay; }
             set
@@ -355,6 +674,18 @@ namespace Karaboss.Mp3
                 }
             }
         }
+        
+
+        private bool _bprogressivehighlight = false;
+        public bool bProgressiveHighlight
+        {
+            get { return _bprogressivehighlight; }
+            set
+            {
+                _bprogressivehighlight = value;                
+            }
+        }
+
 
         private bool _bshowparagraphs = true;
         [Description("show a blank line between paragraphs")]
@@ -433,16 +764,21 @@ namespace Karaboss.Mp3
 
         #endregion Text transform
 
+
         public frmTest(string fileName, double duration, kLyrics kls)
         {
             InitializeComponent();
 
-            FileName = fileName;
-            Duration = duration;
-            KLyrics = kls;
-            bDrawFileName = true;
 
             SetDefaultValues();
+            LoadOptions();
+
+            FileName = fileName;
+            Duration = duration;
+            KLyrics = kls;              // This will launch Init
+            bDrawFileName = true;
+
+
         }
 
 
@@ -461,6 +797,190 @@ namespace Karaboss.Mp3
             _transitionEffect = TransitionEffects.None;
         }
 
+        private void LoadOptions()
+        {
+            try
+            {
+                // Load colors lyrics, backgrounds from current Theme
+                LoadColorsFromCurrentTheme();
+
+
+                // Karaoke display type
+                strKaraokeDisplayType = Properties.Settings.Default.KaraokeDisplayType;     
+
+                // Lyrics border effect 
+                _frametype = Properties.Settings.Default.FrameType;
+                FrameType = _frametype;
+
+                // Font
+                ftName = Properties.Settings.Default.KaraokeFontName;
+                _karaokeFont = new Font(ftName, ftSize, FontStyle.Regular, GraphicsUnit.Pixel);
+                
+
+                bShowParagraphs = Karaclass.m_ShowParagraph;
+
+
+                // Progressive highlight
+                bProgressiveHighlight = Properties.Settings.Default.bProgressiveHighlight;
+
+                // Force Uppercase
+                bforceUppercase = Karaclass.m_ForceUppercase;
+
+                // show balls
+                bShowBalls = Karaclass.m_DisplayBalls;
+
+                #region Backgrounds
+                string bgOption = Properties.Settings.Default.BackGroundOption;
+                switch (bgOption)
+                {
+                    case "Image":
+                        SingleImagePath = Properties.Settings.Default.SingleImagePath;
+                        OptionBackground = "Image";
+                        break;
+
+                    case "Diaporama":
+                        OptionBackground = "Diaporama";
+                        break;
+                    case "SolidColor":
+                        OptionBackground = "SolidColor";
+                        break;
+
+                    case "Gradient":
+                        OptionBackground = "Gradient";
+                        break;
+
+                    case "Rhythm":
+                        OptionBackground = "Rhythm";
+                        break;
+
+                    case "Transparent":
+                        OptionBackground = "Transparent";
+                        break;
+
+                    default:
+                        OptionBackground = "Diaporama";
+                        break;
+                }
+                #endregion Backgrounds
+
+
+                #region Lyrics position
+
+                switch (Properties.Settings.Default.LyricsOptionDisplay)
+                {
+                    case "Top":
+                        _OptionDisplay = Karaclass.OptionsDisplay.Top;
+                        break;
+                    case "Center":
+                        _OptionDisplay = Karaclass.OptionsDisplay.Center;
+                        break;
+                    case "Bottom":
+                        _OptionDisplay = Karaclass.OptionsDisplay.Bottom;
+                        break;
+                    default:
+                        _OptionDisplay = Karaclass.OptionsDisplay.Center;
+                        break;
+                }
+                OptionDisplay = _OptionDisplay;
+
+                #endregion Lyrics position
+
+
+                bTextBackGround = Properties.Settings.Default.bLyricsBackGround;
+
+
+                // Number of Lines to display
+                nbLyricsLines = Properties.Settings.Default.TxtNbLines;
+                // Frequency of slide show
+                FreqSlideShow = Properties.Settings.Default.freqSlideShow;
+                // Position image
+                SizeMode = Properties.Settings.Default.SizeMode;
+
+                bTopMost = Properties.Settings.Default.frmMp3LyricsTopMost;
+
+               // karaokeEffect1.timerIntervall = _timerintervall;
+
+                // Load balls times
+                //if (_bShowBalls)
+                //    LoadBallsTimes(Mp3LyricsMgmtHelper.mp3KaraokeLyrics);
+
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show(e.Message, "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void LoadColorsFromCurrentTheme()
+        {
+            #region Retrieve theme
+
+            // Load all available color themes
+            _ThemesList = LoadThemes();
+
+            // Load default Theme name
+            string currentThemeName = Properties.Settings.Default.Theme;
+
+            // Retrieve Theme from ThList with its name
+            _currentTheme = _ThemesList.GetThemeByName(currentThemeName);
+
+            #endregion Retrieve theme
+
+            if (_currentTheme == null)
+            {
+                // If null (file themes.xml lost for ex) => Default
+                _currentTheme = _ThemesList.Themes[0];
+            }
+
+            // Get colors from the current theme
+            #region Get colors from them
+
+            // Text colors
+            ActiveColor = Parse(_currentTheme.ActiveColor);
+            HighlightColor = Parse(_currentTheme.HighlightColor);
+            InactiveColor = Parse(_currentTheme.InactiveColor);
+            ActiveBorderColor = Parse(_currentTheme.ActiveBorderColor);
+            InactiveBorderColor = Parse(_currentTheme.InactiveBorderColor);
+
+            // Instrumental
+            ActiveInstrumentalColor = Parse(_currentTheme.ActiveInstrumentalColor);
+
+            // Static background
+            BgColor = Parse(_currentTheme.BgColor);
+
+            // Dynamic background
+            Grad0Color = Parse(_currentTheme.Grad0Color);
+            Grad1Color = Parse(_currentTheme.Grad1Color);
+            Rhythm0Color = Parse(_currentTheme.Rhythm0Color);
+            Rhythm1Color = Parse(_currentTheme.Rhythm1Color);
+
+            // Chords
+            //InactiveChordColor = Parse(_currentTheme.InactiveChordColor);
+            //HighlightChordColor = Parse(_currentTheme.HighlightChordColor);
+
+            #endregion Get colors from theme                                                          
+
+        }
+
+        #region Themes Color
+
+        private ThemesList LoadThemes()
+        {
+            try
+            {
+                string fileName = Karaclass.GetThemesListFile(_ThListHelper.File);
+                _ThListHelper.File = fileName;
+                return _ThListHelper.Load(fileName);
+
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return null;
+            }
+        }
+
+        #endregion Themes Color
 
         private kLyrics RemoveParagraphs(kLyrics kls)
         {
@@ -661,12 +1181,8 @@ namespace Karaboss.Mp3
         {                        
 
             // Fonts
-            emSize = this.Font.Size;
-            _karaokeFont = new Font("Arial Black", emSize, FontStyle.Regular, GraphicsUnit.Pixel);
-
-
-            KaraokeDisplayType = KaraokeDisplayTypes.FourLinesSwapped;
-
+            //emSize = this.Font.Size;
+            //_karaokeFont = new Font("Arial Black", emSize, FontStyle.Regular, GraphicsUnit.Pixel);            
 
             // Update _nbLyricsLines if layout changed in options           
             switch (KaraokeDisplayType)
@@ -693,6 +1209,7 @@ namespace Karaboss.Mp3
 
 
             // Colors
+            /*
             _BgColor = Parse("#FCA903");
 
             _ActiveColor = Parse("#00ACFF");
@@ -703,7 +1220,7 @@ namespace Karaboss.Mp3
             _InactiveBorderColor = Parse("#8000FF");
 
             _ActiveInstrumentalColor = Parse("#808080");
-
+            */
            
 
             _bIsSettings = false;
@@ -724,16 +1241,15 @@ namespace Karaboss.Mp3
 
             // Store all lines lengths
             LinesLengths = new float[_kLyrics.Lines.Count];
-            _AverageWidth = GetAverageWidth(_kLyrics, _karaokeFont.Size);
+            //_AverageWidth = GetAverageWidth(_kLyrics, _karaokeFont.Size);
 
-            AdjustText(_AverageWidth, _nbLyricsLines);
+            AdjustFontSize(_nbLyricsLines);
 
 
         }
 
 
         #endregion initializations
-
 
 
         #region Lyrics and position
@@ -955,7 +1471,6 @@ namespace Karaboss.Mp3
         #endregion Lyrics and position
 
 
-
         #region Instrumental functions
 
         /// <summary>
@@ -1069,7 +1584,6 @@ namespace Karaboss.Mp3
         #endregion Instrumental functions
 
 
-
         #region Paint
         private void picBox_Paint(object sender, PaintEventArgs e)
         {
@@ -1081,7 +1595,7 @@ namespace Karaboss.Mp3
             switch (KaraokeDisplayType)
             {
                 case KaraokeDisplayTypes.FixedLines:
-                    //DrawTextWithFixedLines(e);
+                    DrawTextWithFixedLines(e);
                     break;
                 case KaraokeDisplayTypes.ScrollingLinesBottomUp:
                     //DrawTextWithScrollingLinesBottomUp(e);
@@ -1090,7 +1604,7 @@ namespace Karaboss.Mp3
                     //DrawTextWithScrollingLinesTopDown(e);
                     break;
                 case KaraokeDisplayTypes.TwoLinesSwapped:
-                    //DrawTextWithTwoLinesSwapped(e);
+                    DrawTextWithTwoLinesSwapped(e);
                     break;
                 case KaraokeDisplayTypes.FourLinesSwapped:
                     DrawTextWithFourLinesSwapped(e);
@@ -1099,46 +1613,7 @@ namespace Karaboss.Mp3
 
             #endregion draw text
         }
-              
-      
-        private void DrawFileName(PaintEventArgs e, string FileName, float femSize)
-        {
-            //sf = null;
-            int x0 = 0;
-            Color BorderColor = _ActiveBorderColor;
-            Color FillColor = _InactiveColor;
-            Pen penBorder = new Pen(BorderColor, 2);
-            var path = new GraphicsPath();
-
-
-            int y0 = (int)MeasureStringHeight(FileName, 0.038f * _karaokeFont.Size);
-
-            // Measure FileName
-            float w = MeasureString( FileName, femSize);
-
-            float maxLength = 0.41f * pBox.Width;    // 41 % of width            
-
-            // Allow to adapt the length of the text to the width allowed 
-            // If the width of the text is greater than maxLength, ScaleTransform reduce it
-            float scale = maxLength / w;    // Ratio maxLength vs  width of text
-            e.Graphics.ScaleTransform(scale, 1);
-
-            // Left position of the text                        
-            x0 = (int)(0.58f * pBox.Width / scale);
-
-            // Add string to path
-            path.AddString(FileName, _karaokeFont.FontFamily, (int)_karaokeFont.Style, femSize, new Point(x0, y0), sf);
-
-
-            // Draw the text            
-            e.Graphics.FillPath(new SolidBrush(FillColor), path);
-
-            // Outline the text            
-            e.Graphics.DrawPath(penBorder, path);
-
-            e.Graphics.ResetTransform();
-        }
-
+                          
 
         #region fragments
         private void DrawActiveLineWithBorders(PaintEventArgs e, int lineIndex, int y1)
@@ -1158,15 +1633,15 @@ namespace Karaboss.Mp3
             Pen ActiveBorderPen = new Pen(new SolidBrush(_ActiveBorderColor), _borderthick);
             Pen InactiveBorderPen = new Pen(new SolidBrush(_InactiveBorderColor), _borderthick);
 
-            int x0 = 0;
+            float x0 = _marginLeft * pBox.Width;
             GraphicsPath pth = new GraphicsPath();
 
             string s;
 
             #endregion declarations
 
+            if (lineIndex < 0 || lineIndex >= _kLyrics.Lines.Count()) return;            
 
-            if (lineIndex >= _kLyrics.Lines.Count()) return;
             s = _kLyrics.Lines[lineIndex].ToString();
 
 
@@ -1175,8 +1650,8 @@ namespace Karaboss.Mp3
             // ************************  Set ScaleTransform
             float w = MeasureString(s, _karaokeFont.Size);            
             // Example: if the text is greater than the width of the picture box, we reduce the size of the text to fit it in the picture box
-            float scale = (pBox.Width - 50) / w;
-            if (w > 0 && w > pBox.Width - 50)
+            float scale = ((1 - 2*_marginLeft)*pBox.Width) / w;
+            if (w > 0 && w > ((1 - 2*_marginLeft)*pBox.Width))
             {
                 // No need to center text, it is already centered by ScaleTransform
                 e.Graphics.ScaleTransform(scale, 1);
@@ -1202,7 +1677,7 @@ namespace Karaboss.Mp3
             }
             #endregion
 
-            pth.AddString(s, _karaokeFont.FontFamily, (int)_karaokeFont.Style, _karaokeFont.Size, new Point(x0 , y1), sf);
+            pth.AddString(s, _karaokeFont.FontFamily, (int)_karaokeFont.Style, _karaokeFont.Size, new Point((int)x0 , y1), sf);
 
             // Draw full line in white if no active and highlight fragments
             if (active_fragment == string.Empty && highlight_fragment == string.Empty && inactive_fragment == string.Empty)
@@ -1235,7 +1710,7 @@ namespace Karaboss.Mp3
                 {
                     GraphicsPath pathActive = new GraphicsPath();                    
 
-                    pathActive.AddString(active_fragment, _karaokeFont.FontFamily, (int)_karaokeFont.Style, _karaokeFont.Size, new Point(x0, y1), sf);
+                    pathActive.AddString(active_fragment, _karaokeFont.FontFamily, (int)_karaokeFont.Style, _karaokeFont.Size, new Point((int)x0, y1), sf);
 
                     #region Paint in ActiveColor
 
@@ -1369,60 +1844,65 @@ namespace Karaboss.Mp3
 
             // Create a graphical path
             var path = new GraphicsPath();
-            int x0 = 0;
+            float x0 = _marginLeft * pBox.Width;
             Pen penBorder = new Pen(BorderColor, _borderthick); // pen for border color
             int Wbg;
             RectangleF Rbg;
             string s;
-            
+
             #endregion Declarations
 
-            if (lineIndex < _kLyrics.Lines.Count())
-            {                
-                s = _kLyrics.Lines[lineIndex].ToString();
-                float w = MeasureString(s, _karaokeFont.Size);
 
-                // ************************  Set ScaleTransform
-                // Example: if the text is greater than the width of the picture box, we reduce the size of the text to fit it in the picture box
-                float scale = (pBox.Width - 50) / w;
-                if (w > 0 && w > pBox.Width - 50)
-                {
-                    // No need to center text, it is already centered by ScaleTransform
-                    e.Graphics.ScaleTransform(scale, 1);
-                }
-                else
-                {
-                    // Center text horizontally
-                    x0 = (int)((pBox.Width - w) / 2);
-                }
-
-                #region Background of text  
-
-                if (_bTextBackGround)
-                {
-                    Wbg = (int)(1.04 * LinesLengths[lineIndex]);
-                    // Black background to make text more visible
-                    Rbg = new RectangleF((int)(0.94 * x0), (int)(1.04 * y2), Wbg, _lineHeight);
-                    // background
-                    e.Graphics.FillRectangle(new SolidBrush(Color.Black), Rbg);
-                }
-
-                #endregion Background of text
-
-                // Add lines of lyrics to the Graphics path
-                path.AddString(s, _karaokeFont.FontFamily, (int)_karaokeFont.Style, _karaokeFont.Size, new Point(x0, y2), sf);
+            if (lineIndex < 0 || lineIndex >= _kLyrics.Lines.Count()) return;               
+            s = _kLyrics.Lines[lineIndex].ToString();
 
 
-                // Draw the text            
-                e.Graphics.FillPath(new SolidBrush(FillColor), path);
+            #region Scale font size to fit text in picture box
 
-                // Outline the text
-                if (_borderthick > 0)
-                    e.Graphics.DrawPath(penBorder, path);
-
-                // ************************  Reset ScaleTransform
-                e.Graphics.ResetTransform();
+            float w = MeasureString(s, _karaokeFont.Size);
+            // ************************  Set ScaleTransform
+            // Example: if the text is greater than the width of the picture box, we reduce the size of the text to fit it in the picture box
+            float scale = ((1 - 2*_marginLeft)*pBox.Width) / w;
+            if (w > 0 && w > ((1 - 2*_marginLeft)*pBox.Width))
+            {
+                // No need to center text, it is already centered by ScaleTransform
+                e.Graphics.ScaleTransform(scale, 1);
             }
+            else
+            {
+                // Center text horizontally
+                x0 = (int)((pBox.Width - w) / 2);
+            }
+            #endregion Scale font size to fit text in picture box
+
+
+            #region Background of text  
+
+            if (_bTextBackGround)
+            {
+                Wbg = (int)(1.04 * LinesLengths[lineIndex]);
+                // Black background to make text more visible
+                Rbg = new RectangleF((int)(0.94 * x0), (int)(1.04 * y2), Wbg, _lineHeight);
+                // background
+                e.Graphics.FillRectangle(new SolidBrush(Color.Black), Rbg);
+            }
+
+            #endregion Background of text
+
+            // Add lines of lyrics to the Graphics path
+            path.AddString(s, _karaokeFont.FontFamily, (int)_karaokeFont.Style, _karaokeFont.Size, new Point((int)x0, y2), sf);
+
+
+            // Draw the text            
+            e.Graphics.FillPath(new SolidBrush(FillColor), path);
+
+            // Outline the text
+            if (_borderthick > 0)
+                e.Graphics.DrawPath(penBorder, path);
+
+            // ************************  Reset ScaleTransform
+            e.Graphics.ResetTransform();
+            
 
             #region Clean up resources
 
@@ -1494,6 +1974,42 @@ namespace Karaboss.Mp3
 
         }
 
+        private void DrawFileName(PaintEventArgs e, string FileName, float femSize)
+        {
+            int x0 = 0;
+            Color BorderColor = _ActiveBorderColor;
+            Color FillColor = _InactiveColor;
+            Pen penBorder = new Pen(BorderColor, 2);
+            var path = new GraphicsPath();
+
+
+            int y0 = (int)MeasureStringHeight(FileName, _titleMarginTop * _karaokeFont.Size);
+
+            // Measure FileName
+            float w = MeasureString(FileName, femSize);
+
+            float maxLength = _titleMaxLength * pBox.Width;    // 41 % of width            
+
+            // Allow to adapt the length of the text to the width allowed 
+            // If the width of the text is greater than maxLength, ScaleTransform reduce it
+            float scale = maxLength / w;    // Ratio maxLength vs  width of text
+            e.Graphics.ScaleTransform(scale, 1);
+
+            // Left position of the text                        
+            x0 = (int)(_titleMarginLeft * pBox.Width / scale);
+
+            // Add string to path
+            path.AddString(FileName, _karaokeFont.FontFamily, (int)_karaokeFont.Style, femSize, new Point(x0, y0), sf);
+
+
+            // Draw the text            
+            e.Graphics.FillPath(new SolidBrush(FillColor), path);
+
+            // Outline the text            
+            e.Graphics.DrawPath(penBorder, path);
+
+            e.Graphics.ResetTransform();
+        }
 
         #endregion fragments
 
@@ -1535,8 +2051,7 @@ namespace Karaboss.Mp3
             if (_kLyrics.Lines.Count == 0) return;
 
             #region Declarations
-
-            float lineSpacing = 1.17f;
+            
             int LineOfInformationPosition;
             int[] LinesNr = new int[4];
             float w;
@@ -1555,12 +2070,9 @@ namespace Karaboss.Mp3
 
 
             #region Draw FileName
-
            
-
             // Draw file name if required
-            //y0 = (int)MeasureStringHeight(FileName, 0.038f * _karaokeFont.Size);
-
+            
             if (bDrawFileName)
                 DrawFileName(e, FileName, 0.33f * _karaokeFont.Size);
 
@@ -1570,15 +2082,15 @@ namespace Karaboss.Mp3
             #region Line layout
 
             // Draw lines starting from this position
-            y0 = (int)(0.36f * _lineHeight);
+            y0 = (int)(_marginTop * _lineHeight);
 
             // 4 lines positioning depending on the value of _FirstLineToShow % 4          
             int l = _FirstLineToShow;
 
             int a1 = y0;
             int a2 = y0 + _lineHeight;
-            int a3 = y0 + (int)(_lineHeight * (1 + lineSpacing));   //_lineHeight + (int)(lineSpacing * _lineHeight);
-            int a4 = y0 + (int)(_lineHeight * (2 + lineSpacing));   //_lineHeight + (int)(lineSpacing * _lineHeight) + _lineHeight;
+            int a3 = y0 + (int)(_lineHeight * (1 + _fourLinesSpacing));   
+            int a4 = y0 + (int)(_lineHeight * (2 + _fourLinesSpacing));   
 
             int LinePosition = _FirstLineToShow % 4;
 
@@ -1593,7 +2105,7 @@ namespace Karaboss.Mp3
                     /*
                     y1 = y0;                                        // idx1     _FirstLineToShow              current         (update 3 & 4)                
                     y2 = y0 + _lineHeight;                          // idx2     _FirstLineToShow + 1      inactive
-                    y3 = y2 + (int)(lineSpacing * _lineHeight);     // idx3     _FirstLineToShow + 2      inactive                                           
+                    y3 = y2 + (int)(_fourLinesSpacing * _lineHeight);     // idx3     _FirstLineToShow + 2      inactive                                           
                     y4 = y3 + _lineHeight;                          // idx4     _FirstLineToShow + 3      inactive                                           
                     */
                     break;
@@ -1606,7 +2118,7 @@ namespace Karaboss.Mp3
                     /*
                     y2 = y0;                                        // idx2     _FirstLineToShow - 1     active
                     y1 = y0 + _lineHeight;                          // idx1     _FirstLineToShow             current         (no update)
-                    y3 = y1 + (int)(lineSpacing * _lineHeight);     // idx3     _FirstLineToShow + 1     inactive                                          
+                    y3 = y1 + (int)(_fourLinesSpacing * _lineHeight);     // idx3     _FirstLineToShow + 1     inactive                                          
                     y4 = y3 + _lineHeight;                          // idx4     _FirstLineToShow + 2     inactive                                          
                     */
                     break;
@@ -1619,7 +2131,7 @@ namespace Karaboss.Mp3
                     /*
                     y3 = y0;                                        // idx3     _FirstLineToShow + 2     inactive
                     y4 = y0 + _lineHeight;                          // idx4     _FirstLineToShow + 3     inactive
-                    y1 = y4 + (int)(lineSpacing * _lineHeight);     // idx1     _FirstLineToShow             current         (update 1 & 2)                        
+                    y1 = y4 + (int)(_fourLinesSpacing * _lineHeight);     // idx1     _FirstLineToShow             current         (update 1 & 2)                        
                     y2 = y1 + _lineHeight;                          // idx2     _FirstLineToShow + 1     inactive                                                  
                    
                     */
@@ -1633,7 +2145,7 @@ namespace Karaboss.Mp3
                     /*
                     y3 = y0;                                        // idx3     _FirstLineToShow + 1     inactive
                     y4 = y0 + _lineHeight;                          // idx4     _FirstLineToShow + 2     inactive
-                    y2 = y4 + (int)(lineSpacing * _lineHeight);     // idx2     _FirstLineToShow - 1      active                                                
+                    y2 = y4 + (int)(_fourLinesSpacing * _lineHeight);     // idx2     _FirstLineToShow - 1      active                                                
                     y1 = y2 + _lineHeight;                          // idx1     _FirstLineToShow             current         (no update)                        
                     */
                     break;
@@ -1901,6 +2413,278 @@ namespace Karaboss.Mp3
         #endregion Draw text with Four lines swapped
 
 
+        #region Draw text with two lines swapped
+
+        private void DrawTextWithTwoLinesSwapped(PaintEventArgs e)
+        {
+            switch (FrameType)
+            {
+                case "NoBorder":
+                case "FrameThin":
+                case "Frame1":
+                case "Frame2":
+                case "Frame3":
+                case "Frame4":
+                case "Frame5":
+                    TlsDrawTextWithBorder(e);
+                    break;
+
+                case "Shadow":
+                    //TlsDrawTextWithShadow(e);
+                    break; ;
+
+                case "Neon":
+                    //TlsDrawTextWithNeon(e);
+                    break; ;
+
+                default:
+                    //TlsDrawTextWithBorder(e);
+                    break;
+            }
+        }
+
+        private void TlsDrawTextWithBorder(PaintEventArgs e)
+        {
+            if (_kLyrics.Lines.Count == 0) return;
+
+            #region Declarations
+            // Center text vertically
+            int y0 = VCenterText();
+
+            int y1;    // y1 is the y coordinate of the active line to display (line _FirstLineToShow)
+            int y2;    // y2 is the y coordinate of the inactive line to display (line _FirstLineToShow + 1)
+
+            int LineOfInformationPosition = -2;
+            int LinePosition;
+
+            #endregion Declarations
+
+
+            #region Draw FileName
+
+            // Draw file name if required
+
+            if (bDrawFileName)
+                DrawFileName(e, FileName, 0.33f * _karaokeFont.Size);
+
+            #endregion Draw FileName
+
+
+            #region Line layout
+
+            // If active line is odd, it is displayed on the first line
+            // if active line is even, it is displayed on the second line
+            if (_FirstLineToShow % 2 == 0)
+            {
+                LinePosition = 0;
+
+                y1 = y0;                    // active     _FirstLinetoShow
+                y2 = y0 + _lineHeight;      // inactive   _FirstLinetoShow + 1  
+
+                if (_kLyrics.Lines[_FirstLineToShow].Syllables.Last().CharType == Syllable.CharTypes.Information)
+                    LineOfInformationPosition = 0;
+                else if (_FirstLineToShow + 1 < _kLyrics.Lines.Count && _kLyrics.Lines[_FirstLineToShow + 1].Syllables.Last().CharType == Syllable.CharTypes.Information)
+                    LineOfInformationPosition = 1;
+                else if (_FirstLineToShow + 1 >= _kLyrics.Lines.Count)
+                    LineOfInformationPosition = LastLineOfInformationPosition;
+            }
+            else
+            {
+                LinePosition = 1;
+
+                y2 = y0;                    // inactive     _FirstLinetoShow + 1
+                y1 = y0 + _lineHeight;      // active       _FirstLinetoShow
+
+                if (_kLyrics.Lines[_FirstLineToShow].Syllables.Last().CharType == Syllable.CharTypes.Information)
+                    LineOfInformationPosition = 1;
+                else if (_FirstLineToShow + 1 < _kLyrics.Lines.Count && _kLyrics.Lines[_FirstLineToShow + 1].Syllables.Last().CharType == Syllable.CharTypes.Information)
+                    LineOfInformationPosition = 0;
+                else if (_FirstLineToShow + 1 >= _kLyrics.Lines.Count)
+                    LineOfInformationPosition = LastLineOfInformationPosition;
+            }
+
+            #endregion Line layout
+
+
+            // No instrumental
+            if (LineOfInformationPosition == -2)
+            {
+                #region Normal drawing
+
+                // Draw active line with borders
+                DrawActiveLineWithBorders(e, _FirstLineToShow, y1);
+
+                // Draw Inactive line with borders
+                if (percent > 0)
+                    DrawInactiveLineWithBorders(e, _FirstLineToShow + 1, y2);
+
+                #endregion Normal drawing
+            }
+            else
+            {
+                // Checks whether an instrumental section has begun and updates the countdown and timing state accordingly.                
+                CheckIfInstrumentalBegins();
+
+                // Update the CountDown
+                UpdateCountDown();
+
+                TimeSpan tm = DateTime.Now - _startTime;
+
+                // Instrumental found
+                switch (LineOfInformationPosition)
+                {
+                    #region Instrumental on top
+
+                    case 0:                         // Instrumental on line 0
+                        switch (LinePosition)
+                        {
+                            case 0:
+                                // y1 * information
+                                // y2 normal                                
+                                DrawInformation(e, _FirstLineToShow, SecondsBeforeSinging, y1);
+
+                                if (bCountDown)
+                                {
+                                    // Keep last active line 2 when instrumental has began for 1 second
+                                    if (tm.TotalMilliseconds < 1000)                                                                                                                    
+                                        DrawInactiveLineWithBorders(e, _FirstLineToShow - 1, y2, true);         // keep old line 1 sec                                                                                                                       
+                                }
+
+                                // Draw line y2 only if it is less than 4 sec before the end of an instrumental
+                                // Except for introduction
+                                if (bInstrumentalStarted && _FirstLineToShow > 0)
+                                {
+                                    tm = _endTime - DateTime.Now;
+
+                                    if (tm.TotalMilliseconds > _DelayBeforeEndOfInstrumental)
+                                    {
+                                        // Do not display next lines until _DelayBeforeEndOfInstrumental
+                                        return;
+                                    }
+                                }
+                                DrawInactiveLineWithBorders(e, _FirstLineToShow + 1, y2);      // Draw new line before the end of instrumental         
+                                break;
+
+                            case 1:
+                                // y2 information
+                                // y1 * normal                                
+                                DrawInformation(e, _FirstLineToShow + 1, -1, y2);
+                                
+                                DrawActiveLineWithBorders(e, _FirstLineToShow, y1);
+                                break;
+                        }
+                        break;
+
+                    #endregion Instrumental on top
+
+
+                    #region Instrumental on bottom
+
+                    case 1:                         // Instrumental on line 1
+                        switch (LinePosition)
+                        {
+                            case 0:
+                                // y1 * normal
+                                // y2 information
+                                DrawActiveLineWithBorders(e, _FirstLineToShow, y1);                                
+                                DrawInformation(e, _FirstLineToShow + 1, -1, y1 + _lineHeight);
+                                break;
+
+                            case 1:
+                                // y2 normal old than new
+                                // y1 * information                                
+                                DrawInformation(e, _FirstLineToShow, SecondsBeforeSinging, y1);
+
+                                if (bCountDown)
+                                {
+                                    // Keep last active line 2 when instrumental has began for 1 second
+                                    if (tm.TotalMilliseconds < 1000)
+                                    {
+                                        if (_FirstLineToShow - 1 >= 0)
+                                        {
+                                            DrawInactiveLineWithBorders(e, _FirstLineToShow - 1, y1 - _lineHeight, true);         // keep old line 1 sec                                            
+
+                                        }
+                                    }
+                                }
+                                // Draw line y2 only if it is less than 4 sec before the end of an instrumental
+                                if (bInstrumentalStarted)
+                                {
+                                    tm = _endTime - DateTime.Now;
+
+                                    if (tm.TotalMilliseconds > _DelayBeforeEndOfInstrumental)
+                                    {
+                                        // Do not display next lines until _DelayBeforeEndOfInstrumental
+                                        return;
+                                    }
+                                }
+                                DrawInactiveLineWithBorders(e, _FirstLineToShow + 1, y2);      // Draw new line before the end of instrumental   
+                                break;
+                        }
+                        break;
+
+                    #endregion Instrumental on bottom
+                }
+
+            }
+
+            LastLineOfInformationPosition = LineOfInformationPosition;
+
+        }
+
+        #endregion Draw text with two lines swapped
+
+
+        #region Draw text with fixed lines
+
+        private void DrawTextWithFixedLines(PaintEventArgs e)
+        {
+            switch (FrameType)
+            {
+                case "NoBorder":
+                case "FrameThin":
+                case "Frame1":
+                case "Frame2":
+                case "Frame3":
+                case "Frame4":
+                case "Frame5":
+                    FixDrawTextWithBorder(e);
+                    break;
+
+                case "Shadow":
+                    //FixDrawTextWithShadow(e);
+                    break; ;
+
+                case "Neon":
+                    //FixDrawTextWithNeon(e);
+                    break; ;
+
+                default:
+                    //FixDrawTextWithBorder(e);
+                    break;
+            }
+        }
+
+        private void FixDrawTextWithBorder(PaintEventArgs e)
+        {
+
+            // Center text vertically
+            int y0 = VCenterText();
+
+            // Draw active line with borders
+            DrawActiveLineWithBorders(e, _FirstLineToShow, y0);
+
+
+            // Draw Inactive lines with borders
+            for (int i = _FirstLineToShow + 1; i <= _LastLineToShow; i++)
+            {
+                DrawInactiveLineWithBorders(e, i, y0 + (i - _FirstLineToShow) * _lineHeight);
+            }
+        }
+
+        #endregion Draw text with fixed lines
+
+
         #endregion Paint
 
 
@@ -1911,6 +2695,29 @@ namespace Karaboss.Mp3
             int res = -(int)_karaokeFont.Size / 2 + (pBox.ClientSize.Width - (int)MeasureString(s, _karaokeFont.Size)) / 2;
             return res > 0 ? res : 0;
         }
+
+        private int VCenterText()
+        {
+            int y = 0;
+
+            // Height of control minus height of lines to show
+            switch (_OptionDisplay)
+            {
+                case Karaclass.OptionsDisplay.Center:
+                    y = (pBox.ClientSize.Height - (_nbLyricsLines) * _lineHeight) / 2;
+                    break;
+
+                case Karaclass.OptionsDisplay.Top:
+                    y = 0;
+                    break;
+
+                case Karaclass.OptionsDisplay.Bottom:
+                    y = pBox.ClientSize.Height - (_nbLyricsLines * (_lineHeight + 1));
+                    break;
+            }
+            return y > 0 ? y : 0;
+        }
+
 
         private float MeasureString(string fragment, float femSize)
         {
@@ -1932,7 +2739,6 @@ namespace Karaboss.Mp3
             return ret;
         }
               
-
         
         private float GetAverageWidth(kLyrics kls, float femSize)
         {
@@ -1957,7 +2763,7 @@ namespace Karaboss.Mp3
         /// <param name="pBox"></param>
         /// <param name="S"></param>
         /// <param name="NbLines"></param>
-        private void AdjustText(float averageWidth,  int NbLines) 
+        private void AdjustFontSize(int NbLines) 
         { 
             if (pBox == null) return;
 
@@ -2001,11 +2807,16 @@ namespace Karaboss.Mp3
 
             // ------------------------------
             // Ajustement in width with AverageWidth
-            // ------------------------------            
-            float ClientWidth = 0.95f * pBox.ClientSize.Width;
-            float textWidth = averageWidth;
+            // ------------------------------
 
-            if (averageWidth > ClientWidth)
+            // Calculate average width of lines and try to fit inside 95% of client width
+            femsize = g.DpiX * inisize / 72;
+            _AverageWidth = GetAverageWidth(_kLyrics, femsize);
+
+            float ClientWidth = (1 - 2* _marginLeft) * pBox.ClientSize.Width;
+            float textWidth = _AverageWidth;
+
+            if (_AverageWidth > ClientWidth)
             {
                 do
                 {
@@ -2026,7 +2837,7 @@ namespace Karaboss.Mp3
 
                 // Vertical distance between lines          1.6 is
                 // https://pimpmytype.com/line-length-line-height/ they say 1.6 is the best 
-                _lineHeight = (int)(1.55 * emSize);
+                _lineHeight = (int)(_lineHeightMultiplier * emSize);
                 // Height of the full song
                 _linesHeight = _nbLyricsLines * _lineHeight;
 
@@ -2041,7 +2852,6 @@ namespace Karaboss.Mp3
             g.Dispose();
         }
        
-
 
         private float MeasureStringHeight(string line, float femSize)
         {
@@ -2109,13 +2919,69 @@ namespace Karaboss.Mp3
         private void frmTest_Resize(object sender, EventArgs e)
         {
            
-            AdjustText(_AverageWidth, _nbLyricsLines);
+            AdjustFontSize(_nbLyricsLines);
             pBox.Invalidate();
            
         }
 
-       
+
 
         #endregion form load close
+
+
+        #region Start , Stop
+
+        public void Start()
+        {
+            SecondsBeforeSinging = 0;
+            bInstrumentalStarted = false;
+            bCountDown = false;
+            _endTime = DateTime.Now;
+            _startTime = DateTime.Now;
+            PlayerPositionMilliseconds = 0;
+            TargetPositionMilliseconds = 0;
+
+            _FirstLineToShow = 0;
+
+            percent = 0;
+            lastpercent = 0;
+            nextindex = 0;
+            lastindex = 0;
+            _lasttime = 0;
+            lastCurLength = 0;
+            CurLength = 0;
+        }
+
+
+        public void Stop()
+        {
+            SecondsBeforeSinging = 0;
+            bInstrumentalStarted = false;
+            bCountDown = false;
+            _endTime = DateTime.Now;
+            _startTime = DateTime.Now;
+            PlayerPositionMilliseconds = 0;
+            TargetPositionMilliseconds = 0;
+
+            _FirstLineToShow = 0;
+            _LastLineToShow = SetLastLineToShow(_FirstLineToShow, _kLyrics.Lines.Count, _nbLyricsLines);
+
+            percent = 0;
+            lastpercent = 0;
+            nextindex = 0;
+            lastindex = 0;
+            _lasttime = 0;
+            lastCurLength = 0;
+            CurLength = 0;
+
+            active_fragment = string.Empty;
+            highlight_fragment = string.Empty;
+            inactive_fragment = string.Empty;
+
+            pBox.Invalidate();
+        }
+
+        #endregion Start , Stop
+
     }
 }

@@ -2751,8 +2751,7 @@ namespace keffect
         #region Draw text with Two lines swapped
 
         private void DrawTextWithTwoLinesSwapped(PaintEventArgs e)
-        {
-            //_nbLyricsLines = 2;
+        {            
 
             switch (FrameType)
             {

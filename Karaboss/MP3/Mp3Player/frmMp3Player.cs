@@ -424,6 +424,13 @@ namespace Karaboss.Mp3
                 Application.OpenForms["frmMp3Lyrics"].Close();
             }
 
+            if (Application.OpenForms.OfType<frmTest>().Count() > 0)
+            {
+                Application.OpenForms["frmTest"].Close();
+            }
+
+
+
             if (Application.OpenForms.OfType<frmMp3LyrOptions>().Count() > 0)
             {
                 Application.OpenForms["frmMp3LyrOptions"].Close();
@@ -2109,12 +2116,18 @@ namespace Karaboss.Mp3
         {
             if (Application.OpenForms.OfType<frmMp3Lyrics>().Count() > 0)
                 frmMp3Lyrics.Stop();
+            if (Application.OpenForms.OfType<frmTest>().Count() > 0)
+                frmTest.Stop();
         }
 
         private void StartKaraoke()
         {                        
             if (Application.OpenForms.OfType<frmMp3Lyrics>().Count() > 0)
                 frmMp3Lyrics.Start();
+
+            if (Application.OpenForms.OfType<frmTest>().Count() > 0)
+                frmTest.Start();
+
         }
 
         #endregion Timer
