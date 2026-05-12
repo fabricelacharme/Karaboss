@@ -333,6 +333,19 @@ namespace Karaboss.Mp3
         private StringFormat sf;
         Font _karaokeFont;
 
+        // Font stretching (None, Small (no stetching), Medium (some stretching), Large (most stretching)
+        private string _FontStretching = "None";
+        public string FontStretching
+        {
+            get { return _FontStretching; }
+            set
+            {
+                _FontStretching = value;
+                pBox.Invalidate();
+            }
+        }
+
+
         #endregion Font
 
 
@@ -815,7 +828,8 @@ namespace Karaboss.Mp3
                 // Font
                 ftName = Properties.Settings.Default.KaraokeFontName;
                 _karaokeFont = new Font(ftName, ftSize, FontStyle.Regular, GraphicsUnit.Pixel);
-                
+
+                FontStretching = Properties.Settings.Default.FontStretching;
 
                 bShowParagraphs = Karaclass.m_ShowParagraph;
 
@@ -1243,9 +1257,26 @@ namespace Karaboss.Mp3
             LinesLengths = new float[_kLyrics.Lines.Count];
             //_AverageWidth = GetAverageWidth(_kLyrics, _karaokeFont.Size);
 
+            _biggestLine = GetBiggestLine();
+
+
             AdjustFontSize(_nbLyricsLines);
+        }
 
+        private string GetBiggestLine()
+        {
+            int max = 0;
+            string tx = string.Empty;
 
+            for (int i = 0; i < _kLyrics.Lines.Count; i++)
+            {
+                if (_kLyrics.Lines[i].ToString().Length > max)
+                {
+                    max = _kLyrics.Lines[i].ToString().Length; // lstLyricsLines[i].Length;
+                    tx = _kLyrics.Lines[i].ToString();
+                }
+            }
+            return tx;
         }
 
 
@@ -1651,7 +1682,8 @@ namespace Karaboss.Mp3
             float w = MeasureString(s, _karaokeFont.Size);            
             // Example: if the text is greater than the width of the picture box, we reduce the size of the text to fit it in the picture box
             float scale = ((1 - 2*_marginLeft)*pBox.Width) / w;
-            if (w > 0 && w > ((1 - 2*_marginLeft)*pBox.Width))
+            
+            if (_FontStretching == "Large" && w > 0 && w > ((1 - 2*_marginLeft)*pBox.Width))
             {
                 // No need to center text, it is already centered by ScaleTransform
                 e.Graphics.ScaleTransform(scale, 1);
@@ -1863,7 +1895,7 @@ namespace Karaboss.Mp3
             // ************************  Set ScaleTransform
             // Example: if the text is greater than the width of the picture box, we reduce the size of the text to fit it in the picture box
             float scale = ((1 - 2*_marginLeft)*pBox.Width) / w;
-            if (w > 0 && w > ((1 - 2*_marginLeft)*pBox.Width))
+            if (_FontStretching == "Large" && w > 0 && w > ((1 - 2*_marginLeft)*pBox.Width))
             {
                 // No need to center text, it is already centered by ScaleTransform
                 e.Graphics.ScaleTransform(scale, 1);
@@ -2773,7 +2805,15 @@ namespace Karaboss.Mp3
         /// <param name="S"></param>
         /// <param name="NbLines"></param>
         private void AdjustFontSize(int NbLines) 
-        { 
+        {
+            if (FontStretching == "Large")
+                AdjustFontSizeWithStretching(NbLines);
+            else
+            {
+                AdjustFontWithoutStretching(_biggestLine, NbLines);
+            }
+
+            /*
             if (pBox == null) return;
 
             string S = "!/(123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
@@ -2859,8 +2899,187 @@ namespace Karaboss.Mp3
 
             }
             g.Dispose();
+            */
         }
-       
+
+
+        private void AdjustFontWithoutStretching(string biggestLine, int NbLines)
+        {
+            if (pBox == null) return;
+
+            string S = biggestLine;
+
+            Graphics g = pBox.CreateGraphics();
+            float femsize;
+            float inisize = _karaokeFont.Size;
+            femsize = g.DpiY * inisize / 72;
+
+
+            float mult = 1.3f; // 1.2 is the default line spacing in Windows Forms
+            float textWidth = MeasureString(S, femsize);
+
+            // Try to fit inside 90% of client width
+            float ClientWidth = 0.90f * pBox.ClientSize.Width;
+
+            if (textWidth > ClientWidth)
+            {
+                do
+                {
+                    inisize--;
+                    if (inisize > 0)
+                    {
+                        femsize = g.DpiY * inisize / 72;
+                        textWidth = MeasureString(S, femsize);
+
+                    }
+                } while (textWidth > ClientWidth && inisize > 0);
+            }
+            else
+            {
+                do
+                {
+                    inisize++;
+                    femsize = g.DpiY * inisize / 72;
+                    textWidth = MeasureString(S, femsize);
+                } while (textWidth < ClientWidth);
+            }
+
+            // ------------------------------
+            // Ajustement in Height
+            // ------------------------------
+            float textHeight = MeasureStringHeight(S, inisize);
+            float totaltextHeight;
+            totaltextHeight = _nbLyricsLines * (textHeight + 10);
+
+            float compHeight = 0.95f * pBox.ClientSize.Height;
+
+            if (totaltextHeight > compHeight)
+            {
+                do
+                {
+                    inisize--;
+                    if (inisize > 0)
+                    {
+                        femsize = g.DpiY * inisize / 72;
+                        textHeight = MeasureStringHeight(S, femsize);
+
+                        totaltextHeight = _nbLyricsLines * (textHeight + 10);
+                    }
+                } while (totaltextHeight > compHeight && inisize > 0);
+            }
+
+
+            if (inisize > 0)
+            {
+                emSize = g.DpiX * inisize / 72;
+                _karaokeFont = new Font(_karaokeFont.FontFamily, emSize, FontStyle.Regular, GraphicsUnit.Pixel);
+
+                // Vertical distance between lines          1.6 is
+                // https://pimpmytype.com/line-length-line-height/ they say 1.6 is the best 
+                _lineHeight = (int)(_lineHeightMultiplier * emSize);
+                // Height of the full song
+                _linesHeight = _nbLyricsLines * _lineHeight;
+
+
+                // Update horizontal measure of lines                
+                for (int i = 0; i < _kLyrics.Lines.Count; i++)
+                {
+                    LinesLengths[i] = MeasureString(_kLyrics.Lines[i].ToString(), _karaokeFont.Size);
+                }
+
+            }
+            g.Dispose();
+        }
+
+        private void AdjustFontSizeWithStretching(int NbLines)
+        {
+            if (pBox == null) return;
+
+            string S = "!/(123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+
+            Graphics g = pBox.CreateGraphics();
+            float femsize;
+            float inisize = _karaokeFont.Size;
+            femsize = g.DpiY * inisize / 72;
+
+            // Try to fit inside 90% of client Height
+            float ClientHeight = pBox.ClientSize.Height;
+
+            float mult = 1.3f; // 1.2 is the default line spacing in Windows Forms
+            float textHeight = MeasureStringHeight(S, femsize);
+            float linesHeight = mult * textHeight * NbLines;
+
+
+            if (linesHeight > ClientHeight)
+            {
+                do
+                {
+                    inisize--;
+                    if (inisize > 0)
+                    {
+                        femsize = g.DpiY * inisize / 72;
+                        linesHeight = mult * MeasureStringHeight(S, femsize) * NbLines;
+
+                    }
+                } while (linesHeight > ClientHeight && inisize > 0);
+            }
+            else
+            {
+                do
+                {
+                    inisize++;
+                    femsize = g.DpiY * inisize / 72;
+                    linesHeight = mult * MeasureStringHeight(S, femsize) * NbLines;
+                } while (linesHeight < ClientHeight);
+            }
+
+            // ------------------------------
+            // Ajustement in width with AverageWidth
+            // ------------------------------
+
+            // Calculate average width of lines and try to fit inside 95% of client width
+            femsize = g.DpiX * inisize / 72;
+            _AverageWidth = GetAverageWidth(_kLyrics, femsize);
+
+            float ClientWidth = (1 - 2 * _marginLeft) * pBox.ClientSize.Width;
+            float textWidth = _AverageWidth;
+
+            if (_AverageWidth > ClientWidth)
+            {
+                do
+                {
+                    inisize--;
+                    if (inisize > 0)
+                    {
+                        femsize = g.DpiX * inisize / 72;
+                        textWidth = GetAverageWidth(_kLyrics, femsize);
+                    }
+                } while (textWidth > ClientWidth && inisize > 0);
+            }
+
+
+            if (inisize > 0)
+            {
+                emSize = g.DpiX * inisize / 72;
+                _karaokeFont = new Font(_karaokeFont.FontFamily, emSize, FontStyle.Regular, GraphicsUnit.Pixel);
+
+                // Vertical distance between lines          1.6 is
+                // https://pimpmytype.com/line-length-line-height/ they say 1.6 is the best 
+                _lineHeight = (int)(_lineHeightMultiplier * emSize);
+                // Height of the full song
+                _linesHeight = _nbLyricsLines * _lineHeight;
+
+
+                // Update horizontal measure of lines                
+                for (int i = 0; i < _kLyrics.Lines.Count; i++)
+                {
+                    LinesLengths[i] = MeasureString(_kLyrics.Lines[i].ToString(), _karaokeFont.Size);
+                }
+
+            }
+            g.Dispose();
+        }
+
 
         private float MeasureStringHeight(string line, float femSize)
         {

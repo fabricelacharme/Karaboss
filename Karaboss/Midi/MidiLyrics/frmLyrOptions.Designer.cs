@@ -132,6 +132,8 @@
             this.btnNewTheme = new System.Windows.Forms.Button();
             this.openFileDialog = new System.Windows.Forms.OpenFileDialog();
             this.pBox = new PicControl.pictureBoxControl();
+            this.cbFontStretching = new System.Windows.Forms.ComboBox();
+            this.lblFontSize = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.UpDownNbLines)).BeginInit();
             this.pnlBalls.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
@@ -727,6 +729,8 @@
             // 
             // grpBoxKaraokeType
             // 
+            this.grpBoxKaraokeType.Controls.Add(this.cbFontStretching);
+            this.grpBoxKaraokeType.Controls.Add(this.lblFontSize);
             this.grpBoxKaraokeType.Controls.Add(this.cbKaraokeType);
             this.grpBoxKaraokeType.Controls.Add(this.label1);
             this.grpBoxKaraokeType.Controls.Add(this.btnHighlightChordColorPicker);
@@ -979,6 +983,24 @@
             this.pBox.TransitionEffect = PicControl.pictureBoxControl.TransitionEffects.None;
             this.pBox.TransparencyKey = System.Drawing.Color.Lime;
             // 
+            // cbFontStretching
+            // 
+            this.cbFontStretching.FormattingEnabled = true;
+            this.cbFontStretching.Items.AddRange(new object[] {
+            resources.GetString("cbFontStretching.Items"),
+            resources.GetString("cbFontStretching.Items1"),
+            resources.GetString("cbFontStretching.Items2"),
+            resources.GetString("cbFontStretching.Items3")});
+            resources.ApplyResources(this.cbFontStretching, "cbFontStretching");
+            this.cbFontStretching.Name = "cbFontStretching";
+            this.cbFontStretching.SelectedIndexChanged += new System.EventHandler(this.cbFontStretching_SelectedIndexChanged);
+            // 
+            // lblFontSize
+            // 
+            this.lblFontSize.ForeColor = System.Drawing.SystemColors.ControlText;
+            resources.ApplyResources(this.lblFontSize, "lblFontSize");
+            this.lblFontSize.Name = "lblFontSize";
+            // 
             // frmLyrOptions
             // 
             resources.ApplyResources(this, "$this");
@@ -1140,5 +1162,7 @@
         private System.Windows.Forms.OpenFileDialog openFileDialog;
         private System.Windows.Forms.RadioButton radioImage;
         private System.Windows.Forms.Button btnDeleteTheme;
+        private System.Windows.Forms.ComboBox cbFontStretching;
+        private System.Windows.Forms.Label lblFontSize;
     }
 }

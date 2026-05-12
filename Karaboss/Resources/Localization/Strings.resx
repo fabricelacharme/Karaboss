@@ -649,4 +649,13 @@
   <data name="DeleteThemeQuestion" xml:space="preserve">
     <value>Delete the theme &lt;{0}&gt;?</value>
   </data>
+  <data name="FontStretchingSmall" xml:space="preserve">
+    <value>Small (no stretching)</value>
+  </data>
+  <data name="FontStretchingMedium" xml:space="preserve">
+    <value>Medium (some stretching)</value>
+  </data>
+  <data name="FontStretchingLarge" xml:space="preserve">
+    <value>Large (most stretching)</value>
+  </data>
 </root>

@@ -36,13 +36,13 @@
             this.radioDiaporama = new System.Windows.Forms.RadioButton();
             this.btnBgColor = new System.Windows.Forms.Button();
             this.btnResetDir = new System.Windows.Forms.Button();
-            this.label6 = new System.Windows.Forms.Label();
+            this.lblPosition = new System.Windows.Forms.Label();
             this.cbSizeMode = new System.Windows.Forms.ComboBox();
-            this.label4 = new System.Windows.Forms.Label();
-            this.label3 = new System.Windows.Forms.Label();
+            this.lblSeconds = new System.Windows.Forms.Label();
+            this.lblFrequency = new System.Windows.Forms.Label();
             this.txtSlideShowFreq = new System.Windows.Forms.TextBox();
             this.btnDirSlideShow = new System.Windows.Forms.Button();
-            this.label2 = new System.Windows.Forms.Label();
+            this.lblSlideshowDirectory = new System.Windows.Forms.Label();
             this.txtSlideShow = new System.Windows.Forms.TextBox();
             this.btnCancel = new System.Windows.Forms.Button();
             this.btnOk = new System.Windows.Forms.Button();
@@ -99,13 +99,15 @@
             this.txtHighlightColor = new System.Windows.Forms.TextBox();
             this.cbFontName = new System.Windows.Forms.ComboBox();
             this.lblHighlightColor = new System.Windows.Forms.Label();
-            this.label12 = new System.Windows.Forms.Label();
+            this.lblVerticalPosition = new System.Windows.Forms.Label();
             this.lblNumberOfLines = new System.Windows.Forms.Label();
             this.UpDownNbLines = new System.Windows.Forms.NumericUpDown();
             this.cbOptionsTextDisplay = new System.Windows.Forms.ComboBox();
             this.grpBoxKaraokeType = new System.Windows.Forms.GroupBox();
+            this.cbFontStretching = new System.Windows.Forms.ComboBox();
+            this.lblFontSize = new System.Windows.Forms.Label();
             this.cbKaraokeType = new System.Windows.Forms.ComboBox();
-            this.label1 = new System.Windows.Forms.Label();
+            this.lblKaraokeType = new System.Windows.Forms.Label();
             this.karaokeEffect1 = new keffect.KaraokeEffect();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
@@ -186,10 +188,10 @@
             this.btnResetDir.UseVisualStyleBackColor = true;
             this.btnResetDir.Click += new System.EventHandler(this.btnResetDir_Click);
             // 
-            // label6
+            // lblPosition
             // 
-            resources.ApplyResources(this.label6, "label6");
-            this.label6.Name = "label6";
+            resources.ApplyResources(this.lblPosition, "lblPosition");
+            this.lblPosition.Name = "lblPosition";
             // 
             // cbSizeMode
             // 
@@ -204,15 +206,15 @@
             this.cbSizeMode.Name = "cbSizeMode";
             this.cbSizeMode.SelectedIndexChanged += new System.EventHandler(this.cbSizeMode_SelectedIndexChanged);
             // 
-            // label4
+            // lblSeconds
             // 
-            resources.ApplyResources(this.label4, "label4");
-            this.label4.Name = "label4";
+            resources.ApplyResources(this.lblSeconds, "lblSeconds");
+            this.lblSeconds.Name = "lblSeconds";
             // 
-            // label3
+            // lblFrequency
             // 
-            resources.ApplyResources(this.label3, "label3");
-            this.label3.Name = "label3";
+            resources.ApplyResources(this.lblFrequency, "lblFrequency");
+            this.lblFrequency.Name = "lblFrequency";
             // 
             // txtSlideShowFreq
             // 
@@ -228,10 +230,10 @@
             this.btnDirSlideShow.UseVisualStyleBackColor = true;
             this.btnDirSlideShow.Click += new System.EventHandler(this.btnDirSlideShow_Click);
             // 
-            // label2
+            // lblSlideshowDirectory
             // 
-            resources.ApplyResources(this.label2, "label2");
-            this.label2.Name = "label2";
+            resources.ApplyResources(this.lblSlideshowDirectory, "lblSlideshowDirectory");
+            this.lblSlideshowDirectory.Name = "lblSlideshowDirectory";
             // 
             // txtSlideShow
             // 
@@ -404,13 +406,13 @@
             // grpBoxSlideShow
             // 
             this.grpBoxSlideShow.Controls.Add(this.txtSlideShow);
-            this.grpBoxSlideShow.Controls.Add(this.label2);
+            this.grpBoxSlideShow.Controls.Add(this.lblSlideshowDirectory);
             this.grpBoxSlideShow.Controls.Add(this.btnDirSlideShow);
             this.grpBoxSlideShow.Controls.Add(this.txtSlideShowFreq);
-            this.grpBoxSlideShow.Controls.Add(this.label3);
-            this.grpBoxSlideShow.Controls.Add(this.label4);
+            this.grpBoxSlideShow.Controls.Add(this.lblFrequency);
+            this.grpBoxSlideShow.Controls.Add(this.lblSeconds);
             this.grpBoxSlideShow.Controls.Add(this.cbSizeMode);
-            this.grpBoxSlideShow.Controls.Add(this.label6);
+            this.grpBoxSlideShow.Controls.Add(this.lblPosition);
             this.grpBoxSlideShow.Controls.Add(this.btnResetDir);
             resources.ApplyResources(this.grpBoxSlideShow, "grpBoxSlideShow");
             this.grpBoxSlideShow.Name = "grpBoxSlideShow";
@@ -624,11 +626,11 @@
             resources.ApplyResources(this.lblHighlightColor, "lblHighlightColor");
             this.lblHighlightColor.Name = "lblHighlightColor";
             // 
-            // label12
+            // lblVerticalPosition
             // 
-            this.label12.ForeColor = System.Drawing.SystemColors.ControlText;
-            resources.ApplyResources(this.label12, "label12");
-            this.label12.Name = "label12";
+            this.lblVerticalPosition.ForeColor = System.Drawing.SystemColors.ControlText;
+            resources.ApplyResources(this.lblVerticalPosition, "lblVerticalPosition");
+            this.lblVerticalPosition.Name = "lblVerticalPosition";
             // 
             // lblNumberOfLines
             // 
@@ -664,15 +666,35 @@
             // 
             // grpBoxKaraokeType
             // 
+            this.grpBoxKaraokeType.Controls.Add(this.cbFontStretching);
+            this.grpBoxKaraokeType.Controls.Add(this.lblFontSize);
             this.grpBoxKaraokeType.Controls.Add(this.cbKaraokeType);
-            this.grpBoxKaraokeType.Controls.Add(this.label1);
+            this.grpBoxKaraokeType.Controls.Add(this.lblKaraokeType);
             this.grpBoxKaraokeType.Controls.Add(this.cbOptionsTextDisplay);
-            this.grpBoxKaraokeType.Controls.Add(this.label12);
+            this.grpBoxKaraokeType.Controls.Add(this.lblVerticalPosition);
             this.grpBoxKaraokeType.Controls.Add(this.lblNumberOfLines);
             this.grpBoxKaraokeType.Controls.Add(this.UpDownNbLines);
             resources.ApplyResources(this.grpBoxKaraokeType, "grpBoxKaraokeType");
             this.grpBoxKaraokeType.Name = "grpBoxKaraokeType";
             this.grpBoxKaraokeType.TabStop = false;
+            // 
+            // cbFontStretching
+            // 
+            this.cbFontStretching.FormattingEnabled = true;
+            this.cbFontStretching.Items.AddRange(new object[] {
+            resources.GetString("cbFontStretching.Items"),
+            resources.GetString("cbFontStretching.Items1"),
+            resources.GetString("cbFontStretching.Items2"),
+            resources.GetString("cbFontStretching.Items3")});
+            resources.ApplyResources(this.cbFontStretching, "cbFontStretching");
+            this.cbFontStretching.Name = "cbFontStretching";
+            this.cbFontStretching.SelectedIndexChanged += new System.EventHandler(this.cbFontStretching_SelectedIndexChanged);
+            // 
+            // lblFontSize
+            // 
+            this.lblFontSize.ForeColor = System.Drawing.SystemColors.ControlText;
+            resources.ApplyResources(this.lblFontSize, "lblFontSize");
+            this.lblFontSize.Name = "lblFontSize";
             // 
             // cbKaraokeType
             // 
@@ -686,11 +708,11 @@
             this.cbKaraokeType.Name = "cbKaraokeType";
             this.cbKaraokeType.SelectedIndexChanged += new System.EventHandler(this.cbKaraokeType_SelectedIndexChanged);
             // 
-            // label1
+            // lblKaraokeType
             // 
-            this.label1.ForeColor = System.Drawing.SystemColors.ControlText;
-            resources.ApplyResources(this.label1, "label1");
-            this.label1.Name = "label1";
+            this.lblKaraokeType.ForeColor = System.Drawing.SystemColors.ControlText;
+            resources.ApplyResources(this.lblKaraokeType, "lblKaraokeType");
+            this.lblKaraokeType.Name = "lblKaraokeType";
             // 
             // karaokeEffect1
             // 
@@ -698,7 +720,7 @@
             this.karaokeEffect1.ActiveColor = System.Drawing.Color.FromArgb(((int)(((byte)(153)))), ((int)(((byte)(180)))), ((int)(((byte)(51)))));
             this.karaokeEffect1.ActiveInstrumentalColor = System.Drawing.Color.Empty;
             this.karaokeEffect1.BackColor = System.Drawing.Color.LightGray;
-            this.karaokeEffect1.Beat = 200;            
+            this.karaokeEffect1.Beat = 200;
             this.karaokeEffect1.bforceUppercase = false;
             this.karaokeEffect1.BgColor = System.Drawing.Color.Empty;
             this.karaokeEffect1.bIsSettings = false;
@@ -707,6 +729,7 @@
             this.karaokeEffect1.bShowParagraphs = true;
             this.karaokeEffect1.bTextBackGround = false;
             this.karaokeEffect1.Duration = 0D;
+            this.karaokeEffect1.FontStretching = "None";
             this.karaokeEffect1.FrameType = "Frame1";
             this.karaokeEffect1.FreqDirSlideShow = 10;
             this.karaokeEffect1.Frequency = 0F;
@@ -931,13 +954,13 @@
         private System.Windows.Forms.RadioButton radioDiaporama;
         private System.Windows.Forms.Button btnBgColor;
         private System.Windows.Forms.Button btnResetDir;
-        private System.Windows.Forms.Label label6;
+        private System.Windows.Forms.Label lblPosition;
         private System.Windows.Forms.ComboBox cbSizeMode;
-        private System.Windows.Forms.Label label4;
-        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.Label lblSeconds;
+        private System.Windows.Forms.Label lblFrequency;
         private System.Windows.Forms.TextBox txtSlideShowFreq;
         private System.Windows.Forms.Button btnDirSlideShow;
-        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Label lblSlideshowDirectory;
         private System.Windows.Forms.TextBox txtSlideShow;
         private System.Windows.Forms.Button btnCancel;
         private System.Windows.Forms.Button btnOk;
@@ -961,7 +984,7 @@
         private System.Windows.Forms.RadioButton radioGradient;
         private System.Windows.Forms.CheckBox chkTopMost;
         private System.Windows.Forms.GroupBox grpBoxSlideShow;
-        private System.Windows.Forms.Label label12;
+        private System.Windows.Forms.Label lblVerticalPosition;
         private System.Windows.Forms.Button btnActiveColor;
         private System.Windows.Forms.Button btnHighlightColor;
         private System.Windows.Forms.Button btnInactiveColor;
@@ -998,7 +1021,7 @@
         private System.Windows.Forms.TextBox txtHighlightColor;
         private System.Windows.Forms.GroupBox grpBoxKaraokeType;
         private System.Windows.Forms.ComboBox cbKaraokeType;
-        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Label lblKaraokeType;
         private System.Windows.Forms.TabControl tabControl1;
         private System.Windows.Forms.TabPage tabPage1;
         private System.Windows.Forms.TabPage tabPage2;
@@ -1017,5 +1040,7 @@
         private System.Windows.Forms.PictureBox picActiveInstrumentalColor;
         private System.Windows.Forms.Button btnActiveInstrumentalColorPicker;
         private System.Windows.Forms.OpenFileDialog openFileDialog;
+        private System.Windows.Forms.ComboBox cbFontStretching;
+        private System.Windows.Forms.Label lblFontSize;
     }
 }

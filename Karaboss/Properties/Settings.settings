@@ -512,5 +512,8 @@
     <Setting Name="SingleImagePath" Type="System.String" Scope="User">
       <Value Profile="(Default)">orange.bmp</Value>
     </Setting>
+    <Setting Name="FontStretching" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Large</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

@@ -285,6 +285,18 @@ namespace Karaboss
             }
         }
 
+        // Font stretching (Small (no stetching), Medium (some stretching), Large (most stretching)
+        private string _FontStretching = "Large";
+        public string FontStretching
+        {
+            get { return _FontStretching; }
+            set
+            {
+                _FontStretching = value;
+                pBox.FontStretching = _FontStretching;
+            }
+        }
+
         #endregion Font
 
 

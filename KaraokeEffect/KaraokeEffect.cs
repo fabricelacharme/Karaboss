@@ -300,6 +300,19 @@ namespace keffect
             }
         }
 
+        // Font stretching (None, Small (no stetching), Medium (some stretching), Large (most stretching)
+        private string _FontStretching = "None";
+        public string FontStretching
+        {
+            get { return _FontStretching; }
+            set
+            {
+                _FontStretching = value;
+                pBox.Invalidate();
+            }
+        }
+
+
         #endregion Font
 
 

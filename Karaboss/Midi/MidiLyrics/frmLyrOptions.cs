@@ -35,13 +35,12 @@ using GradientApp;
 using kar;
 using Karaboss.Resources.Localization;
 using Karaboss.Themes;
+using keffect;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Linq;
-using System.Net;
-using System.Reflection;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 
@@ -132,8 +131,21 @@ namespace Karaboss
         private string ftName = "Arial Black";
         private uint ftSize = 20;
 
+        // Font stretching (Small (no stetching), Medium (some stretching), Large (most stretching)
+        private string _FontStretching = "Large";
+        public string FontStretching
+        {
+            get { return _FontStretching; }
+            set
+            {
+                _FontStretching = value;
+                //pBox.FontStretching = _FontStretching;
+            }
+        }
+
+
         #endregion Fonts
-                                  
+
 
         #region Karaoke display Layout
 
@@ -229,6 +241,7 @@ namespace Karaboss
                 frmMidiLyrics.bShowBalls = Karaclass.m_DisplayBalls;
 
                 frmMidiLyrics.KaraokeFont = _karaokeFont;
+                frmMidiLyrics.FontStretching = FontStretching;
 
                 // Borders
                 frmMidiLyrics.FrameType = FrameType;
@@ -333,7 +346,21 @@ namespace Karaboss
                 }
                 _karaokeFont = new Font(ftName, ftSize, FontStyle.Regular);                
                 pBox.KaraokeFont = _karaokeFont;
-                
+
+
+                // Font stretching
+                PopulateFontStretching();
+                FontStretching = Properties.Settings.Default.FontStretching;
+                for (int i = 0; i < cbFontStretching.Items.Count; i++)
+                {
+                    if (((KeyValuePair<string, string>)cbFontStretching.Items[i]).Key == FontStretching)
+                    {
+                        cbFontStretching.SelectedIndex = i;
+                        break;
+                    }
+                }
+
+
                 #endregion Fonts
 
 
@@ -596,6 +623,21 @@ namespace Karaboss
             }
         }
 
+        private void PopulateFontStretching()
+        {
+            Dictionary<string, string> dicFontStretching = new Dictionary<string, string>();
+            // FontStretching.Add("None", Strings.FontStretchingNone);
+            dicFontStretching.Add("Small", Strings.FontStretchingSmall);
+            dicFontStretching.Add("Medium", Strings.FontStretchingMedium);
+            dicFontStretching.Add("Large", Strings.FontStretchingLarge);
+            cbFontStretching.DataSource = new BindingSource(dicFontStretching, null);
+            cbFontStretching.ValueMember = "Key";
+            cbFontStretching.DisplayMember = "Value";
+            //if (cbFontStretching.Items.Count > 0)
+            //    cbFontStretching.SelectedIndex = 0; // None
+        }
+
+
         /// <summary>
         /// Frames
         /// </summary>
@@ -638,6 +680,7 @@ namespace Karaboss
 
                 // Font                
                 Properties.Settings.Default.KaraokeFontName = ftName;
+                Properties.Settings.Default.FontStretching = FontStretching;
 
                 // Show chords
                 Properties.Settings.Default.bShowChords = _bShowChords;
@@ -1394,6 +1437,20 @@ namespace Karaboss
             pBox.KaraokeFont = _karaokeFont;
         }
 
+        private void cbFontStretching_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (cbFontStretching.SelectedValue.GetType() == typeof(string))
+            {
+                FontStretching = cbFontStretching.SelectedValue.ToString();
+            }
+            else
+            {
+                FontStretching = ((KeyValuePair<string, string>)cbFontStretching.SelectedValue).Key.ToString();
+            }
+            
+            pBox.FontStretching = FontStretching;
+        }
+
         #endregion font
 
 
@@ -1401,7 +1458,7 @@ namespace Karaboss
 
         #region text events
 
-        
+
         private void txtBgColor_TextChanged(object sender, EventArgs e)
         {
             BgColor = Parse(txtBgColor.Text);
@@ -2081,8 +2138,9 @@ namespace Karaboss
 
 
 
+
         #endregion Color Themes
 
-       
+        
     }
 }

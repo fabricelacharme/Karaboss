@@ -443,7 +443,17 @@ namespace PicControl
             }
         }
 
-
+        // Font stretching (None, Small (no stetching), Medium (some stretching), Large (most stretching)
+        private string _FontStretching = "None";
+        public string FontStretching
+        {
+            get { return _FontStretching; }
+            set
+            {
+                _FontStretching = value;
+                pBox.Invalidate();
+            }
+        }
         #endregion Font
 
 
@@ -2763,7 +2773,7 @@ namespace PicControl
             //for (int i = 0; i < lstLyricsLines.Count; i++)
             for (int i = 0; i < _kLyrics.Lines.Count; i++)
             {
-                //if (lstLyricsLines[i].Length > max)
+               
                 if (_kLyrics.Lines[i].ToString().Length > max)
                 {
                     max = _kLyrics.Lines[i].ToString().Length; // lstLyricsLines[i].Length;

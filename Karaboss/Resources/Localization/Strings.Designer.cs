@@ -1756,5 +1756,26 @@ namespace Karaboss.Resources.Localization {
                 return ResourceManager.GetString("DeleteThemeQuestion", resourceCulture);
             }
         }
+        internal static string FontStretchingSmall
+        {
+            get
+            {
+                return ResourceManager.GetString("FontStretchingSmall", resourceCulture);
+            }
+        }
+        internal static string FontStretchingMedium
+        {
+            get
+            {
+                return ResourceManager.GetString("FontStretchingMedium", resourceCulture);
+            }
+        }
+        internal static string FontStretchingLarge
+        {
+            get            
+            {
+                return ResourceManager.GetString("FontStretchingLarge", resourceCulture);
+            }
+        }        
     }
 }

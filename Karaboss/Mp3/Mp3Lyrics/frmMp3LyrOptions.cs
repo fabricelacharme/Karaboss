@@ -88,6 +88,18 @@ namespace Karaboss.Mp3
         private string ftName = "Arial Black";
         private uint ftSize = 20;
 
+        // Font stretching (Small (no stetching), Medium (some stretching), Large (most stretching)
+        private string _FontStretching = "Large";
+        public string FontStretching
+        {
+            get { return _FontStretching; }
+            set
+            {
+                _FontStretching = value;
+                //karaokeEffect1.FontStretching = _FontStretching;
+            }
+        }
+
         #endregion Fonts
 
 
@@ -287,6 +299,21 @@ namespace Karaboss.Mp3
                 }
                 _karaokeFont = new Font(ftName, ftSize, FontStyle.Regular);
                 karaokeEffect1.KaraokeFont = _karaokeFont;
+
+
+                // Font stretching
+                PopulateFontStretching();
+                FontStretching = Properties.Settings.Default.FontStretching;
+                for (int i = 0; i < cbFontStretching.Items.Count; i++)
+                {
+                    if (((KeyValuePair<string, string>)cbFontStretching.Items[i]).Key == FontStretching)
+                    {
+                        cbFontStretching.SelectedIndex = i;
+                        break;
+                    }
+                }
+
+
                 #endregion Fonts
 
 
@@ -539,6 +566,22 @@ namespace Karaboss.Mp3
                 }
             }
         }
+
+
+        private void PopulateFontStretching()
+        {
+            Dictionary<string, string> FontStretching = new Dictionary<string, string>();
+            // FontStretching.Add("None", Strings.FontStretchingNone);
+            FontStretching.Add("Small", Strings.FontStretchingSmall);
+            FontStretching.Add("Medium", Strings.FontStretchingMedium);
+            FontStretching.Add("Large", Strings.FontStretchingLarge);
+            cbFontStretching.DataSource = new BindingSource(FontStretching, null);
+            cbFontStretching.ValueMember = "Key";
+            cbFontStretching.DisplayMember = "Value";
+            //if (cbFontStretching.Items.Count > 0)
+            //    cbFontStretching.SelectedIndex = 0; // None
+        }
+
 
         /// <summary>
         /// Frames
@@ -1215,15 +1258,13 @@ namespace Karaboss.Mp3
         {
             try
             {                
-
                 if (cbKaraokeType.SelectedValue.GetType() == typeof(string))
                 {
                     KaraokeDisplayType = cbKaraokeType.SelectedValue.ToString();
                 }
                 else
                 {
-                    KaraokeDisplayType = ((KeyValuePair<string, string>)cbKaraokeType.SelectedValue).Key.ToString();
-                                    
+                    KaraokeDisplayType = ((KeyValuePair<string, string>)cbKaraokeType.SelectedValue).Key.ToString();                                    
                 }
 
                 switch (KaraokeDisplayType)
@@ -1344,6 +1385,21 @@ namespace Karaboss.Mp3
             _karaokeFont = new Font(ftName, ftSize, FontStyle.Regular);
             karaokeEffect1.KaraokeFont = _karaokeFont;
         }
+
+        private void cbFontStretching_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (cbFontStretching.SelectedValue.GetType() == typeof(string))
+            {
+                FontStretching = cbFontStretching.SelectedValue.ToString();
+            }
+            else
+            {
+                FontStretching = ((KeyValuePair<string, string>)cbFontStretching.SelectedValue).Key.ToString();
+            }
+
+            karaokeEffect1.FontStretching = FontStretching;
+        }
+
 
         #endregion font
 
@@ -1998,6 +2054,7 @@ namespace Karaboss.Mp3
         }
 
         #endregion Color Themes
-            
+
+       
     }
 }

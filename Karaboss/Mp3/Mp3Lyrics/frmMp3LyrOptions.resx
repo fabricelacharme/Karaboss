@@ -157,7 +157,7 @@
     <value>82, 17</value>
   </data>
   <data name="radioTransparent.TabIndex" type="System.Int32, mscorlib">
-    <value>38</value>
+    <value>21</value>
   </data>
   <data name="radioTransparent.Text" xml:space="preserve">
     <value>Transparent</value>
@@ -184,7 +184,7 @@
     <value>75, 17</value>
   </data>
   <data name="radioSolidColor.TabIndex" type="System.Int32, mscorlib">
-    <value>37</value>
+    <value>11</value>
   </data>
   <data name="radioSolidColor.Text" xml:space="preserve">
     <value>Solid Color</value>
@@ -211,7 +211,7 @@
     <value>76, 17</value>
   </data>
   <data name="radioDiaporama.TabIndex" type="System.Int32, mscorlib">
-    <value>36</value>
+    <value>10</value>
   </data>
   <data name="radioDiaporama.Text" xml:space="preserve">
     <value>Diaporama</value>
@@ -238,7 +238,7 @@
     <value>26, 23</value>
   </data>
   <data name="btnBgColor.TabIndex" type="System.Int32, mscorlib">
-    <value>35</value>
+    <value>13</value>
   </data>
   <data name="btnBgColor.Text" xml:space="preserve">
     <value>...</value>
@@ -282,31 +282,31 @@
   <data name="&gt;&gt;btnResetDir.ZOrder" xml:space="preserve">
     <value>8</value>
   </data>
-  <data name="label6.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+  <data name="lblPosition.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
   </data>
-  <data name="label6.Location" type="System.Drawing.Point, System.Drawing">
+  <data name="lblPosition.Location" type="System.Drawing.Point, System.Drawing">
     <value>8, 82</value>
   </data>
-  <data name="label6.Size" type="System.Drawing.Size, System.Drawing">
+  <data name="lblPosition.Size" type="System.Drawing.Size, System.Drawing">
     <value>47, 14</value>
   </data>
-  <data name="label6.TabIndex" type="System.Int32, mscorlib">
-    <value>49</value>
+  <data name="lblPosition.TabIndex" type="System.Int32, mscorlib">
+    <value>29</value>
   </data>
-  <data name="label6.Text" xml:space="preserve">
+  <data name="lblPosition.Text" xml:space="preserve">
     <value>Position:</value>
   </data>
-  <data name="&gt;&gt;label6.Name" xml:space="preserve">
-    <value>label6</value>
+  <data name="&gt;&gt;lblPosition.Name" xml:space="preserve">
+    <value>lblPosition</value>
   </data>
-  <data name="&gt;&gt;label6.Type" xml:space="preserve">
+  <data name="&gt;&gt;lblPosition.Type" xml:space="preserve">
     <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="&gt;&gt;label6.Parent" xml:space="preserve">
+  <data name="&gt;&gt;lblPosition.Parent" xml:space="preserve">
     <value>grpBoxSlideShow</value>
   </data>
-  <data name="&gt;&gt;label6.ZOrder" xml:space="preserve">
+  <data name="&gt;&gt;lblPosition.ZOrder" xml:space="preserve">
     <value>7</value>
   </data>
   <data name="cbSizeMode.Font" type="System.Drawing.Font, System.Drawing">
@@ -334,7 +334,7 @@
     <value>121, 22</value>
   </data>
   <data name="cbSizeMode.TabIndex" type="System.Int32, mscorlib">
-    <value>48</value>
+    <value>30</value>
   </data>
   <data name="&gt;&gt;cbSizeMode.Name" xml:space="preserve">
     <value>cbSizeMode</value>
@@ -348,58 +348,58 @@
   <data name="&gt;&gt;cbSizeMode.ZOrder" xml:space="preserve">
     <value>6</value>
   </data>
-  <data name="label4.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+  <data name="lblSeconds.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
   </data>
-  <data name="label4.Location" type="System.Drawing.Point, System.Drawing">
+  <data name="lblSeconds.Location" type="System.Drawing.Point, System.Drawing">
     <value>158, 54</value>
   </data>
-  <data name="label4.Size" type="System.Drawing.Size, System.Drawing">
+  <data name="lblSeconds.Size" type="System.Drawing.Size, System.Drawing">
     <value>100, 14</value>
   </data>
-  <data name="label4.TabIndex" type="System.Int32, mscorlib">
-    <value>46</value>
+  <data name="lblSeconds.TabIndex" type="System.Int32, mscorlib">
+    <value>28</value>
   </data>
-  <data name="label4.Text" xml:space="preserve">
+  <data name="lblSeconds.Text" xml:space="preserve">
     <value>Seconds</value>
   </data>
-  <data name="&gt;&gt;label4.Name" xml:space="preserve">
-    <value>label4</value>
+  <data name="&gt;&gt;lblSeconds.Name" xml:space="preserve">
+    <value>lblSeconds</value>
   </data>
-  <data name="&gt;&gt;label4.Type" xml:space="preserve">
+  <data name="&gt;&gt;lblSeconds.Type" xml:space="preserve">
     <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="&gt;&gt;label4.Parent" xml:space="preserve">
+  <data name="&gt;&gt;lblSeconds.Parent" xml:space="preserve">
     <value>grpBoxSlideShow</value>
   </data>
-  <data name="&gt;&gt;label4.ZOrder" xml:space="preserve">
+  <data name="&gt;&gt;lblSeconds.ZOrder" xml:space="preserve">
     <value>5</value>
   </data>
-  <data name="label3.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+  <data name="lblFrequency.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
   </data>
-  <data name="label3.Location" type="System.Drawing.Point, System.Drawing">
+  <data name="lblFrequency.Location" type="System.Drawing.Point, System.Drawing">
     <value>8, 54</value>
   </data>
-  <data name="label3.Size" type="System.Drawing.Size, System.Drawing">
+  <data name="lblFrequency.Size" type="System.Drawing.Size, System.Drawing">
     <value>60, 14</value>
   </data>
-  <data name="label3.TabIndex" type="System.Int32, mscorlib">
-    <value>45</value>
+  <data name="lblFrequency.TabIndex" type="System.Int32, mscorlib">
+    <value>26</value>
   </data>
-  <data name="label3.Text" xml:space="preserve">
+  <data name="lblFrequency.Text" xml:space="preserve">
     <value>Frequency:</value>
   </data>
-  <data name="&gt;&gt;label3.Name" xml:space="preserve">
-    <value>label3</value>
+  <data name="&gt;&gt;lblFrequency.Name" xml:space="preserve">
+    <value>lblFrequency</value>
   </data>
-  <data name="&gt;&gt;label3.Type" xml:space="preserve">
+  <data name="&gt;&gt;lblFrequency.Type" xml:space="preserve">
     <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="&gt;&gt;label3.Parent" xml:space="preserve">
+  <data name="&gt;&gt;lblFrequency.Parent" xml:space="preserve">
     <value>grpBoxSlideShow</value>
   </data>
-  <data name="&gt;&gt;label3.ZOrder" xml:space="preserve">
+  <data name="&gt;&gt;lblFrequency.ZOrder" xml:space="preserve">
     <value>4</value>
   </data>
   <data name="txtSlideShowFreq.Font" type="System.Drawing.Font, System.Drawing">
@@ -412,7 +412,7 @@
     <value>35, 22</value>
   </data>
   <data name="txtSlideShowFreq.TabIndex" type="System.Int32, mscorlib">
-    <value>44</value>
+    <value>27</value>
   </data>
   <data name="txtSlideShowFreq.Text" xml:space="preserve">
     <value>10</value>
@@ -439,7 +439,7 @@
     <value>59, 23</value>
   </data>
   <data name="btnDirSlideShow.TabIndex" type="System.Int32, mscorlib">
-    <value>43</value>
+    <value>25</value>
   </data>
   <data name="btnDirSlideShow.Text" xml:space="preserve">
     <value>Change</value>
@@ -456,31 +456,31 @@
   <data name="&gt;&gt;btnDirSlideShow.ZOrder" xml:space="preserve">
     <value>2</value>
   </data>
-  <data name="label2.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+  <data name="lblSlideshowDirectory.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
   </data>
-  <data name="label2.Location" type="System.Drawing.Point, System.Drawing">
+  <data name="lblSlideshowDirectory.Location" type="System.Drawing.Point, System.Drawing">
     <value>8, 26</value>
   </data>
-  <data name="label2.Size" type="System.Drawing.Size, System.Drawing">
+  <data name="lblSlideshowDirectory.Size" type="System.Drawing.Size, System.Drawing">
     <value>103, 14</value>
   </data>
-  <data name="label2.TabIndex" type="System.Int32, mscorlib">
-    <value>42</value>
+  <data name="lblSlideshowDirectory.TabIndex" type="System.Int32, mscorlib">
+    <value>23</value>
   </data>
-  <data name="label2.Text" xml:space="preserve">
+  <data name="lblSlideshowDirectory.Text" xml:space="preserve">
     <value>SlideShow directory:</value>
   </data>
-  <data name="&gt;&gt;label2.Name" xml:space="preserve">
-    <value>label2</value>
+  <data name="&gt;&gt;lblSlideshowDirectory.Name" xml:space="preserve">
+    <value>lblSlideshowDirectory</value>
   </data>
-  <data name="&gt;&gt;label2.Type" xml:space="preserve">
+  <data name="&gt;&gt;lblSlideshowDirectory.Type" xml:space="preserve">
     <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="&gt;&gt;label2.Parent" xml:space="preserve">
+  <data name="&gt;&gt;lblSlideshowDirectory.Parent" xml:space="preserve">
     <value>grpBoxSlideShow</value>
   </data>
-  <data name="&gt;&gt;label2.ZOrder" xml:space="preserve">
+  <data name="&gt;&gt;lblSlideshowDirectory.ZOrder" xml:space="preserve">
     <value>1</value>
   </data>
   <data name="txtSlideShow.Font" type="System.Drawing.Font, System.Drawing">
@@ -493,7 +493,7 @@
     <value>370, 22</value>
   </data>
   <data name="txtSlideShow.TabIndex" type="System.Int32, mscorlib">
-    <value>41</value>
+    <value>24</value>
   </data>
   <data name="&gt;&gt;txtSlideShow.Name" xml:space="preserve">
     <value>txtSlideShow</value>
@@ -517,7 +517,7 @@
     <value>100, 23</value>
   </data>
   <data name="btnCancel.TabIndex" type="System.Int32, mscorlib">
-    <value>53</value>
+    <value>75</value>
   </data>
   <data name="btnCancel.Text" xml:space="preserve">
     <value>Ca&amp;ncel</value>
@@ -544,7 +544,7 @@
     <value>100, 23</value>
   </data>
   <data name="btnOk.TabIndex" type="System.Int32, mscorlib">
-    <value>6</value>
+    <value>74</value>
   </data>
   <data name="btnOk.Text" xml:space="preserve">
     <value>&amp;Ok</value>
@@ -571,7 +571,7 @@
     <value>100, 23</value>
   </data>
   <data name="btnApply.TabIndex" type="System.Int32, mscorlib">
-    <value>51</value>
+    <value>73</value>
   </data>
   <data name="btnApply.Text" xml:space="preserve">
     <value>&amp;Apply</value>
@@ -604,7 +604,7 @@
     <value>104, 17</value>
   </data>
   <data name="chkHighLightProgressive.TabIndex" type="System.Int32, mscorlib">
-    <value>73</value>
+    <value>58</value>
   </data>
   <data name="chkHighLightProgressive.Text" xml:space="preserve">
     <value>Gradient fill color</value>
@@ -631,7 +631,7 @@
     <value>84, 17</value>
   </data>
   <data name="chkDisplayBalls.TabIndex" type="System.Int32, mscorlib">
-    <value>74</value>
+    <value>32</value>
   </data>
   <data name="chkDisplayBalls.Text" xml:space="preserve">
     <value>Display balls</value>
@@ -709,7 +709,7 @@
     <value>385, 17</value>
   </data>
   <data name="pnlBalls.TabIndex" type="System.Int32, mscorlib">
-    <value>75</value>
+    <value>33</value>
   </data>
   <data name="&gt;&gt;pnlBalls.Name" xml:space="preserve">
     <value>pnlBalls</value>
@@ -733,7 +733,7 @@
     <value>25, 23</value>
   </data>
   <data name="btnSelectImage.TabIndex" type="System.Int32, mscorlib">
-    <value>79</value>
+    <value>9</value>
   </data>
   <data name="btnSelectImage.Text" xml:space="preserve">
     <value>...</value>
@@ -766,7 +766,7 @@
     <value>54, 17</value>
   </data>
   <data name="radioImage.TabIndex" type="System.Int32, mscorlib">
-    <value>80</value>
+    <value>7</value>
   </data>
   <data name="radioImage.Text" xml:space="preserve">
     <value>Image</value>
@@ -793,7 +793,7 @@
     <value>117, 22</value>
   </data>
   <data name="txtImage.TabIndex" type="System.Int32, mscorlib">
-    <value>78</value>
+    <value>8</value>
   </data>
   <data name="txtImage.Text" xml:space="preserve">
     <value>orange.bmp</value>
@@ -820,7 +820,7 @@
     <value>141, 21</value>
   </data>
   <data name="cbRhythm1.TabIndex" type="System.Int32, mscorlib">
-    <value>76</value>
+    <value>20</value>
   </data>
   <data name="&gt;&gt;cbRhythm1.Name" xml:space="preserve">
     <value>cbRhythm1</value>
@@ -841,7 +841,7 @@
     <value>141, 21</value>
   </data>
   <data name="cbRhythm0.TabIndex" type="System.Int32, mscorlib">
-    <value>75</value>
+    <value>19</value>
   </data>
   <data name="&gt;&gt;cbRhythm0.Name" xml:space="preserve">
     <value>cbRhythm0</value>
@@ -862,7 +862,7 @@
     <value>141, 21</value>
   </data>
   <data name="cbGrad1.TabIndex" type="System.Int32, mscorlib">
-    <value>74</value>
+    <value>17</value>
   </data>
   <data name="&gt;&gt;cbGrad1.Name" xml:space="preserve">
     <value>cbGrad1</value>
@@ -883,7 +883,7 @@
     <value>141, 21</value>
   </data>
   <data name="cbGrad0.TabIndex" type="System.Int32, mscorlib">
-    <value>73</value>
+    <value>16</value>
   </data>
   <data name="&gt;&gt;cbGrad0.Name" xml:space="preserve">
     <value>cbGrad0</value>
@@ -907,7 +907,7 @@
     <value>61, 17</value>
   </data>
   <data name="radioRhythm.TabIndex" type="System.Int32, mscorlib">
-    <value>72</value>
+    <value>18</value>
   </data>
   <data name="radioRhythm.Text" xml:space="preserve">
     <value>Rhythm</value>
@@ -934,7 +934,7 @@
     <value>92, 17</value>
   </data>
   <data name="radioGradient.TabIndex" type="System.Int32, mscorlib">
-    <value>71</value>
+    <value>15</value>
   </data>
   <data name="radioGradient.Text" xml:space="preserve">
     <value>Color Gradient</value>
@@ -961,7 +961,7 @@
     <value>26, 26</value>
   </data>
   <data name="btnBgColorPicker.TabIndex" type="System.Int32, mscorlib">
-    <value>70</value>
+    <value>14</value>
   </data>
   <data name="&gt;&gt;btnBgColorPicker.Name" xml:space="preserve">
     <value>btnBgColorPicker</value>
@@ -982,7 +982,7 @@
     <value>60, 20</value>
   </data>
   <data name="txtBgColor.TabIndex" type="System.Int32, mscorlib">
-    <value>61</value>
+    <value>12</value>
   </data>
   <data name="txtBgColor.Text" xml:space="preserve">
     <value>#000000</value>
@@ -1003,10 +1003,10 @@
     <value>8, 64</value>
   </data>
   <data name="grpBoxBackGround.Size" type="System.Drawing.Size, System.Drawing">
-    <value>160, 316</value>
+    <value>160, 320</value>
   </data>
   <data name="grpBoxBackGround.TabIndex" type="System.Int32, mscorlib">
-    <value>76</value>
+    <value>6</value>
   </data>
   <data name="grpBoxBackGround.Text" xml:space="preserve">
     <value>Background</value>
@@ -1033,7 +1033,7 @@
     <value>136, 17</value>
   </data>
   <data name="chkTopMost.TabIndex" type="System.Int32, mscorlib">
-    <value>77</value>
+    <value>31</value>
   </data>
   <data name="chkTopMost.Text" xml:space="preserve">
     <value>Windows lyrics topmost</value>
@@ -1057,7 +1057,7 @@
     <value>557, 114</value>
   </data>
   <data name="grpBoxSlideShow.TabIndex" type="System.Int32, mscorlib">
-    <value>78</value>
+    <value>22</value>
   </data>
   <data name="grpBoxSlideShow.Text" xml:space="preserve">
     <value>Diaporama</value>
@@ -1084,7 +1084,7 @@
     <value>25, 23</value>
   </data>
   <data name="btnActiveColor.TabIndex" type="System.Int32, mscorlib">
-    <value>82</value>
+    <value>36</value>
   </data>
   <data name="btnActiveColor.Text" xml:space="preserve">
     <value>...</value>
@@ -1111,7 +1111,7 @@
     <value>25, 23</value>
   </data>
   <data name="btnHighlightColor.TabIndex" type="System.Int32, mscorlib">
-    <value>83</value>
+    <value>40</value>
   </data>
   <data name="btnHighlightColor.Text" xml:space="preserve">
     <value>...</value>
@@ -1138,7 +1138,7 @@
     <value>25, 23</value>
   </data>
   <data name="btnInactiveColor.TabIndex" type="System.Int32, mscorlib">
-    <value>84</value>
+    <value>44</value>
   </data>
   <data name="btnInactiveColor.Text" xml:space="preserve">
     <value>...</value>
@@ -1165,7 +1165,7 @@
     <value>25, 23</value>
   </data>
   <data name="btnActiveBorderColor.TabIndex" type="System.Int32, mscorlib">
-    <value>86</value>
+    <value>48</value>
   </data>
   <data name="btnActiveBorderColor.Text" xml:space="preserve">
     <value>...</value>
@@ -1237,7 +1237,7 @@
     <value>157, 21</value>
   </data>
   <data name="cbFrameType.TabIndex" type="System.Int32, mscorlib">
-    <value>116</value>
+    <value>55</value>
   </data>
   <data name="&gt;&gt;cbFrameType.Name" xml:space="preserve">
     <value>cbFrameType</value>
@@ -1288,7 +1288,7 @@
     <value>38, 13</value>
   </data>
   <data name="lblBorder.TabIndex" type="System.Int32, mscorlib">
-    <value>115</value>
+    <value>54</value>
   </data>
   <data name="lblBorder.Text" xml:space="preserve">
     <value>Border</value>
@@ -1339,7 +1339,7 @@
     <value>26, 26</value>
   </data>
   <data name="btnInactiveBoderColorPicker.TabIndex" type="System.Int32, mscorlib">
-    <value>114</value>
+    <value>53</value>
   </data>
   <data name="&gt;&gt;btnInactiveBoderColorPicker.Name" xml:space="preserve">
     <value>btnInactiveBoderColorPicker</value>
@@ -1363,7 +1363,7 @@
     <value>26, 26</value>
   </data>
   <data name="btnActiveColorBorderPicker.TabIndex" type="System.Int32, mscorlib">
-    <value>113</value>
+    <value>49</value>
   </data>
   <data name="&gt;&gt;btnActiveColorBorderPicker.Name" xml:space="preserve">
     <value>btnActiveColorBorderPicker</value>
@@ -1387,7 +1387,7 @@
     <value>26, 26</value>
   </data>
   <data name="btnInactiveColorPicker.TabIndex" type="System.Int32, mscorlib">
-    <value>112</value>
+    <value>45</value>
   </data>
   <data name="&gt;&gt;btnInactiveColorPicker.Name" xml:space="preserve">
     <value>btnInactiveColorPicker</value>
@@ -1411,7 +1411,7 @@
     <value>108, 17</value>
   </data>
   <data name="chkTextBackground.TabIndex" type="System.Int32, mscorlib">
-    <value>94</value>
+    <value>56</value>
   </data>
   <data name="chkTextBackground.Text" xml:space="preserve">
     <value>Text background</value>
@@ -1438,7 +1438,7 @@
     <value>26, 26</value>
   </data>
   <data name="btnHighlightColorPicker.TabIndex" type="System.Int32, mscorlib">
-    <value>111</value>
+    <value>41</value>
   </data>
   <data name="&gt;&gt;btnHighlightColorPicker.Name" xml:space="preserve">
     <value>btnHighlightColorPicker</value>
@@ -1462,7 +1462,7 @@
     <value>100, 23</value>
   </data>
   <data name="lblFont.TabIndex" type="System.Int32, mscorlib">
-    <value>95</value>
+    <value>32</value>
   </data>
   <data name="lblFont.Text" xml:space="preserve">
     <value>Font</value>
@@ -1489,7 +1489,7 @@
     <value>26, 26</value>
   </data>
   <data name="btnActiveColorPicker.TabIndex" type="System.Int32, mscorlib">
-    <value>110</value>
+    <value>37</value>
   </data>
   <data name="&gt;&gt;btnActiveColorPicker.Name" xml:space="preserve">
     <value>btnActiveColorPicker</value>
@@ -1513,7 +1513,7 @@
     <value>108, 17</value>
   </data>
   <data name="chkTextUppercase.TabIndex" type="System.Int32, mscorlib">
-    <value>96</value>
+    <value>57</value>
   </data>
   <data name="chkTextUppercase.Text" xml:space="preserve">
     <value>Force Uppercase</value>
@@ -1537,7 +1537,7 @@
     <value>60, 20</value>
   </data>
   <data name="txtInactiveBorderColor.TabIndex" type="System.Int32, mscorlib">
-    <value>109</value>
+    <value>51</value>
   </data>
   <data name="txtInactiveBorderColor.Text" xml:space="preserve">
     <value>#8000FF</value>
@@ -1567,7 +1567,7 @@
     <value>96, 13</value>
   </data>
   <data name="label9.TabIndex" type="System.Int32, mscorlib">
-    <value>98</value>
+    <value>46</value>
   </data>
   <data name="label9.Text" xml:space="preserve">
     <value>Active border color</value>
@@ -1591,7 +1591,7 @@
     <value>60, 20</value>
   </data>
   <data name="txtActiveBorderColor.TabIndex" type="System.Int32, mscorlib">
-    <value>108</value>
+    <value>47</value>
   </data>
   <data name="txtActiveBorderColor.Text" xml:space="preserve">
     <value>#010101</value>
@@ -1618,7 +1618,7 @@
     <value>25, 23</value>
   </data>
   <data name="btnInactiveBorderColor.TabIndex" type="System.Int32, mscorlib">
-    <value>99</value>
+    <value>52</value>
   </data>
   <data name="btnInactiveBorderColor.Text" xml:space="preserve">
     <value>...</value>
@@ -1648,7 +1648,7 @@
     <value>104, 13</value>
   </data>
   <data name="label11.TabIndex" type="System.Int32, mscorlib">
-    <value>107</value>
+    <value>50</value>
   </data>
   <data name="label11.Text" xml:space="preserve">
     <value>Inactive border color</value>
@@ -1696,7 +1696,7 @@
     <value>60, 20</value>
   </data>
   <data name="txtInactiveColor.TabIndex" type="System.Int32, mscorlib">
-    <value>106</value>
+    <value>43</value>
   </data>
   <data name="txtInactiveColor.Text" xml:space="preserve">
     <value>#FFFFFF</value>
@@ -1726,7 +1726,7 @@
     <value>63, 13</value>
   </data>
   <data name="lblActiveColor.TabIndex" type="System.Int32, mscorlib">
-    <value>101</value>
+    <value>34</value>
   </data>
   <data name="lblActiveColor.Text" xml:space="preserve">
     <value>Active color</value>
@@ -1756,7 +1756,7 @@
     <value>71, 13</value>
   </data>
   <data name="lblInactiveColor.TabIndex" type="System.Int32, mscorlib">
-    <value>105</value>
+    <value>42</value>
   </data>
   <data name="lblInactiveColor.Text" xml:space="preserve">
     <value>Inactive color</value>
@@ -1780,7 +1780,7 @@
     <value>60, 20</value>
   </data>
   <data name="txtActiveColor.TabIndex" type="System.Int32, mscorlib">
-    <value>102</value>
+    <value>35</value>
   </data>
   <data name="txtActiveColor.Text" xml:space="preserve">
     <value>#9ACD32</value>
@@ -1804,7 +1804,7 @@
     <value>60, 20</value>
   </data>
   <data name="txtHighlightColor.TabIndex" type="System.Int32, mscorlib">
-    <value>118</value>
+    <value>39</value>
   </data>
   <data name="txtHighlightColor.Text" xml:space="preserve">
     <value>#FF0000</value>
@@ -1831,7 +1831,7 @@
     <value>157, 22</value>
   </data>
   <data name="cbFontName.TabIndex" type="System.Int32, mscorlib">
-    <value>103</value>
+    <value>33</value>
   </data>
   <data name="&gt;&gt;cbFontName.Name" xml:space="preserve">
     <value>cbFontName</value>
@@ -1858,7 +1858,7 @@
     <value>74, 13</value>
   </data>
   <data name="lblHighlightColor.TabIndex" type="System.Int32, mscorlib">
-    <value>104</value>
+    <value>38</value>
   </data>
   <data name="lblHighlightColor.Text" xml:space="preserve">
     <value>Highlight color</value>
@@ -1875,44 +1875,44 @@
   <data name="&gt;&gt;lblHighlightColor.ZOrder" xml:space="preserve">
     <value>2</value>
   </data>
-  <data name="label12.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+  <data name="lblVerticalPosition.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
   </data>
-  <data name="label12.Location" type="System.Drawing.Point, System.Drawing">
-    <value>8, 54</value>
+  <data name="lblVerticalPosition.Location" type="System.Drawing.Point, System.Drawing">
+    <value>8, 82</value>
   </data>
-  <data name="label12.Size" type="System.Drawing.Size, System.Drawing">
+  <data name="lblVerticalPosition.Size" type="System.Drawing.Size, System.Drawing">
     <value>100, 14</value>
   </data>
-  <data name="label12.TabIndex" type="System.Int32, mscorlib">
-    <value>117</value>
+  <data name="lblVerticalPosition.TabIndex" type="System.Int32, mscorlib">
+    <value>64</value>
   </data>
-  <data name="label12.Text" xml:space="preserve">
+  <data name="lblVerticalPosition.Text" xml:space="preserve">
     <value>Vertical position</value>
   </data>
-  <data name="&gt;&gt;label12.Name" xml:space="preserve">
-    <value>label12</value>
+  <data name="&gt;&gt;lblVerticalPosition.Name" xml:space="preserve">
+    <value>lblVerticalPosition</value>
   </data>
-  <data name="&gt;&gt;label12.Type" xml:space="preserve">
+  <data name="&gt;&gt;lblVerticalPosition.Type" xml:space="preserve">
     <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="&gt;&gt;label12.Parent" xml:space="preserve">
+  <data name="&gt;&gt;lblVerticalPosition.Parent" xml:space="preserve">
     <value>grpBoxKaraokeType</value>
   </data>
-  <data name="&gt;&gt;label12.ZOrder" xml:space="preserve">
-    <value>3</value>
+  <data name="&gt;&gt;lblVerticalPosition.ZOrder" xml:space="preserve">
+    <value>5</value>
   </data>
   <data name="lblNumberOfLines.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
   </data>
   <data name="lblNumberOfLines.Location" type="System.Drawing.Point, System.Drawing">
-    <value>8, 82</value>
+    <value>8, 110</value>
   </data>
   <data name="lblNumberOfLines.Size" type="System.Drawing.Size, System.Drawing">
     <value>100, 14</value>
   </data>
   <data name="lblNumberOfLines.TabIndex" type="System.Int32, mscorlib">
-    <value>85</value>
+    <value>66</value>
   </data>
   <data name="lblNumberOfLines.Text" xml:space="preserve">
     <value>Number of lines</value>
@@ -1930,16 +1930,16 @@
     <value>grpBoxKaraokeType</value>
   </data>
   <data name="&gt;&gt;lblNumberOfLines.ZOrder" xml:space="preserve">
-    <value>4</value>
+    <value>6</value>
   </data>
   <data name="UpDownNbLines.Location" type="System.Drawing.Point, System.Drawing">
-    <value>116, 79</value>
+    <value>116, 107</value>
   </data>
   <data name="UpDownNbLines.Size" type="System.Drawing.Size, System.Drawing">
     <value>45, 20</value>
   </data>
   <data name="UpDownNbLines.TabIndex" type="System.Int32, mscorlib">
-    <value>92</value>
+    <value>67</value>
   </data>
   <data name="UpDownNbLines.Visible" type="System.Boolean, mscorlib">
     <value>False</value>
@@ -1954,7 +1954,7 @@
     <value>grpBoxKaraokeType</value>
   </data>
   <data name="&gt;&gt;UpDownNbLines.ZOrder" xml:space="preserve">
-    <value>5</value>
+    <value>7</value>
   </data>
   <data name="cbOptionsTextDisplay.Items" xml:space="preserve">
     <value>Top</value>
@@ -1966,13 +1966,13 @@
     <value>Bottom</value>
   </data>
   <data name="cbOptionsTextDisplay.Location" type="System.Drawing.Point, System.Drawing">
-    <value>116, 51</value>
+    <value>116, 79</value>
   </data>
   <data name="cbOptionsTextDisplay.Size" type="System.Drawing.Size, System.Drawing">
     <value>121, 21</value>
   </data>
   <data name="cbOptionsTextDisplay.TabIndex" type="System.Int32, mscorlib">
-    <value>93</value>
+    <value>65</value>
   </data>
   <data name="&gt;&gt;cbOptionsTextDisplay.Name" xml:space="preserve">
     <value>cbOptionsTextDisplay</value>
@@ -1984,7 +1984,67 @@
     <value>grpBoxKaraokeType</value>
   </data>
   <data name="&gt;&gt;cbOptionsTextDisplay.ZOrder" xml:space="preserve">
-    <value>2</value>
+    <value>4</value>
+  </data>
+  <data name="cbFontStretching.Items" xml:space="preserve">
+    <value>Fixed lines</value>
+  </data>
+  <data name="cbFontStretching.Items1" xml:space="preserve">
+    <value>Scrolling lines</value>
+  </data>
+  <data name="cbFontStretching.Items2" xml:space="preserve">
+    <value>Two lines (swapped)</value>
+  </data>
+  <data name="cbFontStretching.Items3" xml:space="preserve">
+    <value>Four lines (swapped)</value>
+  </data>
+  <data name="cbFontStretching.Location" type="System.Drawing.Point, System.Drawing">
+    <value>116, 23</value>
+  </data>
+  <data name="cbFontStretching.Size" type="System.Drawing.Size, System.Drawing">
+    <value>174, 21</value>
+  </data>
+  <data name="cbFontStretching.TabIndex" type="System.Int32, mscorlib">
+    <value>61</value>
+  </data>
+  <data name="&gt;&gt;cbFontStretching.Name" xml:space="preserve">
+    <value>cbFontStretching</value>
+  </data>
+  <data name="&gt;&gt;cbFontStretching.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ComboBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;cbFontStretching.Parent" xml:space="preserve">
+    <value>grpBoxKaraokeType</value>
+  </data>
+  <data name="&gt;&gt;cbFontStretching.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="lblFontSize.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="lblFontSize.Location" type="System.Drawing.Point, System.Drawing">
+    <value>8, 26</value>
+  </data>
+  <data name="lblFontSize.Size" type="System.Drawing.Size, System.Drawing">
+    <value>100, 14</value>
+  </data>
+  <data name="lblFontSize.TabIndex" type="System.Int32, mscorlib">
+    <value>60</value>
+  </data>
+  <data name="lblFontSize.Text" xml:space="preserve">
+    <value>Font size</value>
+  </data>
+  <data name="&gt;&gt;lblFontSize.Name" xml:space="preserve">
+    <value>lblFontSize</value>
+  </data>
+  <data name="&gt;&gt;lblFontSize.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;lblFontSize.Parent" xml:space="preserve">
+    <value>grpBoxKaraokeType</value>
+  </data>
+  <data name="&gt;&gt;lblFontSize.ZOrder" xml:space="preserve">
+    <value>1</value>
   </data>
   <data name="cbKaraokeType.Items" xml:space="preserve">
     <value>Fixed lines</value>
@@ -1999,13 +2059,13 @@
     <value>Four lines (swapped)</value>
   </data>
   <data name="cbKaraokeType.Location" type="System.Drawing.Point, System.Drawing">
-    <value>116, 23</value>
+    <value>116, 51</value>
   </data>
   <data name="cbKaraokeType.Size" type="System.Drawing.Size, System.Drawing">
     <value>174, 21</value>
   </data>
   <data name="cbKaraokeType.TabIndex" type="System.Int32, mscorlib">
-    <value>118</value>
+    <value>63</value>
   </data>
   <data name="&gt;&gt;cbKaraokeType.Name" xml:space="preserve">
     <value>cbKaraokeType</value>
@@ -2017,43 +2077,43 @@
     <value>grpBoxKaraokeType</value>
   </data>
   <data name="&gt;&gt;cbKaraokeType.ZOrder" xml:space="preserve">
-    <value>0</value>
+    <value>2</value>
   </data>
-  <data name="label1.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+  <data name="lblKaraokeType.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
   </data>
-  <data name="label1.Location" type="System.Drawing.Point, System.Drawing">
-    <value>8, 26</value>
+  <data name="lblKaraokeType.Location" type="System.Drawing.Point, System.Drawing">
+    <value>8, 54</value>
   </data>
-  <data name="label1.Size" type="System.Drawing.Size, System.Drawing">
+  <data name="lblKaraokeType.Size" type="System.Drawing.Size, System.Drawing">
     <value>100, 14</value>
   </data>
-  <data name="label1.TabIndex" type="System.Int32, mscorlib">
-    <value>119</value>
+  <data name="lblKaraokeType.TabIndex" type="System.Int32, mscorlib">
+    <value>62</value>
   </data>
-  <data name="label1.Text" xml:space="preserve">
+  <data name="lblKaraokeType.Text" xml:space="preserve">
     <value>Karaoke type</value>
   </data>
-  <data name="&gt;&gt;label1.Name" xml:space="preserve">
-    <value>label1</value>
+  <data name="&gt;&gt;lblKaraokeType.Name" xml:space="preserve">
+    <value>lblKaraokeType</value>
   </data>
-  <data name="&gt;&gt;label1.Type" xml:space="preserve">
+  <data name="&gt;&gt;lblKaraokeType.Type" xml:space="preserve">
     <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="&gt;&gt;label1.Parent" xml:space="preserve">
+  <data name="&gt;&gt;lblKaraokeType.Parent" xml:space="preserve">
     <value>grpBoxKaraokeType</value>
   </data>
-  <data name="&gt;&gt;label1.ZOrder" xml:space="preserve">
-    <value>1</value>
+  <data name="&gt;&gt;lblKaraokeType.ZOrder" xml:space="preserve">
+    <value>3</value>
   </data>
   <data name="grpBoxKaraokeType.Location" type="System.Drawing.Point, System.Drawing">
-    <value>580, 390</value>
+    <value>580, 368</value>
   </data>
   <data name="grpBoxKaraokeType.Size" type="System.Drawing.Size, System.Drawing">
-    <value>304, 114</value>
+    <value>304, 136</value>
   </data>
   <data name="grpBoxKaraokeType.TabIndex" type="System.Int32, mscorlib">
-    <value>80</value>
+    <value>59</value>
   </data>
   <data name="grpBoxKaraokeType.Text" xml:space="preserve">
     <value>Layout</value>
@@ -2088,7 +2148,7 @@
     <value>387, 214</value>
   </data>
   <data name="karaokeEffect1.TabIndex" type="System.Int32, mscorlib">
-    <value>81</value>
+    <value>34</value>
   </data>
   <data name="&gt;&gt;karaokeEffect1.Name" xml:space="preserve">
     <value>karaokeEffect1</value>
@@ -2139,7 +2199,7 @@
     <value>60, 20</value>
   </data>
   <data name="txtActiveInstrumentalColor.TabIndex" type="System.Int32, mscorlib">
-    <value>77</value>
+    <value>70</value>
   </data>
   <data name="txtActiveInstrumentalColor.Text" xml:space="preserve">
     <value>#808080</value>
@@ -2166,7 +2226,7 @@
     <value>25, 23</value>
   </data>
   <data name="btnActiveInstrumentalColor.TabIndex" type="System.Int32, mscorlib">
-    <value>74</value>
+    <value>71</value>
   </data>
   <data name="btnActiveInstrumentalColor.Text" xml:space="preserve">
     <value>...</value>
@@ -2199,7 +2259,7 @@
     <value>63, 13</value>
   </data>
   <data name="label5.TabIndex" type="System.Int32, mscorlib">
-    <value>76</value>
+    <value>69</value>
   </data>
   <data name="label5.Text" xml:space="preserve">
     <value>Active color</value>
@@ -2250,7 +2310,7 @@
     <value>26, 26</value>
   </data>
   <data name="btnActiveInstrumentalColorPicker.TabIndex" type="System.Int32, mscorlib">
-    <value>78</value>
+    <value>72</value>
   </data>
   <data name="&gt;&gt;btnActiveInstrumentalColorPicker.Name" xml:space="preserve">
     <value>btnActiveInstrumentalColorPicker</value>
@@ -2301,7 +2361,7 @@
     <value>304, 300</value>
   </data>
   <data name="tabControl1.TabIndex" type="System.Int32, mscorlib">
-    <value>120</value>
+    <value>68</value>
   </data>
   <data name="&gt;&gt;tabControl1.Name" xml:space="preserve">
     <value>tabControl1</value>
@@ -2325,7 +2385,7 @@
     <value>100, 23</value>
   </data>
   <data name="btnDeleteTheme.TabIndex" type="System.Int32, mscorlib">
-    <value>89</value>
+    <value>5</value>
   </data>
   <data name="btnDeleteTheme.Text" xml:space="preserve">
     <value>Delete</value>
@@ -2352,7 +2412,7 @@
     <value>100, 23</value>
   </data>
   <data name="btnNewTheme.TabIndex" type="System.Int32, mscorlib">
-    <value>88</value>
+    <value>4</value>
   </data>
   <data name="btnNewTheme.Text" xml:space="preserve">
     <value>New</value>
@@ -2369,6 +2429,9 @@
   <data name="&gt;&gt;btnNewTheme.ZOrder" xml:space="preserve">
     <value>1</value>
   </data>
+  <data name="cbTheme.ItemHeight" type="System.Int32, mscorlib">
+    <value>13</value>
+  </data>
   <data name="cbTheme.Location" type="System.Drawing.Point, System.Drawing">
     <value>60, 17</value>
   </data>
@@ -2376,7 +2439,7 @@
     <value>121, 21</value>
   </data>
   <data name="cbTheme.TabIndex" type="System.Int32, mscorlib">
-    <value>87</value>
+    <value>2</value>
   </data>
   <data name="&gt;&gt;cbTheme.Name" xml:space="preserve">
     <value>cbTheme</value>
@@ -2403,7 +2466,7 @@
     <value>40, 13</value>
   </data>
   <data name="lblTheme.TabIndex" type="System.Int32, mscorlib">
-    <value>85</value>
+    <value>1</value>
   </data>
   <data name="lblTheme.Text" xml:space="preserve">
     <value>Theme</value>
@@ -2430,7 +2493,7 @@
     <value>100, 23</value>
   </data>
   <data name="btnSaveTheme.TabIndex" type="System.Int32, mscorlib">
-    <value>86</value>
+    <value>3</value>
   </data>
   <data name="btnSaveTheme.Text" xml:space="preserve">
     <value>Save</value>
@@ -2454,7 +2517,7 @@
     <value>872, 52</value>
   </data>
   <data name="groupBox1.TabIndex" type="System.Int32, mscorlib">
-    <value>121</value>
+    <value>0</value>
   </data>
   <data name="&gt;&gt;groupBox1.Name" xml:space="preserve">
     <value>groupBox1</value>
