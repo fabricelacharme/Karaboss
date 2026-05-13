@@ -226,6 +226,7 @@ namespace Karaboss.Mp3
         double _nexttime;
         double _lasttime;
 
+        private int _CurrentLineToShow = 0;
         private int _FirstLineToShow = 0;
         private int _LastLineToShow = 0;
 
@@ -779,10 +780,23 @@ namespace Karaboss.Mp3
         #endregion Text transform
 
 
+        #region Vertical scrolling
+
+        private float[] linesYCoordinates;
+        private float vposition = 0;
+        private float vspeed = 0.5f;
+
+        private Timer _timerScroll = new Timer();
+
+
+        #endregion Vertical scrolling
+
+
         public frmTest(string fileName, double duration, kLyrics kls)
         {
             InitializeComponent();
 
+            _bIsSettings = false;
 
             SetDefaultValues();
             LoadOptions();
@@ -791,8 +805,6 @@ namespace Karaboss.Mp3
             Duration = duration;
             KLyrics = kls;              // This will launch Init
             bDrawFileName = true;
-
-
         }
 
 
@@ -879,7 +891,7 @@ namespace Karaboss.Mp3
                 #endregion Backgrounds
 
 
-                #region Lyrics position
+                #region Lyrics vertical position
 
                 switch (Properties.Settings.Default.LyricsOptionDisplay)
                 {
@@ -898,7 +910,7 @@ namespace Karaboss.Mp3
                 }
                 OptionDisplay = _OptionDisplay;
 
-                #endregion Lyrics position
+                #endregion Lyrics vertical position
 
 
                 bTextBackGround = Properties.Settings.Default.bLyricsBackGround;
@@ -1193,12 +1205,14 @@ namespace Karaboss.Mp3
 
 
         private void Init()
-        {                        
-
+        {
             // Fonts
             //emSize = this.Font.Size;
             //_karaokeFont = new Font("Arial Black", emSize, FontStyle.Regular, GraphicsUnit.Pixel);            
 
+
+            #region Karaoke display type
+            
             // Update _nbLyricsLines if layout changed in options           
             switch (KaraokeDisplayType)
             {
@@ -1212,37 +1226,32 @@ namespace Karaboss.Mp3
                     _nbLyricsLines = 2;
                     break;
                 case KaraokeDisplayTypes.ScrollingLinesBottomUp:
-                    _nbLyricsLines = _nbLyricsLinesOrg;
+                    //_nbLyricsLines = _kLyrics.Lines.Count;
+                    _nbLyricsLines = 6;
                     break;
                 case KaraokeDisplayTypes.ScrollingLinesTopDown:
-                    _nbLyricsLines = _nbLyricsLinesOrg;
+                    //_nbLyricsLines = _kLyrics.Lines.Count;
+                    _nbLyricsLines = 6;
                     break;
                 default:
                     _nbLyricsLines = _nbLyricsLinesOrg;
                     break;
             }
 
+            _LastLineToShow = SetLastLineToShow(_FirstLineToShow, _kLyrics.Lines.Count, _nbLyricsLines);
 
-            // Colors
-            /*
-            _BgColor = Parse("#FCA903");
-
-            _ActiveColor = Parse("#00ACFF");
-            _HighlightColor = Parse("#FFFF00");
-            _InactiveColor = Parse("#FFFFFF");
             
-            _ActiveBorderColor = Parse("#010101");
-            _InactiveBorderColor = Parse("#8000FF");
 
-            _ActiveInstrumentalColor = Parse("#808080");
-            */
-           
-
-            _bIsSettings = false;
+            #endregion Karaoke display type
 
 
             // Do not display paragraphs for some cases
-            if (KaraokeDisplayType == KaraokeDisplayTypes.TwoLinesSwapped || KaraokeDisplayType == KaraokeDisplayTypes.FourLinesSwapped || !bShowParagraphs)
+            if (KaraokeDisplayType == KaraokeDisplayTypes.TwoLinesSwapped 
+                || KaraokeDisplayType == KaraokeDisplayTypes.FourLinesSwapped 
+                || KaraokeDisplayType == KaraokeDisplayTypes.ScrollingLinesBottomUp
+                || KaraokeDisplayType == KaraokeDisplayTypes.ScrollingLinesTopDown
+                || !bShowParagraphs
+                )
             {
                 if (!_bIsSettings)
                     _kLyrics = RemoveParagraphs(_kLyrics);
@@ -1279,6 +1288,9 @@ namespace Karaboss.Mp3
             }
             return tx;
         }
+
+
+       
 
 
         #endregion initializations
@@ -1338,9 +1350,6 @@ namespace Karaboss.Mp3
 
                 //_FirstLineToShow = _line;
                 _LastLineToShow = SetLastLineToShow(_FirstLineToShow, _kLyrics.Lines.Count, _nbLyricsLines);
-
-
-
 
                 // StartTime of nextindex
                 if (nextindex < _kLyrics.Lines[_FirstLineToShow].Syllables.Count())
@@ -1630,7 +1639,7 @@ namespace Karaboss.Mp3
                     DrawTextWithFixedLines(e);
                     break;
                 case KaraokeDisplayTypes.ScrollingLinesBottomUp:
-                    //DrawTextWithScrollingLinesBottomUp(e);
+                    DrawTextWithScrollingLinesBottomUp(e);
                     break;
                 case KaraokeDisplayTypes.ScrollingLinesTopDown:
                     //DrawTextWithScrollingLinesTopDown(e);
@@ -2727,6 +2736,137 @@ namespace Karaboss.Mp3
         #endregion Draw text with fixed lines
 
 
+
+        #region Draw scrolling text
+
+        #region Draw scrolling text bottom up
+        
+        private void DrawTextWithScrollingLinesBottomUp(PaintEventArgs e)
+        {
+            switch (FrameType)
+            {
+                case "NoBorder":
+                case "FrameThin":
+                case "Frame1":
+                case "Frame2":
+                case "Frame3":
+                case "Frame4":
+                case "Frame5":
+                    ScrollingBottomUpDrawTextWithBorder(e);
+                    break;
+                case "Shadow":
+                    //ScrollingBottomUpDrawTextWithShadow(e);
+                    break; ;
+                case "Neon":
+                    //ScrollingBottomUpDrawTextWithNeon(e);
+                    break; ;
+                default:
+                    //ScrollingBottomUpDrawTextWithBorder(e);
+                    break;
+            }
+        }
+
+        private void ScrollingBottomUpDrawTextWithBorder(PaintEventArgs e)
+        {
+            if (_kLyrics.Lines.Count == 0) return;
+
+            if (linesYCoordinates == null) return;
+
+
+            //vposition = _linesHeight - (float)(_linesHeight * (PlayerPositionMilliseconds / (_duration * 1000)));
+            vposition = _linesHeight * (float)((PlayerPositionMilliseconds / (_duration * 1000)));
+
+            //DrawActiveLineWithBorders(e, _FirstLineToShow, (int)vposition);
+
+            int y = 0;
+            
+            for (int i = 0; i < _kLyrics.Lines.Count; i++)
+            {                
+                y += (int)(linesYCoordinates[i]);
+                
+                if (i == _FirstLineToShow)
+                    DrawActiveLineWithBorders(e, i, 100 + (int)(y - vposition));
+                else 
+                    DrawInactiveLineWithBorders(e, i, 100 + (int)(y - vposition));
+            }
+            
+
+
+            //vposition =  (float) ( (pBox.ClientSize.Height / 2) * (_duration * 1000 - PlayerPositionMilliseconds)/ (_duration * 1000));// / _linesHeight;           
+            /*
+            if (_FirstLineToShow != _CurrentLineToShow)
+            {
+                // Line has changed, update vposition to avoid jump of text                
+                _CurrentLineToShow = _FirstLineToShow;
+                vposition = 100;
+            }
+            */
+
+            /*
+            e.Graphics.TranslateTransform(0, vposition - _lineHeight);
+            if (_FirstLineToShow > 0)
+                DrawInactiveLineWithBorders(e, _FirstLineToShow - 1, (int)vposition);
+
+            e.Graphics.TranslateTransform(0, vposition);
+            DrawActiveLineWithBorders(e, _FirstLineToShow, (int)vposition);
+
+            e.Graphics.TranslateTransform(0, vposition + _lineHeight);
+            if (_FirstLineToShow + 1 < _kLyrics.Lines.Count)
+                DrawInactiveLineWithBorders(e, _FirstLineToShow + 1, (int)vposition);
+            
+            e.Graphics.ResetTransform();
+            */
+
+            
+
+            /*
+            int y;
+
+            for (int i = 0; i < _kLyrics.Lines.Count; i++)
+            {
+                if (i < _FirstLineToShow)
+                {
+                    y = (int)(vposition - (_FirstLineToShow - i) * linesYCoordinates[i]); // _lineHeight;            
+                    e.Graphics.TranslateTransform(0, y);
+                    // Draw already sung lines above active line
+                    DrawInactiveLineWithBorders(e, i, (int)vposition);
+                    
+                }
+                else if (i == _FirstLineToShow)
+                {
+                    y = (int)vposition; // active line is at vposition
+                    e.Graphics.TranslateTransform(0, y);
+                    // Draw active line
+                    DrawActiveLineWithBorders(e, i, y);
+                }
+                else if (i > _FirstLineToShow)
+                {
+                    y = (int)(vposition + (i - _FirstLineToShow) * linesYCoordinates[i]); // _lineHeight;
+                    if (y < pBox.ClientSize.Height)
+                    {
+                        e.Graphics.TranslateTransform(0, y);
+                        // Draw not yet sung lines below active line
+                        DrawInactiveLineWithBorders(e, i, (int)vposition);
+                    }
+                }                
+            }
+            e.Graphics.ResetTransform();            
+            */
+        }
+
+
+        #endregion Draw scrolling text bottom up
+
+
+        #region Draw scrolling text top down
+
+        #endregion Draw scrolling text top down
+
+
+        #endregion Draw scrolling text
+
+
+
         #endregion Paint
 
 
@@ -2999,6 +3139,11 @@ namespace Karaboss.Mp3
         {
             if (pBox == null) return;
 
+            // Calculate Font size as if there is only 6 lines to display in order to have bigger font size.
+            if (KaraokeDisplayType == KaraokeDisplayTypes.ScrollingLinesBottomUp || KaraokeDisplayType == KaraokeDisplayTypes.ScrollingLinesTopDown)
+                NbLines = 6;
+
+            
             string S = "!/(123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
             Graphics g = pBox.CreateGraphics();
@@ -3174,6 +3319,7 @@ namespace Karaboss.Mp3
             TargetPositionMilliseconds = 0;
 
             _FirstLineToShow = 0;
+            _CurrentLineToShow = -1;
 
             percent = 0;
             lastpercent = 0;
@@ -3182,6 +3328,8 @@ namespace Karaboss.Mp3
             _lasttime = 0;
             lastCurLength = 0;
             CurLength = 0;
+
+            InitScrollMode();
         }
 
 
@@ -3210,10 +3358,82 @@ namespace Karaboss.Mp3
             highlight_fragment = string.Empty;
             inactive_fragment = string.Empty;
 
+            _timerScroll.Stop();
+
+
             pBox.Invalidate();
         }
 
         #endregion Start , Stop
+
+
+        #region Scrolling
+
+        private void InitScrollMode()
+        {
+            if (KaraokeDisplayType == KaraokeDisplayTypes.ScrollingLinesBottomUp || KaraokeDisplayType == KaraokeDisplayTypes.ScrollingLinesTopDown)
+            {
+                linesYCoordinates = new float[_kLyrics.Lines.Count];
+                float t = 0;
+                float last_t = 0;
+                float min = (float)_duration * 1000;
+                // Total height = _lineHeight
+                // calculate the y-coordinate of each line according to its start time and the current position of the player
+                //_linesHeight = _kLyrics.Lines.Count * _lineHeight;
+                
+                //Search for the minimum duration between 2 lines
+                // min = _lineHeight
+                for (int i = 0; i < _kLyrics.Lines.Count; i++)
+                {
+                    t = (float)_kLyrics.Lines[i].Syllables.First().StartTime;
+                    if (t > 0 && last_t > 0 && t != last_t && t - last_t < min)
+                        min = t - last_t;
+                    last_t = t;
+                }
+
+
+                last_t = 0;
+                for (int i = 0; i < _kLyrics.Lines.Count; i++)
+                {
+                    t = (float)_kLyrics.Lines[i].Syllables.First().StartTime;
+                    linesYCoordinates[i] = ((t - last_t) / min) * _lineHeight;
+                    
+                    last_t = t;
+
+                    //float y = ((t / ((float)_duration * 1000))) * min;   // y is the distance between the line and the first line of the song (line 0) and is proportional to the start time of the line
+                    //linesYCoordinates[i] = y;
+                }
+
+
+                float total = 0;
+                for (int i = 0; i < linesYCoordinates.Length; i++)
+                {
+                    total += linesYCoordinates[i];
+                }
+                _linesHeight = (int)total;          // Height of the full song in scrolling mode is the sum of the distances between lines
+
+
+                _timerScroll.Interval = 50;
+                _timerScroll.Tick += TimerScroll_Tick;
+                //_timerScroll.Start();
+            }
+            else
+            {
+                _timerScroll.Stop();
+            }
+        }
+
+        private void TimerScroll_Tick(object sender, EventArgs e)
+        {            
+            //vposition = _linesHeight - (float)(_linesHeight * (PlayerPositionMilliseconds / (_duration * 1000)));
+
+            //Console.WriteLine($"PlayerPositionMilliseconds: {PlayerPositionMilliseconds}, vposition: {vposition}");
+            //vposition = (float)((pBox.ClientSize.Height / 2) * (_duration * 1000 - PlayerPositionMilliseconds) / (_duration * 1000));// / _linesHeight;
+            //pBox.Invalidate();
+
+        }
+
+        #endregion Scrolling
 
     }
 }
