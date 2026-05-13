@@ -325,6 +325,7 @@ namespace Karaboss.Mp3
 
 
         #region Font
+
         private string ftName = "Arial Black";
         private uint ftSize = 20;
 
@@ -2749,7 +2750,10 @@ namespace Karaboss.Mp3
                     break;
 
                 case Karaclass.OptionsDisplay.Top:
-                    y = 0;
+                    if (bDrawFileName)
+                        y = (int)(_titleMarginTop * pBox.Height);
+                    else
+                        y = 0;
                     break;
 
                 case Karaclass.OptionsDisplay.Bottom:
