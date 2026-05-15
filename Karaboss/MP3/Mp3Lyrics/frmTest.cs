@@ -1570,7 +1570,7 @@ namespace Karaboss.Mp3
                 {
                     // Calculate endTime between _FirstLineToShow and the next Text line located in _FirstLineToShow + 2 when Four Lines swapped and _FirstLineToShow + 1 for Two lines swapped
 
-                    if (KaraokeDisplayType == KaraokeDisplayTypes.TwoLinesSwapped)
+                    if (KaraokeDisplayType == KaraokeDisplayTypes.TwoLinesSwapped || KaraokeDisplayType == KaraokeDisplayTypes.ScrollingLinesBottomUp)
                     {
                         if (_FirstLineToShow + 1 < _kLyrics.Lines.Count)
                             TargetPositionMilliseconds = _kLyrics.Lines[_FirstLineToShow + 1].Syllables.First().StartTime;   // Position in the song to reach = next real syllable                                                               
@@ -1584,7 +1584,6 @@ namespace Karaboss.Mp3
                             TargetPositionMilliseconds = _kLyrics.Lines[_FirstLineToShow + 2].Syllables.First().StartTime;   // Position in the song to reach = next real syllable                                                               
                         else
                             TargetPositionMilliseconds = _duration;                                                  // Position in the song to reach = end of song
-
                     }
 
                     _endTime = DateTime.Now.AddMilliseconds(TargetPositionMilliseconds - (_kLyrics.Lines[_FirstLineToShow].Syllables.Last().StartTime + _kLyrics.Lines[_FirstLineToShow].Syllables.Last().Duration));
@@ -2780,45 +2779,79 @@ namespace Karaboss.Mp3
             }
         }
 
+
+        private bool bShowInformation = false;
+
         private void ScrollingBottomUpDrawTextWithBorder(PaintEventArgs e)
         {
             if (_kLyrics.Lines.Count == 0) return;
             if (linesYCoordinates == null) return;
             int y = 0;
 
+            int TopMargin = bDrawFileName ? pBox.ClientRectangle.Top + (int)(_titleMarginTop * pBox.Height) : pBox.ClientRectangle.Top;
+            int BottomMargin = pBox.ClientRectangle.Bottom;
 
-            // Calculate vertical position of the lines according to the position of the song in the current line
-            vposition =  (float)( ( PlayerPositionMilliseconds) * (_linesHeight / (_kLyrics.Lines.Last().Syllables.First().StartTime )));
+            #region Draw FileName
 
+            // Draw file name if required
+            if (bDrawFileName)
+                DrawFileName(e, FileName, 0.33f * _karaokeFont.Size);
 
-            /*
-               if (_kLyrics.Lines[i].Syllables.Last().CharType == Syllable.CharTypes.Information)
-               {
-                   DrawInformation(e, i, SecondsBeforeSinging, y);
-               }
-               */
+            #endregion Draw FileName
 
             
+            #region check whether to show information and update instrumental and countdown state
+
+            if (_kLyrics.Lines[_FirstLineToShow].Syllables.Last().CharType == Syllable.CharTypes.Information)
+            {
+                bShowInformation = true;
+                CheckIfInstrumentalBegins();
+                UpdateCountDown();
+            }
+            else
+            {
+                bShowInformation = false;
+            }
+            #endregion check whether to show information and update instrumental and countdown state
+
+
+            if (bShowInformation)
+            {                                
+                DrawInformation(e, _FirstLineToShow, SecondsBeforeSinging, pBox.ClientRectangle.Top + pBox.ClientRectangle.Height / 2);
+            }
+
+
+
+            // Calculate vertical position of the lines according to the position of the song in the current line
+            vposition = (float)((PlayerPositionMilliseconds) * (_linesHeight / (_kLyrics.Lines.Last().Syllables.First().StartTime)));
 
             for (int i = 0; i < _kLyrics.Lines.Count; i++)
             {                          
-
                 y = pBox.ClientRectangle.Top + pBox.ClientRectangle.Height/2 + (int)(linesYCoordinates[i]) ;
 
-                if (y - vposition < pBox.ClientRectangle.Top - _lineHeight || y - vposition > pBox.ClientRectangle.Bottom + _lineHeight)
+
+                #region Do not draw lines that are out of the control
+
+                //if (y - vposition < pBox.ClientRectangle.Top - _lineHeight)
+                if (y - vposition < TopMargin)
                 {
                     // Do not draw lines that are out of the control
                     continue;
-                }
-
+                }                
                 if (_kLyrics.Lines[i].Syllables.Last().CharType == Syllable.CharTypes.Information)
                 {
-                    DrawInformation(e, i, SecondsBeforeSinging, y);
+                    // Do not draw lines of information                    
+                    continue;
                 }
 
-                
+                if ( y - vposition > BottomMargin)                                  //pBox.ClientRectangle.Bottom + _lineHeight)
+                    break; // Do not draw lines that are out of the control
+
+                #endregion Do not draw lines that are out of the control
+
+
                 if (i == _FirstLineToShow)
-                {
+                {                       
                     e.Graphics.TranslateTransform(0, -vposition);
                     DrawActiveLineWithBorders(e, i, y);
                 }

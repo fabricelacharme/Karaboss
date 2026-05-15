@@ -34,7 +34,7 @@
             // 
             // pBox
             // 
-            this.pBox.BackColor = System.Drawing.Color.Silver;
+            this.pBox.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(252)))), ((int)(((byte)(169)))), ((int)(((byte)(3)))));
             this.pBox.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pBox.Location = new System.Drawing.Point(0, 0);
             this.pBox.Name = "pBox";
