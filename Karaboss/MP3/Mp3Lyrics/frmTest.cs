@@ -784,10 +784,7 @@ namespace Karaboss.Mp3
 
         private float[] linesYCoordinates;
         private float vposition = 0;
-        private float vspeed = 0.5f;
-
-        private Timer _timerScroll = new Timer();
-
+        private float vspeed = 0.5f;        
 
         #endregion Vertical scrolling
 
@@ -2792,24 +2789,46 @@ namespace Karaboss.Mp3
 
             // Calculate vertical position of the lines according to the position of the song in the current line
             vposition =  (float)( ( PlayerPositionMilliseconds) * (_linesHeight / (_kLyrics.Lines.Last().Syllables.First().StartTime )));
-                       
+
+
+            /*
+               if (_kLyrics.Lines[i].Syllables.Last().CharType == Syllable.CharTypes.Information)
+               {
+                   DrawInformation(e, i, SecondsBeforeSinging, y);
+               }
+               */
+
             
+
             for (int i = 0; i < _kLyrics.Lines.Count; i++)
             {                          
+
                 y = pBox.ClientRectangle.Top + pBox.ClientRectangle.Height/2 + (int)(linesYCoordinates[i]) ;
 
+                if (y - vposition < pBox.ClientRectangle.Top - _lineHeight || y - vposition > pBox.ClientRectangle.Bottom + _lineHeight)
+                {
+                    // Do not draw lines that are out of the control
+                    continue;
+                }
+
+                if (_kLyrics.Lines[i].Syllables.Last().CharType == Syllable.CharTypes.Information)
+                {
+                    DrawInformation(e, i, SecondsBeforeSinging, y);
+                }
+
+                
                 if (i == _FirstLineToShow)
                 {
-                    if (vposition > 0)
-                        e.Graphics.TranslateTransform(0, -vposition);
+                    e.Graphics.TranslateTransform(0, -vposition);
                     DrawActiveLineWithBorders(e, i, y);
                 }
                 else
                 {
-                    if (vposition > 0)
-                        e.Graphics.TranslateTransform(0, -vposition);
+
+                    e.Graphics.TranslateTransform(0, -vposition);
                     DrawInactiveLineWithBorders(e, i, y);
                 }
+                
             }
             
             e.Graphics.ResetTransform();                     
@@ -3202,9 +3221,7 @@ namespace Karaboss.Mp3
             lastindex = 0;
             _lasttime = 0;
             lastCurLength = 0;
-            CurLength = 0;
-
-            //InitScrollMode();
+            CurLength = 0;            
         }
 
 
@@ -3231,9 +3248,7 @@ namespace Karaboss.Mp3
 
             active_fragment = string.Empty;
             highlight_fragment = string.Empty;
-            inactive_fragment = string.Empty;
-
-            //_timerScroll.Stop();
+            inactive_fragment = string.Empty;            
 
 
             pBox.Invalidate();
@@ -3249,6 +3264,8 @@ namespace Karaboss.Mp3
             if (KaraokeDisplayType == KaraokeDisplayTypes.ScrollingLinesBottomUp || KaraokeDisplayType == KaraokeDisplayTypes.ScrollingLinesTopDown)
             {
                 // calculate the y-coordinate of each line according to its start time and the current position of the player
+                List<float> intervals = new List<float>();
+
 
                 linesYCoordinates = new float[_kLyrics.Lines.Count];
                 float t = 0;
@@ -3260,11 +3277,20 @@ namespace Karaboss.Mp3
                 for (int i = 0; i < _kLyrics.Lines.Count; i++)
                 {
                     t = (float)_kLyrics.Lines[i].Syllables.First().StartTime;
-                    if (t > 0 && last_t > 0 && t != last_t && t - last_t < min)
-                        min = t - last_t;
+                    intervals.Add(t - last_t);
+                    //if (t > 0 && last_t > 0 && t != last_t && t - last_t < min)
+                    //    min = t - last_t;
                     last_t = t;
                 }
                 
+
+                intervals.Sort();
+                if (intervals.Count > 10) 
+                    min = intervals[10]; // take the 4th minimum to avoid too small intervals that could be due to errors in the timing of the lines
+
+                
+
+
                 // Calculate the y-coordinate of each line: multiple of the minimum line height (_lineHeight) between 2 lines =  _lineHeight * (t - last_t) / min
                 last_t = 0;
 
@@ -3283,26 +3309,8 @@ namespace Karaboss.Mp3
                 _linesHeight = (int)linesYCoordinates[linesYCoordinates.Length - 1];          
 
                 pBox.Invalidate();
-
-                //_timerScroll.Interval = 50;
-                //_timerScroll.Tick += TimerScroll_Tick;
-                //_timerScroll.Start();
             }
-            else
-            {
-                //_timerScroll.Stop();
-            }
-        }
-
-        private void TimerScroll_Tick(object sender, EventArgs e)
-        {            
-            //vposition = _linesHeight - (float)(_linesHeight * (PlayerPositionMilliseconds / _duration));
-
-            //Console.WriteLine($"PlayerPositionMilliseconds: {PlayerPositionMilliseconds}, vposition: {vposition}");
-            //vposition = (float)((pBox.ClientSize.Height / 2) * (_duration - PlayerPositionMilliseconds) / _duration;// / _linesHeight;
-            //pBox.Invalidate();
-
-        }
+        }        
 
         #endregion Scrolling
 
