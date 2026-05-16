@@ -422,7 +422,26 @@ namespace Karaboss
             }
             else if (playlistsControl.Visible)
                 filename = playlistsControl.SelectedFile;
-            
+
+
+            // ferme le formulaire frmMidiPlayer
+            Application.OpenForms["frmMidiPlayer"]?.Close();
+
+            // ferme le formulaire frmMp3Player                        
+            Application.OpenForms["frmMp3Player"]?.Close();
+
+            // Ferme le formulaire frmPianoTraining            
+            Application.OpenForms["frmPianoTraining"]?.Close();
+
+            // Ferme le formulaire frmChords
+            Application.OpenForms["frmChords"]?.Close();
+
+            // Ferme le formulaire frmGuitarTraining            
+            Application.OpenForms["frmGuitarTraining"]?.Close();
+
+            // Close form frmKfnCreate
+            Application.OpenForms["frmKfnCreate"]?.Close();
+
 
             if (filename != null && filename != "" && File.Exists(filename))                            
                 SelectPlayer(filename, true);            
@@ -451,14 +470,30 @@ namespace Karaboss
             }
             else if (playlistsControl.Visible)
                 filename = playlistsControl.SelectedFile;
-            
+
+            // ferme le formulaire frmMidiPlayer
+            Application.OpenForms["frmMidiPlayer"]?.Close();
+
+            // ferme le formulaire frmMp3Player                        
+            Application.OpenForms["frmMp3Player"]?.Close();
+
+            // Ferme le formulaire frmPianoTraining            
+            Application.OpenForms["frmPianoTraining"]?.Close();
+
+            // Ferme le formulaire frmChords
+            Application.OpenForms["frmChords"]?.Close();
+
+            // Ferme le formulaire frmGuitarTraining            
+            Application.OpenForms["frmGuitarTraining"]?.Close();
+
+            // Close form frmKfnCreate
+            Application.OpenForms["frmKfnCreate"]?.Close();
+
 
             if (filename != null && filename != "" && File.Exists(filename))                            
                 SelectPlayer(filename, false);            
             else                            
-                MessageBox.Show(Strings.ErrorSelectFile, Application.ProductName, MessageBoxButtons.OK,MessageBoxIcon.Error);
-            
-
+                MessageBox.Show(Strings.ErrorSelectFile, Application.ProductName, MessageBoxButtons.OK,MessageBoxIcon.Error);            
         }
 
         /// <summary>
@@ -501,12 +536,13 @@ namespace Karaboss
                 }
             }
             
-            // ferme le formulaire frmMidiPlayer
-            if (Application.OpenForms.OfType<frmMidiPlayer>().Count() > 0)
-            {
-                Application.OpenForms["frmMidiPlayer"].Close();
-            }
 
+            // ferme le formulaire frmMidiPlayer
+            Application.OpenForms["frmMidiPlayer"]?.Close();
+            
+            // ferme le formulaire frmMp3Player                        
+            Application.OpenForms["frmMp3Player"]?.Close();
+            
             // Ferme le formulaire frmPianoTraining            
             Application.OpenForms["frmPianoTraining"]?.Close();
 
@@ -515,6 +551,9 @@ namespace Karaboss
 
             // Ferme le formulaire frmGuitarTraining            
             Application.OpenForms["frmGuitarTraining"]?.Close();
+
+            // Close form frmKfnCreate
+            Application.OpenForms["frmKfnCreate"]?.Close();
 
             ResetOutPutDevice();
             // Affiche le formulaire frmPianoTraining 
@@ -546,7 +585,26 @@ namespace Karaboss
             else if (playlistsControl.Visible)
                 filename = playlistsControl.SelectedFile;
 
-            
+
+            // ferme le formulaire frmMidiPlayer
+            Application.OpenForms["frmMidiPlayer"]?.Close();
+
+            // ferme le formulaire frmMp3Player
+            Application.OpenForms["frmMp3Player"]?.Close();
+
+            // Ferme le formulaire frmPianoTraining            
+            Application.OpenForms["frmPianoTraining"]?.Close();
+
+            // Ferme le formulaire frmChords
+            Application.OpenForms["frmChords"]?.Close();
+
+            // Ferme le formulaire frmGuitarTraining            
+            Application.OpenForms["frmGuitarTraining"]?.Close();
+
+            // Close form frmKfnCreate
+            Application.OpenForms["frmKfnCreate"]?.Close();
+
+
             if (filename == null || filename == "" || !File.Exists(filename) || (!Karaclass.IsMidiExtension(filename) && !Karaclass.IsXML(filename) && !Karaclass.IsTXT(filename) && !Karaclass.IsMXL(filename)))
                 {                
                 MessageBox.Show(Strings.ErrorSelectFile, Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -563,22 +621,7 @@ namespace Karaboss
                 }
             }
 
-
-            // ferme le formulaire frmMidiPlayer
-            if (Application.OpenForms.OfType<frmMidiPlayer>().Count() > 0)
-            {
-                Application.OpenForms["frmMidiPlayer"].Close();
-            }
-
-            // Ferme le formulaire frmPianoTraining            
-            Application.OpenForms["frmPianoTraining"]?.Close();
-
-            // Ferme le formulaire frmChords
-            Application.OpenForms["frmChords"]?.Close();
-
-            // Ferme le formulaire frmGuitarTraining            
-            Application.OpenForms["frmGuitarTraining"]?.Close();
-
+          
             ResetOutPutDevice();
             // Affiche le formulaire frmGuitarTraining 
             Form frmGuitarTraining = new frmGuitarTraining(outDevice, filename);
@@ -605,18 +648,12 @@ namespace Karaboss
             else if (playlistsControl.Visible)
                 filename = playlistsControl.SelectedFile;
 
-            if (filename == null || filename == "" || !File.Exists(filename) || (!Karaclass.IsMidiExtension(filename) && !Karaclass.IsXML(filename) && !Karaclass.IsTXT(filename) && !Karaclass.IsMXL(filename) ))
-            {
-                MessageBox.Show(Strings.ErrorSelectFile, Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return;
-            }
 
-            
-            // ferme le formulaire frmMidiPlayer
-            if (Application.OpenForms.OfType<frmMidiPlayer>().Count() > 0)
-            {
-                Application.OpenForms["frmMidiPlayer"].Close();
-            }
+            // ferme le formulaire frmMidiPlayer                        
+            Application.OpenForms["frmMidiPlayer"]?.Close();
+
+            // ferme le formulaire frmMp3Player                        
+            Application.OpenForms["frmMp3Player"]?.Close();
 
             // Ferme le formulaire frmPianoTraining                        
             Application.OpenForms["frmPianoTraining"]?.Close();
@@ -627,6 +664,16 @@ namespace Karaboss
             // Ferme le formulaire frmChords
             Application.OpenForms["frmChords"]?.Close();
 
+            // Close form frmKfnCreate
+            Application.OpenForms["frmKfnCreate"]?.Close();
+
+
+            if (filename == null || filename == "" || !File.Exists(filename) || (!Karaclass.IsMidiExtension(filename) && !Karaclass.IsXML(filename) && !Karaclass.IsTXT(filename) && !Karaclass.IsMXL(filename) ))
+            {
+                MessageBox.Show(Strings.ErrorSelectFile, Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }                      
+
             ResetOutPutDevice();
             // Affiche le formulaire frmChords 
             Form frmChords = new frmChords(outDevice, filename);
@@ -634,7 +681,6 @@ namespace Karaboss
             frmChords.Activate();
 
         }
-
        
 
         /// <summary>
@@ -649,8 +695,7 @@ namespace Karaboss
         private void OpenMruFile(string FullPath)
         {
             try
-            {
-                
+            {                
                 sideBarControl.SelectedItem = VBarControl.SideBarControl.SideBarControl.Selectables.Files;
                 xplorerControl.Visible = true;
                 playlistsControl.Visible = false;
@@ -770,7 +815,8 @@ namespace Karaboss
             Karaclass.m_lang = Properties.Settings.Default.lang;
             Karaclass.m_MuteMelody = Properties.Settings.Default.MuteMelody;
             Karaclass.m_DisplayBalls = Properties.Settings.Default.DisplayBalls;
-            Karaclass.M_filePlaylistGroups = Properties.Settings.Default.filePlaylistGroups;
+            Karaclass.m_filePlaylistGroups = Properties.Settings.Default.filePlaylistGroups;
+            Karaclass.m_fileThemesList = Properties.Settings.Default.fileThemesList;
             Karaclass.m_drivePlaylists = Properties.Settings.Default.drivePlaylists;
             Karaclass.m_CountdownSongs = Properties.Settings.Default.CountdownSongs;
             Karaclass.m_PauseBetweenSongs = Properties.Settings.Default.bPauseBetweenSongs;

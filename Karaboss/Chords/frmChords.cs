@@ -67,8 +67,8 @@ namespace Karaboss
         private string MIDIfilePath; 
         private string MIDIfileFullPath; 
 
-        private readonly string m_SepLine = "/";
-        private readonly string m_SepParagraph = "\\";
+        //private readonly string m_SepLine = "/";
+        //private readonly string m_SepParagraph = "\\";
 
         private int newstart = 0;
         private int nbstop = 0;
@@ -1121,10 +1121,11 @@ namespace Karaboss
                 ResetSequencer();
                 if (fileName != "\\")
                 {                    
-                    MXmlReader = new MusicXmlReader();
-
-                    // Show Xml chords?
-                    MXmlReader.PlayXmlChords = Karaclass.m_ShowXmlChords;
+                    MXmlReader = new MusicXmlReader()
+                    {
+                        // Show Xml chords?
+                        PlayXmlChords = Karaclass.m_ShowXmlChords
+                    };
 
                     MXmlReader.LoadXmlCompleted += HandleLoadXmlCompleted;                    
                     MXmlReader.LoadXmlAsync(fileName, false);
@@ -1661,7 +1662,7 @@ namespace Karaboss
 
 
                 int line = (int)Math.Ceiling(y / (double)HauteurCellule);
-                int prevmeasures = -1 + (line - 1) * ChordMapControlModify.NbColumns;
+                //int prevmeasures = -1 + (line - 1) * ChordMapControlModify.NbColumns;
                 int cellincurrentline = (int)Math.Ceiling(x / (double)LargeurCellule);
 
 
@@ -2904,8 +2905,8 @@ namespace Karaboss
             string initname = Path.GetFileNameWithoutExtension(MIDIfileFullPath);
             //initname += ".pdf";
 
-            int width = 0;
-            int height = 0;
+            int width;// = 0;
+            int height; // = 0;
             int oldheight = 0;
 
             // Calculate height & width of controls in order to make a bitmap
@@ -3331,7 +3332,7 @@ namespace Karaboss
             if (myLyricsMgmt.MelodyTrackNum == -1)
                 myLyricsMgmt.MelodyTrackNum = 0;
 
-            Track track = sequence1.tracks[myLyricsMgmt.MelodyTrackNum];
+            //Track track = sequence1.tracks[myLyricsMgmt.MelodyTrackNum];
             
             if (myLyricsMgmt.KLyrics.Lines.Count == 0)
                 myLyricsMgmt.FullExtractLyrics(true);
@@ -3362,7 +3363,7 @@ namespace Karaboss
         private void ReplaceLyrics(kar.kLyrics newpLyrics, LyricTypes newLyricType, int melodytracknum)
         {
             // LyricType has changed => refresh display
-            bool bRefreshDisplay = (newLyricType != myLyricsMgmt.LyricType);
+            //bool bRefreshDisplay = (newLyricType != myLyricsMgmt.LyricType);
 
             // Delete all lyrics of all types
             foreach (Track T in sequence1.tracks)
@@ -3377,8 +3378,7 @@ namespace Karaboss
             // By default, insert the lyrics (either text or lyric) into the melodytrack
             Track track = sequence1.tracks[melodytracknum];
 
-            // Insert all lyric events
-            //TrkInsertLyrics(track, newpLyrics, newLyricType);
+            // Insert all lyric events            
             LyricsUtilities.TrkInsertLyrics(track, newpLyrics, newLyricType);
 
             // Reload myLyricMgmt

@@ -228,7 +228,7 @@ namespace Karaboss.playlists
             InitListView();            
             // Load existing playlists
             LoadPlaylists();            
-            CheckDrive(Karaclass.M_filePlaylistGroups);                      
+            CheckDrive(Karaclass.m_filePlaylistGroups);                      
 
             if (PlGroup.Count == 0)
             {
@@ -1779,7 +1779,7 @@ namespace Karaboss.playlists
         /// </summary>
         private void SaveAllPlaylist()
         {            
-            string fName = Karaclass.M_filePlaylistGroups;
+            string fName = Karaclass.m_filePlaylistGroups;
             PlGroupHelper.Save(fName, PlGroup);               
             DisplayPlaylistInfos();
             bModified = false;

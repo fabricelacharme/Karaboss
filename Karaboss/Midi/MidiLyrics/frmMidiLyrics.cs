@@ -32,7 +32,11 @@
 
 #endregion
 
+using kar;
 using Karaboss.MidiLyrics;
+using Karaboss.Mp3;
+using Karaboss.Themes;
+using Karaboss.Utilities;
 using PicControl;
 using System;
 using System.Collections.Generic;
@@ -43,51 +47,12 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
-using kar;
 
 namespace Karaboss
 {
     public partial class frmMidiLyrics : Form, IMessageFilter
     {
-        #region Move form without title bar
-
-        public const int WM_NCLBUTTONDOWN = 0xA1;
-        public const int HT_CAPTION = 0x2;
-        public const int WM_LBUTTONDOWN = 0x0201;
-
-        [DllImportAttribute("user32.dll")]
-        public static extern int SendMessage(IntPtr hWnd, int Msg, int wParam, int lParam);
-        [DllImportAttribute("user32.dll")]
-        public static extern bool ReleaseCapture();
-
-        private readonly HashSet<Control> controlsToMove = new HashSet<Control>();
-        #endregion
-
-
-        #region private declarations
-        
-
-        public MidiLyricsMgmt myLyricsMgmt { get; set; }               
-
-
-        private int currentTextPos = 0;
-        private Point Mouselocation;
-
-        //private frmLyrOptions frmLyrOptions;
-        private List<int> LyricsTimes;
-
-        #endregion private
-
-
-        #region properties
-
-        #region Internal lyrics separators
-
-        private readonly string _InternalSepLines = "¼";
-        private readonly string _InternalSepParagraphs = "½";
-
-        #endregion
-
+        #region Declarations    
 
         #region balls
         // Show balls
@@ -105,135 +70,9 @@ namespace Karaboss
         #endregion balls
 
 
-        #region chords
+        #region Colors
 
-        // Chord color
-        private Color _chordNextColor;
-        public Color ChordNextColor
-        {
-            get { return _chordNextColor; }
-            set
-            {
-                _chordNextColor = value;
-                pBox.InactiveChordColor = _chordNextColor;
-            }
-        }
-        // Chord highlight color
-        private Color _chordHighlightColor;
-        public Color ChordHighlightColor
-        {
-            get { return _chordHighlightColor; }
-            set
-            {
-                _chordHighlightColor = value;
-                pBox.HighlightChordColor = _chordHighlightColor;
-            }
-        }
-
-        public bool bShowChords
-        {
-            set
-            {
-                if (value != Karaclass.m_ShowChords)
-                {
-                    chkChords.Checked = value;
-                }
-            }
-        }
-
-
-        #endregion chords
-
-
-        #region text characteristics
-
-        // Force Uppercase
-        //private List<plLyric> _plLyrics;
-
-        private bool _bForceUppercase = false;
-        public bool bForceUppercase
-        {
-            get { return _bForceUppercase; }
-            set
-            {
-
-                if (value != _bForceUppercase)
-                {
-                    _bForceUppercase = value;
-                    pBox.bforceUppercase = _bForceUppercase;
-                    LoadSong(myLyricsMgmt.KLyrics);
-                }
-            }
-        }
-
-
-        #region Font
-        private string ftName = "Arial Black";
-        private uint ftSize = 20;
-
-        private Font _karaokeFont;
-        public Font KaraokeFont
-        {
-            get { return _karaokeFont; }
-            set
-            {
-                try
-                {
-                    _karaokeFont = value;
-                    // Redraw
-                    pBox.KaraokeFont = _karaokeFont;
-                }
-                catch (Exception e)
-                {
-                    Console.Write("Error: " + e.Message);
-                }
-            }
-        }
-
-        #endregion Font
-      
-
-        // Frame type
-        private string _frametype = "Frame1";
-        public string FrameType
-        {
-            get { return _frametype; }
-            set { 
-                _frametype = value; 
-                pBox.FrameType = _frametype;                
-            }
-        }
-
-        private Karaclass.OptionsDisplay _OptionDisplay;
-        /// <summary>
-        /// Display lyrics option: top, Center, Bottom
-        /// </summary>
-        public Karaclass.OptionsDisplay OptionDisplay
-        {
-            get { return _OptionDisplay; }
-            set
-            {
-                _OptionDisplay = value;
-                pBox.OptionDisplay = (PicControl.pictureBoxControl.OptionsDisplay)_OptionDisplay;
-            }
-        }
-
-        private int _nbLyricsLines = 3;
-        // number of lines to display
-        public int nbLyricsLines
-        {
-            get { return _nbLyricsLines; }
-            set
-            {
-                _nbLyricsLines = value;
-                pBox.nbLyricsLines = _nbLyricsLines;
-            }
-        }
-
-        #endregion
-
-
-        #region text color
+        #region Background & text background color
 
         private bool _bTextBackGround = false;
         /// <summary>
@@ -250,70 +89,6 @@ namespace Karaboss
         }
 
 
-        #region Text color
-
-
-        // Text sung color
-        private Color _ActiveColor;
-        public Color ActiveColor
-        {
-            get { return _ActiveColor; }
-            set
-            {
-                _ActiveColor = value;
-                pBox.ActiveColor = _ActiveColor;
-            }
-        }
-
-        private Color _HighlightColor;
-        public Color HighlightColor
-        {
-            get { return _HighlightColor; }
-            set
-            {
-                _HighlightColor = value;
-                pBox.HighlightColor = _HighlightColor;
-            }
-        }
-
-        // Text to sing color
-        private Color _InactiveColor;
-        public Color InactiveColor
-        {
-            get { return _InactiveColor; }
-            set
-            {
-                _InactiveColor = value;
-                pBox.InactiveColor = _InactiveColor;
-            }
-        }
-        
-        
-        // Text border
-        private Color _ActiveBorderColor;
-        public Color ActiveBorderColor
-        {
-            get { return _ActiveBorderColor; }
-            set
-            {
-                _ActiveBorderColor = value;
-                pBox.ActiveBorderColor = _ActiveBorderColor;
-            }
-        }
-
-        private Color _InactiveBorderColor;
-        public Color InactiveBorderColor
-        {
-            get { return _InactiveBorderColor; }
-            set
-            {
-                _InactiveBorderColor = value;
-                pBox.InactiveBorderColor = _InactiveBorderColor;
-            }
-        }
-
-        #endregion text color
-
         // Background color
         private Color _BgColor;
         public Color BgColor
@@ -327,7 +102,40 @@ namespace Karaboss
         }
 
 
-        #region gradient
+        #endregion Background & text background color
+
+
+        #region Chords color
+
+        // Chord color
+        private Color _InactiveChordColor;
+        public Color InactiveChordColor
+        {
+            get { return _InactiveChordColor; }
+            set
+            {
+                _InactiveChordColor = value;
+                pBox.InactiveChordColor = _InactiveChordColor;
+            }
+        }
+
+        // Chord highlight color
+        private Color _HighlightchordColor;
+        public Color HighlightChordColor
+        {
+            get { return _HighlightchordColor; }
+            set
+            {
+                _HighlightchordColor = value;
+                pBox.HighlightChordColor = _HighlightchordColor;
+            }
+        }
+
+        #endregion Chords color
+
+
+        #region Gradients color
+
         private Color _grad0Color;
         public Color Grad0Color
         {
@@ -369,6 +177,216 @@ namespace Karaboss
             }
         }
 
+        #endregion Gradients color
+
+
+        #region Instrumentals color
+
+        private Color _ActiveInstrumentalColor;
+        public Color ActiveInstrumentalColor
+        {
+            get { return _ActiveInstrumentalColor; }
+            set
+            {
+                _ActiveInstrumentalColor = value;
+                pBox.ActiveInstrumentalColor = _ActiveInstrumentalColor;
+            }
+        }
+
+        #endregion Instrumentals color
+
+
+        #region Text color
+
+        // Text sung color
+        private Color _ActiveColor;
+        public Color ActiveColor
+        {
+            get { return _ActiveColor; }
+            set
+            {
+                _ActiveColor = value;
+                pBox.ActiveColor = _ActiveColor;
+            }
+        }
+
+        private Color _HighlightColor;
+        public Color HighlightColor
+        {
+            get { return _HighlightColor; }
+            set
+            {
+                _HighlightColor = value;
+                pBox.HighlightColor = _HighlightColor;
+            }
+        }
+
+        // Text to sing color
+        private Color _InactiveColor;
+        public Color InactiveColor
+        {
+            get { return _InactiveColor; }
+            set
+            {
+                _InactiveColor = value;
+                pBox.InactiveColor = _InactiveColor;
+            }
+        }
+
+
+        // Text border
+        private Color _ActiveBorderColor;
+        public Color ActiveBorderColor
+        {
+            get { return _ActiveBorderColor; }
+            set
+            {
+                _ActiveBorderColor = value;
+                pBox.ActiveBorderColor = _ActiveBorderColor;
+            }
+        }
+
+        private Color _InactiveBorderColor;
+        public Color InactiveBorderColor
+        {
+            get { return _InactiveBorderColor; }
+            set
+            {
+                _InactiveBorderColor = value;
+                pBox.InactiveBorderColor = _InactiveBorderColor;
+            }
+        }
+
+        #endregion Text color
+
+        #endregion Colors
+
+
+        #region Font
+        private string ftName = "Arial Black";
+        private uint ftSize = 20;
+
+        private Font _karaokeFont;
+        public Font KaraokeFont
+        {
+            get { return _karaokeFont; }
+            set
+            {
+                try
+                {
+                    _karaokeFont = value;
+                    // Redraw
+                    pBox.KaraokeFont = _karaokeFont;
+                }
+                catch (Exception e)
+                {
+                    Console.Write("Error: " + e.Message);
+                }
+            }
+        }
+
+        // Font stretching (Small (no stetching), Medium (some stretching), Large (most stretching)
+        private string _FontStretching = "Large";
+        public string FontStretching
+        {
+            get { return _FontStretching; }
+            set
+            {
+                _FontStretching = value;
+                pBox.FontStretching = _FontStretching;
+            }
+        }
+
+        #endregion Font
+
+
+        #region Form
+
+        public bool bShowChords
+        {
+            set
+            {
+                if (value != Karaclass.m_ShowChords)
+                {
+                    chkChords.Checked = value;
+                }
+            }
+        }
+
+        #region TopMost
+        private bool _bTopMost = false;
+        public bool bTopMost
+        {
+            get { return _bTopMost; }
+            set
+            {
+                _bTopMost = value;
+                this.TopMost = _bTopMost;
+            }
+        }
+
+        #endregion TopMost
+
+
+        #region Move form without title bar
+
+        public const int WM_NCLBUTTONDOWN = 0xA1;
+        public const int HT_CAPTION = 0x2;
+        public const int WM_LBUTTONDOWN = 0x0201;
+
+        [DllImportAttribute("user32.dll")]
+        public static extern int SendMessage(IntPtr hWnd, int Msg, int wParam, int lParam);
+        [DllImportAttribute("user32.dll")]
+        public static extern bool ReleaseCapture();
+
+        private readonly HashSet<Control> controlsToMove = new HashSet<Control>();
+        #endregion
+
+        #endregion Form
+
+
+        #region Karaoke display layout
+
+        // Karaoke display Laout
+        private string _karaokeDisplayType = "None";
+        public string KaraokeDisplayType
+        {
+            get { return _karaokeDisplayType; }
+            set
+            {
+                _karaokeDisplayType = value;
+
+                switch (_karaokeDisplayType)
+                {
+                    case "None":
+                        pBox.KaraokeDisplayType = kar.KaraokeDisplayTypes.None;
+                        break;
+                    case "FixedLines":
+                        pBox.KaraokeDisplayType = kar.KaraokeDisplayTypes.FixedLines;
+                        break;
+                    case "ScrollingLinesTopDown":
+                        pBox.KaraokeDisplayType = kar.KaraokeDisplayTypes.ScrollingLinesTopDown;
+                        break;
+                    case "ScrollingLinesBottomUp":
+                        pBox.KaraokeDisplayType = kar.KaraokeDisplayTypes.ScrollingLinesBottomUp;
+                        break;
+                    case "TwoLinesSwapped":
+                        pBox.KaraokeDisplayType = kar.KaraokeDisplayTypes.TwoLinesSwapped; break;
+                    case "FourLinesSwapped":
+                        pBox.KaraokeDisplayType = kar.KaraokeDisplayTypes.FourLinesSwapped; break;
+                    default:
+                        pBox.KaraokeDisplayType = kar.KaraokeDisplayTypes.FixedLines;
+                        break;
+                }
+            }
+        }
+
+        #endregion Karaoke display layout
+
+
+        #region MIDI
+
+        public MidiLyricsMgmt myLyricsMgmt { get; set; }
 
         private int _beatDuration = 0;
         public int BeatDuration
@@ -381,13 +399,80 @@ namespace Karaboss
             }
         }
 
-        #endregion gradient
+        private int _TotalTicks = 0;
+        public int TotalTicks
+        {
+            get { return _TotalTicks; }
+            set
+            {
+                if (value > 0)
+                {
+                    _TotalTicks = value;
+                    pBox.TotalTicks = _TotalTicks;
+                }
+            }
+        }
+
+        private double _duration = 0;
+        public double Duration
+        {
+            get { return _duration; }
+            set
+            {
+                if (value > 0)
+                {
+                    _duration = value;
+                    pBox.Duration = _duration;
+                }
+            }
+        }
+
+        private int _FirstMelodyNoteTicksOn = 0;
+        public int FirstMelodyNoteTicksOn
+        {
+            get { return _FirstMelodyNoteTicksOn; }
+            set
+            {
+                _FirstMelodyNoteTicksOn = value;
+                pBox.FirstMelodyNoteTicksOn = _FirstMelodyNoteTicksOn;
+            }
+        }
+
+        #endregion MIDI
 
 
-        #endregion
+        #region Picture
+
+        private PictureBoxSizeMode _sizeMode;
+        public PictureBoxSizeMode SizeMode
+        {
+            get { return _sizeMode; }
+            set
+            {
+                _sizeMode = value;
+                pBox.SizeMode = _sizeMode;
+            }
+        }
+
+        #endregion Picture
 
 
-        #region dirslideshow
+        #region Slideshow
+
+        private string _SingleImagePath;
+        public string SingleImagePath
+        {
+            get => _SingleImagePath;
+            set
+            {
+                if (File.Exists(value))
+                {
+                    _SingleImagePath = value;
+                    pBox.SingleImagePath = _SingleImagePath;
+                }
+            }
+        }
+
 
         private bool _allowModifyDirSlideShow = true;
         public bool AlloModifyDirSlideShow
@@ -432,21 +517,10 @@ namespace Karaboss
         }
 
 
-        private PictureBoxSizeMode _sizeMode;
-        public PictureBoxSizeMode SizeMode
-        {
-            get { return _sizeMode; }
-            set
-            {
-                _sizeMode = value;
-                pBox.SizeMode = _sizeMode;
-            }
-        }
-
         /// <summary>
         /// Background option : Diaporam, SolidColor, Transparent
         /// </summary>
-        private string _optionbackground = "Diaporama";
+        private string _optionbackground = "Image";
         public string OptionBackground
         {
             get { return _optionbackground; }
@@ -456,6 +530,10 @@ namespace Karaboss
 
                 switch (_optionbackground)
                 {
+                    case "Image":
+                        pBox.OptionBackground = "Image";
+                        break;
+
                     case "Diaporama":
                         pBox.DirSlideShow = DirSlideShow;
                         pBox.OptionBackground = "Diaporama";
@@ -483,28 +561,101 @@ namespace Karaboss
             }
         }
 
-        #endregion dirslideshow
+        #endregion Slideshow
 
 
-        #region TopMost
-        private bool _bTopMost = false;
-        public bool bTopMost
+        #region Themes
+
+        private ThemesListHelper _ThListHelper = new ThemesListHelper();
+        private ThemesList _ThemesList; // = new ThemesList();
+        private ThemeItem _currentTheme; // = new ThemeItem();
+
+        #endregion Themes
+
+
+        #region Text transform
+
+        #region Internal lyrics separators
+
+        private readonly string _InternalSepLines = "¼";
+        private readonly string _InternalSepParagraphs = "½";
+
+        #endregion Internal lyrics separators
+
+        private int currentTextPos = 0;
+        private Point Mouselocation;
+
+        private List<int> LyricsTimes;
+
+        // Force Uppercase       
+        private bool _bForceUppercase = false;
+        public bool bForceUppercase
         {
-            get { return _bTopMost; }
+            get { return _bForceUppercase; }
             set
             {
-                _bTopMost = value;
-                this.TopMost = _bTopMost;
+
+                if (value != _bForceUppercase)
+                {
+                    _bForceUppercase = value;
+                    pBox.bforceUppercase = _bForceUppercase;
+                    LoadSong(myLyricsMgmt.KLyrics);
+                }
             }
         }
 
-        #endregion TopMost
 
+        #region Frame type
+        // Frame type
+        private string _frametype = "Frame1";
+        public string FrameType
+        {
+            get { return _frametype; }
+            set
+            {
+                _frametype = value;
+                pBox.FrameType = _frametype;
+            }
+        }
+
+        #endregion Frame type
+
+
+        #region Display top bottom center
+
+        private Karaclass.OptionsDisplay _OptionDisplay;
+        /// <summary>
+        /// Display lyrics option: top, Center, Bottom
+        /// </summary>
+        public Karaclass.OptionsDisplay OptionDisplay
+        {
+            get { return _OptionDisplay; }
+            set
+            {
+                _OptionDisplay = value;
+                pBox.OptionDisplay = (PicControl.pictureBoxControl.OptionsDisplay)_OptionDisplay;
+            }
+        }
+
+        #endregion Display top bottom center
+
+        private int _nbLyricsLines = 3;
+        // number of lines to display
+        public int nbLyricsLines
+        {
+            get { return _nbLyricsLines; }
+            set
+            {
+                _nbLyricsLines = value;
+                pBox.nbLyricsLines = _nbLyricsLines;
+            }
+        }
+
+        #endregion Text transform
+                                                                                                                    
        
-        #endregion properties
-
-
-        //public List<pictureBoxControl.plLyric> plLyrics;
+        #endregion Declarations
+        
 
         /// <summary>
         /// Constructor
@@ -519,6 +670,16 @@ namespace Karaboss
 
             this.myLyricsMgmt = _myLyricsMgmt;
 
+
+            #region MIDI
+
+            BeatDuration = myLyricsMgmt.Division;
+            TotalTicks = myLyricsMgmt.TotalTicks;
+            Duration = myLyricsMgmt.Duration;
+            FirstMelodyNoteTicksOn = myLyricsMgmt.FirstMelodyNoteTicksOn;
+
+            #endregion MIDI
+          
             // Graphic optimization
             this.SetStyle(ControlStyles.AllPaintingInWmPaint, true);
             this.SetStyle(ControlStyles.ResizeRedraw, true);
@@ -529,18 +690,102 @@ namespace Karaboss
 
             Application.AddMessageFilter(this);
             controlsToMove.Add(this);
-            // UserControls picball & pBox manage themselves this move.            
+            // UserControls picball & pBox manage themselves this move.
+            controlsToMove.Add(this.pnlWindow);
             controlsToMove.Add(this.pnlTittle);
             controlsToMove.Add(this.lblTittle);
 
             #endregion
 
 
+            #region Events
+
+            this.pBox.DoubleClick += new DoubleClickEventHandler(pBox_DoubleClick);
+            this.pBox.Close += new CloseEventHandler(pBox_Close);
+            this.pBox.FullScreen += new FullScreenEventHandler(pBox_FullScreen);
+            this.pBox.Options += new OptionsEventHandler(pBox_Options);
+            this.pBox.TopMost += new TopMostEventHandler(pBox_TopMost);
+
+            #endregion Events
+
             // colours for text, chords, number of lines etc...
-            LoadKarOptions();
+            LoadOptions();
 
             AddMouseMoveHandler(this);
         }
+
+
+        #region Events
+
+        private void pBox_TopMost(object sender, bool bTopMost, EventArgs e)
+        {
+            if (Application.OpenForms.OfType<frmMidiPlayer>().Count() > 0)
+            {
+                frmMidiPlayer frmMidiPlayer = FormUtilities.GetForm<frmMidiPlayer>();
+                if (bTopMost)
+                {
+                    frmMidiPlayer.RemoveOwnedForms();
+                }
+                else
+                {
+                    frmMidiPlayer.RestoreOwnedForms();
+                }
+
+            }
+        }
+
+        private void pBox_DoubleClick(object sender, EventArgs e)
+        {
+            if (WindowState == FormWindowState.Maximized)
+                WindowState = FormWindowState.Normal;
+            else WindowState = FormWindowState.Maximized;
+        }
+
+        private void pBox_Options(object sender, EventArgs e)
+        {
+            Cursor.Current = Cursors.WaitCursor;
+
+            if (Application.OpenForms.OfType<frmLyrOptions>().Count() == 0)
+            {
+                frmLyrOptions frmLyrOptions = new frmLyrOptions();
+                frmLyrOptions.Show();
+            }
+        }
+
+        private void pBox_FullScreen(object sender, EventArgs e)
+        {
+            WindowState = FormWindowState.Maximized;
+        }
+
+        private void pBox_Close(object sender, EventArgs e)
+        {
+            Close();
+        }
+
+
+        #endregion Events
+
+
+        #region Themes Color
+
+        private ThemesList LoadThemes()
+        {
+            try
+            {
+                string fileName = Karaclass.GetThemesListFile(_ThListHelper.File);
+                _ThListHelper.File = fileName;
+                return _ThListHelper.Load(fileName);
+
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return null;
+            }
+        }
+
+        #endregion Themes Color
+
 
 
         #region initializations
@@ -548,10 +793,17 @@ namespace Karaboss
         /// <summary>
         /// Load options (text color, 
         /// </summary>
-        public void LoadKarOptions()
+        public void LoadOptions()
         {
             try
             {
+                // Load colors lyrics, backgrounds from current Theme
+                LoadColorsFromCurrentTheme();
+                
+
+                // Karaoke display type
+                KaraokeDisplayType = Properties.Settings.Default.KaraokeDisplayType;               // setting this property set the karaokeEffect1.KaraokeDisplayType property
+
                 // Lyrics border effect 
                 _frametype = Properties.Settings.Default.FrameType;
                 pBox.FrameType = _frametype;               
@@ -562,23 +814,33 @@ namespace Karaboss
                 pBox.KaraokeFont = _karaokeFont;
 
                 pBox.bShowParagraphs = Karaclass.m_ShowParagraph;
+
+                // Display chords ?
+                chkChords.Checked = Karaclass.m_ShowChords;
                 pBox.bShowChords = Karaclass.m_ShowChords;
 
                 // Force Uppercase
-                _bForceUppercase = Karaclass.m_ForceUppercase;
+                bForceUppercase = Karaclass.m_ForceUppercase;
 
                 // show balls
                 bShowBalls = Karaclass.m_DisplayBalls;
 
+                #region Backgrounds
                 string bgOption = Properties.Settings.Default.BackGroundOption;
                 switch (bgOption)
                 {
+                    case "Image":
+                        SingleImagePath = Properties.Settings.Default.SingleImagePath;
+                        OptionBackground = "Image";
+                        break;
+                    
                     case "Diaporama":
                         // Frequency of slide show
                         FreqSlideShow = Properties.Settings.Default.freqSlideShow;
                         DirSlideShow = Properties.Settings.Default.dirSlideShow;                        
                         OptionBackground = "Diaporama";
                         break;
+
                     case "SolidColor":
                         OptionBackground = "SolidColor";
                         break;
@@ -599,47 +861,24 @@ namespace Karaboss
                         OptionBackground = "Diaporama";
                         break;
                 }
-                //OptionBackground = _optionbackground;
+                #endregion Backgrounds
+
+
 
                 switch (Properties.Settings.Default.LyricsOptionDisplay)
                 {
                     case "Top":
-                        _OptionDisplay = Karaclass.OptionsDisplay.Top;
-                        break;
+                        _OptionDisplay = Karaclass.OptionsDisplay.Top; break;
                     case "Center":
-                        _OptionDisplay = Karaclass.OptionsDisplay.Center;
-                        break;
+                        _OptionDisplay = Karaclass.OptionsDisplay.Center; break;
                     case "Bottom":
-                        _OptionDisplay = Karaclass.OptionsDisplay.Bottom;
-                        break;
+                        _OptionDisplay = Karaclass.OptionsDisplay.Bottom; break;
                     default:
-                        _OptionDisplay = Karaclass.OptionsDisplay.Center;
-                        break;
+                        _OptionDisplay = Karaclass.OptionsDisplay.Center; break;
                 }
                 OptionDisplay = _OptionDisplay;
 
-                bTextBackGround = Properties.Settings.Default.bLyricsBackGround;
-
-                // Background colors
-                BgColor = Parse(Properties.Settings.Default.BgColor);
-
-                Grad0Color = Properties.Settings.Default.Grad0Color;
-                Grad1Color = Properties.Settings.Default.Grad1Color;
-                Rhythm0Color = Properties.Settings.Default.Rhythm0Color;
-                Rhythm1Color = Properties.Settings.Default.Rhythm1Color;
-                               
-                // Text colors
-                InactiveColor = Parse(Properties.Settings.Default.InactiveColor);
-                HighlightColor = Parse(Properties.Settings.Default.HighlightColor);
-                ActiveColor = Parse(Properties.Settings.Default.ActiveColor);                
-                ActiveBorderColor = Parse(Properties.Settings.Default.ActiveBorderColor);
-                InactiveBorderColor = Parse(Properties.Settings.Default.InactiveBorderColor);
-
-                // Chords
-                _chordNextColor = Parse(Properties.Settings.Default.InactiveChordColor);
-                _chordHighlightColor = Parse(Properties.Settings.Default.HighlightChordColor);
-                chkChords.Checked = Karaclass.m_ShowChords;
-
+                bTextBackGround = Properties.Settings.Default.bLyricsBackGround;               
 
                 // Number of Lines to display
                 nbLyricsLines = Properties.Settings.Default.TxtNbLines;
@@ -654,6 +893,63 @@ namespace Karaboss
                 MessageBox.Show(e.Message, Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
+
+
+        private void LoadColorsFromCurrentTheme()
+        {
+            #region Retrieve theme
+
+            // Load all available color themes
+            _ThemesList = LoadThemes();
+
+            // Load default Theme name
+            string currentThemeName = Properties.Settings.Default.Theme;
+
+            // Retrieve Theme from ThList with its name
+            _currentTheme = _ThemesList.GetThemeByName(currentThemeName);
+
+            #endregion Retrieve theme
+
+            if (_currentTheme == null)
+            {
+                // If null (file themes.xml lost for ex) => Default
+                _currentTheme = _ThemesList.Themes[0];
+            }
+                                       
+                // Get colors from the current theme
+                #region Get colors from them
+
+                // Text colors
+                ActiveColor = Parse(_currentTheme.ActiveColor);             
+                HighlightColor = Parse(_currentTheme.HighlightColor);       
+                InactiveColor = Parse(_currentTheme.InactiveColor);         
+                ActiveBorderColor = Parse(_currentTheme.ActiveBorderColor);
+                InactiveBorderColor = Parse(_currentTheme.InactiveBorderColor);
+                
+                // Instrumental
+                ActiveInstrumentalColor = Parse(_currentTheme.ActiveInstrumentalColor);
+
+                // Static background
+                BgColor = Parse(_currentTheme.BgColor);
+
+                // Dynamic background
+                Grad0Color = Parse(_currentTheme.Grad0Color);
+                Grad1Color = Parse(_currentTheme.Grad1Color);
+                Rhythm0Color = Parse(_currentTheme.Rhythm0Color);
+                Rhythm1Color = Parse(_currentTheme.Rhythm1Color);
+
+                // Chords
+                InactiveChordColor = Parse(_currentTheme.InactiveChordColor);
+                HighlightChordColor = Parse(_currentTheme.HighlightChordColor);
+
+                #endregion Get colors from theme                                              
+            
+            
+            
+              //  MessageBox.Show("Theme not found for colors", Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error) ;
+            
+        }
+
 
         #endregion initializations
 
@@ -797,13 +1093,14 @@ namespace Karaboss
         /// Color the syllabe according to song position
         /// </summary>
         /// <param name="songposition"></param>
-        public void ColorLyric(int songposition)
+        public void ColorLyric(int SequencerPosition)
         {
             // déclencheur : timer_2
             // IMPERATIF : calculer ici la position de la syllabe, utilisée pour l'animation des balles
             // drivé par timer_2 de frmMidiPplayer            
             currentTextPos = pBox.CurrentTextPos;
-            pBox.ColorLyric(songposition);
+            //pBox.ColorLyric(songposition);
+            pBox.SetPos(SequencerPosition);
         }
 
         /// <summary>
@@ -814,6 +1111,14 @@ namespace Karaboss
             currentTextPos = 0;
             pBox.ResetTop();
         }
+
+        public void PlayStopActions(bool isStopped)
+        {
+            // Disable buttons for editing lyrics and chords
+            btnEditLyrics.Enabled = isStopped;
+            btnEditLyricsChords.Enabled = isStopped;
+        }
+
 
         public void StopDiaporama()
         {
@@ -1200,8 +1505,7 @@ namespace Karaboss
 
             if (Application.OpenForms.OfType<frmLyrOptions>().Count() == 0)
             {
-                frmLyrOptions frmLyrOptions = new frmLyrOptions();
-                //frmLyrOptions.ShowDialog();
+                frmLyrOptions frmLyrOptions = new frmLyrOptions();                
                 frmLyrOptions.Show();
             }
         }
@@ -1299,6 +1603,7 @@ namespace Karaboss
 
         #endregion panel events
 
+
         #endregion pnlWindow        
 
 
@@ -1310,6 +1615,9 @@ namespace Karaboss
         /// <exception cref="ArgumentException"></exception>
         public static Color Parse(string input)
         {
+            if (input == null)
+                return Color.Black;
+            
             input = input.Trim();
             string strColorRegex = @"^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$";
             Regex re = new Regex(strColorRegex);

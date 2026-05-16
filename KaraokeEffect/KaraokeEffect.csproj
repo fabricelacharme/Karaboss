@@ -65,7 +65,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="KaraokeEffect.cs" />
+    <Compile Include="KaraokeEffect.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Include="KaraokeEffect.Designer.cs">
       <DependentUpon>KaraokeEffect.cs</DependentUpon>
     </Compile>

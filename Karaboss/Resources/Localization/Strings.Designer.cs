@@ -1678,6 +1678,104 @@ namespace Karaboss.Resources.Localization {
             {
                 return ResourceManager.GetString("QuestionSaveDefaults", resourceCulture);
             }
+        }
+        internal static string KTypesFixedLines
+        {
+            get
+            {
+                return ResourceManager.GetString("KTypesFixedLines", resourceCulture);
+            }
+        }
+        internal static string KTypesFourLinesSwapped
+        {
+            get
+            {
+                return ResourceManager.GetString("KTypesFourLinesSwapped", resourceCulture);
+            }
+        }
+        internal static string KTypesTwoLinesSwapped
+        {
+            get
+            {
+                return ResourceManager.GetString("KTypesTwoLinesSwapped", resourceCulture);
+            }
+        }
+        internal static string KTypesScrollingLinesBottomUp
+        {
+            get
+            {
+                return ResourceManager.GetString("KTypesScrollingLinesBottomUp", resourceCulture);
+            }
+        }
+        internal static string KTypesScrollingLinesTopDown
+        {
+            get
+            {
+                return ResourceManager.GetString("KTypesScrollingLinesTopDown", resourceCulture);
+            }
+        }
+        internal static string ErrorThemeAlreadyExists
+        {
+            get
+            {
+                return ResourceManager.GetString("ErrorThemeAlreadyExists", resourceCulture);
+            }
+        }
+        internal static string NameForNewTheme
+        {
+            get
+            {
+                return ResourceManager.GetString("NameForNewTheme", resourceCulture);
+            }
+        }
+        internal static string ThemeSuccessfullySaved
+        {
+            get
+            {
+                return ResourceManager.GetString("ThemeSuccessfullySaved", resourceCulture);
+            }
+        }
+        internal static string ErrorNoThemeFound
+        {
+            get
+            {
+                return ResourceManager.GetString("ErrorNoThemeFound", resourceCulture);
+            }
+        }
+        internal static string SaveThemeQuestion
+        {
+            get
+            {
+                return ResourceManager.GetString("SaveThemeQuestion", resourceCulture);
+            }
+        }
+        internal static string DeleteThemeQuestion
+        {
+            get
+            {
+                return ResourceManager.GetString("DeleteThemeQuestion", resourceCulture);
+            }
+        }
+        internal static string FontStretchingSmall
+        {
+            get
+            {
+                return ResourceManager.GetString("FontStretchingSmall", resourceCulture);
+            }
+        }
+        internal static string FontStretchingMedium
+        {
+            get
+            {
+                return ResourceManager.GetString("FontStretchingMedium", resourceCulture);
+            }
+        }
+        internal static string FontStretchingLarge
+        {
+            get            
+            {
+                return ResourceManager.GetString("FontStretchingLarge", resourceCulture);
+            }
         }        
     }
 }

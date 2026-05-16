@@ -29,24 +29,24 @@
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmMp3LyrOptions));
+            kar.kLyrics kLyrics1 = new kar.kLyrics();
             this.picBgColor = new System.Windows.Forms.PictureBox();
             this.radioTransparent = new System.Windows.Forms.RadioButton();
             this.radioSolidColor = new System.Windows.Forms.RadioButton();
             this.radioDiaporama = new System.Windows.Forms.RadioButton();
             this.btnBgColor = new System.Windows.Forms.Button();
             this.btnResetDir = new System.Windows.Forms.Button();
-            this.label6 = new System.Windows.Forms.Label();
+            this.lblPosition = new System.Windows.Forms.Label();
             this.cbSizeMode = new System.Windows.Forms.ComboBox();
-            this.label4 = new System.Windows.Forms.Label();
-            this.label3 = new System.Windows.Forms.Label();
+            this.lblSeconds = new System.Windows.Forms.Label();
+            this.lblFrequency = new System.Windows.Forms.Label();
             this.txtSlideShowFreq = new System.Windows.Forms.TextBox();
             this.btnDirSlideShow = new System.Windows.Forms.Button();
-            this.label2 = new System.Windows.Forms.Label();
+            this.lblSlideshowDirectory = new System.Windows.Forms.Label();
             this.txtSlideShow = new System.Windows.Forms.TextBox();
             this.btnCancel = new System.Windows.Forms.Button();
             this.btnOk = new System.Windows.Forms.Button();
             this.btnApply = new System.Windows.Forms.Button();
-            this.karaokeEffect1 = new keffect.KaraokeEffect();
             this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
             this.fontDialog1 = new System.Windows.Forms.FontDialog();
             this.chkHighLightProgressive = new System.Windows.Forms.CheckBox();
@@ -55,6 +55,9 @@
             this.pictureBox2 = new System.Windows.Forms.PictureBox();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.grpBoxBackGround = new System.Windows.Forms.GroupBox();
+            this.btnSelectImage = new System.Windows.Forms.Button();
+            this.radioImage = new System.Windows.Forms.RadioButton();
+            this.txtImage = new System.Windows.Forms.TextBox();
             this.cbRhythm1 = new System.Windows.Forms.ComboBox();
             this.cbRhythm0 = new System.Windows.Forms.ComboBox();
             this.cbGrad1 = new System.Windows.Forms.ComboBox();
@@ -65,13 +68,9 @@
             this.txtBgColor = new System.Windows.Forms.TextBox();
             this.chkTopMost = new System.Windows.Forms.CheckBox();
             this.grpBoxSlideShow = new System.Windows.Forms.GroupBox();
-            this.grpBoxTextColor = new System.Windows.Forms.GroupBox();
-            this.lblVerticalText = new System.Windows.Forms.Label();
-            this.label12 = new System.Windows.Forms.Label();
             this.btnActiveColor = new System.Windows.Forms.Button();
             this.btnHighlightColor = new System.Windows.Forms.Button();
             this.btnInactiveColor = new System.Windows.Forms.Button();
-            this.lblNumberOfLines = new System.Windows.Forms.Label();
             this.btnActiveBorderColor = new System.Windows.Forms.Button();
             this.picActiveColor = new System.Windows.Forms.PictureBox();
             this.picHighlightColor = new System.Windows.Forms.PictureBox();
@@ -80,9 +79,7 @@
             this.lblBorder = new System.Windows.Forms.Label();
             this.picActiveBorderColor = new System.Windows.Forms.PictureBox();
             this.btnInactiveBoderColorPicker = new System.Windows.Forms.Button();
-            this.UpDownNbLines = new System.Windows.Forms.NumericUpDown();
             this.btnActiveColorBorderPicker = new System.Windows.Forms.Button();
-            this.cbOptionsTextDisplay = new System.Windows.Forms.ComboBox();
             this.btnInactiveColorPicker = new System.Windows.Forms.Button();
             this.chkTextBackground = new System.Windows.Forms.CheckBox();
             this.btnHighlightColorPicker = new System.Windows.Forms.Button();
@@ -102,19 +99,49 @@
             this.txtHighlightColor = new System.Windows.Forms.TextBox();
             this.cbFontName = new System.Windows.Forms.ComboBox();
             this.lblHighlightColor = new System.Windows.Forms.Label();
+            this.lblVerticalPosition = new System.Windows.Forms.Label();
+            this.lblNumberOfLines = new System.Windows.Forms.Label();
+            this.UpDownNbLines = new System.Windows.Forms.NumericUpDown();
+            this.cbOptionsTextDisplay = new System.Windows.Forms.ComboBox();
+            this.grpBoxKaraokeType = new System.Windows.Forms.GroupBox();
+            this.cbFontStretching = new System.Windows.Forms.ComboBox();
+            this.lblFontSize = new System.Windows.Forms.Label();
+            this.cbKaraokeType = new System.Windows.Forms.ComboBox();
+            this.lblKaraokeType = new System.Windows.Forms.Label();
+            this.karaokeEffect1 = new keffect.KaraokeEffect();
+            this.tabControl1 = new System.Windows.Forms.TabControl();
+            this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.txtActiveInstrumentalColor = new System.Windows.Forms.TextBox();
+            this.btnActiveInstrumentalColor = new System.Windows.Forms.Button();
+            this.label5 = new System.Windows.Forms.Label();
+            this.picActiveInstrumentalColor = new System.Windows.Forms.PictureBox();
+            this.btnActiveInstrumentalColorPicker = new System.Windows.Forms.Button();
+            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.btnDeleteTheme = new System.Windows.Forms.Button();
+            this.btnNewTheme = new System.Windows.Forms.Button();
+            this.cbTheme = new System.Windows.Forms.ComboBox();
+            this.lblTheme = new System.Windows.Forms.Label();
+            this.btnSaveTheme = new System.Windows.Forms.Button();
+            this.openFileDialog = new System.Windows.Forms.OpenFileDialog();
             ((System.ComponentModel.ISupportInitialize)(this.picBgColor)).BeginInit();
             this.pnlBalls.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.grpBoxBackGround.SuspendLayout();
             this.grpBoxSlideShow.SuspendLayout();
-            this.grpBoxTextColor.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.picActiveColor)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.picHighlightColor)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.picInactiveColor)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.picActiveBorderColor)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.UpDownNbLines)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.picInactiveBorderColor)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.UpDownNbLines)).BeginInit();
+            this.grpBoxKaraokeType.SuspendLayout();
+            this.tabControl1.SuspendLayout();
+            this.tabPage1.SuspendLayout();
+            this.tabPage2.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.picActiveInstrumentalColor)).BeginInit();
+            this.groupBox1.SuspendLayout();
             this.SuspendLayout();
             // 
             // picBgColor
@@ -140,8 +167,8 @@
             // 
             // radioDiaporama
             // 
-            resources.ApplyResources(this.radioDiaporama, "radioDiaporama");
             this.radioDiaporama.Checked = true;
+            resources.ApplyResources(this.radioDiaporama, "radioDiaporama");
             this.radioDiaporama.Name = "radioDiaporama";
             this.radioDiaporama.TabStop = true;
             this.radioDiaporama.UseVisualStyleBackColor = true;
@@ -161,13 +188,14 @@
             this.btnResetDir.UseVisualStyleBackColor = true;
             this.btnResetDir.Click += new System.EventHandler(this.btnResetDir_Click);
             // 
-            // label6
+            // lblPosition
             // 
-            resources.ApplyResources(this.label6, "label6");
-            this.label6.Name = "label6";
+            resources.ApplyResources(this.lblPosition, "lblPosition");
+            this.lblPosition.Name = "lblPosition";
             // 
             // cbSizeMode
             // 
+            resources.ApplyResources(this.cbSizeMode, "cbSizeMode");
             this.cbSizeMode.FormattingEnabled = true;
             this.cbSizeMode.Items.AddRange(new object[] {
             resources.GetString("cbSizeMode.Items"),
@@ -175,19 +203,18 @@
             resources.GetString("cbSizeMode.Items2"),
             resources.GetString("cbSizeMode.Items3"),
             resources.GetString("cbSizeMode.Items4")});
-            resources.ApplyResources(this.cbSizeMode, "cbSizeMode");
             this.cbSizeMode.Name = "cbSizeMode";
             this.cbSizeMode.SelectedIndexChanged += new System.EventHandler(this.cbSizeMode_SelectedIndexChanged);
             // 
-            // label4
+            // lblSeconds
             // 
-            resources.ApplyResources(this.label4, "label4");
-            this.label4.Name = "label4";
+            resources.ApplyResources(this.lblSeconds, "lblSeconds");
+            this.lblSeconds.Name = "lblSeconds";
             // 
-            // label3
+            // lblFrequency
             // 
-            resources.ApplyResources(this.label3, "label3");
-            this.label3.Name = "label3";
+            resources.ApplyResources(this.lblFrequency, "lblFrequency");
+            this.lblFrequency.Name = "lblFrequency";
             // 
             // txtSlideShowFreq
             // 
@@ -203,10 +230,10 @@
             this.btnDirSlideShow.UseVisualStyleBackColor = true;
             this.btnDirSlideShow.Click += new System.EventHandler(this.btnDirSlideShow_Click);
             // 
-            // label2
+            // lblSlideshowDirectory
             // 
-            resources.ApplyResources(this.label2, "label2");
-            this.label2.Name = "label2";
+            resources.ApplyResources(this.lblSlideshowDirectory, "lblSlideshowDirectory");
+            this.lblSlideshowDirectory.Name = "lblSlideshowDirectory";
             // 
             // txtSlideShow
             // 
@@ -234,33 +261,6 @@
             this.btnApply.Name = "btnApply";
             this.btnApply.UseVisualStyleBackColor = true;
             this.btnApply.Click += new System.EventHandler(this.btnApply_Click);
-            // 
-            // karaokeEffect1
-            //             
-            this.karaokeEffect1.bforceUppercase = false;
-            this.karaokeEffect1.bTextBackGround = false;
-            this.karaokeEffect1.FreqDirSlideShow = 10;
-            //this.karaokeEffect1.imgLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.karaokeEffect1.KaraokeFont = new System.Drawing.Font("Comic Sans MS", 61.33333F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel);
-            resources.ApplyResources(this.karaokeEffect1, "karaokeEffect1");
-            //this.karaokeEffect1.m_Alpha = 255;
-            this.karaokeEffect1.m_CurrentImage = null;
-            this.karaokeEffect1.m_DisplayRectangle = new System.Drawing.Rectangle(0, 0, 0, 0);
-            this.karaokeEffect1.Name = "karaokeEffect1";
-            this.karaokeEffect1.nbLyricsLines = 1;
-            this.karaokeEffect1.OptionBackground = null;
-            this.karaokeEffect1.OptionDisplay = keffect.KaraokeEffect.OptionsDisplay.Top;
-            this.karaokeEffect1.Position = 0;
-            this.karaokeEffect1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Normal;
-            this.karaokeEffect1.StepPercent = 0.01F;
-            //this.karaokeEffect1.SyncLine = ((System.Collections.Generic.List<keffect.KaraokeEffect.kSyncText>)(resources.GetObject("karaokeEffect1.SyncLine")));
-            //this.karaokeEffect1.SyncLyrics = ((System.Collections.Generic.List<System.Collections.Generic.List<keffect.KaraokeEffect.kSyncText>>)(resources.GetObject("karaokeEffect1.SyncLyrics")));
-            this.karaokeEffect1.timerIntervall = ((long)(50));
-            this.karaokeEffect1.TransitionEffect = keffect.KaraokeEffect.TransitionEffects.Progressive;
-            this.karaokeEffect1.TransparencyKey = System.Drawing.Color.Lime;
-            this.karaokeEffect1.ActiveColor = System.Drawing.Color.FromArgb(((int)(((byte)(153)))), ((int)(((byte)(180)))), ((int)(((byte)(51)))));            
-            this.karaokeEffect1.HighlightColor = System.Drawing.Color.FromArgb(((int)(((byte)(238)))), ((int)(((byte)(17)))), ((int)(((byte)(17)))));            
-            this.karaokeEffect1.InactiveColor = System.Drawing.Color.White;
             // 
             // chkHighLightProgressive
             // 
@@ -300,6 +300,9 @@
             // 
             // grpBoxBackGround
             // 
+            this.grpBoxBackGround.Controls.Add(this.btnSelectImage);
+            this.grpBoxBackGround.Controls.Add(this.radioImage);
+            this.grpBoxBackGround.Controls.Add(this.txtImage);
             this.grpBoxBackGround.Controls.Add(this.cbRhythm1);
             this.grpBoxBackGround.Controls.Add(this.cbRhythm0);
             this.grpBoxBackGround.Controls.Add(this.cbGrad1);
@@ -316,6 +319,24 @@
             resources.ApplyResources(this.grpBoxBackGround, "grpBoxBackGround");
             this.grpBoxBackGround.Name = "grpBoxBackGround";
             this.grpBoxBackGround.TabStop = false;
+            // 
+            // btnSelectImage
+            // 
+            resources.ApplyResources(this.btnSelectImage, "btnSelectImage");
+            this.btnSelectImage.Name = "btnSelectImage";
+            this.btnSelectImage.UseVisualStyleBackColor = true;
+            // 
+            // radioImage
+            // 
+            resources.ApplyResources(this.radioImage, "radioImage");
+            this.radioImage.Name = "radioImage";
+            this.radioImage.UseVisualStyleBackColor = true;
+            this.radioImage.CheckedChanged += new System.EventHandler(this.radioImage_CheckedChanged);
+            // 
+            // txtImage
+            // 
+            resources.ApplyResources(this.txtImage, "txtImage");
+            this.txtImage.Name = "txtImage";
             // 
             // cbRhythm1
             // 
@@ -361,9 +382,11 @@
             // 
             // btnBgColorPicker
             // 
+            this.btnBgColorPicker.Image = global::Karaboss.Properties.Resources.color_picker_black18;
             resources.ApplyResources(this.btnBgColorPicker, "btnBgColorPicker");
             this.btnBgColorPicker.Name = "btnBgColorPicker";
             this.btnBgColorPicker.UseVisualStyleBackColor = true;
+            this.btnBgColorPicker.Click += new System.EventHandler(this.btnBgColorPicker_Click);
             // 
             // txtBgColor
             // 
@@ -373,9 +396,9 @@
             // 
             // chkTopMost
             // 
-            resources.ApplyResources(this.chkTopMost, "chkTopMost");
             this.chkTopMost.Checked = true;
             this.chkTopMost.CheckState = System.Windows.Forms.CheckState.Checked;
+            resources.ApplyResources(this.chkTopMost, "chkTopMost");
             this.chkTopMost.Name = "chkTopMost";
             this.chkTopMost.UseVisualStyleBackColor = true;
             this.chkTopMost.CheckedChanged += new System.EventHandler(this.chkTopMost_CheckedChanged);
@@ -383,71 +406,17 @@
             // grpBoxSlideShow
             // 
             this.grpBoxSlideShow.Controls.Add(this.txtSlideShow);
-            this.grpBoxSlideShow.Controls.Add(this.label2);
+            this.grpBoxSlideShow.Controls.Add(this.lblSlideshowDirectory);
             this.grpBoxSlideShow.Controls.Add(this.btnDirSlideShow);
             this.grpBoxSlideShow.Controls.Add(this.txtSlideShowFreq);
-            this.grpBoxSlideShow.Controls.Add(this.label3);
-            this.grpBoxSlideShow.Controls.Add(this.label4);
+            this.grpBoxSlideShow.Controls.Add(this.lblFrequency);
+            this.grpBoxSlideShow.Controls.Add(this.lblSeconds);
             this.grpBoxSlideShow.Controls.Add(this.cbSizeMode);
-            this.grpBoxSlideShow.Controls.Add(this.label6);
+            this.grpBoxSlideShow.Controls.Add(this.lblPosition);
             this.grpBoxSlideShow.Controls.Add(this.btnResetDir);
             resources.ApplyResources(this.grpBoxSlideShow, "grpBoxSlideShow");
             this.grpBoxSlideShow.Name = "grpBoxSlideShow";
             this.grpBoxSlideShow.TabStop = false;
-            // 
-            // grpBoxTextColor
-            // 
-            this.grpBoxTextColor.Controls.Add(this.lblVerticalText);
-            this.grpBoxTextColor.Controls.Add(this.label12);
-            this.grpBoxTextColor.Controls.Add(this.btnActiveColor);
-            this.grpBoxTextColor.Controls.Add(this.btnHighlightColor);
-            this.grpBoxTextColor.Controls.Add(this.btnInactiveColor);
-            this.grpBoxTextColor.Controls.Add(this.chkHighLightProgressive);
-            this.grpBoxTextColor.Controls.Add(this.lblNumberOfLines);
-            this.grpBoxTextColor.Controls.Add(this.btnActiveBorderColor);
-            this.grpBoxTextColor.Controls.Add(this.picActiveColor);
-            this.grpBoxTextColor.Controls.Add(this.picHighlightColor);
-            this.grpBoxTextColor.Controls.Add(this.cbFrameType);
-            this.grpBoxTextColor.Controls.Add(this.picInactiveColor);
-            this.grpBoxTextColor.Controls.Add(this.lblBorder);
-            this.grpBoxTextColor.Controls.Add(this.picActiveBorderColor);
-            this.grpBoxTextColor.Controls.Add(this.btnInactiveBoderColorPicker);
-            this.grpBoxTextColor.Controls.Add(this.UpDownNbLines);
-            this.grpBoxTextColor.Controls.Add(this.btnActiveColorBorderPicker);
-            this.grpBoxTextColor.Controls.Add(this.cbOptionsTextDisplay);
-            this.grpBoxTextColor.Controls.Add(this.btnInactiveColorPicker);
-            this.grpBoxTextColor.Controls.Add(this.chkTextBackground);
-            this.grpBoxTextColor.Controls.Add(this.btnHighlightColorPicker);
-            this.grpBoxTextColor.Controls.Add(this.lblFont);
-            this.grpBoxTextColor.Controls.Add(this.btnActiveColorPicker);
-            this.grpBoxTextColor.Controls.Add(this.chkTextUppercase);
-            this.grpBoxTextColor.Controls.Add(this.txtInactiveBorderColor);
-            this.grpBoxTextColor.Controls.Add(this.label9);
-            this.grpBoxTextColor.Controls.Add(this.txtActiveBorderColor);
-            this.grpBoxTextColor.Controls.Add(this.btnInactiveBorderColor);
-            this.grpBoxTextColor.Controls.Add(this.label11);
-            this.grpBoxTextColor.Controls.Add(this.picInactiveBorderColor);
-            this.grpBoxTextColor.Controls.Add(this.txtInactiveColor);
-            this.grpBoxTextColor.Controls.Add(this.lblActiveColor);
-            this.grpBoxTextColor.Controls.Add(this.lblInactiveColor);
-            this.grpBoxTextColor.Controls.Add(this.txtActiveColor);
-            this.grpBoxTextColor.Controls.Add(this.txtHighlightColor);
-            this.grpBoxTextColor.Controls.Add(this.cbFontName);
-            this.grpBoxTextColor.Controls.Add(this.lblHighlightColor);
-            resources.ApplyResources(this.grpBoxTextColor, "grpBoxTextColor");
-            this.grpBoxTextColor.Name = "grpBoxTextColor";
-            this.grpBoxTextColor.TabStop = false;
-            // 
-            // lblVerticalText
-            // 
-            resources.ApplyResources(this.lblVerticalText, "lblVerticalText");
-            this.lblVerticalText.Name = "lblVerticalText";
-            // 
-            // label12
-            // 
-            resources.ApplyResources(this.label12, "label12");
-            this.label12.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.label12.Name = "label12";
             // 
             // btnActiveColor
             // 
@@ -470,11 +439,6 @@
             this.btnInactiveColor.UseVisualStyleBackColor = true;
             this.btnInactiveColor.Click += new System.EventHandler(this.btnInactiveColor_Click);
             // 
-            // lblNumberOfLines
-            // 
-            resources.ApplyResources(this.lblNumberOfLines, "lblNumberOfLines");
-            this.lblNumberOfLines.Name = "lblNumberOfLines";
-            // 
             // btnActiveBorderColor
             // 
             resources.ApplyResources(this.btnActiveBorderColor, "btnActiveBorderColor");
@@ -484,22 +448,22 @@
             // 
             // picActiveColor
             // 
-            this.picActiveColor.BackColor = System.Drawing.Color.LightGreen;
+            this.picActiveColor.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(172)))), ((int)(((byte)(255)))));
             resources.ApplyResources(this.picActiveColor, "picActiveColor");
             this.picActiveColor.Name = "picActiveColor";
             this.picActiveColor.TabStop = false;
             // 
             // picHighlightColor
             // 
-            this.picHighlightColor.BackColor = System.Drawing.Color.Red;
+            this.picHighlightColor.BackColor = System.Drawing.Color.Yellow;
             resources.ApplyResources(this.picHighlightColor, "picHighlightColor");
             this.picHighlightColor.Name = "picHighlightColor";
             this.picHighlightColor.TabStop = false;
             // 
             // cbFrameType
             // 
-            resources.ApplyResources(this.cbFrameType, "cbFrameType");
             this.cbFrameType.FormattingEnabled = true;
+            resources.ApplyResources(this.cbFrameType, "cbFrameType");
             this.cbFrameType.Name = "cbFrameType";
             this.cbFrameType.SelectedIndexChanged += new System.EventHandler(this.cbFrameType_SelectedIndexChanged);
             // 
@@ -525,47 +489,23 @@
             // 
             // btnInactiveBoderColorPicker
             // 
+            this.btnInactiveBoderColorPicker.Image = global::Karaboss.Properties.Resources.color_picker_black18;
             resources.ApplyResources(this.btnInactiveBoderColorPicker, "btnInactiveBoderColorPicker");
             this.btnInactiveBoderColorPicker.Name = "btnInactiveBoderColorPicker";
             this.btnInactiveBoderColorPicker.UseVisualStyleBackColor = true;
             this.btnInactiveBoderColorPicker.Click += new System.EventHandler(this.btnInactiveBoderColorPicker_Click);
             // 
-            // UpDownNbLines
-            // 
-            resources.ApplyResources(this.UpDownNbLines, "UpDownNbLines");
-            this.UpDownNbLines.Minimum = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
-            this.UpDownNbLines.Name = "UpDownNbLines";
-            this.UpDownNbLines.Value = new decimal(new int[] {
-            3,
-            0,
-            0,
-            0});
-            this.UpDownNbLines.ValueChanged += new System.EventHandler(this.UpDownNbLines_ValueChanged);
-            // 
             // btnActiveColorBorderPicker
             // 
+            this.btnActiveColorBorderPicker.Image = global::Karaboss.Properties.Resources.color_picker_black18;
             resources.ApplyResources(this.btnActiveColorBorderPicker, "btnActiveColorBorderPicker");
             this.btnActiveColorBorderPicker.Name = "btnActiveColorBorderPicker";
             this.btnActiveColorBorderPicker.UseVisualStyleBackColor = true;
             this.btnActiveColorBorderPicker.Click += new System.EventHandler(this.btnActiveColorBorderPicker_Click);
             // 
-            // cbOptionsTextDisplay
-            // 
-            resources.ApplyResources(this.cbOptionsTextDisplay, "cbOptionsTextDisplay");
-            this.cbOptionsTextDisplay.FormattingEnabled = true;
-            this.cbOptionsTextDisplay.Items.AddRange(new object[] {
-            resources.GetString("cbOptionsTextDisplay.Items"),
-            resources.GetString("cbOptionsTextDisplay.Items1"),
-            resources.GetString("cbOptionsTextDisplay.Items2")});
-            this.cbOptionsTextDisplay.Name = "cbOptionsTextDisplay";
-            this.cbOptionsTextDisplay.SelectedIndexChanged += new System.EventHandler(this.cbOptionsTextDisplay_SelectedIndexChanged);
-            // 
             // btnInactiveColorPicker
             // 
+            this.btnInactiveColorPicker.Image = global::Karaboss.Properties.Resources.color_picker_black18;
             resources.ApplyResources(this.btnInactiveColorPicker, "btnInactiveColorPicker");
             this.btnInactiveColorPicker.Name = "btnInactiveColorPicker";
             this.btnInactiveColorPicker.UseVisualStyleBackColor = true;
@@ -573,15 +513,16 @@
             // 
             // chkTextBackground
             // 
-            resources.ApplyResources(this.chkTextBackground, "chkTextBackground");
             this.chkTextBackground.Checked = true;
             this.chkTextBackground.CheckState = System.Windows.Forms.CheckState.Checked;
+            resources.ApplyResources(this.chkTextBackground, "chkTextBackground");
             this.chkTextBackground.Name = "chkTextBackground";
             this.chkTextBackground.UseVisualStyleBackColor = true;
             this.chkTextBackground.CheckedChanged += new System.EventHandler(this.chkTextBackground_CheckedChanged);
             // 
             // btnHighlightColorPicker
             // 
+            this.btnHighlightColorPicker.Image = global::Karaboss.Properties.Resources.color_picker_black18;
             resources.ApplyResources(this.btnHighlightColorPicker, "btnHighlightColorPicker");
             this.btnHighlightColorPicker.Name = "btnHighlightColorPicker";
             this.btnHighlightColorPicker.UseVisualStyleBackColor = true;
@@ -594,6 +535,7 @@
             // 
             // btnActiveColorPicker
             // 
+            this.btnActiveColorPicker.Image = global::Karaboss.Properties.Resources.color_picker_black18;
             resources.ApplyResources(this.btnActiveColorPicker, "btnActiveColorPicker");
             this.btnActiveColorPicker.Name = "btnActiveColorPicker";
             this.btnActiveColorPicker.UseVisualStyleBackColor = true;
@@ -601,9 +543,9 @@
             // 
             // chkTextUppercase
             // 
-            resources.ApplyResources(this.chkTextUppercase, "chkTextUppercase");
             this.chkTextUppercase.Checked = true;
             this.chkTextUppercase.CheckState = System.Windows.Forms.CheckState.Checked;
+            resources.ApplyResources(this.chkTextUppercase, "chkTextUppercase");
             this.chkTextUppercase.Name = "chkTextUppercase";
             this.chkTextUppercase.UseVisualStyleBackColor = true;
             this.chkTextUppercase.CheckedChanged += new System.EventHandler(this.chkTextUppercase_CheckedChanged);
@@ -684,11 +626,285 @@
             resources.ApplyResources(this.lblHighlightColor, "lblHighlightColor");
             this.lblHighlightColor.Name = "lblHighlightColor";
             // 
+            // lblVerticalPosition
+            // 
+            this.lblVerticalPosition.ForeColor = System.Drawing.SystemColors.ControlText;
+            resources.ApplyResources(this.lblVerticalPosition, "lblVerticalPosition");
+            this.lblVerticalPosition.Name = "lblVerticalPosition";
+            // 
+            // lblNumberOfLines
+            // 
+            resources.ApplyResources(this.lblNumberOfLines, "lblNumberOfLines");
+            this.lblNumberOfLines.Name = "lblNumberOfLines";
+            // 
+            // UpDownNbLines
+            // 
+            resources.ApplyResources(this.UpDownNbLines, "UpDownNbLines");
+            this.UpDownNbLines.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.UpDownNbLines.Name = "UpDownNbLines";
+            this.UpDownNbLines.Value = new decimal(new int[] {
+            3,
+            0,
+            0,
+            0});
+            this.UpDownNbLines.ValueChanged += new System.EventHandler(this.UpDownNbLines_ValueChanged);
+            // 
+            // cbOptionsTextDisplay
+            // 
+            this.cbOptionsTextDisplay.FormattingEnabled = true;
+            this.cbOptionsTextDisplay.Items.AddRange(new object[] {
+            resources.GetString("cbOptionsTextDisplay.Items"),
+            resources.GetString("cbOptionsTextDisplay.Items1"),
+            resources.GetString("cbOptionsTextDisplay.Items2")});
+            resources.ApplyResources(this.cbOptionsTextDisplay, "cbOptionsTextDisplay");
+            this.cbOptionsTextDisplay.Name = "cbOptionsTextDisplay";
+            this.cbOptionsTextDisplay.SelectedIndexChanged += new System.EventHandler(this.cbOptionsTextDisplay_SelectedIndexChanged);
+            // 
+            // grpBoxKaraokeType
+            // 
+            this.grpBoxKaraokeType.Controls.Add(this.cbFontStretching);
+            this.grpBoxKaraokeType.Controls.Add(this.lblFontSize);
+            this.grpBoxKaraokeType.Controls.Add(this.cbKaraokeType);
+            this.grpBoxKaraokeType.Controls.Add(this.lblKaraokeType);
+            this.grpBoxKaraokeType.Controls.Add(this.cbOptionsTextDisplay);
+            this.grpBoxKaraokeType.Controls.Add(this.lblVerticalPosition);
+            this.grpBoxKaraokeType.Controls.Add(this.lblNumberOfLines);
+            this.grpBoxKaraokeType.Controls.Add(this.UpDownNbLines);
+            resources.ApplyResources(this.grpBoxKaraokeType, "grpBoxKaraokeType");
+            this.grpBoxKaraokeType.Name = "grpBoxKaraokeType";
+            this.grpBoxKaraokeType.TabStop = false;
+            // 
+            // cbFontStretching
+            // 
+            this.cbFontStretching.FormattingEnabled = true;
+            this.cbFontStretching.Items.AddRange(new object[] {
+            resources.GetString("cbFontStretching.Items"),
+            resources.GetString("cbFontStretching.Items1"),
+            resources.GetString("cbFontStretching.Items2"),
+            resources.GetString("cbFontStretching.Items3")});
+            resources.ApplyResources(this.cbFontStretching, "cbFontStretching");
+            this.cbFontStretching.Name = "cbFontStretching";
+            this.cbFontStretching.SelectedIndexChanged += new System.EventHandler(this.cbFontStretching_SelectedIndexChanged);
+            // 
+            // lblFontSize
+            // 
+            this.lblFontSize.ForeColor = System.Drawing.SystemColors.ControlText;
+            resources.ApplyResources(this.lblFontSize, "lblFontSize");
+            this.lblFontSize.Name = "lblFontSize";
+            // 
+            // cbKaraokeType
+            // 
+            this.cbKaraokeType.FormattingEnabled = true;
+            this.cbKaraokeType.Items.AddRange(new object[] {
+            resources.GetString("cbKaraokeType.Items"),
+            resources.GetString("cbKaraokeType.Items1"),
+            resources.GetString("cbKaraokeType.Items2"),
+            resources.GetString("cbKaraokeType.Items3")});
+            resources.ApplyResources(this.cbKaraokeType, "cbKaraokeType");
+            this.cbKaraokeType.Name = "cbKaraokeType";
+            this.cbKaraokeType.SelectedIndexChanged += new System.EventHandler(this.cbKaraokeType_SelectedIndexChanged);
+            // 
+            // lblKaraokeType
+            // 
+            this.lblKaraokeType.ForeColor = System.Drawing.SystemColors.ControlText;
+            resources.ApplyResources(this.lblKaraokeType, "lblKaraokeType");
+            this.lblKaraokeType.Name = "lblKaraokeType";
+            // 
+            // karaokeEffect1
+            // 
+            this.karaokeEffect1.ActiveBorderColor = System.Drawing.Color.Empty;
+            this.karaokeEffect1.ActiveColor = System.Drawing.Color.FromArgb(((int)(((byte)(153)))), ((int)(((byte)(180)))), ((int)(((byte)(51)))));
+            this.karaokeEffect1.ActiveInstrumentalColor = System.Drawing.Color.Empty;
+            this.karaokeEffect1.BackColor = System.Drawing.Color.LightGray;
+            this.karaokeEffect1.Beat = 200;
+            this.karaokeEffect1.bforceUppercase = false;
+            this.karaokeEffect1.BgColor = System.Drawing.Color.Empty;
+            this.karaokeEffect1.bIsSettings = false;
+            this.karaokeEffect1.BitRate = 0;
+            this.karaokeEffect1.BorderThick = 1;
+            this.karaokeEffect1.bShowParagraphs = true;
+            this.karaokeEffect1.bTextBackGround = false;
+            this.karaokeEffect1.Duration = 0D;
+            this.karaokeEffect1.FontStretching = "None";
+            this.karaokeEffect1.FrameType = "Frame1";
+            this.karaokeEffect1.FreqDirSlideShow = 10;
+            this.karaokeEffect1.Frequency = 0F;
+            this.karaokeEffect1.Grad0Color = System.Drawing.Color.Empty;
+            this.karaokeEffect1.Grad1Color = System.Drawing.Color.Empty;
+            this.karaokeEffect1.GradientAngle = 45F;
+            this.karaokeEffect1.HighlightColor = System.Drawing.Color.FromArgb(((int)(((byte)(238)))), ((int)(((byte)(17)))), ((int)(((byte)(17)))));
+            this.karaokeEffect1.InactiveBorderColor = System.Drawing.Color.Empty;
+            this.karaokeEffect1.InactiveColor = System.Drawing.Color.White;
+            this.karaokeEffect1.KaraokeDisplayType = kar.KaraokeDisplayTypes.FixedLines;
+            this.karaokeEffect1.KaraokeFont = new System.Drawing.Font("Comic Sans MS", 61.33333F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel);
+            kLyrics1.Lines = ((System.Collections.Generic.List<kar.kLine>)(resources.GetObject("kLyrics1.Lines")));
+            this.karaokeEffect1.KLyrics = kLyrics1;
+            resources.ApplyResources(this.karaokeEffect1, "karaokeEffect1");
+            this.karaokeEffect1.m_CurrentImage = null;
+            this.karaokeEffect1.m_DisplayRectangle = new System.Drawing.Rectangle(0, 0, 0, 0);
+            this.karaokeEffect1.Name = "karaokeEffect1";
+            this.karaokeEffect1.nbLyricsLines = 3;
+            this.karaokeEffect1.OptionBackground = null;
+            this.karaokeEffect1.OptionDisplay = keffect.KaraokeEffect.OptionsDisplay.Top;
+            this.karaokeEffect1.Position = 0;
+            this.karaokeEffect1.Rhythm0Color = System.Drawing.Color.Empty;
+            this.karaokeEffect1.Rhythm1Color = System.Drawing.Color.Empty;
+            this.karaokeEffect1.SingleImagePath = "";
+            this.karaokeEffect1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Normal;
+            this.karaokeEffect1.StepPercent = 0.01F;
+            this.karaokeEffect1.timerIntervall = ((long)(50));
+            this.karaokeEffect1.TransitionEffect = keffect.KaraokeEffect.TransitionEffects.Progressive;
+            this.karaokeEffect1.TransparencyKey = System.Drawing.Color.Lime;
+            // 
+            // tabControl1
+            // 
+            this.tabControl1.Controls.Add(this.tabPage1);
+            this.tabControl1.Controls.Add(this.tabPage2);
+            resources.ApplyResources(this.tabControl1, "tabControl1");
+            this.tabControl1.Name = "tabControl1";
+            this.tabControl1.SelectedIndex = 0;
+            // 
+            // tabPage1
+            // 
+            this.tabPage1.Controls.Add(this.lblActiveColor);
+            this.tabPage1.Controls.Add(this.btnActiveColor);
+            this.tabPage1.Controls.Add(this.lblHighlightColor);
+            this.tabPage1.Controls.Add(this.btnHighlightColor);
+            this.tabPage1.Controls.Add(this.cbFontName);
+            this.tabPage1.Controls.Add(this.btnInactiveColor);
+            this.tabPage1.Controls.Add(this.txtHighlightColor);
+            this.tabPage1.Controls.Add(this.chkHighLightProgressive);
+            this.tabPage1.Controls.Add(this.txtActiveColor);
+            this.tabPage1.Controls.Add(this.btnActiveBorderColor);
+            this.tabPage1.Controls.Add(this.lblInactiveColor);
+            this.tabPage1.Controls.Add(this.picActiveColor);
+            this.tabPage1.Controls.Add(this.txtInactiveColor);
+            this.tabPage1.Controls.Add(this.picHighlightColor);
+            this.tabPage1.Controls.Add(this.picInactiveBorderColor);
+            this.tabPage1.Controls.Add(this.cbFrameType);
+            this.tabPage1.Controls.Add(this.label11);
+            this.tabPage1.Controls.Add(this.picInactiveColor);
+            this.tabPage1.Controls.Add(this.btnInactiveBorderColor);
+            this.tabPage1.Controls.Add(this.lblBorder);
+            this.tabPage1.Controls.Add(this.txtActiveBorderColor);
+            this.tabPage1.Controls.Add(this.picActiveBorderColor);
+            this.tabPage1.Controls.Add(this.label9);
+            this.tabPage1.Controls.Add(this.btnInactiveBoderColorPicker);
+            this.tabPage1.Controls.Add(this.txtInactiveBorderColor);
+            this.tabPage1.Controls.Add(this.btnActiveColorBorderPicker);
+            this.tabPage1.Controls.Add(this.chkTextUppercase);
+            this.tabPage1.Controls.Add(this.btnInactiveColorPicker);
+            this.tabPage1.Controls.Add(this.btnActiveColorPicker);
+            this.tabPage1.Controls.Add(this.chkTextBackground);
+            this.tabPage1.Controls.Add(this.lblFont);
+            this.tabPage1.Controls.Add(this.btnHighlightColorPicker);
+            resources.ApplyResources(this.tabPage1, "tabPage1");
+            this.tabPage1.Name = "tabPage1";
+            this.tabPage1.UseVisualStyleBackColor = true;
+            // 
+            // tabPage2
+            // 
+            this.tabPage2.Controls.Add(this.txtActiveInstrumentalColor);
+            this.tabPage2.Controls.Add(this.btnActiveInstrumentalColor);
+            this.tabPage2.Controls.Add(this.label5);
+            this.tabPage2.Controls.Add(this.picActiveInstrumentalColor);
+            this.tabPage2.Controls.Add(this.btnActiveInstrumentalColorPicker);
+            resources.ApplyResources(this.tabPage2, "tabPage2");
+            this.tabPage2.Name = "tabPage2";
+            this.tabPage2.UseVisualStyleBackColor = true;
+            // 
+            // txtActiveInstrumentalColor
+            // 
+            resources.ApplyResources(this.txtActiveInstrumentalColor, "txtActiveInstrumentalColor");
+            this.txtActiveInstrumentalColor.Name = "txtActiveInstrumentalColor";
+            this.txtActiveInstrumentalColor.TextChanged += new System.EventHandler(this.txtActiveInstrumentalColor_TextChanged);
+            // 
+            // btnActiveInstrumentalColor
+            // 
+            resources.ApplyResources(this.btnActiveInstrumentalColor, "btnActiveInstrumentalColor");
+            this.btnActiveInstrumentalColor.Name = "btnActiveInstrumentalColor";
+            this.btnActiveInstrumentalColor.UseVisualStyleBackColor = true;
+            this.btnActiveInstrumentalColor.Click += new System.EventHandler(this.btnActiveInstrumentalColor_Click);
+            // 
+            // label5
+            // 
+            resources.ApplyResources(this.label5, "label5");
+            this.label5.Name = "label5";
+            // 
+            // picActiveInstrumentalColor
+            // 
+            this.picActiveInstrumentalColor.BackColor = System.Drawing.Color.Gray;
+            resources.ApplyResources(this.picActiveInstrumentalColor, "picActiveInstrumentalColor");
+            this.picActiveInstrumentalColor.Name = "picActiveInstrumentalColor";
+            this.picActiveInstrumentalColor.TabStop = false;
+            // 
+            // btnActiveInstrumentalColorPicker
+            // 
+            this.btnActiveInstrumentalColorPicker.Image = global::Karaboss.Properties.Resources.color_picker_black18;
+            resources.ApplyResources(this.btnActiveInstrumentalColorPicker, "btnActiveInstrumentalColorPicker");
+            this.btnActiveInstrumentalColorPicker.Name = "btnActiveInstrumentalColorPicker";
+            this.btnActiveInstrumentalColorPicker.UseVisualStyleBackColor = true;
+            this.btnActiveInstrumentalColorPicker.Click += new System.EventHandler(this.btnActiveInstrumentalColorPicker_Click);
+            // 
+            // groupBox1
+            // 
+            this.groupBox1.Controls.Add(this.btnDeleteTheme);
+            this.groupBox1.Controls.Add(this.btnNewTheme);
+            this.groupBox1.Controls.Add(this.cbTheme);
+            this.groupBox1.Controls.Add(this.lblTheme);
+            this.groupBox1.Controls.Add(this.btnSaveTheme);
+            resources.ApplyResources(this.groupBox1, "groupBox1");
+            this.groupBox1.Name = "groupBox1";
+            this.groupBox1.TabStop = false;
+            // 
+            // btnDeleteTheme
+            // 
+            resources.ApplyResources(this.btnDeleteTheme, "btnDeleteTheme");
+            this.btnDeleteTheme.Name = "btnDeleteTheme";
+            this.btnDeleteTheme.UseVisualStyleBackColor = true;
+            this.btnDeleteTheme.Click += new System.EventHandler(this.btnDeleteTheme_Click);
+            // 
+            // btnNewTheme
+            // 
+            resources.ApplyResources(this.btnNewTheme, "btnNewTheme");
+            this.btnNewTheme.Name = "btnNewTheme";
+            this.btnNewTheme.UseVisualStyleBackColor = true;
+            this.btnNewTheme.Click += new System.EventHandler(this.btnNewTheme_Click);
+            // 
+            // cbTheme
+            // 
+            this.cbTheme.FormattingEnabled = true;
+            resources.ApplyResources(this.cbTheme, "cbTheme");
+            this.cbTheme.Name = "cbTheme";
+            this.cbTheme.SelectedIndexChanged += new System.EventHandler(this.cbTheme_SelectedIndexChanged);
+            // 
+            // lblTheme
+            // 
+            resources.ApplyResources(this.lblTheme, "lblTheme");
+            this.lblTheme.Name = "lblTheme";
+            // 
+            // btnSaveTheme
+            // 
+            resources.ApplyResources(this.btnSaveTheme, "btnSaveTheme");
+            this.btnSaveTheme.Name = "btnSaveTheme";
+            this.btnSaveTheme.UseVisualStyleBackColor = true;
+            this.btnSaveTheme.Click += new System.EventHandler(this.btnSaveTheme_Click);
+            // 
+            // openFileDialog
+            // 
+            this.openFileDialog.FileName = "openFileDialog1";
+            // 
             // frmMp3LyrOptions
             // 
             resources.ApplyResources(this, "$this");
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.Controls.Add(this.grpBoxTextColor);
+            this.Controls.Add(this.groupBox1);
+            this.Controls.Add(this.tabControl1);
+            this.Controls.Add(this.grpBoxKaraokeType);
             this.Controls.Add(this.grpBoxSlideShow);
             this.Controls.Add(this.chkTopMost);
             this.Controls.Add(this.grpBoxBackGround);
@@ -698,6 +914,9 @@
             this.Controls.Add(this.btnCancel);
             this.Controls.Add(this.btnOk);
             this.Controls.Add(this.btnApply);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
+            this.MaximizeBox = false;
+            this.MinimizeBox = false;
             this.Name = "frmMp3LyrOptions";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.frmMp3LyrOptions_FormClosing);
             this.Load += new System.EventHandler(this.frmMp3LyrOptions_Load);
@@ -709,16 +928,22 @@
             this.grpBoxBackGround.PerformLayout();
             this.grpBoxSlideShow.ResumeLayout(false);
             this.grpBoxSlideShow.PerformLayout();
-            this.grpBoxTextColor.ResumeLayout(false);
-            this.grpBoxTextColor.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.picActiveColor)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.picHighlightColor)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.picInactiveColor)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.picActiveBorderColor)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.UpDownNbLines)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.picInactiveBorderColor)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.UpDownNbLines)).EndInit();
+            this.grpBoxKaraokeType.ResumeLayout(false);
+            this.tabControl1.ResumeLayout(false);
+            this.tabPage1.ResumeLayout(false);
+            this.tabPage1.PerformLayout();
+            this.tabPage2.ResumeLayout(false);
+            this.tabPage2.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.picActiveInstrumentalColor)).EndInit();
+            this.groupBox1.ResumeLayout(false);
+            this.groupBox1.PerformLayout();
             this.ResumeLayout(false);
-            this.PerformLayout();
 
         }
 
@@ -729,13 +954,13 @@
         private System.Windows.Forms.RadioButton radioDiaporama;
         private System.Windows.Forms.Button btnBgColor;
         private System.Windows.Forms.Button btnResetDir;
-        private System.Windows.Forms.Label label6;
+        private System.Windows.Forms.Label lblPosition;
         private System.Windows.Forms.ComboBox cbSizeMode;
-        private System.Windows.Forms.Label label4;
-        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.Label lblSeconds;
+        private System.Windows.Forms.Label lblFrequency;
         private System.Windows.Forms.TextBox txtSlideShowFreq;
         private System.Windows.Forms.Button btnDirSlideShow;
-        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Label lblSlideshowDirectory;
         private System.Windows.Forms.TextBox txtSlideShow;
         private System.Windows.Forms.Button btnCancel;
         private System.Windows.Forms.Button btnOk;
@@ -759,9 +984,7 @@
         private System.Windows.Forms.RadioButton radioGradient;
         private System.Windows.Forms.CheckBox chkTopMost;
         private System.Windows.Forms.GroupBox grpBoxSlideShow;
-        private System.Windows.Forms.GroupBox grpBoxTextColor;
-        private System.Windows.Forms.Label lblVerticalText;
-        private System.Windows.Forms.Label label12;
+        private System.Windows.Forms.Label lblVerticalPosition;
         private System.Windows.Forms.Button btnActiveColor;
         private System.Windows.Forms.Button btnHighlightColor;
         private System.Windows.Forms.Button btnInactiveColor;
@@ -796,5 +1019,28 @@
         private System.Windows.Forms.ComboBox cbFontName;
         private System.Windows.Forms.Label lblHighlightColor;
         private System.Windows.Forms.TextBox txtHighlightColor;
+        private System.Windows.Forms.GroupBox grpBoxKaraokeType;
+        private System.Windows.Forms.ComboBox cbKaraokeType;
+        private System.Windows.Forms.Label lblKaraokeType;
+        private System.Windows.Forms.TabControl tabControl1;
+        private System.Windows.Forms.TabPage tabPage1;
+        private System.Windows.Forms.TabPage tabPage2;
+        private System.Windows.Forms.GroupBox groupBox1;
+        private System.Windows.Forms.Button btnDeleteTheme;
+        private System.Windows.Forms.Button btnNewTheme;
+        private System.Windows.Forms.ComboBox cbTheme;
+        private System.Windows.Forms.Label lblTheme;
+        private System.Windows.Forms.Button btnSaveTheme;
+        private System.Windows.Forms.Button btnSelectImage;
+        private System.Windows.Forms.RadioButton radioImage;
+        private System.Windows.Forms.TextBox txtImage;
+        private System.Windows.Forms.TextBox txtActiveInstrumentalColor;
+        private System.Windows.Forms.Button btnActiveInstrumentalColor;
+        private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.PictureBox picActiveInstrumentalColor;
+        private System.Windows.Forms.Button btnActiveInstrumentalColorPicker;
+        private System.Windows.Forms.OpenFileDialog openFileDialog;
+        private System.Windows.Forms.ComboBox cbFontStretching;
+        private System.Windows.Forms.Label lblFontSize;
     }
 }

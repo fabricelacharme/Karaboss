@@ -45,16 +45,16 @@
       <Value Profile="(Default)">400, 600</Value>
     </Setting>
     <Setting Name="BgColor" Type="System.String" Scope="User">
-      <Value Profile="(Default)">#000000</Value>
+      <Value Profile="(Default)">#FCA903</Value>
     </Setting>
     <Setting Name="InactiveColor" Type="System.String" Scope="User">
-      <Value Profile="(Default)">#000000</Value>
+      <Value Profile="(Default)">#FFFFFF</Value>
     </Setting>
     <Setting Name="HighlightColor" Type="System.String" Scope="User">
-      <Value Profile="(Default)">#FF0000</Value>
+      <Value Profile="(Default)">#FFFF00</Value>
     </Setting>
     <Setting Name="ActiveColor" Type="System.String" Scope="User">
-      <Value Profile="(Default)">#9ACD32</Value>
+      <Value Profile="(Default)">#00ACFF</Value>
     </Setting>
     <Setting Name="frmMidiLyricsEditMaximized" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
@@ -93,7 +93,7 @@
       <Value Profile="(Default)" />
     </Setting>
     <Setting Name="drivePlaylists" Type="System.String" Scope="User">
-      <Value Profile="(Default)">"C:\\"</Value>
+      <Value Profile="(Default)">C:\\</Value>
     </Setting>
     <Setting Name="ShowSequencer" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
@@ -102,7 +102,7 @@
       <Value Profile="(Default)">True</Value>
     </Setting>
     <Setting Name="BackGroundOption" Type="System.String" Scope="User">
-      <Value Profile="(Default)">"Diaporama"</Value>
+      <Value Profile="(Default)">Diaporama</Value>
     </Setting>
     <Setting Name="frmPianoRollMaximized" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
@@ -201,7 +201,7 @@
       <Value Profile="(Default)">True</Value>
     </Setting>
     <Setting Name="LyricsOptionDisplay" Type="System.String" Scope="User">
-      <Value Profile="(Default)">"Center"</Value>
+      <Value Profile="(Default)">Center</Value>
     </Setting>
     <Setting Name="bLyricsBackGround" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
@@ -429,7 +429,7 @@
       <Value Profile="(Default)">DodgerBlue</Value>
     </Setting>
     <Setting Name="DefaultEncoding" Type="System.String" Scope="User">
-      <Value Profile="(Default)">"UTF8</Value>
+      <Value Profile="(Default)">UTF8</Value>
     </Setting>
     <Setting Name="frmKfnViewMaximized" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
@@ -496,6 +496,24 @@
     </Setting>
     <Setting Name="frmKfnCreateLocation" Type="System.Drawing.Point" Scope="User">
       <Value Profile="(Default)">200, 200</Value>
+    </Setting>
+    <Setting Name="KaraokeDisplayType" Type="System.String" Scope="User">
+      <Value Profile="(Default)">FixedLines</Value>
+    </Setting>
+    <Setting Name="ActiveInstrumentalColor" Type="System.String" Scope="User">
+      <Value Profile="(Default)">#808080</Value>
+    </Setting>
+    <Setting Name="Theme" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Default</Value>
+    </Setting>
+    <Setting Name="fileThemesList" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="SingleImagePath" Type="System.String" Scope="User">
+      <Value Profile="(Default)">orange.bmp</Value>
+    </Setting>
+    <Setting Name="FontStretching" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Large</Value>
     </Setting>
   </Settings>
 </SettingsFile>

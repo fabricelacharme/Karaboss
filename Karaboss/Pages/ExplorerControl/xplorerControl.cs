@@ -591,38 +591,45 @@ namespace Karaboss.xplorer
             {
                 string fullpath = this.treeView.SelectedFolder.FileSystemPath;
 
-                
-                if (Directory.GetFiles(fullpath).Length > 0 ||
-                Directory.GetDirectories(fullpath).Length > 0)
+                try
                 {
 
-                    string tx = string.Empty;
-                    string file = string.Empty;
-                    string path = string.Empty;
-
-                    fullpath = this.treeView.SelectedFolder.First().FileSystemPath;
-                                  
-
-                    path = Path.GetDirectoryName(fullpath);
-                    file = Path.GetFileName(fullpath);
-
-                    string[] directories = path.Split(Path.DirectorySeparatorChar);
-                    string pfx = directories.Last();
-
-                    // every first letter to upper case
-                    pfx = ToTitleCase(pfx);
-
-                    tx = "This function use the name of the upper directory to rename all the files.\n";
-                    tx += "The prefix <" + pfx + "> will be added to all the files.\n\n";
-                    tx += "Result:\n" + pfx + " - " + file + "\n\n";
-                    tx += "Continue?";
-
-                    if (MessageBox.Show(tx, "Karaboss", MessageBoxButtons.OKCancel) == DialogResult.OK)
+                    if (Directory.GetFiles(fullpath).Length > 0 ||
+                    Directory.GetDirectories(fullpath).Length > 0)
                     {
-                        RenameAllFiles(pfx, path);
-                        RefreshContents();
 
+                        string tx = string.Empty;
+                        string file = string.Empty;
+                        string path = string.Empty;
+
+                        fullpath = this.treeView.SelectedFolder.First().FileSystemPath;
+
+
+                        path = Path.GetDirectoryName(fullpath);
+                        file = Path.GetFileName(fullpath);
+
+                        string[] directories = path.Split(Path.DirectorySeparatorChar);
+                        string pfx = directories.Last();
+
+                        // every first letter to upper case
+                        pfx = ToTitleCase(pfx);
+
+                        tx = "This function use the name of the upper directory to rename all the files.\n";
+                        tx += "The prefix <" + pfx + "> will be added to all the files.\n\n";
+                        tx += "Result:\n" + pfx + " - " + file + "\n\n";
+                        tx += "Continue?";
+
+                        if (MessageBox.Show(tx, "Karaboss", MessageBoxButtons.OKCancel) == DialogResult.OK)
+                        {
+                            RenameAllFiles(pfx, path);
+                            RefreshContents();
+
+                        }
                     }
+                } 
+                catch (Exception e)
+                {
+                    MessageBox.Show(e.Message, Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
         }
@@ -1678,18 +1685,9 @@ namespace Karaboss.xplorer
         /// </summary>
         private void SaveAllPlaylist()
         {
-            string fName = Karaclass.M_filePlaylistGroups;
+            string fName = Karaclass.m_filePlaylistGroups;
             PlGroupHelper.Save(fName, PlGroup);                        
         }
-
-
-
-
-
-
-
-
-
 
 
         #endregion playlists

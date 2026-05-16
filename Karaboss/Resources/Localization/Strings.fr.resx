@@ -615,4 +615,46 @@
   <data name="QuestionSaveDefaults" xml:space="preserve">
     <value>Les paramètres ont été modifiés,  voulez vous les enregistrer ?</value>
   </data>
+  <data name="KTypesFixedLines" xml:space="preserve">
+    <value>Lignes fixes</value>
+  </data>
+  <data name="KTypesScrollingLinesBottomUp" xml:space="preserve">
+    <value>Lignes défilant de bas en haut</value>
+  </data>
+  <data name="KTypesScrollingLinesTopDown" xml:space="preserve">
+    <value>Lignes défilant de haut en bas</value>
+  </data>
+  <data name="KTypesTwoLinesSwapped" xml:space="preserve">
+    <value>Deux lignes (alternées)</value>
+  </data>
+  <data name="KTypesFourLinesSwapped" xml:space="preserve">
+    <value>Quatre lignes (alternées)</value>
+  </data>
+  <data name="ErrorThemeAlreadyExists" xml:space="preserve">
+    <value>Erreur : le thème &lt;{0}&gt; existe déjà !</value>
+  </data>
+  <data name="NameForNewTheme" xml:space="preserve">
+    <value>Saisissez un nom pour le nouveau thème</value>
+  </data>
+  <data name="ThemeSuccessfullySaved" xml:space="preserve">
+    <value>Le thème &lt;{0}&gt; a été enregistré avec succès</value>
+  </data>
+  <data name="ErrorNoThemeFound" xml:space="preserve">
+    <value>Erreur : aucun thème de couleur n'a été trouvé</value>
+  </data>
+  <data name="SavethemeQuestion" xml:space="preserve">
+    <value>Le thème &lt;{0}&gt; a été modifié, voulez-vous enregistrer les modifications ?</value>
+  </data>
+  <data name="DeleteThemeQuestion" xml:space="preserve">
+    <value>Supprimer le thème &lt;{0}&gt; ?</value>
+  </data>
+  <data name="FontStretchingSmall" xml:space="preserve">
+    <value>Petit (sans étirement)</value>
+  </data>
+  <data name="FontStretchingMedium" xml:space="preserve">
+    <value>Moyen (un peu d'étirement)</value>
+  </data>
+  <data name="FontStretchingLarge" xml:space="preserve">
+    <value>Grand (étirement maximal)</value>
+  </data>
 </root>
