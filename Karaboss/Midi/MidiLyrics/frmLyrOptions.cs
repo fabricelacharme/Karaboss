@@ -33,6 +33,7 @@
 #endregion
 using GradientApp;
 using kar;
+using Karaboss.Mp3;
 using Karaboss.Resources.Localization;
 using Karaboss.Themes;
 using keffect;
@@ -145,6 +146,14 @@ namespace Karaboss
 
 
         #endregion Fonts
+
+
+        #region Instrumental
+
+        // Show hints (introduction, instrumental, ending)
+        private bool bShowHints = true;
+
+        #endregion Instrumental
 
 
         #region Karaoke display Layout
@@ -271,6 +280,9 @@ namespace Karaboss
 
                 // force uppercase
                 frmMidiLyrics.bForceUppercase = bForceUppercase;
+
+                // Show hints (introduction, instrumental, ending)
+                frmMidiLyrics.bShowHints = bShowHints;
 
                 //Window lyrics TopMost
                 frmMidiLyrics.bTopMost = _bTopMost;
@@ -414,7 +426,10 @@ namespace Karaboss
 
                 // Force Uppercase
                 bForceUppercase = Karaclass.m_ForceUppercase;
-              
+
+                // Show hints (introduction, instrumental, ending)
+                bShowHints = Properties.Settings.Default.bShowHints;
+
                 // Display balls on lyrics
                 chkDisplayBalls.Checked = Karaclass.m_DisplayBalls;
 
@@ -685,16 +700,17 @@ namespace Karaboss
                 // Show chords
                 Properties.Settings.Default.bShowChords = _bShowChords;
            
-
                 // FrameType
                 Properties.Settings.Default.FrameType = FrameType;
 
                 // window lyrics topmost
                 Properties.Settings.Default.frmMidiLyricsTopMost = _bTopMost;
 
-
                 // Force Uppercase
                 Properties.Settings.Default.bForceUppercase = bForceUppercase;
+
+                // Show hints (introduction, instrumental, ending)
+                Properties.Settings.Default.bShowHints = bShowHints;
 
                 // Number of lines to display
                 Properties.Settings.Default.TxtNbLines = _nbLyricsLines;
@@ -797,11 +813,15 @@ namespace Karaboss
                 chkTextUppercase.Checked = bForceUppercase;
                 pBox.bforceUppercase = bForceUppercase;
 
+                // Show hints (introduction, instrumental, ending)
+                chkShowHints.Checked = bShowHints;
+                pBox.bShowHints = bShowHints;
+
                 // SingleImage
                 pBox.SingleImagePath = SingleImagePath;
 
                 // SlideShow
-                pBox.FreqDirSlideShow = freqSlideShow;
+                pBox.FreqSlideShow = freqSlideShow;
                 pBox.nbLyricsLines = _nbLyricsLines;
                 pBox.CurrentTime = 30;
 
@@ -1159,7 +1179,7 @@ namespace Karaboss
                     int freq = Convert.ToInt32(f);
 
                     freqSlideShow = freq;
-                    pBox.FreqDirSlideShow = freqSlideShow;                    
+                    pBox.FreqSlideShow = freqSlideShow;                    
                 }
                 catch (Exception eee)
                 {
@@ -1273,6 +1293,13 @@ namespace Karaboss
             bForceUppercase = chkTextUppercase.Checked;
             pBox.bforceUppercase = bForceUppercase;
             Karaclass.m_ForceUppercase = bForceUppercase;
+        }
+
+        // Show hints (introduction, instrumental, ending)
+        private void chkShowHints_CheckedChanged(object sender, EventArgs e)
+        {
+            bShowHints = chkShowHints.Checked;
+            pBox.bShowHints = bShowHints;
         }
 
         /// <summary>
@@ -2139,8 +2166,9 @@ namespace Karaboss
 
 
 
+
         #endregion Color Themes
 
-        
+       
     }
 }

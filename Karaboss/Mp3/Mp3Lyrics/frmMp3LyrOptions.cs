@@ -103,6 +103,14 @@ namespace Karaboss.Mp3
         #endregion Fonts
 
 
+        #region Instrumental
+
+        // Show hints (introduction, instrumental, ending)
+        private bool bShowHints = true;
+
+        #endregion Instrumental
+
+
         #region Karaoke display Layout
 
         private Dictionary<string, string> KaraokeTypes = new Dictionary<string, string>();
@@ -143,7 +151,6 @@ namespace Karaboss.Mp3
 
         // Progressive highlight of text
         private bool bProgressiveHighlight = false;
-
 
         // Number of lines to display
         private int _nbLyricsLines;
@@ -229,6 +236,9 @@ namespace Karaboss.Mp3
 
                 // force uppercase
                 frmMp3Lyrics.bForceUppercase = bForceUppercase;
+
+                // Show hints (introduction, instrumental, ending)
+                frmMp3Lyrics.bShowHints = bShowHints;
 
                 _nbLyricsLines = Convert.ToInt32(UpDownNbLines.Value);
                 frmMp3Lyrics.nbLyricsLines = _nbLyricsLines;
@@ -369,6 +379,9 @@ namespace Karaboss.Mp3
 
                 // Force Uppercase
                 bForceUppercase = Karaclass.m_ForceUppercase;
+
+                // Show hints (introduction, instrumental, ending)
+                bShowHints = Properties.Settings.Default.bShowHints;
 
                 // Display balls on lyrics
                 chkDisplayBalls.Checked = Karaclass.m_DisplayBalls;
@@ -634,6 +647,9 @@ namespace Karaboss.Mp3
                 // Force Uppercase
                 Properties.Settings.Default.bForceUppercase = bForceUppercase;
 
+                // Show hints (introduction, instrumental, ending)
+                Properties.Settings.Default.bShowHints = bShowHints;
+
                 // Number of lines to display
                 Properties.Settings.Default.TxtNbLines = _nbLyricsLines;
 
@@ -724,6 +740,10 @@ namespace Karaboss.Mp3
                 chkTextUppercase.Checked = bForceUppercase;
                 karaokeEffect1.bforceUppercase = bForceUppercase;
 
+                // Show hints (introduction, instrumental, ending)
+                chkShowHints.Checked = bShowHints;
+                karaokeEffect1.bShowHints = bShowHints;
+
                 // Progressive highlight
                 chkHighLightProgressive.Checked = bProgressiveHighlight;
                 karaokeEffect1.TransitionEffect = bProgressiveHighlight ? keffect.KaraokeEffect.TransitionEffects.Progressive : keffect.KaraokeEffect.TransitionEffects.None;
@@ -733,7 +753,7 @@ namespace Karaboss.Mp3
 
 
                 // picturebox            
-                karaokeEffect1.FreqDirSlideShow = freqSlideShow;
+                karaokeEffect1.FreqSlideShow = freqSlideShow;
                 karaokeEffect1.nbLyricsLines = _nbLyricsLines;
 
 
@@ -1138,7 +1158,7 @@ namespace Karaboss.Mp3
                     int freq = Convert.ToInt32(f);
 
                     freqSlideShow = freq;
-                    karaokeEffect1.FreqDirSlideShow = freqSlideShow;
+                    karaokeEffect1.FreqSlideShow = freqSlideShow;
                 }
                 catch (Exception eee)
                 {
@@ -1247,6 +1267,14 @@ namespace Karaboss.Mp3
         private void chkHighLightProgressive_CheckedChanged(object sender, EventArgs e)
         {
             bProgressiveHighlight = chkHighLightProgressive.Checked;
+        }
+
+        // Show hints (introduction, instrumental, ending)
+        private void chkShowHints_CheckedChanged(object sender, EventArgs e)
+        {
+            bShowHints = chkShowHints.Checked;
+            karaokeEffect1.bShowHints = bShowHints;
+
         }
 
         /// <summary>
@@ -2052,6 +2080,7 @@ namespace Karaboss.Mp3
                 }
             }
         }
+
 
         #endregion Color Themes
 

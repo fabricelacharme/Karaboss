@@ -33,7 +33,6 @@ namespace Karaboss.Mp3
 
         #region Colors
 
-
         #region Background & text background color
 
         // Background color
@@ -48,8 +47,6 @@ namespace Karaboss.Mp3
         }
 
         #endregion Background & text background color
-
-
        
 
         #region Gradient color
@@ -93,7 +90,6 @@ namespace Karaboss.Mp3
 
 
         #endregion Gradient color
-
 
 
         #region Instrumentals color
@@ -169,31 +165,9 @@ namespace Karaboss.Mp3
 
         #endregion text color
 
-
-
         #endregion Colors
 
-
-        #region Instrumentals
-
-        private DateTime _endTime;                      // used by countdown
-        private DateTime _startTime;                    // used by countdown
-
-        private double PlayerPositionMilliseconds;      // current player position in ms
-        private double TargetPositionMilliseconds;      // position to reach in ms
-
-        private bool bInstrumentalStarted = false;
-        private int SecondsBeforeSinging = 0;
-        private bool bCountDown = false;
-        private readonly int _DelayBeforeEndOfInstrumental = 4000; // Delay to draw lines before the end of an instrumental: 4 sec
-        private readonly int _MinimumInstrumentalDuration = 5000;  // The minimum duration between two consecutive vocal phrases that mark an instrumental interlude : 5 sec
-        private int LastLineOfInformationPosition = 0;    // Used to store the last valid Instrumental line position (to manage end of song)
-
-        private readonly int _MinimumIntroDuration = 3000;
-
-        #endregion Instrumentals
-
-
+       
         #region Draw filename
 
         public bool bDrawFileName = true;
@@ -226,7 +200,7 @@ namespace Karaboss.Mp3
         double _nexttime;
         double _lasttime;
 
-        private int _CurrentLineToShow = 0;
+        //private int _CurrentLineToShow = 0;
         private int _FirstLineToShow = 0;
         private int _LastLineToShow = 0;
 
@@ -244,6 +218,96 @@ namespace Karaboss.Mp3
         private float inactive_fragment_length = 0;
 
         #endregion Draw syllables
+              
+
+        #region Font
+
+        private string ftName = "Arial Black";
+        private uint ftSize = 20;
+
+        Font m_font;
+        private float emSize = 40; // Size of the font
+
+        private StringFormat sf;
+        Font _karaokeFont;
+
+        // Font stretching (None, Small (no stetching), Medium (some stretching), Large (most stretching)
+        private string _FontStretching = "None";
+        public string FontStretching
+        {
+            get { return _FontStretching; }
+            set
+            {
+                _FontStretching = value;
+                pBox.Invalidate();
+            }
+        }
+
+
+        #endregion Font
+
+
+        #region Form
+
+        private bool _bTopMost = false;
+        public bool bTopMost
+        {
+            get { return _bTopMost; }
+            set
+            {
+                _bTopMost = value;
+                this.TopMost = _bTopMost;
+            }
+        }
+
+        #region Is used for settings
+
+        private bool _bIsSettings = false;
+        [Description("When true, KaraokeEffect is used in a settings window")]
+        public bool bIsSettings
+        {
+            get { return _bIsSettings; }
+            set
+            {
+                _bIsSettings = value;
+            }
+        }
+
+        #endregion Is used for settings
+
+        #endregion Form
+
+
+        #region Instrumentals
+
+        private bool _bShowHints = true;
+        public bool bShowHints
+        {
+            get { return _bShowHints; }
+            set
+            {
+                _bShowHints = value;
+                //pBox.bShowHints = _bShowHints;
+            }
+        }
+
+
+        private DateTime _endTime;                      // used by countdown
+        private DateTime _startTime;                    // used by countdown
+
+        private double PlayerPositionMilliseconds;      // current player position in ms
+        private double TargetPositionMilliseconds;      // position to reach in ms
+
+        private bool bInstrumentalStarted = false;
+        private int SecondsBeforeSinging = 0;
+        private bool bCountDown = false;
+        private readonly int _DelayBeforeEndOfInstrumental = 4000; // Delay to draw lines before the end of an instrumental: 4 sec
+        private readonly int _MinimumInstrumentalDuration = 5000;  // The minimum duration between two consecutive vocal phrases that mark an instrumental interlude : 5 sec
+        private int LastLineOfInformationPosition = 0;    // Used to store the last valid Instrumental line position (to manage end of song)
+
+        private readonly int _MinimumIntroDuration = 3000;
+
+        #endregion Instrumentals
 
 
         #region Karaoke display layout
@@ -325,63 +389,6 @@ namespace Karaboss.Mp3
         #endregion Karaoke lyrics
 
 
-        #region Font
-
-        private string ftName = "Arial Black";
-        private uint ftSize = 20;
-
-        Font m_font;
-        private float emSize = 40; // Size of the font
-        private StringFormat sf;
-        Font _karaokeFont;
-
-        // Font stretching (None, Small (no stetching), Medium (some stretching), Large (most stretching)
-        private string _FontStretching = "None";
-        public string FontStretching
-        {
-            get { return _FontStretching; }
-            set
-            {
-                _FontStretching = value;
-                pBox.Invalidate();
-            }
-        }
-
-
-        #endregion Font
-
-
-        #region Form
-
-        private bool _bTopMost = false;
-        public bool bTopMost
-        {
-            get { return _bTopMost; }
-            set
-            {
-                _bTopMost = value;
-                this.TopMost = _bTopMost;
-            }
-        }
-
-        #region Is used for settings
-
-        private bool _bIsSettings = false;
-        [Description("When true, KaraokeEffect is used in a settings window")]
-        public bool bIsSettings
-        {
-            get { return _bIsSettings; }
-            set
-            {
-                _bIsSettings = value;
-            }
-        }
-
-        #endregion Is used for settings
-
-        #endregion Form
-
-
         #region Margins
 
         // Margins and spacing. General margins are defined as a ratio of the control size to be adaptable to all sizes of control. Some specific margins are defined in pixels to be more precise when needed
@@ -443,66 +450,7 @@ namespace Karaboss.Mp3
         // Array of bitmaps (images as backgound image)
         private Bitmap[] m_BitmapsArray;
 
-
-        #region Single image
-
-        private string _SingleImagePath;
-        public string SingleImagePath
-        {
-            get => _SingleImagePath;
-            set
-            {
-                if (System.IO.File.Exists(value))
-                {
-                    _SingleImagePath = value;                   
-                }
-            }
-        }
-
-        #endregion Single image
-
-
-        #region SlideShow
-        private bool _allowModifyDirSlideShow = true;
-        public bool AlloModifyDirSlideShow
-        {
-            get { return _allowModifyDirSlideShow; }
-            set { _allowModifyDirSlideShow = value; }
-        }
-
-        // SlideShow directory
-        private string _dirSlideShow = string.Empty;
-        public string DirSlideShow
-        {
-            get { return _dirSlideShow; }
-            set
-            {
-                if (value == null || value == "")
-                    value = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), Application.ProductName);
-
-                if (Directory.Exists(value))
-                    _dirSlideShow = value;
-                else
-                    _dirSlideShow = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), Application.ProductName);
-
-                //karaokeEffect1.SetDirectoryBackground(_dirSlideShow);
-            }
-        }
-
-        // SlideShow frequency
-        private int _freqSlideShow;
-        public int FreqSlideShow
-        {
-            get { return _freqSlideShow; }
-            set
-            {
-                _freqSlideShow = value;
-                //karaokeEffect1.FreqDirSlideShow = _freqSlideShow;
-            }
-        }
-
-        #endregion SlideShow
-
+        #region Select background
 
         // Background option : Diaporama, SolidColor, Transparent        
         private string _optionbackground = "Image";
@@ -545,6 +493,70 @@ namespace Karaboss.Mp3
             }
         }
 
+        #endregion Select background
+
+
+        #region Single image
+
+        private string _SingleImagePath;
+        public string SingleImagePath
+        {
+            get => _SingleImagePath;
+            set
+            {
+                if (System.IO.File.Exists(value))
+                {
+                    _SingleImagePath = value;                   
+                }
+            }
+        }
+
+        #endregion Single image
+
+
+        #region SlideShow images
+
+        private bool _allowModifyDirSlideShow = true;
+        public bool AlloModifyDirSlideShow
+        {
+            get { return _allowModifyDirSlideShow; }
+            set { _allowModifyDirSlideShow = value; }
+        }
+
+        // SlideShow directory
+        private string _dirSlideShow = string.Empty;
+        public string DirSlideShow
+        {
+            get { return _dirSlideShow; }
+            set
+            {
+                if (value == null || value == "")
+                    value = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), Application.ProductName);
+
+                if (Directory.Exists(value))
+                    _dirSlideShow = value;
+                else
+                    _dirSlideShow = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), Application.ProductName);
+
+                //karaokeEffect1.SetDirectoryBackground(_dirSlideShow);
+            }
+        }
+
+        // SlideShow frequency
+        private int _freqSlideShow;
+        public int FreqSlideShow
+        {
+            get { return _freqSlideShow; }
+            set
+            {
+                _freqSlideShow = value;
+                //karaokeEffect1.FreqDirSlideShow = _freqSlideShow;
+            }
+        }
+
+        #endregion SlideShow images
+
+       
         #endregion SlideShow
 
 
@@ -783,8 +795,7 @@ namespace Karaboss.Mp3
         #region Vertical scrolling
 
         private float[] linesYCoordinates;
-        private float vposition = 0;
-        private float vspeed = 0.5f;        
+        private float vposition = 0;              
 
         #endregion Vertical scrolling
 
@@ -3246,7 +3257,7 @@ namespace Karaboss.Mp3
             TargetPositionMilliseconds = 0;
 
             _FirstLineToShow = 0;
-            _CurrentLineToShow = -1;
+            //_CurrentLineToShow = -1;
 
             percent = 0;
             lastpercent = 0;

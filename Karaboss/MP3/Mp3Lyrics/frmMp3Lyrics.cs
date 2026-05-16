@@ -290,6 +290,22 @@ namespace Karaboss.Mp3
         #endregion Form
 
 
+        #region Instrumental
+        
+        private bool _bShowHints = true;
+        public bool bShowHints
+        {
+            get { return _bShowHints; }
+            set
+            {
+                _bShowHints = value;
+                karaokeEffect1.bShowHints = _bShowHints;
+            }
+        }
+
+        #endregion Instrumental
+
+
         #region Karaoke display layout
 
         // Karaoke display types
@@ -444,7 +460,7 @@ namespace Karaboss.Mp3
             set
             {
                 _freqSlideShow = value;
-                karaokeEffect1.FreqDirSlideShow = _freqSlideShow;
+                karaokeEffect1.FreqSlideShow = _freqSlideShow;
             }
         }
 

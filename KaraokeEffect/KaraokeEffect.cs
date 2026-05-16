@@ -238,7 +238,27 @@ namespace keffect
         #endregion Colors
 
 
+        #region Draw filename
+
+        public bool bDrawFileName = true;
+
+        private string _fileName;
+        public string FileName
+        {
+            get { return _fileName; }
+            set
+            {
+                _fileName = value;
+                pBox.Invalidate();
+            }
+        }
+
+        #endregion Draw filename
+
+
         #region Draw syllables
+
+        private float _AverageWidth;
 
         private float[] LinesLengths;
 
@@ -282,11 +302,13 @@ namespace keffect
 
         #region Font
 
+        private string ftName = "Arial Black";
+        private uint ftSize = 20;
+
         private Font m_font;   // used to measure strings without changing _karaokeFont
         private float emSize = 40;
 
         private StringFormat sf;
-
 
         private Font _karaokeFont;
         [Description("Karaoke font")]
@@ -295,8 +317,15 @@ namespace keffect
             get { return _karaokeFont; }
             set
             {
-                _karaokeFont = value;
-                pBox.Invalidate();
+                try
+                {
+                    _karaokeFont = value;
+                    pBox.Invalidate();
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Error setting karaoke font: " + ex.Message);
+                }
             }
         }
 
@@ -392,6 +421,18 @@ namespace keffect
 
         #region Instrumentals
 
+        // Show hints for instrumental parts (e.g. display "(introduction, instrumental, ending)" on the screen)
+        private bool _bShowHints = true;
+        public bool bShowHints
+        {
+            get { return _bShowHints; }
+            set
+            {
+                _bShowHints = value;
+                pBox.Invalidate();
+            }
+        }
+
         private DateTime _endTime;                      // used by countdown
         private DateTime _startTime;                    // used by countdown
 
@@ -405,7 +446,7 @@ namespace keffect
         private readonly int _MinimumInstrumentalDuration = 5000;  // The minimum duration between two consecutive vocal phrases that mark an instrumental interlude : 5 sec
         private int LastLineOfInformationPosition = 0;    // Used to store the last valid Instrumental line position (to manage end of song)
 
-        private readonly int _MinimumIntroDuration = 3000;
+        private readonly int _MinimumIntroDuration = 3000;  // The minimum duration for an introduction (without lyrics at the beginning of the song) : 3 sec
 
         #endregion Instrumentals
 
@@ -456,6 +497,24 @@ namespace keffect
         #endregion Karaoke lyrics
 
 
+        #region Margins
+
+        // Margins and spacing. General margins are defined as a ratio of the control size to be adaptable to all sizes of control. Some specific margins are defined in pixels to be more precise when needed
+        private float _lineHeightMultiplier = 1.55f;   // Ration between line spacing and font size. 1.55 is the default value for a single line, but it can be increased to have more space between lines when several lines are displayed        
+        private float _marginLeft = 0.03f;   // Margin left for lyrics (ratio of the width of the control)
+        private float _marginTop = 0.36f;    // Margin top for lyrics when 4 lines swapped are displayed (ratio of the height of the control)
+
+        // Only used for FourLinesSwapped layout: Additional line spacing between 2 firsts lines and 2 last lines
+        private float _fourLinesSpacing = 1.17f;   // Multiplier to apply to line spacing when 4 lines swapped are displayed (instead of 1.55) to avoid too much space between lines. 
+
+        // Positioning for drawing the FileName if option selected.
+        private float _titleMaxLength = 0.41f;
+        private float _titleMarginLeft = 0.58f;
+        private float _titleMarginTop = 0.038f;
+
+        #endregion Margins
+
+
         #region MP3
 
         // Duration in seconds (org Bass)
@@ -492,24 +551,26 @@ namespace keffect
             }
         }
 
+        public Image m_CurrentImage { get; set; }
+
         #endregion Picture
 
 
         #region SlideShow
 
         private string[] bgFiles;
-        public Rectangle m_DisplayRectangle { get; set; }
-        public Image m_CurrentImage { get; set; }
         private string DefaultDirSlideShow;
-        // Paths of images        
+        // Paths of images   
         private List<string> m_ImageFilePaths;
         // Array of bitmaps (images as backgound image)
         private Bitmap[] m_BitmapsArray;
+        public Rectangle m_DisplayRectangle { get; set; }
+                
 
         #region Select background
 
         // Background option : image, diaporama, solidColor, transparent 
-        private string _optionbackground;
+        private string _optionbackground = "Image";
         public string OptionBackground
         {
             get { return _optionbackground; }
@@ -525,6 +586,8 @@ namespace keffect
                         break;
 
                     case "Diaporama":
+                        //if (_dirSlideShow != null && Directory.Exists(_dirSlideShow) && freqSlideShow > 0)              // TODO: add a check to see if there are images in the directory
+                        //    SetDirectoryBackground(_dirSlideShow);
                         break;
 
                     case "SolidColor":
@@ -591,18 +654,19 @@ namespace keffect
         #endregion Single image
 
 
-        #region SlideShow
+        #region SlideShow images
                 
         /// <summary>
         /// SlideShow frequency
         /// </summary>
-        private int _freqdirslideshow = 10;
-        public int FreqDirSlideShow
+        private int _freqSlideShow = 10;
+        public int FreqSlideShow
         {
-            get { return _freqdirslideshow; }
-            set { _freqdirslideshow = value; }
+            get { return _freqSlideShow; }
+            set { _freqSlideShow = value; }
         }
-        #endregion SlideShow
+
+        #endregion SlideShow images
 
 
         #region Transition effect
@@ -856,7 +920,14 @@ namespace keffect
 
         #endregion Text transform
 
-                                              
+
+        #region Vertical scrolling
+
+        private float[] linesYCoordinates;
+        private float vposition = 0;
+
+        #endregion Vertical scrolling
+
 
         /// <summary>
         /// Constructor
@@ -1434,7 +1505,7 @@ namespace keffect
             timerChangeImage?.Dispose();
             timerChangeImage = new System.Timers.Timer()
             {
-                Interval = _freqdirslideshow * 1000
+                Interval = _freqSlideShow * 1000
             };
             timerChangeImage.Elapsed += (sender, e) => OnTimerChangeImage();
 
@@ -5457,7 +5528,11 @@ namespace keffect
             m_BitmapsArray = new Bitmap[] { };
 
             timerChangeImage?.Stop();
+            timerChangeImage?.Dispose();
+            timerChangeImage = null;
             timerTransition?.Stop();
+            timerTransition?.Dispose();
+            timerTransition = null;
         }
 
 

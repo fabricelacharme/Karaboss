@@ -515,5 +515,8 @@
     <Setting Name="FontStretching" Type="System.String" Scope="User">
       <Value Profile="(Default)">Large</Value>
     </Setting>
+    <Setting Name="bShowHints" Description="Show Hints (introduction, instrumental, ending)" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

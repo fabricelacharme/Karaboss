@@ -315,7 +315,55 @@ namespace PicControl
         #endregion Colors
 
 
+        #region Draw filename
+
+        public bool bDrawFileName = true;
+
+        private string _fileName;
+        public string FileName
+        {
+            get { return _fileName; }
+            set
+            {
+                _fileName = value;
+                pBox.Invalidate();
+            }
+        }
+
+        #endregion Draw filename
+
+
         #region Draw syllables
+
+        private float _AverageWidth;
+
+        private float[] LinesLengths;
+
+        private int nextindex = 0;
+        private int lastindex = 0;
+        private float CurLength;
+        private float lastCurLength;
+
+        double _nexttime;
+        double _lasttime;
+
+        private int _FirstLineToShow = 0;
+        private int _LastLineToShow = 0;
+
+        private int _lastLine = -1;
+        private int _lineHeight = 0;
+        private int _linesHeight = 0;
+        private string _biggestLine = string.Empty;
+
+
+        private string active_fragment = string.Empty;
+        private float active_fragment_length = 0;
+        private string highlight_fragment = string.Empty;
+        private float highlight_fragment_length = 0;
+        private string inactive_fragment = string.Empty;
+        private float inactive_fragment_length = 0;
+
+
         public Rectangle m_DisplayRectangle { get; set; }
 
         private List<RectangleF> rRect;
@@ -357,34 +405,7 @@ namespace PicControl
 
 
         private int currentLine = 0;
-        private string lineMax; // Ligne longueur max
-
-
-        private float[] LinesLengths;
-
-        private int nextindex = 0;
-        private int lastindex = 0;
-        private float CurLength;
-        private float lastCurLength;
-
-        double _nexttime;
-        double _lasttime;
-
-        private int _FirstLineToShow = 0;
-        private int _LastLineToShow = 0;
-
-        private int _lastLine = -1;
-        private int _lineHeight = 0;
-        private int _linesHeight = 0;
-        private string _biggestLine = string.Empty;
-
-
-        private string active_fragment = string.Empty;
-        private float active_fragment_length = 0;
-        private string highlight_fragment = string.Empty;
-        private float highlight_fragment_length = 0;
-        private string inactive_fragment = string.Empty;
-        private float inactive_fragment_length = 0;
+        private string lineMax; // Ligne longueur max                             
 
         #endregion Draw syllables
 
@@ -402,8 +423,12 @@ namespace PicControl
 
         #region Font
 
+        private string ftName = "Arial Black";
+        private uint ftSize = 20;
+
         private Font m_font;
-        private float emSize; // Size of the font
+        private float emSize = 40; // Size of the font
+
         private StringFormat sf;
 
         private Font _karaokeFont;
@@ -418,9 +443,9 @@ namespace PicControl
                     _karaokeFont = value;
                     pBox.Invalidate();
                 }
-                catch (Exception e)
+                catch (Exception ex)
                 {
-                    Console.Write("Error: " + e.Message);
+                    MessageBox.Show("Error setting karaoke font: " + ex.Message);
                 }
             }
         }
@@ -460,8 +485,7 @@ namespace PicControl
         #region Form
 
         private bool bTopMostChecked = true;
-        private bool disposed = false;
-
+        
         #region Context menus
         private ContextMenu picContextMenu;
         #endregion Context menus
@@ -533,6 +557,18 @@ namespace PicControl
 
         #region Instrumentals
 
+        // Show hints for instrumental parts (e.g. display "(introduction, instrumental, ending)" on the screen)
+        private bool _bShowHints = true;
+        public bool bShowHints
+        {
+            get { return _bShowHints; }
+            set
+            {
+                _bShowHints = value;
+                pBox.Invalidate();
+            }
+        }
+
         private int _endTime;               // used by countdown
         private int _startTime;             // used by countdown
 
@@ -545,10 +581,11 @@ namespace PicControl
         private int _DelayBeforeEndOfInstrumental = 0; // Delay to draw lines before the end of an instrumental: 4 sec
         private int _MinimumInstrumentalDuration = 0;  // The minimum duration between two consecutive vocal phrases that mark an instrumental interlude : 5 sec
         private int LastLineOfInformationPosition = 0; // Used to store the last valid Instrumental line position (to manage end of song)
-        private int _MinimumIntroDuration = 0;
+        
+        private int _MinimumIntroDuration = 0;          // 3 sec minimum duration for an intro (to avoid counting a short instrumental at the beginning of the song as an intro)
 
         #endregion Instrumentals
-       
+
 
         #region Karaoke display layout
 
@@ -593,6 +630,24 @@ namespace PicControl
         }
 
         #endregion Karaoke Lyrics
+
+
+        #region Margins
+
+        // Margins and spacing. General margins are defined as a ratio of the control size to be adaptable to all sizes of control. Some specific margins are defined in pixels to be more precise when needed
+        private float _lineHeightMultiplier = 1.55f;   // Ration between line spacing and font size. 1.55 is the default value for a single line, but it can be increased to have more space between lines when several lines are displayed        
+        private float _marginLeft = 0.03f;   // Margin left for lyrics (ratio of the width of the control)
+        private float _marginTop = 0.36f;    // Margin top for lyrics when 4 lines swapped are displayed (ratio of the height of the control)
+
+        // Only used for FourLinesSwapped layout: Additional line spacing between 2 firsts lines and 2 last lines
+        private float _fourLinesSpacing = 1.17f;   // Multiplier to apply to line spacing when 4 lines swapped are displayed (instead of 1.55) to avoid too much space between lines. 
+
+        // Positioning for drawing the FileName if option selected.
+        private float _titleMaxLength = 0.41f;
+        private float _titleMarginLeft = 0.58f;
+        private float _titleMarginTop = 0.038f;
+
+        #endregion Margins
 
 
         #region MIDI
@@ -680,7 +735,7 @@ namespace PicControl
             }
         }
 
-        public ImageLayout imgLayout { get; set; }
+        
         public Image m_CurrentImage { get; set; }
 
         #endregion Picture
@@ -690,14 +745,16 @@ namespace PicControl
 
         private string[] bgFiles;
         private string DefaultDirSlideShow;
+        // Paths of images
         private List<string> m_ImageFilePaths;
+        // Array of bitmaps (images as backgound image)
         private Bitmap[] m_BitmapsArray;
 
 
         #region Select background  
 
         // Background option : image, diaporama, solidColor, transparent 
-        private string _optionbackground;
+        private string _optionbackground = "Image";
         public string OptionBackground
         {
             get { return _optionbackground; }
@@ -713,8 +770,8 @@ namespace PicControl
                         break;
 
                     case "Diaporama":
-                        if (dirSlideShow != null && Directory.Exists(dirSlideShow) && freqSlideShow > 0)
-                            SetDirectoryBackground(dirSlideShow);
+                        if (_dirSlideShow != null && Directory.Exists(_dirSlideShow) && _freqSlideShow > 0)
+                            SetDirectoryBackground(_dirSlideShow);
                         break;
 
 
@@ -783,21 +840,21 @@ namespace PicControl
         #endregion Single image
 
 
-        #region SlideShow
+        #region SlideShow images
         // SlideShow directory        
-        private string dirSlideShow;
+        private string _dirSlideShow;
         public string DirSlideShow
         {
             get
-            { return dirSlideShow; }
+            { return _dirSlideShow; }
             set
             {
                 if (value == null) return;
-                if (value != dirSlideShow)
+                if (value != _dirSlideShow)
                 {
-                    dirSlideShow = value;
+                    _dirSlideShow = value;
 
-                    SetDirectoryBackground(dirSlideShow);
+                    SetDirectoryBackground(_dirSlideShow);
                     pBox.Invalidate();                    
                 }
             }
@@ -805,18 +862,20 @@ namespace PicControl
 
         
         // SlideShow frequency        
-        private int freqSlideShow;
-        public int FreqDirSlideShow
+        private int _freqSlideShow;
+        public int FreqSlideShow
         {
             get
-            { return freqSlideShow; }
+            { 
+                return _freqSlideShow; 
+            }
             set
             {
-                freqSlideShow = value;                
+                _freqSlideShow = value;                
             }
         }
 
-        #endregion SlideShow
+        #endregion SlideShow images
 
         
         #region Transition effect
@@ -846,10 +905,7 @@ namespace PicControl
             set { mBlend = value; Invalidate(); }
         }
 
-        #endregion Transition effect
-
-       
-
+        #endregion Transition effect      
 
         #endregion slideshow
 
@@ -1074,7 +1130,14 @@ namespace PicControl
         #endregion Text transform       
 
 
-       
+        #region Vertical scrolling
+
+        private float[] linesYCoordinates;
+        private float vposition = 0;
+
+        #endregion Vertical scrolling
+
+
         /// <summary>
         /// Constructor of pictureBoxControl
         /// </summary>
@@ -1152,8 +1215,7 @@ namespace PicControl
             _karaokeFont = new Font("Arial Black", this.Font.Size);
             _chordFont = new Font("Comic Sans MS", this._karaokeFont.Size);
 
-            m_ImageFilePaths = new List<string>();
-            imgLayout = ImageLayout.Stretch;
+            m_ImageFilePaths = new List<string>();            
 
             Beat = 200; // Default speed for rhythm animation
 
@@ -1178,7 +1240,7 @@ namespace PicControl
 
 
             // Default dir for slide show
-            freqSlideShow = 5 * 1000;
+            _freqSlideShow = 5 * 1000;
             DefaultDirSlideShow = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), Application.ProductName);
             DirSlideShow = DefaultDirSlideShow;
 
@@ -2133,7 +2195,7 @@ namespace PicControl
             timerChangeImage?.Dispose();
             timerChangeImage = new System.Timers.Timer()
             {
-                Interval = freqSlideShow * 1000
+                Interval = _freqSlideShow * 1000
             };
             timerChangeImage.Elapsed += (sender, e) => OnTimerChangeImage();
 
@@ -2235,7 +2297,7 @@ namespace PicControl
         public void LoadWaitSong(int sec)
         {
             _nbLyricsLines = 1;
-            dirSlideShow = null;
+            _dirSlideShow = null;
             SetDirectoryBackground(null);           
 
             // Initial position
@@ -6350,62 +6412,17 @@ namespace PicControl
         /// </summary>
         public void Terminate()
         {
-            //m_Cancel = true;
-            //m_Restart = false;
-
             m_ImageFilePaths = new List<string>();
-            /*
-            if (m_ImageStream != null)
-            {
-                m_ImageStream.Dispose();
-                m_ImageStream = null;
-            }
-            */
+            m_BitmapsArray = new Bitmap[] { };
 
             timerChangeImage?.Stop();
+            timerChangeImage?.Dispose();
+            timerChangeImage = null;
             timerTransition?.Stop();
+            timerTransition?.Dispose();
+            timerTransition = null;
         }
-
-        protected override void Dispose(bool disposing)
-        {
-            if (!disposed)
-            {
-                /*
-                if (disposing)
-                {                    
-                    if (m_ImageStream != null)
-                    {
-                        m_ImageStream.Dispose();
-                        m_ImageStream = null;
-                    }                                      
-                }
-                */
-
-                _karaokeFont? .Dispose();
-                m_font?.Dispose(); 
-                //m_CurrentImage? .Dispose();
-                pBox? .Dispose ();
-                
-                timerChangeImage?.Stop();
-                timerTransition?.Stop();
-                timerChangeImage?.Dispose();
-                timerTransition?.Dispose();
-
-                disposed = true;
-            }
-        }
-
-        public new void Dispose()
-        {
-            Dispose(true);
-            GC.SuppressFinalize(this);
-        }
-
-        ~pictureBoxControl()
-        {
-            Dispose(false);
-        }
-
+                 
 
         #endregion Dispose
 

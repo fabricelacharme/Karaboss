@@ -159,7 +159,7 @@ namespace Karaboss.Mp3
             resources.ApplyResources(this.karaokeEffect1, "karaokeEffect1");
             this.karaokeEffect1.Duration = 0D;
             this.karaokeEffect1.FrameType = "Frame1";
-            this.karaokeEffect1.FreqDirSlideShow = 10;
+            this.karaokeEffect1.FreqSlideShow = 10;
             this.karaokeEffect1.Frequency = 0F;
             this.karaokeEffect1.Grad0Color = System.Drawing.Color.Empty;
             this.karaokeEffect1.Grad1Color = System.Drawing.Color.Empty;

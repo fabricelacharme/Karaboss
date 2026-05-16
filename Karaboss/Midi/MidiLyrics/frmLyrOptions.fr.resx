@@ -131,19 +131,19 @@
     <value>Nombre de lignes</value>
   </data>
   <data name="label2.Size" type="System.Drawing.Size, System.Drawing">
-    <value>62, 13</value>
+    <value>56, 13</value>
   </data>
   <data name="label2.Text" xml:space="preserve">
-    <value>Répertoire :</value>
+    <value>Répertoire</value>
   </data>
   <data name="btnDirSlideShow.Text" xml:space="preserve">
     <value>&amp;Modifier</value>
   </data>
   <data name="label3.Size" type="System.Drawing.Size, System.Drawing">
-    <value>64, 13</value>
+    <value>58, 13</value>
   </data>
   <data name="label3.Text" xml:space="preserve">
-    <value>Fréquence :</value>
+    <value>Fréquence</value>
   </data>
   <data name="label4.Size" type="System.Drawing.Size, System.Drawing">
     <value>59, 13</value>
@@ -152,10 +152,10 @@
     <value>(secondes)</value>
   </data>
   <data name="label6.Size" type="System.Drawing.Size, System.Drawing">
-    <value>95, 13</value>
+    <value>89, 13</value>
   </data>
   <data name="label6.Text" xml:space="preserve">
-    <value>Format de l'image :</value>
+    <value>Format de l'image</value>
   </data>
   <data name="radioSolidColor.Size" type="System.Drawing.Size, System.Drawing">
     <value>92, 17</value>
@@ -283,17 +283,30 @@
   <data name="grpBoxKaraokeType.Text" xml:space="preserve">
     <value>Disposition</value>
   </data>
+  <data name="lblFontSize.Text" xml:space="preserve">
+    <value>Taille du texte</value>
+  </data>
   <data name="label1.Size" type="System.Drawing.Size, System.Drawing">
-    <value>101, 14</value>
+    <value>95, 14</value>
   </data>
   <data name="label1.Text" xml:space="preserve">
-    <value>Type de karaoké :</value>
+    <value>Type de karaoké</value>
   </data>
   <data name="tabPage1.Font" type="System.Drawing.Font, System.Drawing">
     <value>Microsoft Sans Serif, 8.25pt</value>
   </data>
   <data name="tabPage1.Text" xml:space="preserve">
     <value>Couleur texte</value>
+  </data>
+  <assembly alias="mscorlib" name="mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="chkShowHints.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="chkShowHints.Size" type="System.Drawing.Size, System.Drawing">
+    <value>131, 17</value>
+  </data>
+  <data name="chkShowHints.Text" xml:space="preserve">
+    <value>Afficher les indications</value>
   </data>
   <data name="tabPage2.Font" type="System.Drawing.Font, System.Drawing">
     <value>Microsoft Sans Serif, 8.25pt</value>

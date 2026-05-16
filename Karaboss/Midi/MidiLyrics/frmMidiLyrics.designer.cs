@@ -237,13 +237,12 @@
             this.pBox.Duration = 0D;
             this.pBox.FirstMelodyNoteTicksOn = 0;
             this.pBox.FrameType = "Frame1";
-            this.pBox.FreqDirSlideShow = 0;
+            this.pBox.FreqSlideShow = 0;
             this.pBox.Grad0Color = System.Drawing.Color.Empty;
             this.pBox.Grad1Color = System.Drawing.Color.Empty;
             this.pBox.GradientAngle = 45F;
             this.pBox.HighlightChordColor = System.Drawing.Color.FromArgb(((int)(((byte)(238)))), ((int)(((byte)(17)))), ((int)(((byte)(17)))));
-            this.pBox.HighlightColor = System.Drawing.Color.Red;
-            this.pBox.imgLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.pBox.HighlightColor = System.Drawing.Color.Red;            
             this.pBox.InactiveBorderColor = System.Drawing.Color.DarkTurquoise;
             this.pBox.InactiveChordColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(196)))), ((int)(((byte)(13)))));
             this.pBox.InactiveColor = System.Drawing.Color.White;

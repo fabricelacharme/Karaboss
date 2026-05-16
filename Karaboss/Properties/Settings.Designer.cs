@@ -2071,5 +2071,21 @@ namespace Karaboss.Properties {
                 this["FontStretching"] = value;
             }
         }
+        
+        /// <summary>
+        /// Show Hints (introduction, instrumental, ending)
+        /// </summary>
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Configuration.SettingsDescriptionAttribute("Show Hints (introduction, instrumental, ending)")]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool bShowHints {
+            get {
+                return ((bool)(this["bShowHints"]));
+            }
+            set {
+                this["bShowHints"] = value;
+            }
+        }
     }
 }

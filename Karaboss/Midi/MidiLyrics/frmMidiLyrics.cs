@@ -34,7 +34,6 @@
 
 using kar;
 using Karaboss.MidiLyrics;
-using Karaboss.Mp3;
 using Karaboss.Themes;
 using Karaboss.Utilities;
 using PicControl;
@@ -345,6 +344,22 @@ namespace Karaboss
         #endregion Form
 
 
+        #region Instrumental
+
+        private bool _bShowHints = true;
+        public bool bShowHints
+        {
+            get { return _bShowHints; }
+            set
+            {
+                _bShowHints = value;
+                pBox.bShowHints = _bShowHints;
+            }
+        }
+
+        #endregion Instrumental
+
+
         #region Karaoke display layout
 
         // Karaoke display Laout
@@ -512,7 +527,7 @@ namespace Karaboss
             set
             {
                 _freqSlideShow = value;
-                pBox.FreqDirSlideShow = _freqSlideShow;
+                pBox.FreqSlideShow = _freqSlideShow;
             }
         }
 
@@ -1042,7 +1057,7 @@ namespace Karaboss
         public void ForceSlideShow(string dirSlideShow)
         {
             DirSlideShow = dirSlideShow;
-            pBox.FreqDirSlideShow = Properties.Settings.Default.freqSlideShow;
+            pBox.FreqSlideShow = Properties.Settings.Default.freqSlideShow;
             pBox.DirSlideShow = DirSlideShow;
             pBox.OptionBackground = "Diaporama";
             
@@ -1056,7 +1071,7 @@ namespace Karaboss
         {
             if (_optionbackground == "Diaporama")
             {                                            
-                pBox.FreqDirSlideShow = Properties.Settings.Default.freqSlideShow;
+                pBox.FreqSlideShow = Properties.Settings.Default.freqSlideShow;
                 DirSlideShow = Properties.Settings.Default.dirSlideShow;                
                 pBox.DirSlideShow = DirSlideShow;
             }
