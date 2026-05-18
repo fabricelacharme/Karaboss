@@ -209,7 +209,7 @@ namespace Karaboss.Mp3
                 frmMp3Lyrics.bShowBalls = Karaclass.m_DisplayBalls;
 
                 frmMp3Lyrics.KaraokeFont = _karaokeFont;
-
+                frmMp3Lyrics.FontStretching = _FontStretching;
 
                 // Borders
                 frmMp3Lyrics.FrameType = FrameType;
@@ -637,7 +637,8 @@ namespace Karaboss.Mp3
 
                 // Font                
                 Properties.Settings.Default.KaraokeFontName = ftName;
-      
+                Properties.Settings.Default.FontStretching = FontStretching;
+
                 // FrameType
                 Properties.Settings.Default.FrameType = FrameType;
 

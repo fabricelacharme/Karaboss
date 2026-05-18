@@ -293,7 +293,7 @@ namespace Karaboss
             set
             {
                 _FontStretching = value;
-                pBox.Invalidate();
+                pBox.FontStretching = _FontStretching;                
             }
         }
 
@@ -875,10 +875,10 @@ namespace Karaboss
         {
             Cursor.Current = Cursors.WaitCursor;
 
-            if (Application.OpenForms.OfType<frmLyrOptions>().Count() == 0)
+            if (Application.OpenForms.OfType<frmMidiLyrOptions>().Count() == 0)
             {
-                frmLyrOptions frmLyrOptions = new frmLyrOptions();
-                frmLyrOptions.Show();
+                frmMidiLyrOptions frmMidiLyrOptions = new frmMidiLyrOptions();
+                frmMidiLyrOptions.Show();
             }
         }
 
@@ -920,10 +920,10 @@ namespace Karaboss
             picBalls.Stop();
             picBalls.Dispose();
 
-            if (Application.OpenForms.OfType<frmLyrOptions>().Count() > 0)
+            if (Application.OpenForms.OfType<frmMidiLyrOptions>().Count() > 0)
             {
-                frmLyrOptions frmLyrOptions = Utilities.FormUtilities.GetForm<frmLyrOptions>();
-                frmLyrOptions?.Dispose();
+                frmMidiLyrOptions frmMidiLyrOptions = Utilities.FormUtilities.GetForm<frmMidiLyrOptions>();
+                frmMidiLyrOptions?.Dispose();
             }
 
             base.OnClosed(e);
@@ -1434,7 +1434,7 @@ namespace Karaboss
         }
 
         /// <summary>
-        /// Open form frmLyrOptions
+        /// Open form frmMidiLyrOptions
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -1442,10 +1442,10 @@ namespace Karaboss
         {
             Cursor.Current = Cursors.WaitCursor;
 
-            if (Application.OpenForms.OfType<frmLyrOptions>().Count() == 0)
+            if (Application.OpenForms.OfType<frmMidiLyrOptions>().Count() == 0)
             {
-                frmLyrOptions frmLyrOptions = new frmLyrOptions();                
-                frmLyrOptions.Show();
+                frmMidiLyrOptions frmMidiLyrOptions = new frmMidiLyrOptions();                
+                frmMidiLyrOptions.Show();
             }
         }
 

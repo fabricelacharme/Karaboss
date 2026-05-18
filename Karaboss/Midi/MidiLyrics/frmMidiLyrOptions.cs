@@ -47,7 +47,7 @@ using System.Windows.Forms;
 
 namespace Karaboss
 {
-    public partial class frmLyrOptions : Form
+    public partial class frmMidiLyrOptions : Form
     {
 
         #region Declarations
@@ -217,7 +217,7 @@ namespace Karaboss
         /// <summary>
         /// Constructor
         /// </summary>
-        public frmLyrOptions()
+        public frmMidiLyrOptions()
         {
             InitializeComponent();
            
@@ -1010,7 +1010,7 @@ namespace Karaboss
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void FrmLyrOptions_Load(object sender, EventArgs e)
+        private void FrmMidiLyrOptions_Load(object sender, EventArgs e)
         {
             lblNumberOfLines.Visible = UpDownNbLines.Visible;
             this.TopMost = true;                       
@@ -1021,7 +1021,7 @@ namespace Karaboss
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void FrmLyrOptions_FormClosing(object sender, FormClosingEventArgs e)
+        private void FrmMidiLyrOptions_FormClosing(object sender, FormClosingEventArgs e)
         {
             #region save current theme
             if (bColorModified == true && _currentTheme.Name != "Default")

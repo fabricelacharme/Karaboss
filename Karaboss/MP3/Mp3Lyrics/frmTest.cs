@@ -1027,8 +1027,8 @@ namespace Karaboss.Mp3
             kLyrics klsNoParagraphs = new kLyrics();
             kLine line;
             for (int i = 0; i < kls.Lines.Count; i++)
-            {                
-                if (!(kls.Lines[i].Syllables.Count == 1 && kls.Lines[i].Syllables.First().Text == string.Empty))
+            {
+                if (!(kls.Lines[i].Syllables.Count == 1 && kls.Lines[i].Syllables.First().CharType == Syllable.CharTypes.ParagraphSep))
                 {
                     line = new kLine();
                     for (int j = 0; j < kls.Lines[i].Syllables.Count; j++)
@@ -1254,24 +1254,24 @@ namespace Karaboss.Mp3
            
 
             // Do not display paragraphs for some cases
-            if (KaraokeDisplayType == KaraokeDisplayTypes.TwoLinesSwapped 
+            if (!_bIsSettings && 
+                  (KaraokeDisplayType == KaraokeDisplayTypes.TwoLinesSwapped 
                 || KaraokeDisplayType == KaraokeDisplayTypes.FourLinesSwapped 
                 || KaraokeDisplayType == KaraokeDisplayTypes.ScrollingLinesBottomUp
                 || KaraokeDisplayType == KaraokeDisplayTypes.ScrollingLinesTopDown
                 || !bShowParagraphs
-                )
-            {
-                if (!_bIsSettings)
-                    _kLyrics = RemoveParagraphs(_kLyrics);
-            }
+                ))                        
+                _kLyrics = RemoveParagraphs(_kLyrics);
+            
 
 
             // Analyse lyrics to find introduction, instrumentals etc..
-            if (!_bIsSettings && (KaraokeDisplayType == KaraokeDisplayTypes.TwoLinesSwapped 
-                || KaraokeDisplayType == KaraokeDisplayTypes.FourLinesSwapped)
+            if (!_bIsSettings && 
+                  (KaraokeDisplayType == KaraokeDisplayTypes.TwoLinesSwapped 
+                || KaraokeDisplayType == KaraokeDisplayTypes.FourLinesSwapped
                 || KaraokeDisplayType == KaraokeDisplayTypes.ScrollingLinesBottomUp 
                 || KaraokeDisplayType == KaraokeDisplayTypes.ScrollingLinesTopDown
-                )
+                ))
                  _kLyrics = SearchForInstrumentals(_kLyrics);
 
 
@@ -1723,6 +1723,7 @@ namespace Karaboss.Mp3
         private void AdjustFontWithoutStretching(string biggestLine, int NbLines)
         {
             if (pBox == null) return;
+            if (_kLyrics == null || _kLyrics.Lines.Count == 0) return;
             if (biggestLine == string.Empty) return;
 
             string S = biggestLine;
@@ -1812,6 +1813,7 @@ namespace Karaboss.Mp3
         private void AdjustFontSizeWithStretching(int NbLines)
         {
             if (pBox == null) return;
+            if (_kLyrics == null || _kLyrics.Lines.Count == 0) return;
 
             // Calculate Font size as if there is only 6 lines to display in order to have bigger font size.
             if (KaraokeDisplayType == KaraokeDisplayTypes.ScrollingLinesBottomUp || KaraokeDisplayType == KaraokeDisplayTypes.ScrollingLinesTopDown)
@@ -2001,7 +2003,6 @@ namespace Karaboss.Mp3
             #endregion declarations
 
             if (lineIndex < 0 || lineIndex >= _kLyrics.Lines.Count()) return;            
-
             s = _kLyrics.Lines[lineIndex].ToString();
 
 
@@ -2027,7 +2028,8 @@ namespace Karaboss.Mp3
             #endregion Scale font size to fit text in picture box
 
 
-            #region background of syllabe                              
+            #region background of syllabe      
+            
             if (_bTextBackGround)
             {
                 Wbg = (int)(1.04 * LinesLengths[lineIndex]);
@@ -2036,6 +2038,7 @@ namespace Karaboss.Mp3
                 // background
                 e.Graphics.FillRectangle(new SolidBrush(Color.Black), Rbg);
             }
+
             #endregion
 
             pth.AddString(s, _karaokeFont.FontFamily, (int)_karaokeFont.Style, _karaokeFont.Size, new Point((int)x0 , y1), sf);
@@ -2348,6 +2351,7 @@ namespace Karaboss.Mp3
 
             // Measure FileName
             float w = MeasureString(FileName, femSize);
+            if (w == 0) return;
 
             float maxLength = _titleMaxLength * pBox.Width;    // 41 % of width            
 
@@ -3180,7 +3184,6 @@ namespace Karaboss.Mp3
         #endregion Paint
 
                        
-
         #region Start , Stop
 
         public void Start()

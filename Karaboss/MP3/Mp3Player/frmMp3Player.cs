@@ -1477,7 +1477,7 @@ namespace Karaboss.Mp3
             
             
             // Open and add to owners (will be closed/minimized together and will be on top)
-            frmMp3Lyrics = new frmMp3Lyrics(Mp3FullPath);                        
+            frmMp3Lyrics = new frmMp3Lyrics( Path.GetFileNameWithoutExtension(Mp3FullPath));                        
             //frmMp3Lyrics.Owner = this;
             frmMp3Lyrics.Show();
 

@@ -1336,7 +1336,7 @@ namespace keffect
             kLine line;
             for (int i = 0; i < kls.Lines.Count; i++)
             {
-                if (!(kls.Lines[i].Syllables.Count == 1 && kls.Lines[i].Syllables.First().Text == string.Empty))
+                if (!(kls.Lines[i].Syllables.Count == 1 && kls.Lines[i].Syllables.First().CharType == Syllable.CharTypes.ParagraphSep))
                 {
                     line = new kLine();
                     for (int j = 0; j < kls.Lines[i].Syllables.Count; j++)
@@ -1579,27 +1579,27 @@ namespace keffect
             #endregion Karaoke display type
 
             // Do not display paragraphs for some cases
-            if (KaraokeDisplayType == KaraokeDisplayTypes.TwoLinesSwapped
+            if (!_bIsSettings && 
+                  (KaraokeDisplayType == KaraokeDisplayTypes.TwoLinesSwapped
                 || KaraokeDisplayType == KaraokeDisplayTypes.FourLinesSwapped
                 || KaraokeDisplayType == KaraokeDisplayTypes.ScrollingLinesBottomUp
                 || KaraokeDisplayType == KaraokeDisplayTypes.ScrollingLinesTopDown
                 || !bShowParagraphs
-                )
-            {
-                if (!_bIsSettings)
-                    _kLyrics = RemoveParagraphs(_kLyrics);
-            }
+                ))                        
+                _kLyrics = RemoveParagraphs(_kLyrics);
+            
 
             // If Upper case required
             if (_bforceUppercase)
                 _kLyrics = ForceUpperCase(_kLyrics);
 
             // Analyse lyrics to find introduction, instrumentals etc..
-            if (!_bIsSettings && (KaraokeDisplayType == KaraokeDisplayTypes.TwoLinesSwapped
-                || KaraokeDisplayType == KaraokeDisplayTypes.FourLinesSwapped)
+            if (!_bIsSettings && 
+                  (KaraokeDisplayType == KaraokeDisplayTypes.TwoLinesSwapped
+                || KaraokeDisplayType == KaraokeDisplayTypes.FourLinesSwapped
                 || KaraokeDisplayType == KaraokeDisplayTypes.ScrollingLinesBottomUp
                 || KaraokeDisplayType == KaraokeDisplayTypes.ScrollingLinesTopDown
-                )
+                ))
                 _kLyrics = SearchForInstrumentals(_kLyrics);
 
 
@@ -1607,10 +1607,13 @@ namespace keffect
             LinesLengths = new float[_kLyrics.Lines.Count];
 
             _biggestLine = GetBiggestLine();
-            AdjustFontSize(_nbLyricsLines);
-
-           
+            AdjustFontSize(_nbLyricsLines);           
             _LastLineToShow = SetLastLineToShow(_FirstLineToShow, _kLyrics.Lines.Count, _nbLyricsLines);
+
+
+            if (KaraokeDisplayType == KaraokeDisplayTypes.ScrollingLinesBottomUp || KaraokeDisplayType == KaraokeDisplayTypes.ScrollingLinesTopDown)
+                InitScrollMode();
+
         }
 
 
@@ -2009,7 +2012,7 @@ namespace keffect
             float L = 0;
 
             if (pBox == null) return 0;
-            if (kls.Lines.Count == 0) return 0;
+            if (kls == null || kls.Lines.Count == 0) return 0;
 
             // Calculation of the average length of the lines
             for (int i = 0; i < kls.Lines.Count(); i++)
@@ -2042,6 +2045,7 @@ namespace keffect
         private void AdjustFontWithoutStretching(string biggestLine, int NbLines)
         {
             if (pBox == null) return;
+            if (_kLyrics == null || _kLyrics.Lines.Count == 0) return;
             if (biggestLine == string.Empty) return;
 
 
@@ -2132,6 +2136,8 @@ namespace keffect
         private void AdjustFontSizeWithStretching(int NbLines)
         {
             if (pBox == null) return;
+            if (_kLyrics == null || _kLyrics.Lines.Count == 0) return;
+            
 
             // Calculate Font size as if there is only 6 lines to display in order to have bigger font size.
             if (KaraokeDisplayType == KaraokeDisplayTypes.ScrollingLinesBottomUp || KaraokeDisplayType == KaraokeDisplayTypes.ScrollingLinesTopDown)
@@ -2463,33 +2469,54 @@ namespace keffect
         private void DrawActiveLineWithBorders(PaintEventArgs e, int lineIndex, int y1)
         {
             #region declarations
+
             int Wbg;
             RectangleF Rbg;
 
             Region r;
             RectangleF rect;
 
-            Brush ActiveColorBrush = new SolidBrush(ActiveColor);
-            Brush HighlightColorBrush = new SolidBrush(HighlightColor);
-            Brush InactiveColorBrush = new SolidBrush(InactiveColor);
+            Brush ActiveColorBrush = new SolidBrush(_ActiveColor);
+            Brush HighlightColorBrush = new SolidBrush(_HighlightColor);
+            Brush InactiveColorBrush = new SolidBrush(_InactiveColor);
 
-            Pen ActiveBorderPen = new Pen(new SolidBrush(ActiveBorderColor), _borderthick);
-            Pen InactiveBorderPen = new Pen(new SolidBrush(InactiveBorderColor), _borderthick);
+            Pen ActiveBorderPen = new Pen(new SolidBrush(_ActiveBorderColor), _borderthick);
+            Pen InactiveBorderPen = new Pen(new SolidBrush(_InactiveBorderColor), _borderthick);
 
-            int x0;
+            float x0 = _marginLeft * pBox.Width;
             GraphicsPath pth = new GraphicsPath();
 
             string s;
 
             #endregion declarations
 
-            if (lineIndex >= _kLyrics.Lines.Count()) return;
-
-
+            if (lineIndex < 0 || lineIndex >= _kLyrics.Lines.Count()) return;
             s = _kLyrics.Lines[lineIndex].ToString();
-            x0 = HCenterText(s);      // Center horizontally
 
-            #region background of syllabe                              
+            #region Scale font size to fit text in picture box
+
+            // ************************  Set ScaleTransform
+            float w = MeasureString(s, _karaokeFont.Size);
+            // Example: if the text is greater than the width of the picture box, we reduce the size of the text to fit it in the picture box
+            float scale = ((1 - 2 * _marginLeft) * pBox.Width) / w;
+
+            if (_FontStretching == "Large" && w > 0 && w > ((1 - 2 * _marginLeft) * pBox.Width))
+            {
+                // No need to center text, it is already centered by ScaleTransform
+                e.Graphics.ScaleTransform(scale, 1);
+            }
+            else
+            {
+                scale = 1;
+                // Center text horizontally
+                x0 = (int)((pBox.Width - w) / 2);
+            }
+
+            #endregion Scale font size to fit text in picture box
+
+
+            #region background of syllabe
+            
             if (_bTextBackGround)
             {
                 Wbg = (int)(1.04 * LinesLengths[lineIndex]);
@@ -2498,18 +2525,27 @@ namespace keffect
                 // background
                 e.Graphics.FillRectangle(new SolidBrush(Color.Black), Rbg);
             }
-            #endregion
 
-            pth.AddString(s, _karaokeFont.FontFamily, (int)_karaokeFont.Style, _karaokeFont.Size, new Point(x0, y1), sf);
+            #endregion background of syllabe
+
+
+            pth.AddString(s, _karaokeFont.FontFamily, (int)_karaokeFont.Style, _karaokeFont.Size, new Point((int)x0, y1), sf);
 
             // Draw full line in white if no active and highlight fragments
             if (active_fragment == string.Empty && highlight_fragment == string.Empty && inactive_fragment == string.Empty)
             {
                 #region Draw static text (no active and highlight fragments)
 
+
                 #region apply effect
-                //CreateShadowEffect(s, _InactiveBorderColor, x0, y1, _karaokeFont, _karaokeFont.Size, e, pth);
+
+                if (_frametype == "Shadow")
+                    CreateShadowEffect(s, _InactiveBorderColor, (int)x0, y1, _karaokeFont, _karaokeFont.Size, e, pth);
+                else if (_frametype == "Neon")
+                    CreateNeonEffect(_InactiveBorderColor, e, pth);
+                
                 #endregion apply effect
+
 
                 // Fill GraphicsPath path in white => full text is white                    
                 e.Graphics.FillPath(InactiveColorBrush, pth);
@@ -2528,17 +2564,17 @@ namespace keffect
                 rect = r.GetBounds(e.Graphics);
 
                 #region draw active text
+                
                 if (active_fragment != string.Empty)
                 {
                     GraphicsPath pathActive = new GraphicsPath();
+                    pathActive.AddString(active_fragment, _karaokeFont.FontFamily, (int)_karaokeFont.Style, _karaokeFont.Size, new Point((int)x0, y1), sf);
 
-                    pathActive.AddString(active_fragment, _karaokeFont.FontFamily, (int)_karaokeFont.Style, _karaokeFont.Size, new Point(x0, y1), sf);
-
+                    
                     #region Paint in ActiveColor
 
                     // Rectangle for text befor highlighted text (rect.Width * lastpercent)
-                    RectangleF intersectRectBefore = new RectangleF(rect.X, rect.Y, rect.Width * lastpercent, rect.Height);
-                    //RectangleF intersectRectBefore = new RectangleF(rect.X, rect.Y, active_fragment_length, rect.Height);
+                    RectangleF intersectRectBefore = new RectangleF(rect.X, rect.Y, rect.Width * lastpercent, rect.Height);                    
 
                     // update region on the intersection between region and 2nd rectangle
                     r.Intersect(intersectRectBefore);
@@ -2548,12 +2584,17 @@ namespace keffect
 
                     #endregion Paint in ActiveColor
 
+                    
                     #region apply effect
 
-                    //CreateShadowEffect(active_fragment, _ActiveBorderColor, x0, y1, _karaokeFont, _karaokeFont.Size, e, pathActive);
+                    if (_frametype == "Shadow")
+                        CreateShadowEffect(active_fragment, _ActiveBorderColor, (int)x0, y1, _karaokeFont, _karaokeFont.Size, e, pathActive);
+                    else if (_frametype == "Neon")
+                        CreateNeonEffect(_ActiveBorderColor, e, pathActive);                    
 
                     #endregion apply effect
 
+                    
                     // Draw the text               
                     e.Graphics.FillPath(ActiveColorBrush, pathActive);
 
@@ -2566,7 +2607,8 @@ namespace keffect
                 #endregion Draw active text
 
 
-                #region draw highlight text      
+                #region draw highlight text     
+                
                 if (highlight_fragment != string.Empty)
                 {
                     GraphicsPath pathHighlight = new GraphicsPath();
@@ -2575,8 +2617,7 @@ namespace keffect
                     #region Paint in HighlightColor    
 
                     // Create another rectangle shorter than the 1st one (percent of the first)
-                    RectangleF intersectRect = new RectangleF(rect.X + rect.Width * lastpercent, rect.Y, rect.Width * (percent - lastpercent), rect.Height);
-                    //RectangleF intersectRect = new RectangleF(rect.X + active_fragment_length, rect.Y, highlight_fragment_length, rect.Height);
+                    RectangleF intersectRect = new RectangleF(rect.X + rect.Width * lastpercent, rect.Y, rect.Width * (percent - lastpercent), rect.Height);                    
 
                     // update region on the intersection between region and 2nd rectangle
                     r.Intersect(intersectRect);
@@ -2589,9 +2630,13 @@ namespace keffect
 
                     #region apply effect
 
-                    //CreateShadowEffect(highlight_fragment, _ActiveBorderColor, (int)(x0 + active_fragment_length), y1, _karaokeFont, _karaokeFont.Size, e, pathHighlight);
+                    if (_frametype == "Shadow")
+                        CreateShadowEffect(highlight_fragment, _ActiveBorderColor, (int)(x0 + active_fragment_length), y1, _karaokeFont, _karaokeFont.Size, e, pathHighlight);
+                    else if (_frametype == "Neon")
+                        CreateNeonEffect(_ActiveBorderColor, e, pathHighlight);
 
                     #endregion apply effect
+
 
                     // Draw the text               
                     e.Graphics.FillPath(HighlightColorBrush, pathHighlight);
@@ -2615,8 +2660,7 @@ namespace keffect
                     #region Paint in InactiveColor
 
                     // Create another rectangle shorter than the 1st one (percent of the first)
-                    RectangleF intersectRectAfter = new RectangleF(rect.X + rect.Width * percent, rect.Y, rect.Width - rect.Width * percent, rect.Height);
-                    //RectangleF intersectRectAfter = new RectangleF(rect.X + active_fragment_length + highlight_fragment_length, rect.Y, inactive_fragment_length, rect.Height);
+                    RectangleF intersectRectAfter = new RectangleF(rect.X + rect.Width * percent, rect.Y, rect.Width - rect.Width * percent, rect.Height);                    
 
                     // update region on the intersection between region and 2nd rectangle
                     r.Intersect(intersectRectAfter);
@@ -2626,11 +2670,16 @@ namespace keffect
 
                     #endregion Paint in InactiveColor
 
+
                     #region apply effect
 
-                    //CreateShadowEffect(inactive_fragment, _InactiveBorderColor, (int)(x0 + active_fragment_length + highlight_fragment_length), y1, _karaokeFont, _karaokeFont.Size, e, pathInactive);
+                    if (_frametype == "Shadow")
+                        CreateShadowEffect(inactive_fragment, _InactiveBorderColor, (int)(x0 + active_fragment_length + highlight_fragment_length), y1, _karaokeFont, _karaokeFont.Size, e, pathInactive);
+                    else if (_frametype == "Neon")
+                        CreateNeonEffect(_InactiveBorderColor, e, pathInactive);                    
 
                     #endregion apply effect
+
 
                     // Draw the text               
                     e.Graphics.FillPath(InactiveColorBrush, pathInactive);
@@ -2647,6 +2696,10 @@ namespace keffect
 
                 r.Dispose();
 
+
+                // ************************  Reset ScaleTransform
+                e.Graphics.ResetTransform();
+
                 #endregion Draw dynamic text (with active and highlight fragments)
             }
 
@@ -2662,6 +2715,8 @@ namespace keffect
 
         private void DrawActiveLineWithShadow(PaintEventArgs e, int lineIndex, int y1)
         {
+            /*
+
             #region Declarations
             int Wbg;
             RectangleF Rbg;
@@ -2854,10 +2909,13 @@ namespace keffect
             ActiveBorderPen.Dispose();
             InactiveBorderPen.Dispose();
             #endregion Clean up resources
+            */
+        
         }
 
         private void DrawActiveLineWithNeon(PaintEventArgs e, int lineIndex, int y1)
         {
+            /*
             #region declarations
             int Wbg;
             RectangleF Rbg;
@@ -3054,7 +3112,9 @@ namespace keffect
             ActiveBorderPen.Dispose();
             InactiveBorderPen.Dispose();
             #endregion Clean up resources
+            */
         }
+
 
         private void DrawInactiveLineWithBorders(PaintEventArgs e, int lineIndex, int y2, bool IsActive = false)
         {
@@ -3119,7 +3179,17 @@ namespace keffect
             // Add lines of lyrics to the Graphics path
             path.AddString(s, _karaokeFont.FontFamily, (int)_karaokeFont.Style, _karaokeFont.Size, new Point((int)x0, y2), sf);
 
-            
+
+            #region apply effect
+
+            if (_frametype == "Shadow")
+                CreateShadowEffect(s, BorderColor, (int)x0, y2, _karaokeFont, _karaokeFont.Size, e, path);
+            else if (_frametype == "Neon")
+                CreateNeonEffect(BorderColor, e, path);
+
+            #endregion apply effect
+
+
             // Draw the text            
             e.Graphics.FillPath(new SolidBrush(FillColor), path);
 
@@ -3141,6 +3211,7 @@ namespace keffect
 
         private void DrawInactiveLineWithShadow(PaintEventArgs e, int lineIndex, int y2, bool IsActive = false)
         {
+            /*
             #region Declarations
             GraphicsPath path = new GraphicsPath();
             Color BorderColor = _InactiveBorderColor;
@@ -3199,11 +3270,12 @@ namespace keffect
             penBorder.Dispose();
 
             #endregion Clean up resources
-
+            */
         }
 
         private void DrawInactiveLineWithNeon(PaintEventArgs e, int lineIndex, int y2, bool IsActive = false)
         {
+            /*
             #region Declarations
 
             GraphicsPath path = new GraphicsPath();
@@ -3264,8 +3336,9 @@ namespace keffect
             penBorder.Dispose();
 
             #endregion Clean up resources
-
+            */
         }
+
 
         /// <summary>
         /// Draw a line of information like (introduction, instrumental, ending) on a single line
@@ -3273,51 +3346,7 @@ namespace keffect
         /// <param name="e"></param>
         /// <param name="infotext"></param>
         /// <param name="seconds"></param>
-        /// <param name="y0"></param>
-        /*
-        private void DrawInformationold(PaintEventArgs e, string infotext, int seconds, int y0)
-        {
-            // Seconds
-            // value    Display                     Color
-            //  > 0:    (instrumental) seconds      Active
-            //  = 0:    (instrumental)              highlight
-            // = -1:    (instrumental)              Active
-
-            GraphicsPath path = new GraphicsPath();
-            int x0;
-            Pen penBorder = new Pen(ActiveBorderColor);
-            Color FillColor;
-
-
-            switch (seconds)
-            {
-                case -1:
-                    FillColor = _ActiveInstrumentalColor;
-                    break;
-                case 0:
-                    FillColor = _HighlightColor;
-                    break;
-                default:
-                    FillColor = _ActiveInstrumentalColor;
-                    break;
-            }
-
-            // if 0 or -1, do not display seconds
-            infotext = seconds > 0 ? infotext + " " + seconds.ToString() : infotext;
-
-            x0 = HCenterText(infotext);
-
-            // Add lines of lyrics to the Graphics path
-            path.AddString(infotext, _karaokeFont.FontFamily, (int)_karaokeFont.Style, _karaokeFont.Size, new Point((int)x0, (int)y0), sf);
-
-            // Draw the text                    
-            e.Graphics.FillPath(new SolidBrush(FillColor), path);
-
-            // Outline the text
-            if (_borderthick > 0)
-                e.Graphics.DrawPath(penBorder, path);
-        }
-        */
+        /// <param name="y0"></param>       
         private void DrawInformation(PaintEventArgs e, int lineIndex, int seconds, int y0)
         {
             // Seconds
@@ -3393,6 +3422,8 @@ namespace keffect
 
             // Measure FileName
             float w = MeasureString(FileName, femSize);
+
+            if (w == 0) return;
 
             float maxLength = _titleMaxLength * pBox.Width;    // 41 % of width            
 
@@ -3655,6 +3686,7 @@ namespace keffect
         private void TlsDrawTextWithShadow(PaintEventArgs e)
         {
             TlsDrawTextWithBorder(e);
+
             /*
             if (_kLyrics.Lines.Count == 0) return;
 
@@ -4424,6 +4456,7 @@ namespace keffect
         private void FlsDrawTextWithShadow(PaintEventArgs e)
         {
             FlsDrawTextWithBorder(e);
+
             /*
             if (_kLyrics.Lines.Count == 0) return;
 
@@ -5378,16 +5411,18 @@ namespace keffect
                 case "Frame3":
                 case "Frame4":
                 case "Frame5":
-                    ScrollingBottomUpDrawTextWithBorder(e);
-                    break;
+                    //ScrollingBottomUpDrawTextWithBorder(e);
+                    //break;
                 case "Shadow":
                     //ScrollingBottomUpDrawTextWithShadow(e);
-                    break; ;
+                    //break; ;
                 case "Neon":
                     //ScrollingBottomUpDrawTextWithNeon(e);
-                    break; ;
+                    ScrollingBottomUpDrawTextWithBorder(e);
+                    break; 
+
                 default:
-                    //ScrollingBottomUpDrawTextWithBorder(e);
+                    ScrollingBottomUpDrawTextWithBorder(e);
                     break;
             }
         }
@@ -5428,12 +5463,8 @@ namespace keffect
             #endregion check whether to show information and update instrumental and countdown state
 
 
-            if (bShowInformation)
-            {
-                DrawInformation(e, _FirstLineToShow, SecondsBeforeSinging, pBox.ClientRectangle.Top + pBox.ClientRectangle.Height / 2);
-            }
-
-
+            if (bShowInformation)            
+                DrawInformation(e, _FirstLineToShow, SecondsBeforeSinging, pBox.ClientRectangle.Top + pBox.ClientRectangle.Height / 2);            
 
             // Calculate vertical position of the lines according to the position of the song in the current line
             vposition = (float)((PlayerPositionMilliseconds) * (_linesHeight / (_kLyrics.Lines.Last().Syllables.First().StartTime)));
@@ -5470,9 +5501,9 @@ namespace keffect
                 }
                 else
                 {
-
+                    bool IsActive = (i < _FirstLineToShow) ? true : false;
                     e.Graphics.TranslateTransform(0, -vposition);
-                    DrawInactiveLineWithBorders(e, i, y);
+                    DrawInactiveLineWithBorders(e, i, y, IsActive);
                 }
 
             }
@@ -5908,9 +5939,10 @@ namespace keffect
         {
             if (KaraokeDisplayType == KaraokeDisplayTypes.ScrollingLinesBottomUp || KaraokeDisplayType == KaraokeDisplayTypes.ScrollingLinesTopDown)
             {
+                if (_kLyrics == null || _kLyrics.Lines.Count == 0) return;
+
                 // calculate the y-coordinate of each line according to its start time and the current position of the player
                 List<float> intervals = new List<float>();
-
 
                 linesYCoordinates = new float[_kLyrics.Lines.Count];
                 float t = 0;

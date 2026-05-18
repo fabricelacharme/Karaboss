@@ -1,6 +1,6 @@
 ﻿namespace Karaboss
 {
-    partial class frmLyrOptions
+    partial class frmMidiLyrOptions
     {
         /// <summary>
         /// Required designer variable.
@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmLyrOptions));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmMidiLyrOptions));
             this.btnBgColor = new System.Windows.Forms.Button();
             this.btnActiveColor = new System.Windows.Forms.Button();
             this.btnHighlightColor = new System.Windows.Forms.Button();
@@ -1017,7 +1017,7 @@
             this.pBox.TransitionEffect = PicControl.pictureBoxControl.TransitionEffects.None;
             this.pBox.TransparencyKey = System.Drawing.Color.Lime;
             // 
-            // frmLyrOptions
+            // frmMidiLyrOptions
             // 
             resources.ApplyResources(this, "$this");
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -1037,9 +1037,9 @@
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
-            this.Name = "frmLyrOptions";
-            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FrmLyrOptions_FormClosing);
-            this.Load += new System.EventHandler(this.FrmLyrOptions_Load);
+            this.Name = "frmMidiLyrOptions";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FrmMidiLyrOptions_FormClosing);
+            this.Load += new System.EventHandler(this.FrmMidiLyrOptions_Load);
             ((System.ComponentModel.ISupportInitialize)(this.UpDownNbLines)).EndInit();
             this.pnlBalls.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();

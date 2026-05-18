@@ -2428,8 +2428,8 @@ namespace Karaboss
                 // ferme le formulaire frmPrint
                 Application.OpenForms["frmPrint"]?.Close();
                 
-                // ferme le formulaire frmLyrOptions                
-                Application.OpenForms["frmLyrOptions"]?.Close();
+                // ferme le formulaire frmMidiLyrOptions                
+                Application.OpenForms["frmMidiLyrOptions"]?.Close();
                 
 
 

@@ -1816,7 +1816,7 @@ namespace PicControl
             kLine line;
             for (int i = 0; i < kls.Lines.Count; i++)
             {
-                if (!(kls.Lines[i].Syllables.Count == 1 && kls.Lines[i].Syllables.First().Text == string.Empty))
+                if (!(kls.Lines[i].Syllables.Count == 1 && kls.Lines[i].Syllables.First().CharType == Syllable.CharTypes.ParagraphSep))
                 {
                     line = new kLine();
                     for (int j = 0; j < kls.Lines[i].Syllables.Count; j++)
@@ -2111,16 +2111,15 @@ namespace PicControl
             #endregion Karaoke display type
 
             // Do not display paragraphs for some cases
-            if (KaraokeDisplayType == KaraokeDisplayTypes.TwoLinesSwapped
+            if (!_bIsSettings && 
+                  (KaraokeDisplayType == KaraokeDisplayTypes.TwoLinesSwapped
                 || KaraokeDisplayType == KaraokeDisplayTypes.FourLinesSwapped
                 || KaraokeDisplayType == KaraokeDisplayTypes.ScrollingLinesBottomUp
                 || KaraokeDisplayType == KaraokeDisplayTypes.ScrollingLinesTopDown
                 || !bShowParagraphs
-                )
-            {
-                if (!_bIsSettings)
-                    _kLyrics = RemoveParagraphs(_kLyrics);
-            }
+                ))            
+                _kLyrics = RemoveParagraphs(_kLyrics);
+            
 
             // If Upper case required
             if (_bforceUppercase)
@@ -2128,11 +2127,12 @@ namespace PicControl
 
 
             // Analyse lyrics to find introduction, instrumentals etc..
-            if (!_bIsSettings && (KaraokeDisplayType == KaraokeDisplayTypes.TwoLinesSwapped
-                || KaraokeDisplayType == KaraokeDisplayTypes.FourLinesSwapped)
+            if (!_bIsSettings && 
+                  (KaraokeDisplayType == KaraokeDisplayTypes.TwoLinesSwapped
+                || KaraokeDisplayType == KaraokeDisplayTypes.FourLinesSwapped
                 || KaraokeDisplayType == KaraokeDisplayTypes.ScrollingLinesBottomUp
                 || KaraokeDisplayType == KaraokeDisplayTypes.ScrollingLinesTopDown
-                )
+                ))
                 _kLyrics = SearchForInstrumentals(_kLyrics);
 
 
@@ -2181,6 +2181,9 @@ namespace PicControl
 
                 // Create rectangles for drawing active line
                 createListRectangles(0);
+
+                if (KaraokeDisplayType == KaraokeDisplayTypes.ScrollingLinesBottomUp || KaraokeDisplayType == KaraokeDisplayTypes.ScrollingLinesTopDown)
+                    InitScrollMode();
             }
 
         }
@@ -2796,7 +2799,7 @@ namespace PicControl
             float L = 0;
 
             if (pBox == null) return 0;
-            if (kls.Lines.Count == 0) return 0;
+            if (kls == null || kls.Lines.Count == 0) return 0;
 
             // Calculation of the average length of the lines
             for (int i = 0; i < kls.Lines.Count(); i++)
@@ -2829,6 +2832,7 @@ namespace PicControl
         private void AdjustFontWithoutStretching(string biggestLine, int NbLines)
         {
             if (pBox == null) return;
+            if (_kLyrics == null || _kLyrics.Lines.Count == 0) return;
             if (biggestLine == string.Empty) return;
 
             string S = biggestLine;
@@ -2918,6 +2922,7 @@ namespace PicControl
         private void AdjustFontSizeWithStretching(int NbLines)
         {
             if (pBox == null) return;
+            if (_kLyrics == null || _kLyrics.Lines.Count == 0) return;
 
             // Calculate Font size as if there is only 6 lines to display in order to have bigger font size.
             if (KaraokeDisplayType == KaraokeDisplayTypes.ScrollingLinesBottomUp || KaraokeDisplayType == KaraokeDisplayTypes.ScrollingLinesTopDown)
@@ -3954,8 +3959,7 @@ namespace PicControl
             GraphicsPath pthc = new GraphicsPath(); // Chords path
             GraphicsPath pth = new GraphicsPath(); // Lyrics path
             Pen penBorder = new Pen(BorderColor, _borderthick); // pen for inactive border color
-            
-            string lineContent;
+                        
             string lineChords;
             float x0 = _marginLeft * pBox.Width;
             int Wbg;
@@ -3994,7 +3998,7 @@ namespace PicControl
                 lineChords = lstChordsLines[lineIndex];                 // TODO : à revoir pour les accords directement dans la classe KLyrics
 
                 // Draw chord above the text                                                         
-                pthc.AddString(lineChords, _chordFont.FontFamily, (int)_chordFont.Style, 3 * emSize / 4, new Point((int)x0, (int)y2), sf);
+                pthc.AddString(lineChords, _chordFont.FontFamily, (int)_chordFont.Style, 3 * emSize / 4, new Point((int)x0, y2), sf);
                 e.Graphics.FillPath(new SolidBrush(_InactiveChordColor), pthc);
 
                 pthc.Dispose();
@@ -4008,7 +4012,7 @@ namespace PicControl
 
             #region draw text
 
-            #region background of line  
+            #region background of text  
 
             if (_bTextBackGround)
             {
@@ -4019,10 +4023,20 @@ namespace PicControl
                 e.Graphics.FillRectangle(new SolidBrush(Color.Black), Rbg);
             }
 
-            #endregion
+            #endregion background of text
 
             // Add lines of lyrics to the Graphics path
             pth.AddString(s, _karaokeFont.FontFamily, (int)_karaokeFont.Style, _karaokeFont.Size, new Point((int)x0, y2), sf);
+
+            #region apply effect
+
+            if (_frametype == "Shadow")
+                CreateShadowEffect(s, BorderColor, (int)x0, y2, _karaokeFont, _karaokeFont.Size, e, pth);
+            else if (_frametype == "Neon")
+                CreateNeonEffect(BorderColor, e, pth);
+
+            #endregion apply effect
+
 
             // Draw the text                    
             e.Graphics.FillPath(new SolidBrush(FillColor), pth);
@@ -4365,6 +4379,7 @@ namespace PicControl
 
             // Measure FileName
             float w = MeasureString(FileName, femSize);
+            if (w == 0) return;
 
             float maxLength = _titleMaxLength * pBox.Width;    // 41 % of width            
 
@@ -6365,23 +6380,6 @@ namespace PicControl
 
         private void SltDrawTextWithBorder(PaintEventArgs e)
         {
-        }
-
-        private void SltDrawTextWithShadow(PaintEventArgs e)
-        {
-        }
-
-        private void SltDrawTextWithNeon(PaintEventArgs e)
-        {
-        }
-
-        #endregion Draw text with Scrolling lines top down
-
-
-        #region Draw text with Scrolling lines bottom up
-
-        private void DrawTextWithScrollingLinesBottomUp(PaintEventArgs e)
-        {
             try
             {
                 // Create list of rectangles when line changes
@@ -6420,6 +6418,132 @@ namespace PicControl
                 Console.Write("Error drawing text on image: " + ep.Message);
             }
         }
+
+        private void SltDrawTextWithShadow(PaintEventArgs e)
+        {
+        }
+
+        private void SltDrawTextWithNeon(PaintEventArgs e)
+        {
+        }
+
+        #endregion Draw text with Scrolling lines top down
+
+
+        #region Draw text with Scrolling lines bottom up
+
+        private void DrawTextWithScrollingLinesBottomUp(PaintEventArgs e)
+        {
+            switch (FrameType)
+            {
+                case "NoBorder":
+                case "FrameThin":
+                case "Frame1":
+                case "Frame2":
+                case "Frame3":
+                case "Frame4":
+                case "Frame5":
+                //ScrollingBottomUpDrawTextWithBorder(e);
+                //break;
+                case "Shadow":
+                //ScrollingBottomUpDrawTextWithShadow(e);
+                //break; ;
+                case "Neon":
+                    //ScrollingBottomUpDrawTextWithNeon(e);
+                    ScrollingBottomUpDrawTextWithBorder(e);
+                    break;
+
+                default:
+                    ScrollingBottomUpDrawTextWithBorder(e);
+                    break;
+            }
+        }
+
+        private bool bShowInformation = false;
+
+        private void ScrollingBottomUpDrawTextWithBorder(PaintEventArgs e)
+        {
+            if (_kLyrics.Lines.Count == 0) return;
+            if (linesYCoordinates == null) return;
+            int y = 0;
+
+            int TopMargin = bShowSongName ? pBox.ClientRectangle.Top + (int)(_titleMarginTop * pBox.Height) : pBox.ClientRectangle.Top;
+            int BottomMargin = pBox.ClientRectangle.Bottom;
+
+            #region Draw FileName
+
+            // Draw file name if required
+            if (bShowSongName)
+                DrawFileName(e, FileName, 0.33f * _karaokeFont.Size);
+
+            #endregion Draw FileName
+
+
+            #region check whether to show information and update instrumental and countdown state
+
+            if (_kLyrics.Lines[_FirstLineToShow].Syllables.Last().CharType == Syllable.CharTypes.Information)
+            {
+                bShowInformation = true;
+                CheckIfInstrumentalBegins();
+                UpdateCountDown();
+            }
+            else
+            {
+                bShowInformation = false;
+            }
+            #endregion check whether to show information and update instrumental and countdown state
+
+
+            if (bShowInformation)            
+                DrawInformation(e, _FirstLineToShow, SecondsBeforeSinging, pBox.ClientRectangle.Top + pBox.ClientRectangle.Height / 2);            
+
+
+            // Calculate vertical position of the lines according to the position of the song in the current line
+            vposition = (float)((PlayerPositionTicks) * ((float)_linesHeight / (_kLyrics.Lines.Last().Syllables.First().TicksOn)));
+
+            //Console.WriteLine("vposition: " + vposition + " - PlayerPositionTicks: " + PlayerPositionTicks + " - _linesHeight: " + _linesHeight + " - _kLyrics.Lines.Last().Syllables.First().TicksOn: " + _kLyrics.Lines.Last().Syllables.First().TicksOn);
+
+            for (int i = 0; i < _kLyrics.Lines.Count; i++)
+            {
+                y = pBox.ClientRectangle.Top + pBox.ClientRectangle.Height / 2 + (int)(linesYCoordinates[i]);
+
+
+                #region Do not draw lines that are out of the control
+
+                //if (y - vposition < pBox.ClientRectangle.Top - _lineHeight)
+                if (y - vposition < TopMargin)
+                {
+                    // Do not draw lines that are out of the control
+                    continue;
+                }
+                if (_kLyrics.Lines[i].Syllables.Last().CharType == Syllable.CharTypes.Information)
+                {
+                    // Do not draw lines of information                    
+                    continue;
+                }
+
+                if (y - vposition > BottomMargin)                                  //pBox.ClientRectangle.Bottom + _lineHeight)
+                    break; // Do not draw lines that are out of the control
+
+                #endregion Do not draw lines that are out of the control
+
+
+                if (i == _FirstLineToShow)
+                {
+                    e.Graphics.TranslateTransform(0, -vposition);
+                    DrawActiveLineWithBorders(e, i, y);
+                }
+                else
+                {
+                    bool IsActive = (i < _FirstLineToShow) ? true : false;
+                    e.Graphics.TranslateTransform(0, -vposition);
+                    DrawInactiveLineWithBorders(e, i, y, IsActive);
+                }
+            }
+
+            e.Graphics.ResetTransform();
+        }
+
 
         private void SbuDrawTextWithBorder(PaintEventArgs e)
         {
@@ -6593,6 +6717,8 @@ namespace PicControl
         {
             if (KaraokeDisplayType == KaraokeDisplayTypes.ScrollingLinesBottomUp || KaraokeDisplayType == KaraokeDisplayTypes.ScrollingLinesTopDown)
             {
+                if (_kLyrics == null || _kLyrics.Lines.Count == 0) return;
+
                 // calculate the y-coordinate of each line according to its start time and the current position of the player
                 List<float> intervals = new List<float>();
 

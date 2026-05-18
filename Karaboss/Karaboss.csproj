@@ -461,11 +461,11 @@
     <Compile Include="Midi\MidiLyrics\frmMidiLyrics.designer.cs">
       <DependentUpon>frmMidiLyrics.cs</DependentUpon>
     </Compile>
-    <Compile Include="Midi\MidiLyrics\frmLyrOptions.cs">
+    <Compile Include="Midi\MidiLyrics\frmMidiLyrOptions.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Midi\MidiLyrics\frmLyrOptions.Designer.cs">
-      <DependentUpon>frmLyrOptions.cs</DependentUpon>
+    <Compile Include="Midi\MidiLyrics\frmMidiLyrOptions.Designer.cs">
+      <DependentUpon>frmMidiLyrOptions.cs</DependentUpon>
     </Compile>
     <Compile Include="frmExplorer.cs">
       <SubType>Form</SubType>
@@ -816,11 +816,11 @@
       <DependentUpon>frmMidiLyrics.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Midi\MidiLyrics\frmLyrOptions.en.resx">
-      <DependentUpon>frmLyrOptions.cs</DependentUpon>
+    <EmbeddedResource Include="Midi\MidiLyrics\frmMidiLyrOptions.en.resx">
+      <DependentUpon>frmMidiLyrOptions.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Midi\MidiLyrics\frmLyrOptions.fr.resx">
-      <DependentUpon>frmLyrOptions.cs</DependentUpon>
+    <EmbeddedResource Include="Midi\MidiLyrics\frmMidiLyrOptions.fr.resx">
+      <DependentUpon>frmMidiLyrOptions.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="frmMessageBox.resx">
@@ -861,8 +861,8 @@
       <DependentUpon>frmMidiLyrics.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Midi\MidiLyrics\frmLyrOptions.resx">
-      <DependentUpon>frmLyrOptions.cs</DependentUpon>
+    <EmbeddedResource Include="Midi\MidiLyrics\frmMidiLyrOptions.resx">
+      <DependentUpon>frmMidiLyrOptions.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="frmExplorer.resx">

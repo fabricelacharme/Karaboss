@@ -263,7 +263,7 @@ namespace Karaboss.Mp3
             set
             {
                 _FontStretching = value;
-                karaokeEffect1.Invalidate();
+                karaokeEffect1.FontStretching = _FontStretching;                
             }
         }
 
