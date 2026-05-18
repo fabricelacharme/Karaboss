@@ -2087,5 +2087,21 @@ namespace Karaboss.Properties {
                 this["bShowHints"] = value;
             }
         }
+        
+        /// <summary>
+        /// Draw file name as title in lyrics
+        /// </summary>
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Configuration.SettingsDescriptionAttribute("Draw file name as title in lyrics")]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool bShowSongName {
+            get {
+                return ((bool)(this["bShowSongName"]));
+            }
+            set {
+                this["bShowSongName"] = value;
+            }
+        }
     }
 }

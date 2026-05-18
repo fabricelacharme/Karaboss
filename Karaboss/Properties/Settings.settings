@@ -518,5 +518,8 @@
     <Setting Name="bShowHints" Description="Show Hints (introduction, instrumental, ending)" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>
     </Setting>
+    <Setting Name="bShowSongName" Description="Draw file name as title in lyrics" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

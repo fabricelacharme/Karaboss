@@ -355,11 +355,8 @@ namespace Karaboss
                     f = MIDIfileFullPath;
                 }
                 currentPlaylist = myPlayList;
-                // Search file to play with its filename
-                //currentPlaylistItem = currentPlaylist.Songs.Where(z => z.File == MIDIfileFullPath).FirstOrDefault();
-                currentPlaylistItem = currentPlaylist.Songs.Where(z => z.File == f).FirstOrDefault();
-
-                //MIDIfileFullPath = currentPlaylistItem.File;
+                // Search file to play with its filename                
+                currentPlaylistItem = currentPlaylist.Songs.Where(z => z.File == f).FirstOrDefault();                
                 MIDIfileName = currentPlaylistItem.Song; 
 
                 lblPlaylist.Visible = true;
@@ -4368,7 +4365,7 @@ namespace Karaboss
             // if Window closed, reload it
             if (frmMidiLyrics == null || Application.OpenForms.OfType<frmMidiLyrics>().Count() == 0)
             {
-                frmMidiLyrics = new frmMidiLyrics(myLyricsMgmt);
+                frmMidiLyrics = new frmMidiLyrics(myLyricsMgmt, MIDIfileName);
                 //frmMidiLyrics.Owner = this;
                 frmMidiLyrics.Show();
             }
@@ -4388,8 +4385,6 @@ namespace Karaboss
 
             frmMidiLyrics.DisplaySinger(tx);
 
-
-
             // Show window
             if (frmMidiLyrics.WindowState == FormWindowState.Minimized)
                 frmMidiLyrics.WindowState = FormWindowState.Normal;
@@ -4397,9 +4392,42 @@ namespace Karaboss
             frmMidiLyrics.Activate();
 
             // cas d'une playlist ou non : met à jour le diaporama
-            SetSlideShowOfPlaylist();
+            SetSlideShow();
 
         }
+
+        /// <summary>
+        /// If the song is part of a playlist, set the diaporama defined for this song or the default one if not defined
+        /// </summary>
+        private void SetSlideShow()
+        {
+            if (frmMidiLyrics == null) return;
+            
+            // cas d'une playlist ou non : met à jour le diaporama
+            if (currentPlaylistItem != null)
+            {
+                dirSlideShow = currentPlaylistItem.DirSlideShow;
+
+                // If nothing defined for this song, take default value
+                if (dirSlideShow != string.Empty)
+                {
+                    frmMidiLyrics.ForceSlideShow(dirSlideShow);
+                }
+                else
+                {
+                    frmMidiLyrics.RestoreBackgroundAnimation();
+                }
+            }
+            else
+            {
+                dirSlideShow = Properties.Settings.Default.dirSlideShow;
+                frmMidiLyrics.SetSlideShow(dirSlideShow);
+            }
+
+            
+
+        }
+
 
 
         /// <summary>
@@ -4596,30 +4624,7 @@ namespace Karaboss
             myLyricsMgmt.LyricsTrackNum = lyricstracknum;
         }
 
-        /// <summary>
-        /// If the song is part of a playlist, set the diaporama defined for this song or the default one if not defined
-        /// </summary>
-        private void SetSlideShowOfPlaylist()
-        {
-            if (frmMidiLyrics != null)
-            {
-                // cas d'une playlist ou non : met à jour le diaporama
-                if (currentPlaylistItem != null)
-                {
-                    dirSlideShow = currentPlaylistItem.DirSlideShow;
-
-                    // If nothing defined for this song, take default value
-                    if (dirSlideShow != string.Empty)
-                    {
-                        frmMidiLyrics.ForceSlideShow(dirSlideShow);
-                    }
-                    else
-                    {
-                        frmMidiLyrics.RestoreBackgroundAnimation();
-                    }
-                }                
-            }
-        }
+       
 
         /// <summary>
         /// Load chords embedded in Xml file
@@ -6681,7 +6686,7 @@ namespace Karaboss
                 // Display the Lyric form even if no lyrics in order to display the singer
                 if (Application.OpenForms.OfType<frmMidiLyrics>().Count() == 0)
                 {
-                    frmMidiLyrics = new frmMidiLyrics(myLyricsMgmt);
+                    frmMidiLyrics = new frmMidiLyrics(myLyricsMgmt, MIDIfileName);
                     frmMidiLyrics.Owner = this;
                     frmMidiLyrics.Show();
                 }
@@ -6762,7 +6767,7 @@ namespace Karaboss
 
             if (Application.OpenForms.OfType<frmMidiLyrics>().Count() == 0)
             {
-                frmMidiLyrics = new frmMidiLyrics(myLyricsMgmt);
+                frmMidiLyrics = new frmMidiLyrics(myLyricsMgmt, MIDIfileName);
                 frmMidiLyrics.Owner = this;
                 frmMidiLyrics.Show();
             }
@@ -7970,7 +7975,7 @@ namespace Karaboss
                 if (frmMidiLyrics != null)
                 {
                     frmMidiLyrics.LoadOptions();
-                    SetSlideShowOfPlaylist();
+                    SetSlideShow();
                 }
                 PlayPauseMusic();
 

@@ -170,7 +170,7 @@ namespace Karaboss.Mp3
        
         #region Draw filename
 
-        public bool bDrawFileName = true;
+        public bool bShowSongName  = true;
 
         private string _fileName;
         public string FileName
@@ -242,7 +242,6 @@ namespace Karaboss.Mp3
                 pBox.Invalidate();
             }
         }
-
 
         #endregion Font
 
@@ -819,8 +818,38 @@ namespace Karaboss.Mp3
             FileName = fileName;
             Duration = duration * 1000; // Convert to milliseconds
             KLyrics = kls;              // This will launch Init
-            bDrawFileName = true;
+            bShowSongName = true;
         }
+
+
+        #region Color Functions
+
+        /// <summary>
+        /// Check text representing a color
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentException"></exception>
+        public static Color Parse(string input)
+        {
+            input = input.Trim();
+            string strColorRegex = @"^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$";
+            Regex re = new Regex(strColorRegex);
+            if (re.IsMatch(input))
+            {
+                return ColorTranslator.FromHtml(input);
+            }
+
+            Color named = Color.FromName(input);
+            if (named.IsKnownColor || named.IsNamedColor)
+            {
+                return named;
+            }
+            throw new ArgumentException($"Unsupported color value: {input}", nameof(input));
+        }
+
+
+        #endregion Color functions
 
 
         #region initializations
@@ -862,6 +891,9 @@ namespace Karaboss.Mp3
                 bShowParagraphs = Karaclass.m_ShowParagraph;
 
 
+                // Display file name in lyrics as title
+                bShowSongName = Properties.Settings.Default.bShowSongName;
+
                 // Progressive highlight
                 bProgressiveHighlight = Properties.Settings.Default.bProgressiveHighlight;
 
@@ -871,39 +903,8 @@ namespace Karaboss.Mp3
                 // show balls
                 bShowBalls = Karaclass.m_DisplayBalls;
 
-                #region Backgrounds
-                string bgOption = Properties.Settings.Default.BackGroundOption;
-                switch (bgOption)
-                {
-                    case "Image":
-                        SingleImagePath = Properties.Settings.Default.SingleImagePath;
-                        OptionBackground = "Image";
-                        break;
-
-                    case "Diaporama":
-                        OptionBackground = "Diaporama";
-                        break;
-                    case "SolidColor":
-                        OptionBackground = "SolidColor";
-                        break;
-
-                    case "Gradient":
-                        OptionBackground = "Gradient";
-                        break;
-
-                    case "Rhythm":
-                        OptionBackground = "Rhythm";
-                        break;
-
-                    case "Transparent":
-                        OptionBackground = "Transparent";
-                        break;
-
-                    default:
-                        OptionBackground = "Diaporama";
-                        break;
-                }
-                #endregion Backgrounds
+                // Backgrounds (image, diaporama, solid color, gradient, rhythm, transparent)
+                OptionBackground = Properties.Settings.Default.BackGroundOption;
 
 
                 #region Lyrics vertical position
@@ -930,21 +931,18 @@ namespace Karaboss.Mp3
 
                 bTextBackGround = Properties.Settings.Default.bLyricsBackGround;
 
-
                 // Number of Lines to display
                 nbLyricsLines = Properties.Settings.Default.TxtNbLines;
+
+
+                SingleImagePath = Properties.Settings.Default.SingleImagePath;
                 // Frequency of slide show
                 FreqSlideShow = Properties.Settings.Default.freqSlideShow;
                 // Position image
                 SizeMode = Properties.Settings.Default.SizeMode;
 
                 bTopMost = Properties.Settings.Default.frmMp3LyricsTopMost;
-
-               // karaokeEffect1.timerIntervall = _timerintervall;
-
-                // Load balls times
-                //if (_bShowBalls)
-                //    LoadBallsTimes(Mp3LyricsMgmtHelper.mp3KaraokeLyrics);
+              
 
             }
             catch (Exception e)
@@ -1029,8 +1027,7 @@ namespace Karaboss.Mp3
             kLyrics klsNoParagraphs = new kLyrics();
             kLine line;
             for (int i = 0; i < kls.Lines.Count; i++)
-            {
-                //if (kls.Lines[i].Syllables.First().CharType != Syllable.CharTypes.ParagraphSep)
+            {                
                 if (!(kls.Lines[i].Syllables.Count == 1 && kls.Lines[i].Syllables.First().Text == string.Empty))
                 {
                     line = new kLine();
@@ -1041,7 +1038,6 @@ namespace Karaboss.Mp3
                     klsNoParagraphs.Add(line);
                 }
             }
-
             return klsNoParagraphs;
         }
 
@@ -1049,13 +1045,11 @@ namespace Karaboss.Mp3
         private kLyrics SearchForInstrumentals(kLyrics kls)
         {
             double tOnPrevious = 0;
-            double duration = 0;
-            //double introDurationMinimum = 1000;
+            double duration = 0;            
             double t; // = 0;
             kLyrics klsWithinstrumentals = new kLyrics();
-            kLine line;
-            //string text; // = string.Empty;
-            double tend; // = 0;
+            kLine line;            
+            double tend;
 
             // Introduction                        
             for (int i = 0; i < kls.Lines.Count; i++)
@@ -1298,27 +1292,135 @@ namespace Karaboss.Mp3
 
         }
 
-        private string GetBiggestLine()
-        {
-            int max = 0;
-            string tx = string.Empty;
+        #endregion initializations
 
-            for (int i = 0; i < _kLyrics.Lines.Count; i++)
-            {
-                if (_kLyrics.Lines[i].ToString().Length > max)
-                {
-                    max = _kLyrics.Lines[i].ToString().Length; // lstLyricsLines[i].Length;
-                    tx = _kLyrics.Lines[i].ToString();
-                }
-            }
-            return tx;
+
+        #region form load close
+
+        private void frmTest_Resize(object sender, EventArgs e)
+        {
+
+            AdjustFontSize(_nbLyricsLines);
+
+            if (KaraokeDisplayType == KaraokeDisplayTypes.ScrollingLinesBottomUp || KaraokeDisplayType == KaraokeDisplayTypes.ScrollingLinesTopDown)
+                InitScrollMode();
         }
 
 
-       
+
+        #endregion form load close
 
 
-        #endregion initializations
+        #region Instrumental functions
+
+        /// <summary>
+        /// Search for a line containing an instrumental
+        /// </summary>
+        /// <param name="start"></param>
+        /// <param name="end"></param>
+        /// <returns></returns>
+        private int SearchLineOfInformation(int[] lines)
+        {
+            int x;
+            for (int i = 0; i < lines.Count(); i++)
+            {
+                x = lines[i];
+                if (x < _kLyrics.Lines.Count)
+                {
+                    if (_kLyrics.Lines[x].Syllables.Last().CharType == Syllable.CharTypes.Information && _kLyrics.Lines[x].Syllables.Last().Text != string.Empty)
+                    {
+                        return i;
+                    }
+                }
+            }
+            return -2;
+        }
+
+        /// <summary>
+        /// Checks whether an instrumental section has begun and updates the countdown and timing state accordingly.
+        /// </summary>
+        /// <remarks>This method determines if the current lyric line marks the start of an instrumental
+        /// section. If so, it calculates the duration until the next text line and initiates a countdown for when
+        /// singing should resume. This is typically used to manage the display and timing of lyric lines during
+        /// instrumental breaks.</remarks>
+        private void CheckIfInstrumentalBegins()
+        {
+            if (_kLyrics.Lines.Count == 0) return;
+
+            // Check if lines 3 and 4 must be hiden             
+            if (!bInstrumentalStarted)
+            {
+                // If _FirstLineToShow line is an instrumental, we have to wait until the end of the instrumental before drawing lines 1 and 2
+                if (_kLyrics.Lines[_FirstLineToShow].Syllables.Last().CharType == Syllable.CharTypes.Information && _kLyrics.Lines[_FirstLineToShow].Syllables.Last().Text != string.Empty)
+                {
+                    // Calculate endTime between _FirstLineToShow and the next Text line located in _FirstLineToShow + 2 when Four Lines swapped and _FirstLineToShow + 1 for Two lines swapped
+
+                    if (KaraokeDisplayType == KaraokeDisplayTypes.TwoLinesSwapped || KaraokeDisplayType == KaraokeDisplayTypes.ScrollingLinesBottomUp)
+                    {
+                        if (_FirstLineToShow + 1 < _kLyrics.Lines.Count)
+                            TargetPositionMilliseconds = _kLyrics.Lines[_FirstLineToShow + 1].Syllables.First().StartTime;   // Position in the song to reach = next real syllable                                                               
+                        else
+                            TargetPositionMilliseconds = _duration;
+                    }
+                    else if (KaraokeDisplayType == KaraokeDisplayTypes.FourLinesSwapped)
+                    {
+                        // (_FirstLineToShow + 1 cannot be used because it is the 2nd line of information)
+                        if (_FirstLineToShow + 2 < _kLyrics.Lines.Count)
+                            TargetPositionMilliseconds = _kLyrics.Lines[_FirstLineToShow + 2].Syllables.First().StartTime;   // Position in the song to reach = next real syllable                                                               
+                        else
+                            TargetPositionMilliseconds = _duration;                                                  // Position in the song to reach = end of song
+                    }
+
+                    _endTime = DateTime.Now.AddMilliseconds(TargetPositionMilliseconds - (_kLyrics.Lines[_FirstLineToShow].Syllables.Last().StartTime + _kLyrics.Lines[_FirstLineToShow].Syllables.Last().Duration));
+
+                    _startTime = DateTime.Now;
+                    TimeSpan tm = _endTime - DateTime.Now;
+                    SecondsBeforeSinging = (int)tm.TotalSeconds;
+                    bInstrumentalStarted = true;
+                    bCountDown = true;
+                }
+            }
+        }
+
+
+        /// <summary>
+        /// Update the CountDown
+        /// </summary>
+        private void UpdateCountDown()
+        {
+            if (bCountDown)
+            {
+                // Real position:  PlayerPositionMilliseconds
+                // Position to reach: TargetPositionMilliseconds               
+
+                // Recalculates the remaining time with PlayerPosition
+                _endTime = DateTime.Now.AddMilliseconds(TargetPositionMilliseconds - PlayerPositionMilliseconds);
+
+                TimeSpan tm = _endTime - DateTime.Now;
+
+                if (tm.TotalSeconds < 0)
+                {
+                    _endTime = DateTime.Now;
+                    _startTime = DateTime.Now;
+                    bInstrumentalStarted = false;
+                    SecondsBeforeSinging = -1;
+                    bCountDown = false;
+                }
+                else
+                {
+                    // Time is about 3 sec before next lyric to sing
+                    // Calculate countdown
+                    int s = (int)tm.TotalSeconds;
+
+                    if (s != SecondsBeforeSinging)
+                    {
+                        SecondsBeforeSinging = s;
+                    }
+                }
+            }
+        }
+
+        #endregion Instrumental functions
 
 
         #region Lyrics and position
@@ -1508,10 +1610,7 @@ namespace Karaboss.Mp3
                     //inactive_fragment_length += MeasureString(_kLyrics.Lines[curline].Syllables[i].Text, _karaokeFont.Size);
                 }
             }
-
-            //if (inactive_fragment.Length > 0) 
-            //    Console.WriteLine("inactive_fragment = " + inactive_fragment);
-
+         
             active_fragment_length = MeasureString(active_fragment, _karaokeFont.Size);
             highlight_fragment_length = MeasureString(highlight_fragment, _karaokeFont.Size);
             inactive_fragment_length = MeasureString(inactive_fragment, _karaokeFont.Size);
@@ -1536,117 +1635,313 @@ namespace Karaboss.Mp3
 
         #endregion Lyrics and position
 
+       
+        #region Measure
 
-        #region Instrumental functions
-
-        /// <summary>
-        /// Search for a line containing an instrumental
-        /// </summary>
-        /// <param name="start"></param>
-        /// <param name="end"></param>
-        /// <returns></returns>
-        private int SearchLineOfInformation(int[] lines)
+        private int VCenterText()
         {
-            int x;
-            for (int i = 0; i < lines.Count(); i++)
+            int y = 0;
+
+            // Height of control minus height of lines to show
+            switch (_OptionDisplay)
             {
-                x = lines[i];
-                if (x < _kLyrics.Lines.Count)
-                {
-                    if (_kLyrics.Lines[x].Syllables.Last().CharType == Syllable.CharTypes.Information && _kLyrics.Lines[x].Syllables.Last().Text != string.Empty)
-                    {
-                        return i;
-                    }
-                }
+                case Karaclass.OptionsDisplay.Center:
+                    y = (pBox.ClientSize.Height - (_nbLyricsLines) * _lineHeight) / 2;
+                    break;
+
+                case Karaclass.OptionsDisplay.Top:
+                    if (bShowSongName)
+                        y = (int)(_titleMarginTop * pBox.Height);
+                    else
+                        y = 0;
+                    break;
+
+                case Karaclass.OptionsDisplay.Bottom:
+                    y = pBox.ClientSize.Height - (_nbLyricsLines * (_lineHeight + 1));
+                    break;
             }
-            return -2;
+            return y > 0 ? y : 0;
         }
 
-        /// <summary>
-        /// Checks whether an instrumental section has begun and updates the countdown and timing state accordingly.
-        /// </summary>
-        /// <remarks>This method determines if the current lyric line marks the start of an instrumental
-        /// section. If so, it calculates the duration until the next text line and initiates a countdown for when
-        /// singing should resume. This is typically used to manage the display and timing of lyric lines during
-        /// instrumental breaks.</remarks>
-        private void CheckIfInstrumentalBegins()
+
+        private float MeasureString(string fragment, float femSize)
         {
-            if (_kLyrics.Lines.Count == 0) return;
-
-            // Check if lines 3 and 4 must be hiden             
-            if (!bInstrumentalStarted)
+            float ret = 0;
+            if (fragment != "")
             {
-                // If _FirstLineToShow line is an instrumental, we have to wait until the end of the instrumental before drawing lines 1 and 2
-                if (_kLyrics.Lines[_FirstLineToShow].Syllables.Last().CharType == Syllable.CharTypes.Information && _kLyrics.Lines[_FirstLineToShow].Syllables.Last().Text != string.Empty)
+
+                using (Graphics g = pBox.CreateGraphics())
                 {
-                    // Calculate endTime between _FirstLineToShow and the next Text line located in _FirstLineToShow + 2 when Four Lines swapped and _FirstLineToShow + 1 for Two lines swapped
+                    g.TextRenderingHint = TextRenderingHint.AntiAlias;
+                    g.PageUnit = GraphicsUnit.Pixel;
 
-                    if (KaraokeDisplayType == KaraokeDisplayTypes.TwoLinesSwapped || KaraokeDisplayType == KaraokeDisplayTypes.ScrollingLinesBottomUp)
-                    {
-                        if (_FirstLineToShow + 1 < _kLyrics.Lines.Count)
-                            TargetPositionMilliseconds = _kLyrics.Lines[_FirstLineToShow + 1].Syllables.First().StartTime;   // Position in the song to reach = next real syllable                                                               
-                        else
-                            TargetPositionMilliseconds = _duration;
-                    }
-                    else if (KaraokeDisplayType == KaraokeDisplayTypes.FourLinesSwapped)
-                    {
-                        // (_FirstLineToShow + 1 cannot be used because it is the 2nd line of information)
-                        if (_FirstLineToShow + 2 < _kLyrics.Lines.Count)
-                            TargetPositionMilliseconds = _kLyrics.Lines[_FirstLineToShow + 2].Syllables.First().StartTime;   // Position in the song to reach = next real syllable                                                               
-                        else
-                            TargetPositionMilliseconds = _duration;                                                  // Position in the song to reach = end of song
-                    }
-
-                    _endTime = DateTime.Now.AddMilliseconds(TargetPositionMilliseconds - (_kLyrics.Lines[_FirstLineToShow].Syllables.Last().StartTime + _kLyrics.Lines[_FirstLineToShow].Syllables.Last().Duration));
-
-                    _startTime = DateTime.Now;
-                    TimeSpan tm = _endTime - DateTime.Now;
-                    SecondsBeforeSinging = (int)tm.TotalSeconds;
-                    bInstrumentalStarted = true;
-                    bCountDown = true;
+                    m_font = new Font(_karaokeFont.FontFamily, femSize, FontStyle.Regular, GraphicsUnit.Pixel);
+                    SizeF sz = g.MeasureString(fragment, m_font, new Point(0, 0), sf);
+                    ret = sz.Width;
+                    g.Dispose();
                 }
             }
+            return ret;
+        }
+
+
+        private float GetAverageWidth(kLyrics kls, float femSize)
+        {
+            float L = 0;
+
+            if (pBox == null) return 0;
+            if (kls.Lines.Count == 0) return 0;
+
+            // Calculation of the average length of the lines
+            for (int i = 0; i < kls.Lines.Count(); i++)
+            {
+                L += MeasureString(kls.Lines[i].ToString(), femSize);
+            }
+            return L / kls.Lines.Count;
         }
 
 
         /// <summary>
-        /// Update the CountDown
+        /// Ajust font size to fit NbLines in height and the average line lenght in width
+        /// Bigger lines will be shrinked and smaller lines not changed
         /// </summary>
-        private void UpdateCountDown()
+        /// <param name="pBox"></param>
+        /// <param name="S"></param>
+        /// <param name="NbLines"></param>
+        private void AdjustFontSize(int NbLines)
         {
-            if (bCountDown)
+            if (FontStretching == "Large")
+                AdjustFontSizeWithStretching(NbLines);
+            else
             {
-                // Real position:  PlayerPositionMilliseconds
-                // Position to reach: TargetPositionMilliseconds               
-
-                // Recalculates the remaining time with PlayerPosition
-                _endTime = DateTime.Now.AddMilliseconds(TargetPositionMilliseconds - PlayerPositionMilliseconds);
-
-                TimeSpan tm = _endTime - DateTime.Now;                
-
-                if (tm.TotalSeconds < 0)
-                {
-                    _endTime = DateTime.Now;
-                    _startTime = DateTime.Now;
-                    bInstrumentalStarted = false;
-                    SecondsBeforeSinging = -1;
-                    bCountDown = false;
-                }
-                else
-                {                    
-                    // Time is about 3 sec before next lyric to sing
-                    // Calculate countdown
-                    int s = (int)tm.TotalSeconds;
-
-                    if (s != SecondsBeforeSinging)
-                    {
-                        SecondsBeforeSinging = s;                        
-                    }
-                }
+                AdjustFontWithoutStretching(_biggestLine, NbLines);
             }
+
         }
 
-        #endregion Instrumental functions
+
+        private void AdjustFontWithoutStretching(string biggestLine, int NbLines)
+        {
+            if (pBox == null) return;
+            if (biggestLine == string.Empty) return;
+
+            string S = biggestLine;
+
+            Graphics g = pBox.CreateGraphics();
+            float femsize;
+            float inisize = _karaokeFont.Size;
+            femsize = g.DpiY * inisize / 72;
+
+
+            float mult = 1.3f; // 1.2 is the default line spacing in Windows Forms
+            float textWidth = MeasureString(S, femsize);
+
+            // Try to fit inside 90% of client width
+            float ClientWidth = 0.90f * pBox.ClientSize.Width;
+
+            if (textWidth > ClientWidth)
+            {
+                do
+                {
+                    inisize--;
+                    if (inisize > 0)
+                    {
+                        femsize = g.DpiY * inisize / 72;
+                        textWidth = MeasureString(S, femsize);
+
+                    }
+                } while (textWidth > ClientWidth && inisize > 0);
+            }
+            else
+            {
+                do
+                {
+                    inisize++;
+                    femsize = g.DpiY * inisize / 72;
+                    textWidth = MeasureString(S, femsize);
+                } while (textWidth < ClientWidth);
+            }
+
+            // ------------------------------
+            // Ajustement in Height
+            // ------------------------------
+            float textHeight = MeasureStringHeight(S, inisize);
+            float totaltextHeight;
+            totaltextHeight = _nbLyricsLines * (textHeight + 10);
+
+            float compHeight = 0.95f * pBox.ClientSize.Height;
+
+            if (totaltextHeight > compHeight)
+            {
+                do
+                {
+                    inisize--;
+                    if (inisize > 0)
+                    {
+                        femsize = g.DpiY * inisize / 72;
+                        textHeight = MeasureStringHeight(S, femsize);
+
+                        totaltextHeight = _nbLyricsLines * (textHeight + 10);
+                    }
+                } while (totaltextHeight > compHeight && inisize > 0);
+            }
+
+
+            if (inisize > 0)
+            {
+                emSize = g.DpiX * inisize / 72;
+                _karaokeFont = new Font(_karaokeFont.FontFamily, emSize, FontStyle.Regular, GraphicsUnit.Pixel);
+
+                // Vertical distance between lines          1.6 is
+                // https://pimpmytype.com/line-length-line-height/ they say 1.6 is the best 
+                _lineHeight = (int)(_lineHeightMultiplier * emSize);
+                // Height of the full song
+                _linesHeight = _nbLyricsLines * _lineHeight;
+
+
+                // Update horizontal measure of lines                
+                for (int i = 0; i < _kLyrics.Lines.Count; i++)
+                {
+                    LinesLengths[i] = MeasureString(_kLyrics.Lines[i].ToString(), _karaokeFont.Size);
+                }
+
+            }
+            g.Dispose();
+        }
+
+        private void AdjustFontSizeWithStretching(int NbLines)
+        {
+            if (pBox == null) return;
+
+            // Calculate Font size as if there is only 6 lines to display in order to have bigger font size.
+            if (KaraokeDisplayType == KaraokeDisplayTypes.ScrollingLinesBottomUp || KaraokeDisplayType == KaraokeDisplayTypes.ScrollingLinesTopDown)
+                NbLines = 6;
+
+
+            string S = "!/(123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+
+            Graphics g = pBox.CreateGraphics();
+            float femsize;
+            float inisize = _karaokeFont.Size;
+            femsize = g.DpiY * inisize / 72;
+
+            // Try to fit inside 90% of client Height
+            float ClientHeight = pBox.ClientSize.Height;
+
+            float mult = 1.3f; // 1.2 is the default line spacing in Windows Forms
+            float textHeight = MeasureStringHeight(S, femsize);
+            float linesHeight = mult * textHeight * NbLines;
+
+
+            if (linesHeight > ClientHeight)
+            {
+                do
+                {
+                    inisize--;
+                    if (inisize > 0)
+                    {
+                        femsize = g.DpiY * inisize / 72;
+                        linesHeight = mult * MeasureStringHeight(S, femsize) * NbLines;
+
+                    }
+                } while (linesHeight > ClientHeight && inisize > 0);
+            }
+            else
+            {
+                do
+                {
+                    inisize++;
+                    femsize = g.DpiY * inisize / 72;
+                    linesHeight = mult * MeasureStringHeight(S, femsize) * NbLines;
+                } while (linesHeight < ClientHeight);
+            }
+
+            // ------------------------------
+            // Ajustement in width with AverageWidth
+            // ------------------------------
+
+            // Calculate average width of lines and try to fit inside 95% of client width
+            femsize = g.DpiX * inisize / 72;
+            _AverageWidth = GetAverageWidth(_kLyrics, femsize);
+
+            float ClientWidth = (1 - 2 * _marginLeft) * pBox.ClientSize.Width;
+            float textWidth = _AverageWidth;
+
+            if (_AverageWidth > ClientWidth)
+            {
+                do
+                {
+                    inisize--;
+                    if (inisize > 0)
+                    {
+                        femsize = g.DpiX * inisize / 72;
+                        textWidth = GetAverageWidth(_kLyrics, femsize);
+                    }
+                } while (textWidth > ClientWidth && inisize > 0);
+            }
+
+
+            if (inisize > 0)
+            {
+                emSize = g.DpiX * inisize / 72;
+                _karaokeFont = new Font(_karaokeFont.FontFamily, emSize, FontStyle.Regular, GraphicsUnit.Pixel);
+
+                // Vertical distance between lines          1.6 is
+                // https://pimpmytype.com/line-length-line-height/ they say 1.6 is the best 
+                _lineHeight = (int)(_lineHeightMultiplier * emSize);
+                // Height of the full song
+                _linesHeight = _nbLyricsLines * _lineHeight;
+
+
+                // Update horizontal measure of lines                
+                for (int i = 0; i < _kLyrics.Lines.Count; i++)
+                {
+                    LinesLengths[i] = MeasureString(_kLyrics.Lines[i].ToString(), _karaokeFont.Size);
+                }
+
+            }
+            g.Dispose();
+        }
+
+
+        private float MeasureStringHeight(string line, float femSize)
+        {
+            float ret = 0;
+
+            if (line != "")
+            {
+                using (Graphics g = pBox.CreateGraphics())
+                {
+
+                    if (femSize > 0)
+                        m_font = new Font(_karaokeFont.FontFamily, femSize, FontStyle.Regular, GraphicsUnit.Pixel);
+
+                    SizeF sz = g.MeasureString(line, m_font, new Point(0, 0), sf);
+                    ret = sz.Height;
+
+                    g.Dispose();
+                }
+            }
+            return ret;
+        }
+
+        private string GetBiggestLine()
+        {
+            int max = 0;
+            string tx = string.Empty;
+
+            for (int i = 0; i < _kLyrics.Lines.Count; i++)
+            {
+                if (_kLyrics.Lines[i].ToString().Length > max)
+                {
+                    max = _kLyrics.Lines[i].ToString().Length; // lstLyricsLines[i].Length;
+                    tx = _kLyrics.Lines[i].ToString();
+                }
+            }
+            return tx;
+        }
+
+        #endregion Measure
 
 
         #region Paint
@@ -2139,7 +2434,7 @@ namespace Karaboss.Mp3
            
             // Draw file name if required
             
-            if (bDrawFileName)
+            if (bShowSongName)
                 DrawFileName(e, FileName, 0.33f * _karaokeFont.Size);
 
             #endregion Draw FileName
@@ -2245,7 +2540,6 @@ namespace Karaboss.Mp3
                 bInstrumentalStarted = false;
                 bCountDown = false;
 
-
                 // Draw y1 line: active & highlighted line                                
                 DrawActiveLineWithBorders(e, _FirstLineToShow, y1);
 
@@ -2253,20 +2547,15 @@ namespace Karaboss.Mp3
                 bool IsActive = ((_FirstLineToShow % 4 == 1) || (_FirstLineToShow % 4 == 3)); // ? true : false;
 
                 // Draw y2 line: active when before line y1 (already sung), inactive when after line y1 (not yet sung)
-                if (idx2 >= 0)
-                {
+                if (idx2 >= 0)                
                     DrawInactiveLineWithBorders(e, idx2, y2, IsActive);
-                }
+                
 
                 // Draw lines y3 and y4 (always inactives)
-                if (idx3 < _kLyrics.Lines.Count)
-                {
-                    DrawInactiveLineWithBorders(e, idx3, y3);
-                }
-                if (idx4 < _kLyrics.Lines.Count)
-                {
-                    DrawInactiveLineWithBorders(e, idx4, y4);
-                }
+                if (idx3 < _kLyrics.Lines.Count)                
+                    DrawInactiveLineWithBorders(e, idx3, y3);                
+                if (idx4 < _kLyrics.Lines.Count)                
+                    DrawInactiveLineWithBorders(e, idx4, y4);                
 
                 #endregion Normal drwaing
             }
@@ -2530,7 +2819,7 @@ namespace Karaboss.Mp3
 
             // Draw file name if required
 
-            if (bDrawFileName)
+            if (bShowSongName)
                 DrawFileName(e, FileName, 0.33f * _karaokeFont.Size);
 
             #endregion Draw FileName
@@ -2668,8 +2957,7 @@ namespace Karaboss.Mp3
                                     {
                                         if (_FirstLineToShow - 1 >= 0)
                                         {
-                                            DrawInactiveLineWithBorders(e, _FirstLineToShow - 1, y1 - _lineHeight, true);         // keep old line 1 sec                                            
-
+                                            DrawInactiveLineWithBorders(e, _FirstLineToShow - 1, y1 - _lineHeight, true);         // keep old line 1 sec
                                         }
                                     }
                                 }
@@ -2737,7 +3025,7 @@ namespace Karaboss.Mp3
 
             // Draw file name if required
 
-            if (bDrawFileName)
+            if (bShowSongName)
                 DrawFileName(e, FileName, 0.33f * _karaokeFont.Size);
 
             #endregion Draw FileName
@@ -2758,7 +3046,6 @@ namespace Karaboss.Mp3
         }
 
         #endregion Draw text with fixed lines
-
 
 
         #region Draw scrolling text
@@ -2799,13 +3086,13 @@ namespace Karaboss.Mp3
             if (linesYCoordinates == null) return;
             int y = 0;
 
-            int TopMargin = bDrawFileName ? pBox.ClientRectangle.Top + (int)(_titleMarginTop * pBox.Height) : pBox.ClientRectangle.Top;
+            int TopMargin = bShowSongName ? pBox.ClientRectangle.Top + (int)(_titleMarginTop * pBox.Height) : pBox.ClientRectangle.Top;
             int BottomMargin = pBox.ClientRectangle.Bottom;
 
             #region Draw FileName
 
             // Draw file name if required
-            if (bDrawFileName)
+            if (bShowSongName)
                 DrawFileName(e, FileName, 0.33f * _karaokeFont.Size);
 
             #endregion Draw FileName
@@ -2890,359 +3177,9 @@ namespace Karaboss.Mp3
         #endregion Draw scrolling text
 
 
-
         #endregion Paint
 
-
-        #region Measure
-
-        private int HCenterText(Control pBox, string s)
-        {
-            int res = -(int)_karaokeFont.Size / 2 + (pBox.ClientSize.Width - (int)MeasureString(s, _karaokeFont.Size)) / 2;
-            return res > 0 ? res : 0;
-        }
-
-        private int VCenterText()
-        {
-            int y = 0;
-
-            // Height of control minus height of lines to show
-            switch (_OptionDisplay)
-            {
-                case Karaclass.OptionsDisplay.Center:
-                    y = (pBox.ClientSize.Height - (_nbLyricsLines) * _lineHeight) / 2;
-                    break;
-
-                case Karaclass.OptionsDisplay.Top:
-                    if (bDrawFileName)
-                        y = (int)(_titleMarginTop * pBox.Height);
-                    else
-                        y = 0;
-                    break;
-
-                case Karaclass.OptionsDisplay.Bottom:
-                    y = pBox.ClientSize.Height - (_nbLyricsLines * (_lineHeight + 1));
-                    break;
-            }
-            return y > 0 ? y : 0;
-        }
-
-
-        private float MeasureString(string fragment, float femSize)
-        {
-            float ret = 0;
-            if (fragment != "")
-            {
-
-                using (Graphics g = pBox.CreateGraphics())
-                {
-                    g.TextRenderingHint = TextRenderingHint.AntiAlias;
-                    g.PageUnit = GraphicsUnit.Pixel;                    
-
-                    m_font = new Font(_karaokeFont.FontFamily, femSize, FontStyle.Regular, GraphicsUnit.Pixel);
-                    SizeF sz = g.MeasureString(fragment, m_font, new Point(0, 0), sf);
-                    ret = sz.Width;
-                    g.Dispose();
-                }
-            }
-            return ret;
-        }
-              
-        
-        private float GetAverageWidth(kLyrics kls, float femSize)
-        {
-            float L = 0;
-            
-            if (pBox == null) return 0;
-            if (kls.Lines.Count == 0) return 0;
-            
-            // Calculation of the average length of the lines
-            for (int i = 0; i < kls.Lines.Count(); i++)
-            {
-                L += MeasureString(kls.Lines[i].ToString(), femSize);
-            }
-            return L / kls.Lines.Count;
-        }
-
-
-        /// <summary>
-        /// Ajust font size to fit NbLines in height and the average line lenght in width
-        /// Bigger lines will be shrinked and smaller lines not changed
-        /// </summary>
-        /// <param name="pBox"></param>
-        /// <param name="S"></param>
-        /// <param name="NbLines"></param>
-        private void AdjustFontSize(int NbLines) 
-        {
-            if (FontStretching == "Large")
-                AdjustFontSizeWithStretching(NbLines);
-            else
-            {
-                AdjustFontWithoutStretching(_biggestLine, NbLines);
-            }
-          
-        }
-
-
-        private void AdjustFontWithoutStretching(string biggestLine, int NbLines)
-        {
-            if (pBox == null) return;
-
-            string S = biggestLine;
-
-            Graphics g = pBox.CreateGraphics();
-            float femsize;
-            float inisize = _karaokeFont.Size;
-            femsize = g.DpiY * inisize / 72;
-
-
-            float mult = 1.3f; // 1.2 is the default line spacing in Windows Forms
-            float textWidth = MeasureString(S, femsize);
-
-            // Try to fit inside 90% of client width
-            float ClientWidth = 0.90f * pBox.ClientSize.Width;
-
-            if (textWidth > ClientWidth)
-            {
-                do
-                {
-                    inisize--;
-                    if (inisize > 0)
-                    {
-                        femsize = g.DpiY * inisize / 72;
-                        textWidth = MeasureString(S, femsize);
-
-                    }
-                } while (textWidth > ClientWidth && inisize > 0);
-            }
-            else
-            {
-                do
-                {
-                    inisize++;
-                    femsize = g.DpiY * inisize / 72;
-                    textWidth = MeasureString(S, femsize);
-                } while (textWidth < ClientWidth);
-            }
-
-            // ------------------------------
-            // Ajustement in Height
-            // ------------------------------
-            float textHeight = MeasureStringHeight(S, inisize);
-            float totaltextHeight;
-            totaltextHeight = _nbLyricsLines * (textHeight + 10);
-
-            float compHeight = 0.95f * pBox.ClientSize.Height;
-
-            if (totaltextHeight > compHeight)
-            {
-                do
-                {
-                    inisize--;
-                    if (inisize > 0)
-                    {
-                        femsize = g.DpiY * inisize / 72;
-                        textHeight = MeasureStringHeight(S, femsize);
-
-                        totaltextHeight = _nbLyricsLines * (textHeight + 10);
-                    }
-                } while (totaltextHeight > compHeight && inisize > 0);
-            }
-
-
-            if (inisize > 0)
-            {
-                emSize = g.DpiX * inisize / 72;
-                _karaokeFont = new Font(_karaokeFont.FontFamily, emSize, FontStyle.Regular, GraphicsUnit.Pixel);
-
-                // Vertical distance between lines          1.6 is
-                // https://pimpmytype.com/line-length-line-height/ they say 1.6 is the best 
-                _lineHeight = (int)(_lineHeightMultiplier * emSize);
-                // Height of the full song
-                _linesHeight = _nbLyricsLines * _lineHeight;
-
-
-                // Update horizontal measure of lines                
-                for (int i = 0; i < _kLyrics.Lines.Count; i++)
-                {
-                    LinesLengths[i] = MeasureString(_kLyrics.Lines[i].ToString(), _karaokeFont.Size);
-                }
-
-            }
-            g.Dispose();
-        }
-
-        private void AdjustFontSizeWithStretching(int NbLines)
-        {
-            if (pBox == null) return;
-
-            // Calculate Font size as if there is only 6 lines to display in order to have bigger font size.
-            if (KaraokeDisplayType == KaraokeDisplayTypes.ScrollingLinesBottomUp || KaraokeDisplayType == KaraokeDisplayTypes.ScrollingLinesTopDown)
-                NbLines = 6;
-
-            
-            string S = "!/(123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
-
-            Graphics g = pBox.CreateGraphics();
-            float femsize;
-            float inisize = _karaokeFont.Size;
-            femsize = g.DpiY * inisize / 72;
-
-            // Try to fit inside 90% of client Height
-            float ClientHeight = pBox.ClientSize.Height;
-
-            float mult = 1.3f; // 1.2 is the default line spacing in Windows Forms
-            float textHeight = MeasureStringHeight(S, femsize);
-            float linesHeight = mult * textHeight * NbLines;
-
-
-            if (linesHeight > ClientHeight)
-            {
-                do
-                {
-                    inisize--;
-                    if (inisize > 0)
-                    {
-                        femsize = g.DpiY * inisize / 72;
-                        linesHeight = mult * MeasureStringHeight(S, femsize) * NbLines;
-
-                    }
-                } while (linesHeight > ClientHeight && inisize > 0);
-            }
-            else
-            {
-                do
-                {
-                    inisize++;
-                    femsize = g.DpiY * inisize / 72;
-                    linesHeight = mult * MeasureStringHeight(S, femsize) * NbLines;
-                } while (linesHeight < ClientHeight);
-            }
-
-            // ------------------------------
-            // Ajustement in width with AverageWidth
-            // ------------------------------
-
-            // Calculate average width of lines and try to fit inside 95% of client width
-            femsize = g.DpiX * inisize / 72;
-            _AverageWidth = GetAverageWidth(_kLyrics, femsize);
-
-            float ClientWidth = (1 - 2 * _marginLeft) * pBox.ClientSize.Width;
-            float textWidth = _AverageWidth;
-
-            if (_AverageWidth > ClientWidth)
-            {
-                do
-                {
-                    inisize--;
-                    if (inisize > 0)
-                    {
-                        femsize = g.DpiX * inisize / 72;
-                        textWidth = GetAverageWidth(_kLyrics, femsize);
-                    }
-                } while (textWidth > ClientWidth && inisize > 0);
-            }
-
-
-            if (inisize > 0)
-            {
-                emSize = g.DpiX * inisize / 72;
-                _karaokeFont = new Font(_karaokeFont.FontFamily, emSize, FontStyle.Regular, GraphicsUnit.Pixel);
-
-                // Vertical distance between lines          1.6 is
-                // https://pimpmytype.com/line-length-line-height/ they say 1.6 is the best 
-                _lineHeight = (int)(_lineHeightMultiplier * emSize);
-                // Height of the full song
-                _linesHeight = _nbLyricsLines * _lineHeight;
-
-
-                // Update horizontal measure of lines                
-                for (int i = 0; i < _kLyrics.Lines.Count; i++)
-                {
-                    LinesLengths[i] = MeasureString(_kLyrics.Lines[i].ToString(), _karaokeFont.Size);
-                }
-
-            }
-            g.Dispose();
-        }
-
-
-        private float MeasureStringHeight(string line, float femSize)
-        {
-            float ret = 0;
-
-            if (line != "")
-            {
-                using (Graphics g = pBox.CreateGraphics())
-                {
-
-                    if (femSize > 0)
-                        m_font = new Font(_karaokeFont.FontFamily, femSize, FontStyle.Regular, GraphicsUnit.Pixel);
-
-                    SizeF sz = g.MeasureString(line, m_font, new Point(0, 0), sf);
-                    ret = sz.Height;
-
-                    g.Dispose();
-                }
-            }
-            return ret;
-        }
-
-        
-        private float MeasureLine(int curline, float femSize)
-        {
-            return MeasureString(_kLyrics.Lines[curline].ToString(), femSize);
-        }
-
-
-        #endregion Measure
-
-
-        #region Color Functions
-
-        /// <summary>
-        /// Check text representing a color
-        /// </summary>
-        /// <param name="input"></param>
-        /// <returns></returns>
-        /// <exception cref="ArgumentException"></exception>
-        public static Color Parse(string input)
-        {
-            input = input.Trim();
-            string strColorRegex = @"^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$";
-            Regex re = new Regex(strColorRegex);
-            if (re.IsMatch(input))
-            {
-                return ColorTranslator.FromHtml(input);
-            }
-
-            Color named = Color.FromName(input);
-            if (named.IsKnownColor || named.IsNamedColor)
-            {
-                return named;
-            }
-            throw new ArgumentException($"Unsupported color value: {input}", nameof(input));
-        }
-
-
-        #endregion Color functions
-
-
-        #region form load close
-
-        private void frmTest_Resize(object sender, EventArgs e)
-        {
-           
-            AdjustFontSize(_nbLyricsLines);
-
-            if (KaraokeDisplayType == KaraokeDisplayTypes.ScrollingLinesBottomUp || KaraokeDisplayType == KaraokeDisplayTypes.ScrollingLinesTopDown)
-                InitScrollMode();                           
-        }
-
-
-
-        #endregion form load close
-
+                       
 
         #region Start , Stop
 

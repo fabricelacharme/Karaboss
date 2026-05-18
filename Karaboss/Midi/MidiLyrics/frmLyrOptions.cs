@@ -543,7 +543,7 @@ namespace Karaboss
                 dirSlideShow = Properties.Settings.Default.dirSlideShow;
                 if (!Directory.Exists(dirSlideShow))
                     dirSlideShow = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), Application.ProductName);                
-                pBox.DirSlideShow = dirSlideShow;
+                //pBox.DirSlideShow = dirSlideShow;
 
                 freqSlideShow = Properties.Settings.Default.freqSlideShow;
 
@@ -857,6 +857,8 @@ namespace Karaboss
                 cbSizeMode.SelectedText = SizeMode.ToString();
 
                 pBox.OptionBackground = bgOption;
+
+                pBox.SetDirectoryBackground(dirSlideShow);
             }
             catch (Exception e)
             {
@@ -962,7 +964,7 @@ namespace Karaboss
 
             dirSlideShow = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), Application.ProductName);
             txtSlideShow.Text = dirSlideShow;
-            pBox.DirSlideShow = dirSlideShow;
+            pBox.SetDirectoryBackground(dirSlideShow);
         }
 
         /// <summary>
@@ -1103,7 +1105,7 @@ namespace Karaboss
             {                
                 pBox.OptionBackground = "Diaporama";
                 bgOption = "Diaporama";
-                pBox.DirSlideShow = dirSlideShow;
+                pBox.SetDirectoryBackground(dirSlideShow);
             }
         }
 

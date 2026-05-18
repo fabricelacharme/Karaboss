@@ -1446,6 +1446,7 @@ namespace Karaboss.Mp3
         /// <param name="Times"></param>
         private void DisplayFrmMp3Lyrics()
         {
+            /*
             #region tests
 
             if (Application.OpenForms.OfType<frmTest>().Count() > 0)
@@ -1456,7 +1457,7 @@ namespace Karaboss.Mp3
 
             return;
             #endregion tests
-
+            */
 
             string sSong = string.Empty;
             string sSinger = string.Empty;
@@ -1476,7 +1477,7 @@ namespace Karaboss.Mp3
             
             
             // Open and add to owners (will be closed/minimized together and will be on top)
-            frmMp3Lyrics = new frmMp3Lyrics();                        
+            frmMp3Lyrics = new frmMp3Lyrics(Mp3FullPath);                        
             //frmMp3Lyrics.Owner = this;
             frmMp3Lyrics.Show();
 
@@ -1492,12 +1493,10 @@ namespace Karaboss.Mp3
 
 
             // MP3 caracteristics
-            frmMp3Lyrics.Duration = _duration; // mp3 duration in ms
+            frmMp3Lyrics.Duration = _duration * 1000; // mp3 duration in ms
             frmMp3Lyrics.Frequency = _frequency;
             frmMp3Lyrics.BitRate = _bitrate;
-
-            // Load lyrics from Mp3LyricsMgmtHelper.mp3KaraokeLyrics
-            //frmMp3Lyrics.LoadLyrics();
+            
 
             // cas d'une playlist ou non : met à jour le diaporama
             SetSlideShow();
@@ -1506,7 +1505,7 @@ namespace Karaboss.Mp3
         }
 
         /// <summary>
-        /// SliadeShow of frmMp3Lyrics
+        /// SlideShow of frmMp3Lyrics
         /// </summary>
         private void SetSlideShow()
         {

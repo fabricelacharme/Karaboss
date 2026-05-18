@@ -231,8 +231,7 @@
             this.pBox.bTextBackGround = true;
             this.pBox.ChordFont = new System.Drawing.Font("Comic Sans MS", 8.25F);
             this.pBox.CurrentTextPos = 2;
-            this.pBox.CurrentTime = 3;
-            this.pBox.DirSlideShow = "";
+            this.pBox.CurrentTime = 3;            
             resources.ApplyResources(this.pBox, "pBox");
             this.pBox.Duration = 0D;
             this.pBox.FirstMelodyNoteTicksOn = 0;
