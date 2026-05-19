@@ -431,6 +431,8 @@ namespace keffect
 
         #region Instrumentals
 
+        private bool bShowInformation = false;
+
         // Show hints for instrumental parts (e.g. display "(introduction, instrumental, ending)" on the screen)
         private bool _bShowHints = true;
         public bool bShowHints
@@ -767,10 +769,7 @@ namespace keffect
                         _borderthick = 1;
                         break;
                 }
-                pBox?.Invalidate();
-
-
-                AjustText(_biggestLine);      // pourquoi ? mystère. Mais ça marche
+                pBox?.Invalidate();               
             }
         }
 
@@ -967,8 +966,7 @@ namespace keffect
             SetStyle(ControlStyles.AllPaintingInWmPaint | ControlStyles.UserPaint | ControlStyles.OptimizedDoubleBuffer, true);
 
             #endregion Graphic optimization
-
-            //_kLyrics = new kLyrics();
+            
 
             SetDefaultValues();
 
@@ -976,144 +974,7 @@ namespace keffect
                 Init();                       
         }
 
-        #region adjust text deprecated
-
-        /// <summary>
-        /// Ajust size of font regarding size of pictureBox1
-        /// </summary>
-        /// <param name="S"></param>
-        private void AjustText(string S)
-        {
-            if (S != "" && pBox != null)
-            {
-                Graphics g = pBox.CreateGraphics();
-                float femsize;
-                long inisize = (long)_karaokeFont.Size;
-                femsize = g.DpiX * inisize / 72;
-
-                float textSize = MeasureString(S, femsize);
-
-                // Try to fit inside 90% of client size
-                long comp = (long)(0.90 * pBox.ClientSize.Width);
-
-                // Texte trop large
-                if (textSize > comp)
-                {
-                    do
-                    {
-                        inisize--;
-                        if (inisize > 0)
-                        {
-                            femsize = g.DpiX * inisize / 72;
-                            textSize = MeasureString(S, femsize);
-                        }
-                    } while (textSize > comp && inisize > 0);
-                }
-                else
-                {
-                    do
-                    {
-                        inisize++; //= inisize + 1;                        
-                        femsize = g.DpiX * inisize / 72;
-                        textSize = MeasureString(S, femsize);
-                    } while (textSize < comp);
-                }
-
-                // ------------------------------
-                // Ajustement in height 
-                // ------------------------------
-                float textHeight = MeasureStringHeight(S, inisize);
-                float totaltextHeight;
-                totaltextHeight = _nbLyricsLines * (textHeight + 10);
-
-                long compHeight = (long)(0.95 * pBox.ClientSize.Height);
-
-                if (totaltextHeight > compHeight)
-                {
-                    do
-                    {
-                        inisize--;
-                        if (inisize > 0)
-                        {
-                            femsize = g.DpiY * inisize / 72;
-                            textHeight = MeasureStringHeight(S, femsize);
-
-                            totaltextHeight = _nbLyricsLines * (textHeight + 10);
-                        }
-                    } while (totaltextHeight > compHeight && inisize > 0);
-                }
-
-
-                if (inisize > 0)
-                {
-                    emSize = g.DpiY * inisize / 72;
-                    _karaokeFont = new Font(_karaokeFont.FontFamily, emSize, FontStyle.Regular, GraphicsUnit.Pixel);
-
-                    // Vertical distance between lines          1.6 is
-                    // https://pimpmytype.com/line-length-line-height/ they say 1.6 is the best 
-                    _lineHeight = (int)(1.55 * emSize);
-                    // Height of the full song
-                    _linesHeight = _nbLyricsLines * _lineHeight;
-
-
-                    // Update horizontal measure of lines
-                    //for (int i = 0; i < Lines.Count; i++)
-                    for (int i = 0; i < _kLyrics.Lines.Count; i++)
-                    {
-                        LinesLengths[i] = MeasureLine(i);
-                    }
-
-                }
-                g.Dispose();
-            }
-        }
-
-        private float MeasureLine(int curline)
-        {
-            return MeasureString(_kLyrics.Lines[curline].ToString(), _karaokeFont.Size);
-
-        }
-
-        /// <summary>
-        /// Center text vertically, according to number of lines to display and line height
-        /// </summary>
-        /// <returns></returns>
-        private int VCenterText2()
-        {
-            int y = 0;
-
-            // Height of control minus height of lines to show
-            switch (_OptionDisplay)
-            {
-                case OptionsDisplay.Center:
-                    y = (pBox.ClientSize.Height - (_nbLyricsLines) * _lineHeight) / 2;
-                    break;
-
-                case OptionsDisplay.Top:
-                    y = 0;
-                    break;
-
-                case OptionsDisplay.Bottom:
-                    y = pBox.ClientSize.Height - (_nbLyricsLines * (_lineHeight + 1));
-                    break;
-            }
-            return y > 0 ? y : 0;
-        }
-
-        /// <summary>
-        /// Center text horizontally
-        /// </summary>
-        /// <param name="s"></param>
-        /// <returns></returns>
-        private int HCenterText(string s)
-        {
-            int res = -(int)_karaokeFont.Size / 2 + (pBox.ClientSize.Width - (int)MeasureString(s, _karaokeFont.Size)) / 2;
-            return res > 0 ? res : 0;
-        }
-
-        #endregion ajust text deprecated
-
-
+    
         #region Context menu
         private void pBox_MouseDown(object sender, MouseEventArgs e)
         {
@@ -1336,15 +1197,14 @@ namespace keffect
             kLine line;
             for (int i = 0; i < kls.Lines.Count; i++)
             {
-                if (!(kls.Lines[i].Syllables.Count == 1 && kls.Lines[i].Syllables.First().CharType == Syllable.CharTypes.ParagraphSep))
+                if (kls.Lines[i].Syllables.Count == 1 && (kls.Lines[i].Syllables.First().CharType == Syllable.CharTypes.ParagraphSep || (kls.Lines[i].Syllables.First().Text == string.Empty))) continue;                
+                
+                line = new kLine();
+                for (int j = 0; j < kls.Lines[i].Syllables.Count; j++)
                 {
-                    line = new kLine();
-                    for (int j = 0; j < kls.Lines[i].Syllables.Count; j++)
-                    {
-                        line.Add(kls.Lines[i].Syllables[j]);
-                    }
-                    klsNoParagraphs.Add(line);
+                    line.Add(kls.Lines[i].Syllables[j]);
                 }
+                klsNoParagraphs.Add(line);                
             }
             return klsNoParagraphs;
         }
@@ -1552,6 +1412,7 @@ namespace keffect
             if (_kLyrics.Lines.Count == 0) return;
 
             #region Karaoke display type
+
             // Update _nbLyricsLines if layout changed in options           
             switch (KaraokeDisplayType)
             {
@@ -1610,12 +1471,9 @@ namespace keffect
             AdjustFontSize(_nbLyricsLines);           
             _LastLineToShow = SetLastLineToShow(_FirstLineToShow, _kLyrics.Lines.Count, _nbLyricsLines);
 
-
             if (KaraokeDisplayType == KaraokeDisplayTypes.ScrollingLinesBottomUp || KaraokeDisplayType == KaraokeDisplayTypes.ScrollingLinesTopDown)
                 InitScrollMode();
-
         }
-
 
         #endregion
 
@@ -1698,10 +1556,7 @@ namespace keffect
         private void UpdateCountDown()
         {
             if (bCountDown)
-            {
-                // Real position:  PlayerPositionMilliseconds
-                // Position to reach: TargetPositionMilliseconds               
-
+            {                      
                 // Recalculates the remaining time with PlayerPosition
                 _endTime = DateTime.Now.AddMilliseconds(TargetPositionMilliseconds - PlayerPositionMilliseconds);
 
@@ -1916,20 +1771,17 @@ namespace keffect
                     if (nextindex >= 0 && i < nextindex - 1)
                     {
                         // Already sung
-                        active_fragment += _kLyrics.Lines[curline].Syllables[i].Text;
-                        //active_fragment_length += MeasureString(_kLyrics.Lines[curline].Syllables[i].Text, _karaokeFont.Size);
+                        active_fragment += _kLyrics.Lines[curline].Syllables[i].Text;                        
                     }
                     else if (nextindex > 0 && i == nextindex - 1)
                     {
                         // Being sung
-                        highlight_fragment = _kLyrics.Lines[curline].Syllables[i].Text;
-                        //highlight_fragment_length = MeasureString(_kLyrics.Lines[curline].Syllables[i].Text, _karaokeFont.Size);
+                        highlight_fragment = _kLyrics.Lines[curline].Syllables[i].Text;                        
                     }
                 }
                 else if (i >= nextindex)
                 {
-                    inactive_fragment += _kLyrics.Lines[curline].Syllables[i].Text;
-                    //inactive_fragment_length += MeasureString(_kLyrics.Lines[curline].Syllables[i].Text, _karaokeFont.Size);
+                    inactive_fragment += _kLyrics.Lines[curline].Syllables[i].Text;                    
                 }
             }
           
@@ -1985,7 +1837,6 @@ namespace keffect
             return y > 0 ? y : 0;
         }
 
-
         private float MeasureString(string fragment, float femSize)
         {
             float ret = 0;
@@ -2006,7 +1857,6 @@ namespace keffect
             return ret;
         }
 
-
         private float GetAverageWidth(kLyrics kls, float femSize)
         {
             float L = 0;
@@ -2021,7 +1871,6 @@ namespace keffect
             }
             return L / kls.Lines.Count;
         }
-
 
         /// <summary>
         /// Ajust font size to fit NbLines in height and the average line lenght in width
@@ -2038,16 +1887,13 @@ namespace keffect
             {
                 AdjustFontWithoutStretching(_biggestLine, NbLines);
             }
-
         }
-
 
         private void AdjustFontWithoutStretching(string biggestLine, int NbLines)
         {
             if (pBox == null) return;
             if (_kLyrics == null || _kLyrics.Lines.Count == 0) return;
             if (biggestLine == string.Empty) return;
-
 
             string S = biggestLine;
 
@@ -2110,7 +1956,6 @@ namespace keffect
                 } while (totaltextHeight > compHeight && inisize > 0);
             }
 
-
             if (inisize > 0)
             {
                 emSize = g.DpiX * inisize / 72;
@@ -2128,7 +1973,6 @@ namespace keffect
                 {
                     LinesLengths[i] = MeasureString(_kLyrics.Lines[i].ToString(), _karaokeFont.Size);
                 }
-
             }
             g.Dispose();
         }
@@ -2224,11 +2068,9 @@ namespace keffect
                 {
                     LinesLengths[i] = MeasureString(_kLyrics.Lines[i].ToString(), _karaokeFont.Size);
                 }
-
             }
             g.Dispose();
         }
-
 
         private float MeasureStringHeight(string line, float femSize)
         {
@@ -2238,7 +2080,6 @@ namespace keffect
             {
                 using (Graphics g = pBox.CreateGraphics())
                 {
-
                     if (femSize > 0)
                         m_font = new Font(_karaokeFont.FontFamily, femSize, FontStyle.Regular, GraphicsUnit.Pixel);
 
@@ -2250,7 +2091,6 @@ namespace keffect
             }
             return ret;
         }
-
 
         private string GetBiggestLine()
         {
@@ -2468,7 +2308,7 @@ namespace keffect
 
         private void DrawActiveLineWithBorders(PaintEventArgs e, int lineIndex, int y1)
         {
-            #region declarations
+            #region Declarations
 
             int Wbg;
             RectangleF Rbg;
@@ -2483,12 +2323,13 @@ namespace keffect
             Pen ActiveBorderPen = new Pen(new SolidBrush(_ActiveBorderColor), _borderthick);
             Pen InactiveBorderPen = new Pen(new SolidBrush(_InactiveBorderColor), _borderthick);
 
+            float scale = 1.0f;
             float x0 = _marginLeft * pBox.Width;
             GraphicsPath pth = new GraphicsPath();
 
             string s;
 
-            #endregion declarations
+            #endregion Declarations
 
             if (lineIndex < 0 || lineIndex >= _kLyrics.Lines.Count()) return;
             s = _kLyrics.Lines[lineIndex].ToString();
@@ -2498,7 +2339,9 @@ namespace keffect
             // ************************  Set ScaleTransform
             float w = MeasureString(s, _karaokeFont.Size);
             // Example: if the text is greater than the width of the picture box, we reduce the size of the text to fit it in the picture box
-            float scale = ((1 - 2 * _marginLeft) * pBox.Width) / w;
+            
+            if (w > 0) 
+                scale = ((1 - 2 * _marginLeft) * pBox.Width) / w;
 
             if (_FontStretching == "Large" && w > 0 && w > ((1 - 2 * _marginLeft) * pBox.Width))
             {
@@ -2538,9 +2381,10 @@ namespace keffect
 
 
                 #region apply effect
+                // Effect must be modified because it is affected by ScaleTransform.
 
                 if (_frametype == "Shadow")
-                    CreateShadowEffect(s, _InactiveBorderColor, (int)x0, y1, _karaokeFont, _karaokeFont.Size, e, pth);
+                    CreateShadowEffect(s, _InactiveBorderColor, (int)x0, y1, _karaokeFont, _karaokeFont.Size, e, pth, scale);
                 else if (_frametype == "Neon")
                     CreateNeonEffect(_InactiveBorderColor, e, pth);
                 
@@ -2570,45 +2414,57 @@ namespace keffect
                     GraphicsPath pathActive = new GraphicsPath();
                     pathActive.AddString(active_fragment, _karaokeFont.FontFamily, (int)_karaokeFont.Style, _karaokeFont.Size, new Point((int)x0, y1), sf);
 
-                    
                     #region Paint in ActiveColor
 
-                    // Rectangle for text befor highlighted text (rect.Width * lastpercent)
-                    RectangleF intersectRectBefore = new RectangleF(rect.X, rect.Y, rect.Width * lastpercent, rect.Height);                    
-
-                    // update region on the intersection between region and 2nd rectangle
-                    r.Intersect(intersectRectBefore);
-
-                    // Fill updated region in green
-                    e.Graphics.FillRegion(ActiveColorBrush, r);
-
-                    #endregion Paint in ActiveColor
-
-                    
                     #region apply effect
 
                     if (_frametype == "Shadow")
-                        CreateShadowEffect(active_fragment, _ActiveBorderColor, (int)x0, y1, _karaokeFont, _karaokeFont.Size, e, pathActive);
+                        CreateShadowEffect(active_fragment, _ActiveBorderColor, (int)x0, y1, _karaokeFont, _karaokeFont.Size, e, pathActive, scale);
                     else if (_frametype == "Neon")
-                        CreateNeonEffect(_ActiveBorderColor, e, pathActive);                    
+                        CreateNeonEffect(_ActiveBorderColor, e, pathActive);
 
                     #endregion apply effect
 
-                    
-                    // Draw the text               
-                    e.Graphics.FillPath(ActiveColorBrush, pathActive);
+                    if (_transitionEffect == TransitionEffects.Progressive)
+                    {
+                        // Create another rectangle shorter than the 1st one (percent of the first)
+                        RectangleF intersectRect = new RectangleF(rect.X, rect.Y, rect.Width * percent, rect.Height);
+                        // update region on the intersection between region and 2nd rectangle
+                        r.Intersect(intersectRect);
+                        // Fill updated region in green => percent portion of text is green            
+                        e.Graphics.FillRegion(ActiveColorBrush, r);
 
-                    // Outline the text                                
-                    if (_borderthick > 0)
-                        e.Graphics.DrawPath(ActiveBorderPen, pathActive);
+
+                        // Rectangle for text befor highlighted text (rect.Width * lastpercent)
+                        RectangleF intersectRectBefore = new RectangleF(rect.X, rect.Y, rect.Width * lastpercent, rect.Height);
+
+                        // update region on the intersection between region and 2nd rectangle
+                        r.Intersect(intersectRectBefore);
+
+                        // Fill updated region in green
+                        e.Graphics.FillRegion(ActiveColorBrush, r);
+                    }
+                    else
+                    {
+                        // Draw the text               
+                        e.Graphics.FillPath(ActiveColorBrush, pathActive);
+
+                        // Outline the text                                
+                        if (_borderthick > 0)
+                            e.Graphics.DrawPath(ActiveBorderPen, pathActive);
+                    }
+
+                    
 
                     pathActive.Dispose();
+
+                    #endregion Paint in ActiveColor
                 }
                 #endregion Draw active text
 
 
                 #region draw highlight text     
-                
+
                 if (highlight_fragment != string.Empty)
                 {
                     GraphicsPath pathHighlight = new GraphicsPath();
@@ -2616,36 +2472,39 @@ namespace keffect
 
                     #region Paint in HighlightColor    
 
-                    // Create another rectangle shorter than the 1st one (percent of the first)
-                    RectangleF intersectRect = new RectangleF(rect.X + rect.Width * lastpercent, rect.Y, rect.Width * (percent - lastpercent), rect.Height);                    
-
-                    // update region on the intersection between region and 2nd rectangle
-                    r.Intersect(intersectRect);
-
-                    // Fill updated region in red => percent portion of text is red            
-                    e.Graphics.FillRegion(HighlightColorBrush, r);
-
-                    #endregion Paint in HighlightColor
-
-
                     #region apply effect
 
                     if (_frametype == "Shadow")
-                        CreateShadowEffect(highlight_fragment, _ActiveBorderColor, (int)(x0 + active_fragment_length), y1, _karaokeFont, _karaokeFont.Size, e, pathHighlight);
+                        CreateShadowEffect(highlight_fragment, _ActiveBorderColor, (int)(x0 + active_fragment_length), y1, _karaokeFont, _karaokeFont.Size, e, pathHighlight, scale);
                     else if (_frametype == "Neon")
                         CreateNeonEffect(_ActiveBorderColor, e, pathHighlight);
 
                     #endregion apply effect
 
+                    if (_transitionEffect == TransitionEffects.Progressive)
+                    {
+                        // Create another rectangle shorter than the 1st one (percent of the first)
+                        RectangleF intersectRect = new RectangleF(rect.X + rect.Width * lastpercent, rect.Y, rect.Width * (percent - lastpercent), rect.Height);
 
-                    // Draw the text               
-                    e.Graphics.FillPath(HighlightColorBrush, pathHighlight);
+                        // update region on the intersection between region and 2nd rectangle
+                        r.Intersect(intersectRect);
 
-                    // Outline text                
-                    if (_borderthick > 0)
-                        e.Graphics.DrawPath(ActiveBorderPen, pathHighlight);
+                        // Fill updated region in red => percent portion of text is red            
+                        e.Graphics.FillRegion(HighlightColorBrush, r);
+                    }
+                    else
+                    {
+                        // Draw the text               
+                        e.Graphics.FillPath(HighlightColorBrush, pathHighlight);
 
+                        // Outline text                
+                        if (_borderthick > 0)
+                            e.Graphics.DrawPath(ActiveBorderPen, pathHighlight);
+                    }
+                                      
                     pathHighlight.Dispose();
+
+                    #endregion Paint in HighlightColor
                 }
                 #endregion draw highlight text
 
@@ -2658,240 +2517,43 @@ namespace keffect
                     pathInactive.AddString(inactive_fragment, _karaokeFont.FontFamily, (int)_karaokeFont.Style, _karaokeFont.Size, new Point((int)(x0 + active_fragment_length + highlight_fragment_length), y1), sf);
 
                     #region Paint in InactiveColor
-
-                    // Create another rectangle shorter than the 1st one (percent of the first)
-                    RectangleF intersectRectAfter = new RectangleF(rect.X + rect.Width * percent, rect.Y, rect.Width - rect.Width * percent, rect.Height);                    
-
-                    // update region on the intersection between region and 2nd rectangle
-                    r.Intersect(intersectRectAfter);
-
-                    // Fill updated region in InactiveColor
-                    e.Graphics.FillRegion(InactiveColorBrush, r);
-
-                    #endregion Paint in InactiveColor
-
 
                     #region apply effect
 
                     if (_frametype == "Shadow")
-                        CreateShadowEffect(inactive_fragment, _InactiveBorderColor, (int)(x0 + active_fragment_length + highlight_fragment_length), y1, _karaokeFont, _karaokeFont.Size, e, pathInactive);
+                        CreateShadowEffect(inactive_fragment, _InactiveBorderColor, (int)(x0 + active_fragment_length + highlight_fragment_length), y1, _karaokeFont, _karaokeFont.Size, e, pathInactive, scale);
                     else if (_frametype == "Neon")
-                        CreateNeonEffect(_InactiveBorderColor, e, pathInactive);                    
+                        CreateNeonEffect(_InactiveBorderColor, e, pathInactive);
 
                     #endregion apply effect
 
+                    if (_transitionEffect == TransitionEffects.Progressive)
+                    {
 
-                    // Draw the text               
-                    e.Graphics.FillPath(InactiveColorBrush, pathInactive);
+                        // Create another rectangle shorter than the 1st one (percent of the first)
+                        RectangleF intersectRectAfter = new RectangleF(rect.X + rect.Width * percent, rect.Y, rect.Width - rect.Width * percent, rect.Height);
 
-                    // Outline the text
-                    if (_borderthick > 0)
-                        e.Graphics.DrawPath(InactiveBorderPen, pathInactive);
+                        // update region on the intersection between region and 2nd rectangle
+                        r.Intersect(intersectRectAfter);
+
+                        // Fill updated region in InactiveColor
+                        e.Graphics.FillRegion(InactiveColorBrush, r);
+
+                    }
+                    else
+                    {
+                        // Draw the text               
+                        e.Graphics.FillPath(InactiveColorBrush, pathInactive);
+
+                        // Outline the text
+                        if (_borderthick > 0)
+                            e.Graphics.DrawPath(InactiveBorderPen, pathInactive);
+                    }
+                    
 
                     pathInactive.Dispose();
-
-                }
-                #endregion Draw inactive text
-
-
-                r.Dispose();
-
-
-                // ************************  Reset ScaleTransform
-                e.Graphics.ResetTransform();
-
-                #endregion Draw dynamic text (with active and highlight fragments)
-            }
-
-            #region Clean up resources
-            pth.Dispose();
-            ActiveColorBrush.Dispose();
-            HighlightColorBrush.Dispose();
-            InactiveColorBrush.Dispose();
-            ActiveBorderPen.Dispose();
-            InactiveBorderPen.Dispose();
-            #endregion Clean up resources
-        }
-
-        private void DrawActiveLineWithShadow(PaintEventArgs e, int lineIndex, int y1)
-        {
-            /*
-
-            #region Declarations
-            int Wbg;
-            RectangleF Rbg;
-
-            Region r;
-            RectangleF rect;
-
-            Brush ActiveColorBrush = new SolidBrush(ActiveColor);
-            Brush HighlightColorBrush = new SolidBrush(HighlightColor);
-            Brush InactiveColorBrush = new SolidBrush(InactiveColor);
-
-            Pen ActiveBorderPen = new Pen(new SolidBrush(ActiveBorderColor), _borderthick);
-            Pen InactiveBorderPen = new Pen(new SolidBrush(InactiveBorderColor), _borderthick);
-
-            int x0;
-            GraphicsPath pth = new GraphicsPath();
-
-            string s;
-
-            #endregion Declarations
-
-            if (lineIndex >= _kLyrics.Lines.Count()) return;
-
-
-            s = _kLyrics.Lines[lineIndex].ToString();
-            x0 = HCenterText(s);      // Center horizontally
-
-            #region background of syllabe                              
-            if (_bTextBackGround)
-            {
-                Wbg = (int)(1.04 * LinesLengths[lineIndex]);
-                // Black background to make text more visible
-                Rbg = new RectangleF((int)(0.94 * x0), (int)(1.04 * y1), Wbg, _lineHeight);
-                // background
-                e.Graphics.FillRectangle(new SolidBrush(Color.Black), Rbg);
-            }
-            #endregion
-
-            pth.AddString(s, _karaokeFont.FontFamily, (int)_karaokeFont.Style, _karaokeFont.Size, new Point(x0, y1), sf);
-
-            // Draw full line in white if no active and highlight fragments
-            if (active_fragment == string.Empty && highlight_fragment == string.Empty && inactive_fragment == string.Empty)
-            {
-                #region Draw static text (no active and highlight fragments)
-
-                #region apply effect
-                CreateShadowEffect(s, _InactiveBorderColor, x0, y1, _karaokeFont, _karaokeFont.Size, e, pth);
-                #endregion apply effect
-
-                // Fill GraphicsPath path in white => full text is white                    
-                e.Graphics.FillPath(InactiveColorBrush, pth);
-                // Outline the text                                
-                e.Graphics.DrawPath(InactiveBorderPen, pth);
-
-                #endregion Draw static text (no active and highlight fragments)
-            }
-            else
-            {
-                #region Draw dynamic text (with active and highlight fragments)
-
-                r = new Region(pth);
-                // Create a retangle of the graphical path
-                rect = r.GetBounds(e.Graphics);
-
-                #region draw active text
-                if (active_fragment != string.Empty)
-                {
-                    GraphicsPath pathActive = new GraphicsPath();
-
-                    pathActive.AddString(active_fragment, _karaokeFont.FontFamily, (int)_karaokeFont.Style, _karaokeFont.Size, new Point(x0, y1), sf);
-
-                    #region Paint in ActiveColor
-
-                    // Rectangle for text befor highlighted text (rect.Width * lastpercent)
-                    RectangleF intersectRectBefore = new RectangleF(rect.X, rect.Y, rect.Width * lastpercent, rect.Height);
-                    //RectangleF intersectRectBefore = new RectangleF(rect.X, rect.Y, active_fragment_length, rect.Height);
-
-                    // update region on the intersection between region and 2nd rectangle
-                    r.Intersect(intersectRectBefore);
-
-                    // Fill updated region in green
-                    e.Graphics.FillRegion(ActiveColorBrush, r);
-
-                    #endregion Paint in ActiveColor
-
-                    #region apply effect
-
-                    CreateShadowEffect(active_fragment, _ActiveBorderColor, x0, y1, _karaokeFont, _karaokeFont.Size, e, pathActive);
-
-                    #endregion apply effect
-
-                    // Draw the text               
-                    e.Graphics.FillPath(ActiveColorBrush, pathActive);
-
-                    // Outline the text                                
-                    e.Graphics.DrawPath(ActiveBorderPen, pathActive);
-
-                    pathActive.Dispose();
-                }
-                #endregion Draw active text
-
-
-                #region draw highlight text      
-                if (highlight_fragment != string.Empty)
-                {
-                    GraphicsPath pathHighlight = new GraphicsPath();
-                    pathHighlight.AddString(highlight_fragment, _karaokeFont.FontFamily, (int)_karaokeFont.Style, _karaokeFont.Size, new Point((int)(x0 + active_fragment_length), y1), sf);
-
-                    #region Paint in HighlightColor    
-
-                    // Create another rectangle shorter than the 1st one (percent of the first)
-                    RectangleF intersectRect = new RectangleF(rect.X + rect.Width * lastpercent, rect.Y, rect.Width * (percent - lastpercent), rect.Height);
-                    //RectangleF intersectRect = new RectangleF(rect.X + active_fragment_length, rect.Y, highlight_fragment_length, rect.Height);
-
-                    // update region on the intersection between region and 2nd rectangle
-                    r.Intersect(intersectRect);
-
-                    // Fill updated region in red => percent portion of text is red            
-                    e.Graphics.FillRegion(HighlightColorBrush, r);
-
-                    #endregion Paint in HighlightColor
-
-
-                    #region apply effect
-
-                    CreateShadowEffect(highlight_fragment, _ActiveBorderColor, (int)(x0 + active_fragment_length), y1, _karaokeFont, _karaokeFont.Size, e, pathHighlight);
-
-                    #endregion apply effect
-
-                    // Draw the text               
-                    e.Graphics.FillPath(HighlightColorBrush, pathHighlight);
-
-                    // Outline text                
-                    e.Graphics.DrawPath(ActiveBorderPen, pathHighlight);
-
-                    pathHighlight.Dispose();
-                }
-                #endregion draw highlight text
-
-
-                #region Draw inactive text
-
-                if (inactive_fragment != string.Empty)
-                {
-                    GraphicsPath pathInactive = new GraphicsPath();
-                    pathInactive.AddString(inactive_fragment, _karaokeFont.FontFamily, (int)_karaokeFont.Style, _karaokeFont.Size, new Point((int)(x0 + active_fragment_length + highlight_fragment_length), y1), sf);
-
-                    #region Paint in InactiveColor
-
-                    // Create another rectangle shorter than the 1st one (percent of the first)
-                    RectangleF intersectRectAfter = new RectangleF(rect.X + rect.Width * percent, rect.Y, rect.Width - rect.Width * percent, rect.Height);
-                    //RectangleF intersectRectAfter = new RectangleF(rect.X + active_fragment_length + highlight_fragment_length, rect.Y, inactive_fragment_length, rect.Height);
-
-                    // update region on the intersection between region and 2nd rectangle
-                    r.Intersect(intersectRectAfter);
-
-                    // Fill updated region in InactiveColor
-                    e.Graphics.FillRegion(InactiveColorBrush, r);
 
                     #endregion Paint in InactiveColor
-
-                    #region apply effect
-
-                    CreateShadowEffect(inactive_fragment, _InactiveBorderColor, (int)(x0 + active_fragment_length + highlight_fragment_length), y1, _karaokeFont, _karaokeFont.Size, e, pathInactive);
-
-                    #endregion apply effect
-
-                    // Draw the text               
-                    e.Graphics.FillPath(InactiveColorBrush, pathInactive);
-
-                    // Outline text                
-                    e.Graphics.DrawPath(InactiveBorderPen, pathInactive);
-
-                    pathInactive.Dispose();
-
                 }
                 #endregion Draw inactive text
 
@@ -2901,208 +2563,9 @@ namespace keffect
                 #endregion Draw dynamic text (with active and highlight fragments)
             }
 
-            #region Clean up resources
-            pth.Dispose();
-            ActiveColorBrush.Dispose();
-            HighlightColorBrush.Dispose();
-            InactiveColorBrush.Dispose();
-            ActiveBorderPen.Dispose();
-            InactiveBorderPen.Dispose();
-            #endregion Clean up resources
-            */
-        
-        }
 
-        private void DrawActiveLineWithNeon(PaintEventArgs e, int lineIndex, int y1)
-        {
-            /*
-            #region declarations
-            int Wbg;
-            RectangleF Rbg;
-
-            Region r;
-            RectangleF rect;
-
-            Brush ActiveColorBrush = new SolidBrush(ActiveColor);
-            Brush HighlightColorBrush = new SolidBrush(HighlightColor);
-            Brush InactiveColorBrush = new SolidBrush(InactiveColor);
-
-            Pen ActiveBorderPen = new Pen(new SolidBrush(ActiveBorderColor), _borderthick);
-            Pen InactiveBorderPen = new Pen(new SolidBrush(InactiveBorderColor), _borderthick);
-
-            int x0;
-            GraphicsPath pth = new GraphicsPath();
-
-            string s;
-
-            #endregion declarations
-
-            if (lineIndex >= _kLyrics.Lines.Count()) return;
-
-
-            s = _kLyrics.Lines[lineIndex].ToString();
-            x0 = HCenterText(s);      // Center horizontally
-
-            #region background of syllabe                              
-            if (_bTextBackGround)
-            {
-                Wbg = (int)(1.04 * LinesLengths[lineIndex]);
-                // Black background to make text more visible
-                Rbg = new RectangleF((int)(0.94 * x0), (int)(1.04 * y1), Wbg, _lineHeight);
-                // background
-                e.Graphics.FillRectangle(new SolidBrush(Color.Black), Rbg);
-            }
-            #endregion
-
-            pth.AddString(s, _karaokeFont.FontFamily, (int)_karaokeFont.Style, _karaokeFont.Size, new Point(x0, y1), sf);
-
-            // Draw full line in white if no active and highlight fragments
-            if (active_fragment == string.Empty && highlight_fragment == string.Empty && inactive_fragment == string.Empty)
-            {
-                #region Draw static text (no active and highlight fragments)
-
-                #region apply effect
-                //CreateShadowEffect(s, _InactiveBorderColor, x0, y1, _karaokeFont, _karaokeFont.Size, e, pth);
-                CreateNeonEffect(_InactiveBorderColor, e, pth);
-                #endregion apply effect
-
-                // Fill GraphicsPath path in white => full text is white                    
-                e.Graphics.FillPath(InactiveColorBrush, pth);
-                // Outline the text                                
-                e.Graphics.DrawPath(InactiveBorderPen, pth);
-
-                #endregion Draw static text (no active and highlight fragments)
-            }
-            else
-            {
-                #region Draw dynamic text (with active and highlight fragments)
-
-                r = new Region(pth);
-                // Create a retangle of the graphical path
-                rect = r.GetBounds(e.Graphics);
-
-                #region draw active text
-                if (active_fragment != string.Empty)
-                {
-                    GraphicsPath pathActive = new GraphicsPath();
-
-                    pathActive.AddString(active_fragment, _karaokeFont.FontFamily, (int)_karaokeFont.Style, _karaokeFont.Size, new Point(x0, y1), sf);
-
-                    #region Paint in ActiveColor
-
-                    // Rectangle for text befor highlighted text (rect.Width * lastpercent)
-                    RectangleF intersectRectBefore = new RectangleF(rect.X, rect.Y, rect.Width * lastpercent, rect.Height);
-                    //RectangleF intersectRectBefore = new RectangleF(rect.X, rect.Y, active_fragment_length, rect.Height);
-
-                    // update region on the intersection between region and 2nd rectangle
-                    r.Intersect(intersectRectBefore);
-
-                    // Fill updated region in green
-                    e.Graphics.FillRegion(ActiveColorBrush, r);
-
-                    #endregion Paint in ActiveColor
-
-                    #region apply effect
-
-                    //CreateShadowEffect(active_fragment, _ActiveBorderColor, x0, y1, _karaokeFont, _karaokeFont.Size, e, pathActive);
-                    CreateNeonEffect(_ActiveBorderColor, e, pathActive);
-
-                    #endregion apply effect
-
-                    // Draw the text               
-                    e.Graphics.FillPath(ActiveColorBrush, pathActive);
-
-                    // Outline the text                                
-                    e.Graphics.DrawPath(ActiveBorderPen, pathActive);
-
-                    pathActive.Dispose();
-                }
-                #endregion Draw active text
-
-
-                #region draw highlight text      
-                if (highlight_fragment != string.Empty)
-                {
-                    GraphicsPath pathHighlight = new GraphicsPath();
-                    pathHighlight.AddString(highlight_fragment, _karaokeFont.FontFamily, (int)_karaokeFont.Style, _karaokeFont.Size, new Point((int)(x0 + active_fragment_length), y1), sf);
-
-                    #region Paint in HighlightColor    
-
-                    // Create another rectangle shorter than the 1st one (percent of the first)
-                    RectangleF intersectRect = new RectangleF(rect.X + rect.Width * lastpercent, rect.Y, rect.Width * (percent - lastpercent), rect.Height);
-                    //RectangleF intersectRect = new RectangleF(rect.X + active_fragment_length, rect.Y, highlight_fragment_length, rect.Height);
-
-                    // update region on the intersection between region and 2nd rectangle
-                    r.Intersect(intersectRect);
-
-                    // Fill updated region in red => percent portion of text is red            
-                    e.Graphics.FillRegion(HighlightColorBrush, r);
-
-                    #endregion Paint in HighlightColor
-
-
-                    #region apply effect
-
-                    //CreateShadowEffect(highlight_fragment, _ActiveBorderColor, (int)(x0 + active_fragment_length), y1, _karaokeFont, _karaokeFont.Size, e, pathHighlight);
-                    CreateNeonEffect(_ActiveBorderColor, e, pathHighlight);
-
-                    #endregion apply effect
-
-                    // Draw the text               
-                    e.Graphics.FillPath(HighlightColorBrush, pathHighlight);
-
-                    // Outline text                
-                    e.Graphics.DrawPath(ActiveBorderPen, pathHighlight);
-
-                    pathHighlight.Dispose();
-                }
-                #endregion draw highlight text
-
-
-                #region Draw inactive text
-
-                if (inactive_fragment != string.Empty)
-                {
-                    GraphicsPath pathInactive = new GraphicsPath();
-                    pathInactive.AddString(inactive_fragment, _karaokeFont.FontFamily, (int)_karaokeFont.Style, _karaokeFont.Size, new Point((int)(x0 + active_fragment_length + highlight_fragment_length), y1), sf);
-
-                    #region Paint in InactiveColor
-
-                    // Create another rectangle shorter than the 1st one (percent of the first)
-                    RectangleF intersectRectAfter = new RectangleF(rect.X + rect.Width * percent, rect.Y, rect.Width - rect.Width * percent, rect.Height);
-                    //RectangleF intersectRectAfter = new RectangleF(rect.X + active_fragment_length + highlight_fragment_length, rect.Y, inactive_fragment_length, rect.Height);
-
-                    // update region on the intersection between region and 2nd rectangle
-                    r.Intersect(intersectRectAfter);
-
-                    // Fill updated region in InactiveColor
-                    e.Graphics.FillRegion(InactiveColorBrush, r);
-
-                    #endregion Paint in InactiveColor
-
-                    #region apply effect
-
-                    //CreateShadowEffect(inactive_fragment, _InactiveBorderColor, (int)(x0 + active_fragment_length + highlight_fragment_length), y1, _karaokeFont, _karaokeFont.Size, e, pathInactive);
-                    CreateNeonEffect(_InactiveBorderColor, e, pathInactive);
-
-                    #endregion apply effect
-
-                    // Draw the text               
-                    e.Graphics.FillPath(InactiveColorBrush, pathInactive);
-
-                    // Outline text                
-                    e.Graphics.DrawPath(InactiveBorderPen, pathInactive);
-
-                    pathInactive.Dispose();
-
-                }
-                #endregion Draw inactive text
-
-
-                r.Dispose();
-
-                #endregion Draw dynamic text (with active and highlight fragments)
-            }
+            // ************************  Reset ScaleTransform
+            e.Graphics.ResetTransform();
 
             #region Clean up resources
             pth.Dispose();
@@ -3112,10 +2575,9 @@ namespace keffect
             ActiveBorderPen.Dispose();
             InactiveBorderPen.Dispose();
             #endregion Clean up resources
-            */
         }
 
-
+                
         private void DrawInactiveLineWithBorders(PaintEventArgs e, int lineIndex, int y2, bool IsActive = false)
         {
             #region Declarations
@@ -3132,6 +2594,7 @@ namespace keffect
             // Create a graphical path
             var path = new GraphicsPath();
             float x0 = _marginLeft * Width;
+            float scale = 1f;
             Pen penBorder = new Pen(BorderColor, _borderthick); // pen for border color
             int Wbg;
             RectangleF Rbg;
@@ -3149,7 +2612,9 @@ namespace keffect
             float w = MeasureString(s, _karaokeFont.Size);
             // ************************  Set ScaleTransform
             // Example: if the text is greater than the width of the picture box, we reduce the size of the text to fit it in the picture box
-            float scale = ((1 - 2 * _marginLeft) * pBox.Width) / w;
+            if (w > 0)
+                scale = ((1 - 2 * _marginLeft) * pBox.Width) / w;
+            
             if (_FontStretching == "Large" && w > 0 && w > ((1 - 2 * _marginLeft) * pBox.Width))
             {
                 // No need to center text, it is already centered by ScaleTransform
@@ -3160,6 +2625,7 @@ namespace keffect
                 // Center text horizontally
                 x0 = (int)((pBox.Width - w) / 2);
             }
+
             #endregion Scale font size to fit text in picture box
 
 
@@ -3183,7 +2649,7 @@ namespace keffect
             #region apply effect
 
             if (_frametype == "Shadow")
-                CreateShadowEffect(s, BorderColor, (int)x0, y2, _karaokeFont, _karaokeFont.Size, e, path);
+                CreateShadowEffect(s, BorderColor, (int)x0, y2, _karaokeFont, _karaokeFont.Size, e, path, scale);
             else if (_frametype == "Neon")
                 CreateNeonEffect(BorderColor, e, path);
 
@@ -3196,6 +2662,7 @@ namespace keffect
             // Outline the text
             if (_borderthick > 0)
                 e.Graphics.DrawPath(penBorder, path);
+           
 
             // ************************  Reset ScaleTransform
             e.Graphics.ResetTransform();
@@ -3208,137 +2675,7 @@ namespace keffect
 
             #endregion Clean up resources
         }
-
-        private void DrawInactiveLineWithShadow(PaintEventArgs e, int lineIndex, int y2, bool IsActive = false)
-        {
-            /*
-            #region Declarations
-            GraphicsPath path = new GraphicsPath();
-            Color BorderColor = _InactiveBorderColor;
-            Color FillColor = _InactiveColor;
-
-            if (IsActive)
-            {
-                BorderColor = _ActiveBorderColor;
-                FillColor = _ActiveColor;
-            }
-
-            int x0;
-            int Wbg;
-            Pen penBorder = new Pen(BorderColor, _borderthick); // pen for border color
-            RectangleF Rbg;
-            string s;
-
-            #endregion Declarations
-
-            if (lineIndex < _kLyrics.Lines.Count())
-            {
-                s = _kLyrics.Lines[lineIndex].ToString();
-                x0 = HCenterText(s);     // Center text horizontally
-
-                #region background of syllabe                              
-                if (_bTextBackGround)
-                {
-                    Wbg = (int)(1.04 * LinesLengths[lineIndex]);
-                    // Black background to make text more visible
-                    Rbg = new RectangleF((int)(0.94 * x0), (int)(1.04 * y2), Wbg, _lineHeight);
-                    // background
-                    e.Graphics.FillRectangle(new SolidBrush(Color.Black), Rbg);
-                }
-                #endregion
-
-                // Add lines of lyrics to the Graphics path
-                path.AddString(s, _karaokeFont.FontFamily, (int)_karaokeFont.Style, _karaokeFont.Size, new Point(x0, y2), sf);
-
-                #region Shadow effect
-
-                CreateShadowEffect(s, BorderColor, x0, y2, _karaokeFont, _karaokeFont.Size, e, path);
-
-                #endregion Shadow effect
-
-                // Draw the text            
-                e.Graphics.FillPath(new SolidBrush(FillColor), path);
-
-                // Outline the text
-                if (_borderthick > 0)
-                    e.Graphics.DrawPath(penBorder, path);
-            }
-
-            #region Clean up resources
-
-            path.Dispose();
-            penBorder.Dispose();
-
-            #endregion Clean up resources
-            */
-        }
-
-        private void DrawInactiveLineWithNeon(PaintEventArgs e, int lineIndex, int y2, bool IsActive = false)
-        {
-            /*
-            #region Declarations
-
-            GraphicsPath path = new GraphicsPath();
-            Color BorderColor = _InactiveBorderColor;
-            Color FillColor = _InactiveColor;
-
-            if (IsActive)
-            {
-                BorderColor = _ActiveBorderColor;
-                FillColor = _ActiveColor;
-            }
-
-            int x0;
-            Pen penBorder = new Pen(BorderColor, _borderthick); // pen for border color
-            int Wbg;
-            RectangleF Rbg;
-            string s;
-
-            #endregion Declarations
-
-            if (lineIndex < _kLyrics.Lines.Count())
-            {
-                s = _kLyrics.Lines[lineIndex].ToString();
-                x0 = HCenterText(s);     // Center text horizontally
-
-                #region background of syllabe                              
-                if (_bTextBackGround)
-                {
-                    Wbg = (int)(1.04 * LinesLengths[lineIndex]);
-                    // Black background to make text more visible
-                    Rbg = new RectangleF((int)(0.94 * x0), (int)(1.04 * y2), Wbg, _lineHeight);
-                    // background
-                    e.Graphics.FillRectangle(new SolidBrush(Color.Black), Rbg);
-                }
-                #endregion
-
-                // Add lines of lyrics to the Graphics path
-                path.AddString(s, _karaokeFont.FontFamily, (int)_karaokeFont.Style, _karaokeFont.Size, new Point(x0, y2), sf);
-
-                #region Neon effect
-
-                CreateNeonEffect(BorderColor, e, path);
-
-                #endregion Neon effect
-
-                // Draw the text            
-                e.Graphics.FillPath(new SolidBrush(FillColor), path);
-
-                // Outline the text
-                if (_borderthick > 0)
-                    e.Graphics.DrawPath(penBorder, path);
-
-            }
-
-            #region Clean up resources
-
-            path.Dispose();
-            penBorder.Dispose();
-
-            #endregion Clean up resources
-            */
-        }
-
+              
 
         /// <summary>
         /// Draw a line of information like (introduction, instrumental, ending) on a single line
@@ -3456,7 +2793,6 @@ namespace keffect
 
         private void DrawTextWithTwoLinesSwapped(PaintEventArgs e)
         {
-
             switch (FrameType)
             {
                 case "NoBorder":
@@ -3466,15 +2802,9 @@ namespace keffect
                 case "Frame3":
                 case "Frame4":
                 case "Frame5":
-                    TlsDrawTextWithBorder(e);
-                    break;
-
                 case "Shadow":
-                    TlsDrawTextWithShadow(e);
-                    break; ;
-
-                case "Neon":
-                    TlsDrawTextWithNeon(e);
+                 case "Neon":
+                    TlsDrawTextWithBorder(e);
                     break; ;
 
                 default:
@@ -3683,382 +3013,13 @@ namespace keffect
 
         }
 
-        private void TlsDrawTextWithShadow(PaintEventArgs e)
-        {
-            TlsDrawTextWithBorder(e);
-
-            /*
-            if (_kLyrics.Lines.Count == 0) return;
-
-            // Center text vertically
-            int y0 = VCenterText();
-
-            int y1;    // y1 is the y coordinate of the active line to display (line _FirstLineToShow)
-            int y2;    // y2 is the y coordinate of the inactive line to display (line _FirstLineToShow + 1)
-
-            int LineOfInformationPosition = -2;
-            int LinePosition; // = -1;
-
-            #region Line layout
-
-            // If active line is odd, it is displayed on the first line
-            // if active line is even, it is displayed on the second line
-            if (_FirstLineToShow % 2 == 0)
-            {
-                LinePosition = 0;
-
-                y1 = y0;
-                y2 = y0 + _lineHeight;
-
-                if (_kLyrics.Lines[_FirstLineToShow].Syllables.Last().CharType == Syllable.CharTypes.Information)
-                    LineOfInformationPosition = 0;
-                else if (_FirstLineToShow + 1 < _kLyrics.Lines.Count && _kLyrics.Lines[_FirstLineToShow + 1].Syllables.Last().CharType == Syllable.CharTypes.Information)
-                    LineOfInformationPosition = 1;
-                else if (_FirstLineToShow + 1 >= _kLyrics.Lines.Count)
-                    LineOfInformationPosition = LastLineOfInformationPosition;
-            }
-            else
-            {
-                LinePosition = 1;
-
-                y2 = y0;
-                y1 = y0 + _lineHeight;
-
-                if (_kLyrics.Lines[_FirstLineToShow].Syllables.Last().CharType == Syllable.CharTypes.Information)
-                    LineOfInformationPosition = 1;
-                else if (_FirstLineToShow + 1 < _kLyrics.Lines.Count && _kLyrics.Lines[_FirstLineToShow + 1].Syllables.Last().CharType == Syllable.CharTypes.Information)
-                    LineOfInformationPosition = 0;
-                else if (_FirstLineToShow + 1 >= _kLyrics.Lines.Count)
-                    LineOfInformationPosition = LastLineOfInformationPosition;
-            }
-
-            #endregion Line layout
-
-
-            // No instrumental
-            if (LineOfInformationPosition == -2)
-            {
-                #region Normal drawing
-
-                // Draw active line with Shadow
-                DrawActiveLineWithShadow(e, _FirstLineToShow, y1);
-
-                // Draw Inactive line with Shadow
-                if (percent > 0)
-                    DrawInactiveLineWithShadow(e, _FirstLineToShow + 1, y2);
-
-                #endregion Normal drawing
-
-            }
-            else
-            {
-                // Checks whether an instrumental section has begun and updates the countdown and timing state accordingly.
-                //CheckIfInstrumentalBegins2();
-                CheckIfInstrumentalBegins();
-
-                // Update the CountDown
-                UpdateCountDown();
-
-                TimeSpan tm = DateTime.Now - _startTime;
-
-                // Instrumental found
-                switch (LineOfInformationPosition)
-                {
-                    #region Instrumental on top
-
-                    case 0:                         // Instrumental on line 0
-                        switch (LinePosition)
-                        {
-                            case 0:
-                                // y1 * information
-                                // y2 normal
-                                if (_FirstLineToShow < _kLyrics.Lines.Count)
-                                    DrawInformation(e, _kLyrics.Lines[_FirstLineToShow].Syllables.Last().Text, SecondsBeforeSinging, y1);
-
-                                if (bCountDown)
-                                {
-                                    // Keep last active line 2 when instrumental has began for 1 second
-                                    if (tm.TotalMilliseconds < 1000)
-                                    {
-                                        if (_FirstLineToShow - 1 >= 0)
-                                        {
-                                            DrawInactiveLineWithShadow(e, _FirstLineToShow - 1, y2, true);         // keep old line 1 sec                                            
-                                        }
-                                    }
-                                }
-
-                                // Draw line y2 only if it is less than 4 sec before the end of an instrumental
-                                // Except for introduction
-                                if (bInstrumentalStarted && _FirstLineToShow > 0)
-                                {
-                                    tm = _endTime - DateTime.Now;
-
-                                    if (tm.TotalMilliseconds > _DelayBeforeEndOfInstrumental)
-                                    {
-                                        // Do not display next lines until _DelayBeforeEndOfInstrumental
-                                        return;
-                                    }
-                                }
-                                DrawInactiveLineWithShadow(e, _FirstLineToShow + 1, y2);      // Draw new line before the end of instrumental         
-                                break;
-
-                            case 1:
-                                // y2 information
-                                // y1 * normal
-                                if (_FirstLineToShow + 1 < _kLyrics.Lines.Count)
-                                    DrawInformation(e, _kLyrics.Lines[_FirstLineToShow + 1].Syllables.Last().Text, -1, y2);
-                                DrawActiveLineWithShadow(e, _FirstLineToShow, y1);
-                                break;
-                        }
-                        break;
-
-                    #endregion Instrumental on top
-
-                    #region Instrumental on bottom
-
-                    case 1:                         // Instrumental on line 1
-                        switch (LinePosition)
-                        {
-                            case 0:
-                                // y1 * normal
-                                // y2 information
-                                DrawActiveLineWithShadow(e, _FirstLineToShow, y1);
-                                if (_FirstLineToShow + 1 < _kLyrics.Lines.Count)
-                                    DrawInformation(e, _kLyrics.Lines[_FirstLineToShow + 1].Syllables.Last().Text, -1, y1 + _lineHeight);
-                                break;
-
-                            case 1:
-                                // y2 normal old than new
-                                // y1 * information
-                                if (_FirstLineToShow < _kLyrics.Lines.Count)
-                                    DrawInformation(e, _kLyrics.Lines[_FirstLineToShow].Syllables.Last().Text, SecondsBeforeSinging, y1);
-
-                                if (bCountDown)
-                                {
-                                    // Keep last active line 2 when instrumental has began for 1 second
-                                    if (tm.TotalMilliseconds < 1000)
-                                    {
-                                        if (_FirstLineToShow - 1 >= 0)
-                                        {
-                                            DrawInactiveLineWithShadow(e, _FirstLineToShow - 1, y1 - _lineHeight, true);         // keep old line 1 sec
-                                            //Console.WriteLine(_kLyrics.Lines[_FirstLineToShow - 1].ToString());                                                                                                                                   
-
-                                        }
-                                    }
-                                }
-                                // Draw line y2 only if it is less than 4 sec before the end of an instrumental
-                                if (bInstrumentalStarted)
-                                {
-                                    tm = _endTime - DateTime.Now;
-
-                                    if (tm.TotalMilliseconds > _DelayBeforeEndOfInstrumental)
-                                    {
-                                        // Do not display next lines until _DelayBeforeEndOfInstrumental
-                                        return;
-                                    }
-                                }
-                                DrawInactiveLineWithShadow(e, _FirstLineToShow + 1, y2);      // Draw new line before the end of instrumental   
-                                break;
-                        }
-                        break;
-
-                    #endregion Instrumental on bottom
-                }
-            }
-            */
-        }
-
-        private void TlsDrawTextWithNeon(PaintEventArgs e)
-        {
-            TlsDrawTextWithBorder(e);
-
-            /*
-            if (_kLyrics.Lines.Count == 0) return;
-
-            // Center text vertically
-            int y0 = VCenterText();
-
-            int y1;    // y1 is the y coordinate of the active line to display (line _FirstLineToShow)
-            int y2;    // y2 is the y coordinate of the inactive line to display (line _FirstLineToShow + 1)
-
-            int LineOfInformationPosition = -2;
-            int LinePosition; // = -1;
-
-            #region Line layout
-
-            // If active line is odd, it is displayed on the first line
-            // if active line is even, it is displayed on the second line
-            if (_FirstLineToShow % 2 == 0)
-            {
-                LinePosition = 0;
-
-                y1 = y0;
-                y2 = y0 + _lineHeight;
-
-                if (_kLyrics.Lines[_FirstLineToShow].Syllables.Last().CharType == Syllable.CharTypes.Information)
-                    LineOfInformationPosition = 0;
-                else if (_FirstLineToShow + 1 < _kLyrics.Lines.Count && _kLyrics.Lines[_FirstLineToShow + 1].Syllables.Last().CharType == Syllable.CharTypes.Information)
-                    LineOfInformationPosition = 1;
-                else if (_FirstLineToShow + 1 >= _kLyrics.Lines.Count)
-                    LineOfInformationPosition = LastLineOfInformationPosition;
-            }
-            else
-            {
-                LinePosition = 1;
-
-                y2 = y0;
-                y1 = y0 + _lineHeight;
-
-                if (_kLyrics.Lines[_FirstLineToShow].Syllables.Last().CharType == Syllable.CharTypes.Information)
-                    LineOfInformationPosition = 1;
-                else if (_FirstLineToShow + 1 < _kLyrics.Lines.Count && _kLyrics.Lines[_FirstLineToShow + 1].Syllables.Last().CharType == Syllable.CharTypes.Information)
-                    LineOfInformationPosition = 0;
-                else if (_FirstLineToShow + 1 >= _kLyrics.Lines.Count)
-                    LineOfInformationPosition = LastLineOfInformationPosition;
-            }
-
-            #endregion Line layout
-
-            // No instrumental
-            if (LineOfInformationPosition == -2)
-            {
-                #region Normal drawing
-
-                // Draw active line with Shadow
-                DrawActiveLineWithNeon(e, _FirstLineToShow, y1);
-
-                // Draw Inactive line with Shadow
-                if (percent > 0)
-                    DrawInactiveLineWithNeon(e, _FirstLineToShow + 1, y2);
-
-                #endregion Normal drawing
-            }
-            else
-            {
-                // Checks whether an instrumental section has begun and updates the countdown and timing state accordingly.
-                //CheckIfInstrumentalBegins2();
-                CheckIfInstrumentalBegins();
-
-                // Update the CountDown
-                UpdateCountDown();
-
-                TimeSpan tm = DateTime.Now - _startTime;
-
-                // Instrumental found
-                switch (LineOfInformationPosition)
-                {
-                    #region Instrumental on top
-
-                    case 0:                         // Instrumental on line 0
-                        switch (LinePosition)
-                        {
-                            case 0:
-                                // y1 * information
-                                // y2 normal
-                                if (_FirstLineToShow < _kLyrics.Lines.Count)
-                                    DrawInformation(e, _kLyrics.Lines[_FirstLineToShow].Syllables.Last().Text, SecondsBeforeSinging, y1);
-
-                                if (bCountDown)
-                                {
-                                    // Keep last active line 2 when instrumental has began for 1 second
-                                    if (tm.TotalMilliseconds < 1000)
-                                    {
-                                        if (_FirstLineToShow - 1 >= 0)
-                                        {
-                                            DrawInactiveLineWithNeon(e, _FirstLineToShow - 1, y2, true);         // keep old line 1 sec                                            
-                                        }
-                                    }
-                                }
-
-                                // Draw line y2 only if it is less than 4 sec before the end of an instrumental
-                                // Except for introduction
-                                if (bInstrumentalStarted && _FirstLineToShow > 0)
-                                {
-                                    tm = _endTime - DateTime.Now;
-
-                                    if (tm.TotalMilliseconds > _DelayBeforeEndOfInstrumental)
-                                    {
-                                        // Do not display next lines until _DelayBeforeEndOfInstrumental
-                                        return;
-                                    }
-                                }
-                                DrawInactiveLineWithNeon(e, _FirstLineToShow + 1, y2);      // Draw new line before the end of instrumental         
-                                break;
-
-                            case 1:
-                                // y2 information
-                                // y1 * normal
-                                if (_FirstLineToShow + 1 < _kLyrics.Lines.Count)
-                                    DrawInformation(e, _kLyrics.Lines[_FirstLineToShow + 1].Syllables.Last().Text, -1, y2);
-                                DrawActiveLineWithNeon(e, _FirstLineToShow, y1);
-                                break;
-                        }
-                        break;
-
-                    #endregion Instrumental on top
-
-                    #region Instrumental on bottom
-
-                    case 1:                         // Instrumental on line 1
-                        switch (LinePosition)
-                        {
-                            case 0:
-                                // y1 * normal
-                                // y2 information
-                                DrawActiveLineWithNeon(e, _FirstLineToShow, y1);
-                                if (_FirstLineToShow + 1 < _kLyrics.Lines.Count)
-                                    DrawInformation(e, _kLyrics.Lines[_FirstLineToShow + 1].Syllables.Last().Text, -1, y1 + _lineHeight);
-                                break;
-
-                            case 1:
-                                // y2 normal old than new
-                                // y1 * information
-                                if (_FirstLineToShow < _kLyrics.Lines.Count)
-                                    DrawInformation(e, _kLyrics.Lines[_FirstLineToShow].Syllables.Last().Text, SecondsBeforeSinging, y1);
-
-                                if (bCountDown)
-                                {
-                                    // Keep last active line 2 when instrumental has began for 1 second
-                                    if (tm.TotalMilliseconds < 1000)
-                                    {
-                                        if (_FirstLineToShow - 1 >= 0)
-                                        {
-                                            DrawInactiveLineWithNeon(e, _FirstLineToShow - 1, y1 - _lineHeight, true);         // keep old line 1 sec
-                                            //Console.WriteLine(_kLyrics.Lines[_FirstLineToShow - 1].ToString());                                                                                                                                   
-
-                                        }
-                                    }
-                                }
-                                // Draw line y2 only if it is less than 4 sec before the end of an instrumental
-                                if (bInstrumentalStarted)
-                                {
-                                    tm = _endTime - DateTime.Now;
-
-                                    if (tm.TotalMilliseconds > _DelayBeforeEndOfInstrumental)
-                                    {
-                                        // Do not display next lines until _DelayBeforeEndOfInstrumental
-                                        return;
-                                    }
-                                }
-                                DrawInactiveLineWithNeon(e, _FirstLineToShow + 1, y2);      // Draw new line before the end of instrumental   
-                                break;
-                        }
-                        break;
-
-                    #endregion Instrumental on bottom
-                }
-            }
         
-            */
-        }
-
         #endregion Draw text with Two lines swapped
 
 
         #region Draw text with Four lines swapped
         private void DrawTextWithFourLinesSwapped(PaintEventArgs e)
         {
-
             switch (FrameType)
             {
                 case "NoBorder":
@@ -4068,15 +3029,9 @@ namespace keffect
                 case "Frame3":
                 case "Frame4":
                 case "Frame5":
-                    FlsDrawTextWithBorder(e);
-                    break;
-
                 case "Shadow":
-                    FlsDrawTextWithShadow(e);
-                    break; ;
-
                 case "Neon":
-                    FlsDrawTextWithNeon(e);
+                    FlsDrawTextWithBorder(e);
                     break; ;
 
                 default:
@@ -4126,7 +3081,10 @@ namespace keffect
             #region Line layout
 
             // Draw lines starting from this position
-            y0 = (int)(_marginTop * _lineHeight);
+            if (_FontStretching == "Large")
+                y0 = (int)(_marginTop * _lineHeight);
+            else
+                y0 = VCenterText();
 
             // 4 lines positioning depending on the value of _FirstLineToShow % 4          
             int l = _FirstLineToShow;
@@ -4147,10 +3105,10 @@ namespace keffect
                     LinesNr = new int[] { idx1, idx2, idx3, idx4 };
 
                     /*
-                    y1 = y0;                                        // idx1     _FirstLineToShow              current         (update 3 & 4)                
-                    y2 = y0 + _lineHeight;                          // idx2     _FirstLineToShow + 1      inactive
-                    y3 = y2 + (int)(_fourLinesSpacing * _lineHeight);     // idx3     _FirstLineToShow + 2      inactive                                           
-                    y4 = y3 + _lineHeight;                          // idx4     _FirstLineToShow + 3      inactive                                           
+                    y1 = y0;                                            // idx1     _FirstLineToShow              current         (update 3 & 4)                
+                    y2 = y0 + _lineHeight;                              // idx2     _FirstLineToShow + 1      inactive
+                    y3 = y2 + (int)(_fourLinesSpacing * _lineHeight);   // idx3     _FirstLineToShow + 2      inactive                                           
+                    y4 = y3 + _lineHeight;                              // idx4     _FirstLineToShow + 3      inactive                                           
                     */
                     break;
 
@@ -4160,10 +3118,10 @@ namespace keffect
                     LinesNr = new int[] { idx2, idx1, idx3, idx4 };
 
                     /*
-                    y2 = y0;                                        // idx2     _FirstLineToShow - 1     active
-                    y1 = y0 + _lineHeight;                          // idx1     _FirstLineToShow             current         (no update)
-                    y3 = y1 + (int)(_fourLinesSpacing * _lineHeight);     // idx3     _FirstLineToShow + 1     inactive                                          
-                    y4 = y3 + _lineHeight;                          // idx4     _FirstLineToShow + 2     inactive                                          
+                    y2 = y0;                                            // idx2     _FirstLineToShow - 1     active
+                    y1 = y0 + _lineHeight;                              // idx1     _FirstLineToShow             current         (no update)
+                    y3 = y1 + (int)(_fourLinesSpacing * _lineHeight);   // idx3     _FirstLineToShow + 1     inactive                                          
+                    y4 = y3 + _lineHeight;                              // idx4     _FirstLineToShow + 2     inactive                                          
                     */
                     break;
 
@@ -4173,10 +3131,10 @@ namespace keffect
                     LinesNr = new int[] { idx3, idx4, idx1, idx2 };
 
                     /*
-                    y3 = y0;                                        // idx3     _FirstLineToShow + 2     inactive
-                    y4 = y0 + _lineHeight;                          // idx4     _FirstLineToShow + 3     inactive
-                    y1 = y4 + (int)(_fourLinesSpacing * _lineHeight);     // idx1     _FirstLineToShow             current         (update 1 & 2)                        
-                    y2 = y1 + _lineHeight;                          // idx2     _FirstLineToShow + 1     inactive                                                  
+                    y3 = y0;                                            // idx3     _FirstLineToShow + 2     inactive
+                    y4 = y0 + _lineHeight;                              // idx4     _FirstLineToShow + 3     inactive
+                    y1 = y4 + (int)(_fourLinesSpacing * _lineHeight);   // idx1     _FirstLineToShow             current         (update 1 & 2)                        
+                    y2 = y1 + _lineHeight;                              // idx2     _FirstLineToShow + 1     inactive                                                  
                    
                     */
                     break;
@@ -4187,10 +3145,10 @@ namespace keffect
                     LinesNr = new int[] { idx3, idx4, idx2, idx1 };
 
                     /*
-                    y3 = y0;                                        // idx3     _FirstLineToShow + 1     inactive
-                    y4 = y0 + _lineHeight;                          // idx4     _FirstLineToShow + 2     inactive
-                    y2 = y4 + (int)(_fourLinesSpacing * _lineHeight);     // idx2     _FirstLineToShow - 1      active                                                
-                    y1 = y2 + _lineHeight;                          // idx1     _FirstLineToShow             current         (no update)                        
+                    y3 = y0;                                            // idx3     _FirstLineToShow + 1     inactive
+                    y4 = y0 + _lineHeight;                              // idx4     _FirstLineToShow + 2     inactive
+                    y2 = y4 + (int)(_fourLinesSpacing * _lineHeight);   // idx2     _FirstLineToShow - 1      active                                                
+                    y1 = y2 + _lineHeight;                              // idx1     _FirstLineToShow             current         (no update)                        
                     */
                     break;
 
@@ -4228,25 +3186,17 @@ namespace keffect
                 DrawActiveLineWithBorders(e, _FirstLineToShow, y1);
 
                 // Line y2 must be drawned active when
-                bool IsActive = ((_FirstLineToShow % 4 == 1) || (_FirstLineToShow % 4 == 3)); // ? true : false;
+                bool IsActive = ((_FirstLineToShow % 4 == 1) || (_FirstLineToShow % 4 == 3));
 
                 // Draw y2 line: active when before line y1 (already sung), inactive when after line y1 (not yet sung)
-                if (idx2 >= 0)
-                {
-                    DrawInactiveLineWithBorders(e, idx2, y2, IsActive);
-                }
+                 DrawInactiveLineWithBorders(e, idx2, y2, IsActive);
+                
 
                 // Draw lines y3 and y4 (always inactives)
-                if (idx3 < _kLyrics.Lines.Count)
-                {
-                    DrawInactiveLineWithBorders(e, idx3, y3);
-                }
-                if (idx4 < _kLyrics.Lines.Count)
-                {
-                    DrawInactiveLineWithBorders(e, idx4, y4);
-                }
-
-                #endregion Normal drwaing
+                DrawInactiveLineWithBorders(e, idx3, y3);                
+                DrawInactiveLineWithBorders(e, idx4, y4);
+                
+                #endregion Normal drawing
             }
             else
             {
@@ -4453,776 +3403,7 @@ namespace keffect
             LastLineOfInformationPosition = LineOfInformationPosition;
         }
 
-        private void FlsDrawTextWithShadow(PaintEventArgs e)
-        {
-            FlsDrawTextWithBorder(e);
-
-            /*
-            if (_kLyrics.Lines.Count == 0) return;
-
-            // Center text vertically
-            int y0 = VCenterText();
-
-            int y1 = 0;
-            int y2 = 0;
-            int y3 = 0;
-            int y4 = 0;
-            int idx2 = 0;
-            int idx3 = 0;
-            int idx4 = 0;
-
-            int LinePosition = -1;
-            float lineSpacing = 1.2f;
-
-            // Search for information
-            // None                         -2
-            // _FirstLineToShow - 1         -1
-            // _FirstLineToShow              0
-            // _FirstLineToShow + 1          1
-            // _FirstLineToShow + 2          2
-            // _FirstLineToShow + 3          3
-            int LineOfInformationPosition; // = -2;
-
-            int[] LinesNr = new int[4];
-
-            #region Line layout
-
-            if (_FirstLineToShow % 4 == 0)
-            {
-                // First line is active                
-                LinePosition = 0;
-                // Position possible for LineOfInformationPosition
-
-                y1 = y0;                            //          _FirstLineToShow              current         (update 3 & 4)
-                y2 = y0 + _lineHeight;              // idx2     _FirstLineToShow + 1      inactive
-                y3 = y2 + (int)(lineSpacing * _lineHeight);          // idx3     _FirstLineToShow + 2      inactive
-                y4 = y3 + _lineHeight;          // idx4     _FirstLineToShow + 3      inactive
-
-                idx2 = _FirstLineToShow + 1;
-                idx3 = _FirstLineToShow + 2;
-                idx4 = _FirstLineToShow + 3;
-
-                LinesNr[0] = _FirstLineToShow;
-                LinesNr[1] = _FirstLineToShow + 1;
-                LinesNr[2] = _FirstLineToShow + 2;
-                LinesNr[3] = _FirstLineToShow + 3;
-
-            }
-            else if (_FirstLineToShow % 4 == 1)
-            {
-                // 2nd line is active
-                LinePosition = 1;
-                // Position not possible for LineOfInformationPosition
-
-                y2 = y0;                            // idx2     _FirstLineToShow - 1     * active
-                y1 = y0 + _lineHeight;              //          _FirstLineToShow             current         (no update)
-                y3 = y1 + (int)(lineSpacing * _lineHeight);          // idx3     _FirstLineToShow + 1     inactive
-                y4 = y3 + _lineHeight;          // idx4     _FirstLineToShow + 2     inactive
-
-                idx2 = _FirstLineToShow - 1;
-                idx3 = _FirstLineToShow + 1;
-                idx4 = _FirstLineToShow + 2;
-
-                LinesNr[0] = _FirstLineToShow - 1;
-                LinesNr[1] = _FirstLineToShow;
-                LinesNr[2] = _FirstLineToShow + 1;
-                LinesNr[3] = _FirstLineToShow + 2;
-
-            }
-            else if (_FirstLineToShow % 4 == 2)
-            {
-                // 3rd line is active
-                LinePosition = 2;
-                // Position possible for LineOfInformationPosition
-
-                y3 = y0;                            // idx3     _FirstLineToShow + 2     inactive
-                y4 = y0 + _lineHeight;              // idx4     _FirstLineToShow + 3     inactive
-                y1 = y4 + (int)(lineSpacing * _lineHeight);          //          _FirstLineToShow             current         (update 1 & 2)
-                y2 = y1 + _lineHeight;          // idx2     _FirstLineToShow + 1     inactive
-
-                idx2 = _FirstLineToShow + 1;
-                idx3 = _FirstLineToShow + 2;
-                idx4 = _FirstLineToShow + 3;
-
-                LinesNr[0] = _FirstLineToShow + 2;
-                LinesNr[1] = _FirstLineToShow + 3;
-                LinesNr[2] = _FirstLineToShow;
-                LinesNr[3] = _FirstLineToShow + 1;
-
-
-            }
-            else if (_FirstLineToShow % 4 == 3)
-            {
-                // 4th line is active
-                LinePosition = 3;
-                // Position not possible for LineOfInformationPosition
-
-                y3 = y0;                            // idx3     _FirstLineToShow + 1     inactive
-                y4 = y0 + _lineHeight;              // idx4     _FirstLineToShow + 2     inactive
-                y2 = y4 + (int)(lineSpacing * _lineHeight);          // idx2     _FirstLineToShow - 1     * active
-                y1 = y2 + _lineHeight;          //          _FirstLineToShow             current         (no update)
-
-                idx2 = _FirstLineToShow - 1;
-                idx3 = _FirstLineToShow + 1;
-                idx4 = _FirstLineToShow + 2;
-
-                LinesNr[0] = _FirstLineToShow + 1;
-                LinesNr[1] = _FirstLineToShow + 2;
-                LinesNr[2] = _FirstLineToShow - 1;
-                LinesNr[3] = _FirstLineToShow;
-            }
-
-            #endregion Line layout
-
-
-            bool bTooMuch = false;
-            for (int i = 0; i < LinesNr.Length; i++)
-            {
-                if (LinesNr[i] >= _kLyrics.Lines.Count)
-                {
-                    bTooMuch = true;
-                    break;
-                }
-            }
-
-            if (!bTooMuch)
-                LineOfInformationPosition = SearchLineOfInformation(LinesNr);
-            else
-                LineOfInformationPosition = LastLineOfInformationPosition;
-
-
-            // If no line of information in the 4 lines => normal display in 4 lines swapped
-            if (LineOfInformationPosition == -2)
-            {
-                #region Normal drawing
-
-                bInstrumentalStarted = false;
-                bCountDown = false;
-
-
-                // Draw y1 line: active & highlighted line                
-                DrawActiveLineWithShadow(e, _FirstLineToShow, y1);
-
-                // Line y2 must be drawned active when
-                bool IsActive = (_FirstLineToShow % 4 == 1) || (_FirstLineToShow % 4 == 3); // ? true : false;
-
-                // Draw y2 line: active when before line y1 (already sung), inactive when after line y1 (not yet sung)
-                if (idx2 >= 0)
-                    DrawInactiveLineWithShadow(e, idx2, y2, IsActive);
-
-
-                // Draw lines y3 and y4 (always inactives)
-                if (idx3 < _kLyrics.Lines.Count)
-                    DrawInactiveLineWithShadow(e, idx3, y3);
-                if (idx4 < _kLyrics.Lines.Count)
-                    DrawInactiveLineWithShadow(e, idx4, y4);
-
-                #endregion Normal drawing
-
-            }
-            else
-            {
-                // Checks whether an instrumental section has begun and updates the countdown and timing state accordingly.
-                CheckIfInstrumentalBegins();
-
-                // Update the CountDown
-                UpdateCountDown();
-
-
-                TimeSpan tm = DateTime.Now - _startTime;
-
-                switch (LineOfInformationPosition)
-                {
-                    #region Instrumental on top
-
-                    case 0:                             // Instrumental is on line 0
-                        // y1 * information
-                        // y2 information
-                        // y3 normal
-                        // y4 normal
-                        switch (LinePosition)
-                        {
-                            case 0:
-                                // y1 * information1 new
-                                // y2 information2   new
-                                // y3 normal old than new
-                                // y4 normal old than new
-                                // Draw "(intrumental)" on active line and countdown on next line
-                                if (_FirstLineToShow < _kLyrics.Lines.Count)
-                                    DrawInformation(e, _kLyrics.Lines[_FirstLineToShow].Syllables.Last().Text, SecondsBeforeSinging, y1);
-
-                                if (bCountDown)
-                                {
-                                    // Keep last actives lines 3 & 4 when instrumental has began for 1 second
-                                    if (tm.TotalMilliseconds < 1000)
-                                    {
-                                        if (_FirstLineToShow - 2 >= 0)
-                                        {
-                                            DrawInactiveLineWithShadow(e, _FirstLineToShow - 2, y3, true);         // keep old line 1 sec
-                                            DrawInactiveLineWithShadow(e, _FirstLineToShow - 1, y4, true);         // keep olf line 1 sec
-
-                                        }
-                                    }
-                                }
-
-                                // Draw lines y3 and y4 only if they are less than 4 sec before the end of an instrumental
-                                // Except if introduction (_FirstLineToShow = 0) show
-                                if (bInstrumentalStarted && _FirstLineToShow > 0)
-                                {
-                                    tm = _endTime - DateTime.Now;
-
-                                    if (tm.TotalMilliseconds > _DelayBeforeEndOfInstrumental)
-                                    {
-                                        // Do not display next lines until _DelayBeforeEndOfInstrumental
-                                        return;
-                                    }
-                                }
-
-                                DrawInactiveLineWithShadow(e, idx3, y3);      // Draw new line before the end of instrumental         
-                                DrawInactiveLineWithShadow(e, idx4, y4);      // Draw new line before the end of instrumental
-                                break;
-
-                            case 1:
-                                // y2 information1
-                                // y1 * information2 no update
-                                // y3 normal 
-                                // y4 normal 
-
-                                // draw ("instrumental") on previous line and countdown on current line
-                                if (_FirstLineToShow - 1 < _kLyrics.Lines.Count)
-                                    DrawInformation(e, _kLyrics.Lines[_FirstLineToShow - 1].Syllables.Last().Text, SecondsBeforeSinging, y1 - _lineHeight);
-
-                                DrawInactiveLineWithShadow(e, idx3, y3);
-                                DrawInactiveLineWithShadow(e, idx4, y4);
-                                break;
-
-                            case 2:
-                                // y3 information1 new
-                                // y4 information2 new
-                                // y1 * normal old          update y3 & y4 
-                                // y2 normal   old
-
-                                // Draw y1 line: active & highlighted line                
-                                DrawActiveLineWithShadow(e, _FirstLineToShow, y1);
-                                // Draw y2 line: inactive line  (before or after y1)                                
-                                DrawInactiveLineWithShadow(e, idx2, y2, false);
-
-                                // Draw instrumental on line 0 (y3)
-                                if (idx3 < _kLyrics.Lines.Count)
-                                    DrawInformation(e, _kLyrics.Lines[idx3].Syllables.Last().Text, -1, y3);
-                                break;
-
-                            case 3:
-                                // y3 information1
-                                // y4 information2
-                                // y2 normal
-                                // y1 * normal          no update
-
-                                // Draw y1 line: active & highlighted line                
-                                DrawActiveLineWithShadow(e, _FirstLineToShow, y1);
-                                // Draw y2 line: inactive line  (before or after y1)                                
-                                DrawInactiveLineWithShadow(e, idx2, y2, true);
-
-                                // Draw instrumental on line 0
-                                if (idx3 < _kLyrics.Lines.Count)
-                                    DrawInformation(e, _kLyrics.Lines[idx3].Syllables.Last().Text, -1, y3);
-                                break;
-                        }
-                        break;
-
-                    #endregion Instrumental on top
-
-
-                    #region Instrumental on bottom
-
-                    case 2:                                                         // instrumental on line 2 (3rd line)
-                        // y1 normal
-                        // y2 normal
-                        // y3 * information1
-                        // y4 information2
-                        switch (LinePosition)
-                        {
-                            case 0:                                                 // LinePosition is 0
-                                // y1 * normal
-                                // y2 normal
-                                // y3 information1
-                                // y4 information2
-
-                                // Draw y1 line: active & highlighted line                
-                                DrawActiveLineWithShadow(e, _FirstLineToShow, y1);
-                                // line y 2 is inactive (not yet played)
-                                DrawInactiveLineWithShadow(e, idx2, y2, false);
-
-                                // Draw "(intrumental)" on 3rd line and countdown on next line
-                                if (idx3 < _kLyrics.Lines.Count)
-                                    DrawInformation(e, _kLyrics.Lines[idx3].Syllables.Last().Text, -1, y3);
-                                break;
-
-                            case 1:                                                 // LinePosition is 1
-                                // y1 normal
-                                // y2 * normal
-                                // y3 information1
-                                // y4 information2
-
-                                // line y2 is already played
-                                DrawInactiveLineWithShadow(e, idx2, y2, true);
-                                // line y1 : active a highlighted line
-                                DrawActiveLineWithShadow(e, _FirstLineToShow, y1);
-
-                                // Draw "(intrumental)" on 3rd line and countdown on next line
-                                if (idx3 < _kLyrics.Lines.Count)
-                                    DrawInformation(e, _kLyrics.Lines[idx3].Syllables.Last().Text, -1, y3);
-
-                                break;
-
-                            case 2:                                                 // LinePosition is 2   = LineOfInformationPosition                                                                                                                
-                                // y1 normal
-                                // y2 normal
-                                // y3 * information1
-                                // y4 information2
-                                if (bCountDown)
-                                {
-                                    // Keep last actives lines 3 & 4 when instrumental has began for 1 second
-                                    if (tm.TotalMilliseconds < 1000)
-                                    {
-                                        if (_FirstLineToShow - 2 >= 0)
-                                        {
-                                            DrawInactiveLineWithShadow(e, _FirstLineToShow - 2, y3, true);
-                                            DrawInactiveLineWithShadow(e, _FirstLineToShow - 1, y4, true);
-                                        }
-                                    }
-                                }
-                                // Draw "(intrumental)" on active line and countdown on next line
-                                if (_FirstLineToShow < _kLyrics.Lines.Count)
-                                    DrawInformation(e, _kLyrics.Lines[_FirstLineToShow].Syllables.Last().Text, SecondsBeforeSinging, y1);
-
-                                // Draw lines y3 and y4 only if they are less than 4 sec before the end of an instrumental
-                                if (bInstrumentalStarted)
-                                {
-                                    tm = _endTime - DateTime.Now;
-
-                                    if (tm.TotalMilliseconds > _DelayBeforeEndOfInstrumental)
-                                    {
-                                        // Do not display next lines
-                                        return;
-                                    }
-                                }
-                                if (idx3 < _kLyrics.Lines.Count)
-                                    DrawInactiveLineWithShadow(e, idx3, y3);
-                                if (idx4 < _kLyrics.Lines.Count)
-                                    DrawInactiveLineWithShadow(e, idx4, y4);
-
-                                break;
-
-                            case 3:
-                                // y1 normal
-                                // y2 normal
-                                // y3 information1
-                                // y4 * information2
-                                // Draw "(intrumental)" on active line and countdown on next line                                
-                                if (idx2 < _kLyrics.Lines.Count)
-                                    DrawInformation(e, _kLyrics.Lines[idx2].Syllables.Last().Text, SecondsBeforeSinging, y2);
-
-                                DrawInactiveLineWithShadow(e, idx3, y3);
-                                DrawInactiveLineWithShadow(e, idx4, y4);
-
-                                break;
-                        }
-                        break;
-
-                    #endregion Instrumental on bottom
-                }
-            }
-
-            LastLineOfInformationPosition = LineOfInformationPosition;
-            */
-        }
-
-        private void FlsDrawTextWithNeon(PaintEventArgs e)
-        {
-            FlsDrawTextWithBorder(e);
-            /*
-            if (_kLyrics.Lines.Count == 0) return;
-
-            // Center text vertically
-            int y0 = VCenterText();
-
-            int y1 = 0;
-            int y2 = 0;
-            int y3 = 0;
-            int y4 = 0;
-            int idx2 = 0;
-            int idx3 = 0;
-            int idx4 = 0;
-
-            int LinePosition = -1;
-            float lineSpacing = 1.2f;
-
-            // Search for information
-            // None                         -2
-            // _FirstLineToShow - 1         -1
-            // _FirstLineToShow              0
-            // _FirstLineToShow + 1          1
-            // _FirstLineToShow + 2          2
-            // _FirstLineToShow + 3          3
-            int LineOfInformationPosition; // = -2;
-
-            int[] LinesNr = new int[4];
-
-            #region Line layout
-
-            if (_FirstLineToShow % 4 == 0)
-            {
-                // First line is active                
-                LinePosition = 0;
-                // Position possible for LineOfInformationPosition
-
-                y1 = y0;                            //          _FirstLineToShow              current         (update 3 & 4)
-                y2 = y0 + _lineHeight;              // idx2     _FirstLineToShow + 1      inactive
-                y3 = y2 + (int)(lineSpacing * _lineHeight);          // idx3     _FirstLineToShow + 2      inactive
-                y4 = y3 + _lineHeight;          // idx4     _FirstLineToShow + 3      inactive
-
-                idx2 = _FirstLineToShow + 1;
-                idx3 = _FirstLineToShow + 2;
-                idx4 = _FirstLineToShow + 3;
-
-                LinesNr[0] = _FirstLineToShow;
-                LinesNr[1] = _FirstLineToShow + 1;
-                LinesNr[2] = _FirstLineToShow + 2;
-                LinesNr[3] = _FirstLineToShow + 3;
-
-            }
-            else if (_FirstLineToShow % 4 == 1)
-            {
-                // 2nd line is active
-                LinePosition = 1;
-                // Position not possible for LineOfInformationPosition
-
-                y2 = y0;                            // idx2     _FirstLineToShow - 1     * active
-                y1 = y0 + _lineHeight;              //          _FirstLineToShow             current         (no update)
-                y3 = y1 + (int)(lineSpacing * _lineHeight);          // idx3     _FirstLineToShow + 1     inactive
-                y4 = y3 + _lineHeight;          // idx4     _FirstLineToShow + 2     inactive
-
-                idx2 = _FirstLineToShow - 1;
-                idx3 = _FirstLineToShow + 1;
-                idx4 = _FirstLineToShow + 2;
-
-                LinesNr[0] = _FirstLineToShow - 1;
-                LinesNr[1] = _FirstLineToShow;
-                LinesNr[2] = _FirstLineToShow + 1;
-                LinesNr[3] = _FirstLineToShow + 2;
-
-            }
-            else if (_FirstLineToShow % 4 == 2)
-            {
-                // 3rd line is active
-                LinePosition = 2;
-                // Position possible for LineOfInformationPosition
-
-                y3 = y0;                            // idx3     _FirstLineToShow + 2     inactive
-                y4 = y0 + _lineHeight;              // idx4     _FirstLineToShow + 3     inactive
-                y1 = y4 + (int)(lineSpacing * _lineHeight);          //          _FirstLineToShow             current         (update 1 & 2)
-                y2 = y1 + _lineHeight;          // idx2     _FirstLineToShow + 1     inactive
-
-                idx2 = _FirstLineToShow + 1;
-                idx3 = _FirstLineToShow + 2;
-                idx4 = _FirstLineToShow + 3;
-
-                LinesNr[0] = _FirstLineToShow + 2;
-                LinesNr[1] = _FirstLineToShow + 3;
-                LinesNr[2] = _FirstLineToShow;
-                LinesNr[3] = _FirstLineToShow + 1;
-
-
-            }
-            else if (_FirstLineToShow % 4 == 3)
-            {
-                // 4th line is active
-                LinePosition = 3;
-                // Position not possible for LineOfInformationPosition
-
-                y3 = y0;                            // idx3     _FirstLineToShow + 1     inactive
-                y4 = y0 + _lineHeight;              // idx4     _FirstLineToShow + 2     inactive
-                y2 = y4 + (int)(lineSpacing * _lineHeight);          // idx2     _FirstLineToShow - 1     * active
-                y1 = y2 + _lineHeight;          //          _FirstLineToShow             current         (no update)
-
-                idx2 = _FirstLineToShow - 1;
-                idx3 = _FirstLineToShow + 1;
-                idx4 = _FirstLineToShow + 2;
-
-                LinesNr[0] = _FirstLineToShow + 1;
-                LinesNr[1] = _FirstLineToShow + 2;
-                LinesNr[2] = _FirstLineToShow - 1;
-                LinesNr[3] = _FirstLineToShow;
-
-
-            }
-
-            #endregion Line layout
-
-
-            bool bTooMuch = false;
-            for (int i = 0; i < LinesNr.Length; i++)
-            {
-                if (LinesNr[i] >= _kLyrics.Lines.Count)
-                {
-                    bTooMuch = true;
-                    break;
-                }
-            }
-
-            if (!bTooMuch)
-                LineOfInformationPosition = SearchLineOfInformation(LinesNr);
-            else
-                LineOfInformationPosition = LastLineOfInformationPosition;
-
-
-            // If no line of information in the 4 lines => normal display in 4 lines swapped
-            if (LineOfInformationPosition == -2)
-            {
-                #region Normal drawing
-
-                bInstrumentalStarted = false;
-                bCountDown = false;
-
-
-                // Draw y1 line: active & highlighted line                
-                DrawActiveLineWithNeon(e, _FirstLineToShow, y1);
-
-                // Line y2 must be drawned active when
-                bool IsActive = ((_FirstLineToShow % 4 == 1) || (_FirstLineToShow % 4 == 3)); // ? true : false;
-
-                // Draw y2 line: active when before line y1 (already sung), inactive when after line y1 (not yet sung)
-                if (idx2 >= 0)
-                    DrawInactiveLineWithNeon(e, idx2, y2, IsActive);
-
-
-                // Draw lines y3 and y4 (always inactives)
-                if (idx3 < _kLyrics.Lines.Count)
-                    DrawInactiveLineWithNeon(e, idx3, y3);
-                if (idx4 < _kLyrics.Lines.Count)
-                    DrawInactiveLineWithNeon(e, idx4, y4);
-
-                #endregion Normal drawing
-            }
-            else
-            {
-                // Checks whether an instrumental section has begun and updates the countdown and timing state accordingly.
-                CheckIfInstrumentalBegins();
-
-                // Update the CountDown
-                UpdateCountDown();
-
-
-                TimeSpan tm = DateTime.Now - _startTime;
-
-                switch (LineOfInformationPosition)
-                {
-                    #region instrumental on top
-
-                    case 0:                             // Instrumental is on line 0
-                        // y1 * information
-                        // y2 information
-                        // y3 normal
-                        // y4 normal
-                        switch (LinePosition)
-                        {
-                            case 0:
-                                // y1 * information1 new
-                                // y2 information2   new
-                                // y3 normal old than new
-                                // y4 normal old than new
-                                // Draw "(intrumental)" on active line and countdown on next line
-                                if (_FirstLineToShow < _kLyrics.Lines.Count)
-                                    DrawInformation(e, _kLyrics.Lines[_FirstLineToShow].Syllables.Last().Text, SecondsBeforeSinging, y1);
-
-                                if (bCountDown)
-                                {
-                                    // Keep last actives lines 3 & 4 when instrumental has began for 1 second
-                                    if (tm.TotalMilliseconds < 1000)
-                                    {
-                                        if (_FirstLineToShow - 2 >= 0)
-                                        {
-                                            DrawInactiveLineWithNeon(e, _FirstLineToShow - 2, y3, true);         // keep old line 1 sec
-                                            DrawInactiveLineWithNeon(e, _FirstLineToShow - 1, y4, true);         // keep olf line 1 sec
-
-                                        }
-                                    }
-                                }
-
-                                // Draw lines y3 and y4 only if they are less than 4 sec before the end of an instrumental
-                                // Except if introduction (_FirstLineToShow = 0) show
-                                if (bInstrumentalStarted && _FirstLineToShow > 0)
-                                {
-                                    tm = _endTime - DateTime.Now;
-
-                                    if (tm.TotalMilliseconds > _DelayBeforeEndOfInstrumental)
-                                    {
-                                        // Do not display next lines until _DelayBeforeEndOfInstrumental
-                                        return;
-                                    }
-                                }
-
-                                DrawInactiveLineWithNeon(e, idx3, y3);      // Draw new line before the end of instrumental         
-                                DrawInactiveLineWithNeon(e, idx4, y4);      // Draw new line before the end of instrumental
-                                break;
-
-                            case 1:
-                                // y2 information1
-                                // y1 * information2 no update
-                                // y3 normal 
-                                // y4 normal 
-
-                                // draw ("instrumental") on previous line and countdown on current line
-                                if (_FirstLineToShow - 1 < _kLyrics.Lines.Count)
-                                    DrawInformation(e, _kLyrics.Lines[_FirstLineToShow - 1].Syllables.Last().Text, SecondsBeforeSinging, y1 - _lineHeight);
-
-                                DrawInactiveLineWithNeon(e, idx3, y3);
-                                DrawInactiveLineWithNeon(e, idx4, y4);
-                                break;
-
-                            case 2:
-                                // y3 information1 new
-                                // y4 information2 new
-                                // y1 * normal old          update y3 & y4 
-                                // y2 normal   old
-
-                                // Draw y1 line: active & highlighted line                
-                                DrawActiveLineWithNeon(e, _FirstLineToShow, y1);
-                                // Draw y2 line: inactive line  (before or after y1)                                
-                                DrawInactiveLineWithNeon(e, idx2, y2, false);
-
-                                // Draw instrumental on line 0 (y3)
-                                if (idx3 < _kLyrics.Lines.Count)
-                                    DrawInformation(e, _kLyrics.Lines[idx3].Syllables.Last().Text, -1, y3);
-                                break;
-
-                            case 3:
-                                // y3 information1
-                                // y4 information2
-                                // y2 normal
-                                // y1 * normal          no update
-
-                                // Draw y1 line: active & highlighted line                
-                                DrawActiveLineWithNeon(e, _FirstLineToShow, y1);
-                                // Draw y2 line: inactive line  (before or after y1)                                
-                                DrawInactiveLineWithNeon(e, idx2, y2, true);
-
-                                // Draw instrumental on line 0
-                                if (idx3 < _kLyrics.Lines.Count)
-                                    DrawInformation(e, _kLyrics.Lines[idx3].Syllables.Last().Text, -1, y3);
-                                break;
-                        }
-                        break;
-
-                    #endregion Instrumental on top
-
-
-                    #region Instrumental on bottom
-
-                    case 2:                                                         // instrumental on line 2 (3rd line)
-                        // y1 normal
-                        // y2 normal
-                        // y3 * information1
-                        // y4 information2
-                        switch (LinePosition)
-                        {
-                            case 0:                                                 // LinePosition is 0
-                                // y1 * normal
-                                // y2 normal
-                                // y3 information1
-                                // y4 information2
-
-                                // Draw y1 line: active & highlighted line                
-                                DrawActiveLineWithNeon(e, _FirstLineToShow, y1);
-                                // line y 2 is inactive (not yet played)
-                                DrawInactiveLineWithNeon(e, idx2, y2, false);
-
-                                // Draw "(intrumental)" on 3rd line and countdown on next line
-                                if (idx3 < _kLyrics.Lines.Count)
-                                    DrawInformation(e, _kLyrics.Lines[idx3].Syllables.Last().Text, -1, y3);
-                                break;
-
-                            case 1:                                                 // LinePosition is 1
-                                // y1 normal
-                                // y2 * normal
-                                // y3 information1
-                                // y4 information2
-
-                                // line y2 is already played
-                                DrawInactiveLineWithNeon(e, idx2, y2, true);
-                                // line y1 : active a highlighted line
-                                DrawActiveLineWithNeon(e, _FirstLineToShow, y1);
-
-                                // Draw "(intrumental)" on 3rd line and countdown on next line
-                                if (idx3 < _kLyrics.Lines.Count)
-                                    DrawInformation(e, _kLyrics.Lines[idx3].Syllables.Last().Text, -1, y3);
-
-                                break;
-
-                            case 2:                                                 // LinePosition is 2   = LineOfInformationPosition                                                                                                                
-                                // y1 normal
-                                // y2 normal
-                                // y3 * information1
-                                // y4 information2
-                                if (bCountDown)
-                                {
-                                    // Keep last actives lines 3 & 4 when instrumental has began for 1 second
-                                    if (tm.TotalMilliseconds < 1000)
-                                    {
-                                        if (_FirstLineToShow - 2 >= 0)
-                                        {
-                                            DrawInactiveLineWithNeon(e, _FirstLineToShow - 2, y3, true);
-                                            DrawInactiveLineWithNeon(e, _FirstLineToShow - 1, y4, true);
-                                        }
-                                    }
-                                }
-                                // Draw "(intrumental)" on active line and countdown on next line
-                                if (_FirstLineToShow < _kLyrics.Lines.Count)
-                                    DrawInformation(e, _kLyrics.Lines[_FirstLineToShow].Syllables.Last().Text, SecondsBeforeSinging, y1);
-
-                                // Draw lines y3 and y4 only if they are less than 4 sec before the end of an instrumental
-                                if (bInstrumentalStarted)
-                                {
-                                    tm = _endTime - DateTime.Now;
-
-                                    if (tm.TotalMilliseconds > _DelayBeforeEndOfInstrumental)
-                                    {
-                                        // Do not display next lines
-                                        return;
-                                    }
-                                }
-                                if (idx3 < _kLyrics.Lines.Count)
-                                    DrawInactiveLineWithNeon(e, idx3, y3);
-                                if (idx4 < _kLyrics.Lines.Count)
-                                    DrawInactiveLineWithNeon(e, idx4, y4);
-
-                                break;
-
-                            case 3:
-                                // y1 normal
-                                // y2 normal
-                                // y3 information1
-                                // y4 * information2
-                                // Draw "(intrumental)" on active line and countdown on next line                                
-                                if (idx2 < _kLyrics.Lines.Count)
-                                    DrawInformation(e, _kLyrics.Lines[idx2].Syllables.Last().Text, SecondsBeforeSinging, y2);
-
-                                DrawInactiveLineWithNeon(e, idx3, y3);
-                                DrawInactiveLineWithNeon(e, idx4, y4);
-
-                                break;
-                        }
-                        break;
-
-                    #endregion Instrumental on bottom
-                }
-            }
-
-            LastLineOfInformationPosition = LineOfInformationPosition;
-            */
-        }
-
+             
         #endregion Draw text with Four lines swapped
 
 
@@ -5243,15 +3424,9 @@ namespace keffect
                 case "Frame3":
                 case "Frame4":
                 case "Frame5":
-                    FixDrawTextWithBorder(e);
-                    break;
-
                 case "Shadow":
-                    FixDrawTextWithShadow(e);
-                    break; ;
-
                 case "Neon":
-                    FixDrawTextWithNeon(e);
+                    FixDrawTextWithBorder(e);
                     break; ;
 
                 default:
@@ -5292,106 +3467,7 @@ namespace keffect
             }
         }
 
-        /// <summary>
-        /// Fixed lines: Draw text with Shadow effect
-        /// </summary>
-        /// <param name="e"></param>
-        private void FixDrawTextWithShadow(PaintEventArgs e)
-        {
-            if (_kLyrics.Lines.Count == 0) return;
-
-            #region Draw FileName
-
-            // Draw file name if required
-
-            if (bShowSongName)
-                DrawFileName(e, FileName, 0.33f * _karaokeFont.Size);
-
-            #endregion Draw FileName
-
-
-            // Center text vertically          
-            int y0 = VCenterText();
-
-            // Draw active line with shadow
-            DrawActiveLineWithShadow(e, _FirstLineToShow, y0);
-
-            // Draw Inactive lines with shadow
-            GraphicsPath path = new GraphicsPath();
-            Brush InactiveColorBrush = new SolidBrush(InactiveColor);
-            Pen ActiveBorderPen = new Pen(new SolidBrush(ActiveBorderColor), _borderthick);
-            Pen InactiveBorderPen = new Pen(new SolidBrush(InactiveBorderColor), _borderthick);
-
-            for (int i = _FirstLineToShow + 1; i <= _LastLineToShow; i++)
-            {
-                DrawInactiveLineWithShadow(e, i, y0 + (i - _FirstLineToShow) * _lineHeight);
-            }
-
-            // Draw the text                    
-            e.Graphics.FillPath(InactiveColorBrush, path);
-
-            // Outline the text                    
-            e.Graphics.DrawPath(InactiveBorderPen, path);
-
-            #region Clean all                 
-            InactiveColorBrush.Dispose();
-            ActiveBorderPen.Dispose();
-            InactiveBorderPen.Dispose();
-            path?.Dispose();
-            #endregion Clean all
-        }
-
-        /// <summary>
-        /// Fixed lines: Draw text with neon effect
-        /// </summary>
-        /// <param name="e"></param>
-        private void FixDrawTextWithNeon(PaintEventArgs e)
-        {
-            if (_kLyrics.Lines.Count == 0) return;
-
-            #region Draw FileName
-
-            // Draw file name if required
-
-            if (bShowSongName)
-                DrawFileName(e, FileName, 0.33f * _karaokeFont.Size);
-
-            #endregion Draw FileName
-
-
-            // Center text vertically 
-            int y0 = VCenterText();
-
-            // Draw active line with Neon
-            DrawActiveLineWithNeon(e, _FirstLineToShow, y0);
-
-
-            // Draw Inactive lines with Neon
-            GraphicsPath path = new GraphicsPath();
-
-            for (int i = _FirstLineToShow + 1; i <= _LastLineToShow; i++)
-            {
-                DrawInactiveLineWithNeon(e, i, y0 + (i - _FirstLineToShow) * _lineHeight);
-            }
-
-            Brush InactiveColorBrush = new SolidBrush(InactiveColor);
-            Brush InactiveColorBorderBrush = new SolidBrush(InactiveBorderColor);
-            Pen InactiveBorderPen = new Pen(InactiveColorBorderBrush, _borderthick);
-
-            // Draw the text            )
-            e.Graphics.FillPath(InactiveColorBrush, path);
-
-            // Outline the text                    
-            e.Graphics.DrawPath(InactiveBorderPen, path);
-
-            #region Clean up resources
-            path.Dispose();
-            InactiveColorBorderBrush.Dispose();
-            InactiveColorBrush.Dispose();
-            InactiveBorderPen?.Dispose();
-            #endregion Clean up resources
-
-        }
+      
 
         #endregion Draw text with fixed lines
 
@@ -5410,14 +3486,9 @@ namespace keffect
                 case "Frame2":
                 case "Frame3":
                 case "Frame4":
-                case "Frame5":
-                    //ScrollingBottomUpDrawTextWithBorder(e);
-                    //break;
+                case "Frame5":                
                 case "Shadow":
-                    //ScrollingBottomUpDrawTextWithShadow(e);
-                    //break; ;
                 case "Neon":
-                    //ScrollingBottomUpDrawTextWithNeon(e);
                     ScrollingBottomUpDrawTextWithBorder(e);
                     break; 
 
@@ -5428,8 +3499,7 @@ namespace keffect
         }
 
 
-        private bool bShowInformation = false;
-
+      
         private void ScrollingBottomUpDrawTextWithBorder(PaintEventArgs e)
         {
             if (_kLyrics.Lines.Count == 0) return;
@@ -5475,8 +3545,7 @@ namespace keffect
 
 
                 #region Do not draw lines that are out of the control
-
-                //if (y - vposition < pBox.ClientRectangle.Top - _lineHeight)
+                
                 if (y - vposition < TopMargin)
                 {
                     // Do not draw lines that are out of the control
@@ -5505,7 +3574,6 @@ namespace keffect
                     e.Graphics.TranslateTransform(0, -vposition);
                     DrawInactiveLineWithBorders(e, i, y, IsActive);
                 }
-
             }
 
             e.Graphics.ResetTransform();
@@ -5521,7 +3589,6 @@ namespace keffect
 
 
         #endregion Draw scrolling text
-
 
 
         #region Effects
@@ -5582,25 +3649,35 @@ namespace keffect
         /// <param name="font"></param>
         /// <param name="e"></param>
         /// <param name="pth"></param>
-        private void CreateShadowEffect(string line, Color clr, int x0, int y0, Font font, float emSize, PaintEventArgs e, GraphicsPath pth)
+        /// <param name="scale"></param>
+        private void CreateShadowEffect(string line, Color clr, int x0, int y0, Font font, float emSize, PaintEventArgs e, GraphicsPath pth, float scale)
         {
-            Bitmap bm = new Bitmap(pBox.ClientSize.Width / 4, pBox.ClientSize.Height / 4);
+
+            // How to take into account scale?
+            
+
+            float zoomFactor = 0.25f; // Adjust this factor to control the size of the shadow
+
+            Bitmap bm = new Bitmap((int)(zoomFactor * pBox.ClientSize.Width ), (int)(zoomFactor * pBox.ClientSize.Height));            
 
             //Get a graphics object for it
-            Graphics g = Graphics.FromImage(bm);
-            //Graphics ge = e.Graphics;
+            Graphics g = Graphics.FromImage(bm);           
+            
+            
 
             // must use an antialiased rendering hint
             g.TextRenderingHint = TextRenderingHint.AntiAlias;
 
             //this matrix zooms the text out to 1/4 size and offsets it by a little right and down                
-            Matrix mx = new Matrix(0.25f, 0, 0, 0.25f, 1.3f, 1.3f);
+            //Matrix mx = new Matrix(0.25f, 0, 0, 0.25f, 1.3f, 1.3f);
+            Matrix mx = new Matrix(zoomFactor, 0, 0, zoomFactor, 1.3f, 1.3f);
 
             g.Transform = mx;
 
-
+            
             //The shadow is drawn
             g.DrawString(line, font, new SolidBrush(clr), x0, y0, sf);
+           
 
             //Don't need this anymore
             g.Dispose();
@@ -5616,6 +3693,9 @@ namespace keffect
 
             // finally, the text is drawn on top
             //pth.AddString(line, new FontFamily(font.Name), (int)FontStyle.Regular, emSize, new Point(x0, y0), sf);
+            
+            //e.Graphics.ScaleTransform(scale, 1);
+
         }
 
 
