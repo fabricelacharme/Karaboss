@@ -481,17 +481,6 @@
   <data name="karaokeEffect1.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
     <value>Fill</value>
   </data>
-  <data name="kLyrics1.Lines" mimetype="application/x-microsoft.net.object.binary.base64">
-    <value>
-        AAEAAAD/////AQAAAAAAAAAMAgAAAJMBS2FyYW9rZUx5cmljcywgVmVyc2lvbj0xLjAuMC4wLCBDdWx0
-        dXJlPW5ldXRyYWwsIFB1YmxpY0tleVRva2VuPW51bGxdXSwgbXNjb3JsaWIsIFZlcnNpb249NC4wLjAu
-        MCwgQ3VsdHVyZT1uZXV0cmFsLCBQdWJsaWNLZXlUb2tlbj1iNzdhNWM1NjE5MzRlMDg5DAMAAABES2Fy
-        YW9rZUx5cmljcywgVmVyc2lvbj0xLjAuMC4wLCBDdWx0dXJlPW5ldXRyYWwsIFB1YmxpY0tleVRva2Vu
-        PW51bGwFAQAAACxTeXN0ZW0uQ29sbGVjdGlvbnMuR2VuZXJpYy5MaXN0YDFbW2thci5rTGluZQMAAAAG
-        X2l0ZW1zBV9zaXplCF92ZXJzaW9uBAAAC2thci5rTGluZVtdAwAAAAgIAgAAAAkEAAAAAAAAAAAAAAAH
-        BAAAAAABAAAAAAAAAAQJa2FyLmtMaW5lAwAAAAs=
-</value>
-  </data>
   <data name="karaokeEffect1.Location" type="System.Drawing.Point, System.Drawing">
     <value>0, 60</value>
   </data>
