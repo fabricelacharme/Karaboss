@@ -46,13 +46,16 @@ using System.Windows.Forms;
 
 
 namespace keffect
-{   
+{
+
+    #region Delegates
     
     public delegate void DoubleClickEventHandler(object sender, EventArgs e);
     public delegate void CloseEventHandler(object sender, EventArgs e);
     public delegate void FullScreenEventHandler(object sender, EventArgs e);
     public delegate void OptionsEventHandler(object sender, EventArgs e);
     public delegate void TopMostEventHandler(object sender, bool bTopMost, EventArgs e);
+    #endregion Delegates
 
     public partial class KaraokeEffect : UserControl, IMessageFilter
     {
@@ -1258,7 +1261,7 @@ namespace keffect
             double t; // = 0;
             kLyrics klsWithinstrumentals = new kLyrics();
             kLine line;            
-            double tend;
+            double tend;            
 
             // Introduction                        
             for (int i = 0; i < kls.Lines.Count; i++)
@@ -1460,8 +1463,7 @@ namespace keffect
             if (!_bIsSettings && 
                   (KaraokeDisplayType == KaraokeDisplayTypes.TwoLinesSwapped
                 || KaraokeDisplayType == KaraokeDisplayTypes.FourLinesSwapped
-                || KaraokeDisplayType == KaraokeDisplayTypes.ScrollingLinesBottomUp
-                || KaraokeDisplayType == KaraokeDisplayTypes.ScrollingLinesTopDown
+                || KaraokeDisplayType == KaraokeDisplayTypes.ScrollingLinesBottomUp                
                 || !bShowParagraphs
                 ))                        
                 _kLyrics = RemoveParagraphs(_kLyrics);
@@ -1473,7 +1475,7 @@ namespace keffect
 
 
             // Analyse lyrics to find introduction, instrumentals etc..
-            if (!_bIsSettings && _bShowHints &&
+            if (!_bIsSettings && _bShowHints && _kLyrics.Lines.Count > 3 &&
                   (KaraokeDisplayType == KaraokeDisplayTypes.TwoLinesSwapped
                 || KaraokeDisplayType == KaraokeDisplayTypes.FourLinesSwapped
                 || KaraokeDisplayType == KaraokeDisplayTypes.ScrollingLinesBottomUp

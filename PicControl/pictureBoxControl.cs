@@ -43,17 +43,18 @@ using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
-using static PicControl.pictureBoxControl;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement.TrackBar;
 
 namespace PicControl
 {
+    #region Delegates
 
     public delegate void DoubleClickEventHandler(object sender, EventArgs e);
     public delegate void CloseEventHandler(object sender, EventArgs e);
     public delegate void FullScreenEventHandler(object sender, EventArgs e);
     public delegate void OptionsEventHandler(object sender, EventArgs e);
     public delegate void TopMostEventHandler(object sender, bool bTopMost, EventArgs e);
+
+    #endregion Delegates
 
     public partial class pictureBoxControl : UserControl, IMessageFilter, IDisposable
     {
@@ -2013,6 +2014,7 @@ namespace PicControl
             if (_kLyrics.Lines.Count == 0) return;
 
             #region Karaoke display type
+
             // Update _nbLyricsLines if layout changed in options            
             switch (KaraokeDisplayType)
             {
@@ -2043,8 +2045,7 @@ namespace PicControl
             if (!_bIsSettings && 
                   (KaraokeDisplayType == KaraokeDisplayTypes.TwoLinesSwapped
                 || KaraokeDisplayType == KaraokeDisplayTypes.FourLinesSwapped
-                || KaraokeDisplayType == KaraokeDisplayTypes.ScrollingLinesBottomUp
-                || KaraokeDisplayType == KaraokeDisplayTypes.ScrollingLinesTopDown
+                || KaraokeDisplayType == KaraokeDisplayTypes.ScrollingLinesBottomUp                
                 || !bShowParagraphs
                 ))            
                 _kLyrics = RemoveParagraphs(_kLyrics);
@@ -2056,7 +2057,7 @@ namespace PicControl
 
 
             // Analyse lyrics to find introduction, instrumentals etc..
-            if (!_bIsSettings && _bShowHints &&
+            if (!_bIsSettings && _bShowHints && _kLyrics.Lines.Count > 3 &&
                   (KaraokeDisplayType == KaraokeDisplayTypes.TwoLinesSwapped
                 || KaraokeDisplayType == KaraokeDisplayTypes.FourLinesSwapped
                 || KaraokeDisplayType == KaraokeDisplayTypes.ScrollingLinesBottomUp
@@ -2663,9 +2664,7 @@ namespace PicControl
             _currentTextPos = -1;
             pBox.Invalidate();
         }
-              
-        
-
+                     
         #endregion public methods
                      
 
@@ -5341,7 +5340,7 @@ namespace PicControl
         
             */
         }
-     
+
 
         #endregion Draw text with Two lines swapped
 
@@ -5350,6 +5349,24 @@ namespace PicControl
 
         private void DrawTextWithScrollingLinesTopDown(PaintEventArgs e)
         {
+            switch (FrameType)
+            {
+                case "NoBorder":
+                case "FrameThin":
+                case "Frame1":
+                case "Frame2":
+                case "Frame3":
+                case "Frame4":
+                case "Frame5":
+                case "Shadow":
+                case "Neon":
+                    SltDrawTextWithBorder(e);
+                    break;
+
+                default:
+                    SltDrawTextWithBorder(e);
+                    break;
+            }
         }
 
         private void SltDrawTextWithBorder(PaintEventArgs e)

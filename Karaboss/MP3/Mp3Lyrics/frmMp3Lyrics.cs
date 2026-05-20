@@ -659,10 +659,8 @@ namespace Karaboss.Mp3
             controlsToMove.Add(this);
             // UserControls picball & pBox manage themselves this move.
             controlsToMove.Add(this.pnlWindow);
-            //controlsToMove.Add(this.pnlTitle);
-            //controlsToMove.Add(this.lblTitle);
 
-            #endregion
+            #endregion Move form without title bar
 
 
             #region Events

@@ -790,12 +790,26 @@ namespace Karaboss
             { return; }
 
             LyricsTimes = new List<int>();
-
+            /*
             for (int i = 0; i < kl.Lines.Count; i++)
             {
                 for (int j = 0; j < kl.Lines[i].Syllables.Count; j++)
                 {
                     Syllable syllable = kl.Lines[i].Syllables[j];
+                    if (syllable.CharType == Syllable.CharTypes.Text || syllable.CharType == Syllable.CharTypes.ParagraphSep)
+                    {
+                        LyricsTimes.Add(syllable.TicksOn);
+                    }
+                }
+            }
+            */
+
+            // Take lyrics times from the pBox which are transformed (trailing spaces added, instrumentals etc...)
+            for (int i = 0; i < pBox.KLyrics.Lines.Count; i++)
+            {
+                for (int j = 0; j < pBox.KLyrics.Lines[i].Syllables.Count; j++)
+                {
+                    Syllable syllable = pBox.KLyrics.Lines[i].Syllables[j];
                     if (syllable.CharType == Syllable.CharTypes.Text || syllable.CharType == Syllable.CharTypes.ParagraphSep)
                     {
                         LyricsTimes.Add(syllable.TicksOn);
@@ -1187,8 +1201,6 @@ namespace Karaboss
         }
 
        
-
-
         /// <summary>
         /// Load song in picturebox control
         ///  1/4 = LineFeed
