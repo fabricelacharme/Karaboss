@@ -659,8 +659,8 @@ namespace Karaboss.Mp3
             controlsToMove.Add(this);
             // UserControls picball & pBox manage themselves this move.
             controlsToMove.Add(this.pnlWindow);
-            controlsToMove.Add(this.pnlTitle);
-            controlsToMove.Add(this.lblTitle);
+            //controlsToMove.Add(this.pnlTitle);
+            //controlsToMove.Add(this.lblTitle);
 
             #endregion
 
@@ -1100,7 +1100,7 @@ namespace Karaboss.Mp3
         /// <param name="text"></param>
         public void DisplaySinger(string text)
         {
-            lblTitle.Text = text;
+            //lblTitle.Text = text;
         }
 
         public void Start()

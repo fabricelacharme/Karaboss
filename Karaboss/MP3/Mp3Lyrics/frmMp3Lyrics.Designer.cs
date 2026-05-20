@@ -38,11 +38,8 @@ namespace Karaboss.Mp3
             this.karaokeEffect1 = new keffect.KaraokeEffect();
             this.pnlWindow = new System.Windows.Forms.Panel();
             this.pnlTimer = new System.Windows.Forms.Timer(this.components);
-            this.lblTitle = new System.Windows.Forms.Label();
-            this.pnlTitle = new System.Windows.Forms.Panel();
             this.pnlTop.SuspendLayout();
             this.pnlWindow.SuspendLayout();
-            this.pnlTitle.SuspendLayout();
             this.SuspendLayout();
             // 
             // btnEditLyrics
@@ -115,7 +112,6 @@ namespace Karaboss.Mp3
             // 
             // pnlTop
             // 
-            this.pnlTop.Controls.Add(this.pnlTitle);
             this.pnlTop.Controls.Add(this.picBalls);
             resources.ApplyResources(this.pnlTop, "pnlTop");
             this.pnlTop.Name = "pnlTop";
@@ -192,20 +188,6 @@ namespace Karaboss.Mp3
             // 
             this.pnlTimer.Tick += new System.EventHandler(this.pnlTimer_Tick);
             // 
-            // lblTitle
-            // 
-            resources.ApplyResources(this.lblTitle, "lblTitle");
-            this.lblTitle.BackColor = System.Drawing.Color.Black;
-            this.lblTitle.ForeColor = System.Drawing.Color.Teal;
-            this.lblTitle.Name = "lblTitle";
-            // 
-            // pnlTitle
-            // 
-            this.pnlTitle.BackColor = System.Drawing.Color.Black;
-            this.pnlTitle.Controls.Add(this.lblTitle);
-            resources.ApplyResources(this.pnlTitle, "pnlTitle");
-            this.pnlTitle.Name = "pnlTitle";
-            // 
             // frmMp3Lyrics
             // 
             resources.ApplyResources(this, "$this");
@@ -223,8 +205,6 @@ namespace Karaboss.Mp3
             this.Resize += new System.EventHandler(this.frmMp3Lyrics_Resize);
             this.pnlTop.ResumeLayout(false);
             this.pnlWindow.ResumeLayout(false);
-            this.pnlTitle.ResumeLayout(false);
-            this.pnlTitle.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -241,7 +221,5 @@ namespace Karaboss.Mp3
         private System.Windows.Forms.Button btnFrmMin;
         private System.Windows.Forms.Button btnFrmMax;
         private System.Windows.Forms.Button btnFrmClose;
-        private System.Windows.Forms.Panel pnlTitle;
-        private System.Windows.Forms.Label lblTitle;
     }
 }

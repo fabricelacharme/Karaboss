@@ -755,8 +755,8 @@ namespace Karaboss
             controlsToMove.Add(this);
             // UserControls picball & pBox manage themselves this move.
             controlsToMove.Add(this.pnlWindow);
-            controlsToMove.Add(this.pnlTittle);
-            controlsToMove.Add(this.lblTittle);
+            //controlsToMove.Add(this.pnlTittle);
+            //controlsToMove.Add(this.lblTittle);
 
             #endregion
 
@@ -1164,7 +1164,7 @@ namespace Karaboss
         /// <param name="text"></param>
         public void DisplaySinger(string text)
         {
-            lblTittle.Text = text;
+            //lblTittle.Text = text;
         }
 
         /// <summary>
