@@ -737,12 +737,12 @@ namespace Karaboss
             this.pBox.Options += new OptionsEventHandler(pBox_Options);
             this.pBox.TopMost += new TopMostEventHandler(pBox_TopMost);
 
+            AddMouseMoveHandler(this);
+
             #endregion Events
 
             // colours for text, chords, number of lines etc...
-            LoadOptions();
-
-            AddMouseMoveHandler(this);
+            LoadOptions();            
         }
 
 
@@ -1036,9 +1036,13 @@ namespace Karaboss
                 _karaokeFont = new Font(ftName, ftSize, FontStyle.Regular, GraphicsUnit.Pixel);                
                 pBox.KaraokeFont = _karaokeFont;
 
-                
+                // Font stretching
                 FontStretching = Properties.Settings.Default.FontStretching;
 
+                // Display hints for instrumental parts
+                bShowHints = Properties.Settings.Default.bShowHints;
+
+                // Display paragraphs
                 pBox.bShowParagraphs = Karaclass.m_ShowParagraph;
 
                 // Display file name in lyrics as title

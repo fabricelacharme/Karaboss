@@ -2126,7 +2126,7 @@ namespace PicControl
 
 
             // Analyse lyrics to find introduction, instrumentals etc..
-            if (!_bIsSettings && 
+            if (!_bIsSettings && _bShowHints &&
                   (KaraokeDisplayType == KaraokeDisplayTypes.TwoLinesSwapped
                 || KaraokeDisplayType == KaraokeDisplayTypes.FourLinesSwapped
                 || KaraokeDisplayType == KaraokeDisplayTypes.ScrollingLinesBottomUp
@@ -2449,7 +2449,7 @@ namespace PicControl
                     }
                 }
             }
-            return (0, 2);
+            return (0, 0);
         }
 
        

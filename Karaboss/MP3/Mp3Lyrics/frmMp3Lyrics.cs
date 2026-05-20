@@ -657,12 +657,12 @@ namespace Karaboss.Mp3
             this.karaokeEffect1.Options += new OptionsEventHandler(karaokeEffect1_Options);
             this.karaokeEffect1.TopMost += new TopMostEventHandler(karaokeEffect1_TopMost);
 
-            #endregion Events
-
-            LoadOptions();                        
-
             AddMouseMoveHandler(this);
 
+            #endregion Events
+
+            // Load options
+            LoadOptions();            
         }
 
 
@@ -860,8 +860,13 @@ namespace Karaboss.Mp3
                 _karaokeFont = new Font(ftName, ftSize, FontStyle.Regular, GraphicsUnit.Pixel);
                 karaokeEffect1.KaraokeFont = _karaokeFont;
 
+                // Font stretching
                 FontStretching = Properties.Settings.Default.FontStretching;
 
+                // Show hints for instrumental parts
+                bShowHints = Properties.Settings.Default.bShowHints;
+
+                // Show paragraphs
                 karaokeEffect1.bShowParagraphs = Karaclass.m_ShowParagraph;
 
                 // Display file name in lyrics as title

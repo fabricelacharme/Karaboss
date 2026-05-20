@@ -1454,8 +1454,9 @@ namespace keffect
             if (_bforceUppercase)
                 _kLyrics = ForceUpperCase(_kLyrics);
 
+
             // Analyse lyrics to find introduction, instrumentals etc..
-            if (!_bIsSettings && 
+            if (!_bIsSettings && _bShowHints &&
                   (KaraokeDisplayType == KaraokeDisplayTypes.TwoLinesSwapped
                 || KaraokeDisplayType == KaraokeDisplayTypes.FourLinesSwapped
                 || KaraokeDisplayType == KaraokeDisplayTypes.ScrollingLinesBottomUp
@@ -1612,6 +1613,8 @@ namespace keffect
             // Search _line & index of the next lyric to play
             (_FirstLineToShow, nextindex) = GetNextIndex(pos);
 
+            Console.WriteLine("pos: " + pos + " => line: " + _FirstLineToShow + " index: " + nextindex);
+
 
             // CurLength:
             // Mesure length of a portion of line (already sung + being sung)
@@ -1738,7 +1741,7 @@ namespace keffect
                     }
                 }
             }
-            return (0, 2);
+            return (0, 0);
         }
 
 
