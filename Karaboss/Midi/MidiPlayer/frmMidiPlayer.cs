@@ -3463,8 +3463,7 @@ namespace Karaboss
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void HandleLoadCompleted(object sender, AsyncCompletedEventArgs e)
-        {
-            //string lyrics; // = string.Empty;
+        {            
             this.Cursor = Cursors.Arrow;
             mnuFileOpen.Enabled = true;
             progressBarPlayer.Value = 0;
@@ -3473,8 +3472,6 @@ namespace Karaboss
             // Reset settings made for previous song
             ResetPlaySettings();
 
-            //if (frmLoading != null)
-            //    frmLoading.Dispose();
             loading = false;
 
             if (e.Error == null && e.Cancelled == false)
@@ -3494,7 +3491,6 @@ namespace Karaboss
                 * If the file contains lyrics (not text), they are lost when the file is saved
                 * Workaround is to rewrite the lyrics
                 */
-
                 if (sequence1.OrigFormat == 0)
                 {
                     //myLyricsMgmt = new MidiLyricsMgmt(sequence1);
@@ -3506,10 +3502,8 @@ namespace Karaboss
                         // supprime tous les messages text & lyric
                         track.deleteLyrics();
 
-                        // Insert all lyric events                                            
-                        //TrkInsertLyrics(track, myLyricsMgmt.OrgKLyrics, myLyricsMgmt.LyricType);
+                        // Insert all lyric events                                                                    
                         LyricsUtilities.TrkInsertLyrics(track, myLyricsMgmt.OrgKLyrics, myLyricsMgmt.LyricType);
-
                     }
                 }
 
@@ -3769,8 +3763,6 @@ namespace Karaboss
             // Reset settings made for previous song
             ResetPlaySettings();
 
-            //if (frmLoading != null)
-            //    frmLoading.Dispose();
             loading = false;
 
             sequence1 = MTxtReader.seq;
@@ -3783,8 +3775,7 @@ namespace Karaboss
 
                 // FAB : force le format à 1 hu hu hu sinon on ne peut pas ajouter de paroles            
                 sequence1.Format = 1;
-
-                //
+                
                 myLyricsMgmt = new MidiLyricsMgmt(sequence1);
 
                 /*
@@ -3794,8 +3785,7 @@ namespace Karaboss
                 */
 
                 if (sequence1.OrigFormat == 0 )
-                {
-                    
+                {                    
                     if (myLyricsMgmt.LyricType == LyricTypes.Lyric)
                     {
                         int tracknum = myLyricsMgmt.LyricsTrackNum;
@@ -3991,185 +3981,11 @@ namespace Karaboss
                 RefreshDisplay();
             }
 
-
             // File was modified
             FileModified();
 
         }
-
-        /// <summary>
-        /// Insert new lyrics in the target track
-        /// </summary>
-        /// <param name="Track"></param>
-        /// <param name="l"></param>
-        /// <param name="LyricType"></param>
-        /*
-        private void TrkInsertLyrics(Track Track, kLyrics l, LyricTypes LyricType)
-        {
-            int currentTick;
-            int lastcurrenttick = 0;
-
-            string currentElement;
-            string currentCR = string.Empty;
-
-            Track.Lyrics.Clear();
-            Track.LyricsText.Clear();
-
-            Track.TotalLyricsL = "";
-            Track.TotalLyricsT = "";
-
-            kar.Syllable pll = new kar.Syllable();
-
-            if (l == null || l.Lines.Count == 0)
-                return;
-
-            // Recréé tout les textes et lyrics
-            for (int i = 0; i < l.Lines.Count; i++)
-            {
-                kLine line = l.Lines[i];
-
-
-                // Paragraph line
-                if (line.Syllables.Count == 1 && line.Syllables.First().CharType == kar.Syllable.CharTypes.ParagraphSep)
-                {                    
-                    pll = line.Syllables.First();
-
-                    if (LyricType == LyricTypes.Text)
-                        currentCR = m_SepParagraph;
-                    else
-                        currentCR = "\r\r";
-
-                    Track.Lyric L = new Track.Lyric()
-                    {
-                        Element = pll.Text,
-                        TicksOn = pll.TicksOn,
-                        Type = (Track.Lyric.Types)pll.CharType,
-                    };
-                    
-                    if (LyricType == LyricTypes.Text)
-                    {
-                        // si lyrics de type text                     
-                        Track.LyricsText.Add(L);
-                    }
-                    else
-                    {
-                        // si lyrics de type lyrics
-                        Track.Lyrics.Add(L);
-                    }
-                }
-                else 
-                { 
-                    // Normal line
-                    for (int idx = 0; idx < line.Syllables.Count; idx++)
-                    {
-                        pll = line.Syllables[idx];
-                        // C'est un lyric
-                        currentTick = pll.TicksOn;
-                        if (currentTick >= lastcurrenttick)
-                        {
-                            lastcurrenttick = currentTick;
-                            currentElement = currentCR + pll.Text;
-
-                            // Transforme en byte la nouvelle chaine
-                            // ERROR FAB 16-01-2021 : must tyake into accout encoding selected by end user !!!
-                            byte[] newdata; // = Encoding.Default.GetBytes(currentElement);
-
-                            switch (OpenMidiFileOptions.TextEncoding)
-                            {
-                                case "Ascii":
-                                    //sy = System.Text.Encoding.Default.GetString(data);
-                                    newdata = System.Text.Encoding.Default.GetBytes(currentElement);
-                                    break;
-                                case "Chinese":
-                                    System.Text.Encoding chinese = System.Text.Encoding.GetEncoding("gb2312");
-                                    newdata = chinese.GetBytes(currentElement);
-                                    break;
-                                case "Japanese":
-                                    System.Text.Encoding japanese = System.Text.Encoding.GetEncoding("shift_jis");
-                                    newdata = japanese.GetBytes(currentElement);
-                                    break;
-                                case "Korean":
-                                    System.Text.Encoding korean = System.Text.Encoding.GetEncoding("ks_c_5601-1987");
-                                    newdata = korean.GetBytes(currentElement);
-                                    break;
-                                case "Vietnamese":
-                                    System.Text.Encoding vietnamese = System.Text.Encoding.GetEncoding("windows-1258");
-                                    newdata = vietnamese.GetBytes(currentElement);
-                                    break;
-                                default:
-                                    newdata = System.Text.Encoding.Default.GetBytes(currentElement);
-                                    break;
-                            }
-
-
-                            MetaMessage mtMsg;
-
-                            // Update Track.Lyrics List
-                            Track.Lyric L = new Track.Lyric()
-                            {
-                                Element = pll.Text,
-                                TicksOn = pll.TicksOn,
-                                Type = (Track.Lyric.Types)pll.CharType,
-                            };
-
-
-                            if (LyricType == LyricTypes.Text)
-                            {
-                                // si lyrics de type text
-                                mtMsg = new MetaMessage(MetaType.Text, newdata);
-                                Track.LyricsText.Add(L);
-                            }
-                            else
-                            {
-                                // si lyrics de type lyrics
-                                mtMsg = new MetaMessage(MetaType.Lyric, newdata);
-                                Track.Lyrics.Add(L);
-                            }
-
-                            // Insert new message
-                            Track.Insert(currentTick, mtMsg);
-                        }
-                        currentCR = "";                                 
-                    }
-
-                    // Add a linefeed if next line is not a paragraph
-                    if (i < l.Lines.Count - 1 && l.Lines[i + 1].Syllables.Count != 1 && l.Lines[i + 1].Syllables.First().CharType != kar.Syllable.CharTypes.ParagraphSep)
-                    {
-                        if (LyricType == LyricTypes.Text)
-                            currentCR = m_SepLine;
-                        else
-                            currentCR = "\r";
-
-                        pll = new kar.Syllable()
-                        {
-                            Text = m_SepLine,
-                            TicksOn = lastcurrenttick,
-                            CharType = kar.Syllable.CharTypes.LineFeed
-                        };
-
-                        // Update Track.Lyrics List
-                        Track.Lyric L = new Track.Lyric()
-                        {
-                            Element = pll.Text,
-                            TicksOn = pll.TicksOn,
-                            Type = (Track.Lyric.Types)pll.CharType,
-                        };
-
-                        if (LyricType == LyricTypes.Text)
-                        {
-                            // si lyrics de type text                     
-                            Track.LyricsText.Add(L);
-                        }
-                        else
-                        {
-                            // si lyrics de type lyrics
-                            Track.Lyrics.Add(L);
-                        }
-                    }
-                }
-            }                                    
-        }
-        */
+            
 
         #region restore sequence tags
 
@@ -4259,6 +4075,7 @@ namespace Karaboss
         }
 
         #endregion restore sequence tags
+
 
         /// <summary>
         /// Delete all lyrics
@@ -4372,6 +4189,7 @@ namespace Karaboss
             else
             {
                 frmMidiLyrics.myLyricsMgmt = myLyricsMgmt;
+                frmMidiLyrics.FileName = MIDIfileName;
             }
 
 
@@ -4422,10 +4240,7 @@ namespace Karaboss
             {
                 dirSlideShow = Properties.Settings.Default.dirSlideShow;
                 frmMidiLyrics.SetSlideShow(dirSlideShow);
-            }
-
-            
-
+            }            
         }
 
 

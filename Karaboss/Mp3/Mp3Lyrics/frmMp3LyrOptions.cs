@@ -75,6 +75,13 @@ namespace Karaboss.Mp3
         #endregion Colors
 
 
+        #region Draw filename
+
+        private bool bShowSongName = true;
+
+        #endregion Draw filename
+
+
         #region Form
         // Lyrics TopMost
         private bool _bTopMost = false;
@@ -240,6 +247,8 @@ namespace Karaboss.Mp3
                 // Show hints (introduction, instrumental, ending)
                 frmMp3Lyrics.bShowHints = bShowHints;
 
+                frmMp3Lyrics.bShowSongName = chkShowSongName.Checked;
+
                 _nbLyricsLines = Convert.ToInt32(UpDownNbLines.Value);
                 frmMp3Lyrics.nbLyricsLines = _nbLyricsLines;
 
@@ -368,7 +377,6 @@ namespace Karaboss.Mp3
                 #endregion Layout
 
 
-
                 bProgressiveHighlight = Properties.Settings.Default.bProgressiveHighlight;
 
                 // Populate Combos with known colors
@@ -382,6 +390,9 @@ namespace Karaboss.Mp3
 
                 // Show hints (introduction, instrumental, ending)
                 bShowHints = Properties.Settings.Default.bShowHints;
+
+                // Show song name
+                chkShowSongName.Checked = Properties.Settings.Default.bShowSongName;
 
                 // Display balls on lyrics
                 chkDisplayBalls.Checked = Karaclass.m_DisplayBalls;
@@ -650,6 +661,9 @@ namespace Karaboss.Mp3
 
                 // Show hints (introduction, instrumental, ending)
                 Properties.Settings.Default.bShowHints = bShowHints;
+
+
+                Properties.Settings.Default.bShowSongName = chkShowSongName.Checked;
 
                 // Number of lines to display
                 Properties.Settings.Default.TxtNbLines = _nbLyricsLines;
@@ -1333,6 +1347,13 @@ namespace Karaboss.Mp3
             }
 
         }
+
+        private void chkShowSongName_CheckedChanged(object sender, EventArgs e)
+        {
+            bShowSongName = chkShowSongName.Checked;
+            karaokeEffect1.bShowSongName = bShowSongName;
+        }
+
 
         #endregion events
 
@@ -2081,6 +2102,7 @@ namespace Karaboss.Mp3
                 }
             }
         }
+
 
 
         #endregion Color Themes

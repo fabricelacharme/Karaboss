@@ -98,12 +98,7 @@ namespace Karaboss.Mp3
 
             FileName = fileName;
             
-            /*
-            if (InitBass())
-            {                
-                Load(_FileName);
-            }
-            */
+           
         }
 
 

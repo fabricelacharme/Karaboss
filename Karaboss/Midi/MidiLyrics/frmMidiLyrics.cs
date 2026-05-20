@@ -261,6 +261,38 @@ namespace Karaboss
         #endregion Colors
 
 
+        #region Draw filename
+
+        private bool _bShowSongName = true;
+        public bool bShowSongName
+        {
+            get { return _bShowSongName; }
+            set
+            {
+                _bShowSongName = value;
+                pBox.bShowSongName = _bShowSongName;
+            }
+        }
+
+        private string _fileName = "Song name";
+        public string FileName                  // Name of the song to display on the screen (Filename without extension)
+        {
+            get { return _fileName; }
+            set
+            {
+                if (value != null)
+                {
+                    _fileName = value;
+                    if (_bShowSongName)                    
+                        pBox.FileName = _fileName;                                            
+                }
+            }
+        }
+
+
+        #endregion Draw filename
+
+
         #region Font
 
         private string ftName = "Arial Black";
@@ -1564,15 +1596,15 @@ namespace Karaboss
 
         /// <summary>
         /// Use case : Plalist
-        /// Force Slideshow backgroud if it was requested in the plalist, even if the option is not set in the display options
+        /// Force Slideshow backgroud if it was requested in the playlist, even if the option is not set in the display options
         /// </summary>
         /// <param name="dirSlideShow"></param>
         public void ForceSlideShow(string dirSlideShow)
         {
-            DirSlideShow = dirSlideShow;
+            OptionBackground = "Diaporama";
+            DirSlideShow = dirSlideShow;            
             pBox.FreqSlideShow = Properties.Settings.Default.freqSlideShow;            
-            pBox.OptionBackground = "Diaporama";
-
+            
         }
 
         /// <summary>

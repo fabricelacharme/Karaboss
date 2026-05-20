@@ -268,149 +268,8 @@ namespace Karaboss.MidiLyrics
 
             #endregion Minimal lyrics extraction
         }
-
-
       
-        /// <summary>
-        /// Converts a kLyrics object to a list of plLyric objects, mapping each syllable and line structure to the
-        /// target format.
-        /// </summary>
-        /// <remarks>Line feed elements are inserted between lines unless the line starts with a paragraph
-        /// separator. The resulting list preserves the timing and structure of the original kLyrics input.</remarks>
-        /// <param name="kl">The kLyrics instance containing the lines and syllables to convert. Must not be null.</param>
-        /// <returns>A list of plLyric objects representing the converted lyrics, including line feed markers between lines as
-        /// appropriate.</returns>
-        public List<plLyric> ConvertToPlLyric(kLyrics kl)
-        {
-            int lastTicksOff = 0;
-
-            // Transform kLyrics into plLyrics
-            List<plLyric> _lstpl = new List<plLyric>();
-            plLyric pcL;
-            for (int i = 0; i < kl.Lines.Count; i++)
-            {
-                if (kl.Lines[i].Syllables.Count == 1 && kl.Lines[i].Syllables[0].CharType == Syllable.CharTypes.LineFeed)
-                {
-                    // If the line contains only a line feed, we add it directly and we do not add another one at the end of the line
-
-                    pcL = new plLyric()
-                    {
-                        CharType = plLyric.CharTypes.LineFeed,
-                        Element = ("", _InternalSepLines),
-                        TicksOn = i > 0 ? kl.Lines[i - 1].Syllables.Last().TicksOff : kl.Lines[i].Syllables.Last().TicksOn,
-                        TicksOff = i > 0 ? kl.Lines[i - 1].Syllables.Last().TicksOff : kl.Lines[i].Syllables.Last().TicksOff,
-                        IsChord = false,                        
-                    };
-                    _lstpl.Add(pcL);
-
-                    pcL = new plLyric()
-                    {
-                        CharType = plLyric.CharTypes.LineFeed,
-                        Element = ("", _InternalSepLines),
-                        TicksOn = i > 0 ?  kl.Lines[i - 1].Syllables.Last().TicksOff : kl.Lines[i].Syllables.Last().TicksOn,
-                        TicksOff = i > 0 ? kl.Lines[i - 1].Syllables.Last().TicksOff : kl.Lines[i].Syllables.Last().TicksOff,
-                        IsChord = false,
-                    };
-                    _lstpl.Add(pcL);
-
-                }
-                else if (kl.Lines[i].Syllables.Count == 1 && kl.Lines[i].Syllables[0].CharType == Syllable.CharTypes.ParagraphSep)
-                {
-                    // If the line contains only a paragraph separator, we add it directly and we do not add a line feed at the end of the line
-                    pcL = new plLyric()
-                    {
-                        CharType = plLyric.CharTypes.ParagraphSep,
-                        Element = ("", _InternalSepParagraphs),                                             
-                        TicksOn = i > 0 ? kl.Lines[i - 1].Syllables.Last().TicksOff : kl.Lines[i].Syllables[0].TicksOn,
-                        TicksOff = i > 0 ? kl.Lines[i - 1].Syllables.Last().TicksOff : kl.Lines[i].Syllables[0].TicksOff,                            
-                        IsChord = false,                        
-                    };
-                    _lstpl.Add(pcL);
-                    
-                }
-                else
-                {
-                    // Add each syllable of the line 
-                    for (int j = 0; j < kl.Lines[i].Syllables.Count; j++)
-                    {
-
-                        Syllable syll = kl.Lines[i].Syllables[j];
-
-
-                        pcL = new plLyric()
-                        {
-                            CharType = (plLyric.CharTypes)syll.CharType,
-                            TicksOn = syll.TicksOn,
-                            TicksOff = syll.TicksOff,
-                            IsChord = syll.IsChord,
-                            Beat = syll.Beat
-
-                        };
-
-                        if (Karaclass.m_ShowChords)
-                        {
-                            // if bShowChords, the chords will be displayed above the lyrics, so clean chords included in lyrics
-                            if (ChordsOriginatedFrom == ChordsOrigins.Lyrics)
-                            {
-                                if (RemoveChordPattern == null)
-                                {
-                                    MessageBox.Show("RemoveChordsPattern is null", Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
-                                    return new List<plLyric>();
-                                }
-                                syll.Text = Regex.Replace(syll.Text, RemoveChordPattern, @"");
-                            }
-                        }
-                        pcL.Element = (syll.Chord, syll.Text);
-
-                        _lstpl.Add(pcL);
-
-                        // LastTicksOff is used to set the ticksoff of the line feed at the end of the current line,                        
-                        lastTicksOff = syll.TicksOff;
-                    }
-
-                    // We add a line feed only if the next line does not start with a paragraph separator,
-                    // otherwise we will have two line feeds in a row, which is not what we want
-                    if (i < kl.Lines.Count - 1)
-                    {
-                        if (kl.Lines[i + 1].Syllables.First().CharType == Syllable.CharTypes.Text)
-                        {                            
-                            int ticksOn = lastTicksOff;
-                            int ticksOff = ticksOn;  
-                            pcL = new plLyric()
-                            {
-                                CharType = plLyric.CharTypes.LineFeed,
-                                Element = ("", _InternalSepLines),
-                                TicksOn = ticksOn,
-                                TicksOff = ticksOff,
-                                IsChord = false,
-                            };
-                            _lstpl.Add(pcL);
-                        }
-                    }
-                }              
-            }
-
-
-            // Repair the ticksoff of the line feeds and paragraph separators
-            for (int i = _lstpl.Count - 1; i >= 0; i--)
-            {
-                // If separator
-                if (_lstpl[i].CharType != plLyric.CharTypes.Text)
-                {
-                    // if precious is a text, move the separator to the end of the beat of the previous text
-                    if (i > 0 && _lstpl[i - 1].CharType == plLyric.CharTypes.Text)
-                    {
-                        _lstpl[i].TicksOn = _lstpl[i - 1].TicksOff;
-                        _lstpl[i].TicksOff = _lstpl[i - 1].TicksOff;
-                    }
-
-                }
-            }
-
-            return _lstpl;
-        }
-
-
+        
         /// <summary>
         /// Reload lyrics with choosen options
         /// </summary>
@@ -483,6 +342,7 @@ namespace Karaboss.MidiLyrics
 
             }
         }
+
 
         #region arrange lyrics
 
@@ -820,11 +680,7 @@ namespace Karaboss.MidiLyrics
         /// /lyric -> beat/linefeed/lyric
         /// </summary>
         private void FixLinefeeds()
-        {
-            //int nbBeatsPerMeasure = sequence1.Numerator;
-            //int beatDuration = _measurelen / nbBeatsPerMeasure;
-            
-            
+        {                       
             for (int i = 0; i < KLyrics.Lines.Count; i++)
             {
                 kLine _kline = KLyrics.Lines[i];
@@ -839,6 +695,53 @@ namespace Karaboss.MidiLyrics
             } 
         
         }
+
+
+        /// <summary>
+        /// Add a trailing syllable with a space if the last syllable of a line is a text syllable and if the next line starts after the end of the last syllable of the current line. 
+        /// This allows to have a better display of the lyrics in karaoke mode, with a better synchronization between the lyrics and the melody.
+        /// </summary>
+        /// <param name="kls"></param>
+        /// <returns></returns>
+        private kLyrics AddTrailingSyllable(kLyrics kls)
+        {
+            kLyrics klsWithTrailingSyllable = new kLyrics();
+            kLine line;
+            Syllable syll;
+            int ticksOn; 
+            int ticksOff;
+
+            for (int i = 0; i < kls.Lines.Count; i++)
+            {
+                line = new kLine();
+
+                for (int j = 0; j < kls.Lines[i].Syllables.Count; j++)
+                {
+                    line.Add(kls.Lines[i].Syllables[j]);
+                }
+
+                // Add a new "space" syllable for all lines of Text
+                if (kls.Lines[i].Syllables.Last().CharType == Syllable.CharTypes.Text)
+                {
+                    if (i + 1 < kls.Lines.Count)
+                    {
+                        if (kls.Lines[i + 1].Syllables.First().TicksOn > kls.Lines[i].Syllables.Last().TicksOff)
+                        {
+                            ticksOn = kls.Lines[i].Syllables.Last().TicksOff + 1;
+                            ticksOff = kls.Lines[i + 1].Syllables.First().TicksOn - 1;
+
+                            syll = new Syllable() { Text = " ", TicksOn = ticksOn, TicksOff = ticksOff, CharType = Syllable.CharTypes.Text };
+                            line.Add(syll);
+                        }
+                    }
+                }
+
+                klsWithTrailingSyllable.Add(line);
+            }
+
+            return klsWithTrailingSyllable;
+        }
+
 
         #endregion arrange lyrics
 
@@ -1163,13 +1066,13 @@ namespace Karaboss.MidiLyrics
                 // Guess spacing or not and carriage return or not
                 GetLyricsSpacingModel();
 
-                // Add a trailing space to each syllabe
+                // Add a trailing space to each syllabe when there is no space between syllabes and no carriage return in the lyrics (case of letter by letter lyrics for example)
                 if (_lyricsspacing == lyricsSpacings.WithoutSpace)
                 {
                     SetTrailingSpace();
                 }
 
-                // If zero carriage return in the lyrics
+                // Add a carriage return if zero carriage return in the lyrics
                 if (!_bHasCarriageReturn)                
                    KLyrics = AddCarriageReturn();
                 
@@ -1199,7 +1102,11 @@ namespace Karaboss.MidiLyrics
 
                 // Remove empty lyrics
                 KLyrics = RemoveEmptyLyrics(KLyrics);
-                
+
+
+                // Add a space to each line
+                //KLyrics = AddTrailingSyllable(KLyrics);
+
 
                 #endregion clean lyrics
 

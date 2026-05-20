@@ -89,6 +89,13 @@ namespace keffect
         #endregion Background color
 
 
+        #region FileName color
+
+        private Color _FileNameColor = Color.FromArgb(128, 128, 128);
+
+        #endregion FileName color
+
+
         #region Gradient color
 
         private Color _Grad0Color;
@@ -150,6 +157,7 @@ namespace keffect
             set
             {
                 _ActiveInstrumentalColor = value;
+                _FileNameColor = value;
                 pBox.Invalidate();
             }
         }
@@ -251,15 +259,18 @@ namespace keffect
             }
         }
 
-        private string _fileName;
+        private string _fileName = "Song name";
         public string FileName                  // Name of the song to display on the screen (Filename without extension)
         {
             get { return _fileName; }
             set
             {
-                _fileName = value;
-                if (_bShowSongName)
-                    pBox.Invalidate();
+                if (value != null)
+                {
+                    _fileName = value;
+                    if (_bShowSongName)
+                        pBox.Invalidate();
+                }
             }
         }
 
@@ -523,6 +534,7 @@ namespace keffect
         private float _titleMaxLength = 0.41f;
         private float _titleMarginLeft = 0.58f;
         private float _titleMarginTop = 0.038f;
+        private float _titleMarginBottom = 0.38f;
 
         #endregion Margins
 
@@ -831,7 +843,10 @@ namespace keffect
                 _nbLyricsLines = value;
                 _nbLyricsLinesOrg = value;
                 if (bIsSettings)
+                {
+                    _kLyrics = _kLyricsOrg.Clone();
                     Init();
+                }
                 pBox.Invalidate();
             }
         }
@@ -1121,32 +1136,34 @@ namespace keffect
         {
             List<string> lines = new List<string>
             {
-                "Lorem ipsum dolor sit amet,",
-                "consectetur adipisicing elit,",
-                "sed do eiusmod tempor incididunt",
-                "ut labore et dolore magna aliqua.",
-                "Ut enim ad minim veniam,",
-                "quis nostrud exercitation ullamco",
-                "laboris nisi ut aliquip",
-                "ex ea commodo consequat.",
-                "Duis aute irure dolor in reprehenderit",
-                "in voluptate velit esse cillum dolore",
-                "eu fugiat nulla pariatur.",
+                "Lorem ipsum dolor",
+                "sit amet,",
+                "consectetur",
+                "adipisicing elit,",
+                "sed do eiusmod",
+                "tempor incididunt",
+                "ut labore et dolore",
+                "magna aliqua.",
+                "Ut enim ad minim",
+                "veniam,",
+                "quis nostrud",
+                "exercitation ullamco",
+                "laboris nisi",
+                "ut aliquip",
+                "ex ea commodo",
+                "consequat.",
+                "Duis aute irure",
+                "dolor in",
+                "reprehenderit in",
+                "voluptate velit",
+                "esse cillum dolore",
+                "eu fugiat nulla",
+                "pariatur.",
             };
-            // Do not use KLyrics but _kLyrics to be able to use the same LoadSong method for demo and real text
-            _kLyrics = StoreDemoText(lines, 500);
 
-            // Load song with demo text
-            Init();
-
-            // needs LinesLengths to be set => so launch Init() before
-
-            this.SetPos(500);   // 
-            this.SetPos(1010);  // after Lorem
-            this.SetPos(1510); // after ipsum
-            this.SetPos(2010); // after dolor     
-
-            pBox.Invalidate();
+            // Step 100 ms between syllables
+            KLyrics = StoreDemoText(lines, 100);           
+            this.SetPos(200); // after ipsum
         }
 
         /// <summary>
@@ -1158,7 +1175,7 @@ namespace keffect
         {
             int ticks = 0;
             Syllable syll;
-            kLine kLine; // = new kLine();
+            kLine kLine; 
             kLyrics KL = new kLyrics();
 
             for (int i = 0; i < lines.Count; i++)
@@ -1173,8 +1190,8 @@ namespace keffect
                         words[j] = words[j].ToUpper();
 
                     string w = words[j] + " ";
-                    //ticks = tcks + (i + 1) * (j + 1) * 10;
-                    syll = new Syllable() { Text = w, TicksOn = ticks };
+                    
+                    syll = new Syllable() { Text = w, StartTime = ticks, Duration = step/2 };
                     ticks += step;
 
                     kLine.Add(syll);
@@ -1608,12 +1625,10 @@ namespace keffect
         /// <param name="pos"></param>
         private void SetPosition(int pos)
         {
-            if (_kLyrics.Lines.Count == 0) return;
+            if (_kLyrics == null || _kLyrics.Lines.Count == 0) return;
 
             // Search _line & index of the next lyric to play
-            (_FirstLineToShow, nextindex) = GetNextIndex(pos);
-
-            Console.WriteLine("pos: " + pos + " => line: " + _FirstLineToShow + " index: " + nextindex);
+            (_FirstLineToShow, nextindex) = GetNextIndex(pos);            
 
 
             // CurLength:
@@ -2752,14 +2767,36 @@ namespace keffect
         private void DrawFileName(PaintEventArgs e, string FileName, float femSize)
         {
             int x0 = 0;
-            Color BorderColor = _ActiveBorderColor;
-            Color FillColor = _InactiveColor;
-            Pen penBorder = new Pen(BorderColor, 2);
+            int y0 = 0;
+
+            //Color BorderColor = _ActiveBorderColor;
+            Color FillColor = _FileNameColor;
+            //Pen penBorder = new Pen(BorderColor, 2);
             var path = new GraphicsPath();
 
-
-            int y0 = (int)MeasureStringHeight(FileName, _titleMarginTop * _karaokeFont.Size);
-
+            switch (KaraokeDisplayType) 
+            {
+                case KaraokeDisplayTypes.FixedLines:                             
+                case KaraokeDisplayTypes.TwoLinesSwapped:
+                case KaraokeDisplayTypes.FourLinesSwapped:
+                    switch (_OptionDisplay)
+                    {
+                        case OptionsDisplay.Center:
+                        case OptionsDisplay.Bottom:
+                            y0 = (int)MeasureStringHeight(FileName, _titleMarginTop * _karaokeFont.Size);
+                            break;
+                        case OptionsDisplay.Top:
+                            y0 = (int)(pBox.ClientSize.Height - MeasureStringHeight(FileName, _titleMarginBottom * _karaokeFont.Size));
+                            break;
+                    }
+                    break;
+                
+                case KaraokeDisplayTypes.ScrollingLinesBottomUp:
+                    y0 = (int)MeasureStringHeight(FileName, _titleMarginTop * _karaokeFont.Size);
+                    break;
+            }
+            
+            
             // Measure FileName
             float w = MeasureString(FileName, femSize);
 
@@ -2783,7 +2820,7 @@ namespace keffect
             e.Graphics.FillPath(new SolidBrush(FillColor), path);
 
             // Outline the text            
-            e.Graphics.DrawPath(penBorder, path);
+            //e.Graphics.DrawPath(penBorder, path);
 
             e.Graphics.ResetTransform();
         }
@@ -2822,7 +2859,7 @@ namespace keffect
         /// <param name="e"></param>
         private void TlsDrawTextWithBorder(PaintEventArgs e)
         {
-            if (_kLyrics.Lines.Count == 0) return;
+            if (_kLyrics == null || _kLyrics.Lines.Count == 0) return;
 
             #region Declarations
             
@@ -3050,7 +3087,7 @@ namespace keffect
         /// <param name="e"></param>
         private void FlsDrawTextWithBorder(PaintEventArgs e)
         {
-            if (_kLyrics.Lines.Count == 0) return;
+            if (_kLyrics == null || _kLyrics.Lines.Count == 0) return;
 
             #region Declarations
 
@@ -3444,7 +3481,7 @@ namespace keffect
         /// <param name="e"></param>
         private void FixDrawTextWithBorder(PaintEventArgs e)
         {
-            if (_kLyrics.Lines.Count == 0) return;
+            if (_kLyrics == null || _kLyrics.Lines.Count == 0) return;
 
             #region Draw FileName
 
@@ -3505,7 +3542,7 @@ namespace keffect
       
         private void ScrollingBottomUpDrawTextWithBorder(PaintEventArgs e)
         {
-            if (_kLyrics.Lines.Count == 0) return;
+            if (_kLyrics == null || _kLyrics.Lines.Count == 0) return;
             if (linesYCoordinates == null) return;
             int y = 0;
 

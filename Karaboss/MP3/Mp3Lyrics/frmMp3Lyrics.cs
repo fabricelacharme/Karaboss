@@ -232,6 +232,22 @@ namespace Karaboss.Mp3
         #endregion Colors
 
 
+        #region Draw filename
+
+        private bool _bShowSongName = true;
+        public bool bShowSongName
+        {
+            get { return _bShowSongName; }
+            set
+            {
+                _bShowSongName = value;
+                karaokeEffect1.bShowSongName = _bShowSongName;
+            }
+        }
+
+        #endregion Draw filename
+
+
         #region Font
         private string ftName = "Arial Black";
         private uint ftSize = 20;

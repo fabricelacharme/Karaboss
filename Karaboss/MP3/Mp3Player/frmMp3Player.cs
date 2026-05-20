@@ -235,10 +235,10 @@ namespace Karaboss.Mp3
             ExtractMp3Lyrics(Mp3FullPath);
 
             // Load lyrics into the control
-            if (Application.OpenForms.OfType<frmMp3Lyrics>().Count() > 0)
-            {
-                frmMp3Lyrics.SetLyrics(Mp3LyricsMgmtHelper.mp3KaraokeLyrics);
-            }
+            //if (Application.OpenForms.OfType<frmMp3Lyrics>().Count() > 0)
+            //{
+            //    frmMp3Lyrics.SetLyrics(Mp3LyricsMgmtHelper.mp3KaraokeLyrics);
+            //}
 
 
             PopulateMetadataTags();
@@ -1395,6 +1395,12 @@ namespace Karaboss.Mp3
                     // This one returns lyrics without separators                    
                     Mp3LyricsMgmtHelper.mp3KaraokeLyrics = Mp3LyricsMgmtHelper.GetLyricsFromMp3File(SyncLyricsFrame);    // KaraokeLyrics class used for display in frmMp3Lyrics
                     DisplayFrmMp3Lyrics();
+
+                    // Load lyrics in KaraokeEffect of frmMp3Myrics
+                    if (Application.OpenForms.OfType<frmMp3Lyrics>().Count() > 0)
+                    {
+                        frmMp3Lyrics.SetLyrics(Mp3LyricsMgmtHelper.mp3KaraokeLyrics);
+                    }
                     break;
 
                 // Lyrics brought by a lrc file in the same directory & having the same name
@@ -1871,9 +1877,9 @@ namespace Karaboss.Mp3
                 PlayerState = PlayerStates.LaunchNextSong;
                 BtnStatus();
 
+                
                 #region display singer in the Lyrics form
                 
-
                 if (Application.OpenForms.OfType<frmMp3Lyrics>().Count() > 0)
                 {
                     // During the waiting time, display informations about the next singer

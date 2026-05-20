@@ -115,6 +115,13 @@ namespace Karaboss
         #endregion Colors
 
 
+        #region Draw filename
+
+        private bool bShowSongName = true;
+
+        #endregion Draw filename
+
+
         #region Form
 
         // Form TopMost
@@ -283,6 +290,8 @@ namespace Karaboss
 
                 // Show hints (introduction, instrumental, ending)
                 frmMidiLyrics.bShowHints = bShowHints;
+                
+                frmMidiLyrics.bShowSongName = chkShowSongName.Checked;
 
                 //Window lyrics TopMost
                 frmMidiLyrics.bTopMost = _bTopMost;
@@ -429,6 +438,9 @@ namespace Karaboss
 
                 // Show hints (introduction, instrumental, ending)
                 bShowHints = Properties.Settings.Default.bShowHints;
+
+                // Show song name
+                chkShowSongName.Checked = Properties.Settings.Default.bShowSongName;
 
                 // Display balls on lyrics
                 chkDisplayBalls.Checked = Karaclass.m_DisplayBalls;
@@ -711,6 +723,9 @@ namespace Karaboss
 
                 // Show hints (introduction, instrumental, ending)
                 Properties.Settings.Default.bShowHints = bShowHints;
+
+                // Show song name
+                Properties.Settings.Default.bShowSongName = chkShowSongName.Checked;
 
                 // Number of lines to display
                 Properties.Settings.Default.TxtNbLines = _nbLyricsLines;
@@ -1241,8 +1256,7 @@ namespace Karaboss
         {           
             string tx = txtSlideShow.Text;
             tx = tx.Trim();
-            dirSlideShow = tx;
-            //pBox.DirSlideShow = dirSlideShow;
+            dirSlideShow = tx;            
             
             // Only if option Diaporama is selected
             if (radioDiaporama.Checked)
@@ -1359,6 +1373,16 @@ namespace Karaboss
             }
         }
 
+        /// <summary>
+        /// Display song name
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void chkShowSongName_CheckedChanged(object sender, EventArgs e)
+        {
+            bShowSongName = chkShowSongName.Checked;
+            pBox.bShowSongName = bShowSongName;
+        }
 
         #endregion events
 
@@ -2164,6 +2188,7 @@ namespace Karaboss
                 }
             }
         }
+
 
 
 

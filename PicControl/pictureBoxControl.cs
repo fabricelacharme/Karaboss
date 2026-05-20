@@ -43,6 +43,8 @@ using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
+using static PicControl.pictureBoxControl;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.TrackBar;
 
 namespace PicControl
 {
@@ -113,6 +115,13 @@ namespace PicControl
         }
 
         #endregion Background color
+
+
+        #region FileName color
+
+        private Color _FileNameColor = Color.FromArgb(128, 128, 128);
+
+        #endregion FileName color
 
 
         #region Chord color
@@ -228,6 +237,7 @@ namespace PicControl
             set
             {
                 _ActiveInstrumentalColor = value;
+                _FileNameColor = value;
                 pBox.Invalidate();
             }
         }
@@ -328,15 +338,18 @@ namespace PicControl
             }
         }
 
-        private string _fileName;
+        private string _fileName = "Song name";
         public string FileName                  // Name of the song to display on the screen (Filename without extension)
         {
             get { return _fileName; }
             set
             {
-                _fileName = value;
-                if (_bShowSongName)
-                    pBox.Invalidate();
+                if (value != null)
+                {
+                    _fileName = value;
+                    if (_bShowSongName)
+                        pBox.Invalidate();
+                }
             }
         }
 
@@ -656,6 +669,7 @@ namespace PicControl
         private float _titleMaxLength = 0.41f;
         private float _titleMarginLeft = 0.58f;
         private float _titleMarginTop = 0.038f;
+        private float _titleMarginBottom = 0.38f;
 
         #endregion Margins
 
@@ -852,27 +866,7 @@ namespace PicControl
 
         #region SlideShow images
         
-        /*
-        // SlideShow directory        
-        private string _dirSlideShow;
-        public string DirSlideShow
-        {
-            get
-            { return _dirSlideShow; }
-            set
-            {
-                if (value == null) return;
-                if (value != _dirSlideShow)
-                {
-                    _dirSlideShow = value;
-
-                    SetDirectoryBackground(_dirSlideShow);
-                    pBox.Invalidate();                    
-                }
-            }
-        }
-        */
-        
+               
         // SlideShow frequency        
         private int _freqSlideShow;
         public int FreqSlideShow
@@ -1045,8 +1039,11 @@ namespace PicControl
                 _nbLyricsLines = value;
                 _nbLyricsLinesOrg = value;
                 if (bIsSettings)
+                {
+                    _kLyrics = _kLyricsOrg.Clone();
                     Init();
-                ajustTextAgain();
+                }
+                //ajustTextAgain();
                 pBox.Invalidate();
             }
         }
@@ -1130,7 +1127,6 @@ namespace PicControl
             get { return _timerintervall; }
             set
             {
-
                 if (value >= 10)
                     _timerintervall = value;
             }
@@ -1300,9 +1296,7 @@ namespace PicControl
         /// <returns></returns>
         private float MeasureLine(int curline)
         {
-
             return MeasureString(_kLyrics.Lines[curline].ToString(), _karaokeFont.Size);
-
         }
 
         /// <summary>
@@ -1375,80 +1369,7 @@ namespace PicControl
 
             return (int)ret;
         }
-
-        /// <summary>
-        /// Measure the length of a string
-        /// </summary>
-        /// <param name="line"></param>
-        /// <param name="fSize"></param>
-        /// <returns></returns>
-        private float MeasureString2(string line, float femSize)
-        {
-            float ret = 0;
-
-            if (line != "")
-            {
-                using (Graphics g = pBox.CreateGraphics())
-                {
-                    m_font = new Font(_karaokeFont.FontFamily, femSize, FontStyle.Regular, GraphicsUnit.Pixel);
-
-                    SizeF sz = g.MeasureString(line, m_font, new Point(0, 0), sf);
-                    ret = sz.Width;
-
-                    g.Dispose();
-                }
-            }
-            return ret;
-        }
-
-        /// <summary>
-        /// Measure the height of a string
-        /// </summary>
-        /// <param name="line"></param>
-        /// <param name="femSize"></param>
-        /// <returns></returns>
-        private float MeasureStringHeight2(string line, float femSize)
-        {
-            float ret = 0;
-
-            if (line != "")
-            {
-                using (Graphics g = pBox.CreateGraphics())
-                {
-
-                    if (femSize > 0)
-                        m_font = new Font(_karaokeFont.FontFamily, femSize, FontStyle.Regular, GraphicsUnit.Pixel);
-
-                    SizeF sz = g.MeasureString(line, m_font, new Point(0, 0), sf);
-                    ret = sz.Height;
-
-                    g.Dispose();
-                }
-            }
-            return ret;
-        }
-
-        /// <summary>
-        /// Return the line with maxi number of characters
-        /// </summary>
-        /// <returns></returns>
-        private string GetMaxLength()
-        {
-            int max = 0;
-            string tx = string.Empty;
-
-            //for (int i = 0; i < lstLyricsLines.Count; i++)
-            for (int i = 0; i < _kLyrics.Lines.Count; i++)
-            {
-
-                if (_kLyrics.Lines[i].ToString().Length > max)
-                {
-                    max = _kLyrics.Lines[i].ToString().Length; // lstLyricsLines[i].Length;
-                    tx = _kLyrics.Lines[i].ToString();
-                }
-            }
-            return tx;
-        }
+              
 
         #endregion Ajust text deprecated
 
@@ -1625,6 +1546,7 @@ namespace PicControl
 
             // Do not use KLyrics but _kLyrics to be able to use the same LoadSong method for demo and real text
             _kLyrics = StoreDemoText(lines, 500);
+            
             Init(true);
         }
 
@@ -1632,7 +1554,6 @@ namespace PicControl
         {
             syllabes = null;
         }
-
 
 
         /// <summary>
@@ -1747,25 +1668,38 @@ namespace PicControl
 
         public void LoadDemoText()
         {
+            
             List<string> lines = new List<string>
             {
-                "Lorem ipsum dolor sit amet,",
-                "consectetur adipisicing elit,",
-                "sed do eiusmod tempor incididunt",
-                "ut labore et dolore magna aliqua.",
-                "Ut enim ad minim veniam,",
-                "quis nostrud exercitation ullamco",
-                "laboris nisi ut aliquip",
-                "ex ea commodo consequat.",
-                "Duis aute irure dolor in reprehenderit",
-                "in voluptate velit esse cillum dolore",
-                "eu fugiat nulla pariatur.",
+                "Lorem ipsum dolor",
+                "sit amet,",
+                "consectetur",
+                "adipisicing elit,",
+                "sed do eiusmod",
+                "tempor incididunt",
+                "ut labore et dolore",
+                "magna aliqua.",
+                "Ut enim ad minim",
+                "veniam,",
+                "quis nostrud",
+                "exercitation ullamco",
+                "laboris nisi",
+                "ut aliquip",
+                "ex ea commodo",
+                "consequat.",
+                "Duis aute irure",
+                "dolor in",
+                "reprehenderit in",
+                "voluptate velit",
+                "esse cillum dolore",
+                "eu fugiat nulla",
+                "pariatur.",
             };
-            
-            _kLyrics = StoreDemoText(lines, 500);
 
-            // Load song with demo text
-            Init(true);
+
+            // Step 100 ticks between syllables 
+            KLyrics = StoreDemoText(lines, 100);
+            this.SetPos(100);   // after ipsum
         }
 
         /// <summary>
@@ -1792,8 +1726,8 @@ namespace PicControl
                         words[j] = words[j].ToUpper();
 
                     string w = words[j] + " ";
-                    //ticks = tcks + (i + 1) * (j + 1) * 10;
-                    syll = new Syllable() { Text = w, TicksOn = ticks };
+                    
+                    syll = new Syllable() { Text = w, TicksOn = ticks, TicksOff = ticks + step/2 };
                     ticks += step;
 
                     kLine.Add(syll);
@@ -2047,21 +1981,17 @@ namespace PicControl
 
                 // Add a new syllable when line of Text
                 if (kls.Lines[i].Syllables.Last().CharType == Syllable.CharTypes.Text)
-                {
-                   
+                {                   
                     if (i + 1 < kls.Lines.Count)
                     {
                         if (kls.Lines[i + 1].Syllables.First().TicksOn > kls.Lines[i].Syllables.Last().TicksOff)
                         {
-
-                            ticksOn = kls.Lines[i].Syllables.Last().TicksOff + 1;
-                            //ticksOff = ticksOn;                                                        
+                            ticksOn = kls.Lines[i].Syllables.Last().TicksOff + 1;                                                                                   
                             ticksOff = kls.Lines[i + 1].Syllables.First().TicksOn - 1;
                             
                             syll = new Syllable() { Text = " ", TicksOn = ticksOn, TicksOff = ticksOff, CharType = Syllable.CharTypes.Text };
                             line.Add(syll);                        
-                        }
-                       
+                        }                       
                     } 
                 }
 
@@ -2157,12 +2087,7 @@ namespace PicControl
                 _biggestLine = GetBiggestLine();
                 AdjustFontSize(_nbLyricsLines);
 
-                // ajust font size
-                //lineMax = GetMaxLength();
-                //AjustText(lineMax);
-
-
-
+               
                 // Store syllabes                
                 if (_kLyrics != null)
                     syllabes = StoreLyricsSyllabes(_kLyrics);
@@ -2828,6 +2753,46 @@ namespace PicControl
         }
 
 
+
+        private void ajustTextAgain()
+        {
+            if (lineMax != null && syllabes != null)
+            {
+                int pos;
+                AjustText(lineMax);
+
+                if (_currentTextPos < 0)
+                {
+                    // Rectangles of current line
+                    createListRectangles(0);
+                    /*
+                    // Rectangles of next line
+                    if (syllabes != null && syllabes.Count > 0)
+                    {
+                        pos = syllabes[0].last + 1;
+                        // Rectangles for other lines
+                        //createListNextRectangles(pos);
+                    }
+                    */
+                }
+                else
+                {
+                    // Rectangles of current line
+                    pos = _currentTextPos - syllabes[_currentTextPos].posline;
+                    createListRectangles(pos);
+
+                    /*
+                    // Rectangles of next line
+                    pos = syllabes[_currentTextPos].last + 1;
+                    // Rectangles for other lines 
+                    //createListNextRectangles(pos);
+                    */
+                }
+            }
+
+        }
+
+
         private void AdjustFontWithoutStretching(string biggestLine, int NbLines)
         {
             if (pBox == null) return;
@@ -3045,7 +3010,7 @@ namespace PicControl
             {
                 if (_kLyrics.Lines[i].ToString().Length > max)
                 {
-                    max = _kLyrics.Lines[i].ToString().Length; // lstLyricsLines[i].Length;
+                    max = _kLyrics.Lines[i].ToString().Length;
                     tx = _kLyrics.Lines[i].ToString();
                 }
             }
@@ -4151,13 +4116,34 @@ namespace PicControl
         private void DrawFileName(PaintEventArgs e, string FileName, float femSize)
         {
             int x0 = 0;
-            Color BorderColor = _ActiveBorderColor;
-            Color FillColor = _InactiveColor;
-            Pen penBorder = new Pen(BorderColor, 2);
+            int y0 = 0;
+
+            //Color BorderColor = _ActiveBorderColor;
+            Color FillColor = _FileNameColor;
+            //Pen penBorder = new Pen(BorderColor, 2);
             var path = new GraphicsPath();
 
+            switch (KaraokeDisplayType)
+            {
+                case KaraokeDisplayTypes.FixedLines:
+                case KaraokeDisplayTypes.TwoLinesSwapped:
+                case KaraokeDisplayTypes.FourLinesSwapped:
+                    switch (_OptionDisplay)
+                    {
+                        case OptionsDisplay.Center:
+                        case OptionsDisplay.Bottom:
+                            y0 = (int)MeasureStringHeight(FileName, _titleMarginTop * _karaokeFont.Size);
+                            break;
+                        case OptionsDisplay.Top:
+                            y0 = (int)(pBox.ClientSize.Height - MeasureStringHeight(FileName, _titleMarginBottom * _karaokeFont.Size));
+                            break;
+                    }
+                    break;
 
-            int y0 = (int)MeasureStringHeight(FileName, _titleMarginTop * _karaokeFont.Size);
+                case KaraokeDisplayTypes.ScrollingLinesBottomUp:
+                    y0 = (int)MeasureStringHeight(FileName, _titleMarginTop * _karaokeFont.Size);
+                    break;
+            }
 
             // Measure FileName
             float w = MeasureString(FileName, femSize);
@@ -4181,7 +4167,7 @@ namespace PicControl
             e.Graphics.FillPath(new SolidBrush(FillColor), path);
 
             // Outline the text            
-            e.Graphics.DrawPath(penBorder, path);
+            //e.Graphics.DrawPath(penBorder, path);
 
             e.Graphics.ResetTransform();
         }
@@ -4222,7 +4208,7 @@ namespace PicControl
         private void FixDrawTextWithBorder(PaintEventArgs e)
         {
 
-            if (_kLyrics.Lines.Count == 0) return;
+            if (_kLyrics == null || _kLyrics.Lines.Count == 0) return;
 
             #region Draw FileName
 
@@ -4233,8 +4219,7 @@ namespace PicControl
 
             #endregion Draw FileName
 
-        
-
+       
             // Create list of rectangles when line changes
             synchronize(_currentTextPos);
 
@@ -4250,7 +4235,7 @@ namespace PicControl
             int y2;
             for (int i = _FirstLineToShow + 1; i <= _LastLineToShow; i++)
             {
-                if (i < lstLyricsLines.Count)
+                if (i < _kLyrics.Lines.Count)
                 {
                     y2 = y0 + (i - _FirstLineToShow) * _lineHeight;
                     DrawInactiveLineWithBorders(e, i, y2);                    
@@ -4288,7 +4273,7 @@ namespace PicControl
 
             for (int i = _FirstLineToShow; i <= _LastLineToShow; i++)
             {
-                if (i < lstLyricsLines.Count)
+                if (i < _kLyrics.Lines.Count)
                 {
 
                     y2 = y0 + (i - _FirstLineToShow) * _lineHeight;
@@ -4326,7 +4311,7 @@ namespace PicControl
             int y2;
             for (int i = _FirstLineToShow; i <= _LastLineToShow; i++)
             {
-                if (i < lstLyricsLines.Count)
+                if (i < _kLyrics.Lines.Count)
                 {
                     y2 = y0 + (i - _FirstLineToShow) * _lineHeight;
                     DrawInactiveLineWithBorders(e, i, y2);
@@ -4368,7 +4353,7 @@ namespace PicControl
         /// <param name="e"></param>
         private void FlsDrawTextWithBorder(PaintEventArgs e)
         {
-            if (_kLyrics.Lines.Count == 0) return;
+            if (_kLyrics == null || _kLyrics.Lines.Count == 0) return;
 
                        // Create list of rectangles when line changes
             synchronize(_currentTextPos);
@@ -4743,9 +4728,7 @@ namespace PicControl
         #region Draw text with Two lines swapped
 
         private void DrawTextWithTwoLinesSwapped(PaintEventArgs e)
-        {
-            _nbLyricsLines = 2;
-
+        {           
             switch (FrameType)
             {
                 case "NoBorder":
@@ -4775,7 +4758,7 @@ namespace PicControl
 
         private void TlsDrawTextWithBorder(PaintEventArgs e)
         {
-            if (_kLyrics.Lines.Count == 0) return;
+            if (_kLyrics == null || _kLyrics.Lines.Count == 0) return;
 
             // Antialiasing
             e.Graphics.SmoothingMode = SmoothingMode.AntiAlias;
@@ -5454,7 +5437,7 @@ namespace PicControl
 
         private void ScrollingBottomUpDrawTextWithBorder(PaintEventArgs e)
         {
-            if (_kLyrics.Lines.Count == 0) return;
+            if (_kLyrics == null || _kLyrics.Lines.Count == 0) return;
             if (linesYCoordinates == null) return;
             int y = 0;
 
@@ -5644,45 +5627,7 @@ namespace PicControl
             }
         }
 
-
-        private void ajustTextAgain()
-        {
-            if (lineMax != null && syllabes != null)
-            {
-                int pos;
-                AjustText(lineMax);
-
-                if (_currentTextPos < 0)
-                {
-                    // Rectangles of current line
-                    createListRectangles(0);
-                    /*
-                    // Rectangles of next line
-                    if (syllabes != null && syllabes.Count > 0)
-                    {
-                        pos = syllabes[0].last + 1;
-                        // Rectangles for other lines
-                        //createListNextRectangles(pos);
-                    }
-                    */
-                }
-                else
-                {
-                    // Rectangles of current line
-                    pos = _currentTextPos - syllabes[_currentTextPos].posline;
-                    createListRectangles(pos);
-                    
-                    /*
-                    // Rectangles of next line
-                    pos = syllabes[_currentTextPos].last + 1;
-                    // Rectangles for other lines 
-                    //createListNextRectangles(pos);
-                    */
-                }
-            }
-
-        }
-        
+      
         
 
         private void AdjustSpeed() 
@@ -6026,7 +5971,7 @@ namespace PicControl
                     rRect = new List<RectangleF>();
 
                     int line = syllabes[pos].line;
-                    string strLine = lstLyricsLines[line];
+                    string strLine = _kLyrics.Lines[line].ToString();
 
                     
                     Offset =  leftPos == 0 ? HCenterText(strLine, emSize) : leftPos;           // Offset de la ligne (centré)
