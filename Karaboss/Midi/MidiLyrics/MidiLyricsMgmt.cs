@@ -387,7 +387,7 @@ namespace Karaboss.MidiLyrics
         /// </summary>
         private kLyrics RemoveExecessiveLinebreaks(kLyrics T)
         {
-            bool bFound; // = false;
+            bool bFound;
 
 
             // Remove first and last linefeed/paragraph if exists
@@ -905,7 +905,7 @@ namespace Karaboss.MidiLyrics
                         if (kline != null && kline.Syllables.Count > 0)
                             l.Add(kline);
                         kline = new kLine();
-                        kline.Add(new Syllable() { CharType = plType, Text = _InternalSepParagraphs, Chord = string.Empty, TicksOn = plTicksOn, TicksOff = plTicksOff });
+                        kline.Add(new Syllable() { CharType = plType, Text = _InternalSepParagraphs, Chord = string.Empty, TicksOn = plTicksOn, TicksOff = plTicksOff });                        
                         l.Add(kline);
                         kline = new kLine();
                         break;
@@ -999,7 +999,7 @@ namespace Karaboss.MidiLyrics
                             if (kline != null && kline.Syllables.Count > 0)
                                 l.Add(kline);
                             kline = new kLine();
-                            kline.Add(new Syllable() { CharType = plType, Text = _InternalSepParagraphs, Chord = string.Empty, TicksOn = plTicksOn, TicksOff = plTicksOff });
+                            kline.Add(new Syllable() { CharType = plType, Text = _InternalSepParagraphs, Chord = string.Empty, TicksOn = plTicksOn, TicksOff = plTicksOff });                            
                             l.Add(kline);
                             kline = new kLine();
                             break;
@@ -1026,7 +1026,7 @@ namespace Karaboss.MidiLyrics
                             if (kline != null && kline.Syllables.Count > 0)
                                 l.Add(kline);
                             kline = new kLine();
-                            kline.Add(new Syllable() { CharType = plType, Text = _InternalSepParagraphs, Chord = string.Empty, TicksOn = plTicksOn, TicksOff = plTicksOff });
+                            kline.Add(new Syllable() { CharType = plType, Text = _InternalSepParagraphs, Chord = string.Empty, TicksOn = plTicksOn, TicksOff = plTicksOff });                            
                             l.Add(kline);
                             kline = new kLine();
                             break;

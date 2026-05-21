@@ -869,6 +869,8 @@ namespace Karaboss
                 if (Application.OpenForms.OfType<frmMidiLyrics>().Count() > 0)
                 {
                     frmMidiLyrics.BeatDuration = sequence1.Division;
+                    frmMidiLyrics.Duration = _duration;
+                    frmMidiLyrics.TotalTicks = _totalTicks;
                     frmMidiLyrics.PlayStopActions(false);
                 }
 
