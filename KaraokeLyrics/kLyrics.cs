@@ -9,11 +9,11 @@ namespace kar
     public enum KaraokeDisplayTypes
     {        
         None = 0,
-        FixedLines = 1,
-        ScrollingLinesBottomUp = 2,
-        ScrollingLinesTopDown = 3,
+        FourLinesSwapped = 1,
+        ConstantScrolling = 2,
+        DynamicScrolling = 3,
         TwoLinesSwapped = 4,
-        FourLinesSwapped = 5,
+        FixedLines = 5,                                
     }
 
 

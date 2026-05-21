@@ -890,7 +890,7 @@
             this.karaokeEffect1.bShowSongName = true;
             this.karaokeEffect1.bTextBackGround = false;
             this.karaokeEffect1.Duration = 0D;
-            this.karaokeEffect1.FileName = null;
+            this.karaokeEffect1.FileName = "Song name";
             this.karaokeEffect1.FontStretching = "None";
             this.karaokeEffect1.FrameType = "Frame1";
             this.karaokeEffect1.FreqSlideShow = 10;

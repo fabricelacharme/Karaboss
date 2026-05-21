@@ -585,9 +585,7 @@ namespace keffect
 
         #region SlideShow
 
-        private string[] bgFiles;
-        //private string DefaultDirSlideShow;
-
+        private string[] bgFiles;        
         // Paths of images   
         private List<string> m_ImageFilePaths;
         // Array of bitmaps (images as backgound image)
@@ -1080,11 +1078,10 @@ namespace keffect
 
             // Increase _steppercent if Width increase
             if (this.ParentForm != null && this.ParentForm.WindowState != FormWindowState.Minimized)
-            {
-                //AjustText(_biggestLine);
+            {                
                 AdjustFontSize(_nbLyricsLines);
 
-                if (KaraokeDisplayType == KaraokeDisplayTypes.ScrollingLinesBottomUp || KaraokeDisplayType == KaraokeDisplayTypes.ScrollingLinesTopDown)
+                if (KaraokeDisplayType == KaraokeDisplayTypes.ConstantScrolling || KaraokeDisplayType == KaraokeDisplayTypes.DynamicScrolling)
                     InitScrollMode();
 
                 pBox.Invalidate();
@@ -1436,22 +1433,22 @@ namespace keffect
             // Update _nbLyricsLines if layout changed in options           
             switch (KaraokeDisplayType)
             {
-                case KaraokeDisplayTypes.FixedLines:
-                    _nbLyricsLines = _nbLyricsLinesOrg;
-                    break;
                 case KaraokeDisplayTypes.FourLinesSwapped:
                     _nbLyricsLines = 4;
+                    break;
+                case KaraokeDisplayTypes.ConstantScrolling:
+                    //_nbLyricsLines = _nbLyricsLinesOrg;
+                    _nbLyricsLines = 6;
+                    break;
+                case KaraokeDisplayTypes.DynamicScrolling:
+                    //_nbLyricsLines = _nbLyricsLinesOrg;
+                    _nbLyricsLines = 6;
                     break;
                 case KaraokeDisplayTypes.TwoLinesSwapped:
                     _nbLyricsLines = 2;
                     break;
-                case KaraokeDisplayTypes.ScrollingLinesBottomUp:
-                    //_nbLyricsLines = _nbLyricsLinesOrg;
-                    _nbLyricsLines = 6;
-                    break;
-                case KaraokeDisplayTypes.ScrollingLinesTopDown:
-                    //_nbLyricsLines = _nbLyricsLinesOrg;
-                    _nbLyricsLines = 6;
+                case KaraokeDisplayTypes.FixedLines:
+                    _nbLyricsLines = _nbLyricsLinesOrg;
                     break;
                 default:
                     _nbLyricsLines = _nbLyricsLinesOrg;
@@ -1463,7 +1460,7 @@ namespace keffect
             if (!_bIsSettings && 
                   (KaraokeDisplayType == KaraokeDisplayTypes.TwoLinesSwapped
                 || KaraokeDisplayType == KaraokeDisplayTypes.FourLinesSwapped
-                || KaraokeDisplayType == KaraokeDisplayTypes.ScrollingLinesBottomUp                
+                || KaraokeDisplayType == KaraokeDisplayTypes.ConstantScrolling                
                 || !bShowParagraphs
                 ))                        
                 _kLyrics = RemoveParagraphs(_kLyrics);
@@ -1478,8 +1475,8 @@ namespace keffect
             if (!_bIsSettings && _bShowHints && _kLyrics.Lines.Count > 3 &&
                   (KaraokeDisplayType == KaraokeDisplayTypes.TwoLinesSwapped
                 || KaraokeDisplayType == KaraokeDisplayTypes.FourLinesSwapped
-                || KaraokeDisplayType == KaraokeDisplayTypes.ScrollingLinesBottomUp
-                || KaraokeDisplayType == KaraokeDisplayTypes.ScrollingLinesTopDown
+                || KaraokeDisplayType == KaraokeDisplayTypes.ConstantScrolling
+                || KaraokeDisplayType == KaraokeDisplayTypes.DynamicScrolling
                 ))
                 _kLyrics = SearchForInstrumentals(_kLyrics);
 
@@ -1491,7 +1488,7 @@ namespace keffect
             AdjustFontSize(_nbLyricsLines);           
             _LastLineToShow = SetLastLineToShow(_FirstLineToShow, _kLyrics.Lines.Count, _nbLyricsLines);
 
-            if (KaraokeDisplayType == KaraokeDisplayTypes.ScrollingLinesBottomUp || KaraokeDisplayType == KaraokeDisplayTypes.ScrollingLinesTopDown)
+            if (KaraokeDisplayType == KaraokeDisplayTypes.ConstantScrolling || KaraokeDisplayType == KaraokeDisplayTypes.DynamicScrolling)
                 InitScrollMode();
         }
 
@@ -1542,7 +1539,7 @@ namespace keffect
                 {
                     // Calculate endTime between _FirstLineToShow and the next Text line located in _FirstLineToShow + 2 when Four Lines swapped and _FirstLineToShow + 1 for Two lines swapped
 
-                    if (KaraokeDisplayType == KaraokeDisplayTypes.TwoLinesSwapped || KaraokeDisplayType == KaraokeDisplayTypes.ScrollingLinesBottomUp)
+                    if (KaraokeDisplayType == KaraokeDisplayTypes.TwoLinesSwapped || KaraokeDisplayType == KaraokeDisplayTypes.ConstantScrolling)
                     {
                         if (_FirstLineToShow + 1 < _kLyrics.Lines.Count)
                             TargetPositionMilliseconds = _kLyrics.Lines[_FirstLineToShow + 1].Syllables.First().StartTime;   // Position in the song to reach = next real syllable                                                               
@@ -2004,7 +2001,7 @@ namespace keffect
             
 
             // Calculate Font size as if there is only 6 lines to display in order to have bigger font size.
-            if (KaraokeDisplayType == KaraokeDisplayTypes.ScrollingLinesBottomUp || KaraokeDisplayType == KaraokeDisplayTypes.ScrollingLinesTopDown)
+            if (KaraokeDisplayType == KaraokeDisplayTypes.ConstantScrolling || KaraokeDisplayType == KaraokeDisplayTypes.DynamicScrolling)
                 NbLines = 6;
 
 
@@ -2303,25 +2300,197 @@ namespace keffect
 
             switch (KaraokeDisplayType)
             {
-                case KaraokeDisplayTypes.FixedLines:
-                    DrawTextWithFixedLines(e);
+                case KaraokeDisplayTypes.FourLinesSwapped:
+                    DrawTextWithFourLinesSwapped(e);
                     break;
-                case KaraokeDisplayTypes.ScrollingLinesBottomUp:
-                    DrawTextWithScrollingLinesBottomUp(e);
+                case KaraokeDisplayTypes.ConstantScrolling:
+                    DrawTextWithConstantScrollingLines(e);
                     break;
-                case KaraokeDisplayTypes.ScrollingLinesTopDown:
-                    //DrawTextWithScrollingLinesTopDown(e);
+                case KaraokeDisplayTypes.DynamicScrolling:
+                    DrawTextWithDynamicScrollingLines(e);
                     break;
                 case KaraokeDisplayTypes.TwoLinesSwapped:
                     DrawTextWithTwoLinesSwapped(e);
                     break;
-                case KaraokeDisplayTypes.FourLinesSwapped:
-                    DrawTextWithFourLinesSwapped(e);
+                case KaraokeDisplayTypes.FixedLines:
+                    DrawTextWithFixedLines(e);
                     break;
+
             }
 
             #endregion draw text
         }
+
+        #region Effects
+
+        /// <summary>
+        /// Create a neon effect
+        /// </summary>
+        /// <param name="clr"></param>
+        /// <param name="e"></param>
+        /// <param name="pth"></param>
+        private void CreateNeonEffect(Color clr, PaintEventArgs e, GraphicsPath pth)
+        {
+            //Create a bitmap in a fixed ratio to the original drawing area.
+            Bitmap bm = new Bitmap(pBox.ClientSize.Width / 5, pBox.ClientSize.Height / 5);
+            //Get the graphics object for the image. 
+            Graphics gimg = Graphics.FromImage(bm);
+
+            //Create a matrix that shrinks the drawing output by the fixed ratio. 
+            Matrix mx = new Matrix(1.0f / 5, 0, 0, 1.0f / 5, -(1.0f / 5), -(1.0f / 5));
+
+            //Choose an appropriate smoothing mode for the halo. 
+            gimg.SmoothingMode = SmoothingMode.AntiAlias;
+
+            //Transform the graphics object so that the same half may be used for both halo and text output. 
+            gimg.Transform = mx;
+
+            //Using a suitable pen...
+            Color HaloColor = clr;
+            Brush HaloBrush = new SolidBrush(HaloColor);
+
+            Pen penHaloColor = new Pen(HaloColor, 3);
+
+            //Draw around the outline of the path
+            gimg.DrawPath(penHaloColor, pth);
+
+            //and then fill in for good measure. 
+            gimg.FillPath(HaloBrush, pth);
+
+            //We no longer need this graphics object
+            //g.Dispose();
+
+            //setup the smoothing mode for path drawing
+            e.Graphics.SmoothingMode = SmoothingMode.AntiAlias;
+
+            //and the interpolation mode for the expansion of the halo bitmap
+            e.Graphics.InterpolationMode = InterpolationMode.HighQualityBicubic;
+
+            //expand the halo making the edges nice and fuzzy. 
+            e.Graphics.DrawImage(bm, pBox.ClientRectangle, 0, 0, bm.Width, bm.Height, GraphicsUnit.Pixel);
+        }
+
+        /// <summary>
+        /// Create a shadow effect
+        /// </summary>
+        /// <param name="line"></param>
+        /// <param name="x0"></param>
+        /// <param name="y0"></param>
+        /// <param name="font"></param>
+        /// <param name="e"></param>
+        /// <param name="pth"></param>
+        /// <param name="scale"></param>
+        private void CreateShadowEffect(string line, Color clr, int x0, int y0, Font font, float emSize, PaintEventArgs e, GraphicsPath pth, float scale)
+        {
+
+            // How to take into account scale?
+
+
+            float zoomFactor = 0.25f; // Adjust this factor to control the size of the shadow
+
+            Bitmap bm = new Bitmap((int)(zoomFactor * pBox.ClientSize.Width), (int)(zoomFactor * pBox.ClientSize.Height));
+
+            //Get a graphics object for it
+            Graphics g = Graphics.FromImage(bm);
+
+
+
+            // must use an antialiased rendering hint
+            g.TextRenderingHint = TextRenderingHint.AntiAlias;
+
+            //this matrix zooms the text out to 1/4 size and offsets it by a little right and down                
+            //Matrix mx = new Matrix(0.25f, 0, 0, 0.25f, 1.3f, 1.3f);
+            Matrix mx = new Matrix(zoomFactor, 0, 0, zoomFactor, 1.3f, 1.3f);
+
+            g.Transform = mx;
+
+
+            //The shadow is drawn
+            g.DrawString(line, font, new SolidBrush(clr), x0, y0, sf);
+
+
+            //Don't need this anymore
+            g.Dispose();
+
+            //The destination Graphics uses a high quality mode
+            e.Graphics.InterpolationMode = InterpolationMode.HighQualityBicubic;
+
+            //and draws antialiased text for accurate fitting
+            e.Graphics.TextRenderingHint = TextRenderingHint.AntiAlias;
+
+            //The small image is blown up to fill the main client rectangle
+            e.Graphics.DrawImage(bm, pBox.ClientRectangle, 0, 0, bm.Width, bm.Height, GraphicsUnit.Pixel);
+
+            // finally, the text is drawn on top
+            //pth.AddString(line, new FontFamily(font.Name), (int)FontStyle.Regular, emSize, new Point(x0, y0), sf);
+
+            //e.Graphics.ScaleTransform(scale, 1);
+
+        }
+
+
+
+        /// <summary>
+        /// Apply the beat effect.
+        /// </summary>
+        public void OnBeat(int beat, int bpm)
+        {
+            if (bpm > 0 && bpm != _bpm)
+            {
+                _bpm = bpm;
+                AdjustSpeed();
+            }
+
+            _beatNumber = beat;
+
+            BeatEffect(beat);
+        }
+
+
+        /// <summary>
+        /// Applies a visual effect in response to a beat event.
+        /// </summary>
+        /// <remarks>This method is a placeholder for implementing beat-based visual effects.  Depending
+        /// on the gradient style, different effects can be applied, such as  resetting dimensions or altering colors.
+        /// Currently, it resets the width and  height for radial gradients and provides a framework for future
+        /// extensions.</remarks>
+        private void BeatEffect(int beat)
+        {
+            switch (_optionbackground)
+            {
+                case "Gradient":
+                    // For diagonal gradients, you can implement a different effect if needed
+                    // For example, you could change the angle or colors on each beat
+                    // Change the colors of the radial gradient on each beat
+                    //Color temp = _color0;
+                    //_color0 = _color1;
+                    //_color1 = temp;
+                    break;
+                case "Rhythm":
+                    // Radial gradients can have a different effect, such as changing colors or sizes
+                    // For diagonal gradients, you can implement a different effect if needed
+                    // W & H are reset to their maximum at each beat
+                    //if (beat == 1) ResetSize(); // Reset the width and height to the original size
+                    ResetSize(); // Reset the width and height to the original size
+                    break;
+            }
+        }
+
+        private void AdjustSpeed()
+        {
+            if (_bpm > 0)
+            {
+                double hypo = Math.Sqrt(ClientSize.Width * ClientSize.Width + ClientSize.Height * ClientSize.Height);
+                if (hypo <= 0) return;
+                //2600.0F                
+                //speed = (int)(_bpm * hypo / 5200.0F); // Speed depends on the BPM and the size of the screen
+                speed = (int)(_bpm * hypo / 7000.0F); // Speed depends on the BPM and the size of the screen
+                //speed = (int)(_bpm * hypo / 10400.0F); // Speed depends on the BPM and the size of the screen
+                Console.WriteLine("BPM changed to: " + _bpm + " - Speed: " + speed);
+            }
+        }
+
+        #endregion Effects
 
 
         #region Code fragments
@@ -2793,7 +2962,7 @@ namespace keffect
                     }
                     break;
                 
-                case KaraokeDisplayTypes.ScrollingLinesBottomUp:
+                case KaraokeDisplayTypes.ConstantScrolling:
                     y0 = (int)MeasureStringHeight(FileName, _titleMarginTop * _karaokeFont.Size);
                     break;
             }
@@ -2829,235 +2998,7 @@ namespace keffect
 
 
         #endregion Code fragments
-
-
-        #region Draw text with Two lines swapped
-
-        private void DrawTextWithTwoLinesSwapped(PaintEventArgs e)
-        {
-            switch (FrameType)
-            {
-                case "NoBorder":
-                case "FrameThin":
-                case "Frame1":
-                case "Frame2":
-                case "Frame3":
-                case "Frame4":
-                case "Frame5":
-                case "Shadow":
-                 case "Neon":
-                    TlsDrawTextWithBorder(e);
-                    break; ;
-
-                default:
-                    TlsDrawTextWithBorder(e);
-                    break;
-            }
-        }
-
-        /// <summary>
-        /// Draw two lines swapped with borders
-        /// </summary>
-        /// <param name="e"></param>
-        private void TlsDrawTextWithBorder(PaintEventArgs e)
-        {
-            if (_kLyrics == null || _kLyrics.Lines.Count == 0) return;
-
-            #region Declarations
-            
-            // Center text vertically
-            int y0 = VCenterText();
-
-            int y1;    // y1 is the y coordinate of the active line to display (line _FirstLineToShow)
-            int y2;    // y2 is the y coordinate of the inactive line to display (line _FirstLineToShow + 1)
-
-            int LineOfInformationPosition = -2;
-            int LinePosition; // = -1;
-
-            #endregion Declarations
-
-
-            #region Draw FileName
-
-            // Draw file name if required
-
-            if (bShowSongName)
-                DrawFileName(e, FileName, 0.33f * _karaokeFont.Size);
-
-            #endregion Draw FileName
-
-
-            #region Line layout
-
-            // If active line is odd, it is displayed on the first line
-            // if active line is even, it is displayed on the second line
-            if (_FirstLineToShow % 2 == 0)
-            {
-                LinePosition = 0;
-
-                y1 = y0;                    // active     _FirstLinetoShow
-                y2 = y0 + _lineHeight;      // inactive   _FirstLinetoShow + 1  
-
-                if (_kLyrics.Lines[_FirstLineToShow].Syllables.Last().CharType == Syllable.CharTypes.Information)
-                    LineOfInformationPosition = 0;
-                else if (_FirstLineToShow + 1 < _kLyrics.Lines.Count && _kLyrics.Lines[_FirstLineToShow + 1].Syllables.Last().CharType == Syllable.CharTypes.Information)
-                    LineOfInformationPosition = 1;
-                else if (_FirstLineToShow + 1 >= _kLyrics.Lines.Count)
-                    LineOfInformationPosition = LastLineOfInformationPosition;
-
-            }
-            else
-            {
-                LinePosition = 1;
-
-                y2 = y0;                    // inactive     _FirstLinetoShow + 1
-                y1 = y0 + _lineHeight;      // active       _FirstLinetoShow
-
-                if (_kLyrics.Lines[_FirstLineToShow].Syllables.Last().CharType == Syllable.CharTypes.Information)
-                    LineOfInformationPosition = 1;
-                else if (_FirstLineToShow + 1 < _kLyrics.Lines.Count && _kLyrics.Lines[_FirstLineToShow + 1].Syllables.Last().CharType == Syllable.CharTypes.Information)
-                    LineOfInformationPosition = 0;
-                else if (_FirstLineToShow + 1 >= _kLyrics.Lines.Count)
-                    LineOfInformationPosition = LastLineOfInformationPosition;
-            }
-
-            #endregion Line layout
-
-
-            // No instrumental
-            if (LineOfInformationPosition == -2)
-            {
-                #region Normal drawing
-
-                // Draw active line with borders
-                DrawActiveLineWithBorders(e, _FirstLineToShow, y1);
-
-                // Draw Inactive line with borders
-                if (percent > 0)
-                    DrawInactiveLineWithBorders(e, _FirstLineToShow + 1, y2);
-
-                #endregion Normal drawing
-            }
-            else
-            {
-                // Checks whether an instrumental section has begun and updates the countdown and timing state accordingly.                
-                CheckIfInstrumentalBegins();
-
-                // Update the CountDown
-                UpdateCountDown();
-
-                TimeSpan tm = DateTime.Now - _startTime;
-
-                // Instrumental found
-                switch (LineOfInformationPosition)
-                {
-                    #region Instrumental on top
-
-                    case 0:                         // Instrumental on line 0
-                        switch (LinePosition)
-                        {
-                            case 0:
-                                // y1 * information
-                                // y2 normal                                
-                                DrawInformation(e, _FirstLineToShow, SecondsBeforeSinging, y1);
-
-                                if (bCountDown)
-                                {
-                                    // Keep last active line 2 when instrumental has began for 1 second
-                                    if (tm.TotalMilliseconds < 1000)
-                                    {
-                                        if (_FirstLineToShow - 1 >= 0)
-                                        {
-                                            DrawInactiveLineWithBorders(e, _FirstLineToShow - 1, y2, true);         // keep old line 1 sec                                            
-                                        }
-                                    }
-                                }
-
-                                // Draw line y2 only if it is less than 4 sec before the end of an instrumental
-                                // Except for introduction
-                                if (bInstrumentalStarted && _FirstLineToShow > 0)
-                                {
-                                    tm = _endTime - DateTime.Now;
-
-                                    if (tm.TotalMilliseconds > _DelayBeforeEndOfInstrumental)
-                                    {
-                                        // Do not display next lines until _DelayBeforeEndOfInstrumental
-                                        return;
-                                    }
-                                }
-                                DrawInactiveLineWithBorders(e, _FirstLineToShow + 1, y2);      // Draw new line before the end of instrumental         
-                                break;
-
-                            case 1:
-                                // y2 information
-                                // y1 * normal                                
-                                DrawInformation(e, _FirstLineToShow + 1, -1, y2);
-
-                                DrawActiveLineWithBorders(e, _FirstLineToShow, y1);
-                                break;
-
-                        }
-                        break;
-
-                    #endregion Instrumental on top
-
-
-                    #region Instrumental on bottom
-
-                    case 1:                         // Instrumental on line 1
-                        switch (LinePosition)
-                        {
-                            case 0:
-                                // y1 * normal
-                                // y2 information
-                                DrawActiveLineWithBorders(e, _FirstLineToShow, y1);
-                                DrawInformation(e, _FirstLineToShow + 1, -1, y1 + _lineHeight);
-                                break;
-
-                            case 1:
-                                // y2 normal old than new
-                                // y1 * information                                
-                                DrawInformation(e, _FirstLineToShow, SecondsBeforeSinging, y1);
-
-                                if (bCountDown)
-                                {
-                                    // Keep last active line 2 when instrumental has began for 1 second
-                                    if (tm.TotalMilliseconds < 1000)
-                                    {
-                                        if (_FirstLineToShow - 1 >= 0)
-                                        {
-                                            DrawInactiveLineWithBorders(e, _FirstLineToShow - 1, y1 - _lineHeight, true);         // keep old line 1 sec
-                                        }
-                                    }
-                                }
-                                // Draw line y2 only if it is less than 4 sec before the end of an instrumental
-                                if (bInstrumentalStarted)
-                                {
-                                    tm = _endTime - DateTime.Now;
-
-                                    if (tm.TotalMilliseconds > _DelayBeforeEndOfInstrumental)
-                                    {
-                                        // Do not display next lines until _DelayBeforeEndOfInstrumental
-                                        return;
-                                    }
-                                }
-                                DrawInactiveLineWithBorders(e, _FirstLineToShow + 1, y2);      // Draw new line before the end of instrumental   
-                                break;
-                        }
-                        break;
-
-                    #endregion Instrumental on bottom
-                }
-
-            }
-
-            LastLineOfInformationPosition = LineOfInformationPosition;
-
-        }
-
-        
-        #endregion Draw text with Two lines swapped
-
+       
 
         #region Draw text with Four lines swapped
         private void DrawTextWithFourLinesSwapped(PaintEventArgs e)
@@ -3447,78 +3388,11 @@ namespace keffect
 
              
         #endregion Draw text with Four lines swapped
+        
+        
+        #region Draw text with constant-speed scrolling lines
 
-
-        #region Draw text with fixed lines
-
-        /// <summary>
-        /// Draw text with fixed lines
-        /// </summary>
-        /// <param name="e"></param>
-        private void DrawTextWithFixedLines(PaintEventArgs e)
-        {
-            switch (FrameType)
-            {
-                case "NoBorder":
-                case "FrameThin":
-                case "Frame1":
-                case "Frame2":
-                case "Frame3":
-                case "Frame4":
-                case "Frame5":
-                case "Shadow":
-                case "Neon":
-                    FixDrawTextWithBorder(e);
-                    break; ;
-
-                default:
-                    FixDrawTextWithBorder(e);
-                    break;
-            }
-        }
-
-        /// <summary>
-        /// Fixed lines: Draw text with various borders 
-        /// </summary>
-        /// <param name="e"></param>
-        private void FixDrawTextWithBorder(PaintEventArgs e)
-        {
-            if (_kLyrics == null || _kLyrics.Lines.Count == 0) return;
-
-            #region Draw FileName
-
-            // Draw file name if required
-
-            if (bShowSongName)
-                DrawFileName(e, FileName, 0.33f * _karaokeFont.Size);
-
-            #endregion Draw FileName
-
-
-            // Center text vertically
-            int y0 = VCenterText();
-
-            // Draw active line with borders
-            DrawActiveLineWithBorders(e, _FirstLineToShow, y0);
-
-
-            // Draw Inactive lines with borders
-            for (int i = _FirstLineToShow + 1; i <= _LastLineToShow; i++)
-            {
-                DrawInactiveLineWithBorders(e, i, y0 + (i - _FirstLineToShow) * _lineHeight);
-            }
-        }
-
-      
-
-        #endregion Draw text with fixed lines
-
-
-        #region Draw scrolling text
-
-        #region Draw scrolling text bottom up
-
-        private void DrawTextWithScrollingLinesBottomUp(PaintEventArgs e)
+        private void DrawTextWithConstantScrollingLines(PaintEventArgs e)
         {
             switch (FrameType)
             {
@@ -3531,18 +3405,17 @@ namespace keffect
                 case "Frame5":                
                 case "Shadow":
                 case "Neon":
-                    ScrollingBottomUpDrawTextWithBorder(e);
+                    CslDrawTextWithBorder(e);
                     break; 
 
                 default:
-                    ScrollingBottomUpDrawTextWithBorder(e);
+                    CslDrawTextWithBorder(e);
                     break;
             }
         }
 
-
       
-        private void ScrollingBottomUpDrawTextWithBorder(PaintEventArgs e)
+        private void CslDrawTextWithBorder(PaintEventArgs e)
         {
             if (_kLyrics == null || _kLyrics.Lines.Count == 0) return;
             if (linesYCoordinates == null) return;
@@ -3621,189 +3494,335 @@ namespace keffect
             e.Graphics.ResetTransform();
         }
 
-
-        #endregion Draw scrolling text bottom up
-
-
-        #region Draw scrolling text top down
-
-        #endregion Draw scrolling text top down
+        #endregion Draw text with constant-speed scrolling lines
 
 
-        #endregion Draw scrolling text
+        #region Draw dynamic scrolling lines
 
-
-        #region Effects
-
-        /// <summary>
-        /// Create a neon effect
-        /// </summary>
-        /// <param name="clr"></param>
-        /// <param name="e"></param>
-        /// <param name="pth"></param>
-        private void CreateNeonEffect(Color clr, PaintEventArgs e, GraphicsPath pth)
+        private void DrawTextWithDynamicScrollingLines(PaintEventArgs e)
         {
-            //Create a bitmap in a fixed ratio to the original drawing area.
-            Bitmap bm = new Bitmap(pBox.ClientSize.Width / 5, pBox.ClientSize.Height / 5);
-            //Get the graphics object for the image. 
-            Graphics gimg = Graphics.FromImage(bm);
-
-            //Create a matrix that shrinks the drawing output by the fixed ratio. 
-            Matrix mx = new Matrix(1.0f / 5, 0, 0, 1.0f / 5, -(1.0f / 5), -(1.0f / 5));
-
-            //Choose an appropriate smoothing mode for the halo. 
-            gimg.SmoothingMode = SmoothingMode.AntiAlias;
-
-            //Transform the graphics object so that the same half may be used for both halo and text output. 
-            gimg.Transform = mx;
-
-            //Using a suitable pen...
-            Color HaloColor = clr;
-            Brush HaloBrush = new SolidBrush(HaloColor);
-
-            Pen penHaloColor = new Pen(HaloColor, 3);
-
-            //Draw around the outline of the path
-            gimg.DrawPath(penHaloColor, pth);
-
-            //and then fill in for good measure. 
-            gimg.FillPath(HaloBrush, pth);
-
-            //We no longer need this graphics object
-            //g.Dispose();
-
-            //setup the smoothing mode for path drawing
-            e.Graphics.SmoothingMode = SmoothingMode.AntiAlias;
-
-            //and the interpolation mode for the expansion of the halo bitmap
-            e.Graphics.InterpolationMode = InterpolationMode.HighQualityBicubic;
-
-            //expand the halo making the edges nice and fuzzy. 
-            e.Graphics.DrawImage(bm, pBox.ClientRectangle, 0, 0, bm.Width, bm.Height, GraphicsUnit.Pixel);
-        }
-
-        /// <summary>
-        /// Create a shadow effect
-        /// </summary>
-        /// <param name="line"></param>
-        /// <param name="x0"></param>
-        /// <param name="y0"></param>
-        /// <param name="font"></param>
-        /// <param name="e"></param>
-        /// <param name="pth"></param>
-        /// <param name="scale"></param>
-        private void CreateShadowEffect(string line, Color clr, int x0, int y0, Font font, float emSize, PaintEventArgs e, GraphicsPath pth, float scale)
-        {
-
-            // How to take into account scale?
-            
-
-            float zoomFactor = 0.25f; // Adjust this factor to control the size of the shadow
-
-            Bitmap bm = new Bitmap((int)(zoomFactor * pBox.ClientSize.Width ), (int)(zoomFactor * pBox.ClientSize.Height));            
-
-            //Get a graphics object for it
-            Graphics g = Graphics.FromImage(bm);           
-            
-            
-
-            // must use an antialiased rendering hint
-            g.TextRenderingHint = TextRenderingHint.AntiAlias;
-
-            //this matrix zooms the text out to 1/4 size and offsets it by a little right and down                
-            //Matrix mx = new Matrix(0.25f, 0, 0, 0.25f, 1.3f, 1.3f);
-            Matrix mx = new Matrix(zoomFactor, 0, 0, zoomFactor, 1.3f, 1.3f);
-
-            g.Transform = mx;
-
-            
-            //The shadow is drawn
-            g.DrawString(line, font, new SolidBrush(clr), x0, y0, sf);
-           
-
-            //Don't need this anymore
-            g.Dispose();
-
-            //The destination Graphics uses a high quality mode
-            e.Graphics.InterpolationMode = InterpolationMode.HighQualityBicubic;
-
-            //and draws antialiased text for accurate fitting
-            e.Graphics.TextRenderingHint = TextRenderingHint.AntiAlias;
-
-            //The small image is blown up to fill the main client rectangle
-            e.Graphics.DrawImage(bm, pBox.ClientRectangle, 0, 0, bm.Width, bm.Height, GraphicsUnit.Pixel);
-
-            // finally, the text is drawn on top
-            //pth.AddString(line, new FontFamily(font.Name), (int)FontStyle.Regular, emSize, new Point(x0, y0), sf);
-            
-            //e.Graphics.ScaleTransform(scale, 1);
-
-        }
-
-
-
-        /// <summary>
-        /// Apply the beat effect.
-        /// </summary>
-        public void OnBeat(int beat, int bpm)
-        {
-            if (bpm > 0 && bpm != _bpm)
+            switch (FrameType)
             {
-                _bpm = bpm;
-                AdjustSpeed();
-            }
-
-            _beatNumber = beat;
-
-            BeatEffect(beat);
-        }
-
-
-        /// <summary>
-        /// Applies a visual effect in response to a beat event.
-        /// </summary>
-        /// <remarks>This method is a placeholder for implementing beat-based visual effects.  Depending
-        /// on the gradient style, different effects can be applied, such as  resetting dimensions or altering colors.
-        /// Currently, it resets the width and  height for radial gradients and provides a framework for future
-        /// extensions.</remarks>
-        private void BeatEffect(int beat)
-        {
-            switch (_optionbackground)
-            {
-                case "Gradient":
-                    // For diagonal gradients, you can implement a different effect if needed
-                    // For example, you could change the angle or colors on each beat
-                    // Change the colors of the radial gradient on each beat
-                    //Color temp = _color0;
-                    //_color0 = _color1;
-                    //_color1 = temp;
-                    break;
-                case "Rhythm":
-                    // Radial gradients can have a different effect, such as changing colors or sizes
-                    // For diagonal gradients, you can implement a different effect if needed
-                    // W & H are reset to their maximum at each beat
-                    //if (beat == 1) ResetSize(); // Reset the width and height to the original size
-                    ResetSize(); // Reset the width and height to the original size
+                case "NoBorder":
+                case "FrameThin":
+                case "Frame1":
+                case "Frame2":
+                case "Frame3":
+                case "Frame4":
+                case "Frame5":
+                case "Shadow":
+                case "Neon":
+                    DslDrawTextWithBorder(e);
+                    break; ;
+                default:
+                    DslDrawTextWithBorder(e);
                     break;
             }
         }
 
-        private void AdjustSpeed()
+        private void DslDrawTextWithBorder(PaintEventArgs e)
         {
-            if (_bpm > 0)
+            // To be implemented
+            // The vertical position of the lines is calculated according to the position of the song in the current line and the duration of the current line
+            // The speed of the lines is not constant, it is faster at the beginning and at the end of the line and slower in the middle of the line
+            // The speed of the lines is calculated according to a sine function
+
+        }
+
+        #endregion Draw dynamic scrolling lines
+
+
+        #region Draw text with Two lines swapped
+
+        private void DrawTextWithTwoLinesSwapped(PaintEventArgs e)
+        {
+            switch (FrameType)
             {
-                double hypo = Math.Sqrt(ClientSize.Width * ClientSize.Width + ClientSize.Height * ClientSize.Height);
-                if (hypo <= 0) return;
-                //2600.0F                
-                //speed = (int)(_bpm * hypo / 5200.0F); // Speed depends on the BPM and the size of the screen
-                speed = (int)(_bpm * hypo / 7000.0F); // Speed depends on the BPM and the size of the screen
-                //speed = (int)(_bpm * hypo / 10400.0F); // Speed depends on the BPM and the size of the screen
-                Console.WriteLine("BPM changed to: " + _bpm + " - Speed: " + speed);
+                case "NoBorder":
+                case "FrameThin":
+                case "Frame1":
+                case "Frame2":
+                case "Frame3":
+                case "Frame4":
+                case "Frame5":
+                case "Shadow":
+                case "Neon":
+                    TlsDrawTextWithBorder(e);
+                    break; ;
+
+                default:
+                    TlsDrawTextWithBorder(e);
+                    break;
             }
         }
 
-        #endregion Effects
+        /// <summary>
+        /// Draw two lines swapped with borders
+        /// </summary>
+        /// <param name="e"></param>
+        private void TlsDrawTextWithBorder(PaintEventArgs e)
+        {
+            if (_kLyrics == null || _kLyrics.Lines.Count == 0) return;
 
+            #region Declarations
+
+            // Center text vertically
+            int y0 = VCenterText();
+
+            int y1;    // y1 is the y coordinate of the active line to display (line _FirstLineToShow)
+            int y2;    // y2 is the y coordinate of the inactive line to display (line _FirstLineToShow + 1)
+
+            int LineOfInformationPosition = -2;
+            int LinePosition; // = -1;
+
+            #endregion Declarations
+
+
+            #region Draw FileName
+
+            // Draw file name if required
+
+            if (bShowSongName)
+                DrawFileName(e, FileName, 0.33f * _karaokeFont.Size);
+
+            #endregion Draw FileName
+
+
+            #region Line layout
+
+            // If active line is odd, it is displayed on the first line
+            // if active line is even, it is displayed on the second line
+            if (_FirstLineToShow % 2 == 0)
+            {
+                LinePosition = 0;
+
+                y1 = y0;                    // active     _FirstLinetoShow
+                y2 = y0 + _lineHeight;      // inactive   _FirstLinetoShow + 1  
+
+                if (_kLyrics.Lines[_FirstLineToShow].Syllables.Last().CharType == Syllable.CharTypes.Information)
+                    LineOfInformationPosition = 0;
+                else if (_FirstLineToShow + 1 < _kLyrics.Lines.Count && _kLyrics.Lines[_FirstLineToShow + 1].Syllables.Last().CharType == Syllable.CharTypes.Information)
+                    LineOfInformationPosition = 1;
+                else if (_FirstLineToShow + 1 >= _kLyrics.Lines.Count)
+                    LineOfInformationPosition = LastLineOfInformationPosition;
+
+            }
+            else
+            {
+                LinePosition = 1;
+
+                y2 = y0;                    // inactive     _FirstLinetoShow + 1
+                y1 = y0 + _lineHeight;      // active       _FirstLinetoShow
+
+                if (_kLyrics.Lines[_FirstLineToShow].Syllables.Last().CharType == Syllable.CharTypes.Information)
+                    LineOfInformationPosition = 1;
+                else if (_FirstLineToShow + 1 < _kLyrics.Lines.Count && _kLyrics.Lines[_FirstLineToShow + 1].Syllables.Last().CharType == Syllable.CharTypes.Information)
+                    LineOfInformationPosition = 0;
+                else if (_FirstLineToShow + 1 >= _kLyrics.Lines.Count)
+                    LineOfInformationPosition = LastLineOfInformationPosition;
+            }
+
+            #endregion Line layout
+
+
+            // No instrumental
+            if (LineOfInformationPosition == -2)
+            {
+                #region Normal drawing
+
+                // Draw active line with borders
+                DrawActiveLineWithBorders(e, _FirstLineToShow, y1);
+
+                // Draw Inactive line with borders
+                if (percent > 0)
+                    DrawInactiveLineWithBorders(e, _FirstLineToShow + 1, y2);
+
+                #endregion Normal drawing
+            }
+            else
+            {
+                // Checks whether an instrumental section has begun and updates the countdown and timing state accordingly.                
+                CheckIfInstrumentalBegins();
+
+                // Update the CountDown
+                UpdateCountDown();
+
+                TimeSpan tm = DateTime.Now - _startTime;
+
+                // Instrumental found
+                switch (LineOfInformationPosition)
+                {
+                    #region Instrumental on top
+
+                    case 0:                         // Instrumental on line 0
+                        switch (LinePosition)
+                        {
+                            case 0:
+                                // y1 * information
+                                // y2 normal                                
+                                DrawInformation(e, _FirstLineToShow, SecondsBeforeSinging, y1);
+
+                                if (bCountDown)
+                                {
+                                    // Keep last active line 2 when instrumental has began for 1 second
+                                    if (tm.TotalMilliseconds < 1000)
+                                    {
+                                        if (_FirstLineToShow - 1 >= 0)
+                                        {
+                                            DrawInactiveLineWithBorders(e, _FirstLineToShow - 1, y2, true);         // keep old line 1 sec                                            
+                                        }
+                                    }
+                                }
+
+                                // Draw line y2 only if it is less than 4 sec before the end of an instrumental
+                                // Except for introduction
+                                if (bInstrumentalStarted && _FirstLineToShow > 0)
+                                {
+                                    tm = _endTime - DateTime.Now;
+
+                                    if (tm.TotalMilliseconds > _DelayBeforeEndOfInstrumental)
+                                    {
+                                        // Do not display next lines until _DelayBeforeEndOfInstrumental
+                                        return;
+                                    }
+                                }
+                                DrawInactiveLineWithBorders(e, _FirstLineToShow + 1, y2);      // Draw new line before the end of instrumental         
+                                break;
+
+                            case 1:
+                                // y2 information
+                                // y1 * normal                                
+                                DrawInformation(e, _FirstLineToShow + 1, -1, y2);
+
+                                DrawActiveLineWithBorders(e, _FirstLineToShow, y1);
+                                break;
+
+                        }
+                        break;
+
+                    #endregion Instrumental on top
+
+
+                    #region Instrumental on bottom
+
+                    case 1:                         // Instrumental on line 1
+                        switch (LinePosition)
+                        {
+                            case 0:
+                                // y1 * normal
+                                // y2 information
+                                DrawActiveLineWithBorders(e, _FirstLineToShow, y1);
+                                DrawInformation(e, _FirstLineToShow + 1, -1, y1 + _lineHeight);
+                                break;
+
+                            case 1:
+                                // y2 normal old than new
+                                // y1 * information                                
+                                DrawInformation(e, _FirstLineToShow, SecondsBeforeSinging, y1);
+
+                                if (bCountDown)
+                                {
+                                    // Keep last active line 2 when instrumental has began for 1 second
+                                    if (tm.TotalMilliseconds < 1000)
+                                    {
+                                        if (_FirstLineToShow - 1 >= 0)
+                                        {
+                                            DrawInactiveLineWithBorders(e, _FirstLineToShow - 1, y1 - _lineHeight, true);         // keep old line 1 sec
+                                        }
+                                    }
+                                }
+                                // Draw line y2 only if it is less than 4 sec before the end of an instrumental
+                                if (bInstrumentalStarted)
+                                {
+                                    tm = _endTime - DateTime.Now;
+
+                                    if (tm.TotalMilliseconds > _DelayBeforeEndOfInstrumental)
+                                    {
+                                        // Do not display next lines until _DelayBeforeEndOfInstrumental
+                                        return;
+                                    }
+                                }
+                                DrawInactiveLineWithBorders(e, _FirstLineToShow + 1, y2);      // Draw new line before the end of instrumental   
+                                break;
+                        }
+                        break;
+
+                    #endregion Instrumental on bottom
+                }
+
+            }
+            LastLineOfInformationPosition = LineOfInformationPosition;
+        }
+
+
+        #endregion Draw text with Two lines swapped
+
+
+        #region Draw text with fixed lines
+
+        /// <summary>
+        /// Draw text with fixed lines
+        /// </summary>
+        /// <param name="e"></param>
+        private void DrawTextWithFixedLines(PaintEventArgs e)
+        {
+            switch (FrameType)
+            {
+                case "NoBorder":
+                case "FrameThin":
+                case "Frame1":
+                case "Frame2":
+                case "Frame3":
+                case "Frame4":
+                case "Frame5":
+                case "Shadow":
+                case "Neon":
+                    FixDrawTextWithBorder(e);
+                    break; ;
+
+                default:
+                    FixDrawTextWithBorder(e);
+                    break;
+            }
+        }
+
+        /// <summary>
+        /// Fixed lines: Draw text with various borders 
+        /// </summary>
+        /// <param name="e"></param>
+        private void FixDrawTextWithBorder(PaintEventArgs e)
+        {
+            if (_kLyrics == null || _kLyrics.Lines.Count == 0) return;
+
+            #region Draw FileName
+
+            // Draw file name if required
+
+            if (bShowSongName)
+                DrawFileName(e, FileName, 0.33f * _karaokeFont.Size);
+
+            #endregion Draw FileName
+
+
+            // Center text vertically
+            int y0 = VCenterText();
+
+            // Draw active line with borders
+            DrawActiveLineWithBorders(e, _FirstLineToShow, y0);
+
+
+            // Draw Inactive lines with borders
+            for (int i = _FirstLineToShow + 1; i <= _LastLineToShow; i++)
+            {
+                DrawInactiveLineWithBorders(e, i, y0 + (i - _FirstLineToShow) * _lineHeight);
+            }
+        }
+
+
+
+        #endregion Draw text with fixed lines
+
+        
 
         /// <summary>
         /// Return rectangle for image
@@ -4059,7 +4078,7 @@ namespace keffect
 
         private void InitScrollMode()
         {
-            if (KaraokeDisplayType == KaraokeDisplayTypes.ScrollingLinesBottomUp || KaraokeDisplayType == KaraokeDisplayTypes.ScrollingLinesTopDown)
+            if (KaraokeDisplayType == KaraokeDisplayTypes.ConstantScrolling || KaraokeDisplayType == KaraokeDisplayTypes.DynamicScrolling)
             {
                 if (_kLyrics == null || _kLyrics.Lines.Count == 0) return;
 

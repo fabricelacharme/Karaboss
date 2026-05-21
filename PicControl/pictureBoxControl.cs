@@ -581,6 +581,8 @@ namespace PicControl
 
         #region Instrumentals
 
+        private bool bShowInformation = false;
+
         // Show hints for instrumental parts (e.g. display "(introduction, instrumental, ending)" on the screen)
         private bool _bShowHints = true;
         public bool bShowHints
@@ -995,7 +997,7 @@ namespace PicControl
 
         #endregion Frame type
 
-
+        
         #region Text position        
         // Display lyrics option: top, Center, Bottom        
         public enum OptionsDisplay
@@ -1471,7 +1473,7 @@ namespace PicControl
                 AdjustFontSize(_nbLyricsLines);
 
 
-                if (KaraokeDisplayType == KaraokeDisplayTypes.ScrollingLinesBottomUp || KaraokeDisplayType == KaraokeDisplayTypes.ScrollingLinesTopDown)
+                if (KaraokeDisplayType == KaraokeDisplayTypes.ConstantScrolling || KaraokeDisplayType == KaraokeDisplayTypes.DynamicScrolling)
                     InitScrollMode();
 
                 pBox.Invalidate();
@@ -2018,23 +2020,24 @@ namespace PicControl
             // Update _nbLyricsLines if layout changed in options            
             switch (KaraokeDisplayType)
             {
-                case KaraokeDisplayTypes.FixedLines:
-                    _nbLyricsLines = _nbLyricsLinesOrg;
-                    break;
                 case KaraokeDisplayTypes.FourLinesSwapped:
                     _nbLyricsLines = 4;
+                    break;
+                case KaraokeDisplayTypes.ConstantScrolling:
+                    //_nbLyricsLines = _nbLyricsLinesOrg;
+                    _nbLyricsLines = 6;
+                    break;
+                case KaraokeDisplayTypes.DynamicScrolling:
+                    //_nbLyricsLines = _nbLyricsLinesOrg;
+                    _nbLyricsLines = 6;
                     break;
                 case KaraokeDisplayTypes.TwoLinesSwapped:
                     _nbLyricsLines = 2;
                     break;
-                case KaraokeDisplayTypes.ScrollingLinesBottomUp:
-                    //_nbLyricsLines = _nbLyricsLinesOrg;
-                    _nbLyricsLines = 6;
+                case KaraokeDisplayTypes.FixedLines:
+                    _nbLyricsLines = _nbLyricsLinesOrg;
                     break;
-                case KaraokeDisplayTypes.ScrollingLinesTopDown:
-                    //_nbLyricsLines = _nbLyricsLinesOrg;
-                    _nbLyricsLines = 6;
-                    break;
+
                 default:
                     _nbLyricsLines = _nbLyricsLinesOrg;
                     break;
@@ -2045,7 +2048,7 @@ namespace PicControl
             if (!_bIsSettings && 
                   (KaraokeDisplayType == KaraokeDisplayTypes.TwoLinesSwapped
                 || KaraokeDisplayType == KaraokeDisplayTypes.FourLinesSwapped
-                || KaraokeDisplayType == KaraokeDisplayTypes.ScrollingLinesBottomUp                
+                || KaraokeDisplayType == KaraokeDisplayTypes.ConstantScrolling                
                 || !bShowParagraphs
                 ))            
                 _kLyrics = RemoveParagraphs(_kLyrics);
@@ -2060,8 +2063,8 @@ namespace PicControl
             if (!_bIsSettings && _bShowHints && _kLyrics.Lines.Count > 3 &&
                   (KaraokeDisplayType == KaraokeDisplayTypes.TwoLinesSwapped
                 || KaraokeDisplayType == KaraokeDisplayTypes.FourLinesSwapped
-                || KaraokeDisplayType == KaraokeDisplayTypes.ScrollingLinesBottomUp
-                || KaraokeDisplayType == KaraokeDisplayTypes.ScrollingLinesTopDown
+                || KaraokeDisplayType == KaraokeDisplayTypes.ConstantScrolling
+                || KaraokeDisplayType == KaraokeDisplayTypes.DynamicScrolling
                 ))
                 _kLyrics = SearchForInstrumentals(_kLyrics);
 
@@ -2107,7 +2110,7 @@ namespace PicControl
                 // Create rectangles for drawing active line
                 createListRectangles(0);
 
-                if (KaraokeDisplayType == KaraokeDisplayTypes.ScrollingLinesBottomUp || KaraokeDisplayType == KaraokeDisplayTypes.ScrollingLinesTopDown)
+                if (KaraokeDisplayType == KaraokeDisplayTypes.ConstantScrolling || KaraokeDisplayType == KaraokeDisplayTypes.DynamicScrolling)
                     InitScrollMode();
             }
 
@@ -2161,7 +2164,7 @@ namespace PicControl
                 {
                     // Calculate endTime between _FirstLineToShow and the next Text line located in _FirstLineToShow + 2 when Four Lines swapped and _FirstLineToShow + 1 for Two lines swapped
 
-                    if (KaraokeDisplayType == KaraokeDisplayTypes.TwoLinesSwapped || KaraokeDisplayType == KaraokeDisplayTypes.ScrollingLinesBottomUp)
+                    if (KaraokeDisplayType == KaraokeDisplayTypes.TwoLinesSwapped || KaraokeDisplayType == KaraokeDisplayTypes.ConstantScrolling)
                     {
                         if (_FirstLineToShow + 1 < _kLyrics.Lines.Count)
                             TargetPositionTicks = _kLyrics.Lines[_FirstLineToShow + 1].Syllables.First().TicksOn;   // Position in the song to reach = next real syllable                                                               
@@ -2888,7 +2891,7 @@ namespace PicControl
             if (_kLyrics == null || _kLyrics.Lines.Count == 0) return;
 
             // Calculate Font size as if there is only 6 lines to display in order to have bigger font size.
-            if (KaraokeDisplayType == KaraokeDisplayTypes.ScrollingLinesBottomUp || KaraokeDisplayType == KaraokeDisplayTypes.ScrollingLinesTopDown)
+            if (KaraokeDisplayType == KaraokeDisplayTypes.ConstantScrolling || KaraokeDisplayType == KaraokeDisplayTypes.DynamicScrolling)
                 NbLines = 6;
 
 
@@ -3194,26 +3197,24 @@ namespace PicControl
             if (lstLyricsLines is null || lstLyricsLines.Count == 0)
                 return;
             
-
             switch (KaraokeDisplayType)
             {
-                case KaraokeDisplayTypes.FixedLines:
-                    DrawTextWithFixedLines(e);
+                case KaraokeDisplayTypes.FourLinesSwapped:
+                    DrawTextWithFourLinesSwapped(e);
                     break;
-                case KaraokeDisplayTypes.ScrollingLinesBottomUp:
-                    DrawTextWithScrollingLinesBottomUp(e);
+                case KaraokeDisplayTypes.ConstantScrolling:
+                    DrawTextWithConstantScrollingLines(e);
                     break;
-                case KaraokeDisplayTypes.ScrollingLinesTopDown:
-                    DrawTextWithScrollingLinesTopDown(e);
+                case KaraokeDisplayTypes.DynamicScrolling:
+                    DrawTextWithDynamicScrollingLines(e);
                     break;
                 case KaraokeDisplayTypes.TwoLinesSwapped:
                     DrawTextWithTwoLinesSwapped(e);
                     break;
-                case KaraokeDisplayTypes.FourLinesSwapped:
-                    DrawTextWithFourLinesSwapped(e);
+                case KaraokeDisplayTypes.FixedLines:
+                    DrawTextWithFixedLines(e);
                     break;
             }
-
 
             #endregion
 
@@ -3639,7 +3640,7 @@ namespace PicControl
         #endregion draw lyrics & chords
 
 
-        #region effects
+        #region Effects
 
         /// <summary>
         /// Create a neon effect
@@ -3733,7 +3734,7 @@ namespace PicControl
             //pth.AddString(line, new FontFamily(font.Name), (int)FontStyle.Regular, emSize, new Point(x0, y0), sf);
         }
 
-        #endregion effects
+        #endregion Effects
 
 
         #region Code fragments
@@ -3923,8 +3924,7 @@ namespace PicControl
             e.Graphics.ResetTransform();
 
         }
-       
-       
+              
         private void DrawInactiveLineWithBorders(PaintEventArgs e, int lineIndex, int y2, bool IsActive = false)
         {
             #region Declarations
@@ -4041,7 +4041,6 @@ namespace PicControl
             
             #endregion Clean up resources
         }
-
        
 
         /// <summary>
@@ -4139,7 +4138,7 @@ namespace PicControl
                     }
                     break;
 
-                case KaraokeDisplayTypes.ScrollingLinesBottomUp:
+                case KaraokeDisplayTypes.ConstantScrolling:
                     y0 = (int)MeasureStringHeight(FileName, _titleMarginTop * _karaokeFont.Size);
                     break;
             }
@@ -4174,157 +4173,10 @@ namespace PicControl
         #endregion Code fragments
 
 
-        #region Draw text with fixed lines
-
-        private void DrawTextWithFixedLines(PaintEventArgs e)
-        {
-            switch (FrameType)
-            {
-                case "NoBorder":
-                case "FrameThin":
-                case "Frame1":
-                case "Frame2":
-                case "Frame3":
-                case "Frame4":
-                case "Frame5":
-                    FixDrawTextWithBorder(e);
-                    break;
-
-                case "Shadow":
-                    FixDrawTextWithShadow(e);
-                    break; ;
-
-                case "Neon":
-                    FixDrawTextWithNeon(e);
-                    break; ;
-
-                default:
-                    FixDrawTextWithBorder(e);
-                    break;
-            }      
-        }
-
-        private void FixDrawTextWithBorder(PaintEventArgs e)
-        {
-
-            if (_kLyrics == null || _kLyrics.Lines.Count == 0) return;
-
-            #region Draw FileName
-
-            // Draw file name if required
-
-            if (bShowSongName)
-                DrawFileName(e, FileName, 0.33f * _karaokeFont.Size);
-
-            #endregion Draw FileName
-
-       
-            // Create list of rectangles when line changes
-            synchronize(_currentTextPos);
-
-            // Calculate offset to center the text vertically
-            int y0 = getOffsetHeight(emSize);
-            
-            // Draw active line with borders
-            DrawActiveLineWithBorders(e, _FirstLineToShow, y0);
-            
-            // Draw next  inactives lines with borders
-            _LastLineToShow = SetLastLineToShow(_FirstLineToShow, _kLyrics.Lines.Count, _nbLyricsLines);
-
-            int y2;
-            for (int i = _FirstLineToShow + 1; i <= _LastLineToShow; i++)
-            {
-                if (i < _kLyrics.Lines.Count)
-                {
-                    y2 = y0 + (i - _FirstLineToShow) * _lineHeight;
-                    DrawInactiveLineWithBorders(e, i, y2);                    
-                }
-            }          
-        }
-
-        private void FixDrawTextWithShadow(PaintEventArgs e)
-        {
-            if (_kLyrics.Lines.Count == 0) return;
-
-            #region Draw FileName
-
-            // Draw file name if required
-
-            if (bShowSongName)
-                DrawFileName(e, FileName, 0.33f * _karaokeFont.Size);
-
-            #endregion Draw FileName
-
-            // Create list of rectangles when line changes
-            synchronize(_currentTextPos);
-
-            // Calculate offset to center the text vertically
-            int y0 = getOffsetHeight(emSize);
-
-            // Draw active line with borders
-            DrawActiveLineWithBorders(e, _FirstLineToShow, y0);
-
-
-            // Draw next  inactives lines with borders           
-            _LastLineToShow = SetLastLineToShow(_FirstLineToShow, _kLyrics.Lines.Count, _nbLyricsLines);
-
-            int y2; 
-
-            for (int i = _FirstLineToShow; i <= _LastLineToShow; i++)
-            {
-                if (i < _kLyrics.Lines.Count)
-                {
-
-                    y2 = y0 + (i - _FirstLineToShow) * _lineHeight;
-                    DrawInactiveLineWithBorders(e, i, y2);
-                }
-            }           
-        }
-
-        private void FixDrawTextWithNeon(PaintEventArgs e)
-        {
-            if (_kLyrics.Lines.Count == 0) return;
-
-            #region Draw FileName
-
-            // Draw file name if required
-
-            if (bShowSongName)
-                DrawFileName(e, FileName, 0.33f * _karaokeFont.Size);
-
-            #endregion Draw FileName
-
-            // Create list of rectangles when line changes
-            synchronize(_currentTextPos);
-
-            // Calculate offset to center the text vertically
-            int y0 = getOffsetHeight(emSize);
-
-            // Draw active line with borders
-            DrawActiveLineWithBorders(e, _FirstLineToShow, y0);
-
-
-            // Draw next  inactives lines with borders
-            _LastLineToShow = SetLastLineToShow(_FirstLineToShow, _kLyrics.Lines.Count, _nbLyricsLines);
-
-            int y2;
-            for (int i = _FirstLineToShow; i <= _LastLineToShow; i++)
-            {
-                if (i < _kLyrics.Lines.Count)
-                {
-                    y2 = y0 + (i - _FirstLineToShow) * _lineHeight;
-                    DrawInactiveLineWithBorders(e, i, y2);
-                }
-            }
-        }
-
-        #endregion Draw text with fixed lines
-
-       
         #region Draw text with Four lines swapped
 
         private void DrawTextWithFourLinesSwapped(PaintEventArgs e)
-        {           
+        {
             switch (FrameType)
             {
                 case "NoBorder":
@@ -4344,8 +4196,8 @@ namespace PicControl
                     break;
             }
         }
-        
-     
+
+
         /// <summary>
         /// Draw four lines swapped
         /// </summary>
@@ -4354,7 +4206,7 @@ namespace PicControl
         {
             if (_kLyrics == null || _kLyrics.Lines.Count == 0) return;
 
-                       // Create list of rectangles when line changes
+            // Create list of rectangles when line changes
             synchronize(_currentTextPos);
 
             #region Declarations
@@ -4400,13 +4252,13 @@ namespace PicControl
 
             int a1 = y0;
             int a2 = y0 + _lineHeight;
-            int a3 = y0 + (int)(_lineHeight * (1 + _fourLinesSpacing));   
-            int a4 = y0 + (int)(_lineHeight * (2 + _fourLinesSpacing));   
+            int a3 = y0 + (int)(_lineHeight * (1 + _fourLinesSpacing));
+            int a4 = y0 + (int)(_lineHeight * (2 + _fourLinesSpacing));
 
             int LinePosition = _FirstLineToShow % 4;
 
             switch (LinePosition)
-            {                
+            {
                 case 0:
 
                     (y1, y2, y3, y4) = (a1, a2, a3, a4);
@@ -4420,7 +4272,7 @@ namespace PicControl
                     y4 = y3 + _lineHeight;                          // idx4     _FirstLineToShow + 3      inactive                                           
                     */
                     break;
-                
+
                 case 1:
                     (y1, y2, y3, y4) = (a2, a1, a3, a4);
                     (idx1, idx2, idx3, idx4) = (l, l - 1, l + 1, l + 2);
@@ -4433,10 +4285,10 @@ namespace PicControl
                     y4 = y3 + _lineHeight;                          // idx4     _FirstLineToShow + 2     inactive                                          
                     */
                     break;
-                
+
                 case 2:
                     (y1, y2, y3, y4) = (a3, a4, a1, a2);
-                    (idx1, idx2, idx3, idx4) = (l, l + 1, l + 2, l + 3);                    
+                    (idx1, idx2, idx3, idx4) = (l, l + 1, l + 2, l + 3);
                     LinesNr = new int[] { idx3, idx4, idx1, idx2 };
 
                     /*
@@ -4447,10 +4299,10 @@ namespace PicControl
                    
                     */
                     break;
-                
+
                 case 3:
                     (y1, y2, y3, y4) = (a4, a3, a1, a2);
-                    (idx1, idx2, idx3, idx4) = (l, l - 1, l + 1, l + 2);                    
+                    (idx1, idx2, idx3, idx4) = (l, l - 1, l + 1, l + 2);
                     LinesNr = new int[] { idx3, idx4, idx2, idx1 };
 
                     /*
@@ -4460,7 +4312,7 @@ namespace PicControl
                     y1 = y2 + _lineHeight;                          // idx1     _FirstLineToShow             current         (no update)                        
                     */
                     break;
-                
+
             }
             #endregion Line layout
 
@@ -4517,7 +4369,7 @@ namespace PicControl
 
                 // Update the CountDown
                 UpdateCountDown();
-                
+
 
                 switch (LineOfInformationPosition)
                 {
@@ -4537,7 +4389,7 @@ namespace PicControl
                                 // y4 normal old than new
                                 // Draw "(intrumental)" on active line and countdown on next line
 
-                                DrawInformation(e, _FirstLineToShow, SecondsBeforeSinging, y1);                                
+                                DrawInformation(e, _FirstLineToShow, SecondsBeforeSinging, y1);
 
                                 if (bCountDown)
                                 {
@@ -4689,9 +4541,9 @@ namespace PicControl
                                         // Do not display next lines
                                         return;
                                     }
-                                }                                
+                                }
 
-                                DrawInactiveLineWithBorders(e, idx3, y3);                                
+                                DrawInactiveLineWithBorders(e, idx3, y3);
                                 DrawInactiveLineWithBorders(e, idx4, y4);
                                 break;
 
@@ -4700,7 +4552,7 @@ namespace PicControl
                                 // y2 normal
                                 // y3 information1
                                 // y4 * information2
-                                
+
                                 // Draw "(intrumental)" on active line and countdown on next line
                                 DrawInformation(e, idx2, SecondsBeforeSinging, y2);
 
@@ -4714,16 +4566,190 @@ namespace PicControl
                     #endregion Instrumental on bottom
                 }
             }
-
             LastLineOfInformationPosition = LineOfInformationPosition;
-
         }
 
-
-      
         #endregion Draw text with Four lines swapped
 
 
+        #region Draw text with constant-speed scrolling lines
+        private void DrawTextWithConstantScrollingLines(PaintEventArgs e)
+        {
+            switch (FrameType)
+            {
+                case "NoBorder":
+                case "FrameThin":
+                case "Frame1":
+                case "Frame2":
+                case "Frame3":
+                case "Frame4":
+                case "Frame5":
+                case "Shadow":
+                case "Neon":
+                    CslDrawTextWithBorder(e);
+                    break;
+
+                default:
+                    CslDrawTextWithBorder(e);
+                    break;
+            }
+        }
+        
+        private void CslDrawTextWithBorder(PaintEventArgs e)
+        {
+            if (_kLyrics == null || _kLyrics.Lines.Count == 0) return;
+            if (linesYCoordinates == null) return;
+            int y = 0;
+
+            int TopMargin = bShowSongName ? pBox.ClientRectangle.Top + (int)(_titleMarginTop * pBox.Height) : pBox.ClientRectangle.Top;
+            int BottomMargin = pBox.ClientRectangle.Bottom;
+
+            #region Draw FileName
+
+            // Draw file name if required
+            if (bShowSongName)
+                DrawFileName(e, FileName, 0.33f * _karaokeFont.Size);
+
+            #endregion Draw FileName
+
+
+            #region check whether to show information and update instrumental and countdown state
+
+            if (_kLyrics.Lines[_FirstLineToShow].Syllables.Last().CharType == Syllable.CharTypes.Information)
+            {
+                bShowInformation = true;
+                CheckIfInstrumentalBegins();
+                UpdateCountDown();
+            }
+            else
+            {
+                bShowInformation = false;
+            }
+            #endregion check whether to show information and update instrumental and countdown state
+
+
+            if (bShowInformation)
+                DrawInformation(e, _FirstLineToShow, SecondsBeforeSinging, pBox.ClientRectangle.Top + pBox.ClientRectangle.Height / 2);
+
+
+            // Calculate vertical position of the lines according to the position of the song in the current line
+            vposition = (float)((PlayerPositionTicks) * ((float)_linesHeight / (_kLyrics.Lines.Last().Syllables.First().TicksOn)));
+
+            //Console.WriteLine("vposition: " + vposition + " - PlayerPositionTicks: " + PlayerPositionTicks + " - _linesHeight: " + _linesHeight + " - _kLyrics.Lines.Last().Syllables.First().TicksOn: " + _kLyrics.Lines.Last().Syllables.First().TicksOn);
+
+            for (int i = 0; i < _kLyrics.Lines.Count; i++)
+            {
+                y = pBox.ClientRectangle.Top + pBox.ClientRectangle.Height / 2 + (int)(linesYCoordinates[i]);
+
+
+                #region Do not draw lines that are out of the control
+
+                //if (y - vposition < pBox.ClientRectangle.Top - _lineHeight)
+                if (y - vposition < TopMargin)
+                {
+                    // Do not draw lines that are out of the control
+                    continue;
+                }
+                if (_kLyrics.Lines[i].Syllables.Last().CharType == Syllable.CharTypes.Information)
+                {
+                    // Do not draw lines of information                    
+                    continue;
+                }
+
+                if (y - vposition > BottomMargin)                                  //pBox.ClientRectangle.Bottom + _lineHeight)
+                    break; // Do not draw lines that are out of the control
+
+                #endregion Do not draw lines that are out of the control
+
+
+                if (i == _FirstLineToShow)
+                {
+                    e.Graphics.TranslateTransform(0, -vposition);
+                    DrawActiveLineWithBorders(e, i, y);
+                }
+                else
+                {
+                    bool IsActive = (i < _FirstLineToShow) ? true : false;
+                    e.Graphics.TranslateTransform(0, -vposition);
+                    DrawInactiveLineWithBorders(e, i, y, IsActive);
+                }
+            }
+
+            e.Graphics.ResetTransform();
+        }
+
+
+        #endregion Draw text with constant-speed scrolling lines
+
+
+        #region Draw text with dynamic scrolling lines  
+
+        private void DrawTextWithDynamicScrollingLines(PaintEventArgs e)
+        {
+            switch (FrameType)
+            {
+                case "NoBorder":
+                case "FrameThin":
+                case "Frame1":
+                case "Frame2":
+                case "Frame3":
+                case "Frame4":
+                case "Frame5":
+                case "Shadow":
+                case "Neon":
+                    DslDrawTextWithBorder(e);
+                    break;
+
+                default:
+                    DslDrawTextWithBorder(e);
+                    break;
+            }
+        }
+
+        private void DslDrawTextWithBorder(PaintEventArgs e)
+        {
+            try
+            {
+                // Create list of rectangles when line changes
+                synchronize(_currentTextPos);
+
+                // Antialiasing
+                e.Graphics.SmoothingMode = SmoothingMode.AntiAlias;
+
+                // Calculate offset to center the text vertically
+                int y0 = getOffsetHeight(emSize);
+
+                if (_nbLyricsLines > 1)
+                {
+                    // Several lines to display
+                    // progressive offset - vOffset increases, so y0 decreases
+                    y0 = y0 - vOffset;
+
+                    // Draw current line                    
+                    DrawCurrentLine(_currentPosition, y0, e);
+
+                    // Draw next lines                 
+                    DrawNextLines(y0, e);
+                }
+                else
+                {
+                    // A single line to display
+                    // Draw current line until end of line
+                    if (!bEndOfLine)
+                        DrawCurrentLine(_currentPosition, y0, e);
+                    else
+                        DrawNextLines(y0, e);
+                }
+            }
+            catch (Exception ep)
+            {
+                Console.Write("Error drawing text on image: " + ep.Message);
+            }
+        }
+
+        #endregion Draw text with Scrolling lines top down
+
+                       
         #region Draw text with Two lines swapped
 
         private void DrawTextWithTwoLinesSwapped(PaintEventArgs e)
@@ -5345,9 +5371,9 @@ namespace PicControl
         #endregion Draw text with Two lines swapped
 
 
-        #region Draw text with Scrolling lines top down
+        #region Draw text with fixed lines
 
-        private void DrawTextWithScrollingLinesTopDown(PaintEventArgs e)
+        private void DrawTextWithFixedLines(PaintEventArgs e)
         {
             switch (FrameType)
             {
@@ -5358,200 +5384,138 @@ namespace PicControl
                 case "Frame3":
                 case "Frame4":
                 case "Frame5":
-                case "Shadow":
-                case "Neon":
-                    SltDrawTextWithBorder(e);
+                    FixDrawTextWithBorder(e);
                     break;
+
+                case "Shadow":
+                    FixDrawTextWithShadow(e);
+                    break; ;
+
+                case "Neon":
+                    FixDrawTextWithNeon(e);
+                    break; ;
 
                 default:
-                    SltDrawTextWithBorder(e);
+                    FixDrawTextWithBorder(e);
                     break;
             }
         }
 
-        private void SltDrawTextWithBorder(PaintEventArgs e)
+        private void FixDrawTextWithBorder(PaintEventArgs e)
         {
-            try
-            {
-                // Create list of rectangles when line changes
-                synchronize(_currentTextPos);
 
-                // Antialiasing
-                e.Graphics.SmoothingMode = SmoothingMode.AntiAlias;
-
-                // Calculate offset to center the text vertically
-                int y0 = getOffsetHeight(emSize);
-
-                if (_nbLyricsLines > 1)
-                {
-                    // Several lines to display
-                    // progressive offset - vOffset increases, so y0 decreases
-                    y0 = y0 - vOffset;
-
-                    // Draw current line                    
-                    DrawCurrentLine(_currentPosition, y0, e);
-
-                    // Draw next lines                 
-                    DrawNextLines(y0, e);
-                }
-                else
-                {
-                    // A single line to display
-                    // Draw current line until end of line
-                    if (!bEndOfLine)
-                        DrawCurrentLine(_currentPosition, y0, e);
-                    else
-                        DrawNextLines(y0, e);
-                }
-            }
-            catch (Exception ep)
-            {
-                Console.Write("Error drawing text on image: " + ep.Message);
-            }
-        }
-
-        private void SltDrawTextWithShadow(PaintEventArgs e)
-        {
-        }
-
-        private void SltDrawTextWithNeon(PaintEventArgs e)
-        {
-        }
-
-        #endregion Draw text with Scrolling lines top down
-
-
-        #region Draw text with Scrolling lines bottom up
-
-        private void DrawTextWithScrollingLinesBottomUp(PaintEventArgs e)
-        {
-            switch (FrameType)
-            {
-                case "NoBorder":
-                case "FrameThin":
-                case "Frame1":
-                case "Frame2":
-                case "Frame3":
-                case "Frame4":
-                case "Frame5":
-                //ScrollingBottomUpDrawTextWithBorder(e);
-                //break;
-                case "Shadow":
-                //ScrollingBottomUpDrawTextWithShadow(e);
-                //break; ;
-                case "Neon":
-                    //ScrollingBottomUpDrawTextWithNeon(e);
-                    ScrollingBottomUpDrawTextWithBorder(e);
-                    break;
-
-                default:
-                    ScrollingBottomUpDrawTextWithBorder(e);
-                    break;
-            }
-        }
-
-        private bool bShowInformation = false;
-
-        private void ScrollingBottomUpDrawTextWithBorder(PaintEventArgs e)
-        {
             if (_kLyrics == null || _kLyrics.Lines.Count == 0) return;
-            if (linesYCoordinates == null) return;
-            int y = 0;
-
-            int TopMargin = bShowSongName ? pBox.ClientRectangle.Top + (int)(_titleMarginTop * pBox.Height) : pBox.ClientRectangle.Top;
-            int BottomMargin = pBox.ClientRectangle.Bottom;
 
             #region Draw FileName
 
             // Draw file name if required
+
             if (bShowSongName)
                 DrawFileName(e, FileName, 0.33f * _karaokeFont.Size);
 
             #endregion Draw FileName
 
 
-            #region check whether to show information and update instrumental and countdown state
+            // Create list of rectangles when line changes
+            synchronize(_currentTextPos);
 
-            if (_kLyrics.Lines[_FirstLineToShow].Syllables.Last().CharType == Syllable.CharTypes.Information)
+            // Calculate offset to center the text vertically
+            int y0 = getOffsetHeight(emSize);
+
+            // Draw active line with borders
+            DrawActiveLineWithBorders(e, _FirstLineToShow, y0);
+
+            // Draw next  inactives lines with borders
+            _LastLineToShow = SetLastLineToShow(_FirstLineToShow, _kLyrics.Lines.Count, _nbLyricsLines);
+
+            int y2;
+            for (int i = _FirstLineToShow + 1; i <= _LastLineToShow; i++)
             {
-                bShowInformation = true;
-                CheckIfInstrumentalBegins();
-                UpdateCountDown();
-            }
-            else
-            {
-                bShowInformation = false;
-            }
-            #endregion check whether to show information and update instrumental and countdown state
-
-
-            if (bShowInformation)            
-                DrawInformation(e, _FirstLineToShow, SecondsBeforeSinging, pBox.ClientRectangle.Top + pBox.ClientRectangle.Height / 2);            
-
-
-            // Calculate vertical position of the lines according to the position of the song in the current line
-            vposition = (float)((PlayerPositionTicks) * ((float)_linesHeight / (_kLyrics.Lines.Last().Syllables.First().TicksOn)));
-
-            //Console.WriteLine("vposition: " + vposition + " - PlayerPositionTicks: " + PlayerPositionTicks + " - _linesHeight: " + _linesHeight + " - _kLyrics.Lines.Last().Syllables.First().TicksOn: " + _kLyrics.Lines.Last().Syllables.First().TicksOn);
-
-            for (int i = 0; i < _kLyrics.Lines.Count; i++)
-            {
-                y = pBox.ClientRectangle.Top + pBox.ClientRectangle.Height / 2 + (int)(linesYCoordinates[i]);
-
-
-                #region Do not draw lines that are out of the control
-
-                //if (y - vposition < pBox.ClientRectangle.Top - _lineHeight)
-                if (y - vposition < TopMargin)
+                if (i < _kLyrics.Lines.Count)
                 {
-                    // Do not draw lines that are out of the control
-                    continue;
-                }
-                if (_kLyrics.Lines[i].Syllables.Last().CharType == Syllable.CharTypes.Information)
-                {
-                    // Do not draw lines of information                    
-                    continue;
-                }
-
-                if (y - vposition > BottomMargin)                                  //pBox.ClientRectangle.Bottom + _lineHeight)
-                    break; // Do not draw lines that are out of the control
-
-                #endregion Do not draw lines that are out of the control
-
-
-                if (i == _FirstLineToShow)
-                {
-                    e.Graphics.TranslateTransform(0, -vposition);
-                    DrawActiveLineWithBorders(e, i, y);
-                }
-                else
-                {
-                    bool IsActive = (i < _FirstLineToShow) ? true : false;
-                    e.Graphics.TranslateTransform(0, -vposition);
-                    DrawInactiveLineWithBorders(e, i, y, IsActive);
+                    y2 = y0 + (i - _FirstLineToShow) * _lineHeight;
+                    DrawInactiveLineWithBorders(e, i, y2);
                 }
             }
-
-            e.Graphics.ResetTransform();
         }
 
-
-        private void SbuDrawTextWithBorder(PaintEventArgs e)
+        private void FixDrawTextWithShadow(PaintEventArgs e)
         {
-            // To be implemented
+            if (_kLyrics.Lines.Count == 0) return;
+
+            #region Draw FileName
+
+            // Draw file name if required
+
+            if (bShowSongName)
+                DrawFileName(e, FileName, 0.33f * _karaokeFont.Size);
+
+            #endregion Draw FileName
+
+            // Create list of rectangles when line changes
+            synchronize(_currentTextPos);
+
+            // Calculate offset to center the text vertically
+            int y0 = getOffsetHeight(emSize);
+
+            // Draw active line with borders
+            DrawActiveLineWithBorders(e, _FirstLineToShow, y0);
+
+
+            // Draw next  inactives lines with borders           
+            _LastLineToShow = SetLastLineToShow(_FirstLineToShow, _kLyrics.Lines.Count, _nbLyricsLines);
+
+            int y2;
+
+            for (int i = _FirstLineToShow; i <= _LastLineToShow; i++)
+            {
+                if (i < _kLyrics.Lines.Count)
+                {
+
+                    y2 = y0 + (i - _FirstLineToShow) * _lineHeight;
+                    DrawInactiveLineWithBorders(e, i, y2);
+                }
+            }
         }
 
-        private void SbuDrawTextWithShadow(PaintEventArgs e)
+        private void FixDrawTextWithNeon(PaintEventArgs e)
         {
-            // To be implemented
+            if (_kLyrics.Lines.Count == 0) return;
+
+            #region Draw FileName
+
+            // Draw file name if required
+
+            if (bShowSongName)
+                DrawFileName(e, FileName, 0.33f * _karaokeFont.Size);
+
+            #endregion Draw FileName
+
+            // Create list of rectangles when line changes
+            synchronize(_currentTextPos);
+
+            // Calculate offset to center the text vertically
+            int y0 = getOffsetHeight(emSize);
+
+            // Draw active line with borders
+            DrawActiveLineWithBorders(e, _FirstLineToShow, y0);
+
+
+            // Draw next  inactives lines with borders
+            _LastLineToShow = SetLastLineToShow(_FirstLineToShow, _kLyrics.Lines.Count, _nbLyricsLines);
+
+            int y2;
+            for (int i = _FirstLineToShow; i <= _LastLineToShow; i++)
+            {
+                if (i < _kLyrics.Lines.Count)
+                {
+                    y2 = y0 + (i - _FirstLineToShow) * _lineHeight;
+                    DrawInactiveLineWithBorders(e, i, y2);
+                }
+            }
         }
 
-        private void SbuDrawTextWithNeon(PaintEventArgs e)
-        {
-            // To be implemented
-        }
-
-        #endregion Draw text with Scrolling lines bottom up
+        #endregion Draw text with fixed lines
 
 
         /// <summary>
@@ -5668,7 +5632,7 @@ namespace PicControl
 
         private void InitScrollMode()
         {
-            if (KaraokeDisplayType == KaraokeDisplayTypes.ScrollingLinesBottomUp || KaraokeDisplayType == KaraokeDisplayTypes.ScrollingLinesTopDown)
+            if (KaraokeDisplayType == KaraokeDisplayTypes.ConstantScrolling || KaraokeDisplayType == KaraokeDisplayTypes.DynamicScrolling)
             {
                 if (_kLyrics == null || _kLyrics.Lines.Count == 0) return;
 

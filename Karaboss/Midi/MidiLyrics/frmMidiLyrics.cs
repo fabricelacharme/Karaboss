@@ -406,25 +406,20 @@ namespace Karaboss
 
                 switch (_karaokeDisplayType)
                 {
-                    case "None":
-                        pBox.KaraokeDisplayType = kar.KaraokeDisplayTypes.None;
-                        break;
-                    case "FixedLines":
-                        pBox.KaraokeDisplayType = kar.KaraokeDisplayTypes.FixedLines;
-                        break;
-                    case "ScrollingLinesTopDown":
-                        pBox.KaraokeDisplayType = kar.KaraokeDisplayTypes.ScrollingLinesTopDown;
-                        break;
-                    case "ScrollingLinesBottomUp":
-                        pBox.KaraokeDisplayType = kar.KaraokeDisplayTypes.ScrollingLinesBottomUp;
-                        break;
-                    case "TwoLinesSwapped":
-                        pBox.KaraokeDisplayType = kar.KaraokeDisplayTypes.TwoLinesSwapped; break;
                     case "FourLinesSwapped":
-                        pBox.KaraokeDisplayType = kar.KaraokeDisplayTypes.FourLinesSwapped; break;
+                        pBox.KaraokeDisplayType = KaraokeDisplayTypes.FourLinesSwapped; break;
+                    case "ConstantScrolling":
+                        pBox.KaraokeDisplayType = KaraokeDisplayTypes.ConstantScrolling; break;
+                    case "DynamicScrolling":
+                        pBox.KaraokeDisplayType = KaraokeDisplayTypes.DynamicScrolling; break;
+                    case "TwoLinesSwapped":
+                        pBox.KaraokeDisplayType = KaraokeDisplayTypes.TwoLinesSwapped; break;
+                    case "FixedLines":
+                        pBox.KaraokeDisplayType = KaraokeDisplayTypes.FixedLines; break;
+                    case "None":
+                        pBox.KaraokeDisplayType = KaraokeDisplayTypes.None; break;
                     default:
-                        pBox.KaraokeDisplayType = kar.KaraokeDisplayTypes.FixedLines;
-                        break;
+                        pBox.KaraokeDisplayType = KaraokeDisplayTypes.FourLinesSwapped; break;
                 }
             }
         }
@@ -1069,7 +1064,6 @@ namespace Karaboss
                 // Load colors lyrics, backgrounds from current Theme
                 LoadColorsFromCurrentTheme();
                 
-
                 // Karaoke display type
                 KaraokeDisplayType = Properties.Settings.Default.KaraokeDisplayType;               // setting this property set the karaokeEffect1.KaraokeDisplayType property
 

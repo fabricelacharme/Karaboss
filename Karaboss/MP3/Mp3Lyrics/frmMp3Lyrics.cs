@@ -348,25 +348,20 @@ namespace Karaboss.Mp3
 
                 switch (_karaokeDisplayType)
                 {
-                    case "None":
-                        karaokeEffect1.KaraokeDisplayType = kar.KaraokeDisplayTypes.None;
-                        break;
-                    case "FixedLines":
-                        karaokeEffect1.KaraokeDisplayType = kar.KaraokeDisplayTypes.FixedLines;
-                        break;
-                    case "ScrollingLinesTopDown":
-                        karaokeEffect1.KaraokeDisplayType = kar.KaraokeDisplayTypes.ScrollingLinesTopDown;
-                        break;
-                    case "ScrollingLinesBottomUp":
-                        karaokeEffect1.KaraokeDisplayType = kar.KaraokeDisplayTypes.ScrollingLinesBottomUp;
-                        break;
-                    case "TwoLinesSwapped":
-                        karaokeEffect1.KaraokeDisplayType = kar.KaraokeDisplayTypes.TwoLinesSwapped; break;
                     case "FourLinesSwapped":
                         karaokeEffect1.KaraokeDisplayType = kar.KaraokeDisplayTypes.FourLinesSwapped; break;
+                    case "ConstantScrolling":
+                        karaokeEffect1.KaraokeDisplayType = kar.KaraokeDisplayTypes.ConstantScrolling; break;
+                    case "DynamicScrolling":
+                        karaokeEffect1.KaraokeDisplayType = kar.KaraokeDisplayTypes.DynamicScrolling; break;
+                    case "TwoLinesSwapped":
+                        karaokeEffect1.KaraokeDisplayType = kar.KaraokeDisplayTypes.TwoLinesSwapped; break;
+                    case "FixedLines":
+                        karaokeEffect1.KaraokeDisplayType = kar.KaraokeDisplayTypes.FixedLines; break;
+                    case "None":
+                        karaokeEffect1.KaraokeDisplayType = kar.KaraokeDisplayTypes.None; break;
                     default:
-                        karaokeEffect1.KaraokeDisplayType = kar.KaraokeDisplayTypes.FixedLines;
-                        break;
+                        karaokeEffect1.KaraokeDisplayType = kar.KaraokeDisplayTypes.FourLinesSwapped; break;
                 }
             }
         }

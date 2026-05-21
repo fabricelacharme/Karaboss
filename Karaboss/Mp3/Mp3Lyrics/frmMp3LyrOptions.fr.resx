@@ -194,9 +194,6 @@
   <data name="chkDisplayBalls.Text" xml:space="preserve">
     <value>Afficher les balles</value>
   </data>
-  <data name="grpBoxBackGround.Text" xml:space="preserve">
-    <value>Arrière plan</value>
-  </data>
   <data name="cbRhythm1.Size" type="System.Drawing.Size, System.Drawing">
     <value>140, 21</value>
   </data>
@@ -235,6 +232,9 @@
   </data>
   <data name="txtBgColor.Visible" type="System.Boolean, mscorlib">
     <value>False</value>
+  </data>
+  <data name="grpBoxBackGround.Text" xml:space="preserve">
+    <value>Arrière plan</value>
   </data>
   <data name="chkTopMost.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -389,17 +389,20 @@
   <data name="cbOptionsTextDisplay.Text" xml:space="preserve">
     <value>Center</value>
   </data>
-  <data name="grpBoxKaraokeType.Text" xml:space="preserve">
-    <value>Disposition</value>
-  </data>
   <data name="lblFontSize.Text" xml:space="preserve">
     <value>Taille du texte</value>
   </data>
   <data name="lblKaraokeType.Text" xml:space="preserve">
     <value>Type de karaoké</value>
   </data>
-  <data name="tabPage1.Text" xml:space="preserve">
-    <value>Couleur texte</value>
+  <data name="grpBoxKaraokeType.Text" xml:space="preserve">
+    <value>Disposition</value>
+  </data>
+  <data name="chkShowSongName.Size" type="System.Drawing.Size, System.Drawing">
+    <value>93, 17</value>
+  </data>
+  <data name="chkShowSongName.Text" xml:space="preserve">
+    <value>Afficher le titre</value>
   </data>
   <data name="chkShowHints.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -410,14 +413,17 @@
   <data name="chkShowHints.Text" xml:space="preserve">
     <value>Afficher les indications</value>
   </data>
-  <data name="tabPage2.Text" xml:space="preserve">
-    <value>Couleur instrumentaux</value>
+  <data name="tabPage1.Text" xml:space="preserve">
+    <value>Couleur texte</value>
   </data>
   <data name="label5.Size" type="System.Drawing.Size, System.Drawing">
     <value>75, 13</value>
   </data>
   <data name="label5.Text" xml:space="preserve">
     <value>Couleur active</value>
+  </data>
+  <data name="tabPage2.Text" xml:space="preserve">
+    <value>Couleur instrumentaux</value>
   </data>
   <data name="btnDeleteTheme.Text" xml:space="preserve">
     <value>Supprimer</value>
@@ -427,17 +433,6 @@
   </data>
   <data name="btnSaveTheme.Text" xml:space="preserve">
     <value>Enregistrer</value>
-  </data>
-  <data name="kLyrics2.Lines" mimetype="application/x-microsoft.net.object.binary.base64">
-    <value>
-        AAEAAAD/////AQAAAAAAAAAMAgAAAJMBS2FyYW9rZUx5cmljcywgVmVyc2lvbj0xLjAuMC4wLCBDdWx0
-        dXJlPW5ldXRyYWwsIFB1YmxpY0tleVRva2VuPW51bGxdXSwgbXNjb3JsaWIsIFZlcnNpb249NC4wLjAu
-        MCwgQ3VsdHVyZT1uZXV0cmFsLCBQdWJsaWNLZXlUb2tlbj1iNzdhNWM1NjE5MzRlMDg5DAMAAABES2Fy
-        YW9rZUx5cmljcywgVmVyc2lvbj0xLjAuMC4wLCBDdWx0dXJlPW5ldXRyYWwsIFB1YmxpY0tleVRva2Vu
-        PW51bGwFAQAAACxTeXN0ZW0uQ29sbGVjdGlvbnMuR2VuZXJpYy5MaXN0YDFbW2thci5rTGluZQMAAAAG
-        X2l0ZW1zBV9zaXplCF92ZXJzaW9uBAAAC2thci5rTGluZVtdAwAAAAgIAgAAAAkEAAAAAAAAAAAAAAAH
-        BAAAAAABAAAAAAAAAAQJa2FyLmtMaW5lAwAAAAs=
-</value>
   </data>
   <data name="karaokeEffect1.Size" type="System.Drawing.Size, System.Drawing">
     <value>385, 226</value>

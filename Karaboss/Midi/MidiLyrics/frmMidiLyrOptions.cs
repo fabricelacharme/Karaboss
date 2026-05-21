@@ -146,8 +146,7 @@ namespace Karaboss
             get { return _FontStretching; }
             set
             {
-                _FontStretching = value;
-                //pBox.FontStretching = _FontStretching;
+                _FontStretching = value;                
             }
         }
 
@@ -409,12 +408,14 @@ namespace Karaboss
                 // karaokeEffect1 is updated by the options form when changing the display type, so we need to set it before setting the selected item in the combo box
                 #region Layout
                 PopulateKaraokeDisplayTypes();
+
                 KaraokeDisplayType = Properties.Settings.Default.KaraokeDisplayType;
+                                
                 foreach (KeyValuePair<string, string> valuePair in cbKaraokeType.Items)
                 {
                     if (!string.IsNullOrEmpty(valuePair.Key))
                     {
-                        if (valuePair.Key == KaraokeDisplayType)
+                        if (valuePair.Key == KaraokeDisplayType.ToString())
                         {
                             cbKaraokeType.SelectedItem = valuePair;
                             break;
@@ -423,8 +424,6 @@ namespace Karaboss
                 }                
 
                 #endregion Layout
-
-
 
                 // Populate Combos with known colors
                 cboColor.DisplayKnownColors(cbGrad0);
@@ -620,11 +619,11 @@ namespace Karaboss
             // Populate karaoke display types cbKaraokeType         
             KaraokeTypes = new Dictionary<string, string>()
             {
-                { "FixedLines", Strings.KTypesFixedLines },
-                { "ScrollingLinesBottomUp", Strings.KTypesScrollingLinesBottomUp },
-                {"ScrollingLinesTopDown", Strings.KTypesScrollingLinesTopDown },
+                { "FourLinesSwapped", Strings.KTypesFourLinesSwapped },                
+                { "ConstantScrolling", Strings.KTypesConstantScrolling },
+                { "DynamicScrolling", Strings.KTypesDynamicScrolling },
                 { "TwoLinesSwapped", Strings.KTypesTwoLinesSwapped },
-                { "FourLinesSwapped", Strings.KTypesFourLinesSwapped },
+                { "FixedLines", Strings.KTypesFixedLines },
             };
             cbKaraokeType.DataSource = new BindingSource(KaraokeTypes, null);
             cbKaraokeType.ValueMember = "Key";
@@ -652,16 +651,12 @@ namespace Karaboss
 
         private void PopulateFontStretching()
         {
-            Dictionary<string, string> dicFontStretching = new Dictionary<string, string>();
-            // FontStretching.Add("None", Strings.FontStretchingNone);
-            dicFontStretching.Add("Small", Strings.FontStretchingSmall);
-            dicFontStretching.Add("Medium", Strings.FontStretchingMedium);
+            Dictionary<string, string> dicFontStretching = new Dictionary<string, string>();            
+            dicFontStretching.Add("Small", Strings.FontStretchingSmall);            
             dicFontStretching.Add("Large", Strings.FontStretchingLarge);
             cbFontStretching.DataSource = new BindingSource(dicFontStretching, null);
             cbFontStretching.ValueMember = "Key";
             cbFontStretching.DisplayMember = "Value";
-            //if (cbFontStretching.Items.Count > 0)
-            //    cbFontStretching.SelectedIndex = 0; // None
         }
 
 
@@ -1339,28 +1334,28 @@ namespace Karaboss
 
                 switch (KaraokeDisplayType)
                 {
-                    case "FixedLines":
-                        pBox.KaraokeDisplayType = KaraokeDisplayTypes.FixedLines;
-                        UpDownNbLines.Visible = true;
-                        lblNumberOfLines.Visible = true;
+                    case "FourLinesSwapped":
+                        pBox.KaraokeDisplayType = KaraokeDisplayTypes.FourLinesSwapped;
+                        UpDownNbLines.Visible = false;
                         break;
-                    case "ScrollingLinesBottomUp":
-                        pBox.KaraokeDisplayType = KaraokeDisplayTypes.ScrollingLinesBottomUp;
+                    case "ConstantScrolling":
+                        pBox.KaraokeDisplayType = KaraokeDisplayTypes.ConstantScrolling;
                         break;
-                    case "ScrollingLinesTopDown":
-                        pBox.KaraokeDisplayType = KaraokeDisplayTypes.ScrollingLinesTopDown;
+                    case "DynamicScrolling":
+                        pBox.KaraokeDisplayType = KaraokeDisplayTypes.DynamicScrolling;
                         break;
                     case "TwoLinesSwapped":
                         pBox.KaraokeDisplayType = KaraokeDisplayTypes.TwoLinesSwapped;
                         UpDownNbLines.Visible = false;
                         break;
-                    case "FourLinesSwapped":
-                        pBox.KaraokeDisplayType = KaraokeDisplayTypes.FourLinesSwapped;
-                        UpDownNbLines.Visible = false;
+                    case "FixedLines":
+                        pBox.KaraokeDisplayType = KaraokeDisplayTypes.FixedLines;
+                        UpDownNbLines.Visible = true;
+                        lblNumberOfLines.Visible = true;
                         break;
 
                     default:
-                        pBox.KaraokeDisplayType = KaraokeDisplayTypes.FixedLines;
+                        pBox.KaraokeDisplayType = KaraokeDisplayTypes.FourLinesSwapped;
                         break;
                 }
 

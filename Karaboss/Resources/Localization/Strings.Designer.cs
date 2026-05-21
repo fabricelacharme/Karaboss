@@ -1700,18 +1700,18 @@ namespace Karaboss.Resources.Localization {
                 return ResourceManager.GetString("KTypesTwoLinesSwapped", resourceCulture);
             }
         }
-        internal static string KTypesScrollingLinesBottomUp
+        internal static string KTypesDynamicScrolling
         {
             get
             {
-                return ResourceManager.GetString("KTypesScrollingLinesBottomUp", resourceCulture);
+                return ResourceManager.GetString("KTypesDynamicScrolling", resourceCulture);
             }
         }
-        internal static string KTypesScrollingLinesTopDown
+        internal static string KTypesConstantScrolling
         {
             get
             {
-                return ResourceManager.GetString("KTypesScrollingLinesTopDown", resourceCulture);
+                return ResourceManager.GetString("KTypesConstantScrolling", resourceCulture);
             }
         }
         internal static string ErrorThemeAlreadyExists

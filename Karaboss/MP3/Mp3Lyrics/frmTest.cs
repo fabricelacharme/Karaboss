@@ -340,25 +340,20 @@ namespace Karaboss.Mp3
 
                 switch (_strkaraokeDisplayType)
                 {
-                    case "None":
-                        KaraokeDisplayType = kar.KaraokeDisplayTypes.None;
-                        break;
-                    case "FixedLines":
-                        KaraokeDisplayType = kar.KaraokeDisplayTypes.FixedLines;
-                        break;
-                    case "ScrollingLinesTopDown":
-                        KaraokeDisplayType = kar.KaraokeDisplayTypes.ScrollingLinesTopDown;
-                        break;
-                    case "ScrollingLinesBottomUp":
-                        KaraokeDisplayType = kar.KaraokeDisplayTypes.ScrollingLinesBottomUp;
-                        break;
-                    case "TwoLinesSwapped":
-                        KaraokeDisplayType = kar.KaraokeDisplayTypes.TwoLinesSwapped; break;
                     case "FourLinesSwapped":
                         KaraokeDisplayType = kar.KaraokeDisplayTypes.FourLinesSwapped; break;
+                    case "ConstantScrolling":
+                        KaraokeDisplayType = kar.KaraokeDisplayTypes.ConstantScrolling; break;
+                    case "DynamicScrolling":
+                        KaraokeDisplayType = kar.KaraokeDisplayTypes.DynamicScrolling; break;
+                    case "TwoLinesSwapped":
+                        KaraokeDisplayType = kar.KaraokeDisplayTypes.TwoLinesSwapped; break;
+                    case "FixedLines":
+                        KaraokeDisplayType = kar.KaraokeDisplayTypes.FixedLines; break;
+                    case "None":
+                        KaraokeDisplayType = kar.KaraokeDisplayTypes.None; break;
                     default:
-                        KaraokeDisplayType = kar.KaraokeDisplayTypes.FixedLines;
-                        break;
+                        KaraokeDisplayType = kar.KaraokeDisplayTypes.FixedLines; break;
                 }
             }
         }
@@ -1233,11 +1228,11 @@ namespace Karaboss.Mp3
                 case KaraokeDisplayTypes.TwoLinesSwapped:
                     _nbLyricsLines = 2;
                     break;
-                case KaraokeDisplayTypes.ScrollingLinesBottomUp:
+                case KaraokeDisplayTypes.ConstantScrolling:
                     //_nbLyricsLines = _kLyrics.Lines.Count;
                     _nbLyricsLines = 6;
                     break;
-                case KaraokeDisplayTypes.ScrollingLinesTopDown:
+                case KaraokeDisplayTypes.DynamicScrolling:
                     //_nbLyricsLines = _kLyrics.Lines.Count;
                     _nbLyricsLines = 6;
                     break;
@@ -1257,8 +1252,7 @@ namespace Karaboss.Mp3
             if (!_bIsSettings && 
                   (KaraokeDisplayType == KaraokeDisplayTypes.TwoLinesSwapped 
                 || KaraokeDisplayType == KaraokeDisplayTypes.FourLinesSwapped 
-                || KaraokeDisplayType == KaraokeDisplayTypes.ScrollingLinesBottomUp
-                || KaraokeDisplayType == KaraokeDisplayTypes.ScrollingLinesTopDown
+                || KaraokeDisplayType == KaraokeDisplayTypes.ConstantScrolling                
                 || !bShowParagraphs
                 ))                        
                 _kLyrics = RemoveParagraphs(_kLyrics);
@@ -1269,8 +1263,8 @@ namespace Karaboss.Mp3
             if (!_bIsSettings && 
                   (KaraokeDisplayType == KaraokeDisplayTypes.TwoLinesSwapped 
                 || KaraokeDisplayType == KaraokeDisplayTypes.FourLinesSwapped
-                || KaraokeDisplayType == KaraokeDisplayTypes.ScrollingLinesBottomUp 
-                || KaraokeDisplayType == KaraokeDisplayTypes.ScrollingLinesTopDown
+                || KaraokeDisplayType == KaraokeDisplayTypes.ConstantScrolling
+                || KaraokeDisplayType == KaraokeDisplayTypes.DynamicScrolling
                 ))
                  _kLyrics = SearchForInstrumentals(_kLyrics);
 
@@ -1283,7 +1277,7 @@ namespace Karaboss.Mp3
             AdjustFontSize(_nbLyricsLines);
 
 
-            if (KaraokeDisplayType == KaraokeDisplayTypes.ScrollingLinesBottomUp || KaraokeDisplayType == KaraokeDisplayTypes.ScrollingLinesTopDown)
+            if (KaraokeDisplayType == KaraokeDisplayTypes.ConstantScrolling || KaraokeDisplayType == KaraokeDisplayTypes.DynamicScrolling)
             {
                 // For scrolling display, we need to have all lines in order to scroll them
                 //_nbLyricsLines = _kLyrics.Lines.Count;
@@ -1302,7 +1296,7 @@ namespace Karaboss.Mp3
 
             AdjustFontSize(_nbLyricsLines);
 
-            if (KaraokeDisplayType == KaraokeDisplayTypes.ScrollingLinesBottomUp || KaraokeDisplayType == KaraokeDisplayTypes.ScrollingLinesTopDown)
+            if (KaraokeDisplayType == KaraokeDisplayTypes.ConstantScrolling || KaraokeDisplayType == KaraokeDisplayTypes.DynamicScrolling)
                 InitScrollMode();
         }
 
@@ -1355,7 +1349,7 @@ namespace Karaboss.Mp3
                 {
                     // Calculate endTime between _FirstLineToShow and the next Text line located in _FirstLineToShow + 2 when Four Lines swapped and _FirstLineToShow + 1 for Two lines swapped
 
-                    if (KaraokeDisplayType == KaraokeDisplayTypes.TwoLinesSwapped || KaraokeDisplayType == KaraokeDisplayTypes.ScrollingLinesBottomUp)
+                    if (KaraokeDisplayType == KaraokeDisplayTypes.TwoLinesSwapped || KaraokeDisplayType == KaraokeDisplayTypes.ConstantScrolling)
                     {
                         if (_FirstLineToShow + 1 < _kLyrics.Lines.Count)
                             TargetPositionMilliseconds = _kLyrics.Lines[_FirstLineToShow + 1].Syllables.First().StartTime;   // Position in the song to reach = next real syllable                                                               
@@ -1816,7 +1810,7 @@ namespace Karaboss.Mp3
             if (_kLyrics == null || _kLyrics.Lines.Count == 0) return;
 
             // Calculate Font size as if there is only 6 lines to display in order to have bigger font size.
-            if (KaraokeDisplayType == KaraokeDisplayTypes.ScrollingLinesBottomUp || KaraokeDisplayType == KaraokeDisplayTypes.ScrollingLinesTopDown)
+            if (KaraokeDisplayType == KaraokeDisplayTypes.ConstantScrolling || KaraokeDisplayType == KaraokeDisplayTypes.DynamicScrolling)
                 NbLines = 6;
 
 
@@ -1959,11 +1953,11 @@ namespace Karaboss.Mp3
                 case KaraokeDisplayTypes.FixedLines:
                     DrawTextWithFixedLines(e);
                     break;
-                case KaraokeDisplayTypes.ScrollingLinesBottomUp:
+                case KaraokeDisplayTypes.ConstantScrolling:
                     DrawTextWithScrollingLinesBottomUp(e);
                     break;
-                case KaraokeDisplayTypes.ScrollingLinesTopDown:
-                    //DrawTextWithScrollingLinesTopDown(e);
+                case KaraokeDisplayTypes.DynamicScrolling:
+                    //DrawTextWithDynamicScrolling(e);
                     break;
                 case KaraokeDisplayTypes.TwoLinesSwapped:
                     DrawTextWithTwoLinesSwapped(e);
@@ -3245,7 +3239,7 @@ namespace Karaboss.Mp3
 
         private void InitScrollMode()
         {
-            if (KaraokeDisplayType == KaraokeDisplayTypes.ScrollingLinesBottomUp || KaraokeDisplayType == KaraokeDisplayTypes.ScrollingLinesTopDown)
+            if (KaraokeDisplayType == KaraokeDisplayTypes.ConstantScrolling || KaraokeDisplayType == KaraokeDisplayTypes.DynamicScrolling)
             {
                 // calculate the y-coordinate of each line according to its start time and the current position of the player
                 List<float> intervals = new List<float>();
