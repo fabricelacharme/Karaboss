@@ -3527,6 +3527,47 @@ namespace keffect
             // The speed of the lines is not constant, it is faster at the beginning and at the end of the line and slower in the middle of the line
             // The speed of the lines is calculated according to a sine function
 
+            double CurLineStart;
+            double NextLineStart;
+
+            int y = pBox.ClientRectangle.Top + pBox.ClientRectangle.Height / 2;
+
+            CurLineStart = _kLyrics.Lines[_FirstLineToShow].Syllables.First().StartTime;
+            if (_FirstLineToShow + 1 < _kLyrics.Lines.Count)
+            {
+                NextLineStart = _kLyrics.Lines[_FirstLineToShow + 1].Syllables.First().StartTime;
+            }
+            else
+            {
+                // If there is no next line, we consider that the next line starts at the end of the current line
+                NextLineStart = _kLyrics.Lines[_FirstLineToShow].Syllables.Last().StartTime;
+            }
+
+            double dur = NextLineStart - CurLineStart;
+            vposition = (float)((PlayerPositionMilliseconds - CurLineStart) * ((float)_lineHeight / dur));
+
+
+            y = y - (int)vposition;
+
+            for (int i = 0; i < _kLyrics.Lines.Count; i++)
+            {
+
+                if (i < _FirstLineToShow)
+                {
+                    // Draw previous line
+                    DrawInactiveLineWithBorders(e, i, y + (i - _FirstLineToShow) * _lineHeight, true);
+                }
+                else if (i == _FirstLineToShow)
+                {
+                    // Draw current line
+                    DrawActiveLineWithBorders(e, i, y);
+                }
+                else if (i > _FirstLineToShow)
+                {
+                    // Draw next line
+                    DrawInactiveLineWithBorders(e, i, y + (i - _FirstLineToShow) * _lineHeight, false);
+                }
+            }
         }
 
         #endregion Draw dynamic scrolling lines

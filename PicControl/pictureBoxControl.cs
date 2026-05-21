@@ -2064,7 +2064,7 @@ namespace PicControl
                   (KaraokeDisplayType == KaraokeDisplayTypes.TwoLinesSwapped
                 || KaraokeDisplayType == KaraokeDisplayTypes.FourLinesSwapped
                 || KaraokeDisplayType == KaraokeDisplayTypes.ConstantScrolling
-                || KaraokeDisplayType == KaraokeDisplayTypes.DynamicScrolling
+                //|| KaraokeDisplayType == KaraokeDisplayTypes.DynamicScrolling
                 ))
                 _kLyrics = SearchForInstrumentals(_kLyrics);
 
@@ -2561,7 +2561,7 @@ namespace PicControl
         private void SetOffset()
         {
             int ctp = findPosition(_currentPosition);  // index syllabe à chanter
-            int newvOffset; // = 0;
+            int newvOffset; 
 
             // If vertical Offset change => redraw
             // Time to next line            
@@ -4624,18 +4624,16 @@ namespace PicControl
             else
             {
                 bShowInformation = false;
-            }
-            #endregion check whether to show information and update instrumental and countdown state
-
+            }            
 
             if (bShowInformation)
                 DrawInformation(e, _FirstLineToShow, SecondsBeforeSinging, pBox.ClientRectangle.Top + pBox.ClientRectangle.Height / 2);
 
+            #endregion check whether to show information and update instrumental and countdown state
 
             // Calculate vertical position of the lines according to the position of the song in the current line
             vposition = (float)((PlayerPositionTicks) * ((float)_linesHeight / (_kLyrics.Lines.Last().Syllables.First().TicksOn)));
-
-            //Console.WriteLine("vposition: " + vposition + " - PlayerPositionTicks: " + PlayerPositionTicks + " - _linesHeight: " + _linesHeight + " - _kLyrics.Lines.Last().Syllables.First().TicksOn: " + _kLyrics.Lines.Last().Syllables.First().TicksOn);
+            
 
             for (int i = 0; i < _kLyrics.Lines.Count; i++)
             {
@@ -4643,8 +4641,7 @@ namespace PicControl
 
 
                 #region Do not draw lines that are out of the control
-
-                //if (y - vposition < pBox.ClientRectangle.Top - _lineHeight)
+                
                 if (y - vposition < TopMargin)
                 {
                     // Do not draw lines that are out of the control
@@ -4656,7 +4653,7 @@ namespace PicControl
                     continue;
                 }
 
-                if (y - vposition > BottomMargin)                                  //pBox.ClientRectangle.Bottom + _lineHeight)
+                if (y - vposition > BottomMargin)                                 
                     break; // Do not draw lines that are out of the control
 
                 #endregion Do not draw lines that are out of the control
@@ -4710,6 +4707,52 @@ namespace PicControl
         {
             try
             {
+                int CurLineStart;
+                int NextLineStart;
+
+                int y = pBox.ClientRectangle.Top + pBox.ClientRectangle.Height / 2;
+                                
+                CurLineStart = _kLyrics.Lines[_FirstLineToShow].Syllables.First().TicksOn;
+                if (_FirstLineToShow + 1 < _kLyrics.Lines.Count)
+                {
+                    NextLineStart = _kLyrics.Lines[_FirstLineToShow + 1].Syllables.First().TicksOn;
+                }
+                else
+                {
+                    // If there is no next line, we consider that the next line starts at the end of the current line
+                    NextLineStart = _kLyrics.Lines[_FirstLineToShow].Syllables.Last().TicksOn;
+                }
+
+                int dur = NextLineStart - CurLineStart;
+                vposition = (float)((PlayerPositionTicks - CurLineStart) * ((float)_lineHeight / dur));
+                
+
+                y = y - (int)vposition;
+
+                for (int i = 0; i < _kLyrics.Lines.Count; i++)
+                {
+
+                    if (i < _FirstLineToShow)
+                    {
+                        // Draw previous line
+                        DrawInactiveLineWithBorders(e, i, y + (i - _FirstLineToShow) *_lineHeight, true);
+                    }
+                    else if (i == _FirstLineToShow)
+                    {
+                        // Draw current line
+                        DrawActiveLineWithBorders(e, i, y);
+                    }
+                    else if (i > _FirstLineToShow)
+                    {
+                        // Draw next line
+                        DrawInactiveLineWithBorders(e, i, y + (i - _FirstLineToShow) *_lineHeight, false);
+                    }                    
+                }
+
+
+                    
+                /*
+              
                 // Create list of rectangles when line changes
                 synchronize(_currentTextPos);
 
@@ -4740,6 +4783,9 @@ namespace PicControl
                     else
                         DrawNextLines(y0, e);
                 }
+                */
+                
+
             }
             catch (Exception ep)
             {
@@ -5607,10 +5653,7 @@ namespace PicControl
                     break;
             }
         }
-
-      
-        
-
+             
         private void AdjustSpeed() 
         {             
             if (_bpm > 0)
