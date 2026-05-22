@@ -3562,9 +3562,9 @@ namespace keffect
             #endregion check whether to show information and update instrumental and countdown state
 
 
-            int y = pBox.ClientRectangle.Top + pBox.ClientRectangle.Height / 2;
-
             #region Caculate vertical position of the lines
+
+            int y = pBox.ClientRectangle.Top + pBox.ClientRectangle.Height / 2;
 
             CurLineStart = _kLyrics.Lines[_FirstLineToShow].Syllables.First().StartTime;
             if (_FirstLineToShow + 1 < _kLyrics.Lines.Count)
@@ -3583,9 +3583,9 @@ namespace keffect
             else
                 vposition = 0;
 
-            #endregion Caculate vertical position of the lines
-
             y = y - (int)vposition;
+
+            #endregion Caculate vertical position of the lines
 
 
             // Draw lines starting from this position
