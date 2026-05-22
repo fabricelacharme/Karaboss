@@ -405,7 +405,7 @@ namespace Karaboss.MidiLyrics
                 if (line.Syllables.Count == 1 && line.Syllables.First().CharType == Syllable.CharTypes.LineFeed)
                 {
                     T.Lines[i].Syllables[0].CharType = Syllable.CharTypes.ParagraphSep;
-                    T.Lines[i].Syllables[0].Text = _InternalSepParagraphs;                                                            
+                    T.Lines[i].Syllables[0].Text = ""; // _InternalSepParagraphs;                                                            
                 }
             }
 
@@ -420,7 +420,7 @@ namespace Karaboss.MidiLyrics
                     if (line.Syllables.Count == 1 && nextline.Syllables.Count == 1 && line.Syllables.First().CharType != Syllable.CharTypes.Text && nextline.Syllables.First().CharType != Syllable.CharTypes.Text && line.Syllables.First().CharType != nextline.Syllables.First().CharType)
                     {
                         T.Lines[i].Syllables[0].CharType = Syllable.CharTypes.ParagraphSep;
-                        T.Lines[i].Syllables[0].Text = _InternalSepParagraphs;
+                        T.Lines[i].Syllables[0].Text = ""; // _InternalSepParagraphs;
                         T.Lines.RemoveAt(i + 1);
                         bFound = true;
                         break;
@@ -905,7 +905,8 @@ namespace Karaboss.MidiLyrics
                         if (kline != null && kline.Syllables.Count > 0)
                             l.Add(kline);
                         kline = new kLine();
-                        kline.Add(new Syllable() { CharType = plType, Text = _InternalSepParagraphs, Chord = string.Empty, TicksOn = plTicksOn, TicksOff = plTicksOff });                        
+                        //kline.Add(new Syllable() { CharType = plType, Text = _InternalSepParagraphs, Chord = string.Empty, TicksOn = plTicksOn, TicksOff = plTicksOff });
+                        kline.Add(new Syllable() { CharType = plType, Text = "", Chord = string.Empty, TicksOn = plTicksOn, TicksOff = plTicksOff });
                         l.Add(kline);
                         kline = new kLine();
                         break;
@@ -999,7 +1000,8 @@ namespace Karaboss.MidiLyrics
                             if (kline != null && kline.Syllables.Count > 0)
                                 l.Add(kline);
                             kline = new kLine();
-                            kline.Add(new Syllable() { CharType = plType, Text = _InternalSepParagraphs, Chord = string.Empty, TicksOn = plTicksOn, TicksOff = plTicksOff });                            
+                            //kline.Add(new Syllable() { CharType = plType, Text = _InternalSepParagraphs, Chord = string.Empty, TicksOn = plTicksOn, TicksOff = plTicksOff });
+                            kline.Add(new Syllable() { CharType = plType, Text = "", Chord = string.Empty, TicksOn = plTicksOn, TicksOff = plTicksOff });
                             l.Add(kline);
                             kline = new kLine();
                             break;
@@ -1026,7 +1028,8 @@ namespace Karaboss.MidiLyrics
                             if (kline != null && kline.Syllables.Count > 0)
                                 l.Add(kline);
                             kline = new kLine();
-                            kline.Add(new Syllable() { CharType = plType, Text = _InternalSepParagraphs, Chord = string.Empty, TicksOn = plTicksOn, TicksOff = plTicksOff });                            
+                            //kline.Add(new Syllable() { CharType = plType, Text = _InternalSepParagraphs, Chord = string.Empty, TicksOn = plTicksOn, TicksOff = plTicksOff });
+                            kline.Add(new Syllable() { CharType = plType, Text = "", Chord = string.Empty, TicksOn = plTicksOn, TicksOff = plTicksOff });
                             l.Add(kline);
                             kline = new kLine();
                             break;
@@ -1401,24 +1404,33 @@ namespace Karaboss.MidiLyrics
         /// To be launch first
         /// </summary>
         /// <returns></returns>  
-        private kLyrics RemoveEmptyLyrics(kLyrics l)
+        private kLyrics RemoveEmptyLyrics(kLyrics kls)
         {
             string lyric;
-            kLyrics lst = new kLyrics();
+            kLyrics kLyricsWithoutEmpty = new kLyrics();
             
-            foreach (kLine line in l.Lines)
+            foreach (kLine line in kls.Lines)
             {
-                foreach (Syllable syll in line.Syllables)
+                // Add paragraphs even if they are empty
+                if (line.Syllables.Count == 1 && line.Syllables.First().CharType == Syllable.CharTypes.ParagraphSep) 
                 {
-                    lyric = syll.Text;
-                    if (lyric.Trim().Length > 0)
+                    kLyricsWithoutEmpty.Add(line);                    
+                }
+                else 
+                {
+                    foreach (Syllable syll in line.Syllables)
                     {
-                        lst.Add(line);
-                        break;
+                        lyric = syll.Text;
+                        // If one syllable of the line is not empty, we keep the line                                        
+                        if (lyric.Trim().Length > 0)
+                        {
+                            kLyricsWithoutEmpty.Add(line);
+                            break;
+                        }
                     }
                 }
             }
-            return lst;
+            return kLyricsWithoutEmpty;
         }
 
         /// <summary>

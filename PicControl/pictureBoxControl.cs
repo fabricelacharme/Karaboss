@@ -4751,10 +4751,16 @@ namespace PicControl
             int y = pBox.ClientRectangle.Top + pBox.ClientRectangle.Height / 2;
 
             CurLineStart = _kLyrics.Lines[_FirstLineToShow].Syllables.First().TicksOn;
-            if (_FirstLineToShow + 1 < _kLyrics.Lines.Count)
+            if (_FirstLineToShow + 1 < _kLyrics.Lines.Count && _kLyrics.Lines[_FirstLineToShow + 1].Syllables.First().CharType != Syllable.CharTypes.ParagraphSep)
             {
                 NextLineStart = _kLyrics.Lines[_FirstLineToShow + 1].Syllables.First().TicksOn;
             }
+            
+            else if (_FirstLineToShow + 2 < _kLyrics.Lines.Count)
+            {
+                NextLineStart = _kLyrics.Lines[_FirstLineToShow + 2].Syllables.First().TicksOn;
+            }
+            
             else
             {
                 // If there is no next line, we consider that the next line starts at the end of the current line

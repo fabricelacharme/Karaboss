@@ -3571,6 +3571,10 @@ namespace keffect
             {
                 NextLineStart = _kLyrics.Lines[_FirstLineToShow + 1].Syllables.First().StartTime;
             }
+            else if (_FirstLineToShow + 2 < _kLyrics.Lines.Count)
+            {
+                NextLineStart = _kLyrics.Lines[_FirstLineToShow + 2].Syllables.First().StartTime;
+            }
             else
             {
                 // If there is no next line, we consider that the next line starts at the end of the current line
