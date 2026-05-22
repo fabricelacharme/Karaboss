@@ -1488,6 +1488,11 @@ namespace keffect
             AdjustFontSize(_nbLyricsLines);           
             _LastLineToShow = SetLastLineToShow(_FirstLineToShow, _kLyrics.Lines.Count, _nbLyricsLines);
 
+
+
+            if (_bIsSettings)
+                SetPos(200);
+
             if (KaraokeDisplayType == KaraokeDisplayTypes.ConstantScrolling || KaraokeDisplayType == KaraokeDisplayTypes.DynamicScrolling)
                 InitScrollMode();
         }
@@ -2645,9 +2650,7 @@ namespace keffect
                         if (_borderthick > 0)
                             e.Graphics.DrawPath(ActiveBorderPen, pathActive);
                     }
-
                     
-
                     pathActive.Dispose();
 
                     #endregion Paint in ActiveColor
@@ -2749,12 +2752,10 @@ namespace keffect
                 }
                 #endregion Draw inactive text
 
-
                 r.Dispose();
 
                 #endregion Draw dynamic text (with active and highlight fragments)
             }
-
 
             // ************************  Reset ScaleTransform
             e.Graphics.ResetTransform();
@@ -3731,7 +3732,7 @@ namespace keffect
                 DrawActiveLineWithBorders(e, _FirstLineToShow, y1);
 
                 // Draw Inactive line with borders
-                if (percent > 0)
+                //if (percent > 0)
                     DrawInactiveLineWithBorders(e, _FirstLineToShow + 1, y2);
 
                 #endregion Normal drawing

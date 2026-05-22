@@ -326,6 +326,7 @@
             resources.ApplyResources(this.btnSelectImage, "btnSelectImage");
             this.btnSelectImage.Name = "btnSelectImage";
             this.btnSelectImage.UseVisualStyleBackColor = true;
+            this.btnSelectImage.Click += new System.EventHandler(this.btnSelectImage_Click);
             // 
             // radioImage
             // 

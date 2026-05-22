@@ -930,6 +930,9 @@ namespace Karaboss
 
         private void btnSelectImage_Click(object sender, EventArgs e)
         {
+            openFileDialog.Filter = "Image Files|*.jpg;*.jpeg;*.png;*.gif;*.tif;...|All files (*.*)|*.*";
+            openFileDialog.FileName = string.Empty;
+
             if (openFileDialog.ShowDialog() == DialogResult.OK)
             {
                 radioImage.Checked = true;

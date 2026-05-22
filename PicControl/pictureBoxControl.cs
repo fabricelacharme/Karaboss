@@ -2091,7 +2091,9 @@ namespace PicControl
                 _biggestLine = GetBiggestLine();
                 AdjustFontSize(_nbLyricsLines);
 
+
                
+
                 // Store syllabes                
                 if (_kLyrics != null)
                     syllabes = StoreLyricsSyllabes(_kLyrics);
@@ -2107,15 +2109,17 @@ namespace PicControl
                     _currentTextPos = -1;
                 }
 
+                if (_bIsSettings)
+                    SetPos(100);
+
+
                 // Create rectangles for drawing active line
                 createListRectangles(0);
 
                 if (KaraokeDisplayType == KaraokeDisplayTypes.ConstantScrolling || KaraokeDisplayType == KaraokeDisplayTypes.DynamicScrolling)
                     InitScrollMode();
             }
-
         }
-
 
         #endregion Initializations
 
@@ -2754,9 +2758,7 @@ namespace PicControl
             {
                 AdjustFontWithoutStretching(_biggestLine, NbLines);
             }
-
         }
-
 
 
         private void ajustTextAgain()
@@ -4926,9 +4928,8 @@ namespace PicControl
                 // Draw active line with borders
                 DrawActiveLineWithBorders(e, _FirstLineToShow, y1);                
 
-                // Draw Inactive line with borders
-                //if (_currentTextPos > -1)
-                    DrawInactiveLineWithBorders(e, _FirstLineToShow + 1, y2);                
+                // Draw Inactive line with borders                
+                DrawInactiveLineWithBorders(e, _FirstLineToShow + 1, y2);                
 
                 #endregion Normal drawing
             }
