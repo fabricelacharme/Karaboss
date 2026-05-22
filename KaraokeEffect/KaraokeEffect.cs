@@ -1539,7 +1539,10 @@ namespace keffect
                 {
                     // Calculate endTime between _FirstLineToShow and the next Text line located in _FirstLineToShow + 2 when Four Lines swapped and _FirstLineToShow + 1 for Two lines swapped
 
-                    if (KaraokeDisplayType == KaraokeDisplayTypes.TwoLinesSwapped || KaraokeDisplayType == KaraokeDisplayTypes.ConstantScrolling)
+                    if (KaraokeDisplayType == KaraokeDisplayTypes.TwoLinesSwapped 
+                        || KaraokeDisplayType == KaraokeDisplayTypes.ConstantScrolling
+                        || KaraokeDisplayType == KaraokeDisplayTypes.DynamicScrolling
+                        )
                     {
                         if (_FirstLineToShow + 1 < _kLyrics.Lines.Count)
                             TargetPositionMilliseconds = _kLyrics.Lines[_FirstLineToShow + 1].Syllables.First().StartTime;   // Position in the song to reach = next real syllable                                                               
@@ -3445,11 +3448,11 @@ namespace keffect
             {
                 bShowInformation = false;
             }
-            #endregion check whether to show information and update instrumental and countdown state
-
-
+            
             if (bShowInformation)            
-                DrawInformation(e, _FirstLineToShow, SecondsBeforeSinging, pBox.ClientRectangle.Top + pBox.ClientRectangle.Height / 2);            
+                DrawInformation(e, _FirstLineToShow, SecondsBeforeSinging, pBox.ClientRectangle.Top + pBox.ClientRectangle.Height / 2);
+
+            #endregion check whether to show information and update instrumental and countdown state
 
             // Calculate vertical position of the lines according to the position of the song in the current line
             vposition = (float)((PlayerPositionMilliseconds) * (_linesHeight / (_kLyrics.Lines.Last().Syllables.First().StartTime)));
@@ -3472,7 +3475,7 @@ namespace keffect
                     continue;
                 }
 
-                if (y - vposition > BottomMargin)                                  //pBox.ClientRectangle.Bottom + _lineHeight)
+                if (y - vposition > BottomMargin)                                 
                     break; // Do not draw lines that are out of the control
 
                 #endregion Do not draw lines that are out of the control
@@ -3522,15 +3525,46 @@ namespace keffect
 
         private void DslDrawTextWithBorder(PaintEventArgs e)
         {
-            // To be implemented
             // The vertical position of the lines is calculated according to the position of the song in the current line and the duration of the current line
-            // The speed of the lines is not constant, it is faster at the beginning and at the end of the line and slower in the middle of the line
-            // The speed of the lines is calculated according to a sine function
+
+            int TopMargin = bShowSongName ? pBox.ClientRectangle.Top + (int)(_titleMarginTop * pBox.Height) : pBox.ClientRectangle.Top;
+            int BottomMargin = pBox.ClientRectangle.Bottom;
 
             double CurLineStart;
             double NextLineStart;
 
+
+            #region Draw FileName
+
+            // Draw file name if required
+            if (bShowSongName)
+                DrawFileName(e, FileName, 0.33f * _karaokeFont.Size);
+
+            #endregion Draw FileName
+
+
+            #region check whether to show information and update instrumental and countdown state
+
+            if (_kLyrics.Lines[_FirstLineToShow].Syllables.Last().CharType == Syllable.CharTypes.Information)
+            {
+                bShowInformation = true;
+                CheckIfInstrumentalBegins();
+                UpdateCountDown();
+            }
+            else
+            {
+                bShowInformation = false;
+            }
+
+            if (bShowInformation)
+                DrawInformation(e, _FirstLineToShow, SecondsBeforeSinging, pBox.ClientRectangle.Top + pBox.ClientRectangle.Height / 2);
+
+            #endregion check whether to show information and update instrumental and countdown state
+
+
             int y = pBox.ClientRectangle.Top + pBox.ClientRectangle.Height / 2;
+
+            #region Caculate vertical position of the lines
 
             CurLineStart = _kLyrics.Lines[_FirstLineToShow].Syllables.First().StartTime;
             if (_FirstLineToShow + 1 < _kLyrics.Lines.Count)
@@ -3544,15 +3578,33 @@ namespace keffect
             }
 
             double dur = NextLineStart - CurLineStart;
-            vposition = (float)((PlayerPositionMilliseconds - CurLineStart) * ((float)_lineHeight / dur));
+            if (dur > 0) 
+                vposition = (float)((PlayerPositionMilliseconds - CurLineStart) * ((float)_lineHeight / dur));
+            else
+                vposition = 0;
 
+            #endregion Caculate vertical position of the lines
 
             y = y - (int)vposition;
 
+
+            // Draw lines starting from this position
             for (int i = 0; i < _kLyrics.Lines.Count; i++)
             {
+                #region Do not draw lines that are out of the control
 
-                if (i < _FirstLineToShow)
+                // Do not draw lines of information
+                if (_kLyrics.Lines[i].Syllables.Last().CharType == Syllable.CharTypes.Information)                                                        
+                    continue;
+                
+
+                if (y + (i - _FirstLineToShow) * _lineHeight > BottomMargin)
+                    break; // Do not draw lines that are out of the control
+                
+                #endregion Do not draw lines that are out of the control
+
+
+                if (i < _FirstLineToShow && y + (i - _FirstLineToShow) * _lineHeight > TopMargin)
                 {
                     // Draw previous line
                     DrawInactiveLineWithBorders(e, i, y + (i - _FirstLineToShow) * _lineHeight, true);
