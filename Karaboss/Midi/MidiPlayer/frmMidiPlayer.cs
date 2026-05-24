@@ -839,6 +839,8 @@ namespace Karaboss
 
                 // 1. DISPLAY LYRICS
                 ManageDisplayLyricsForm();
+                // Send mandatory informations to lyrics form
+                SendInformationsToLyrics();
 
 
                 // 2. START PLAYING
@@ -866,13 +868,7 @@ namespace Karaboss
 
                 // start Lyrics                   
                 timer2.Start();
-                if (Application.OpenForms.OfType<frmMidiLyrics>().Count() > 0)
-                {
-                    frmMidiLyrics.BeatDuration = sequence1.Division;
-                    frmMidiLyrics.Duration = _duration;
-                    frmMidiLyrics.TotalTicks = _totalTicks;
-                    frmMidiLyrics.PlayStopActions(false);
-                }
+                                
 
                 // start animation balls
                 StartTimerBalls();
@@ -892,6 +888,20 @@ namespace Karaboss
             }
         }
        
+        /// <summary>
+        /// Update informations of lyrics form
+        /// </summary>
+        private void SendInformationsToLyrics()
+        {
+            if (Application.OpenForms.OfType<frmMidiLyrics>().Count() > 0)
+            {
+                frmMidiLyrics.BeatDuration = sequence1.Division;
+                frmMidiLyrics.Duration = _duration;
+                frmMidiLyrics.TotalTicks = _totalTicks;
+                frmMidiLyrics.PlayStopActions(false);
+            }
+        }
+
 
         #region Mute
         /// <summary>

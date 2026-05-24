@@ -4233,7 +4233,9 @@ namespace keffect
 
         #region start stop
 
-        // Start Display lyrics
+        /// <summary>
+        /// Reset all values
+        /// </summary>
         public void Start()
         {
             

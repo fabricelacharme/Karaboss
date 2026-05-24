@@ -1096,14 +1096,22 @@ namespace Karaboss.Mp3
             //lblTitle.Text = text;
         }
 
+
+        public void PlayStopActions(bool isStopped)
+        {
+            // Disable buttons for editing lyrics and chords
+            btnEditLyrics.Enabled = isStopped;
+        }
         public void Start()
         {
             karaokeEffect1.Start();
+            
         }
 
         public void Stop()
         {
             karaokeEffect1.Stop();
+            PlayStopActions(true);
         }
 
         public void GetPositionFromPlayer(double position)

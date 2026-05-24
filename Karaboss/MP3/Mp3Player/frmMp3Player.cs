@@ -673,7 +673,11 @@ namespace Karaboss.Mp3
                 // Set Volume, frequency & transpose
                 SetInitialListenValues();
 
+                if (Application.OpenForms.OfType<frmMp3Lyrics>().Count() > 0)
+                    frmMp3Lyrics.PlayStopActions(false);
+         
                 StartKaraoke();
+                
                 Timer1.Start();
 
                 // Start balls
@@ -686,6 +690,8 @@ namespace Karaboss.Mp3
             }
         }
 
+
+     
         private void SetInitialListenValues()
         {
             // Frequency
@@ -768,7 +774,8 @@ namespace Karaboss.Mp3
 
             DisplayTimeElapse(0);
             StopKaraoke();
-            
+
+
             // Stop balls
             StopTimerBalls();
 
@@ -792,8 +799,10 @@ namespace Karaboss.Mp3
                 if (dgView.Rows[Row].Cells[COL_MS].Value != null && IsNumeric(dgView.Rows[Row].Cells[COL_MS].Value.ToString()))
                 {
                     // Load frmMp3Lyrics
-                    DisplayFrmMp3Lyrics();                    
-                    
+                    DisplayFrmMp3Lyrics();
+
+                    SendInformationsToLyrics();
+
                     // Reload modified lyrics before playing
                     if (Application.OpenForms.OfType<frmMp3Lyrics>().Count() > 0)
                     {                                                                        
@@ -1396,6 +1405,8 @@ namespace Karaboss.Mp3
                     Mp3LyricsMgmtHelper.mp3KaraokeLyrics = Mp3LyricsMgmtHelper.GetLyricsFromMp3File(SyncLyricsFrame);    // KaraokeLyrics class used for display in frmMp3Lyrics
                     DisplayFrmMp3Lyrics();
 
+                    SendInformationsToLyrics();
+
                     // Load lyrics in KaraokeEffect of frmMp3Myrics
                     if (Application.OpenForms.OfType<frmMp3Lyrics>().Count() > 0)
                     {
@@ -1408,7 +1419,9 @@ namespace Karaboss.Mp3
                     Mp3LyricsMgmtHelper.mp3KaraokeLyrics = Mp3LyricsMgmtHelper.GetLyricsFromLrcFile(FileName);                    
 
                     DisplayFrmMp3Lyrics();
-                    
+
+                    SendInformationsToLyrics();
+
                     // Load lyrics in KaraokeEffect of frmMp3Myrics
                     if (Application.OpenForms.OfType<frmMp3Lyrics>().Count() > 0)
                     {
@@ -1478,6 +1491,7 @@ namespace Karaboss.Mp3
                 sSong = Mp3FullPath;
             }
 
+            // Close form if opened
             if (Application.OpenForms.OfType<frmMp3Lyrics>().Count() > 0)            
                 Application.OpenForms["frmMp3Lyrics"].Close();
             
@@ -1496,19 +1510,22 @@ namespace Karaboss.Mp3
                 tx = sSong + " - " + Strings.Singer + ": " + sSinger;
 
             frmMp3Lyrics.DisplaySinger(tx);
-
-
-            // MP3 caracteristics
-            frmMp3Lyrics.Duration = _duration * 1000; // mp3 duration in ms
-            frmMp3Lyrics.Frequency = _frequency;
-            frmMp3Lyrics.BitRate = _bitrate;
-            
+                        
 
             // cas d'une playlist ou non : met à jour le diaporama
             SetSlideShow();
 
-            StartKaraoke();
+            //StartKaraoke();
         }
+
+        private void SendInformationsToLyrics()
+        {
+            // MP3 caracteristics
+            frmMp3Lyrics.Duration = _duration * 1000; // mp3 duration in ms
+            //frmMp3Lyrics.Frequency = _frequency;
+            //frmMp3Lyrics.BitRate = _bitrate;
+        }
+
 
         /// <summary>
         /// SlideShow of frmMp3Lyrics
@@ -2120,15 +2137,23 @@ namespace Karaboss.Mp3
         private void StopKaraoke()
         {
             if (Application.OpenForms.OfType<frmMp3Lyrics>().Count() > 0)
-                frmMp3Lyrics.Stop();
+            {
+                frmMp3Lyrics.Stop();                
+                frmMp3Lyrics.PlayStopActions(true);
+            }
+
             if (Application.OpenForms.OfType<frmTest>().Count() > 0)
                 frmTest.Stop();
         }
 
         private void StartKaraoke()
-        {                        
+        {
             if (Application.OpenForms.OfType<frmMp3Lyrics>().Count() > 0)
+            {
                 frmMp3Lyrics.Start();
+                frmMp3Lyrics.PlayStopActions(false);
+
+            }
 
             if (Application.OpenForms.OfType<frmTest>().Count() > 0)
                 frmTest.Start();
