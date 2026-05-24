@@ -1127,6 +1127,7 @@ namespace Karaboss
                 nbLyricsLines = Properties.Settings.Default.TxtNbLines;
 
                 SingleImagePath = Properties.Settings.Default.SingleImagePath;
+                
                 // Frequency of slide show
                 FreqSlideShow = Properties.Settings.Default.freqSlideShow;
 
