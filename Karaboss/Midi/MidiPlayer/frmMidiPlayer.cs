@@ -33,6 +33,8 @@
 #endregion
 using kar;
 using Karaboss.MidiLyrics;
+using Karaboss.Mp3;
+using Karaboss.Mp3.Mp3Lyrics;
 using Karaboss.Resources.Localization;
 using Karaboss.Utilities;
 using MusicTxt;
@@ -4161,6 +4163,29 @@ namespace Karaboss
             }
         }
 
+
+        private void ManagePauseAndCountdown()         
+        {
+            if (currentPlaylistItem == null) return;
+
+            if (Karaclass.m_CountdownSongs == 0 && !Karaclass.m_PauseBetweenSongs)
+            {
+                // COUNTDOWN terminated
+
+            }
+            else if (Karaclass.m_PauseBetweenSongs)
+            {
+                // Pause terminated
+
+                // Restore the values after displaying the song and artist information
+                if (Application.OpenForms.OfType<frmMp3Lyrics>().Count() > 0)
+                {
+                    frmMidiLyrics.KaraokeDisplayType = Properties.Settings.Default.KaraokeDisplayType;
+                    frmMidiLyrics.nbLyricsLines = Properties.Settings.Default.TxtNbLines;
+                }
+            }
+        }
+
         /// <summary>
         /// Load form frmMidiLyrics       
         /// </summary>
@@ -6585,7 +6610,7 @@ namespace Karaboss
 
             w_tick = 0;
             int sec = Karaclass.m_CountdownSongs;  // wait for x seconds
-            w_wait = sec + 4;
+            w_wait = sec + 1; // + 4;
 
             if (Application.OpenForms.OfType<frmMidiLyrics>().Count() == 0)
             {

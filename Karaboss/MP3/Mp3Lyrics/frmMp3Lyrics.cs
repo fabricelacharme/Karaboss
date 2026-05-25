@@ -1071,6 +1071,12 @@ namespace Karaboss.Mp3
 
         #region public methods
 
+        public void LoadWaitSong(int sec)
+        {
+            karaokeEffect1.LoadWaitSong(sec);
+        }
+
+
         /// <summary>
         /// Displays a visual representation of a beat on the associated PictureBox control.
         /// </summary>

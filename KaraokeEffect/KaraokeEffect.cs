@@ -1106,30 +1106,28 @@ namespace keffect
         #endregion Events
 
 
-        #region Initializations
+        #region Demo, wait
 
-        private void SetDefaultValues()
+        public void LoadWaitSong(int sec)
         {
-            m_ImageFilePaths = new List<string>();
-            m_BitmapsArray = new Bitmap[] { };
+            // provisional value
+            KaraokeDisplayType = KaraokeDisplayTypes.FixedLines;
 
-            #region Font
+            List<string> lines = new List<string>();
+            // 10|9|8|7|6|5|4|3|2|1|0|       
+            for (int i = sec; i >= 0; i--)
+            {
+                lines.Add(i.ToString());
+            }
 
-            sf = new StringFormat(StringFormat.GenericTypographic) { FormatFlags = StringFormatFlags.MeasureTrailingSpaces };
-            _karaokeFont = new Font("Arial Black", emSize, FontStyle.Regular, GraphicsUnit.Pixel);
+            // Do not use KLyrics but _kLyrics to be able to use the same LoadSong method for demo and real text
+            _kLyrics = StoreDemoText(lines, 100);
 
-            #endregion Font
+            Init();
 
-
-            #region Gradient colors
-
-            Beat = 200; // Default speed for rhythm animation
-
-            _timerGradient.Interval = 60; // 60 ms
-            _timerGradient.Tick += new EventHandler(_timerGradient_Tick);
-
-            #endregion Gradient colors
-            
+            // Init reset _nbLyricsLines
+            // So we have to force it
+            _nbLyricsLines = 1;
         }
 
         public void LoadDemoText()
@@ -1162,7 +1160,7 @@ namespace keffect
             };
 
             // Step 100 ms between syllables
-            KLyrics = StoreDemoText(lines, 100);           
+            KLyrics = StoreDemoText(lines, 100);
             this.SetPos(200); // after ipsum
         }
 
@@ -1175,7 +1173,7 @@ namespace keffect
         {
             int ticks = 0;
             Syllable syll;
-            kLine kLine; 
+            kLine kLine;
             kLyrics KL = new kLyrics();
 
             for (int i = 0; i < lines.Count; i++)
@@ -1190,8 +1188,8 @@ namespace keffect
                         words[j] = words[j].ToUpper();
 
                     string w = words[j] + " ";
-                    
-                    syll = new Syllable() { Text = w, StartTime = ticks, Duration = step/2 };
+
+                    syll = new Syllable() { Text = w, StartTime = ticks, Duration = step / 2 };
                     ticks += step;
 
                     kLine.Add(syll);
@@ -1201,6 +1199,38 @@ namespace keffect
 
             return KL;
         }
+
+
+        #endregion Demo, wait
+
+
+        #region Initializations
+
+        private void SetDefaultValues()
+        {
+            m_ImageFilePaths = new List<string>();
+            m_BitmapsArray = new Bitmap[] { };
+
+            #region Font
+
+            sf = new StringFormat(StringFormat.GenericTypographic) { FormatFlags = StringFormatFlags.MeasureTrailingSpaces };
+            _karaokeFont = new Font("Arial Black", emSize, FontStyle.Regular, GraphicsUnit.Pixel);
+
+            #endregion Font
+
+
+            #region Gradient colors
+
+            Beat = 200; // Default speed for rhythm animation
+
+            _timerGradient.Interval = 60; // 60 ms
+            _timerGradient.Tick += new EventHandler(_timerGradient_Tick);
+
+            #endregion Gradient colors
+            
+        }
+
+      
 
 
         /// <summary>

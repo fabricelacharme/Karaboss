@@ -671,13 +671,12 @@ namespace Karaboss.Mp3
                 lstSaveTimestamps.Clear();       // Clear timestamps 
 
                 BtnStatus();
-                ValideMenus(false);                
-                
+                ValideMenus(false);
+
+                ManagePauseEnding();
 
                 // Set Volume, frequency & transpose
-                SetInitialListenValues();
-
-                ManagePauseAndCountdown();
+                SetInitialListenValues();                
 
                 if (Application.OpenForms.OfType<frmMp3Lyrics>().Count() > 0)
                     frmMp3Lyrics.PlayStopActions(false);
@@ -698,22 +697,12 @@ namespace Karaboss.Mp3
             }
         }
 
-
-
-        private void ManagePauseAndCountdown()
+        private void ManagePauseEnding()
         {
             if (currentPlaylistItem == null) return;
 
-            if (Karaclass.m_CountdownSongs == 0 && !Karaclass.m_PauseBetweenSongs)
+            if (Karaclass.m_PauseBetweenSongs)
             {
-                // COUNTDOWN terminated
-
-            }
-            else if (Karaclass.m_PauseBetweenSongs)
-            {
-                // Pause terminated
-
-                // Load lyrics in KaraokeEffect of frmMp3Myrics
                 if (Application.OpenForms.OfType<frmMp3Lyrics>().Count() > 0)
                 {
                     frmMp3Lyrics.KaraokeDisplayType = Properties.Settings.Default.KaraokeDisplayType;
@@ -721,6 +710,25 @@ namespace Karaboss.Mp3
                 }
             }
         }
+
+        private void ManageCountdownEnding()
+        {
+            if (currentPlaylistItem == null) return;
+
+            // Pause between 2 songs of a playlist: nothing to do
+
+            if (Karaclass.m_CountdownSongs > 0)
+            {
+                // Countdown terminated
+                //Console.WriteLine("Count down between songs of the playlist: " + Karaclass.m_CountdownSongs + " seconds");
+                if (Application.OpenForms.OfType<frmMp3Lyrics>().Count() > 0)
+                {
+                    frmMp3Lyrics.KaraokeDisplayType = Properties.Settings.Default.KaraokeDisplayType;
+                    frmMp3Lyrics.SetLyrics(Mp3LyricsMgmtHelper.mp3KaraokeLyrics);
+                }
+            }                                   
+        }
+       
         private void SetInitialListenValues()
         {
             // Frequency
@@ -1802,7 +1810,7 @@ namespace Karaboss.Mp3
                 
                 // color each second              
                 //frmMp3Lyrics?.ColorLyric(w_tick * 100);
-                frmMp3Lyrics.GetPositionFromPlayer(w_tick * 100);
+                frmMp3Lyrics.GetPositionFromPlayer(w_tick * 100 * 1000);
             }
             else if (w_tick == w_wait)
             {
@@ -1815,13 +1823,7 @@ namespace Karaboss.Mp3
                 // Countdown completed, Play next song of the play list
                 timerCountdown.Enabled = false;
                 PlayerState = PlayerStates.Stopped;
-
-                // Restore display options modified by the wait animation
-                if (frmMp3Lyrics != null)
-                {
-                    //frmMp3Lyrics.LoadOptions();
-                    SetSlideShow();
-                }
+                ManageCountdownEnding();
                 PlayPauseMusic();
 
             }
@@ -2117,8 +2119,10 @@ namespace Karaboss.Mp3
 
             w_tick = 0;
             int sec = Karaclass.m_CountdownSongs;  // wait for x seconds
-            w_wait = sec + 4;
+            w_wait = sec + 1; // + 4;
 
+
+            frmMp3Lyrics.LoadWaitSong(sec);
 
             timerCountdown.Interval = 1000;  // interval = 1 sec      
             timerCountdown.Enabled = true;
@@ -2238,8 +2242,8 @@ namespace Karaboss.Mp3
 
 
             // ************************************************************************* TEST *************************************************************************
-            if (Application.OpenForms.OfType<frmTest>().Count() > 0 )
-                frmTest.SetPos(pos * 1000);
+            //if (Application.OpenForms.OfType<frmTest>().Count() > 0 )
+            //    frmTest.SetPos(pos * 1000);
 
         }
 
