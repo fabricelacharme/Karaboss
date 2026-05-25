@@ -1204,6 +1204,22 @@ namespace keffect
 
 
         /// <summary>
+        /// Display a text from another windows form (used in playlists to display song title and artist during the wait time before the song starts)
+        /// </summary>
+        /// <param name="tx"></param>
+        public void DisplayText(List<string> Lines)
+        {
+            if (Lines == null || Lines.Count == 0) return;
+
+            // provisional value
+            KaraokeDisplayType = KaraokeDisplayTypes.FixedLines;
+            // provisional value
+            KLyrics = StoreDemoText(Lines, 100);
+            pBox.Invalidate();
+        }
+
+
+        /// <summary>
         /// Remove paragra^hs in some cases
         /// </summary>
         /// <param name="kls"></param>

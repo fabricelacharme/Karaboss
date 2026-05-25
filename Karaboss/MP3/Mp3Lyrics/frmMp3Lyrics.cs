@@ -1091,11 +1091,10 @@ namespace Karaboss.Mp3
         /// Display singer and song names
         /// </summary>
         /// <param name="text"></param>
-        public void DisplaySinger(string text)
+        public void DisplayText(List<string> Lines)
         {
-            //lblTitle.Text = text;
+            karaokeEffect1.DisplayText(Lines);
         }
-
 
         public void PlayStopActions(bool isStopped)
         {

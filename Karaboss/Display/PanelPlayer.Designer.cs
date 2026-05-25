@@ -29,11 +29,11 @@
         private void InitializeComponent()
         {
             this.pnlDisplay = new System.Windows.Forms.Panel();
-            this.lblStatus = new System.Windows.Forms.Label();
-            this.lblElapsed = new System.Windows.Forms.Label();
-            this.lblBeat = new System.Windows.Forms.Label();
-            this.lblPercent = new System.Windows.Forms.Label();
             this.lblDuration = new System.Windows.Forms.Label();
+            this.lblPercent = new System.Windows.Forms.Label();
+            this.lblBeat = new System.Windows.Forms.Label();
+            this.lblElapsed = new System.Windows.Forms.Label();
+            this.lblStatus = new System.Windows.Forms.Label();
             this.pnlDisplay.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -41,52 +41,30 @@
             // 
             this.pnlDisplay.BackColor = System.Drawing.Color.Black;
             this.pnlDisplay.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.pnlDisplay.Controls.Add(this.lblStatus);
             this.pnlDisplay.Controls.Add(this.lblDuration);
             this.pnlDisplay.Controls.Add(this.lblPercent);
             this.pnlDisplay.Controls.Add(this.lblBeat);
             this.pnlDisplay.Controls.Add(this.lblElapsed);
-            this.pnlDisplay.Controls.Add(this.lblStatus);
             this.pnlDisplay.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pnlDisplay.Location = new System.Drawing.Point(0, 0);
+            this.pnlDisplay.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.pnlDisplay.Name = "pnlDisplay";
-            this.pnlDisplay.Size = new System.Drawing.Size(200, 45);
+            this.pnlDisplay.Size = new System.Drawing.Size(300, 69);
             this.pnlDisplay.TabIndex = 0;
             // 
-            // lblStatus
+            // lblDuration
             // 
-            this.lblStatus.BackColor = System.Drawing.Color.Transparent;
-            this.lblStatus.Font = new System.Drawing.Font("Consolas", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblStatus.ForeColor = System.Drawing.Color.Red;
-            this.lblStatus.Location = new System.Drawing.Point(1, 2);
-            this.lblStatus.Name = "lblStatus";
-            this.lblStatus.Size = new System.Drawing.Size(80, 19);
-            this.lblStatus.TabIndex = 0;
-            this.lblStatus.Text = "Stopped";
-            this.lblStatus.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            // 
-            // lblElapsed
-            // 
-            this.lblElapsed.BackColor = System.Drawing.Color.Transparent;
-            this.lblElapsed.Font = new System.Drawing.Font("Consolas", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblElapsed.ForeColor = System.Drawing.Color.White;
-            this.lblElapsed.Location = new System.Drawing.Point(1, 22);
-            this.lblElapsed.Name = "lblElapsed";
-            this.lblElapsed.Size = new System.Drawing.Size(60, 19);
-            this.lblElapsed.TabIndex = 1;
-            this.lblElapsed.Text = "00:00";
-            this.lblElapsed.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            // 
-            // lblBeat
-            // 
-            this.lblBeat.BackColor = System.Drawing.Color.Transparent;
-            this.lblBeat.Font = new System.Drawing.Font("Consolas", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblBeat.ForeColor = System.Drawing.Color.PaleGreen;
-            this.lblBeat.Location = new System.Drawing.Point(142, 2);
-            this.lblBeat.Name = "lblBeat";
-            this.lblBeat.Size = new System.Drawing.Size(60, 19);
-            this.lblBeat.TabIndex = 2;
-            this.lblBeat.Text = "15|16";
-            this.lblBeat.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.lblDuration.BackColor = System.Drawing.Color.Transparent;
+            this.lblDuration.Font = new System.Drawing.Font("Consolas", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblDuration.ForeColor = System.Drawing.Color.White;
+            this.lblDuration.Location = new System.Drawing.Point(213, 34);
+            this.lblDuration.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.lblDuration.Name = "lblDuration";
+            this.lblDuration.Size = new System.Drawing.Size(90, 29);
+            this.lblDuration.TabIndex = 4;
+            this.lblDuration.Text = "00:00";
+            this.lblDuration.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // lblPercent
             // 
@@ -94,32 +72,62 @@
             this.lblPercent.BackColor = System.Drawing.Color.Transparent;
             this.lblPercent.Font = new System.Drawing.Font("Consolas", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblPercent.ForeColor = System.Drawing.Color.White;
-            this.lblPercent.Location = new System.Drawing.Point(94, 26);
+            this.lblPercent.Location = new System.Drawing.Point(141, 40);
+            this.lblPercent.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblPercent.Name = "lblPercent";
-            this.lblPercent.Size = new System.Drawing.Size(19, 13);
+            this.lblPercent.Size = new System.Drawing.Size(27, 20);
             this.lblPercent.TabIndex = 3;
             this.lblPercent.Text = "0%";
             this.lblPercent.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
-            // lblDuration
+            // lblBeat
             // 
-            this.lblDuration.BackColor = System.Drawing.Color.Transparent;
-            this.lblDuration.Font = new System.Drawing.Font("Consolas", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblDuration.ForeColor = System.Drawing.Color.White;
-            this.lblDuration.Location = new System.Drawing.Point(142, 22);
-            this.lblDuration.Name = "lblDuration";
-            this.lblDuration.Size = new System.Drawing.Size(60, 19);
-            this.lblDuration.TabIndex = 4;
-            this.lblDuration.Text = "00:00";
-            this.lblDuration.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.lblBeat.BackColor = System.Drawing.Color.Transparent;
+            this.lblBeat.Font = new System.Drawing.Font("Consolas", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblBeat.ForeColor = System.Drawing.Color.PaleGreen;
+            this.lblBeat.Location = new System.Drawing.Point(213, 3);
+            this.lblBeat.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.lblBeat.Name = "lblBeat";
+            this.lblBeat.Size = new System.Drawing.Size(90, 29);
+            this.lblBeat.TabIndex = 2;
+            this.lblBeat.Text = "15|16";
+            this.lblBeat.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // lblElapsed
+            // 
+            this.lblElapsed.BackColor = System.Drawing.Color.Transparent;
+            this.lblElapsed.Font = new System.Drawing.Font("Consolas", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblElapsed.ForeColor = System.Drawing.Color.White;
+            this.lblElapsed.Location = new System.Drawing.Point(2, 34);
+            this.lblElapsed.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.lblElapsed.Name = "lblElapsed";
+            this.lblElapsed.Size = new System.Drawing.Size(90, 29);
+            this.lblElapsed.TabIndex = 1;
+            this.lblElapsed.Text = "00:00";
+            this.lblElapsed.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // lblStatus
+            // 
+            this.lblStatus.AutoSize = true;
+            this.lblStatus.BackColor = System.Drawing.Color.Transparent;
+            this.lblStatus.Font = new System.Drawing.Font("Consolas", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblStatus.ForeColor = System.Drawing.Color.Red;
+            this.lblStatus.Location = new System.Drawing.Point(2, 3);
+            this.lblStatus.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.lblStatus.Name = "lblStatus";
+            this.lblStatus.Size = new System.Drawing.Size(103, 28);
+            this.lblStatus.TabIndex = 0;
+            this.lblStatus.Text = "Stopped";
+            this.lblStatus.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // PanelPlayer
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.pnlDisplay);
+            this.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.Name = "PanelPlayer";
-            this.Size = new System.Drawing.Size(200, 45);
+            this.Size = new System.Drawing.Size(300, 69);
             this.pnlDisplay.ResumeLayout(false);
             this.pnlDisplay.PerformLayout();
             this.ResumeLayout(false);

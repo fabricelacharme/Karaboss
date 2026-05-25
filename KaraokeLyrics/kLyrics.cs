@@ -13,7 +13,8 @@ namespace kar
         ConstantScrolling = 2,
         DynamicScrolling = 3,
         TwoLinesSwapped = 4,
-        FixedLines = 5,                                
+        FixedLines = 5,
+        
     }
 
 

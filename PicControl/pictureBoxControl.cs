@@ -357,6 +357,12 @@ namespace PicControl
         #endregion Draw filename
 
 
+        #region Draw informations
+
+        private List<string> _lstInformations = new List<string>();
+
+        #endregion Draw informations
+
         #region Draw syllables
 
         private float _AverageWidth;
@@ -1563,27 +1569,14 @@ namespace PicControl
         /// Display a text from another windows form (used in playlists to display song title and artist during the wait time before the song starts)
         /// </summary>
         /// <param name="tx"></param>
-        public void DisplayText(string tx, int ticks = 0)
+        public void DisplayText(List<string> Lines)
         {
-            List<string> lines = new List<string>();
+            if (Lines == null || Lines.Count == 0)  return;
 
-            string[] ArrayLines = tx.Split(_InternalSepLines.ToCharArray());
-            for (int i = 0; i < ArrayLines.Length; i++)
-            {
-                lines.Add(ArrayLines[i]);
-            }
-
-
-            //List<plLyric> plLyrics = StoreDemoText(tx, ticks);
-            _kLyrics = StoreDemoText(lines, ticks);
-
-            Init();
-
-            // Initial position
-            _currentPosition = 0;
-            currentLine = 1;
-            _currentTextPos = 0;
-
+            // provisional value
+            KaraokeDisplayType = KaraokeDisplayTypes.FixedLines;
+            // provisional value
+            KLyrics = StoreDemoText(Lines, 100);
             pBox.Invalidate();
         }
 
@@ -3178,8 +3171,8 @@ namespace PicControl
 
             #region draw text           
 
-            if (lstLyricsLines is null || lstLyricsLines.Count == 0)
-                return;
+            //if (lstLyricsLines is null || lstLyricsLines.Count == 0)
+            //    return;
             
             switch (KaraokeDisplayType)
             {
@@ -3197,7 +3190,8 @@ namespace PicControl
                     break;
                 case KaraokeDisplayTypes.FixedLines:
                     DrawTextWithFixedLines(e);
-                    break;
+                    break;               
+
             }
 
             #endregion
@@ -3729,7 +3723,7 @@ namespace PicControl
         /// <param name="e"></param>
         ///  <param name="infotext"</param>
         /// <param name="y"></param>
-        private void DrawInformation(PaintEventArgs e, int lineIndex, int seconds, int y0)
+        private void DrawInstrumental(PaintEventArgs e, int lineIndex, int seconds, int y0)
         {
             // Seconds
             // value    Display                     Color
@@ -3850,6 +3844,7 @@ namespace PicControl
             e.Graphics.ResetTransform();
         }
 
+      
         #endregion Code fragments
 
 
@@ -4069,7 +4064,7 @@ namespace PicControl
                                 // y4 normal old than new
                                 // Draw "(intrumental)" on active line and countdown on next line
 
-                                DrawInformation(e, _FirstLineToShow, SecondsBeforeSinging, y1);
+                                DrawInstrumental(e, _FirstLineToShow, SecondsBeforeSinging, y1);
 
                                 if (bCountDown)
                                 {
@@ -4110,7 +4105,7 @@ namespace PicControl
                                 // y4 normal 
 
                                 // draw ("instrumental") on previous line and countdown on current line
-                                DrawInformation(e, _FirstLineToShow - 1, SecondsBeforeSinging, y1 - _lineHeight);
+                                DrawInstrumental(e, _FirstLineToShow - 1, SecondsBeforeSinging, y1 - _lineHeight);
 
                                 DrawInactiveLineWithBorders(e, idx3, y3);
                                 DrawInactiveLineWithBorders(e, idx4, y4);
@@ -4128,7 +4123,7 @@ namespace PicControl
                                 DrawInactiveLineWithBorders(e, idx2, y2, false);
 
                                 // Draw instrumental on line 0 (y3)
-                                DrawInformation(e, idx3, -1, y3);
+                                DrawInstrumental(e, idx3, -1, y3);
                                 break;
 
                             case 3:
@@ -4143,7 +4138,7 @@ namespace PicControl
                                 DrawInactiveLineWithBorders(e, idx2, y2, true);
 
                                 // Draw instrumental on line 0
-                                DrawInformation(e, idx3, -1, y3);
+                                DrawInstrumental(e, idx3, -1, y3);
                                 break;
                         }
                         break;
@@ -4172,7 +4167,7 @@ namespace PicControl
                                 DrawInactiveLineWithBorders(e, idx2, y2, false);
 
                                 // Draw "(intrumental)" on 3rd line and countdown on next line
-                                DrawInformation(e, idx3, -1, y3);
+                                DrawInstrumental(e, idx3, -1, y3);
                                 break;
 
                             case 1:                                                 // LinePosition is 1
@@ -4187,7 +4182,7 @@ namespace PicControl
                                 DrawActiveLineWithBorders(e, _FirstLineToShow, y1);
 
                                 // Draw "(intrumental)" on 3rd line and countdown on next line
-                                DrawInformation(e, idx3, -1, y3);
+                                DrawInstrumental(e, idx3, -1, y3);
                                 break;
 
                             case 2:                                                 // LinePosition is 2   = LineOfInformationPosition                                                                                                                
@@ -4209,7 +4204,7 @@ namespace PicControl
                                     }
                                 }
                                 // Draw "(intrumental)" on active line and countdown on next line
-                                DrawInformation(e, _FirstLineToShow, SecondsBeforeSinging, y1);
+                                DrawInstrumental(e, _FirstLineToShow, SecondsBeforeSinging, y1);
 
                                 // Draw lines y3 and y4 only if they are less than 4 sec before the end of an instrumental
                                 if (bInstrumentalStarted)
@@ -4234,7 +4229,7 @@ namespace PicControl
                                 // y4 * information2
 
                                 // Draw "(intrumental)" on active line and countdown on next line
-                                DrawInformation(e, idx2, SecondsBeforeSinging, y2);
+                                DrawInstrumental(e, idx2, SecondsBeforeSinging, y2);
 
                                 DrawInactiveLineWithBorders(e, idx3, y3);
                                 DrawInactiveLineWithBorders(e, idx4, y4);
@@ -4307,7 +4302,7 @@ namespace PicControl
             }            
 
             if (bShowInformation)
-                DrawInformation(e, _FirstLineToShow, SecondsBeforeSinging, pBox.ClientRectangle.Top + pBox.ClientRectangle.Height / 2);
+                DrawInstrumental(e, _FirstLineToShow, SecondsBeforeSinging, pBox.ClientRectangle.Top + pBox.ClientRectangle.Height / 2);
 
             #endregion check whether to show information and update instrumental and countdown state
 
@@ -4418,7 +4413,7 @@ namespace PicControl
             }
 
             if (bShowInformation)
-                DrawInformation(e, _FirstLineToShow, SecondsBeforeSinging, pBox.ClientRectangle.Top + pBox.ClientRectangle.Height / 2);
+                DrawInstrumental(e, _FirstLineToShow, SecondsBeforeSinging, pBox.ClientRectangle.Top + pBox.ClientRectangle.Height / 2);
 
             #endregion check whether to show information and update instrumental and countdown state
 
@@ -4630,7 +4625,7 @@ namespace PicControl
                             case 0:
                                 // y1 * information
                                 // y2 normal
-                                DrawInformation(e, _FirstLineToShow, SecondsBeforeSinging, y1);
+                                DrawInstrumental(e, _FirstLineToShow, SecondsBeforeSinging, y1);
                                 
                                 if (bCountDown)
                                 {
@@ -4657,7 +4652,7 @@ namespace PicControl
                             case 1:
                                 // y2 information
                                 // y1 * normal
-                                DrawInformation(e, _FirstLineToShow + 1, -1, y2);
+                                DrawInstrumental(e, _FirstLineToShow + 1, -1, y2);
 
                                 DrawActiveLineWithBorders(e, _FirstLineToShow, y1);
                                 break;
@@ -4677,13 +4672,13 @@ namespace PicControl
                                 // y1 * normal
                                 // y2 information
                                 DrawActiveLineWithBorders(e, _FirstLineToShow, y1);
-                                DrawInformation(e, _FirstLineToShow + 1, -1, y1 + _lineHeight);
+                                DrawInstrumental(e, _FirstLineToShow + 1, -1, y1 + _lineHeight);
                                 break;
 
                             case 1:
                                 // y2 normal old than new
                                 // y1 * information
-                                DrawInformation(e, _FirstLineToShow, SecondsBeforeSinging, y1);
+                                DrawInstrumental(e, _FirstLineToShow, SecondsBeforeSinging, y1);
 
                                 if (bCountDown)
                                 {

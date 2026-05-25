@@ -1190,9 +1190,9 @@ namespace Karaboss
             pBox.endDemoText();
         }
 
-        public void DisplayText(string tx, int ticks = 0)
+        public void DisplayText(List<string>Lines)
         {
-            pBox.DisplayText(tx, ticks);
+            pBox.DisplayText(Lines);
         }
 
        

@@ -4116,47 +4116,44 @@ namespace Karaboss
         private void ManageDisplayLyricsForm()
         {
             // If the user does not want to see the lyrics => exit
-            if (!bKaraokeAlwaysOn)
-            { return; }
+            if (!bKaraokeAlwaysOn) return;
 
-            // If normal plying and no lyrics => exit
-            //if (currentPlaylistItem == null && !Karaclass.m_ShowChords && myLyricsMgmt.OrgplLyrics.Count == 0)
-            //{ return; }
 
-            if (currentPlaylistItem == null && !Karaclass.m_ShowChords && myLyricsMgmt.OrgKLyrics.Lines.Count == 0)
-            {
-                return;
-            }
-
+            if (currentPlaylistItem == null && !Karaclass.m_ShowChords && myLyricsMgmt.OrgKLyrics.Lines.Count == 0) return;
+            
             myLyricsMgmt.ResetDisplayChordsOptions(Karaclass.m_ShowChords);
-
+            
             DisplayLyricsForm();
 
 
-            // If no lyrics and a playlist, display something in the center
-            //if (currentPlaylistItem != null && myLyricsMgmt.OrgplLyrics.Count == 0 && !Karaclass.m_PauseBetweenSongs && Karaclass.m_CountdownSongs == 0 && !Karaclass.m_ShowChords)
+            // If no lyrics and a playlist, display song & singer informations in the center            
             if (currentPlaylistItem != null && myLyricsMgmt.OrgKLyrics.Lines.Count == 0 && !Karaclass.m_PauseBetweenSongs && Karaclass.m_CountdownSongs == 0 && !Karaclass.m_ShowChords)
             {
-                string sSinger = currentPlaylistItem.KaraokeSinger;
-                string centertxt;
-                if (sSinger == "" || sSinger == "<Song reserved by>")
+                // COUNTDOWN terminated
+                
+                List<string> Lines = new List<string>()
                 {
-                    centertxt = Path.GetFileNameWithoutExtension(currentPlaylistItem.Song);
-                }
-                else
-                {
-                    centertxt = Path.GetFileNameWithoutExtension(currentPlaylistItem.Song)
-                + _InternalSepLines + Strings.SungBy
-                + _InternalSepLines + currentPlaylistItem.KaraokeSinger;
+                    {" Next song:" },
+                    { Path.GetFileNameWithoutExtension(currentPlaylistItem.Song) }
+                };
+                
+                if (currentPlaylistItem.KaraokeSinger != string.Empty && currentPlaylistItem.KaraokeSinger != "<Song reserved by>")
+                {                
+                    Lines.Add(Strings.SungBy);
+                    Lines.Add(currentPlaylistItem.KaraokeSinger);
                 }
 
-                frmMidiLyrics.DisplayText(centertxt, (int)_duration);
+                frmMidiLyrics.DisplayText(Lines);
             }
             else
             {
-                // REstore number of lines of lyrics to display
+                // PAUSE terminated
+
+                // Restore number of lines of lyrics to display
                 if (Karaclass.m_PauseBetweenSongs)
                 {
+                    // Restore the values after displaying the song and artist information
+                    frmMidiLyrics.KaraokeDisplayType = Properties.Settings.Default.KaraokeDisplayType;
                     frmMidiLyrics.nbLyricsLines = Properties.Settings.Default.TxtNbLines;
                 }
 
@@ -4173,8 +4170,7 @@ namespace Karaboss
             //if (currentPlaylistItem == null && !Karaclass.m_ShowChords && myLyricsMgmt.OrgplLyrics.Count == 0)
             //{ return; }
 
-            if (currentPlaylistItem == null && !Karaclass.m_ShowChords && myLyricsMgmt.OrgKLyrics.Lines.Count == 0)
-            { return; }
+            if (currentPlaylistItem == null && !Karaclass.m_ShowChords && myLyricsMgmt.OrgKLyrics.Lines.Count == 0) return;
 
             string sSong;
             string sSinger = string.Empty;
@@ -6517,28 +6513,29 @@ namespace Karaboss
                     frmMidiLyrics.Owner = this;
                     frmMidiLyrics.Show();
                 }
-
+                
                 if (Application.OpenForms.OfType<frmMidiLyrics>().Count() > 0)
                 {
-                    // During the waiting time, display informations about the next singer
-                    int nbLines;
-                    string toptxt;
-                    string centertxt;
+                    List<string> lstSingerInfos;
 
+                    // During the waiting time, display informations about the next singer                  
                     if (currentPlaylistItem.KaraokeSinger == "" || currentPlaylistItem.KaraokeSinger == "<Song reserved by>")
-                    {
-                        toptxt = "Next song: " + Path.GetFileNameWithoutExtension(currentPlaylistItem.Song);
-                        centertxt = Path.GetFileNameWithoutExtension(currentPlaylistItem.Song);
-                        nbLines = 1;
+                    {            
+                        lstSingerInfos = new List<string>()
+                        {
+                            { "Next song:" },
+                            { Path.GetFileNameWithoutExtension(currentPlaylistItem.Song)},
+                        };
                     }
                     else
                     {
-
-                        toptxt = "Next song: " + Path.GetFileNameWithoutExtension(currentPlaylistItem.Song) + " - Next singer: " + currentPlaylistItem.KaraokeSinger;
-                        centertxt = Path.GetFileNameWithoutExtension(currentPlaylistItem.Song)
-                            + _InternalSepLines + Strings.SungBy
-                            + _InternalSepLines + currentPlaylistItem.KaraokeSinger;
-                        nbLines = 4;
+                        lstSingerInfos = new List<string>()
+                        {
+                            { "Next song:" },
+                            { Path.GetFileNameWithoutExtension(currentPlaylistItem.Song)},
+                            { "Next singer:"},
+                            { currentPlaylistItem.KaraokeSinger }
+                        };                       
                     }
 
                     // arriere plan provisoire
@@ -6546,15 +6543,11 @@ namespace Karaboss
                     frmMidiLyrics.DirSlideShow = Properties.Settings.Default.dirSlideShow;
                     frmMidiLyrics.AlloModifyDirSlideShow = false;
 
-                    // Warning, number of lyrics lines is changed here
-                    frmMidiLyrics.nbLyricsLines = nbLines;
+                                      
                     frmMidiLyrics.bTextBackGround = false;
 
-                    // Display singer in top panel
-                    frmMidiLyrics.DisplaySinger(toptxt);
-
                     // Display next singer in lyrics form
-                    frmMidiLyrics.DisplayText(centertxt);
+                    frmMidiLyrics.DisplayText(lstSingerInfos);
                 }
                 #endregion
 
