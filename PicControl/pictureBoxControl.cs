@@ -1536,14 +1536,18 @@ namespace PicControl
         /// <param name="sec">Count down max </param>
         public void LoadWaitSong(int sec)
         {
-            _nbLyricsLines = 1;
-            //_dirSlideShow = null;
-            SetDirectoryBackground(null);
+
+            // provisional value
+           
+            KaraokeDisplayType = KaraokeDisplayTypes.FixedLines;
+           
+            
+            //SetDirectoryBackground(null);
 
             // Initial position
-            _currentTextPos = -1;
-            vOffset = 0;
-            nextStartOfLineTime = 0;
+            //_currentTextPos = -1;
+            //vOffset = 0;
+            //nextStartOfLineTime = 0;
 
 
             List<string> lines = new List<string>();
@@ -1554,9 +1558,13 @@ namespace PicControl
             }
 
             // Do not use KLyrics but _kLyrics to be able to use the same LoadSong method for demo and real text
-            _kLyrics = StoreDemoText(lines, 500);
+            _kLyrics = StoreDemoText(lines, 100);
             
             Init(true);
+
+            // Init reset _nbLyricsLines
+            // So we have to force it
+            _nbLyricsLines = 1;
         }
 
         public void endDemoText()

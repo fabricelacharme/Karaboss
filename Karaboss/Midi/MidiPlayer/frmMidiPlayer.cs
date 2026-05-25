@@ -4167,8 +4167,7 @@ namespace Karaboss
         private void DisplayLyricsForm()
         {
             // If normal playing (no playlist) AND do not show chords AND no lyrics => do not show this form 
-            //if (currentPlaylistItem == null && !Karaclass.m_ShowChords && myLyricsMgmt.OrgplLyrics.Count == 0)
-            //{ return; }
+            
 
             if (currentPlaylistItem == null && !Karaclass.m_ShowChords && myLyricsMgmt.OrgKLyrics.Lines.Count == 0) return;
 
@@ -6502,6 +6501,8 @@ namespace Karaboss
             // Display a waiting information (not the words)
             if (Karaclass.m_PauseBetweenSongs)
             {
+                #region Pause between songs
+
                 PlayerState = PlayerStates.LaunchNextSong;
                 BtnStatus();
 
@@ -6554,10 +6555,11 @@ namespace Karaboss
                 // Focus on paused windows
                 this.Restore();
                 this.Activate();
+
+                #endregion Pause between songs
             }
             else
-            {
-                // NO PAUSE MODE
+            {                
                 if (Karaclass.m_CountdownSongs == 0)
                 {
                     // NO Timer => play                    
@@ -6588,7 +6590,7 @@ namespace Karaboss
             if (Application.OpenForms.OfType<frmMidiLyrics>().Count() == 0)
             {
                 frmMidiLyrics = new frmMidiLyrics(myLyricsMgmt, MIDIfileName);
-                frmMidiLyrics.Owner = this;
+                //frmMidiLyrics.Owner = this;
                 frmMidiLyrics.Show();
             }
 
@@ -7771,17 +7773,14 @@ namespace Karaboss
             // Wait until X sec
             if (w_tick < w_wait)
             {
-                // color each second
-                //if (frmMidiLyrics != null)
-                //    frmMidiLyrics.ColorLyric(w_tick * 10);
-                frmMidiLyrics?.ColorLyric(w_tick * 10);
+                Console.WriteLine("w_tick = " + w_tick);
+                // color each second              
+                frmMidiLyrics?.ColorLyric(w_tick * 100);
 
             }
             else if (w_tick == w_wait)
             {
-                // set syllabes to null
-                //if (frmMidiLyrics!= null)
-                //    frmMidiLyrics.EndWaitSong();
+                // set syllabes to null               
                 frmMidiLyrics?.EndWaitSong();
 
             }

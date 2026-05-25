@@ -54,6 +54,16 @@ namespace Karaboss.Mp3
      
         private List<(string, string)> lstSaveTimestamps = new List<(string, string)>();
 
+        #region Countdown
+
+        // To wait between 2 songs (playlists)
+        private int w_tick = 0;
+        private int w_wait = 10;
+
+        Timer timerCountdown = new Timer();
+
+        #endregion Countdown
+
 
         #region MP3
 
@@ -769,6 +779,23 @@ namespace Karaboss.Mp3
                     break;
 
 
+                case PlayerStates.Waiting:
+                    // if Count down running: pause it
+                    // stop timer : status = WaitingPaused
+                    PlayerState = PlayerStates.WaitingPaused;
+                    BtnStatus();
+                    //timer5.Enabled = false;
+                    break;
+
+
+                case PlayerStates.WaitingPaused:
+                    // if Count down was paused
+                    // => restart count down timer
+                    PlayerState = PlayerStates.Waiting;
+                    BtnStatus();
+                    //timer5.Enabled = true;
+                    break;
+
                 case PlayerStates.LaunchNextSong:       // pause between 2 songs of a playlist
                     if (Karaclass.m_CountdownSongs == 0)
                     {
@@ -782,6 +809,12 @@ namespace Karaboss.Mp3
                         StartCountDownTimer();
                     }
                     break;
+
+                case PlayerStates.Stopped:
+                    // First play                
+                    FirstPlaySong(start);
+                    break;
+
                 default:
                     // First play                
                     FirstPlaySong(start);
@@ -1745,7 +1778,53 @@ namespace Karaboss.Mp3
             InitGridView();
 
             #endregion dgview
-            
+
+
+            #region Countdown
+
+            timerCountdown = new Timer();
+            timerCountdown.Tick += timerCountdown_Tick;
+
+
+            #endregion Countdown
+        }
+
+        private void timerCountdown_Tick(object sender, EventArgs e)
+        {
+            // Si pause next song, afficher le text de la prochaine chansons        
+            w_tick++;
+
+            // Wait until X sec
+            if (w_tick < w_wait)
+            {
+                Console.WriteLine("w_tick = " + w_tick);
+                  
+                
+                // color each second              
+                //frmMp3Lyrics?.ColorLyric(w_tick * 100);
+                frmMp3Lyrics.GetPositionFromPlayer(w_tick * 100);
+            }
+            else if (w_tick == w_wait)
+            {
+                // set syllabes to null               
+                //frmMp3Lyrics?.EndWaitSong();
+
+            }
+            else
+            {
+                // Countdown completed, Play next song of the play list
+                timerCountdown.Enabled = false;
+                PlayerState = PlayerStates.Stopped;
+
+                // Restore display options modified by the wait animation
+                if (frmMp3Lyrics != null)
+                {
+                    //frmMp3Lyrics.LoadOptions();
+                    SetSlideShow();
+                }
+                PlayPauseMusic();
+
+            }
         }
 
 
@@ -2035,7 +2114,14 @@ namespace Karaboss.Mp3
         {
             PlayerState = PlayerStates.Waiting;
             BtnStatus();
-            
+
+            w_tick = 0;
+            int sec = Karaclass.m_CountdownSongs;  // wait for x seconds
+            w_wait = sec + 4;
+
+
+            timerCountdown.Interval = 1000;  // interval = 1 sec      
+            timerCountdown.Enabled = true;
         }
 
         #endregion Playlists
