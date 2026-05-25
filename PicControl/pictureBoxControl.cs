@@ -1805,9 +1805,20 @@ namespace PicControl
                 return kls;
             }
 
+            
             // Introduction                        
             for (int i = 0; i < kls.Lines.Count; i++)
             {
+                #region Clean lyrics
+
+                if (kls.Lines[i].ToString().ToLower() == "(instrumental)"
+                    || kls.Lines[i].ToString().ToLower() == "(introduction)"
+                    || kls.Lines[i].ToString().ToLower() == "(ending)"
+                    )
+                    continue;
+
+                #endregion Clean lyrics
+
                 line = new kLine();
                 for (int j = 0; j < kls.Lines[i].Syllables.Count; j++)
                 {
@@ -1839,6 +1850,8 @@ namespace PicControl
                         }                        
                         else if (t > _FirstMelodyNoteTicksOn && t - tOnPrevious > _MinimumInstrumentalDuration)
                         {
+                            #region Instrumental
+
                             // Instrumental must be on line 0 or 2 => create additional blank lines in order to have instrumental on the right position
 
                             // instrumental allowed
@@ -1901,17 +1914,21 @@ namespace PicControl
                             }
 
                             line = new kLine();
+
+                            #endregion Instrumental
                         }
 
                         tOnPrevious = t;    // Start time of previous lyric
                         duration = kls.Lines[i].Syllables[j].TicksOff - kls.Lines[i].Syllables[j].TicksOn; // Duration of previous lyric
+                    
                     }
                     line.Add(kls.Lines[i].Syllables[j]);
                 }
                 klsWithinstrumentals.Add(line);
+
             }
             
-            #region ENDING
+            #region Ending
             
             t = _kLyrics.Lines.Last().Syllables.Last().TicksOn;
 
@@ -1943,7 +1960,7 @@ namespace PicControl
                     }
                 }
 
-                #region ENDING
+                #region Ending
                 // First line
                 line = new kLine();
                 line.Add(new Syllable() { Text = "(ending)", TicksOn = t + duration, CharType = Syllable.CharTypes.Information });
@@ -1957,10 +1974,10 @@ namespace PicControl
                     line.Add(new Syllable() { Text = "", TicksOn = tend, CharType = Syllable.CharTypes.Information });
                     klsWithinstrumentals.Add(line);
                 }
-                #endregion ENDING
+                #endregion Ending
             }
 
-            #endregion ENDING
+            #endregion Ending
 
             return klsWithinstrumentals;
         }
