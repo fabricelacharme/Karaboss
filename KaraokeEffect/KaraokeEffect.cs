@@ -1120,14 +1120,15 @@ namespace keffect
                 lines.Add(i.ToString());
             }
 
-            // Do not use KLyrics but _kLyrics to be able to use the same LoadSong method for demo and real text
-            _kLyrics = StoreDemoText(lines, 100);
+            // Store text with a step of 1000 ms (1 second)
+            _kLyrics = StoreDemoText(lines, 1000);
 
             Init();
 
-            // Init reset _nbLyricsLines
+            // The prox Init() resets the value of _nbLyricsLines 
             // So we have to force it
             _nbLyricsLines = 1;
+            _LastLineToShow = 0;
         }
 
         public void LoadDemoText()
@@ -1228,10 +1229,7 @@ namespace keffect
 
             #endregion Gradient colors
             
-        }
-
-      
-
+        }      
 
         /// <summary>
         /// Display a text from another windows form (used in playlists to display song title and artist during the wait time before the song starts)
@@ -1697,8 +1695,9 @@ namespace keffect
             if (_kLyrics == null || _kLyrics.Lines.Count == 0) return;
 
             // Search _line & index of the next lyric to play
-            (_FirstLineToShow, nextindex) = GetNextIndex(pos);            
+            (_FirstLineToShow, nextindex) = GetNextIndex(pos);
 
+            //Console.WriteLine("_FirstLineToShow = " + _FirstLineToShow + " - nextindex = " + nextindex + " - pos = " + pos);
 
             // CurLength:
             // Mesure length of a portion of line (already sung + being sung)
@@ -1875,6 +1874,9 @@ namespace keffect
             active_fragment_length = MeasureString(active_fragment, _karaokeFont.Size);
             highlight_fragment_length = MeasureString(highlight_fragment, _karaokeFont.Size);
             inactive_fragment_length = MeasureString(inactive_fragment, _karaokeFont.Size);
+            
+            //Console.WriteLine("curline = " + curline + " - nextindex = " + nextindex);
+            //Console.WriteLine("active_fragment = " + active_fragment + " - highlight_fragment = " + highlight_fragment + " - inactive_fragment = " + inactive_fragment);
 
             return res;
         }

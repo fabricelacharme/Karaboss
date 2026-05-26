@@ -1799,24 +1799,18 @@ namespace Karaboss.Mp3
 
         private void timerCountdown_Tick(object sender, EventArgs e)
         {
-            // Si pause next song, afficher le text de la prochaine chansons        
+            // w_tick increases by one second (1000 ms) at each Tick        
             w_tick++;
-
-            // Wait until X sec
+            
             if (w_tick < w_wait)
-            {
-                Console.WriteLine("w_tick = " + w_tick);
-                  
-                
-                // color each second              
-                //frmMp3Lyrics?.ColorLyric(w_tick * 100);
-                frmMp3Lyrics.GetPositionFromPlayer(w_tick * 100 * 1000);
+            {                                                 
+                // color each second                             
+                frmMp3Lyrics.GetPositionFromPlayer(w_tick);
             }
             else if (w_tick == w_wait)
             {
                 // set syllabes to null               
                 //frmMp3Lyrics?.EndWaitSong();
-
             }
             else
             {
@@ -1825,7 +1819,6 @@ namespace Karaboss.Mp3
                 PlayerState = PlayerStates.Stopped;
                 ManageCountdownEnding();
                 PlayPauseMusic();
-
             }
         }
 
@@ -2118,13 +2111,13 @@ namespace Karaboss.Mp3
             BtnStatus();
 
             w_tick = 0;
-            int sec = Karaclass.m_CountdownSongs;  // wait for x seconds
-            w_wait = sec + 1; // + 4;
+            int seconds = Karaclass.m_CountdownSongs;  // wait for x seconds
+            w_wait = seconds + 1; 
 
 
-            frmMp3Lyrics.LoadWaitSong(sec);
+            frmMp3Lyrics.LoadWaitSong(seconds);
 
-            timerCountdown.Interval = 1000;  // interval = 1 sec      
+            timerCountdown.Interval = 1000;  // interval of countdown = 1 sec      
             timerCountdown.Enabled = true;
         }
 
