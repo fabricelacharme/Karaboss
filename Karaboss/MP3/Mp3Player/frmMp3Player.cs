@@ -98,7 +98,6 @@ namespace Karaboss.Mp3
 
         #endregion dgview        
 
-
         private enum Directions
         {
             Forward,
@@ -719,8 +718,7 @@ namespace Karaboss.Mp3
 
             if (Karaclass.m_CountdownSongs > 0)
             {
-                // Countdown terminated
-                //Console.WriteLine("Count down between songs of the playlist: " + Karaclass.m_CountdownSongs + " seconds");
+                // Countdown terminated                
                 if (Application.OpenForms.OfType<frmMp3Lyrics>().Count() > 0)
                 {
                     frmMp3Lyrics.KaraokeDisplayType = Properties.Settings.Default.KaraokeDisplayType;
@@ -1477,7 +1475,7 @@ namespace Karaboss.Mp3
                     SendInformationsToLyrics();
 
                     // Load lyrics in KaraokeEffect of frmMp3Myrics
-                    if (Application.OpenForms.OfType<frmMp3Lyrics>().Count() > 0)                    
+                    if (Application.OpenForms.OfType<frmMp3Lyrics>().Count() > 0 && currentPlaylistItem == null)                    
                         frmMp3Lyrics.SetLyrics(Mp3LyricsMgmtHelper.mp3KaraokeLyrics);
                     
                     break;
@@ -1491,10 +1489,9 @@ namespace Karaboss.Mp3
                     SendInformationsToLyrics();
 
                     // Load lyrics in KaraokeEffect of frmMp3Myrics
-                    if (Application.OpenForms.OfType<frmMp3Lyrics>().Count() > 0)
-                    {
+                    if (Application.OpenForms.OfType<frmMp3Lyrics>().Count() > 0 && currentPlaylistItem == null)                    
                         frmMp3Lyrics.SetLyrics(Mp3LyricsMgmtHelper.mp3KaraokeLyrics);
-                    }
+                    
                     break;
                 
                 case Mp3LyricsTypes.KOKFile:

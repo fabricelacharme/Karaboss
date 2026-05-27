@@ -14,7 +14,8 @@ namespace kar
         DynamicScrolling = 3,
         TwoLinesSwapped = 4,
         FixedLines = 5,
-        
+        Countdown = 6,
+        Informations = 7,
     }
 
 

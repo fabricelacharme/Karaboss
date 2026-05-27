@@ -480,7 +480,7 @@ namespace keffect
         #region Karaoke display layout
 
         // Fixed lines, scrolling lines, 4 lines swapped, 2 lines swapped
-        private kar.KaraokeDisplayTypes _karaokeDisplayType = KaraokeDisplayTypes.FixedLines;
+        private kar.KaraokeDisplayTypes _karaokeDisplayType = KaraokeDisplayTypes.FourLinesSwapped;
         public kar.KaraokeDisplayTypes KaraokeDisplayType
         {
             get { return _karaokeDisplayType; }
@@ -864,7 +864,6 @@ namespace keffect
                     _bforceUppercase = value;
                     if (_bIsSettings)
                         LoadDemoText();
-
                 }
             }
         }
@@ -1110,8 +1109,8 @@ namespace keffect
 
         public void LoadWaitSong(int sec)
         {
-            // provisional value
-            KaraokeDisplayType = KaraokeDisplayTypes.FixedLines;
+            // provisional value        
+            KaraokeDisplayType = KaraokeDisplayTypes.Countdown;
 
             List<string> lines = new List<string>();
             // 10|9|8|7|6|5|4|3|2|1|0|       
@@ -1124,11 +1123,6 @@ namespace keffect
             _kLyrics = StoreDemoText(lines, 1000);
 
             Init();
-
-            // The prox Init() resets the value of _nbLyricsLines 
-            // So we have to force it
-            _nbLyricsLines = 1;
-            _LastLineToShow = 0;
         }
 
         public void LoadDemoText()
@@ -1240,7 +1234,7 @@ namespace keffect
             if (Lines == null || Lines.Count == 0) return;
 
             // provisional value
-            KaraokeDisplayType = KaraokeDisplayTypes.FixedLines;
+            KaraokeDisplayType = KaraokeDisplayTypes.Informations;
             // provisional value
             KLyrics = StoreDemoText(Lines, 100);
             pBox.Invalidate();
@@ -1510,6 +1504,12 @@ namespace keffect
                 case KaraokeDisplayTypes.FixedLines:
                     _nbLyricsLines = _nbLyricsLinesOrg;
                     break;
+                case KaraokeDisplayTypes.Countdown:
+                    _nbLyricsLines = 1;
+                    break;
+                case KaraokeDisplayTypes.Informations:
+                    _nbLyricsLines = _kLyrics.Lines.Count;
+                    break;
                 default:
                     _nbLyricsLines = _nbLyricsLinesOrg;
                     break;
@@ -1549,11 +1549,10 @@ namespace keffect
             _LastLineToShow = SetLastLineToShow(_FirstLineToShow, _kLyrics.Lines.Count, _nbLyricsLines);
 
 
-
             if (_bIsSettings)
                 SetPos(200);
 
-            if (KaraokeDisplayType == KaraokeDisplayTypes.ConstantScrolling || KaraokeDisplayType == KaraokeDisplayTypes.DynamicScrolling)
+            if (KaraokeDisplayType == KaraokeDisplayTypes.ConstantScrolling)
                 InitScrollMode();
         }
 
@@ -2385,6 +2384,10 @@ namespace keffect
                     DrawTextWithTwoLinesSwapped(e);
                     break;
                 case KaraokeDisplayTypes.FixedLines:
+                    DrawTextWithFixedLines(e);
+                    break;
+                case KaraokeDisplayTypes.Countdown:
+                case KaraokeDisplayTypes.Informations:
                     DrawTextWithFixedLines(e);
                     break;
 
