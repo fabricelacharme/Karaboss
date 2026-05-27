@@ -812,9 +812,8 @@ namespace Karaboss.Mp3
                         FirstPlaySong(0);
                     }
                     else
-                    {
-                        // Start  count down timer
-                        StartCountDownTimer();
+                    {                                                 
+                        StartCountDownTimer();      // Start  count down timer                        
                     }
                     break;
 
@@ -1443,10 +1442,7 @@ namespace Karaboss.Mp3
         /// <param name="FileName"></param>
         private void ExtractMp3Lyrics(string FileName)
         {
-
-            Mp3LyricsMgmtHelper.mp3KaraokeLyrics = new kLyrics();
-            //Mp3LyricsMgmtHelper.mp3KaraokeLine = new kLine();
-
+            Mp3LyricsMgmtHelper.mp3KaraokeLyrics = new kLyrics();           
 
             Player.GetMp3Infos(Mp3FullPath);                        
             pBox.Image = Player.AlbumArtImage;            
@@ -1805,12 +1801,15 @@ namespace Karaboss.Mp3
             if (w_tick < w_wait)
             {                                                 
                 // color each second                             
-                frmMp3Lyrics.GetPositionFromPlayer(w_tick);
+                frmMp3Lyrics?.GetPositionFromPlayer(w_tick);
             }
             else if (w_tick == w_wait)
             {
-                // set syllabes to null               
-                //frmMp3Lyrics?.EndWaitSong();
+                if (Mp3LyricsMgmtHelper.mp3KaraokeLyrics.Lines.Count == 0)
+                {
+                    if (Application.OpenForms.OfType<frmMp3Lyrics>().Count() > 0)
+                        frmMp3Lyrics.Close();
+                }              
             }
             else
             {
@@ -2012,11 +2011,9 @@ namespace Karaboss.Mp3
                             { currentPlaylistItem.KaraokeSinger }
                         };
                     }
-
-
+                    
                     // Display next singer in lyrics form
                     frmMp3Lyrics.DisplayText(lstSingerInfos);
-
                 }
                 #endregion
 
@@ -2112,9 +2109,15 @@ namespace Karaboss.Mp3
 
             w_tick = 0;
             int seconds = Karaclass.m_CountdownSongs;  // wait for x seconds
-            w_wait = seconds + 1; 
+            w_wait = seconds + 1;
 
-
+            // Open form if not present
+            if (Application.OpenForms.OfType<frmMp3Lyrics>().Count() == 0)
+            {
+                frmMp3Lyrics = new frmMp3Lyrics(Path.GetFileNameWithoutExtension(Mp3FullPath));
+                frmMp3Lyrics.Show();                                
+            }
+            // Load countdown
             frmMp3Lyrics.LoadWaitSong(seconds);
 
             timerCountdown.Interval = 1000;  // interval of countdown = 1 sec      

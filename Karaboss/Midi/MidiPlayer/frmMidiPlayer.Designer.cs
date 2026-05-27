@@ -150,7 +150,7 @@ namespace Karaboss
             this.TimeStartVLine = new System.Windows.Forms.Panel();
             this.TimeVLine = new System.Windows.Forms.Panel();
             this.saveMidiFileDialog = new System.Windows.Forms.SaveFileDialog();
-            this.timer5 = new System.Windows.Forms.Timer(this.components);
+            this.timerCountdown = new System.Windows.Forms.Timer(this.components);
             this.sequence1 = new Sanford.Multimedia.Midi.Sequence();
             this.sequencer1 = new Sanford.Multimedia.Midi.Sequencer();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
@@ -1237,9 +1237,9 @@ namespace Karaboss
             resources.ApplyResources(this.TimeVLine, "TimeVLine");
             this.TimeVLine.Name = "TimeVLine";
             // 
-            // timer5
+            // timerCountdown
             // 
-            this.timer5.Tick += new System.EventHandler(this.Timer5_Tick);
+            this.timerCountdown.Tick += new System.EventHandler(this.timerCountdown_Tick);
             // 
             // sequence1
             // 
@@ -1347,7 +1347,7 @@ namespace Karaboss
         private System.Windows.Forms.ToolStripMenuItem mnuEdit;
         private System.Windows.Forms.ToolStripMenuItem mnuEditAddLyrics;
         private System.Windows.Forms.ToolStripMenuItem mnuHelpAboutSong;
-        private System.Windows.Forms.Timer timer5;
+        private System.Windows.Forms.Timer timerCountdown;
         private System.Windows.Forms.ToolStripMenuItem mnuMidiNewTrack;
         private System.Windows.Forms.Label lblCrocheNote;
         private System.Windows.Forms.Label lblBlackNote;

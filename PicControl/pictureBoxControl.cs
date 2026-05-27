@@ -2176,7 +2176,7 @@ namespace PicControl
         /// instrumental breaks.</remarks>
         private void CheckIfInstrumentalBegins()
         {
-            if (_kLyrics.Lines.Count == 0) return;
+            if (_kLyrics.Lines.Count == 0  || _FirstLineToShow >= _kLyrics.Lines.Count) return;
 
             // Check if lines 3 and 4 must be hiden             
             if (!bInstrumentalStarted)

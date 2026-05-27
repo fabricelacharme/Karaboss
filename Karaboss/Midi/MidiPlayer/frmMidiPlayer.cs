@@ -718,7 +718,7 @@ namespace Karaboss
             PlayerState = PlayerStates.Stopped;
             try
             {
-                timer5.Enabled = false;
+                timerCountdown.Enabled = false;
                 sequencer1.Stop();
 
                 // Si point de départ n'est pas le début du morceau
@@ -778,7 +778,7 @@ namespace Karaboss
                     // stop timer : status = WaitingPaused
                     PlayerState = PlayerStates.WaitingPaused;
                     BtnStatus();
-                    timer5.Enabled = false;
+                    timerCountdown.Enabled = false;
                     break;
 
                 case PlayerStates.WaitingPaused:
@@ -786,7 +786,7 @@ namespace Karaboss
                     // => restart count down timer
                     PlayerState = PlayerStates.Waiting;
                     BtnStatus();
-                    timer5.Enabled = true;
+                    timerCountdown.Enabled = true;
                     break;
 
                 case PlayerStates.LaunchNextSong:       // pause between 2 songs of a playlist
@@ -797,9 +797,8 @@ namespace Karaboss
                         FirstPlaySong(newstart);
                     }
                     else
-                    {
-                        // Start  count down timer
-                        StartCountDownTimer();
+                    {                        
+                        StartCountDownTimer();                       
                     }
                     break;
 
@@ -4125,7 +4124,9 @@ namespace Karaboss
             
             myLyricsMgmt.ResetDisplayChordsOptions(Karaclass.m_ShowChords);
             
-            DisplayLyricsForm();
+
+            if (myLyricsMgmt.OrgKLyrics.Lines.Count > 0)
+                DisplayLyricsForm();
 
 
             // If no lyrics and a playlist, display song & singer informations in the center            
@@ -4147,7 +4148,7 @@ namespace Karaboss
 
                 frmMidiLyrics.DisplayText(Lines);
             }
-            else
+            else if (myLyricsMgmt.OrgKLyrics.Lines.Count > 0)
             {
                 // PAUSE terminated
 
@@ -6610,27 +6611,19 @@ namespace Karaboss
 
             w_tick = 0;
             int sec = Karaclass.m_CountdownSongs;  // wait for x seconds
-            w_wait = sec + 1; // + 4;
+            w_wait = sec + 1; 
 
+            // Open form if not present
             if (Application.OpenForms.OfType<frmMidiLyrics>().Count() == 0)
             {
-                frmMidiLyrics = new frmMidiLyrics(myLyricsMgmt, MIDIfileName);
-                //frmMidiLyrics.Owner = this;
-                frmMidiLyrics.Show();
+                frmMidiLyrics = new frmMidiLyrics(myLyricsMgmt, MIDIfileName);               
+                frmMidiLyrics.Show();                           
             }
 
-            if (Application.OpenForms.OfType<frmMidiLyrics>().Count() > 0)
-            {
-                // Display song & singer
-                string nextsong = Path.GetFileNameWithoutExtension(currentPlaylistItem.Song);
-                string txt = "Next song: " + nextsong + " - Next singer: " + currentPlaylistItem.KaraokeSinger;
-                frmMidiLyrics.DisplaySinger(txt);
+            frmMidiLyrics.LoadWaitSong(sec);
 
-                frmMidiLyrics.LoadWaitSong(sec);
-            }
-
-            timer5.Interval = 1000;  // interval = 1 sec      
-            timer5.Enabled = true;
+            timerCountdown.Interval = 1000;  // interval = 1 sec      
+            timerCountdown.Enabled = true;
         }
 
 
@@ -7790,7 +7783,7 @@ namespace Karaboss
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void Timer5_Tick(object sender, EventArgs e)
+        private void timerCountdown_Tick(object sender, EventArgs e)
         {            
             // Si pause next song, afficher le text de la prochaine chansons        
             w_tick++;            
@@ -7798,25 +7791,30 @@ namespace Karaboss
             // Wait until X sec
             if (w_tick < w_wait)
             {
-                Console.WriteLine("w_tick = " + w_tick);
-                // color each second              
+                //Console.WriteLine("w_tick = " + w_tick);
+                // color each second                             
                 frmMidiLyrics?.ColorLyric(w_tick * 100);
 
             }
             else if (w_tick == w_wait)
             {
                 // set syllabes to null               
-                frmMidiLyrics?.EndWaitSong();
+                //frmMidiLyrics?.EndWaitSong();
 
+                if (!myLyricsMgmt.bHasLyrics) {
+
+                    if (Application.OpenForms.OfType<frmMidiLyrics>().Count() > 0)
+                        frmMidiLyrics.Close();
+                }
             }
             else
             {
                 // Countdown completed, Play next song of the play list
-                timer5.Enabled = false;              
+                timerCountdown.Enabled = false;              
                 PlayerState = PlayerStates.Stopped;
 
                 // Restore display options modified by the wait animation
-                if (frmMidiLyrics != null)
+                if (Application.OpenForms.OfType<frmMidiLyrics>().Count() > 0)
                 {
                     frmMidiLyrics.LoadOptions();
                     SetSlideShow();
