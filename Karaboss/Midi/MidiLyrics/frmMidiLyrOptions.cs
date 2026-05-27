@@ -33,10 +33,8 @@
 #endregion
 using GradientApp;
 using kar;
-using Karaboss.Mp3;
 using Karaboss.Resources.Localization;
 using Karaboss.Themes;
-using keffect;
 using System;
 using System.Collections.Generic;
 using System.Drawing;

@@ -45,7 +45,6 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
-using TagLib.Mpeg4;
 
 namespace Karaboss.Mp3
 {    
@@ -922,6 +921,7 @@ namespace Karaboss.Mp3
                 nbLyricsLines = Properties.Settings.Default.TxtNbLines;
 
                 SingleImagePath = Properties.Settings.Default.SingleImagePath;
+
                 // Frequency of slide show
                 FreqSlideShow = Properties.Settings.Default.freqSlideShow;
                 // Position image

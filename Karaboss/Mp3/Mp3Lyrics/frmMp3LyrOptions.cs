@@ -9,7 +9,6 @@ using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
-using TagLib.Mpeg4;
 
 
 namespace Karaboss.Mp3
@@ -662,6 +661,13 @@ namespace Karaboss.Mp3
 
                 // Number of lines to display
                 Properties.Settings.Default.TxtNbLines = _nbLyricsLines;
+
+
+                // Display single Image
+                if (System.IO.File.Exists(SingleImagePath))
+                {
+                    Properties.Settings.Default.SingleImagePath = SingleImagePath;
+                }
 
                 // SlideShow
                 dirSlideShow = txtSlideShow.Text.Trim();
