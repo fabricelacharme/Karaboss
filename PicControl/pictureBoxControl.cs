@@ -2695,6 +2695,9 @@ namespace PicControl
 
             _currentPosition = 0;
             _currentTextPos = -1;
+
+            PlayerPositionTicks = 0;
+
             pBox.Invalidate();
         }
                      
@@ -4396,7 +4399,6 @@ namespace PicControl
 
         private void DslDrawTextWithBorder(PaintEventArgs e)
         {
-
             // The vertical position of the lines is calculated according to the position of the song in the current line and the duration of the current line
 
             int TopMargin = bShowSongName ? pBox.ClientRectangle.Top + (int)(_titleMarginTop * pBox.Height) : pBox.ClientRectangle.Top;
@@ -4405,6 +4407,7 @@ namespace PicControl
             double CurLineStart;
             double NextLineStart;
 
+            int y2;
 
             #region Draw FileName
 
@@ -4434,7 +4437,7 @@ namespace PicControl
             #endregion check whether to show information and update instrumental and countdown state
 
 
-            #region Caculate vertical position of the lines
+            #region Caculate vertical position of the active line
 
             int y = pBox.ClientRectangle.Top + pBox.ClientRectangle.Height / 2;
 
@@ -4442,13 +4445,11 @@ namespace PicControl
             if (_FirstLineToShow + 1 < _kLyrics.Lines.Count && _kLyrics.Lines[_FirstLineToShow + 1].Syllables.First().CharType != Syllable.CharTypes.ParagraphSep)
             {
                 NextLineStart = _kLyrics.Lines[_FirstLineToShow + 1].Syllables.First().TicksOn;
-            }
-            
+            }            
             else if (_FirstLineToShow + 2 < _kLyrics.Lines.Count)
             {
                 NextLineStart = _kLyrics.Lines[_FirstLineToShow + 2].Syllables.First().TicksOn;
-            }
-            
+            }            
             else
             {
                 // If there is no next line, we consider that the next line starts at the end of the current line
@@ -4466,6 +4467,7 @@ namespace PicControl
             #endregion Caculate vertical position of the lines
 
 
+            /*
             // Draw lines starting from this position
             for (int i = 0; i < _kLyrics.Lines.Count; i++)
             {
@@ -4480,7 +4482,7 @@ namespace PicControl
                     break; // Do not draw lines that are out of the control
 
                 #endregion Do not draw lines that are out of the control
-
+                
 
                 if (i < _FirstLineToShow && y + (i - _FirstLineToShow) * _lineHeight > TopMargin)
                 {
@@ -4496,6 +4498,46 @@ namespace PicControl
                 {
                     // Draw next line
                     DrawInactiveLineWithBorders(e, i, y + (i - _FirstLineToShow) * _lineHeight, false);
+                }
+            }
+            */
+
+            // Draw lines starting from this position
+            for (int i = 0; i < _kLyrics.Lines.Count; i++)
+            {
+                #region Do not draw lines that are out of the control
+
+                // Do not draw lines of information
+                if (_kLyrics.Lines[i].Syllables.Last().CharType == Syllable.CharTypes.Information)
+                    continue;
+
+
+                if (y + (i - _FirstLineToShow) * _lineHeight > BottomMargin)
+                    break; // Do not draw lines that are out of the control
+
+                #endregion Do not draw lines that are out of the control
+
+                y2 = y + (i - _FirstLineToShow) * _lineHeight;
+
+                if (i < _FirstLineToShow && y2 > TopMargin)
+                {
+                    //if (bShowChords)
+                    //    y2 = y2 - 2 * _lineHeight / 3;
+                    // Draw previous line
+                    DrawInactiveLineWithBorders(e, i, y2, true);
+                }
+                else if (i == _FirstLineToShow)
+                {
+                    // Draw current line
+                    DrawActiveLineWithBorders(e, i, y);
+                }
+                else if (i > _FirstLineToShow)
+                {
+                    //if (bShowChords)
+                    //    y2 = y2 + 2 * _lineHeight / 3;
+                    
+                    // Draw next line
+                    DrawInactiveLineWithBorders(e, i, y2, false);
                 }
             }
 
