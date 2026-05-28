@@ -739,6 +739,8 @@ namespace Karaboss
                 Properties.Settings.Default.freqSlideShow = freqSlideShow;
                 Properties.Settings.Default.SizeMode = SizeMode;
 
+                #region Text position
+
                 switch (OptionDisplay)
                 {
                     case Karaclass.OptionsDisplay.Top:
@@ -754,6 +756,8 @@ namespace Karaboss
                         Properties.Settings.Default.LyricsOptionDisplay = "Center";
                         break;
                 }
+
+                #endregion Text position
 
                 // Lyrics background
                 Properties.Settings.Default.bLyricsBackGround = chkTextBackground.Checked;
@@ -1403,6 +1407,7 @@ namespace Karaboss
             Color clr = SelectColorFromButton(picInactiveChordColor, txtInactiveChordColor);
             InactiveChordColor = clr;
             ApplyNewColors();
+            
         }
 
         private void btnChordHighlightColor_Click(object sender, EventArgs e)
@@ -1410,6 +1415,7 @@ namespace Karaboss
             Color clr = SelectColorFromButton(picHighlightChordColor, txtHighlightChordColor);
             HighlightChordColor = clr;
             ApplyNewColors();
+            
         }
 
         #endregion chords
@@ -1817,7 +1823,6 @@ namespace Karaboss
             {
                 this.Text = Title;
             }
-
         }
 
 
@@ -1918,16 +1923,7 @@ namespace Karaboss
                     cbRhythm1.SelectedItem = item;
                     break;
                 }
-            }
-           
-
-            /*
-             *  This is no more working with themes
-            cbGrad0.SelectedIndex = cbGrad0.Items.IndexOf(Grad0Color);
-            cbGrad1.SelectedIndex = cbGrad1.Items.IndexOf(Grad1Color);
-            cbRhythm0.SelectedIndex = cbRhythm0.Items.IndexOf(Rhythm0Color);
-            cbRhythm1.SelectedIndex = cbRhythm1.Items.IndexOf(Rhythm1Color);
-            */
+            }           
         }
 
 
@@ -2170,7 +2166,6 @@ namespace Karaboss
             cbTheme.SelectedItem = item.Name;            
         }
 
-
         private void btnDeleteTheme_Click(object sender, EventArgs e)
         {                        
             if (cbTheme.SelectedItem == null) return;
@@ -2192,13 +2187,7 @@ namespace Karaboss
             }
         }
 
-
-
-
-
-
         #endregion Color Themes
-
        
     }
 }

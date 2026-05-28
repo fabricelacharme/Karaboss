@@ -1264,7 +1264,7 @@ namespace Karaboss.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("#8B0000")]
+        [global::System.Configuration.DefaultSettingValueAttribute("#FFFF00")]
         public string HighlightChordColor {
             get {
                 return ((string)(this["HighlightChordColor"]));

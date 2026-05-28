@@ -312,7 +312,7 @@
       <Value Profile="(Default)">#FF8C00</Value>
     </Setting>
     <Setting Name="HighlightChordColor" Type="System.String" Scope="User">
-      <Value Profile="(Default)">#8B0000</Value>
+      <Value Profile="(Default)">#FFFF00</Value>
     </Setting>
     <Setting Name="bShowChords" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>

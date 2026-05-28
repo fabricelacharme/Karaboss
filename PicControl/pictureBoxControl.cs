@@ -1198,6 +1198,7 @@ namespace PicControl
         /// Ajuste la taille de la fonte en fonction de la taille de pictureBox1
         /// </summary>
         /// <param name="S"></param>
+        /*private v
         private void AjustText(string S)
         {
             if (S != "" && pBox != null)
@@ -1297,17 +1298,20 @@ namespace PicControl
                 g.Dispose();
             }
         }
-
+        */
 
         /// <summary>
         /// Measure the length of line "curline"
         /// </summary>
         /// <param name="curline"></param>
         /// <returns></returns>
+        /*
         private float MeasureLine(int curline)
         {
             return MeasureString(_kLyrics.Lines[curline].ToString(), _karaokeFont.Size);
         }
+        */
+
 
         /// <summary>
         /// Get offset to center text
@@ -1357,11 +1361,11 @@ namespace PicControl
                     else
                     {
                         if (_bShowChords)
-                            ret = (H - ((2 * _nbLyricsLines - 1) * (h + 10))) / 2;
-                        else
                         {
-                            //ret = (H - ((_nbLyricsLines - 1) * (h + 10))) / 2;
-
+                            ret = (H -  (_nbLyricsLines * _lineHeight + _nbLyricsLines *  2 * _lineHeight / 3 )) / 2;
+                        }
+                        else
+                        {                            
                             ret = (H - (_nbLyricsLines * _lineHeight)) / 2;
 
                         }
@@ -4803,12 +4807,18 @@ namespace PicControl
             // Draw next  inactives lines with borders
             _LastLineToShow = SetLastLineToShow(_FirstLineToShow, _kLyrics.Lines.Count, _nbLyricsLines);
 
-            int y2;
+            int y2 = y0;
+
+
             for (int i = _FirstLineToShow + 1; i <= _LastLineToShow; i++)
             {
                 if (i < _kLyrics.Lines.Count)
                 {
-                    y2 = y0 + (i - _FirstLineToShow) * _lineHeight;
+                    y2 += _lineHeight;
+                    
+                    if (bShowChords)
+                        y2 = y2 + 2 * _lineHeight / 3;
+                   
                     DrawInactiveLineWithBorders(e, i, y2);
                 }
             }
