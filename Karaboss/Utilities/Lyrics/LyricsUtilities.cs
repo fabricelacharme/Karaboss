@@ -1018,8 +1018,13 @@ namespace Karaboss.Utilities
                         // LRC with only lines
                         // Example: [00:01.03] La petite
 
-                        SyncLine = new kLine();  //List<keffect.KaraokeEffect.kSyncText>();
-                        SyncLine.Add(new Syllable(lyric, time));
+                        SyncLine = new kLine();  
+
+                        if (lyric == string.Empty)
+                            SyncLine.Add(new Syllable() { Text = "", StartTime = time, CharType = Syllable.CharTypes.ParagraphSep }); //SyncLine.Add(new Syllable(lyric, time));
+                        else
+                            SyncLine.Add(new Syllable(lyric, time));
+
                         SyncLyrics.Add(SyncLine);
                     }
                 }

@@ -320,7 +320,15 @@ namespace Karaboss.Mp3.Mp3Lyrics
 
                         // add a blank line for the paragraph
                         SyncLine = new kLine();
-                        SyncLine.Add(new Syllable("", time));
+                        //SyncLine.Add(new Syllable("", time));
+
+                        SyncLine.Add(new Syllable()
+                        {
+                            CharType = Syllable.CharTypes.ParagraphSep,
+                            Text = "",
+                            StartTime = time
+                        });
+
                         SyncLyrics.Add(SyncLine);
 
                         // new line

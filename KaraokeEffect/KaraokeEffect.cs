@@ -462,8 +462,8 @@ namespace keffect
         private DateTime _endTime;                      // used by countdown
         private DateTime _startTime;                    // used by countdown
 
-        private double PlayerPositionMilliseconds;      // current player position in ms
-        private double TargetPositionMilliseconds;      // position to reach in ms
+        private double PlayerPositionMilliseconds = 0;      // current player position in ms
+        private double TargetPositionMilliseconds = 0;      // position to reach in ms
 
         private bool bInstrumentalStarted = false;
         private int SecondsBeforeSinging = 0;
@@ -515,8 +515,9 @@ namespace keffect
                 if (value.Lines.Count == 0) return;
                 _kLyrics = value;
                 _kLyricsOrg = _kLyrics.Clone();
-                if (_kLyrics != null && _kLyrics.Lines.Count > 0)
+                if (_kLyrics != null && _kLyrics.Lines.Count > 0)                                    
                     Init();
+                
             }
         }
 
@@ -1548,6 +1549,8 @@ namespace keffect
             AdjustFontSize(_nbLyricsLines);           
             _LastLineToShow = SetLastLineToShow(_FirstLineToShow, _kLyrics.Lines.Count, _nbLyricsLines);
 
+            //Console.WriteLine("Init _FirstLineToShow = " + _FirstLineToShow);
+
 
             if (_bIsSettings)
                 SetPos(200);
@@ -1696,7 +1699,7 @@ namespace keffect
             // Search _line & index of the next lyric to play
             (_FirstLineToShow, nextindex) = GetNextIndex(pos);
 
-            //Console.WriteLine("_FirstLineToShow = " + _FirstLineToShow + " - nextindex = " + nextindex + " - pos = " + pos);
+            //Console.WriteLine("SetPosition _FirstLineToShow = " + _FirstLineToShow + " - nextindex = " + nextindex + " - pos = " + pos);
 
             // CurLength:
             // Mesure length of a portion of line (already sung + being sung)
@@ -3103,6 +3106,9 @@ namespace keffect
         {
             if (_kLyrics == null || _kLyrics.Lines.Count == 0) return;
 
+            //Console.WriteLine("_FirstLineToShow = " + _FirstLineToShow);
+
+
             #region Declarations
 
             int LineOfInformationPosition;
@@ -3635,7 +3641,8 @@ namespace keffect
             int y = pBox.ClientRectangle.Top + pBox.ClientRectangle.Height / 2;
 
             CurLineStart = _kLyrics.Lines[_FirstLineToShow].Syllables.First().StartTime;
-            if (_FirstLineToShow + 1 < _kLyrics.Lines.Count)
+            
+            if (_FirstLineToShow + 1 < _kLyrics.Lines.Count && _kLyrics.Lines[_FirstLineToShow + 1].Syllables.First().CharType != Syllable.CharTypes.ParagraphSep)
             {
                 NextLineStart = _kLyrics.Lines[_FirstLineToShow + 1].Syllables.First().StartTime;
             }
@@ -4305,7 +4312,8 @@ namespace keffect
         /// </summary>
         public void Start()
         {
-            
+            _FirstLineToShow = 0;
+            _LastLineToShow = 0;
             SecondsBeforeSinging = 0;
             bInstrumentalStarted = false;
             bCountDown = false;
@@ -4337,7 +4345,10 @@ namespace keffect
             TargetPositionMilliseconds = 0;
 
             _FirstLineToShow = 0;
-            _LastLineToShow = SetLastLineToShow(_FirstLineToShow, _kLyrics.Lines.Count, _nbLyricsLines);
+            _LastLineToShow = 0;
+            if (_kLyrics !=  null) 
+                _LastLineToShow = SetLastLineToShow(_FirstLineToShow, _kLyrics.Lines.Count, _nbLyricsLines);
+            
 
             percent = 0;
             lastpercent = 0;

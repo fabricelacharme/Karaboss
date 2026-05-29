@@ -4437,11 +4437,13 @@ namespace PicControl
             #endregion check whether to show information and update instrumental and countdown state
 
 
+            
             #region Caculate vertical position of the active line
 
             int y = pBox.ClientRectangle.Top + pBox.ClientRectangle.Height / 2;
 
             CurLineStart = _kLyrics.Lines[_FirstLineToShow].Syllables.First().TicksOn;
+            
             if (_FirstLineToShow + 1 < _kLyrics.Lines.Count && _kLyrics.Lines[_FirstLineToShow + 1].Syllables.First().CharType != Syllable.CharTypes.ParagraphSep)
             {
                 NextLineStart = _kLyrics.Lines[_FirstLineToShow + 1].Syllables.First().TicksOn;
@@ -4455,6 +4457,7 @@ namespace PicControl
                 // If there is no next line, we consider that the next line starts at the end of the current line
                 NextLineStart = _kLyrics.Lines[_FirstLineToShow].Syllables.Last().TicksOn;
             }
+
 
             double dur = NextLineStart - CurLineStart;
             if (dur > 0)

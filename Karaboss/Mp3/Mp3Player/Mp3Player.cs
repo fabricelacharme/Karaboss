@@ -182,7 +182,7 @@ namespace Karaboss.Mp3
 
         private void HandlePlayingCompleted(int handle, int channel, int data, IntPtr user)
         {
-            //Stop();
+            Stop();            
             PlayingCompleted?.Invoke(handle, channel, data, user);
         }
     

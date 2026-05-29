@@ -4146,7 +4146,8 @@ namespace Karaboss
                     Lines.Add(currentPlaylistItem.KaraokeSinger);
                 }
 
-                frmMidiLyrics.DisplayText(Lines);
+                if (Application.OpenForms.OfType<frmMidiLyrics>().Count() > 0)
+                    frmMidiLyrics.DisplayText(Lines);
             }
             else if (myLyricsMgmt.OrgKLyrics.Lines.Count > 0)
             {
