@@ -1194,125 +1194,7 @@ namespace PicControl
 
         #region Ajust text deprecated
 
-        /// <summary>
-        /// Ajuste la taille de la fonte en fonction de la taille de pictureBox1
-        /// </summary>
-        /// <param name="S"></param>
-        /*private v
-        private void AjustText(string S)
-        {
-            if (S != "" && pBox != null)
-            {
-                Graphics g = pBox.CreateGraphics();
-                float femsize;
-
-                long inisize = (long)pBox.Font.Size;
-                femsize = g.DpiX * inisize / 72;
-
-                float textSize = MeasureString(S, femsize);
-                long comp = (long)(0.94 * pBox.ClientSize.Width);
-
-                // Texte trop large
-                if (textSize > comp)
-                {
-                    do
-                    {
-                        inisize--; //= inisize - 1;
-                        if (inisize > 0)
-                        {
-                            femsize = g.DpiX * inisize / 72;
-                            textSize = MeasureString(S, femsize);
-                        }
-                    } while (textSize > comp && inisize > 0);
-                }
-                else
-                {
-                    do
-                    {
-                        inisize++; //= inisize + 1;                        
-                        femsize = g.DpiX * inisize / 72;
-                        textSize = MeasureString(S, femsize);
-                    } while (textSize < comp);
-                }
-
-
-                // ------------------------------
-                // Ajustement in height 
-                // ------------------------------
-
-                float textHeight = MeasureStringHeight(S, inisize);
-                float totaltextHeight;
-                totaltextHeight = _nbLyricsLines * (textHeight + 10);
-
-                if (_bShowChords)
-                {
-                    // FAB CHORD
-                    totaltextHeight = (int)2.5 * totaltextHeight;
-                }
-
-                long compHeight = (long)(0.95 * pBox.ClientSize.Height);
-
-                if (totaltextHeight > compHeight)
-                {
-                    do
-                    {
-                        inisize--; //= inisize - 1;
-                        if (inisize > 0)
-                        {
-                            femsize = g.DpiY * inisize / 72;
-                            textHeight = MeasureStringHeight(S, femsize);
-
-                            totaltextHeight = _nbLyricsLines * (textHeight + 10);
-                            if (_bShowChords)
-                            {
-                                // FAB CHORD
-                                totaltextHeight = (int)2.5 * totaltextHeight;
-                            }
-
-                        }
-                    } while (totaltextHeight > compHeight && inisize > 0);
-                }
-
-
-                if (inisize > 0)
-                {
-                    emSize = g.DpiY * inisize / 72;
-                    m_font = new Font(_karaokeFont.FontFamily, emSize, FontStyle.Regular, GraphicsUnit.Pixel);
-                    pBox.Font = new Font(Name = _karaokeFont.Name, emSize);
-
-                    // Vertical distance between lines
-                    // https://pimpmytype.com/line-length-line-height/ they say 1.6 is the best                         
-                    //_lineHeight = (int)emSize + 10;                    
-                    _lineHeight = (int)(1.55 * emSize);
-
-                    // Height of the full song
-                    _linesHeight = _nbLyricsLines * _lineHeight;
-
-                    // Calculate the length of each line
-                    for (int i = 0; i < LinesLengths.Length; i++)
-                    {
-                        LinesLengths[i] = MeasureLine(i);
-                    }
-
-                }
-                g.Dispose();
-            }
-        }
-        */
-
-        /// <summary>
-        /// Measure the length of line "curline"
-        /// </summary>
-        /// <param name="curline"></param>
-        /// <returns></returns>
-        /*
-        private float MeasureLine(int curline)
-        {
-            return MeasureString(_kLyrics.Lines[curline].ToString(), _karaokeFont.Size);
-        }
-        */
-
-
+      
         /// <summary>
         /// Get offset to center text
         /// </summary>
@@ -1479,55 +1361,15 @@ namespace PicControl
 
 
             if (this.ParentForm != null && this.ParentForm.WindowState != FormWindowState.Minimized)
-            {
-                //ajustTextAgain();
-                AdjustFontSize(_nbLyricsLines);
+            {                
+                AdjustFontSize();
 
-
-                if (KaraokeDisplayType == KaraokeDisplayTypes.ConstantScrolling || KaraokeDisplayType == KaraokeDisplayTypes.DynamicScrolling)
+                if (KaraokeDisplayType == KaraokeDisplayTypes.ConstantScrolling)
                     InitScrollMode();
 
                 pBox.Invalidate();
             }
-
-            #region redraw image
-            if (m_CurrentImage != null)
-            {
-
-                //m_DisplayRectangle = GetRectangleForSizeMode(m_CurrentImage.Width, m_CurrentImage.Height);
-
-                /*
-                int x;
-                int y;
-
-                switch (_sizemode)
-                {
-                    case PictureBoxSizeMode.AutoSize:
-                        x = (this.ClientSize.Width - m_CurrentImage.Width) / 2;
-                        y = (this.ClientSize.Height - m_CurrentImage.Height) / 2;
-                        m_DisplayRectangle = new Rectangle(x, y, m_CurrentImage.Width, m_CurrentImage.Height);
-                        break;
-                    case PictureBoxSizeMode.CenterImage:
-                        x = (this.ClientSize.Width - m_CurrentImage.Width) / 2;
-                        y = (this.ClientSize.Height - m_CurrentImage.Height) / 2;
-                        m_DisplayRectangle = new Rectangle(x, y, m_CurrentImage.Width, m_CurrentImage.Height);
-                        break;
-                    case PictureBoxSizeMode.Normal:
-                        // coin superieur gauche
-                        m_DisplayRectangle = new Rectangle(0, 0, this.ClientSize.Width, this.ClientSize.Height);
-                        break;
-                    case PictureBoxSizeMode.StretchImage:
-                        //  l'image est étirée ou réduite pour s'ajuster à PictureBox.
-                        m_DisplayRectangle = new Rectangle(0, 0, this.ClientSize.Width, this.ClientSize.Height);
-                        break;
-                    case PictureBoxSizeMode.Zoom:
-                        m_DisplayRectangle = new Rectangle(0, 0, this.ClientSize.Width, this.ClientSize.Height);
-                        break;
-                }
-                */
-            }
-            #endregion
-
+          
         }
 
         #endregion Control load and resize
@@ -2040,19 +1882,17 @@ namespace PicControl
                 case KaraokeDisplayTypes.FourLinesSwapped:
                     _nbLyricsLines = 4;
                     break;
-                case KaraokeDisplayTypes.ConstantScrolling:
-                    //_nbLyricsLines = _nbLyricsLinesOrg;
+                case KaraokeDisplayTypes.ConstantScrolling:                    
                     _nbLyricsLines = 6;
                     break;
-                case KaraokeDisplayTypes.DynamicScrolling:
-                    //_nbLyricsLines = _nbLyricsLinesOrg;
+                case KaraokeDisplayTypes.DynamicScrolling:                    
                     _nbLyricsLines = 6;
                     break;
                 case KaraokeDisplayTypes.TwoLinesSwapped:
                     _nbLyricsLines = 2;
                     break;
                 case KaraokeDisplayTypes.FixedLines:
-                    _nbLyricsLines = _nbLyricsLinesOrg;
+                    _nbLyricsLines = _nbLyricsLinesOrg;                    
                     break;
                 case KaraokeDisplayTypes.Countdown:
                     _nbLyricsLines = 1;
@@ -2112,10 +1952,7 @@ namespace PicControl
 
                 LinesLengths = new float[_kLyrics.Lines.Count];
                 _biggestLine = GetBiggestLine();
-                AdjustFontSize(_nbLyricsLines);
-
-
-               
+                AdjustFontSize();               
 
                 // Store syllabes                
                 if (_kLyrics != null)
@@ -2776,19 +2613,58 @@ namespace PicControl
         /// <param name="pBox"></param>
         /// <param name="S"></param>
         /// <param name="NbLines"></param>
-        private void AdjustFontSize(int NbLines)
+        private void AdjustFontSize()
         {
+
+            int nbLines = 0;
+
+            // Update _nbLyricsLines if layout changed in options            
+            switch (KaraokeDisplayType)
+            {
+                case KaraokeDisplayTypes.FourLinesSwapped:
+                    if (_bIsSettings || !bShowChords)
+                        nbLines = 4;
+                    else
+                        nbLines = 7;
+                    break;
+                case KaraokeDisplayTypes.ConstantScrolling:
+                    nbLines = 6;
+                    break;
+                case KaraokeDisplayTypes.DynamicScrolling:
+                    nbLines = 6;
+                    break;
+                case KaraokeDisplayTypes.TwoLinesSwapped:
+                    nbLines = 2;
+                    break;
+                case KaraokeDisplayTypes.FixedLines:
+                    if (_bIsSettings || !bShowChords)
+                        nbLines = _nbLyricsLinesOrg;
+                    else
+                        nbLines = _nbLyricsLinesOrg + 2 * _nbLyricsLinesOrg / 3;
+                    break;
+                case KaraokeDisplayTypes.Countdown:
+                    nbLines = 1;
+                    break;
+                case KaraokeDisplayTypes.Informations:
+                    nbLines = _kLyrics.Lines.Count;
+                    break;
+
+                default:
+                    _nbLyricsLines = _nbLyricsLinesOrg;
+                    break;
+            }            
+
+
             if (FontStretching == "Large")
-                AdjustFontSizeWithStretching(NbLines);
+                AdjustFontSizeWithStretching(nbLines);
             else
             {
-                AdjustFontWithoutStretching(_biggestLine, NbLines);
+                AdjustFontWithoutStretching(_biggestLine, nbLines);
             }
         }
 
       
-
-        private void AdjustFontWithoutStretching(string biggestLine, int NbLines)
+        private void AdjustFontWithoutStretching(string biggestLine, int nbLines)
         {
             if (pBox == null) return;
             if (_kLyrics == null || _kLyrics.Lines.Count == 0) return;
@@ -2836,7 +2712,7 @@ namespace PicControl
             // ------------------------------
             float textHeight = MeasureStringHeight(S, inisize);
             float totaltextHeight;
-            totaltextHeight = _nbLyricsLines * (textHeight + 10);
+            totaltextHeight = nbLines * textHeight * _lineHeightMultiplier;                 // C'EST TROP ??????????????????????????????????????
 
             float compHeight = 0.95f * pBox.ClientSize.Height;
 
@@ -2850,7 +2726,7 @@ namespace PicControl
                         femsize = g.DpiY * inisize / 72;
                         textHeight = MeasureStringHeight(S, femsize);
 
-                        totaltextHeight = _nbLyricsLines * (textHeight + 10);
+                        totaltextHeight = nbLines * textHeight * _lineHeightMultiplier ;
                     }
                 } while (totaltextHeight > compHeight && inisize > 0);
             }
@@ -3905,6 +3781,7 @@ namespace PicControl
 
             #region Declarations
 
+            int _liHeight = bShowChords ? 5 * _lineHeight / 3 : _lineHeight;           // Line height depending on show chord or not
             int LineOfInformationPosition;
             int[] LinesNr = new int[4];
             float w;
@@ -3920,6 +3797,7 @@ namespace PicControl
             int idx4 = 0;
 
             int tm;
+
             #endregion Declarations
 
 
@@ -3936,7 +3814,7 @@ namespace PicControl
             #region Line layout
             // Draw lines starting from this position
             if (_FontStretching == "Large")
-                y0 = (int)(_marginTop * _lineHeight);
+                y0 = (int)(_marginTop * _liHeight);
             else
                 y0 = VCenterText();
 
@@ -3945,9 +3823,9 @@ namespace PicControl
             int l = _FirstLineToShow;
 
             int a1 = y0;
-            int a2 = y0 + _lineHeight;
-            int a3 = y0 + (int)(_lineHeight * (1 + _fourLinesSpacing));
-            int a4 = y0 + (int)(_lineHeight * (2 + _fourLinesSpacing));
+            int a2 = y0 + _liHeight;
+            int a3 = y0 + (int)(_liHeight * (1 + _fourLinesSpacing));
+            int a4 = y0 + (int)(_liHeight * (2 + _fourLinesSpacing));
 
             int LinePosition = _FirstLineToShow % 4;
 
@@ -4408,6 +4286,9 @@ namespace PicControl
             double NextLineStart;
 
             int y2;
+            int _liHeight =  bShowChords ? 5*_lineHeight/3 : _lineHeight;           // Line height depending on show chord or not
+
+
 
             #region Draw FileName
 
@@ -4463,7 +4344,7 @@ namespace PicControl
 
             double dur = NextLineStart - CurLineStart;
             if (dur > 0)
-                vposition = (float)((PlayerPositionTicks - CurLineStart) * ((float)_lineHeight / dur));
+                vposition = (float)((PlayerPositionTicks - CurLineStart) * ((float)_liHeight / dur)); // vposition = (float)((PlayerPositionTicks - CurLineStart) * ((float)_lineHeight / dur));
             else
                 vposition = 0;
 
@@ -4517,14 +4398,14 @@ namespace PicControl
                     continue;
 
 
-                if (y + (i - _FirstLineToShow) * _lineHeight > BottomMargin)
+                if (y + (i - _FirstLineToShow) * _liHeight > BottomMargin)
                     break; // Do not draw lines that are out of the control
 
                 #endregion Do not draw lines that are out of the control
 
-                y2 = y + (i - _FirstLineToShow) * _lineHeight;
-                if (bShowChords)
-                    y2 = y + (i - _FirstLineToShow) * (5*_lineHeight/3);
+                y2 = y + (i - _FirstLineToShow) * _liHeight;
+                //if (bShowChords)
+                //    y2 = y + (i - _FirstLineToShow) * (5*_lineHeight/3);
 
                 if (i < _FirstLineToShow && y2 > TopMargin)
                 {                   
@@ -4953,6 +4834,9 @@ namespace PicControl
         /// <param name="imgWidth"></param>
         /// <param name="imgHeight"></param>
         /// <returns></returns>
+        
+        
+
         private Rectangle GetRectangleForSizeMode(int imgWidth, int imgHeight)
         {            
             int x;
@@ -5050,6 +4934,8 @@ namespace PicControl
                 Console.WriteLine("BPM changed to: " + _bpm + " - Speed: " + speed);
             }
         }
+
+
 
         #endregion Paint Control
 
