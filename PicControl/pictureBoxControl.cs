@@ -1923,7 +1923,7 @@ namespace PicControl
 
 
             // Analyse lyrics to find introduction, instrumentals etc..
-            if (!_bIsSettings && _bShowHints && _kLyrics.Lines.Count > 3 &&
+            if (!_bIsSettings && !bShowChords && _bShowHints && _kLyrics.Lines.Count > 3 &&
                   (KaraokeDisplayType == KaraokeDisplayTypes.TwoLinesSwapped
                 || KaraokeDisplayType == KaraokeDisplayTypes.FourLinesSwapped
                 || KaraokeDisplayType == KaraokeDisplayTypes.ConstantScrolling
@@ -2616,7 +2616,7 @@ namespace PicControl
         private void AdjustFontSize()
         {
 
-            int nbLines = 0;
+            float nbLines = 0;
 
             // Update _nbLyricsLines if layout changed in options            
             switch (KaraokeDisplayType)
@@ -2625,13 +2625,14 @@ namespace PicControl
                     if (_bIsSettings || !bShowChords)
                         nbLines = 4;
                     else
-                        nbLines = 7;
+                        nbLines = 20/3f;                            // 4 + 4 * 2/3 = 4 * 5/3
                     break;
                 case KaraokeDisplayTypes.ConstantScrolling:
                     nbLines = 6;
                     break;
                 case KaraokeDisplayTypes.DynamicScrolling:
                     nbLines = 6;
+                    
                     break;
                 case KaraokeDisplayTypes.TwoLinesSwapped:
                     nbLines = 2;
@@ -2640,7 +2641,7 @@ namespace PicControl
                     if (_bIsSettings || !bShowChords)
                         nbLines = _nbLyricsLinesOrg;
                     else
-                        nbLines = _nbLyricsLinesOrg + 2 * _nbLyricsLinesOrg / 3;
+                        nbLines = 5 * _nbLyricsLinesOrg / 3f;   // _nbLyricsLinesOrg + 2 * _nbLyricsLinesOrg /3
                     break;
                 case KaraokeDisplayTypes.Countdown:
                     nbLines = 1;
@@ -2664,7 +2665,7 @@ namespace PicControl
         }
 
       
-        private void AdjustFontWithoutStretching(string biggestLine, int nbLines)
+        private void AdjustFontWithoutStretching(string biggestLine, float nbLines)
         {
             if (pBox == null) return;
             if (_kLyrics == null || _kLyrics.Lines.Count == 0) return;
@@ -2678,7 +2679,7 @@ namespace PicControl
             femsize = g.DpiY * inisize / 72;
 
 
-            float mult = 1.3f; // 1.2 is the default line spacing in Windows Forms
+            
             float textWidth = MeasureString(S, femsize);
 
             // Try to fit inside 90% of client width
@@ -2707,13 +2708,14 @@ namespace PicControl
                 } while (textWidth < ClientWidth);
             }
 
+
+
             // ------------------------------
             // Ajustement in Height
             // ------------------------------
+            float mult = _lineHeightMultiplier; // 1.35f; // 1.2 is the default line spacing in Windows Forms
             float textHeight = MeasureStringHeight(S, inisize);
-            float totaltextHeight;
-            totaltextHeight = nbLines * textHeight * _lineHeightMultiplier;                 // C'EST TROP ??????????????????????????????????????
-
+            float totaltextHeight = mult * textHeight * nbLines;                   
             float compHeight = 0.95f * pBox.ClientSize.Height;
 
             if (totaltextHeight > compHeight)
@@ -2724,9 +2726,7 @@ namespace PicControl
                     if (inisize > 0)
                     {
                         femsize = g.DpiY * inisize / 72;
-                        textHeight = MeasureStringHeight(S, femsize);
-
-                        totaltextHeight = nbLines * textHeight * _lineHeightMultiplier ;
+                        totaltextHeight = mult * MeasureStringHeight(S, femsize) * nbLines;
                     }
                 } while (totaltextHeight > compHeight && inisize > 0);
             }
@@ -2754,7 +2754,7 @@ namespace PicControl
             g.Dispose();
         }
 
-        private void AdjustFontSizeWithStretching(int NbLines)
+        private void AdjustFontSizeWithStretching(float NbLines)
         {
             if (pBox == null) return;
             if (_kLyrics == null || _kLyrics.Lines.Count == 0) return;

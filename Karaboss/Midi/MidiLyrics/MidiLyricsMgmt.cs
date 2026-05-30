@@ -575,7 +575,8 @@ namespace Karaboss.MidiLyrics
                 Sanford.Multimedia.Midi.Track trk = sequence1.tracks[_melodytracknum];
                 List<MidiNote> notes = trk.Notes;
 
-                _FirstMelodyNoteTicksOn = notes[0].StartTime;
+                if (notes.Count > 0) 
+                    _FirstMelodyNoteTicksOn = notes[0].StartTime;
 
 
                 int startline = 0;
