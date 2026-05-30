@@ -43,6 +43,7 @@ using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
+using static System.Windows.Forms.LinkLabel;
 
 
 namespace keffect
@@ -3638,11 +3639,13 @@ namespace keffect
 
             #region Caculate vertical position of the lines
 
+
             int y = pBox.ClientRectangle.Top + pBox.ClientRectangle.Height / 2;
 
             CurLineStart = _kLyrics.Lines[_FirstLineToShow].Syllables.First().StartTime;
-            
-            if (_FirstLineToShow + 1 < _kLyrics.Lines.Count && _kLyrics.Lines[_FirstLineToShow + 1].Syllables.First().CharType != Syllable.CharTypes.ParagraphSep)
+
+            // Much more gradual, focusing on the next line even if it's a paragraph
+            if (_FirstLineToShow + 1 < _kLyrics.Lines.Count)    //  No !!! && _kLyrics.Lines[_FirstLineToShow + 1].Syllables.First().CharType != Syllable.CharTypes.ParagraphSep)
             {
                 NextLineStart = _kLyrics.Lines[_FirstLineToShow + 1].Syllables.First().StartTime;
             }

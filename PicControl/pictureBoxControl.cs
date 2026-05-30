@@ -4440,11 +4440,13 @@ namespace PicControl
             
             #region Caculate vertical position of the active line
 
+
             int y = pBox.ClientRectangle.Top + pBox.ClientRectangle.Height / 2;
 
             CurLineStart = _kLyrics.Lines[_FirstLineToShow].Syllables.First().TicksOn;
-            
-            if (_FirstLineToShow + 1 < _kLyrics.Lines.Count && _kLyrics.Lines[_FirstLineToShow + 1].Syllables.First().CharType != Syllable.CharTypes.ParagraphSep)
+
+            // Much more gradual, focusing on the next line even if it's a paragraph
+            if (_FirstLineToShow + 1 < _kLyrics.Lines.Count)    //No !!! && _kLyrics.Lines[_FirstLineToShow + 1].Syllables.First().CharType != Syllable.CharTypes.ParagraphSep)
             {
                 NextLineStart = _kLyrics.Lines[_FirstLineToShow + 1].Syllables.First().TicksOn;
             }            
@@ -4521,11 +4523,11 @@ namespace PicControl
                 #endregion Do not draw lines that are out of the control
 
                 y2 = y + (i - _FirstLineToShow) * _lineHeight;
+                if (bShowChords)
+                    y2 = y + (i - _FirstLineToShow) * (5*_lineHeight/3);
 
                 if (i < _FirstLineToShow && y2 > TopMargin)
-                {
-                    //if (bShowChords)
-                    //    y2 = y2 - 2 * _lineHeight / 3;
+                {                   
                     // Draw previous line
                     DrawInactiveLineWithBorders(e, i, y2, true);
                 }
@@ -4535,10 +4537,7 @@ namespace PicControl
                     DrawActiveLineWithBorders(e, i, y);
                 }
                 else if (i > _FirstLineToShow)
-                {
-                    //if (bShowChords)
-                    //    y2 = y2 + 2 * _lineHeight / 3;
-                    
+                {                                       
                     // Draw next line
                     DrawInactiveLineWithBorders(e, i, y2, false);
                 }
