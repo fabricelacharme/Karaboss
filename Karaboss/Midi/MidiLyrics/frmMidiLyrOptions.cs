@@ -1799,7 +1799,7 @@ namespace Karaboss
 
                 // Background (Image, Diaporama, SolidColor...)
                 #region Backgrounds
-                string bgOption = Properties.Settings.Default.BackGroundOption;
+                bgOption = Properties.Settings.Default.BackGroundOption;
 
                 switch (bgOption)
                 {

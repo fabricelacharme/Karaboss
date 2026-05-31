@@ -466,7 +466,7 @@ namespace Karaboss.Mp3
 
                 // Background
                 #region Backgrounds
-                string bgOption = Properties.Settings.Default.BackGroundOption;
+                bgOption = Properties.Settings.Default.BackGroundOption;
 
                 switch (bgOption)
                 {
