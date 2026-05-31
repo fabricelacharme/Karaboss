@@ -500,6 +500,25 @@ namespace Karaboss
         #endregion Picture
 
 
+        #region Playlists
+
+        // Playlists
+        private Playlist _currentPlaylist;
+        public Playlist currentPlaylist 
+        { 
+            get { return _currentPlaylist; } 
+            set { _currentPlaylist = value; }
+        }
+        private PlaylistItem _currentPlaylistItem;
+        public PlaylistItem currentPlaylistItem
+        {
+            get { return _currentPlaylistItem; }
+            set { _currentPlaylistItem = value; }
+        }
+
+        #endregion Playlists
+
+
         #region Slideshow
 
         private string _SingleImagePath;
@@ -574,8 +593,7 @@ namespace Karaboss
                         pBox.OptionBackground = "Image";
                         break;
 
-                    case "Diaporama":
-                        //pBox.DirSlideShow = DirSlideShow;
+                    case "Diaporama":                        
                         pBox.OptionBackground = "Diaporama";
                         break;
                     case "SolidColor":
@@ -703,16 +721,17 @@ namespace Karaboss
         }
 
         #endregion Text transform
-                                                                                                                    
-       
+
+      
+
         #endregion Declarations
-        
+
 
         /// <summary>
         /// Constructor
         /// </summary>
         /// <param name="_myLyricsMgmt"></param>
-        public frmMidiLyrics(MidiLyricsMgmt _myLyricsMgmt, string fileName)
+        public frmMidiLyrics(MidiLyricsMgmt _myLyricsMgmt, string fileName, Playlist myPlayList = null)
         {
             InitializeComponent();
 
@@ -767,6 +786,17 @@ namespace Karaboss
             AddMouseMoveHandler(this);
 
             #endregion Events
+
+
+            #region playlists
+            if (myPlayList != null)
+            {
+                // Playlists
+                currentPlaylist = myPlayList;
+                    // Search file to play with its filename                
+                currentPlaylistItem = currentPlaylist.Songs.Where(z => z.File == fileName).FirstOrDefault();            // ERROR FILENAME IS NOT THE FULL PATH !!!!
+            }
+            #endregion Playlists
 
             // colours for text, chords, number of lines etc...
             LoadOptions();            
@@ -918,7 +948,7 @@ namespace Karaboss
 
             if (Application.OpenForms.OfType<frmMidiLyrOptions>().Count() == 0)
             {
-                frmMidiLyrOptions frmMidiLyrOptions = new frmMidiLyrOptions();
+                frmMidiLyrOptions frmMidiLyrOptions = new frmMidiLyrOptions(currentPlaylistItem);
                 frmMidiLyrOptions.Show();
             }
         }
@@ -1487,7 +1517,7 @@ namespace Karaboss
 
             if (Application.OpenForms.OfType<frmMidiLyrOptions>().Count() == 0)
             {
-                frmMidiLyrOptions frmMidiLyrOptions = new frmMidiLyrOptions();                
+                frmMidiLyrOptions frmMidiLyrOptions = new frmMidiLyrOptions(currentPlaylistItem);                
                 frmMidiLyrOptions.Show();
             }
         }
@@ -1615,11 +1645,13 @@ namespace Karaboss
         }
 
         /// <summary>
-        /// Use case: Plalists
+        /// Use case: Playlists
         /// No slide show was requested in the playlist, but the slideshow was forced for the previous song, so restore background option to the one set in display options
         /// </summary>
         public void RestoreBackgroundAnimation()
         {
+            _optionbackground = Properties.Settings.Default.BackGroundOption;
+            
             if (_optionbackground == "Diaporama")
             {
                 pBox.FreqSlideShow = Properties.Settings.Default.freqSlideShow;

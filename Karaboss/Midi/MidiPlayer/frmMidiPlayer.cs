@@ -4216,7 +4216,7 @@ namespace Karaboss
             // if Window closed, reload it
             if (frmMidiLyrics == null || Application.OpenForms.OfType<frmMidiLyrics>().Count() == 0)
             {
-                frmMidiLyrics = new frmMidiLyrics(myLyricsMgmt, MIDIfileName);
+                frmMidiLyrics = new frmMidiLyrics(myLyricsMgmt, MIDIfileFullPath, currentPlaylist);
                 //frmMidiLyrics.Owner = this;
                 frmMidiLyrics.Show();
             }
@@ -4224,6 +4224,8 @@ namespace Karaboss
             {
                 frmMidiLyrics.myLyricsMgmt = myLyricsMgmt;
                 frmMidiLyrics.FileName = MIDIfileName;
+                frmMidiLyrics.currentPlaylist = currentPlaylist;
+                frmMidiLyrics.currentPlaylistItem = currentPlaylistItem;
             }
 
 
@@ -6537,8 +6539,8 @@ namespace Karaboss
                 // Display the Lyric form even if no lyrics in order to display the singer
                 if (Application.OpenForms.OfType<frmMidiLyrics>().Count() == 0)
                 {
-                    frmMidiLyrics = new frmMidiLyrics(myLyricsMgmt, MIDIfileName);
-                    frmMidiLyrics.Owner = this;
+                    frmMidiLyrics = new frmMidiLyrics(myLyricsMgmt, MIDIfileFullPath, currentPlaylist);
+                    //frmMidiLyrics.Owner = this;
                     frmMidiLyrics.Show();
                 }
                 
@@ -6617,7 +6619,7 @@ namespace Karaboss
             // Open form if not present
             if (Application.OpenForms.OfType<frmMidiLyrics>().Count() == 0)
             {
-                frmMidiLyrics = new frmMidiLyrics(myLyricsMgmt, MIDIfileName);               
+                frmMidiLyrics = new frmMidiLyrics(myLyricsMgmt, MIDIfileFullPath, currentPlaylist);               
                 frmMidiLyrics.Show();                           
             }
 
