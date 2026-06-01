@@ -187,13 +187,6 @@ namespace Karaboss
         #endregion Picture
 
 
-        #region Playlists
-
-        private PlaylistItem _plItem;
-
-        #endregion Playlists
-
-
         #region Text transform
 
         // Display Top, Center, Bottom
@@ -228,14 +221,10 @@ namespace Karaboss
         /// <summary>
         /// Constructor
         /// </summary>
-        public frmMidiLyrOptions(PlaylistItem plItem = null)
+        public frmMidiLyrOptions()
         {
             InitializeComponent();
            
-
-            if (plItem != null)
-                _plItem = plItem;
-
             TopMost = true;
 
             LoadOptions();     
@@ -1518,82 +1507,12 @@ namespace Karaboss
             // Save first
             SaveOptions();
 
-            // Apply
-            if (Application.OpenForms.OfType<frmMidiLyrics>().Count() > 0)
-            {
-                Cursor.Current = Cursors.WaitCursor;
-
+            // Apply to lyrics form
+            if (Application.OpenForms.OfType<frmMidiLyrics>().Count() > 0) {
                 frmMidiLyrics frmMidiLyrics = Utilities.FormUtilities.GetForm<frmMidiLyrics>();
-
-                frmMidiLyrics.bShowBalls = Karaclass.m_DisplayBalls;
-
-                frmMidiLyrics.KaraokeFont = _karaokeFont;
-                frmMidiLyrics.FontStretching = FontStretching;
-
-                // Borders
-                frmMidiLyrics.FrameType = FrameType;
-
-                // Text colors                
-                frmMidiLyrics.BgColor = BgColor;
-                frmMidiLyrics.Grad0Color = Grad0Color;
-                frmMidiLyrics.Grad1Color = Grad1Color;
-                frmMidiLyrics.Rhythm0Color = Rhythm0Color;
-                frmMidiLyrics.Rhythm1Color = Rhythm1Color;
-
-
-                frmMidiLyrics.ActiveColor = ActiveColor;
-                frmMidiLyrics.HighlightColor = HighlightColor;
-                frmMidiLyrics.InactiveColor = InactiveColor;
-
-                frmMidiLyrics.ActiveBorderColor = ActiveBorderColor;
-                frmMidiLyrics.InactiveBorderColor = InactiveBorderColor;
-
-                // Chords
-                frmMidiLyrics.InactiveChordColor = InactiveChordColor;
-                frmMidiLyrics.HighlightChordColor = HighlightChordColor;
-                frmMidiLyrics.bShowChords = _bShowChords;
-
-                // Instrumental color
-                frmMidiLyrics.ActiveInstrumentalColor = ActiveInstrumentalColor;
-
-                // force uppercase
-                frmMidiLyrics.bForceUppercase = bForceUppercase;
-
-                // Show hints (introduction, instrumental, ending)
-                frmMidiLyrics.bShowHints = bShowHints;
-
-                frmMidiLyrics.bShowSongName = chkShowSongName.Checked;
-
-                //Window lyrics TopMost
-                frmMidiLyrics.bTopMost = _bTopMost;
-
-                _nbLyricsLines = Convert.ToInt32(UpDownNbLines.Value);
-                frmMidiLyrics.nbLyricsLines = _nbLyricsLines;
-
-                frmMidiLyrics.SizeMode = SizeMode;
-
-                // Image, Diaporama, Backcolor ou transparent
-                if (_plItem == null)
-                    frmMidiLyrics.OptionBackground = bgOption;
-
-                // Text display: Center, Top, Bottom
-                frmMidiLyrics.OptionDisplay = OptionDisplay;
-
-                frmMidiLyrics.bTextBackGround = chkTextBackground.Checked;
-
-                // Display single image as background
-                frmMidiLyrics.SingleImagePath = SingleImagePath;
-
-                // SlideShow frequency
-                frmMidiLyrics.FreqSlideShow = freqSlideShow;
-
-                // directory for slide show
-                if (_plItem == null)
-                    frmMidiLyrics.DirSlideShow = dirSlideShow;
-
-                // Karaoke display type (FixedLines, ScrollingLinesBottomUp, ScrollingLinesTopDown, TwoLinesSwapped ..)
-                frmMidiLyrics.KaraokeDisplayType = KaraokeDisplayType;
+                frmMidiLyrics.ApplyFromOptionsForm();
             }
+          
         }
 
 

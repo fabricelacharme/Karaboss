@@ -427,10 +427,29 @@ namespace Karaboss.Mp3
         #endregion Picture
 
 
+        #region Playlists
+
+        // Playlists
+        private Playlist _currentPlaylist;
+        public Playlist currentPlaylist
+        {
+            get { return _currentPlaylist; }
+            set { _currentPlaylist = value; }
+        }
+        private PlaylistItem _currentPlaylistItem;
+        public PlaylistItem currentPlaylistItem
+        {
+            get { return _currentPlaylistItem; }
+            set { _currentPlaylistItem = value; }
+        }
+
+        #endregion Playlists
+
+
         #region Slideshow
 
         #region Single image
-        
+
         private string _SingleImagePath;
         public string SingleImagePath
         {
@@ -627,7 +646,7 @@ namespace Karaboss.Mp3
         /// <summary>
         /// Constructor
         /// </summary>
-        public frmMp3Lyrics(string fileName)
+        public frmMp3Lyrics(string fileName, Playlist myPlayList = null)
         {
             InitializeComponent();
 
@@ -635,7 +654,7 @@ namespace Karaboss.Mp3
             this.KeyPreview = true;
 
             // Set song name in title
-            karaokeEffect1.FileName = fileName;
+            karaokeEffect1.FileName = Path.GetFileNameWithoutExtension(fileName);
 
             #region Graphic optimization
 
@@ -668,6 +687,18 @@ namespace Karaboss.Mp3
             AddMouseMoveHandler(this);
 
             #endregion Events
+
+
+            #region playlists
+            if (myPlayList != null)
+            {
+                // Playlists
+                currentPlaylist = myPlayList;
+                // Search file to play with its filename                
+                currentPlaylistItem = currentPlaylist.Songs.Where(z => z.File == fileName).FirstOrDefault();            // ERROR FILENAME IS NOT THE FULL PATH !!!!
+            }
+            #endregion Playlists
+
 
             // Load options
             LoadOptions();            
@@ -940,7 +971,94 @@ namespace Karaboss.Mp3
             {
                 MessageBox.Show(e.Message, Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
-        }        
+        }
+
+
+        public void ApplyFromOptionsForm()
+        {
+            try
+            {
+
+                Cursor.Current = Cursors.WaitCursor;
+
+                // Show balls
+                bShowBalls = Karaclass.m_DisplayBalls;                
+
+                // Font
+                ftName = Properties.Settings.Default.KaraokeFontName;
+                KaraokeFont = new Font(ftName, ftSize, FontStyle.Regular, GraphicsUnit.Pixel);
+                FontStretching = Properties.Settings.Default.FontStretching;
+
+
+                // Borders
+                FrameType = Properties.Settings.Default.FrameType;
+
+                // Load colors lyrics, backgrounds from current Theme
+                LoadColorsFromCurrentTheme();
+
+
+                // force uppercase
+                bForceUppercase = Properties.Settings.Default.bForceUppercase;
+
+                // Show hints (introduction, instrumental, ending)
+                bShowHints = Properties.Settings.Default.bShowHints;
+
+                bShowSongName = Properties.Settings.Default.bShowSongName;
+
+                //Window lyrics TopMost
+                bTopMost = Properties.Settings.Default.frmMidiLyricsTopMost;
+
+
+                nbLyricsLines = Properties.Settings.Default.TxtNbLines;
+
+                SizeMode = Properties.Settings.Default.SizeMode;
+
+                // Image, Diaporama, Backcolor ou transparent
+                if (_currentPlaylistItem == null)
+                    OptionBackground = Properties.Settings.Default.BackGroundOption;
+
+                // Text display: Center, Top, Bottom
+                string opd = Properties.Settings.Default.LyricsOptionDisplay;
+                switch (opd)
+                {
+                    case "Top":
+                        OptionDisplay = Karaclass.OptionsDisplay.Top;
+                        break;
+                    case "Center":
+                        OptionDisplay = Karaclass.OptionsDisplay.Center;
+                        break;
+                    case "Bottom":
+                        OptionDisplay = Karaclass.OptionsDisplay.Bottom;
+                        break;
+                    default:
+                        OptionDisplay = Karaclass.OptionsDisplay.Center;
+                        break;
+                }
+
+                bTextBackGround = Properties.Settings.Default.bLyricsBackGround;
+
+                // Display single image as background
+                SingleImagePath = Properties.Settings.Default.SingleImagePath;
+
+                // SlideShow frequency
+                FreqSlideShow = Properties.Settings.Default.freqSlideShow;
+
+                // directory for slide show
+                if (_currentPlaylistItem == null)
+                    DirSlideShow = Properties.Settings.Default.dirSlideShow;
+
+                // Karaoke display type (FixedLines, ScrollingLinesBottomUp, ScrollingLinesTopDown, TwoLinesSwapped ..)
+                KaraokeDisplayType = Properties.Settings.Default.KaraokeDisplayType;
+
+                Cursor.Current = Cursors.Default;
+            }
+            catch (Exception ex)
+            {
+                Cursor.Current = Cursors.Default;
+                MessageBox.Show(ex.Message, Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
 
         #endregion initializations
 

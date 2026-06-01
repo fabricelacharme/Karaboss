@@ -208,7 +208,15 @@ namespace Karaboss.Mp3
 
             if (Application.OpenForms.OfType<frmMp3Lyrics>().Count() > 0)
             {
+                frmMp3Lyrics frmMp3Lyrics = Utilities.FormUtilities.GetForm<frmMp3Lyrics>();
+                frmMp3Lyrics.ApplyFromOptionsForm();
+            }
+
+            /*
+            if (Application.OpenForms.OfType<frmMp3Lyrics>().Count() > 0)
+            {
                 Cursor.Current = Cursors.WaitCursor;
+
                 frmMp3Lyrics frmMp3Lyrics = Utilities.FormUtilities.GetForm<frmMp3Lyrics>();
 
                 frmMp3Lyrics.bShowBalls = Karaclass.m_DisplayBalls;
@@ -272,6 +280,8 @@ namespace Karaboss.Mp3
                 // Karaoke display type
                 frmMp3Lyrics.KaraokeDisplayType = KaraokeDisplayType;
             }
+            */
+        
         }
 
         #region Themes Color

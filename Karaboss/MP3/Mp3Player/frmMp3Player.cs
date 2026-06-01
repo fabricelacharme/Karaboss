@@ -241,7 +241,7 @@ namespace Karaboss.Mp3
             Player.PlayingCompleted += new EndingSyncHandler(HandlePlayingCompleted);
             
             DisplayMp3Characteristics();
-            ExtractMp3Lyrics(Mp3FullPath);          
+            //ExtractMp3Lyrics(Mp3FullPath);          
 
 
             PopulateMetadataTags();
@@ -258,12 +258,19 @@ namespace Karaboss.Mp3
                 int idx = currentPlaylist.SelectedIndex(currentPlaylistItem) + 1;
                 lblPlaylist.Text = "PLAYLIST: " + idx + "/" + currentPlaylist.Count;
 
+                ExtractMp3Lyrics(Mp3FullPath);
+
                 // play asap, pause, countdown
                 performPlaylistChainingChoice();
 
+
+
             }
             else
-            {               
+            {
+                // New fab
+                ExtractMp3Lyrics(Mp3FullPath);
+
                 lblPlaylist.Visible = false;
                 // If true, launch player
                 bPlayNow = bplay;
@@ -1950,7 +1957,7 @@ namespace Karaboss.Mp3
 
 
             // Open and add to owners (will be closed/minimized together and will be on top)
-            frmMp3Lyrics = new frmMp3Lyrics(Path.GetFileNameWithoutExtension(Mp3FullPath));
+            frmMp3Lyrics = new frmMp3Lyrics(Mp3FullPath, currentPlaylist);
             //frmMp3Lyrics.Owner = this;
             frmMp3Lyrics.Show();
 
@@ -4109,7 +4116,7 @@ namespace Karaboss.Mp3
             // Open form if not present
             if (Application.OpenForms.OfType<frmMp3Lyrics>().Count() == 0)
             {
-                frmMp3Lyrics = new frmMp3Lyrics(Path.GetFileNameWithoutExtension(Mp3FullPath));
+                frmMp3Lyrics = new frmMp3Lyrics(Mp3FullPath, currentPlaylist);
                 frmMp3Lyrics.Show();                                
             }
             // Load countdown
