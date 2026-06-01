@@ -389,14 +389,19 @@ namespace Karaboss.MidiLyrics
         {
             bool bFound;
 
+            if (T.Lines.Count == 0) return new kLyrics();
 
             // Remove first and last linefeed/paragraph if exists
-            if (T.Lines.Count > 0 && T.Lines.First().Syllables.First().CharType != Syllable.CharTypes.Text)
-                T.Lines[0].Syllables.RemoveAt(0);
+            if (T.Lines.First().Syllables.Count > 0 && T.Lines.First().Syllables.First().CharType != Syllable.CharTypes.Text)            
+                T.Lines[0].Syllables.RemoveAt(0);                            
 
-            if (T.Lines.Count > 0 && T.Lines.Last().Syllables.Last().CharType != Syllable.CharTypes.Text)
+            if (T.Lines.Last().Syllables.Count > 0 && T.Lines.Last().Syllables.Last().CharType != Syllable.CharTypes.Text)
                 T.Lines.Last().Syllables.RemoveAt(T.Lines.Last().Syllables.Count - 1);
 
+
+            // No more lines
+            if (T.Lines.Count == 1 && T.Lines.First().Syllables.Count == 0) return new kLyrics();
+            
 
             for (int i = 0; i < T.Lines.Count - 1; i++)
             {
@@ -1269,6 +1274,9 @@ namespace Karaboss.MidiLyrics
 
             // Eliminer les cr
             int nblyrics = 0;
+
+
+            if (l == null) return -1;
             
             foreach (kLine line in l.Lines)
             {
