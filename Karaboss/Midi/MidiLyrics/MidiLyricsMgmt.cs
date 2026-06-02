@@ -1143,7 +1143,8 @@ namespace Karaboss.MidiLyrics
             bool bWithSpace = false;
             bool bHasCr = false;
 
-            if (KLyrics.Lines.Count > 0)
+            //if (KLyrics.Lines.Count > 0)
+            if (KLyrics.Lines.Count > 1)
             {
                 bHasCr = true;
                 _bHasCarriageReturn = true;
