@@ -431,9 +431,7 @@ namespace PicControl
 
 
         private List<syllabe> syllabes;
-        private List<string> lstLyricsLines;    // Liste de lignes
-        private List<string> lstChordsLines;    // List of lines of chords (same number of lines as lstLyricsLines but with chords instead of lyrics)
-
+        private List<List<(string, float)>> lstChordsPositions; // List of lines of lyrics fragments with their length (to manage syllables with chords in the middle of the word)
 
         private int currentLine = 0;
         private string lineMax; // Ligne longueur max                             
@@ -1939,23 +1937,26 @@ namespace PicControl
             _kLyrics = AddTrailingSyllable(_kLyrics);
           
 
-            lstLyricsLines = new List<string>();
-            lstChordsLines = new List<string>();
+            //lstLyricsLines = new List<string>();
+            //lstChordsLines = new List<string>();
+            lstChordsPositions = new List<List<(string, float)>>();
+
             LinesLengths = new float[_kLyrics.Lines.Count];
             syllabes = new List<syllabe>();
 
             if (_kLyrics != null && _kLyrics.Count > 0)
             {
-                // store lines in a specific list
-                if (_kLyrics != null)
-                {
-                    lstLyricsLines = StoreLyricsLines(_kLyrics);
-                    lstChordsLines = StoreChordLines(_kLyrics);
-                }
+                
 
                 LinesLengths = new float[_kLyrics.Lines.Count];
                 _biggestLine = GetBiggestLine();
-                AdjustFontSize();               
+                AdjustFontSize();
+
+
+                // store chords positions (after adjusting font size to be able to calculate chords positions in pixels)
+                if (_kLyrics != null)
+                    lstChordsPositions = StoreChordsPositions();
+
 
                 // Store syllabes                
                 if (_kLyrics != null)
@@ -3503,7 +3504,7 @@ namespace PicControl
         }
               
         private void DrawInactiveLineWithBorders(PaintEventArgs e, int lineIndex, int y2, bool IsActive = false)
-        {
+        {                       
             #region Declarations
 
             Color BorderColor = _InactiveBorderColor;
@@ -3554,11 +3555,14 @@ namespace PicControl
 
             if (_bShowChords)
             {                
-                lineChords = lstChordsLines[lineIndex];                 // TODO : à revoir pour les accords directement dans la classe KLyrics
+                for (int i = 0; i < lstChordsPositions[lineIndex].Count; i++)
+                {
+                    var (chord, pos) = lstChordsPositions[lineIndex][i];
+                    // Process each chord position
+                    pthc.AddString(chord, _chordFont.FontFamily, (int)_chordFont.Style, 3 * emSize / 4, new Point((int)(x0 + pos), y2), sf);
+                    e.Graphics.FillPath(new SolidBrush(_InactiveChordColor), pthc);
 
-                // Draw chord above the text                                                         
-                pthc.AddString(lineChords, _chordFont.FontFamily, (int)_chordFont.Style, 3 * emSize / 4, new Point((int)x0, y2), sf);
-                e.Graphics.FillPath(new SolidBrush(_InactiveChordColor), pthc);
+                }
 
                 pthc.Dispose();
 
@@ -4309,6 +4313,9 @@ namespace PicControl
         {
             // The vertical position of the lines is calculated according to the position of the song in the current line and the duration of the current line
 
+
+            #region Declarations
+
             int TopMargin = bShowSongName ? pBox.ClientRectangle.Top + (int)(_titleMarginTop * pBox.Height) : pBox.ClientRectangle.Top;
             int BottomMargin = pBox.ClientRectangle.Bottom;
 
@@ -4318,6 +4325,7 @@ namespace PicControl
             int y2;
             int _liHeight =  bShowChords ? 5*_lineHeight/3 : _lineHeight;           // Line height depending on show chord or not
 
+            #endregion Declarations
 
 
             #region Draw FileName
@@ -4347,10 +4355,8 @@ namespace PicControl
 
             #endregion check whether to show information and update instrumental and countdown state
 
-
             
             #region Caculate vertical position of the active line
-
 
             int y = pBox.ClientRectangle.Top + pBox.ClientRectangle.Height / 2;
 
@@ -4381,42 +4387,7 @@ namespace PicControl
             y = y - (int)vposition;
 
             #endregion Caculate vertical position of the lines
-
-
-            /*
-            // Draw lines starting from this position
-            for (int i = 0; i < _kLyrics.Lines.Count; i++)
-            {
-                #region Do not draw lines that are out of the control
-
-                // Do not draw lines of information
-                if (_kLyrics.Lines[i].Syllables.Last().CharType == Syllable.CharTypes.Information)
-                    continue;
-
-
-                if (y + (i - _FirstLineToShow) * _lineHeight > BottomMargin)
-                    break; // Do not draw lines that are out of the control
-
-                #endregion Do not draw lines that are out of the control
-                
-
-                if (i < _FirstLineToShow && y + (i - _FirstLineToShow) * _lineHeight > TopMargin)
-                {
-                    // Draw previous line
-                    DrawInactiveLineWithBorders(e, i, y + (i - _FirstLineToShow) * _lineHeight, true);
-                }
-                else if (i == _FirstLineToShow)
-                {
-                    // Draw current line
-                    DrawActiveLineWithBorders(e, i, y);
-                }
-                else if (i > _FirstLineToShow)
-                {
-                    // Draw next line
-                    DrawInactiveLineWithBorders(e, i, y + (i - _FirstLineToShow) * _lineHeight, false);
-                }
-            }
-            */
+          
 
             // Draw lines starting from this position
             for (int i = 0; i < _kLyrics.Lines.Count; i++)
@@ -4426,7 +4397,6 @@ namespace PicControl
                 // Do not draw lines of information
                 if (_kLyrics.Lines[i].Syllables.Last().CharType == Syllable.CharTypes.Information)
                     continue;
-
 
                 if (y + (i - _FirstLineToShow) * _liHeight > BottomMargin)
                     break; // Do not draw lines that are out of the control
@@ -4434,8 +4404,6 @@ namespace PicControl
                 #endregion Do not draw lines that are out of the control
 
                 y2 = y + (i - _FirstLineToShow) * _liHeight;
-                //if (bShowChords)
-                //    y2 = y + (i - _FirstLineToShow) * (5*_lineHeight/3);
 
                 if (i < _FirstLineToShow && y2 > TopMargin)
                 {                   
@@ -5060,77 +5028,34 @@ namespace PicControl
 
         #region Text and Chords management
 
-        /// <summary>
-        /// Store lyrics lines in a list called lstLyricsLines
-        /// </summary>
-        /// <param name="ly"></param>    
-        private List<string> StoreLyricsLines(kLyrics kl)
+        private List<List<(string, float)>> StoreChordsPositions()
         {
+            float pos = 0;
+            string fragment;
+            List<List< (string,float)>> lstChords = new List<List< (string, float)>>();
 
-            /*
-           * A back slash "\" character marks the end of a line of lyrics, as displayed by a Karaoke viewer/player program.
-           *
-           * A forward slash "/" character marks the end of a "paragraph" of lyrics. 
-           * Some Karaoke viewer / player programs interpret this to mean that the screen should be refreshed starting with the next line of lyrics at the top.
-           *
-           * Dash characters at the end of syllables are removed by the Karaoke viewer/player program, and the syllables are joined together. 
-           */
-
-            List<string> lstLines = new List<string>();
-
-            for (int i = 0; i < kl.Lines.Count; i++)
+            for (int i = 0; i < _kLyrics.Lines.Count; i++)
             {
-                string lineContent = kl.Lines[i].ToString();
-
-                if (_bshowparagraphs && lineContent == _InternalSepParagraphs)
-                {
-                    // new paragraph = empty line (space)
-                    lstLines.Add(" ");
-                }
-                else //if (lineContent != "")
-                {
-                    lstLines.Add(lineContent);
-                }
-            }
-            return lstLines;
-        }
-
-        private List<string> StoreChordLines(kLyrics kl)
-        {
-            string chord;
-            string lyric;
-            string lineChords; // = string.Empty;
-            List<string> lstChords = new List<string>();
-
-            for (int i = 0; i < kl.Lines.Count; i++)
-            {
-                lineChords = string.Empty;
-
-                for (int j = 0; j < kl.Lines[i].Syllables.Count; j++)
-                {
-                    Syllable syll = kl.Lines[i].Syllables[j];
-                    if (syll.CharType == Syllable.CharTypes.Text)
+                List<(string, float)> lineChords = new List<(string, float)>();
+                fragment = string.Empty;
+                
+                for (int j = 0; j < _kLyrics.Lines[i].Syllables.Count; j++)
+                {                    
+                    Syllable syll = _kLyrics.Lines[i].Syllables[j];
+                    if (syll.CharType == Syllable.CharTypes.Text && !string.IsNullOrEmpty(syll.Chord))
                     {
-                        chord = syll.Chord;
-                        lyric = syll.Text;
-
-                        if (chord.Length > lyric.Length)
-                        {
-                            lyric += new string(' ', chord.Length - lyric.Length);
-                        }
-                        else if (chord.Length < lyric.Length)
-                        {
-                            chord += new string(' ', lyric.Length - chord.Length);
-                        }
-                        lineChords += chord;
+                        pos = MeasureString(fragment, _karaokeFont.Size); // Measure the width of the text fragment up to the current syllable                        
+                        lineChords.Add((syll.Chord, pos));
                     }
+                    fragment += _kLyrics.Lines[i].Syllables[j].Text;
                 }
                 lstChords.Add(lineChords);
             }
 
+            Console.WriteLine("pBox.Width = " + pBox.Width + ", pBox.Height = " + pBox.Height);
+
             return lstChords;
         }
-
 
         /// <summary>
         /// Store syllabes in a list, each item being a class called syllabe

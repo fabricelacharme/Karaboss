@@ -4227,18 +4227,7 @@ namespace Karaboss
                 frmMidiLyrics.currentPlaylist = currentPlaylist;
                 frmMidiLyrics.currentPlaylistItem = currentPlaylistItem;
             }
-
-
-            // Display song & current singer on top label
-            string tx;
-            sSong = Path.GetFileNameWithoutExtension(sSong);
-            if (sSinger == "" || sSinger == "<Song reserved by>")
-                tx = sSong;
-            else
-                tx = sSong + " - " + Strings.Singer + ": " + sSinger;
-
-            frmMidiLyrics.DisplaySinger(tx);
-
+          
             // Show window
             if (frmMidiLyrics.WindowState == FormWindowState.Minimized)
                 frmMidiLyrics.WindowState = FormWindowState.Normal;
