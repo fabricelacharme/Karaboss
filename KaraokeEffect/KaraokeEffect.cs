@@ -3529,7 +3529,16 @@ namespace keffect
 
             #endregion check whether to show information and update instrumental and countdown state
 
-            // Calculate vertical position of the lines according to the position of the song in the current line
+            // Calculate vertical position of the lines according to the position of the song 
+            // vposition ranges from 0 to the maximum value _linesHeight (the first ticks of the last line: _kLyrics.Lines.Last().Syllables.First().TicksOn)
+
+            // 0                introduction
+            // ticks1           first line  (tickson of the first syllable of the first line)
+            // ticks2           second line (tickson of the first syllable of the second line)
+            // ../..            line x
+            // _linesHeight     last line   (tickson of the first syllable of the last line)
+
+            // The vertical position is a fraction of _linesHeight, caculated with "PlayerPositionTicks/last line ticks"
             vposition = (float)((PlayerPositionMilliseconds) * (_linesHeight / (_kLyrics.Lines.Last().Syllables.First().StartTime)));
 
             for (int i = 0; i < _kLyrics.Lines.Count; i++)
@@ -4253,7 +4262,7 @@ namespace keffect
 
         private void InitScrollMode()
         {
-            if (KaraokeDisplayType == KaraokeDisplayTypes.ConstantScrolling || KaraokeDisplayType == KaraokeDisplayTypes.DynamicScrolling)
+            if (KaraokeDisplayType == KaraokeDisplayTypes.ConstantScrolling)
             {
                 if (_kLyrics == null || _kLyrics.Lines.Count == 0) return;
 
@@ -4271,8 +4280,6 @@ namespace keffect
                 {
                     t = (float)_kLyrics.Lines[i].Syllables.First().StartTime;
                     intervals.Add(t - last_t);
-                    //if (t > 0 && last_t > 0 && t != last_t && t - last_t < min)
-                    //    min = t - last_t;
                     last_t = t;
                 }
 
@@ -4280,8 +4287,6 @@ namespace keffect
                 intervals.Sort();
                 if (intervals.Count > 10)
                     min = intervals[10]; // take the 4th minimum to avoid too small intervals that could be due to errors in the timing of the lines
-
-
 
 
                 // Calculate the y-coordinate of each line: multiple of the minimum line height (_lineHeight) between 2 lines =  _lineHeight * (t - last_t) / min

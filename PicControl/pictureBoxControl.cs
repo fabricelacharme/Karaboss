@@ -4210,7 +4210,17 @@ namespace PicControl
 
             #endregion check whether to show information and update instrumental and countdown state
 
-            // Calculate vertical position of the lines according to the position of the song in the current line
+            // Calculate vertical position of the lines according to the position of the song 
+            // vposition ranges from 0 to the maximum value _linesHeight (the first ticks of the last line: _kLyrics.Lines.Last().Syllables.First().TicksOn)
+
+            // 0                introduction
+            // ticks1           first line  (tickson of the first syllable of the first line)
+            // ticks2           second line (tickson of the first syllable of the second line)
+            // ../..            line x
+            // _linesHeight     last line   (tickson of the first syllable of the last line)
+
+            // The vertical position is a fraction of _linesHeight, caculated with "PlayerPositionTicks/last line ticks"
+
             vposition = (float)((PlayerPositionTicks) * ((float)_linesHeight / (_kLyrics.Lines.Last().Syllables.First().TicksOn)));
             
 
@@ -4460,7 +4470,6 @@ namespace PicControl
             }
         }
 
-
         private void TlsDrawTextWithBorder(PaintEventArgs e)
         {
             if (_kLyrics == null || _kLyrics.Lines.Count == 0) return;
@@ -4474,6 +4483,7 @@ namespace PicControl
             #region Declarations
 
             // Center text vertically
+            int _liHeight = bShowChords ? 5 * _lineHeight / 3 : _lineHeight;           // Line height depending on show chord or not
             int y0 = VCenterText();
 
             int y1;    // y1 is the y coordinate of the active line to display (line _FirstLineToShow)
@@ -4504,7 +4514,7 @@ namespace PicControl
                 LinePosition = 0;
 
                 y1 = y0;                    // active     _FirstLinetoShow
-                y2 = y0 + _lineHeight;      // inactive   _FirstLinetoShow + 1  
+                y2 = y0 + _liHeight;      // inactive   _FirstLinetoShow + 1  
 
                 if (_kLyrics.Lines[_FirstLineToShow].Syllables.Last().CharType == Syllable.CharTypes.Information)
                     LineOfInformationPosition = 0;
@@ -4519,7 +4529,7 @@ namespace PicControl
                 LinePosition = 1;
 
                 y2 = y0;                    // inactive     _FirstLinetoShow + 1
-                y1 = y0 + _lineHeight;      // active       _FirstLinetoShow
+                y1 = y0 + _liHeight;      // active       _FirstLinetoShow
 
                 if (_kLyrics.Lines[_FirstLineToShow].Syllables.Last().CharType == Syllable.CharTypes.Information)
                     LineOfInformationPosition = 1;
@@ -4841,14 +4851,23 @@ namespace PicControl
 
         #endregion Paint Control
 
-              
+
         #region Scrolling
 
+        /// <summary>
+        /// Initialize the y-coordinate of each line according to its start time and the current position of the player in scrolling mode
+        /// </summary>
         private void InitScrollMode()
         {
-            if (KaraokeDisplayType == KaraokeDisplayTypes.ConstantScrolling || KaraokeDisplayType == KaraokeDisplayTypes.DynamicScrolling)
+            if (KaraokeDisplayType == KaraokeDisplayTypes.ConstantScrolling)
             {
                 if (_kLyrics == null || _kLyrics.Lines.Count == 0) return;
+
+                float _liHeight = _lineHeight;
+
+
+                if (bShowChords)
+                    _liHeight = 1.66f * _lineHeight; // Line height when chords are shown (_lineHeight + 2*_lineHeight/3)
 
                 // calculate the y-coordinate of each line according to its start time and the current position of the player
                 List<float> intervals = new List<float>();
@@ -4860,20 +4879,20 @@ namespace PicControl
                 float min = (float)_duration;
 
                 //Search for the minimum duration between 2 lines
-                // This minimpum will be equivalent to the line height and will be used to calculate the y-coordinate of each line according to its start time and the current position of the player
+                // This minimpum will be equivalent to the line height and will be used to calculate the y-coordinate of each line
+                // according to its start time and the current position of the player
                 for (int i = 0; i < _kLyrics.Lines.Count; i++)
                 {
                     t = (float)_kLyrics.Lines[i].Syllables.First().TicksOn;
-                    intervals.Add(t - last_t);
-                    //if (t > 0 && last_t > 0 && t != last_t && t - last_t < min)
-                    //    min = t - last_t;
+                    intervals.Add(t - last_t);      // interval between the start of the current line and the start of the previous line
                     last_t = t;
                 }
 
                 intervals.Sort();
                 if (intervals.Count > 10)
-                    min = intervals[10]; // take the 4th minimum to avoid too small intervals that could be due to errors in the timing of the lines
-
+                    min = intervals[10]; // take the 10th minimum to avoid too small intervals that could be due to errors in the timing of the lines
+                
+               
 
                 // Calculate the y-coordinate of each line: multiple of the minimum line height (_lineHeight) between 2 lines =  _lineHeight * (t - last_t) / min
                 last_t = 0;
@@ -4883,11 +4902,12 @@ namespace PicControl
                 {
                     t = (float)_kLyrics.Lines[i].Syllables.First().TicksOn;
 
-                    y0 += ((t - last_t) / min) * _lineHeight;
+                    y0 += ((t - last_t) / min) * _liHeight;
                     linesYCoordinates[i] = y0;
                     last_t = t;
                 }
 
+              
                 // Calculate the total height of the full song in scrolling mode
                 // ie the sum of the distances between lines
                 _linesHeight = (int)linesYCoordinates[linesYCoordinates.Length - 1];

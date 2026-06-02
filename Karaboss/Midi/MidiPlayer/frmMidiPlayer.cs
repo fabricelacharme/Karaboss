@@ -4223,7 +4223,7 @@ namespace Karaboss
             else
             {
                 frmMidiLyrics.myLyricsMgmt = myLyricsMgmt;
-                frmMidiLyrics.FileName = MIDIfileName;
+                frmMidiLyrics.FileName =  Path.GetFileNameWithoutExtension(MIDIfileName);
                 frmMidiLyrics.currentPlaylist = currentPlaylist;
                 frmMidiLyrics.currentPlaylistItem = currentPlaylistItem;
             }
