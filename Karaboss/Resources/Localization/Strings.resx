@@ -620,10 +620,10 @@
     <value>Fixed lines</value>
   </data>
   <data name="KTypesConstantScrolling" xml:space="preserve">
-    <value>Constant-speed scrolling lines</value>
+    <value>Constant-speed scrolling</value>
   </data>
   <data name="KTypesDynamicScrolling" xml:space="preserve">
-    <value>Dynamic scrolling lines</value>
+    <value>Dynamic scrolling</value>
   </data>
   <data name="KTypesTwoLinesSwapped" xml:space="preserve">
     <value>Two lines (swapped)</value>

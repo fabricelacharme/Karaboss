@@ -1853,6 +1853,7 @@ namespace Karaboss.Mp3
             TagLib.Id3v2.SynchronisedLyricsFrame SyncLyricsFrame = Player.SyncLyricsFrame;
             Mp3LyricsMgmtHelper.MySyncLyricsFrame = SyncLyricsFrame;
 
+            Mp3LyricsMgmtHelper.m_duration = Player.Seconds * 1000; // duration in ms
 
             // Get lyrics type origin
             Mp3LyricsMgmtHelper.m_mp3lyricstype = Mp3LyricsMgmtHelper.GetLyricsType(SyncLyricsFrame, TagLyrics, TagSubTitles, FileName);
