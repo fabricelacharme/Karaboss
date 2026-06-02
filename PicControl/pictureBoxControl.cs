@@ -3731,7 +3731,6 @@ namespace PicControl
             float scale = maxLength / w;    // Ratio maxLength vs  width of text
 
 
-
             if (w > maxLength)
             {
                 // No need to center text, it is already centered by ScaleTransform
@@ -3745,16 +3744,7 @@ namespace PicControl
                 // Center text horizontally
                 x0 = (int)(pBox.Width - w - _marginRight * pBox.Width);
             }
-
-
-
-
-            //e.Graphics.ScaleTransform(scale, 1);
-
-            // Left position of the text                        
-            //x0 = (int)(_titleMarginLeft * pBox.Width / scale);
-
-            
+           
             
             // Add string to path
             path.AddString(FileName, _karaokeFont.FontFamily, (int)_karaokeFont.Style, femSize, new Point(x0, y0), sf);

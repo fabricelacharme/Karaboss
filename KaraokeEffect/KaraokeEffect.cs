@@ -530,6 +530,7 @@ namespace keffect
         // Margins and spacing. General margins are defined as a ratio of the control size to be adaptable to all sizes of control. Some specific margins are defined in pixels to be more precise when needed
         private float _lineHeightMultiplier = 1.55f;   // Ration between line spacing and font size. 1.55 is the default value for a single line, but it can be increased to have more space between lines when several lines are displayed        
         private float _marginLeft = 0.03f;   // Margin left for lyrics (ratio of the width of the control)
+        private float _marginRight = 0.02f;
         private float _marginTop = 0.36f;    // Margin top for lyrics when 4 lines swapped are displayed (ratio of the height of the control)
 
         // Only used for FourLinesSwapped layout: Additional line spacing between 2 firsts lines and 2 last lines
@@ -3045,7 +3046,6 @@ namespace keffect
             
             // Measure FileName
             float w = MeasureString(FileName, femSize);
-
             if (w == 0) return;
 
             float maxLength = _titleMaxLength * pBox.Width;    // 41 % of width            
@@ -3053,11 +3053,22 @@ namespace keffect
             // Allow to adapt the length of the text to the width allowed 
             // If the width of the text is greater than maxLength, ScaleTransform reduce it
             float scale = maxLength / w;    // Ratio maxLength vs  width of text
-            e.Graphics.ScaleTransform(scale, 1);
 
-            // Left position of the text                        
-            x0 = (int)(_titleMarginLeft * pBox.Width / scale);
+            if (w > maxLength)
+            {
+                // No need to center text, it is already centered by ScaleTransform
+                e.Graphics.ScaleTransform(scale, 1);
+                // Left position of the text                        
+                x0 = (int)(_titleMarginLeft * pBox.Width / scale);
 
+            }
+            else
+            {
+                // Center text horizontally
+                x0 = (int)(pBox.Width - w - _marginRight * pBox.Width);
+            }
+            
+            
             // Add string to path
             path.AddString(FileName, _karaokeFont.FontFamily, (int)_karaokeFont.Style, femSize, new Point(x0, y0), sf);
 
