@@ -434,7 +434,7 @@ namespace Karaboss.Mp3
                 ActiveInstrumentalColor = picActiveInstrumentalColor.BackColor;
 
                 // Window lyris topmost
-                _bTopMost = Properties.Settings.Default.frmMidiLyricsTopMost;
+                _bTopMost = Properties.Settings.Default.frmMp3LyricsTopMost;
                 chkTopMost.Checked = _bTopMost;
 
                 // Backgroud color beside lyrics to help to read when an image is displayed

@@ -353,6 +353,7 @@ namespace Karaboss
             set
             {
                 _bTopMost = value;
+                pBox.bTopMost = _bTopMost;
                 this.TopMost = _bTopMost;
             }
         }
@@ -918,21 +919,10 @@ namespace Karaboss
 
         #region Events
 
-        private void pBox_TopMost(object sender, bool bTopMost, EventArgs e)
+        private void pBox_TopMost(object sender, bool btopMost, EventArgs e)
         {
-            if (Application.OpenForms.OfType<frmMidiPlayer>().Count() > 0)
-            {
-                frmMidiPlayer frmMidiPlayer = FormUtilities.GetForm<frmMidiPlayer>();
-                if (bTopMost)
-                {
-                    frmMidiPlayer.RemoveOwnedForms();
-                }
-                else
-                {
-                    frmMidiPlayer.RestoreOwnedForms();
-                }
-
-            }
+            Properties.Settings.Default.frmMidiLyricsTopMost = btopMost;
+            bTopMost = btopMost;
         }
 
         private void pBox_DoubleClick(object sender, EventArgs e)
@@ -955,7 +945,10 @@ namespace Karaboss
 
         private void pBox_FullScreen(object sender, EventArgs e)
         {
-            WindowState = FormWindowState.Maximized;
+            if (WindowState == FormWindowState.Maximized)
+                WindowState = FormWindowState.Normal;
+            else
+                WindowState = FormWindowState.Maximized;
         }
 
         private void pBox_Close(object sender, EventArgs e)

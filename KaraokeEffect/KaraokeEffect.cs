@@ -371,7 +371,18 @@ namespace keffect
 
         #region Form
 
-        private bool bTopMostChecked = true;
+        #region TopMost
+        private bool _bTopMost = false;
+        public bool bTopMost
+        {
+            get { return _bTopMost; }
+            set
+            {
+                _bTopMost = value;
+            }
+        }
+
+        #endregion TopMost
 
         #region Context menus
         private ContextMenu picContextMenu;
@@ -1016,7 +1027,7 @@ namespace keffect
                 // Top most
                 MenuItem mnuTopMost = new MenuItem("TopMost");
                 mnuTopMost.Click += new System.EventHandler(this.mnuTopMost_Click);
-                mnuTopMost.Checked = bTopMostChecked;
+                mnuTopMost.Checked = _bTopMost;
                 picContextMenu.MenuItems.Add(mnuTopMost);
 
                 // Options
@@ -1030,8 +1041,9 @@ namespace keffect
 
         private void mnuTopMost_Click(object sender, EventArgs e)
         {
-            TopMost?.Invoke(this, bTopMostChecked, e);
-            bTopMostChecked = !bTopMostChecked;
+            _bTopMost = !_bTopMost;
+            TopMost?.Invoke(this, _bTopMost, e);
+            
         }
 
         private void mnuOptions_Click(object sender, EventArgs e)

@@ -294,6 +294,7 @@ namespace Karaboss.Mp3
             set
             {
                 _bTopMost = value;
+                karaokeEffect1.bTopMost = _bTopMost;
                 this.TopMost = _bTopMost;
             }
         }
@@ -826,21 +827,10 @@ namespace Karaboss.Mp3
 
         #region Events
 
-        private void karaokeEffect1_TopMost(object sender, bool bTopMost, EventArgs e)
+        private void karaokeEffect1_TopMost(object sender, bool btopMost, EventArgs e)
         {
-            if (Application.OpenForms.OfType<frmMp3Player>().Count() > 0)
-            {
-                frmMp3Player frmMp3Player = FormUtilities.GetForm<frmMp3Player>();
-                if (bTopMost)
-                {
-                    frmMp3Player.RemoveOwnedForms();
-                }
-                else
-                {
-                    frmMp3Player.RestoreOwnedForms();
-                }
-
-            }
+            Properties.Settings.Default.frmMp3LyricsTopMost = btopMost;
+            bTopMost = btopMost;          
         }
 
         private void karaokeEffect1_DoubleClick(object sender, EventArgs e)
@@ -863,7 +853,11 @@ namespace Karaboss.Mp3
 
         private void karaokeEffect1_FullScreen(object sender, EventArgs e)
         {
-            WindowState = FormWindowState.Maximized;
+            
+            if (WindowState == FormWindowState.Maximized)
+                WindowState = FormWindowState.Normal;
+            else
+                WindowState = FormWindowState.Maximized;
         }
 
         private void karaokeEffect1_Close(object sender, EventArgs e)
@@ -978,7 +972,6 @@ namespace Karaboss.Mp3
         {
             try
             {
-
                 Cursor.Current = Cursors.WaitCursor;
 
                 // Show balls
@@ -1006,7 +999,7 @@ namespace Karaboss.Mp3
                 bShowSongName = Properties.Settings.Default.bShowSongName;
 
                 //Window lyrics TopMost
-                bTopMost = Properties.Settings.Default.frmMidiLyricsTopMost;
+                bTopMost = Properties.Settings.Default.frmMp3LyricsTopMost;
 
 
                 nbLyricsLines = Properties.Settings.Default.TxtNbLines;
