@@ -1478,6 +1478,45 @@ namespace keffect
         }
 
 
+        private kLyrics AddTrailingSyllable(kLyrics kls)
+        {
+            kLyrics klsWithTrailingSyllable = new kLyrics();
+            kLine line;
+            Syllable syll;
+            double StartTime; 
+            double EndTime; 
+
+            for (int i = 0; i < kls.Lines.Count; i++)
+            {
+                line = new kLine();
+
+                for (int j = 0; j < kls.Lines[i].Syllables.Count; j++)
+                {
+                    line.Add(kls.Lines[i].Syllables[j]);
+                }
+
+                // Add a new syllable when line of Text
+                if (kls.Lines[i].Syllables.Last().CharType == Syllable.CharTypes.Text)
+                {
+                    if (i + 1 < kls.Lines.Count)
+                    {
+                        if (kls.Lines[i + 1].Syllables.First().StartTime > kls.Lines[i].Syllables.Last().StartTime + kls.Lines[i].Syllables.Last().Duration)
+                        {
+                            StartTime = kls.Lines[i].Syllables.Last().StartTime + kls.Lines[i].Syllables.Last().Duration + 1;
+                            EndTime = kls.Lines[i + 1].Syllables.First().StartTime - 1;
+
+                            syll = new Syllable() { Text = " ", StartTime = StartTime, Duration = EndTime - StartTime, CharType = Syllable.CharTypes.Text };
+                            line.Add(syll);
+                        }
+                    }
+                }
+
+                klsWithTrailingSyllable.Add(line);
+            }
+
+            return klsWithTrailingSyllable;
+        }
+
         private void Init()
         {
             if (_kLyrics == null) return;
@@ -1543,14 +1582,18 @@ namespace keffect
                 _kLyrics = SearchForInstrumentals(_kLyrics);
 
 
+
+            // Add a syllable to each end of lines
+            _kLyrics = AddTrailingSyllable(_kLyrics);
+
+
             // Store all lines lengths
             LinesLengths = new float[_kLyrics.Lines.Count];
 
             _biggestLine = GetBiggestLine();
             AdjustFontSize(_nbLyricsLines);           
             _LastLineToShow = SetLastLineToShow(_FirstLineToShow, _kLyrics.Lines.Count, _nbLyricsLines);
-
-            //Console.WriteLine("Init _FirstLineToShow = " + _FirstLineToShow);
+            
 
 
             if (_bIsSettings)

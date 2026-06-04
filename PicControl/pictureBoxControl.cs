@@ -425,7 +425,7 @@ namespace PicControl
         private int vOffset = 0;
 
         private bool bEndOfLine = false;
-        private bool bHighLight = false;
+        //private bool bHighLight = false;
         private int nextStartOfLineTime = 0;
         private int TimeToNextLineDuration = 0;
 
@@ -1937,52 +1937,34 @@ namespace PicControl
             _kLyrics = AddTrailingSyllable(_kLyrics);
           
 
-            //lstLyricsLines = new List<string>();
-            //lstChordsLines = new List<string>();
             lstChordsPositions = new List<List<(string, float, string)>>();
 
             LinesLengths = new float[_kLyrics.Lines.Count];
-            syllabes = new List<syllabe>();
-
-            if (_kLyrics != null && _kLyrics.Count > 0)
-            {
-                
-
-                LinesLengths = new float[_kLyrics.Lines.Count];
-                _biggestLine = GetBiggestLine();
-                AdjustFontSize();
+            //syllabes = new List<syllabe>();
+                            
+            _biggestLine = GetBiggestLine();
+            AdjustFontSize();
 
 
-                // store chords positions (after adjusting font size to be able to calculate chords positions in pixels)
-                if (_kLyrics != null)
-                    lstChordsPositions = StoreChordsPositions();
+            // store chords positions (after adjusting font size to be able to calculate chords positions in pixels)
+            if (_kLyrics != null)
+                lstChordsPositions = StoreChordsPositions();
 
 
                 // Store syllabes                
-                if (_kLyrics != null)
-                    syllabes = StoreLyricsSyllabes(_kLyrics);
+                //if (_kLyrics != null)
+                //    syllabes = StoreLyricsSyllabes(_kLyrics);
 
-                if (bDemoMode)
-                {
-                    bHighLight = true;
-                }
-                else
-                {
-                    bHighLight = false;
-                    // Position initiale                 
-                    _currentTextPos = -1;
-                }
-
-                if (_bIsSettings)
-                    SetPos(100);
+            if (_bIsSettings)
+                SetPos(100);
 
 
                 // Create rectangles for drawing active line
-                createListRectangles(0);
+                //createListRectangles(0);
 
-                if (KaraokeDisplayType == KaraokeDisplayTypes.ConstantScrolling)
-                    InitScrollMode();
-            }
+            if (KaraokeDisplayType == KaraokeDisplayTypes.ConstantScrolling)
+                InitScrollMode();
+            
         }
 
         #endregion Initializations
@@ -3375,7 +3357,7 @@ namespace PicControl
 
 
         #region Code fragments
-
+        /*
         private void DrawActiveLineWithBorders2(PaintEventArgs e, int lineIndex, int y1)
         {
             #region Declarations
@@ -3561,7 +3543,7 @@ namespace PicControl
             e.Graphics.ResetTransform();
 
         }
-
+        */
         private void DrawActiveLineWithBorders(PaintEventArgs e, int lineIndex, int y1)
         {
             #region Declarations
