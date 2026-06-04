@@ -431,7 +431,7 @@ namespace PicControl
 
 
         private List<syllabe> syllabes;
-        private List<List<(string, float)>> lstChordsPositions; // List of lines of lyrics fragments with their length (to manage syllables with chords in the middle of the word)
+        private List<List<(string, float, string)>> lstChordsPositions; // List of lines of lyrics fragments with their length (to manage syllables with chords in the middle of the word)
 
         private int currentLine = 0;
         private string lineMax; // Ligne longueur max                             
@@ -1939,7 +1939,7 @@ namespace PicControl
 
             //lstLyricsLines = new List<string>();
             //lstChordsLines = new List<string>();
-            lstChordsPositions = new List<List<(string, float)>>();
+            lstChordsPositions = new List<List<(string, float, string)>>();
 
             LinesLengths = new float[_kLyrics.Lines.Count];
             syllabes = new List<syllabe>();
@@ -2112,7 +2112,7 @@ namespace PicControl
             SetPosition(ticks);
 
             // old
-            SetOffset();
+            //SetOffset();
         }
 
         /// <summary>
@@ -2269,32 +2269,84 @@ namespace PicControl
             inactive_fragment = string.Empty;
             inactive_fragment_length = 0;
 
-            // Search for the current line
-            for (int i = 0; i < _kLyrics.Lines[curline].Syllables.Count(); i++)
+            int idxChord = -1;
+            bool bChordFound = false;
+            int count = _kLyrics.Lines[curline].Syllables.Count();           
+
+
+            // Analyze the syllables of the current line
+            for (int i = 0; i < count; i++)
             {
+                
+                if (bShowChords)
+                {
+                    // A chord is found for the current syllable
+                    if (_kLyrics.Lines[curline].Syllables[i].Chord != string.Empty)
+                    {
+                        if (idxChord < lstChordsPositions[curline].Count)
+                            idxChord++;
+                        bChordFound = true;                        
+                    }
+                    else
+                        bChordFound = false;
+                }
+
                 // Fragments before nextindex
                 if (i < nextindex)
                 {
                     res += MeasureString(_kLyrics.Lines[curline].Syllables[i].Text, _karaokeFont.Size);
 
-                    if (nextindex >= 0 && i < nextindex - 1)
+                    //if (nextindex >= 0 && nextindex < count && i < nextindex - 1)
+                    //if (nextindex >= 0 && i < count - 1 && i < nextindex - 1)
+                    if (i < count - 1 && i < nextindex - 1)
                     {
                         // Already sung
                         active_fragment += _kLyrics.Lines[curline].Syllables[i].Text;
-                        //active_fragment_length += MeasureString(_kLyrics.Lines[curline].Syllables[i].Text, _karaokeFont.Size);
+
+                        //Console.WriteLine("A Position i " + i + " - nextindex " + nextindex);
+
+                        if (bShowChords && bChordFound)
+                        {
+                            // Change the status of the chord to "Inactive" for the syllables already sung
+                            if (idxChord >= 0 && idxChord < lstChordsPositions[curline].Count)
+                                lstChordsPositions[curline][idxChord] = (lstChordsPositions[curline][idxChord].Item1, lstChordsPositions[curline][idxChord].Item2, "Inactive");
+                        }
                     }
-                    else if (nextindex > 0 && i == nextindex - 1)
+                    else if (i == nextindex - 1)
                     {
                         // Being sung
                         highlight_fragment = _kLyrics.Lines[curline].Syllables[i].Text;
-                        //highlight_fragment_length = MeasureString(_kLyrics.Lines[curline].Syllables[i].Text, _karaokeFont.Size);
+
+                        //Console.WriteLine("B Position i " + i + " - nextindex " + nextindex);
+
+                        // Change the status of the chord to "Highlight" for the syllable being sung
+                        if (bShowChords && bChordFound)
+                        {
+                            if (idxChord >= 0 && idxChord < lstChordsPositions[curline].Count)
+                                lstChordsPositions[curline][idxChord] = (lstChordsPositions[curline][idxChord].Item1, lstChordsPositions[curline][idxChord].Item2, "Highlight");
+                        }
                     }
+                    else if (nextindex > count)
+                    {
+                        // Last syllable of the line is an information, we do not take it into account for the length of the line
+                        //Console.WriteLine("D Last syllable of line i " + i + " - nextindex " + nextindex);
+
+                        
+                        highlight_fragment = _kLyrics.Lines[curline].Syllables[count - 1].Text;
+                        //active_fragment = _kLyrics.Lines[curline].ToString().Substring(0, _kLyrics.Lines[curline].ToString().Length - highlight_fragment.Length);
+
+                        if (idxChord >= 0 && idxChord < lstChordsPositions[curline].Count)
+                            lstChordsPositions[curline][idxChord] = (lstChordsPositions[curline][idxChord].Item1, lstChordsPositions[curline][idxChord].Item2, "Highlight");
+                    }
+
                 }
                 else if (i >= nextindex)
                 {
                     inactive_fragment += _kLyrics.Lines[curline].Syllables[i].Text;
-                    //inactive_fragment_length += MeasureString(_kLyrics.Lines[curline].Syllables[i].Text, _karaokeFont.Size);
+                    //Console.WriteLine("C Position i " + i + " - nextindex " + nextindex);
+
                 }
+                
             }
 
             active_fragment_length = MeasureString(active_fragment, _karaokeFont.Size);
@@ -2424,7 +2476,7 @@ namespace PicControl
             }
         }
 
-             
+        /*     
         /// <summary>
         /// Guess if picturebox should be paint.
         /// Paint should be done only if syllable has changed
@@ -2461,7 +2513,10 @@ namespace PicControl
             // Redraw the display
             pBox.Invalidate();
         }
+        */
 
+
+        /*
         /// <summary>
         /// Find index of syllabe to sing according to time
         /// TODO : remove chords ?
@@ -2516,7 +2571,10 @@ namespace PicControl
 
             return syllabes.Count - 1;
         }
+        */
 
+
+        /*
         /// <summary>
         /// Reset display at begining
         /// </summary>
@@ -2541,7 +2599,8 @@ namespace PicControl
 
             pBox.Invalidate();
         }
-                     
+        */
+        
         #endregion public methods
                      
 
@@ -3317,7 +3376,7 @@ namespace PicControl
 
         #region Code fragments
 
-        private void DrawActiveLineWithBorders(PaintEventArgs e, int lineIndex, int y1)
+        private void DrawActiveLineWithBorders2(PaintEventArgs e, int lineIndex, int y1)
         {
             #region Declarations
             int idx0 = 0;
@@ -3502,7 +3561,317 @@ namespace PicControl
             e.Graphics.ResetTransform();
 
         }
-              
+
+        private void DrawActiveLineWithBorders(PaintEventArgs e, int lineIndex, int y1)
+        {
+            #region Declarations
+
+            int Wbg;
+            RectangleF Rbg;
+
+            Region r;
+            RectangleF rect;
+
+            Brush ActiveColorBrush = new SolidBrush(_ActiveColor);
+            Brush HighlightColorBrush = new SolidBrush(_HighlightColor);
+            Brush InactiveColorBrush = new SolidBrush(_InactiveColor);
+
+            Pen ActiveBorderPen = new Pen(new SolidBrush(_ActiveBorderColor), _borderthick);
+            Pen InactiveBorderPen = new Pen(new SolidBrush(_InactiveBorderColor), _borderthick);
+
+            float scale = 1.0f;
+            float x0 = _marginLeft * pBox.Width;
+            GraphicsPath pth = new GraphicsPath();
+
+            string s;
+
+            #endregion Declarations
+
+            if (lineIndex < 0 || lineIndex >= _kLyrics.Lines.Count()) return;
+            s = _kLyrics.Lines[lineIndex].ToString();
+
+            #region Scale font size to fit text in picture box
+
+            // ************************  Set ScaleTransform
+            float w = MeasureString(s, _karaokeFont.Size);
+            // Example: if the text is greater than the width of the picture box, we reduce the size of the text to fit it in the picture box
+
+            if (w > 0)
+                scale = ((1 - 2 * _marginLeft) * pBox.Width) / w;
+
+            if (_FontStretching == "Large" && w > 0 && w > ((1 - 2 * _marginLeft) * pBox.Width))
+            {
+                // No need to center text, it is already centered by ScaleTransform
+                e.Graphics.ScaleTransform(scale, 1);
+            }
+            else
+            {
+                scale = 1;
+                // Center text horizontally
+                x0 = (int)((pBox.Width - w) / 2);
+            }
+
+            #endregion Scale font size to fit text in picture box
+
+
+            #region Show chords
+
+            if (_bShowChords)
+            {
+                
+                Color chordColor = _InactiveChordColor;
+
+                for (int i = 0; i < lstChordsPositions[lineIndex].Count; i++)
+                {
+                    GraphicsPath pthc = new GraphicsPath(); // Chords path
+
+                    var (chord, pos, status) = lstChordsPositions[lineIndex][i];
+
+                    switch(status)
+                    {
+                        case "Highlight":
+                            // Highlight chord
+                            chordColor = _HighlightChordColor;
+                            //Console.WriteLine($"Highlight chord: {chord} at position {pos}");
+                            break;
+                        case "Inactive":
+                            // Inactive chord
+                            chordColor = _InactiveChordColor;
+                            //Console.WriteLine($"Inactive chord: {chord} at position {pos}");
+                            break;
+                    }
+                    // Process each chord position
+                    pthc.AddString(chord, _chordFont.FontFamily, (int)_chordFont.Style, 3 * emSize / 4, new Point((int)(x0 + pos), y1), sf);
+                    e.Graphics.FillPath(new SolidBrush(chordColor), pthc);
+                    
+                    pthc.Dispose();
+                }
+
+                
+
+                // Draw syllabe below at 2 * ChordOffset / 3
+                y1 = y1 + 2 * _lineHeight / 3;
+            }
+            
+            #endregion Show chords
+
+
+            #region background of syllabe
+
+            if (_bTextBackGround)
+            {
+                Wbg = (int)(1.04 * LinesLengths[lineIndex]);
+                // Black background to make text more visible
+                Rbg = new RectangleF((int)(0.94 * x0), (int)(1.04 * y1), Wbg, _lineHeight);
+                // background
+                e.Graphics.FillRectangle(new SolidBrush(Color.Black), Rbg);
+            }
+
+            #endregion background of syllabe
+
+
+            pth.AddString(s, _karaokeFont.FontFamily, (int)_karaokeFont.Style, _karaokeFont.Size, new Point((int)x0, y1), sf);
+
+            // Draw full line in white if no active and highlight fragments
+            if (active_fragment == string.Empty && highlight_fragment == string.Empty && inactive_fragment == string.Empty)
+            {
+                #region Draw static text (no active and highlight fragments)
+
+
+                #region apply effect
+                // Effect must be modified because it is affected by ScaleTransform.
+
+                if (_frametype == "Shadow")
+                    CreateShadowEffect(s, _InactiveBorderColor, (int)x0, y1, _karaokeFont, _karaokeFont.Size, e, pth);
+                else if (_frametype == "Neon")
+                    CreateNeonEffect(_InactiveBorderColor, e, pth);
+
+                #endregion apply effect
+
+
+                // Fill GraphicsPath path in white => full text is white                    
+                e.Graphics.FillPath(InactiveColorBrush, pth);
+                // Outline the text                                
+                if (_borderthick > 0)
+                    e.Graphics.DrawPath(InactiveBorderPen, pth);
+
+                #endregion Draw static text (no active and highlight fragments)
+            }
+            else
+            {
+                #region Draw dynamic text (with active and highlight fragments)
+
+                r = new Region(pth);
+                // Create a retangle of the graphical path
+                rect = r.GetBounds(e.Graphics);
+
+                #region draw active text
+
+                if (active_fragment != string.Empty)
+                {
+                    GraphicsPath pathActive = new GraphicsPath();
+                    pathActive.AddString(active_fragment, _karaokeFont.FontFamily, (int)_karaokeFont.Style, _karaokeFont.Size, new Point((int)x0, y1), sf);
+
+                    #region Paint in ActiveColor
+
+                    #region apply effect
+
+                    if (_frametype == "Shadow")
+                        CreateShadowEffect(active_fragment, _ActiveBorderColor, (int)x0, y1, _karaokeFont, _karaokeFont.Size, e, pathActive);
+                    else if (_frametype == "Neon")
+                        CreateNeonEffect(_ActiveBorderColor, e, pathActive);
+
+                    #endregion apply effect
+
+                    if (_transitionEffect == TransitionEffects.Progressive)
+                    {
+                        // Create another rectangle shorter than the 1st one (percent of the first)
+                        RectangleF intersectRect = new RectangleF(rect.X, rect.Y, rect.Width * percent, rect.Height);
+                        // update region on the intersection between region and 2nd rectangle
+                        r.Intersect(intersectRect);
+                        // Fill updated region in green => percent portion of text is green            
+                        e.Graphics.FillRegion(ActiveColorBrush, r);
+
+
+                        // Rectangle for text befor highlighted text (rect.Width * lastpercent)
+                        RectangleF intersectRectBefore = new RectangleF(rect.X, rect.Y, rect.Width * lastpercent, rect.Height);
+
+                        // update region on the intersection between region and 2nd rectangle
+                        r.Intersect(intersectRectBefore);
+
+                        // Fill updated region in green
+                        e.Graphics.FillRegion(ActiveColorBrush, r);
+                    }
+                    else
+                    {
+                        // Draw the text               
+                        e.Graphics.FillPath(ActiveColorBrush, pathActive);
+
+                        // Outline the text                                
+                        if (_borderthick > 0)
+                            e.Graphics.DrawPath(ActiveBorderPen, pathActive);
+                    }
+
+                    pathActive.Dispose();
+
+                    #endregion Paint in ActiveColor
+                }
+                #endregion Draw active text
+
+
+                #region draw highlight text     
+
+                if (highlight_fragment != string.Empty)
+                {
+                    GraphicsPath pathHighlight = new GraphicsPath();
+                    pathHighlight.AddString(highlight_fragment, _karaokeFont.FontFamily, (int)_karaokeFont.Style, _karaokeFont.Size, new Point((int)(x0 + active_fragment_length), y1), sf);
+
+                    #region Paint in HighlightColor    
+
+                    #region apply effect
+
+                    if (_frametype == "Shadow")
+                        CreateShadowEffect(highlight_fragment, _ActiveBorderColor, (int)(x0 + active_fragment_length), y1, _karaokeFont, _karaokeFont.Size, e, pathHighlight);
+                    else if (_frametype == "Neon")
+                        CreateNeonEffect(_ActiveBorderColor, e, pathHighlight);
+
+                    #endregion apply effect
+
+                    if (_transitionEffect == TransitionEffects.Progressive)
+                    {
+                        // Create another rectangle shorter than the 1st one (percent of the first)
+                        RectangleF intersectRect = new RectangleF(rect.X + rect.Width * lastpercent, rect.Y, rect.Width * (percent - lastpercent), rect.Height);
+
+                        // update region on the intersection between region and 2nd rectangle
+                        r.Intersect(intersectRect);
+
+                        // Fill updated region in red => percent portion of text is red            
+                        e.Graphics.FillRegion(HighlightColorBrush, r);
+                    }
+                    else
+                    {
+                        // Draw the text               
+                        e.Graphics.FillPath(HighlightColorBrush, pathHighlight);
+
+                        // Outline text                
+                        if (_borderthick > 0)
+                            e.Graphics.DrawPath(ActiveBorderPen, pathHighlight);
+                    }
+
+                    pathHighlight.Dispose();
+
+                    #endregion Paint in HighlightColor
+                }
+                #endregion draw highlight text
+
+
+                #region Draw inactive text
+
+                if (inactive_fragment != string.Empty)
+                {
+                    GraphicsPath pathInactive = new GraphicsPath();
+                    pathInactive.AddString(inactive_fragment, _karaokeFont.FontFamily, (int)_karaokeFont.Style, _karaokeFont.Size, new Point((int)(x0 + active_fragment_length + highlight_fragment_length), y1), sf);
+
+                    #region Paint in InactiveColor
+
+                    #region apply effect
+
+                    if (_frametype == "Shadow")
+                        CreateShadowEffect(inactive_fragment, _InactiveBorderColor, (int)(x0 + active_fragment_length + highlight_fragment_length), y1, _karaokeFont, _karaokeFont.Size, e, pathInactive);
+                    else if (_frametype == "Neon")
+                        CreateNeonEffect(_InactiveBorderColor, e, pathInactive);
+
+                    #endregion apply effect
+
+                    if (_transitionEffect == TransitionEffects.Progressive)
+                    {
+
+                        // Create another rectangle shorter than the 1st one (percent of the first)
+                        RectangleF intersectRectAfter = new RectangleF(rect.X + rect.Width * percent, rect.Y, rect.Width - rect.Width * percent, rect.Height);
+
+                        // update region on the intersection between region and 2nd rectangle
+                        r.Intersect(intersectRectAfter);
+
+                        // Fill updated region in InactiveColor
+                        e.Graphics.FillRegion(InactiveColorBrush, r);
+
+                    }
+                    else
+                    {
+                        // Draw the text               
+                        e.Graphics.FillPath(InactiveColorBrush, pathInactive);
+
+                        // Outline the text
+                        if (_borderthick > 0)
+                            e.Graphics.DrawPath(InactiveBorderPen, pathInactive);
+                    }
+
+
+                    pathInactive.Dispose();
+
+                    #endregion Paint in InactiveColor
+                }
+                #endregion Draw inactive text
+
+                r.Dispose();
+
+                #endregion Draw dynamic text (with active and highlight fragments)
+            }
+
+            // ************************  Reset ScaleTransform
+            e.Graphics.ResetTransform();
+
+            #region Clean up resources
+            pth.Dispose();
+            ActiveColorBrush.Dispose();
+            HighlightColorBrush.Dispose();
+            InactiveColorBrush.Dispose();
+            ActiveBorderPen.Dispose();
+            InactiveBorderPen.Dispose();
+            #endregion Clean up resources
+        }
+
+
         private void DrawInactiveLineWithBorders(PaintEventArgs e, int lineIndex, int y2, bool IsActive = false)
         {                       
             #region Declarations
@@ -3516,7 +3885,7 @@ namespace PicControl
                 FillColor = _ActiveColor;
             }
 
-            GraphicsPath pthc = new GraphicsPath(); // Chords path
+            
             GraphicsPath pth = new GraphicsPath(); // Lyrics path
             Pen penBorder = new Pen(BorderColor, _borderthick); // pen for inactive border color
                         
@@ -3554,10 +3923,12 @@ namespace PicControl
             #region Show chords
 
             if (_bShowChords)
-            {                
+            {
+                GraphicsPath pthc = new GraphicsPath(); // Chords path
+
                 for (int i = 0; i < lstChordsPositions[lineIndex].Count; i++)
                 {
-                    var (chord, pos) = lstChordsPositions[lineIndex][i];
+                    var (chord, pos, status) = lstChordsPositions[lineIndex][i];
                     // Process each chord position
                     pthc.AddString(chord, _chordFont.FontFamily, (int)_chordFont.Style, 3 * emSize / 4, new Point((int)(x0 + pos), y2), sf);
                     e.Graphics.FillPath(new SolidBrush(_InactiveChordColor), pthc);
@@ -3616,8 +3987,7 @@ namespace PicControl
 
             #region Clean up resources
 
-            pth.Dispose();
-            pthc.Dispose();
+            pth.Dispose();            
             penBorder.Dispose();
             
             #endregion Clean up resources
@@ -5000,8 +5370,70 @@ namespace PicControl
 
         #endregion SlideShow functions
 
-
         #endregion SlideShow with timer      
+
+
+        #region Start stop
+
+        /// <summary>
+        /// Reset all values
+        /// </summary>
+        public void Start()
+        {
+            _FirstLineToShow = 0;
+            _LastLineToShow = 0;
+            SecondsBeforeSinging = 0;
+            bInstrumentalStarted = false;
+            bCountDown = false;
+            _endTime = 0;
+            _startTime = 0;
+            PlayerPositionTicks = 0;
+            TargetPositionTicks = 0;
+
+            _FirstLineToShow = 0;
+
+            percent = 0;
+            lastpercent = 0;
+            nextindex = 0;
+            lastindex = 0;
+            _lasttime = 0;
+            lastCurLength = 0;
+            CurLength = 0;
+        }
+
+        public void Stop()
+        {
+            SecondsBeforeSinging = 0;
+            bInstrumentalStarted = false;
+            bCountDown = false;
+            _endTime = 0;
+            _startTime = 0;
+            PlayerPositionTicks = 0;
+            TargetPositionTicks = 0;
+
+            _FirstLineToShow = 0;
+            _LastLineToShow = 0;
+            if (_kLyrics != null)
+                _LastLineToShow = SetLastLineToShow(_FirstLineToShow, _kLyrics.Lines.Count, _nbLyricsLines);
+
+
+            percent = 0;
+            lastpercent = 0;
+            nextindex = 0;
+            lastindex = 0;
+            _lasttime = 0;
+            lastCurLength = 0;
+            CurLength = 0;
+
+            active_fragment = string.Empty;
+            highlight_fragment = string.Empty;
+            inactive_fragment = string.Empty;
+
+            pBox.Invalidate();
+        }
+
+
+        #endregion Start stop
 
 
         #region Terminate        
@@ -5028,15 +5460,15 @@ namespace PicControl
 
         #region Text and Chords management
 
-        private List<List<(string, float)>> StoreChordsPositions()
+        private List<List<(string, float, string)>> StoreChordsPositions()
         {
             float pos = 0;
             string fragment;
-            List<List< (string,float)>> lstChords = new List<List< (string, float)>>();
+            List<List< (string,float, string)>> lstChords = new List<List< (string, float, string)>>();
 
             for (int i = 0; i < _kLyrics.Lines.Count; i++)
             {
-                List<(string, float)> lineChords = new List<(string, float)>();
+                List<(string, float, string)> lineChords = new List<(string, float, string)>();
                 fragment = string.Empty;
                 
                 for (int j = 0; j < _kLyrics.Lines[i].Syllables.Count; j++)
@@ -5045,14 +5477,13 @@ namespace PicControl
                     if (syll.CharType == Syllable.CharTypes.Text && !string.IsNullOrEmpty(syll.Chord))
                     {
                         pos = MeasureString(fragment, _karaokeFont.Size); // Measure the width of the text fragment up to the current syllable                        
-                        lineChords.Add((syll.Chord, pos));
+                        lineChords.Add((syll.Chord, pos, "Inactive" ));
                     }
                     fragment += _kLyrics.Lines[i].Syllables[j].Text;
                 }
                 lstChords.Add(lineChords);
             }
-
-            Console.WriteLine("pBox.Width = " + pBox.Width + ", pBox.Height = " + pBox.Height);
+            
 
             return lstChords;
         }

@@ -1237,7 +1237,7 @@ namespace Karaboss.Mp3
             PlayStopActions(true);
         }
 
-        public void GetPositionFromPlayer(double position)
+        public void SendPlayerPositionToKaraoke(double position)
         {
             karaokeEffect1.SetPos(position * 1000);
 

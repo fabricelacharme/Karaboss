@@ -1287,15 +1287,7 @@ namespace Karaboss
         }
 
 
-        /// <summary>
-        /// Display singer and song names
-        /// </summary>
-        /// <param name="text"></param>
-        public void DisplaySinger(string text)
-        {
-            //lblTittle.Text = text;
-        }
-
+      
         /// <summary>
         /// Count Down: decreasing numbers to wait for next song to start
         /// </summary>
@@ -1339,7 +1331,7 @@ namespace Karaboss
                 LoadBallsTimes(kl);
         }
 
-
+        /*
         /// <summary>
         /// Color the syllabe according to song position
         /// </summary>
@@ -1353,7 +1345,9 @@ namespace Karaboss
             //pBox.ColorLyric(songposition);
             pBox.SetPos(SequencerPosition);
         }
+        */
 
+        /*
         /// <summary>
         /// Reset display at begining
         /// </summary>
@@ -1362,12 +1356,34 @@ namespace Karaboss
             currentTextPos = 0;
             pBox.ResetTop();
         }
-
+        */
         public void PlayStopActions(bool isStopped)
         {
             // Disable buttons for editing lyrics and chords
             btnEditLyrics.Enabled = isStopped;
             btnEditLyricsChords.Enabled = isStopped;
+        }
+
+
+        public void Start()
+        {
+            pBox.Start();
+        }
+
+        public void Stop()
+        {
+            pBox.Stop();
+            PlayStopActions(true);
+        }
+
+        /// <summary>
+        /// Color the syllabe according to song position
+        /// </summary>
+        /// <param name="songposition"></param>
+        public void SendPlayerPositionToKaraoke(int SequencerPosition)
+        {
+            pBox.SetPos(SequencerPosition);
+
         }
 
 

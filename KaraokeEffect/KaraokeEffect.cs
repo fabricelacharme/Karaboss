@@ -43,7 +43,6 @@ using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
-using static System.Windows.Forms.LinkLabel;
 
 
 namespace keffect
@@ -1850,9 +1849,49 @@ namespace keffect
 
             if (_kLyrics.Lines.Count == 0) return 0;
 
+            int count = _kLyrics.Lines[curline].Syllables.Count();
+
             // Search for the current line
-            for (int i = 0; i < _kLyrics.Lines[curline].Syllables.Count(); i++)
+            for (int i = 0; i < count; i++)
             {
+                // Fragments before nextindex
+                if (i < nextindex)
+                {
+                    res += MeasureString(_kLyrics.Lines[curline].Syllables[i].Text, _karaokeFont.Size);
+
+                    //if (nextindex >= 0 && nextindex < count && i < nextindex - 1)
+                    //if (nextindex >= 0 && i < count - 1 && i < nextindex - 1)
+                    if (i < count - 1 && i < nextindex - 1)
+                    {
+                        // Already sung
+                        active_fragment += _kLyrics.Lines[curline].Syllables[i].Text;
+
+                        //Console.WriteLine("A Position i " + i + " - nextindex " + nextindex);
+                    }
+                    else if (i == nextindex - 1)
+                    {
+                        // Being sung
+                        highlight_fragment = _kLyrics.Lines[curline].Syllables[i].Text;
+
+                        //Console.WriteLine("B Position i " + i + " - nextindex " + nextindex);
+                    }
+                    else if (nextindex > count)
+                    {
+                        // Last syllable of the line is an information, we do not take it into account for the length of the line
+                        //Console.WriteLine("D Last syllable of line i " + i + " - nextindex " + nextindex);
+
+                        if (count > 0)
+                            highlight_fragment = _kLyrics.Lines[curline].Syllables[count - 1].Text;
+                        //active_fragment = _kLyrics.Lines[curline].ToString().Substring(0, _kLyrics.Lines[curline].ToString().Length - highlight_fragment.Length);
+                    }
+                }
+                else if (i >= nextindex)
+                {
+                    inactive_fragment += _kLyrics.Lines[curline].Syllables[i].Text;
+                    //Console.WriteLine("C Position i " + i + " - nextindex " + nextindex);
+                }
+
+                /*
                 // Fragments before nextindex
                 if (i < nextindex)
                 {
@@ -1873,14 +1912,13 @@ namespace keffect
                 {
                     inactive_fragment += _kLyrics.Lines[curline].Syllables[i].Text;                    
                 }
+                */
             }
           
             active_fragment_length = MeasureString(active_fragment, _karaokeFont.Size);
             highlight_fragment_length = MeasureString(highlight_fragment, _karaokeFont.Size);
             inactive_fragment_length = MeasureString(inactive_fragment, _karaokeFont.Size);
             
-            //Console.WriteLine("curline = " + curline + " - nextindex = " + nextindex);
-            //Console.WriteLine("active_fragment = " + active_fragment + " - highlight_fragment = " + highlight_fragment + " - inactive_fragment = " + inactive_fragment);
 
             return res;
         }
@@ -4353,8 +4391,7 @@ namespace keffect
         }
 
         public void Stop()
-        {
-            
+        {            
             SecondsBeforeSinging = 0;
             bInstrumentalStarted = false;
             bCountDown = false;
@@ -4383,9 +4420,7 @@ namespace keffect
 
             pBox.Invalidate();            
         }
-
      
-
         #endregion start stop
       
 

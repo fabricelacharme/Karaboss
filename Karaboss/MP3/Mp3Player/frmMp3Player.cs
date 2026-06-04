@@ -796,12 +796,14 @@ namespace Karaboss.Mp3
                 // Set Volume, frequency & transpose
                 SetInitialListenValues();
 
-                if (Application.OpenForms.OfType<frmMp3Lyrics>().Count() > 0)
-                    frmMp3Lyrics.PlayStopActions(false);
+
+                StartKaraoke();
+                //if (Application.OpenForms.OfType<frmMp3Lyrics>().Count() > 0)
+                //    frmMp3Lyrics.PlayStopActions(false);
 
                 Player.Play(Mp3FullPath, start);
 
-                StartKaraoke();
+                
 
                 Timer1.Start();
 
@@ -2191,7 +2193,7 @@ namespace Karaboss.Mp3
             if (w_tick < w_wait)
             {
                 // color each second                             
-                frmMp3Lyrics?.GetPositionFromPlayer(w_tick);
+                frmMp3Lyrics?.SendPlayerPositionToKaraoke(w_tick);
             }
             else if (w_tick == w_wait)
             {
@@ -4619,13 +4621,7 @@ namespace Karaboss.Mp3
             if (Player == null) return;
 
             if (Application.OpenForms.OfType<frmMp3Lyrics>().Count() > 0)
-                frmMp3Lyrics.GetPositionFromPlayer(pos);
-
-
-            // ************************************************************************* TEST *************************************************************************
-            //if (Application.OpenForms.OfType<frmTest>().Count() > 0 )
-            //    frmTest.SetPos(pos * 1000);
-
+                frmMp3Lyrics.SendPlayerPositionToKaraoke(pos);
         }
 
         private void StopKaraoke()
@@ -4635,9 +4631,6 @@ namespace Karaboss.Mp3
                 frmMp3Lyrics.Stop();
                 frmMp3Lyrics.PlayStopActions(true);
             }
-
-            //if (Application.OpenForms.OfType<frmTest>().Count() > 0)
-            //    frmTest.Stop();
         }
 
         private void StartKaraoke()
@@ -4648,10 +4641,6 @@ namespace Karaboss.Mp3
                 frmMp3Lyrics.PlayStopActions(false);
 
             }
-
-            if (Application.OpenForms.OfType<frmTest>().Count() > 0)
-                frmTest.Start();
-
         }
 
         #endregion Timer

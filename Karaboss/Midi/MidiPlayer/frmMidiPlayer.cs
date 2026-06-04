@@ -34,7 +34,6 @@
 using kar;
 using Karaboss.MidiLyrics;
 using Karaboss.Mp3;
-using Karaboss.Mp3.Mp3Lyrics;
 using Karaboss.Resources.Localization;
 using Karaboss.Utilities;
 using MusicTxt;
@@ -843,6 +842,9 @@ namespace Karaboss
                 // Send mandatory informations to lyrics form
                 SendInformationsToLyrics();
 
+                
+                StartKaraoke();
+
 
                 // 2. START PLAYING
                 // 
@@ -860,8 +862,8 @@ namespace Karaboss
                     // Start sequencer
                     sequencer1.Start();
                 }
-
                 sequencer1.Tempo = TempoOrig;
+
 
 
                 // main timer
@@ -964,12 +966,17 @@ namespace Karaboss
 
                 lblBeat.Text = "1|" + sequence1.Numerator;
 
+
+                StopKaraoke();
+
+                /*
                 if (Application.OpenForms.OfType<frmMidiLyrics>().Count() > 0)
                 {
                     frmMidiLyrics.ResetTop();
                     frmMidiLyrics.StopDiaporama();
                     frmMidiLyrics.PlayStopActions(true);
                 }
+                */
 
                 positionHScrollBarNew.Value = 0;
 
@@ -7678,7 +7685,7 @@ namespace Karaboss
             if (PlayerState == PlayerStates.Playing)
             {
                 if (Application.OpenForms.OfType<frmMidiLyrics>().Count() > 0 && myLyricsMgmt.KLyrics.Lines.Count > 0)
-                    frmMidiLyrics.ColorLyric(sequencer1.Position);
+                    frmMidiLyrics?.SendPlayerPositionToKaraoke(sequencer1.Position);  //frmMidiLyrics.ColorLyric(sequencer1.Position);
             }
         }
 
@@ -7785,7 +7792,8 @@ namespace Karaboss
             {
                 //Console.WriteLine("w_tick = " + w_tick);
                 // color each second                             
-                frmMidiLyrics?.ColorLyric(w_tick * 100);
+                //frmMidiLyrics?.ColorLyric(w_tick * 100);
+                frmMidiLyrics?.SendPlayerPositionToKaraoke(w_tick*100);
 
             }
             else if (w_tick == w_wait)
@@ -7816,7 +7824,36 @@ namespace Karaboss
             }
         }
 
-       
+
+
+        private void SendPlayerPositionToKaraoke(int pos)
+        {
+            //if (Player == null) return;
+
+            if (Application.OpenForms.OfType<frmMidiLyrics>().Count() > 0)
+                frmMidiLyrics.SendPlayerPositionToKaraoke(pos);
+
+        }
+
+
+        private void StopKaraoke()
+        {
+            if (Application.OpenForms.OfType<frmMidiLyrics>().Count() > 0)
+            {
+                frmMidiLyrics.Stop();
+                frmMidiLyrics.PlayStopActions(true);
+            }
+        }
+
+        private void StartKaraoke()
+        {
+            if (Application.OpenForms.OfType<frmMidiLyrics>().Count() > 0)
+            {
+                frmMidiLyrics.Start();
+                frmMidiLyrics.PlayStopActions(false);
+
+            }          
+        }
 
         #endregion timers
 
