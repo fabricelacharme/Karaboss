@@ -34,8 +34,8 @@
 
 using kar;
 using Karaboss.MidiLyrics;
+using Karaboss.Mp3.Mp3Lyrics;
 using Karaboss.Themes;
-using Karaboss.Utilities;
 using PicControl;
 using System;
 using System.Collections.Generic;
@@ -660,7 +660,7 @@ namespace Karaboss
                 {
                     _bForceUppercase = value;
                     pBox.bforceUppercase = _bForceUppercase;
-                    LoadSong(myLyricsMgmt.KLyrics);
+                    SetLyrics(myLyricsMgmt.KLyrics);
                 }
             }
         }
@@ -1121,9 +1121,7 @@ namespace Karaboss
                 // Force Uppercase
                 bForceUppercase = Karaclass.m_ForceUppercase;
 
-                // show balls
-                bShowBalls = Karaclass.m_DisplayBalls;
-
+                
                 // Backgrounds (image, diaporama, solid color, gradient, rhythm, transparent)
                 OptionBackground = Properties.Settings.Default.BackGroundOption;
 
@@ -1161,6 +1159,13 @@ namespace Karaboss
 
                 pBox.timerIntervall = _timerintervall;
 
+
+                // show balls
+                bShowBalls = Karaclass.m_DisplayBalls;
+
+               
+                
+
             }
             catch (Exception e)
             {
@@ -1173,12 +1178,15 @@ namespace Karaboss
         {
             try
             {
-
                 Cursor.Current = Cursors.WaitCursor;
 
                 // Show balls
                 bShowBalls = Karaclass.m_DisplayBalls;
-                
+
+                // Load balls times
+                //if (_bShowBalls)
+                //    LoadBallsTimes(myLyricsMgmt.KLyrics);
+
                 // Show chords
                 bShowChords = Properties.Settings.Default.bShowChords;
 
@@ -1259,9 +1267,45 @@ namespace Karaboss
 
 
         #endregion initializations
-       
+
+
+        #region Lyrics 
+
+        /// <summary>
+        /// Load song in picturebox control
+        ///  1/4 = LineFeed
+        ///  1/2 = Paragraph
+        /// </summary>
+        public void SetLyrics(kLyrics kl)
+        {
+            currentTextPos = 0;
+
+            // Load kLyrics with kLyrics to have all the information for chords and lyrics positions, used for balls animation
+            pBox.KLyrics = kl;
+
+            // Force Uppercase         
+            pBox.bforceUppercase = _bForceUppercase;
+            pBox.bShowChords = Karaclass.m_ShowChords;
+
+            // Load balls times after having loaded the kLyrics in the pBox because the kLyrics are transformed (trailing spaces added, instrumental parts etc...) and the balls times are based on the kLyrics syllabes positions
+            if (bShowBalls)
+                LoadBallsTimes(kl);
+        }
+
+        #endregion Lyrics
+
 
         #region public methods
+
+
+        /// <summary>
+        /// Count Down: decreasing numbers to wait for next song to start
+        /// </summary>
+        /// <param name="sec"></param>
+        public void LoadWaitSong(int sec)
+        {
+            pBox.LoadWaitSong(sec);
+        }
 
         /// <summary>
         /// Displays a visual representation of a beat on the associated PictureBox control.
@@ -1280,83 +1324,19 @@ namespace Karaboss
         }
 
 
-      
-        /// <summary>
-        /// Count Down: decreasing numbers to wait for next song to start
-        /// </summary>
-        /// <param name="sec"></param>
-        public void LoadWaitSong(int sec)
-        {
-            pBox.LoadWaitSong(sec);
-        }
-
-        public void EndWaitSong()
-        {
-            pBox.endDemoText();
-        }
-
         public void DisplayText(List<string>Lines)
         {
             pBox.DisplayText(Lines);
         }
 
-       
-        /// <summary>
-        /// Load song in picturebox control
-        ///  1/4 = LineFeed
-        ///  1/2 = Paragraph
-        /// </summary>
-        public void LoadSong(kLyrics kl)
-        {
-            currentTextPos = 0;
-                   
-            // Load kLyrics with kLyrics to have all the information for chords and lyrics positions, used for balls animation
-            pBox.KLyrics = kl;
 
-            // Force Uppercase         
-            pBox.bforceUppercase = _bForceUppercase;
-            pBox.bShowChords = Karaclass.m_ShowChords;
-
-            //Initial position
-            pBox.CurrentTextPos = -1;
-
-            if (bShowBalls)
-                LoadBallsTimes(kl);
-        }
-
-        /*
-        /// <summary>
-        /// Color the syllabe according to song position
-        /// </summary>
-        /// <param name="songposition"></param>
-        public void ColorLyric(int SequencerPosition)
-        {
-            // déclencheur : timer_2
-            // IMPERATIF : calculer ici la position de la syllabe, utilisée pour l'animation des balles
-            // drivé par timer_2 de frmMidiPplayer            
-            currentTextPos = pBox.CurrentTextPos;
-            //pBox.ColorLyric(songposition);
-            pBox.SetPos(SequencerPosition);
-        }
-        */
-
-        /*
-        /// <summary>
-        /// Reset display at begining
-        /// </summary>
-        public void ResetTop()
-        {
-            currentTextPos = 0;
-            pBox.ResetTop();
-        }
-        */
         public void PlayStopActions(bool isStopped)
         {
             // Disable buttons for editing lyrics and chords
             btnEditLyrics.Enabled = isStopped;
             btnEditLyricsChords.Enabled = isStopped;
         }
-
+            
 
         public void Start()
         {
@@ -1376,15 +1356,8 @@ namespace Karaboss
         public void SendPlayerPositionToKaraoke(int SequencerPosition)
         {
             pBox.SetPos(SequencerPosition);
-
         }
-
-
-        public void StopDiaporama()
-        {
-            pBox.Terminate();
-        }
-     
+              
 
         #endregion public methods
                
@@ -1504,7 +1477,7 @@ namespace Karaboss
                 myLyricsMgmt.ResetDisplayChordsOptions(chkChords.Checked);
 
                 // Load modified lyrics into the picturebox
-                LoadSong(myLyricsMgmt.KLyrics);
+                SetLyrics(myLyricsMgmt.KLyrics);
 
                 // Refresh score with or without chords
                 frmMidiPlayer frmMidiPlayer = Utilities.FormUtilities.GetForm<frmMidiPlayer>();

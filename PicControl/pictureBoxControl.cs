@@ -66,7 +66,7 @@ namespace PicControl
 
                       
         #region classes
-
+        /*
         // Syllabes
         public class syllabe
         {
@@ -80,7 +80,7 @@ namespace PicControl
             public int last;            // position derniére syllabe
             public int offset;          // offset horizontal
         }
-
+        */
         #endregion classes
 
 
@@ -397,8 +397,9 @@ namespace PicControl
 
         public Rectangle m_DisplayRectangle { get; set; }
 
+        /*
         private List<RectangleF> rRect;
-        //private List<RectangleF> rNextRect;
+        private List<RectangleF> rNextRect;
 
         private int _currentPosition;
         public int CurrentTime
@@ -423,14 +424,15 @@ namespace PicControl
         }
 
         private int vOffset = 0;
+        */
 
-        private bool bEndOfLine = false;
+        //private bool bEndOfLine = false;
         //private bool bHighLight = false;
-        private int nextStartOfLineTime = 0;
-        private int TimeToNextLineDuration = 0;
+        //private int nextStartOfLineTime = 0;
+        //private int TimeToNextLineDuration = 0;
 
 
-        private List<syllabe> syllabes;
+        //private List<syllabe> syllabes;
         private List<List<(string, float, string)>> lstChordsPositions; // List of lines of lyrics fragments with their length (to manage syllables with chords in the middle of the word)
 
         private int currentLine = 0;
@@ -1422,11 +1424,12 @@ namespace PicControl
             Init(true);           
         }
 
+        /*
         public void endDemoText()
         {
             syllabes = null;
         }
-
+        */
 
         /// <summary>
         /// Display a text from another windows form (used in playlists to display song title and artist during the wait time before the song starts)
@@ -1454,6 +1457,84 @@ namespace PicControl
         }
 
         #endregion Events
+
+
+        #region Demo, wait
+
+
+        public void LoadDemoText()
+        {
+
+            List<string> lines = new List<string>
+            {
+                "Lorem ipsum dolor",
+                "sit amet,",
+                "consectetur",
+                "adipisicing elit,",
+                "sed do eiusmod",
+                "tempor incididunt",
+                "ut labore et dolore",
+                "magna aliqua.",
+                "Ut enim ad minim",
+                "veniam,",
+                "quis nostrud",
+                "exercitation ullamco",
+                "laboris nisi",
+                "ut aliquip",
+                "ex ea commodo",
+                "consequat.",
+                "Duis aute irure",
+                "dolor in",
+                "reprehenderit in",
+                "voluptate velit",
+                "esse cillum dolore",
+                "eu fugiat nulla",
+                "pariatur.",
+            };
+
+
+            // Step 100 ticks between syllables 
+            KLyrics = StoreDemoText(lines, 100);
+            this.SetPos(200);   // after ipsum
+        }
+
+        /// <summary>
+        /// Store demo text        
+        /// </summary>
+        /// <param name="tx"></param>
+        /// <returns></returns>
+        private kLyrics StoreDemoText(List<string> lines, int step, int tcks = 0)
+        {
+            int ticks = 0;
+            Syllable syll;
+            kLine kLine; // = new kLine();
+            kLyrics KL = new kLyrics();
+
+            for (int i = 0; i < lines.Count; i++)
+            {
+                string l = lines[i];
+                string[] words = l.Split(new Char[] { ' ' });
+
+                kLine = new kLine();
+                for (int j = 0; j < words.Length; j++)
+                {
+                    if (bforceUppercase)
+                        words[j] = words[j].ToUpper();
+
+                    string w = words[j] + " ";
+
+                    syll = new Syllable() { Text = w, TicksOn = ticks, TicksOff = ticks + step / 2 };
+                    ticks += step;
+
+                    kLine.Add(syll);
+                }
+                KL.Add(kLine);
+            }
+
+            return KL;
+        }
+
+        #endregion Demo, wait
 
 
         #region Initializations
@@ -1514,87 +1595,14 @@ namespace PicControl
 
             #region Initial text position
             
-            _currentPosition = 30;
+            //_currentPosition = 30;
             currentLine = 1;
-            _currentTextPos = 2;
+            //_currentTextPos = 2;
 
             #endregion Initial text position
 
 
             pBox.Invalidate();
-        }
-
-
-        public void LoadDemoText()
-        {
-            
-            List<string> lines = new List<string>
-            {
-                "Lorem ipsum dolor",
-                "sit amet,",
-                "consectetur",
-                "adipisicing elit,",
-                "sed do eiusmod",
-                "tempor incididunt",
-                "ut labore et dolore",
-                "magna aliqua.",
-                "Ut enim ad minim",
-                "veniam,",
-                "quis nostrud",
-                "exercitation ullamco",
-                "laboris nisi",
-                "ut aliquip",
-                "ex ea commodo",
-                "consequat.",
-                "Duis aute irure",
-                "dolor in",
-                "reprehenderit in",
-                "voluptate velit",
-                "esse cillum dolore",
-                "eu fugiat nulla",
-                "pariatur.",
-            };
-
-
-            // Step 100 ticks between syllables 
-            KLyrics = StoreDemoText(lines, 100);
-            this.SetPos(100);   // after ipsum
-        }
-
-        /// <summary>
-        /// Store demo text        
-        /// </summary>
-        /// <param name="tx"></param>
-        /// <returns></returns>
-        private kLyrics StoreDemoText(List<string> lines, int step, int tcks = 0)
-        {
-            int ticks = 0;
-            Syllable syll;
-            kLine kLine; // = new kLine();
-            kLyrics KL = new kLyrics();
-
-            for (int i = 0; i < lines.Count; i++)
-            {
-                string l = lines[i];
-                string[] words = l.Split(new Char[] { ' ' });
-
-                kLine = new kLine();
-                for (int j = 0; j < words.Length; j++)
-                {
-                    if (bforceUppercase)
-                        words[j] = words[j].ToUpper();
-
-                    string w = words[j] + " ";
-                    
-                    syll = new Syllable() { Text = w, TicksOn = ticks, TicksOff = ticks + step/2 };
-                    ticks += step;
-
-                    kLine.Add(syll);
-                }
-                KL.Add(kLine);
-            }
-
-            return KL;
         }
 
 
@@ -1948,32 +1956,19 @@ namespace PicControl
 
             // Add a syllable to each end of lines
             _kLyrics = AddTrailingSyllable(_kLyrics);
-          
+                      
 
-            lstChordsPositions = new List<List<(string, float, string)>>();
-
-            LinesLengths = new float[_kLyrics.Lines.Count];
-            //syllabes = new List<syllabe>();
+            LinesLengths = new float[_kLyrics.Lines.Count];            
                             
             _biggestLine = GetBiggestLine();
             AdjustFontSize();
 
 
             // store chords positions (after adjusting font size to be able to calculate chords positions in pixels)
-            if (_kLyrics != null)
+            lstChordsPositions = new List<List<(string, float, string)>>();
+            if (_kLyrics != null && _bShowChords)
                 lstChordsPositions = StoreChordsPositions();
 
-
-                // Store syllabes                
-                //if (_kLyrics != null)
-                //    syllabes = StoreLyricsSyllabes(_kLyrics);
-
-            if (_bIsSettings)
-                SetPos(100);
-
-
-                // Create rectangles for drawing active line
-                //createListRectangles(0);
 
             if (KaraokeDisplayType == KaraokeDisplayTypes.ConstantScrolling)
                 InitScrollMode();
@@ -2099,7 +2094,7 @@ namespace PicControl
         public void SetPos(int ticks)
         {
             // Store player position (ms)
-            _currentPosition = ticks;
+            //_currentPosition = ticks;
 
             PlayerPositionTicks = ticks;
 
@@ -3161,6 +3156,7 @@ namespace PicControl
 
         #region draw lyrics & chords
 
+        /*
         /// <summary>
         /// Draw current line, syllabe by syllabe
         /// already sung: _ActiveColor
@@ -3238,7 +3234,9 @@ namespace PicControl
                 Console.Write("Error: " + ed.Message);
             }
         }
+        */
 
+        /*
         /// <summary>
         /// Draw chords on current line
         /// </summary>
@@ -3266,7 +3264,7 @@ namespace PicControl
                 Console.Write("Error: " + ed.Message);
             }
         }
-
+        */
 
        
         #endregion draw lyrics & chords
@@ -4166,7 +4164,7 @@ namespace PicControl
             if (_kLyrics == null || _kLyrics.Lines.Count == 0) return;
 
             // Create list of rectangles when line changes
-            synchronize(_currentTextPos);
+            //synchronize(_currentTextPos);
 
             #region Declarations
 
@@ -4824,7 +4822,7 @@ namespace PicControl
             e.Graphics.SmoothingMode = SmoothingMode.AntiAlias;
 
             // Create list of rectangles when line changes
-            synchronize(_currentTextPos);
+            //synchronize(_currentTextPos);
 
             #region Declarations
 
@@ -5058,7 +5056,7 @@ namespace PicControl
 
 
             // Create list of rectangles when line changes
-            synchronize(_currentTextPos);
+            //synchronize(_currentTextPos);
 
             // Calculate offset to center the text vertically
             int y0 = getOffsetHeight(emSize);
@@ -5483,6 +5481,7 @@ namespace PicControl
             return lstChords;
         }
 
+        /*
         /// <summary>
         /// Store syllabes in a list, each item being a class called syllabe
         /// </summary>
@@ -5528,8 +5527,9 @@ namespace PicControl
             }
             return lstSyllabes;
         }
+        */
 
-
+        /*
         /// <summary>
         /// Crée une liste de rectangles pour chaque syllable de la ligne en cours 
         /// </summary>
@@ -5591,8 +5591,9 @@ namespace PicControl
                 }
             }
         }
+        */
 
-
+        /*
         /// <summary>
         /// Create rectangles when line changes
         /// </summary>
@@ -5624,7 +5625,7 @@ namespace PicControl
                 }
             }
         }
-
+        */
 
         #endregion Text and Chords management
 

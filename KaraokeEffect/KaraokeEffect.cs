@@ -1594,7 +1594,6 @@ namespace keffect
                 _kLyrics = SearchForInstrumentals(_kLyrics);
 
 
-
             // Add a syllable to each end of lines
             _kLyrics = AddTrailingSyllable(_kLyrics);
 
@@ -1606,10 +1605,6 @@ namespace keffect
             AdjustFontSize(_nbLyricsLines);           
             _LastLineToShow = SetLastLineToShow(_FirstLineToShow, _kLyrics.Lines.Count, _nbLyricsLines);
             
-
-
-            if (_bIsSettings)
-                SetPos(200);
 
             if (KaraokeDisplayType == KaraokeDisplayTypes.ConstantScrolling)
                 InitScrollMode();

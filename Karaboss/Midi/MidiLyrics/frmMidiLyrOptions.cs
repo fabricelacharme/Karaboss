@@ -322,6 +322,18 @@ namespace Karaboss
                 openFileDialog.Filter = "Image Files|*.jpg;*.jpeg;*.png;*.gif;*.tif;...|All files (*.*)|*.*";
                 openFileDialog.FileName = string.Empty;
 
+                var AppDataFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Karaboss");                              
+                if (SingleImagePath != null && SingleImagePath.Trim() != "" && System.IO.File.Exists(SingleImagePath))
+                {
+                    openFileDialog.InitialDirectory = Path.GetDirectoryName(SingleImagePath);
+                }
+                else if (Directory.Exists(AppDataFolder))
+                {
+                    openFileDialog.InitialDirectory = AppDataFolder;
+                }
+                else
+                    openFileDialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyPictures);
+                
                 if (openFileDialog.ShowDialog() == DialogResult.OK)
                 {
                     radioImage.Checked = true;
@@ -2029,7 +2041,7 @@ namespace Karaboss
                 // SlideShow
                 pBox.FreqSlideShow = freqSlideShow;
                 pBox.nbLyricsLines = _nbLyricsLines;
-                pBox.CurrentTime = 30;
+                //pBox.CurrentTime = 30;
 
                 // Backgrounds
                 pBox.BgColor = BgColor;

@@ -992,9 +992,7 @@
             this.pBox.bShowParagraphs = true;
             this.pBox.bShowSongName = true;
             this.pBox.bTextBackGround = true;
-            this.pBox.ChordFont = new System.Drawing.Font("Comic Sans MS", 8.25F);
-            this.pBox.CurrentTextPos = 2;
-            this.pBox.CurrentTime = 30;
+            this.pBox.ChordFont = new System.Drawing.Font("Comic Sans MS", 8.25F);                        
             this.pBox.Duration = 0D;
             this.pBox.FileName = "Song Name";
             this.pBox.FirstMelodyNoteTicksOn = 0;

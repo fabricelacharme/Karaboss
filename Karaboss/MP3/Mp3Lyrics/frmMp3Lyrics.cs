@@ -248,6 +248,7 @@ namespace Karaboss.Mp3
 
 
         #region Font
+
         private string ftName = "Arial Black";
         private uint ftSize = 20;
 
@@ -1056,7 +1057,7 @@ namespace Karaboss.Mp3
         #endregion initializations
 
 
-        #region lyrics        
+        #region Lyrics        
 
         /// <summary>
         /// Load lyrics into karaokeEffect1.KLyrics
@@ -1067,7 +1068,7 @@ namespace Karaboss.Mp3
             karaokeEffect1.KLyrics = lyrics;
         }
 
-        #endregion lyrics
+        #endregion Lyrics
 
 
         #region Move Window

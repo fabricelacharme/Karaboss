@@ -3987,7 +3987,7 @@ namespace Karaboss
 
                 // Window closed
                 DisplayLyricsForm();
-                frmMidiLyrics.LoadSong(myLyricsMgmt.KLyrics);
+                frmMidiLyrics.SetLyrics(myLyricsMgmt.KLyrics);
             }
 
             // Refresh display of lyrics
@@ -4168,7 +4168,7 @@ namespace Karaboss
                     frmMidiLyrics.nbLyricsLines = Properties.Settings.Default.TxtNbLines;
                 }
 
-                frmMidiLyrics.LoadSong(myLyricsMgmt.KLyrics);
+                frmMidiLyrics.SetLyrics(myLyricsMgmt.KLyrics);
             }
         }
 
