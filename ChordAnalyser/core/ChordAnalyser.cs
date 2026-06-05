@@ -50,6 +50,9 @@ namespace ChordsAnalyser
         static List<int[]> lnIntNote = new List<int[]>();
         static readonly List<string[]> lnStringNote = new List<string[]>();
 
+        static List<int> LastChord = new List<int>();
+
+
         #region properties
 
         // Search by half measure
@@ -471,9 +474,13 @@ namespace ChordsAnalyser
         /// <param name="section"></param>
         /// <param name="notes"></param>
         private void SearchMeasure(int _measure, int section,  List<int> notes)
-        {
+        {                        
+
             if (notes.Count == 0)
             {
+                // Remove chord if no note, but only if no chord already found with the other method (beat method)
+                LastChord = new List<int>();
+
                 if (section == 1)
                 {
                     if (Gridchords[_measure].Item1 == ChordNotFound)
@@ -546,8 +553,8 @@ namespace ChordsAnalyser
                         bestnotletters4.Add(dictbestnotes.ElementAt(3).Key);
                         
                     }
-                } 
-
+                }
+              
 
                 // Try best notes, if not, try all notes                                
                 List<int> lroot = null;
@@ -570,7 +577,29 @@ namespace ChordsAnalyser
                
                 if (lroot != null)
                 {
+                                                           
+                    // Search if LastChord is equal or included in the current chord,
+                    // if yes, we can suppose that it is the same chord as in the previous measure
+                    if (LastChord.Count > 0 && lroot.Count > 0 && LastChord.Count <= lroot.Count)
+                    {
+                        bool isIncluded = true;
+                        foreach (int n in LastChord)
+                        {
+                            if (!lroot.Contains(n))
+                            {
+                                isIncluded = false;
+                                break;
+                            }
+                        }
+                        if (isIncluded)
+                            lroot = LastChord;
+                    }
+                    
+
                     string res = Analyser.determine(lroot);
+                    
+                    LastChord = lroot;
+                    
                     if (section == 1)
                     {
                         if (Gridchords[_measure].Item1 == ChordNotFound)
@@ -580,10 +609,12 @@ namespace ChordsAnalyser
                     {
                         if (Gridchords[_measure].Item2 == ChordNotFound)
                             Gridchords[_measure] = (Gridchords[_measure].Item1, res);
-
                     }
+
                 }                
             }
+
+
         }
 
         private void SearchByBass()
