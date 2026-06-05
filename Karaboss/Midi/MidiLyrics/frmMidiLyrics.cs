@@ -34,7 +34,6 @@
 
 using kar;
 using Karaboss.MidiLyrics;
-using Karaboss.Mp3.Mp3Lyrics;
 using Karaboss.Themes;
 using PicControl;
 using System;
@@ -812,11 +811,10 @@ namespace Karaboss
         /// <param name="plLyrics"></param>
         public void LoadBallsTimes(kLyrics kl)
         {
-            if (!bShowBalls || kl.Lines.Count == 0)
-            { return; }
+            if (!bShowBalls || kl.Lines.Count == 0)  return;
 
             LyricsTimes = new List<int>();
-            /*
+            
             for (int i = 0; i < kl.Lines.Count; i++)
             {
                 for (int j = 0; j < kl.Lines[i].Syllables.Count; j++)
@@ -828,8 +826,8 @@ namespace Karaboss
                     }
                 }
             }
-            */
-
+            
+            /*
             // Take lyrics times from the pBox which are transformed (trailing spaces added, instrumentals etc...)
             for (int i = 0; i < pBox.KLyrics.Lines.Count; i++)
             {
@@ -842,10 +840,10 @@ namespace Karaboss
                     }
                 }
             }
+            */
 
             picBalls.Division = myLyricsMgmt.Division;
             picBalls.LoadTimes(LyricsTimes);
-
             picBalls.Start();
 
         }
@@ -862,8 +860,62 @@ namespace Karaboss
             // déclencheur : timer_3
             // 21 balls: 1 fix, 20 moving to the fix one  
             // la position currentTextPos est calculée avec timer_2 et non pas timer_3 trop rapide    
+            // Find syllabe related to songposition
+            currentTextPos = FindIndexSyllabe(songposition);
+
             if (Karaclass.m_DisplayBalls)
                 picBalls.MoveBallsToLyrics(songposition, currentTextPos);
+        }
+
+
+        /// <summary>
+        /// Find syllabe related to songposition
+        /// </summary>
+        /// <param name="songposition"></param>
+        /// <returns></returns>
+        private int FindIndexSyllabe(int songposition)
+        {                       
+            int idx = 0;            
+            if (pBox.KLyrics == null) return 0;
+
+            kLine syncline = new kLine();
+
+            for (int i = 0; i < myLyricsMgmt.KLyrics.Lines.Count; i++)
+            {
+                syncline = myLyricsMgmt.KLyrics.Lines[i];
+                for (int j = 0; j < syncline.Syllables.Count; j++)
+                {
+                    if (songposition < syncline.Syllables[j].TicksOn)
+                    {
+                        return idx;
+                    }
+                    else
+                    {
+                        idx++;
+                    }
+                }
+            }
+
+
+            /*
+            for (int i = 0; i < pBox.KLyrics.Lines.Count; i++)
+            {
+                syncline = pBox.KLyrics.Lines[i];
+                for (int j = 0; j < syncline.Syllables.Count; j++)
+                {
+                    if (songposition < syncline.Syllables[j].TicksOn)
+                    {
+                        return idx;
+                    }
+                    else
+                    {
+                        idx++;
+                    }
+                }
+            }
+            */
+
+            return 0;
         }
 
         public void UnlightFixedBall()
@@ -1184,8 +1236,8 @@ namespace Karaboss
                 bShowBalls = Karaclass.m_DisplayBalls;
 
                 // Load balls times
-                //if (_bShowBalls)
-                //    LoadBallsTimes(myLyricsMgmt.KLyrics);
+                if (_bShowBalls)
+                    LoadBallsTimes(myLyricsMgmt.KLyrics);
 
                 // Show chords
                 bShowChords = Properties.Settings.Default.bShowChords;

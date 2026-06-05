@@ -713,10 +713,10 @@ namespace Karaboss.Mp3
         /// Load balls times
         /// </summary>
         /// <param name="SyncLyrics"></param>
-        public void LoadBallsTimes(kLyrics SyncLyrics)
+        public void LoadBallsTimes(kLyrics kls)
         {
             #region guard
-            if (!_bShowBalls || SyncLyrics.Lines.Count == 0) return;
+            if (!_bShowBalls || kls.Lines.Count == 0) return;
             #endregion guard
 
 
@@ -725,9 +725,9 @@ namespace Karaboss.Mp3
 
             currentTextPos = 0;
 
-            for (int i = 0; i < SyncLyrics.Lines.Count; i++)
+            for (int i = 0; i < kls.Lines.Count; i++)
             {
-                syncline = SyncLyrics.Lines[i];
+                syncline = kls.Lines[i];
 
                 for (int j = 0; j < syncline.Syllables.Count; j++)
                 {
@@ -764,25 +764,20 @@ namespace Karaboss.Mp3
         /// <returns></returns>
         private int FindIndexSyllabe(int songposition)
         {
-            int i = 0;
-            int j = 0;
-
             int idx = 0;
-
-            //if (Mp3LyricsMgmtHelper.SyncLyrics == null) return 0;
+            
             if (Mp3LyricsMgmtHelper.mp3KaraokeLyrics == null) return 0;
 
             kLine syncline = new kLine();
 
-            for (i = 0; i < Mp3LyricsMgmtHelper.mp3KaraokeLyrics.Lines.Count; i++)
+            for (int i = 0; i < Mp3LyricsMgmtHelper.mp3KaraokeLyrics.Lines.Count; i++)
             {
                 syncline = Mp3LyricsMgmtHelper.mp3KaraokeLyrics.Lines[i];
-                for (j = 0; j < syncline.Syllables.Count; j++)
+                for (int j = 0; j < syncline.Syllables.Count; j++)
                 {
                     if (songposition < syncline.Syllables[j].StartTime)
                     {
                         return idx;
-
                     }
                     else
                     {
@@ -976,7 +971,9 @@ namespace Karaboss.Mp3
                 Cursor.Current = Cursors.WaitCursor;
 
                 // Show balls
-                bShowBalls = Karaclass.m_DisplayBalls;                
+                bShowBalls = Karaclass.m_DisplayBalls;
+                if (bShowBalls)
+                    LoadBallsTimes(Mp3LyricsMgmtHelper.mp3KaraokeLyrics);
 
                 // Font
                 ftName = Properties.Settings.Default.KaraokeFontName;
