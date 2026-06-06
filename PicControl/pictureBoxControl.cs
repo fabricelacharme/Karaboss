@@ -42,6 +42,7 @@ using System.Drawing.Text;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
+using System.Text.RegularExpressions;
 using System.Windows.Forms;
 
 namespace PicControl
@@ -1853,6 +1854,7 @@ namespace PicControl
 
             return klsWithTrailingSyllable;
         }
+
 
 
         /// <summary>

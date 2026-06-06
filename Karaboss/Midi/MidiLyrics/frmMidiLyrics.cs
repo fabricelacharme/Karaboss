@@ -1333,6 +1333,11 @@ namespace Karaboss
             currentTextPos = 0;
 
             // Load kLyrics with kLyrics to have all the information for chords and lyrics positions, used for balls animation
+            if (Karaclass.m_ShowChords && myLyricsMgmt != null && myLyricsMgmt.ChordsOriginatedFrom == MidiLyricsMgmt.ChordsOrigins.Lyrics)
+            {
+                kl = RemoveChordsFromLyrics(kl);
+            }
+            
             pBox.KLyrics = kl;
 
             // Force Uppercase         
@@ -1343,6 +1348,33 @@ namespace Karaboss
             if (bShowBalls)
                 LoadBallsTimes(kl);
         }
+
+
+        private kLyrics RemoveChordsFromLyrics(kLyrics kl)
+        {
+            if (myLyricsMgmt.RemoveChordPattern == null)
+            {
+                MessageBox.Show("RemoveChordsPattern is null", Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return null;
+            }
+
+            kLyrics klNoChords = new kLyrics();
+            foreach (kLine line in kl.Lines)
+            {
+                kLine newLine = new kLine();
+                foreach (Syllable syllable in line.Syllables)
+                {
+                    if (syllable.CharType == Syllable.CharTypes.Text)
+                    {
+                        syllable.Text = Regex.Replace(syllable.Text, myLyricsMgmt.RemoveChordPattern, @"");                        
+                    }
+                    newLine.Syllables.Add(syllable);
+                }
+                klNoChords.Lines.Add(newLine);
+            }
+            return klNoChords;
+        }
+
 
         #endregion Lyrics
 
