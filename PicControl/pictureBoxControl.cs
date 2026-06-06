@@ -65,25 +65,7 @@ namespace PicControl
          */
 
                       
-        #region classes
-        /*
-        // Syllabes
-        public class syllabe
-        {
-            public string chord;        // Chord to play with this syllabe
-            public string text;         // piece of text (text of Syllabe)
-            public int time;            // temps de la syllabe 
-            public int line;            // num de ligne  
-            public int posline;         // position dans la ligne
-            public int pos;             // position dans la chanson
-            public int SylCount;        // Nombre de syllabes sur la meme ligne
-            public int last;            // position derniére syllabe
-            public int offset;          // offset horizontal
-        }
-        */
-        #endregion classes
-
-
+       
         #region Colors
 
         #region Background color
@@ -1403,14 +1385,6 @@ namespace PicControl
             KaraokeDisplayType = KaraokeDisplayTypes.Countdown;
 
 
-            //SetDirectoryBackground(null);
-
-            // Initial position
-            //_currentTextPos = -1;
-            //vOffset = 0;
-            //nextStartOfLineTime = 0;
-
-
             List<string> lines = new List<string>();
             // 10|9|8|7|6|5|4|3|2|1|0|       
             for (int i = sec; i >= 0; i--)
@@ -1424,12 +1398,7 @@ namespace PicControl
             Init(true);           
         }
 
-        /*
-        public void endDemoText()
-        {
-            syllabes = null;
-        }
-        */
+  
 
         /// <summary>
         /// Display a text from another windows form (used in playlists to display song title and artist during the wait time before the song starts)
