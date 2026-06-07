@@ -1296,13 +1296,13 @@ namespace Sanford.Multimedia.Midi
         #endregion channel
 
         #region fader
+
         // Find Fader controller (11)
         private int findFader()
         {
             int id = 0;
 
             MidiEvent current = GetMidiEvent(0);
-
 
             while (current.AbsoluteTicks <= Length)
             {
@@ -1369,6 +1369,78 @@ namespace Sanford.Multimedia.Midi
             return -1;
         }
 
+        private int findFader(int starttime, int endtime)
+        {
+            int id = 0;
+
+            MidiEvent current = GetMidiEvent(0);
+
+            while (current.AbsoluteTicks <= Length)
+            {
+                IMidiMessage a = current.MidiMessage;
+
+                if (a.MessageType == MessageType.Channel)
+                {
+                    ChannelMessage Msg = (ChannelMessage)current.MidiMessage;
+                    ChannelCommand cc = Msg.Command;
+
+                    if (cc == ChannelCommand.Controller)
+                    {
+                        ControllerType ct = (ControllerType)cc;
+                        // FAB test 11 pour fade in & out
+                        if (Msg.Data1 == 11 && current.AbsoluteTicks >= starttime && current.AbsoluteTicks <= endtime)
+                        {
+                            return id;
+                        }
+                        else
+                        {
+                            #region next
+                            if (current.Next != null)
+                            {
+                                current = current.Next;
+                                id++;
+                            }
+                            else
+                            {
+                                break;
+                            }
+                            #endregion next      
+                        }
+                    }
+                    else
+                    {
+                        #region next
+                        if (current.Next != null)
+                        {
+                            current = current.Next;
+                            id++;
+                        }
+                        else
+                        {
+                            break;
+                        }
+                        #endregion next      
+                    }
+                }
+                else
+                {
+                    #region next
+                    if (current.Next != null)
+                    {
+                        current = current.Next;
+                        id++;
+                    }
+                    else
+                    {
+                        break;
+                    }
+                    #endregion next      
+                }
+            }
+            return -1;
+        }
+
+
         /// <summary>
         /// Remove all Fader events
         /// </summary>
@@ -1382,6 +1454,44 @@ namespace Sanford.Multimedia.Midi
                 i = findFader();
             }
         }
+
+        //public void SetFadingOut(int channel, int starttime, int endtime)
+        public void SetFadingOut(int steps, int starttime, int endtime)
+        {
+            // Remove all fader events for this channel in the time range
+            //RemoveFader(channel, starttime, endtime);
+            UnsetFadingOut(starttime, endtime);
+            // Insert new fader events for fading out
+            //int steps = 10; // (int)step;
+            int offsetTime = (endtime - starttime) / steps;
+            int t = starttime;
+            for (int i = 0; i < steps; i++)
+            {
+                int expression = 127 - (i * 127 / steps);
+                
+                //ChannelMessage message = new ChannelMessage(ChannelCommand.Controller, channel, (int)ControllerType.Expression, expression);
+                ChannelMessage message = new ChannelMessage(ChannelCommand.Controller, MidiChannel, (int)ControllerType.Expression, expression);                
+
+                Insert(t, message);
+                t += offsetTime;
+            }
+        }
+
+
+        
+        //private void RemoveFader(int channel, int starttime, int endtime)
+        public void UnsetFadingOut(int starttime, int endtime)
+        {
+            int i = findFader(starttime, endtime);
+
+            while (i != -1)
+            {
+                RemoveAt(i);
+                i = findFader(starttime, endtime);
+            }
+        }
+
+
         #endregion fader
 
         #region trackname
@@ -1748,6 +1858,14 @@ namespace Sanford.Multimedia.Midi
             Insert(position, message);
         }
         #endregion
+
+
+        #region Fading out
+
+     
+
+        #endregion Fading out
+
 
         #region pitchbend
 

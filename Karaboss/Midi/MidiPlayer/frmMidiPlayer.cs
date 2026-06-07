@@ -3015,7 +3015,8 @@ namespace Karaboss
         /// Click on sheetmusic => track changed event
         /// </summary>
         /// <param name="tracknum"></param>
-        private void SheetMusic_CurrentTrackChanged(int tracknum)
+        /// <param name="length"></param>
+        private void SheetMusic_CurrentTrackChanged(int tracknum, int length)
         {
             if (!bEditScore)
                 return;

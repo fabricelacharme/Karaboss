@@ -17,8 +17,6 @@ using System.IO;
 using System.Linq;
 using System.Windows.Forms;
 using Sanford.Multimedia.Midi.Resources;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement.TrackBar;
 
 namespace Sanford.Multimedia.Midi.Score
 {
@@ -38,7 +36,7 @@ namespace Sanford.Multimedia.Midi.Score
         public delegate void CurrentNoteChangedEventHandler(MidiNote n);
         public event CurrentNoteChangedEventHandler CurrentNoteChanged;
 
-        public delegate void CurrentTrackChangedEventHandler(int tracknum);
+        public delegate void CurrentTrackChangedEventHandler(int tracknum, int length);
         public event CurrentTrackChangedEventHandler CurrentTrackChanged;
 
         // Event: midi file was modified
@@ -87,6 +85,7 @@ namespace Sanford.Multimedia.Midi.Score
 
         public class CurrNote
         {
+            public int Measure;
             public int numstaff;
             public int lastnote;
             public MidiNote midinote = new MidiNote(0, 0, 0, 0, 0, false);
@@ -112,7 +111,8 @@ namespace Sanford.Multimedia.Midi.Score
                     if (staffs != null && staffs.Count > 0 && value >= 0 && value < staffs.Count)
                     {
                         _selectedstaff = value;                        
-                        CurrentTrackChanged?.Invoke(_selectedstaff);
+
+                        CurrentTrackChanged?.Invoke(_selectedstaff, sequence1.tracks[_selectedstaff].Length);
                         MidiNote n = sequence1.tracks[_selectedstaff].GetFirstNote();
                         if (n != null)
                         {
@@ -281,7 +281,7 @@ namespace Sanford.Multimedia.Midi.Score
 
         private Sequence sequence1;
         private int seqlength;          // Length of sequence
-        private int measurelen;
+        public int measurelen { get; private set; }          // Length of measure in ticks
         private int nbMeasures;
 
         private int xbox;
@@ -1431,7 +1431,7 @@ namespace Sanford.Multimedia.Midi.Score
             int channel = track.MidiChannel;
             int notenumber = newnote;
 
-            int velocity = CurrentNote.midinote.Velocity;
+            int velocity = CurrentNote.midinote.Velocity;            
 
             MidiNote mdnote = new MidiNote(starttime, channel, notenumber, dur, velocity, false);
             track.addNote(mdnote);
@@ -1453,6 +1453,7 @@ namespace Sanford.Multimedia.Midi.Score
             int starttime = 0;
             int dur = 0;
             int channel = 0;
+            int measure = 0;
 
             if (_selectedstaff == -1)
                 return;
@@ -1501,7 +1502,7 @@ namespace Sanford.Multimedia.Midi.Score
                 notenumber = newnote;
 
                 int velocity = mdnote.Velocity;
-
+                
                 // Add new note with selected = true
                 mdnote = new MidiNote(starttime, channel, notenumber, dur, velocity, true);
                 track.addNote(mdnote);
@@ -1811,7 +1812,9 @@ namespace Sanford.Multimedia.Midi.Score
                         Track track = sequence1.tracks[_selectedstaff];
 
                         if (track.findMidiNote(note, (int)ticks) != null)
+                        {                            
                             UpdateCurrentNote(_selectedstaff, note, ticks, false);
+                        }
                         else
                         {
                             MidiNote n = track.findPreviousMidiNote((int)ticks);
@@ -1968,8 +1971,13 @@ namespace Sanford.Multimedia.Midi.Score
                     smContextMenu.Items.Add(menuDeleteMeasures);
                     menuDeleteMeasures.Click += new EventHandler(this.MnuDeleteMeasures_Click);
                     menuDeleteMeasures.ShortcutKeys = Keys.Control | Keys.D;     // Shortcut.CtrlD;
-                    menuDeleteMeasures.ShortcutKeyDisplayString = "Ctrl+D";                    
+                    menuDeleteMeasures.ShortcutKeyDisplayString = "Ctrl+D";
 
+
+                    // select measures
+                    ToolStripMenuItem menuSelectMeasures = new ToolStripMenuItem(Strings.SelectMeasures);
+                    smContextMenu.Items.Add(menuSelectMeasures);
+                    menuSelectMeasures.Click += new EventHandler(this.MnuSelectMeasures_Click);
 
                     // Sep 1
                     ToolStripSeparator menusep1 = new ToolStripSeparator();
@@ -2072,18 +2080,20 @@ namespace Sanford.Multimedia.Midi.Score
                         menuPaste.ShortcutKeys = Keys.Control | Keys.V;                           // Shortcut.CtrlV;
                         menuPaste.ShortcutKeyDisplayString = "Ctrl+V";
 
-                        // Triolet
-                        ToolStripMenuItem menuTriolet = new ToolStripMenuItem("Triolet");
-                        smContextMenu.Items.Add(menuTriolet);
-                        menuTriolet.Click += new System.EventHandler(this.MnuTriolet_Click);
 
+                        // Sep 2
+                        ToolStripSeparator menusep4 = new ToolStripSeparator();
+                        smContextMenu.Items.Add(menusep4);
 
+                        if (_selnotes.Count == 3)
+                        {
+                            // Triolet
+                            ToolStripMenuItem menuTriolet = new ToolStripMenuItem("Triolet");
+                            smContextMenu.Items.Add(menuTriolet);
+                            menuTriolet.Click += new System.EventHandler(this.MnuTriolet_Click);
+                        }
                     }
 
-                    // select measures
-                    ToolStripMenuItem menuSelectMeasures = new ToolStripMenuItem(Strings.SelectMeasures);
-                    smContextMenu.Items.Add(menuSelectMeasures);
-                    menuSelectMeasures.Click += new EventHandler(this.MnuSelectMeasures_Click);
 
 
                     // Show menu
@@ -3199,6 +3209,8 @@ namespace Sanford.Multimedia.Midi.Score
 
         #region Effects
 
+
+        #region PitchBend
         public bool IsPitchBend(int channel, int starttime, int endtime)
         {
             int numstaff = CurrentNote.numstaff;
@@ -3241,9 +3253,77 @@ namespace Sanford.Multimedia.Midi.Score
             trk.RemovePitchBend(mn.Channel, mn.StartTime, mn.EndTime);
         }
 
-        #endregion
+        #endregion PitchBend
 
-        #endregion
+
+        #region Fading out
+
+        public void SetFadingOut(bool bAlltracks, bool bFadingTillEndOfSong, int steps, int startTime, int endTime)
+        {
+            int numstaff = CurrentNote.numstaff;
+            Track trk = sequence1.tracks[numstaff];            
+
+
+            if (bAlltracks)
+            {
+                foreach (Track track in sequence1.tracks)
+                {
+                    if (track.Notes.Count > 0)
+                    {
+                        if (bFadingTillEndOfSong)
+                            track.SetFadingOut(steps, startTime, sequence1.GetLength());
+                        else
+                            track.SetFadingOut(steps,startTime, endTime);
+                    }
+                }
+            }
+            else
+            {
+                if (trk.Notes.Count > 0)
+                {
+                    if (bFadingTillEndOfSong)
+                        trk.SetFadingOut(steps, startTime, sequence1.GetLength());
+                    else
+                        trk.SetFadingOut(steps, startTime, endTime);
+                }
+            }
+        }
+
+        public void UnsetFadingOut(bool bAlltracks, bool bFadingTillEndOfSong, int startTime, int endTime)
+        {
+            int numstaff = CurrentNote.numstaff;
+            Track trk = sequence1.tracks[numstaff];
+            if (bAlltracks)
+            {
+                foreach (Track track in sequence1.tracks)
+                {
+                    if (track.Notes.Count > 0)
+                    {
+                        if (bFadingTillEndOfSong)
+                            track.UnsetFadingOut(startTime, sequence1.GetLength());
+                        else
+                            track.UnsetFadingOut(startTime, endTime);
+                    }
+                }
+            }
+            else
+            {
+                if (trk.Notes.Count > 0)
+                {
+                    if (bFadingTillEndOfSong)
+                        trk.UnsetFadingOut(startTime, sequence1.GetLength());
+                    else
+                        trk.UnsetFadingOut(startTime, endTime);
+                }
+            }
+        }
+
+
+        #endregion Fading out
+
+        #endregion Effects
+
+        #endregion frmNoteEdit
 
 
 
@@ -3363,6 +3443,7 @@ namespace Sanford.Multimedia.Midi.Score
             CurrentNote.numstaff = numstaff;
                         
             int duration = 0;
+            int measure;
 
             if (numstaff >= sequence1.tracks.Count)
                 return;
@@ -3379,9 +3460,13 @@ namespace Sanford.Multimedia.Midi.Score
             if (resetSelection)
                 ClearSelectedNotes();
 
-            duration = midinote.Duration;                
+            duration = midinote.Duration;
+
+            measure = Convert.ToInt32(ticks) / measurelen;
+
             CurrentNote.midinote = midinote;
 
+            CurrentNote.Measure = measure;
                            
             // Raise event
             CurrentNoteChanged?.Invoke(midinote);

@@ -42,6 +42,7 @@ namespace Sanford.Multimedia.Midi.Score.UI
     {        
         SheetMusic sheetmusic;
         private int _tracknum;
+        private int _tracklength;
         private List<MidiNote> _lstmidinotes;
         bool busy = false;
         private MidiNote _note;
@@ -56,9 +57,10 @@ namespace Sanford.Multimedia.Midi.Score.UI
             sheetmusic.CurrentTrackChanged += new SheetMusic.CurrentTrackChangedEventHandler(sheetmusic_TrackChanged);
         }
 
-        private void sheetmusic_TrackChanged(int tracknum)
+        private void sheetmusic_TrackChanged(int tracknum, int length)
         {
-            _tracknum = tracknum;            
+            _tracknum = tracknum;       
+            _tracklength = length;
         }
 
         private void sheetmusic_CurrentNoteChanged(MidiNote n)
@@ -79,6 +81,16 @@ namespace Sanford.Multimedia.Midi.Score.UI
             txtTicks.Text = n.StartTime.ToString();
             txtDuration.Text = n.Duration.ToString();
             upDownNoteVelocity.Value = n.Velocity;
+
+            // Fading out: start = current note, end = end of the track
+            txtStartFadingTime.Text = txtTicks.Text;
+            txtEndFadingTime.Text = _tracklength.ToString();
+            lblStartMeasure.Text = String.Format("{00}", sheetmusic.CurrentNote.Measure + 1);
+            
+            if (sheetmusic.measurelen > 0)
+                lblEndFadingMeasure.Text = String.Format("{00}", 1 + _tracklength/sheetmusic.measurelen);
+            
+
 
             // Is ther a pitch bend ?
             chkPitchBend.Checked = sheetmusic.IsPitchBend(n.Channel, n.StartTime, n.EndTime);
@@ -317,6 +329,7 @@ namespace Sanford.Multimedia.Midi.Score.UI
 
         #endregion
 
+
         #region pitchbend
         decimal pitchbend;
         private void chkPitchBend_CheckedChanged(object sender, EventArgs e)
@@ -362,8 +375,84 @@ namespace Sanford.Multimedia.Midi.Score.UI
             hsPitchBend.Value = 0;
         }
 
+
         #endregion pitchbend
 
-       
+
+        #region Fading out
+
+        public bool IsNumeric(string input)
+        {
+            return int.TryParse(input, out int test);
+        }
+
+
+        private void btnSetFadingOut_Click(object sender, EventArgs e)
+        {
+            bool bFadingAllTrack = optFadingAllTracks.Checked;
+            bool bFadingTillEndOfSong = optFadingToEndOfSong.Checked;
+
+            int steps = Convert.ToInt32(upDownFadingStep.Value);
+
+            if (IsNumeric(txtStartFadingTime.Text) && IsNumeric(txtEndFadingTime.Text))  
+            {
+                if (MessageBox.Show("Are you sure you want to apply fading out settings ?", Application.ProductName, MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.No)
+                    return;
+
+                sheetmusic.SetFadingOut(bFadingAllTrack, bFadingTillEndOfSong, steps, Convert.ToInt32(txtStartFadingTime.Text), Convert.ToInt32(txtEndFadingTime.Text));
+                
+                MessageBox.Show("Fading out settings applied.", Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+            else
+            {
+                MessageBox.Show("Start and end fading time must be numeric", Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void btnRemoveFadingOut_Click(object sender, EventArgs e)
+        {
+
+            bool bFadingAllTrack = optFadingAllTracks.Checked;
+            bool bFadingTillEndOfSong = optFadingToEndOfSong.Checked;
+
+            if (IsNumeric(txtStartFadingTime.Text) && IsNumeric(txtEndFadingTime.Text))
+            {
+                if (MessageBox.Show("Are you sure you want to remove fading out settings ?", Application.ProductName, MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.No)
+                    return;
+
+                sheetmusic.UnsetFadingOut(bFadingAllTrack, bFadingTillEndOfSong, Convert.ToInt32(txtStartFadingTime.Text), Convert.ToInt32(txtEndFadingTime.Text));
+
+                MessageBox.Show("Fading out settings removed.", Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+            else
+            {
+                MessageBox.Show("Start and end fading time must be numeric", Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void optFadingThisTrack_CheckedChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void optFadingAllTracks_CheckedChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void chkFadingEndOfSong_CheckedChanged(object sender, EventArgs e)
+        {
+            
+        }
+
+        private void optFadingToEndOfSong_CheckedChanged(object sender, EventArgs e)
+        {
+            lblEndFadingMeasure.Visible = !optFadingToEndOfSong.Checked;
+            txtEndFadingTime.Visible = !optFadingToEndOfSong.Checked;            
+        }
+
+        #endregion Fading out
+
+
     }
 }
