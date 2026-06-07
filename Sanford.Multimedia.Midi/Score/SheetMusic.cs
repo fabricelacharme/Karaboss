@@ -3287,6 +3287,10 @@ namespace Sanford.Multimedia.Midi.Score
                         trk.SetFadingOut(steps, startTime, endTime);
                 }
             }
+
+
+            // Raise event
+            FileModified?.Invoke(this);
         }
 
         public void UnsetFadingOut(bool bAlltracks, bool bFadingTillEndOfSong, int startTime, int endTime)
@@ -3316,6 +3320,10 @@ namespace Sanford.Multimedia.Midi.Score
                         trk.UnsetFadingOut(startTime, endTime);
                 }
             }
+
+
+            // Raise event
+            FileModified?.Invoke(this);
         }
 
 
