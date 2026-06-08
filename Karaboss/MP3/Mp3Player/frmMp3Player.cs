@@ -2987,6 +2987,7 @@ namespace Karaboss.Mp3
         /// <param name="user"></param>
         private void HandlePlayingCompleted(int handle, int channel, int data, IntPtr user)
         {
+            Player.Stop();
             PlayerState = PlayerStates.NextSong;
         }
 

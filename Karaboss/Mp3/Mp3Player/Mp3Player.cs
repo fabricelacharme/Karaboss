@@ -182,7 +182,7 @@ namespace Karaboss.Mp3
 
         private void HandlePlayingCompleted(int handle, int channel, int data, IntPtr user)
         {
-            Stop();            
+            //Stop();            
             PlayingCompleted?.Invoke(handle, channel, data, user);
         }
     
@@ -293,9 +293,12 @@ namespace Karaboss.Mp3
             //if (_stream == 0) return;
             try
             {
-                Bass.BASS_ChannelStop(_stream);
-                Bass.BASS_StreamFree(_stream);
-                Bass.BASS_ChannelSetPosition(_stream, 0L);
+                if (_stream != 0 && !Bass.BASS_ChannelStop(_stream))
+                    Console.WriteLine("*** Bass.BASS_ChannelStop error");
+                if (_stream != 0 && !Bass.BASS_StreamFree(_stream))
+                    Console.WriteLine("*** Bass.BASS_StreamFree error");
+                //if (!Bass.BASS_ChannelSetPosition(_stream, 0L))
+                //    Console.WriteLine("*** Bass.BASS_ChannelSetPosition error");
                 _stream = 0;
             }
             catch (Exception ex)
