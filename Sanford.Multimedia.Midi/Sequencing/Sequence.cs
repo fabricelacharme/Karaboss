@@ -661,6 +661,8 @@ namespace Sanford.Multimedia.Midi
 
             // Replace by new tracks
             this.tracks.Clear();
+            
+            
             foreach (Track track in result)
             {
                 track.ContainsNotes = true;

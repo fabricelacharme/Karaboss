@@ -7596,10 +7596,7 @@ namespace Karaboss
             {
                 
                 myLyricsMgmt.ResetDisplayChordsOptions(true);
-                //RefreshChordsSheetMusic();
-
-                //AddChordsToTracks();
-                //myLyricsMgmt.PopulateDetectedChords(myLyricsMgmt.KLyrics);
+                frmMidiLyrics?.SetLyrics(myLyricsMgmt.KLyrics);
             }
 
 
