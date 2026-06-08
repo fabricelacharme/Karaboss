@@ -331,11 +331,16 @@ namespace Karaboss
             if (bPlayNow == false)
                 bForceShowSequencer = true;
 
+            #region Graphics optimization
+
             // Graphic optimization
             this.SetStyle(ControlStyles.AllPaintingInWmPaint, true);
             this.SetStyle(ControlStyles.OptimizedDoubleBuffer, true);
             this.SetStyle(ControlStyles.UserPaint, true);
             this.SetStyle(ControlStyles.ResizeRedraw, true);
+
+            #endregion Graphics optimization
+
 
             // Allow form keydown
             this.KeyPreview = true;
@@ -7587,11 +7592,24 @@ namespace Karaboss
                 myLyricsMgmt.TransposeChordsInLyrics(TransposeDelta);
                 frmMidiLyrics?.SetLyrics(myLyricsMgmt.KLyrics);
             }
+            else if (Karaclass.m_ShowChords && myLyricsMgmt.ChordsOriginatedFrom == MidiLyricsMgmt.ChordsOrigins.Discovery)
+            {
+                
+                myLyricsMgmt.ResetDisplayChordsOptions(true);
+                //RefreshChordsSheetMusic();
+
+                //AddChordsToTracks();
+                //myLyricsMgmt.PopulateDetectedChords(myLyricsMgmt.KLyrics);
+            }
+
 
             // FAB : 16/09/2018 fixed redraw of scores
             if (bSequencerAlwaysOn | bForceShowSequencer)
             {
                 RedrawSheetMusic();
+
+                RefreshChordsSheetMusic();
+
             }
 
 

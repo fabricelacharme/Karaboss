@@ -663,7 +663,10 @@ namespace Sanford.Multimedia.Midi
             this.tracks.Clear();
             foreach (Track track in result)
             {
+                track.ContainsNotes = true;
                 this.tracks.Add(track);
+                
+                // PB ici : on perd les tags de la track d'origine ; à revoir
             }
 
             //GetLength();

@@ -27,7 +27,7 @@ namespace kar
     /// This class is typically used in applications involving speech processing, karaoke timing, or linguistic analysis
     /// where precise timing of syllables is required.</remarks>
     [Serializable()]
-    public class Syllable
+    public class Syllable : ICloneable
     {
         public enum CharTypes
         {
@@ -92,6 +92,20 @@ namespace kar
             TicksOff = 0;
         }
 
+        public object Clone()
+        {
+            return new Syllable()
+            {
+                CharType = this.CharType,
+                Text = this.Text,
+                Chord = this.Chord,
+                StartTime = this.StartTime,
+                Duration = this.Duration,
+                TicksOn = this.TicksOn,
+                TicksOff = this.TicksOff,
+                Beat = this.Beat
+            };
+        }
     }
 
     /// <summary>
@@ -103,7 +117,7 @@ namespace kar
     /// respectively. Modifying the collection of syllables will affect the line's timing and text
     /// representation.</remarks>
     [Serializable()]
-    public class kLine
+    public class kLine : ICloneable
     {
         public List<Syllable> Syllables { get; set; }
         //public double StartTime => Syllables.First().StartTime;
@@ -142,6 +156,13 @@ namespace kar
             return ToString().Length;
         }
 
+        public object Clone()
+        {
+            return new kLine
+            {
+                Syllables = new List<Syllable>(Syllables.Select(s => (Syllable)s.Clone()))
+            };            
+        }
     }
 
     /// <summary>
@@ -151,7 +172,7 @@ namespace kar
     /// representing a segment of lyrics with associated timing. It supports enumeration and provides properties to
     /// access the start and end times of the entire lyrics collection. The class is suitable for scenarios where lyrics
     /// need to be displayed, synchronized, or manipulated as a group.</remarks>
-    public class kLyrics : IEnumerable
+    public class kLyrics : IEnumerable, ICloneable
     {
 
         private  readonly string _InternalSepLines = "¼";
@@ -285,23 +306,15 @@ namespace kar
             return Lines.IndexOf(line);
         }
 
-        public kLyrics Clone()
-        {
-            kLyrics result = new kLyrics();
-            kLine line = new kLine();
-            for (int i = 0; i < Lines.Count; i++)
+        
+        public object Clone()
+        {            
+            return new kLyrics()
             {
-                line = new kLine();
-                for (int j = 0; j < Lines[i].Syllables.Count; j++)
-                {
-                    line.Syllables.Add(Lines[i].Syllables[j]);
-                }
-                result.Add(line);
-            }
-
-            return result;  
+                Lines = new List<kLine>(Lines.Select(l => (kLine)l.Clone()))
+            };
         }
-
+        
 
         // Implementation for the GetEnumerator method.
         IEnumerator IEnumerable.GetEnumerator()
@@ -314,6 +327,12 @@ namespace kar
             return new LineEnum(Lines);
         }
 
+        /*
+        object ICloneable.Clone()
+        {
+            return Clone();
+        }
+        */
     }
 
     public class LineEnum : IEnumerator

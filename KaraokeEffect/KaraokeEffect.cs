@@ -501,7 +501,7 @@ namespace keffect
                     
                 if (_kLyricsOrg != null)
                 {
-                    _kLyrics = _kLyricsOrg.Clone();                        
+                    _kLyrics = (kLyrics)_kLyricsOrg.Clone();                        
                     Init();
                         
                 }
@@ -525,7 +525,7 @@ namespace keffect
                 if (value.Lines == null) return;
                 if (value.Lines.Count == 0) return;
                 _kLyrics = value;
-                _kLyricsOrg = _kLyrics.Clone();
+                _kLyricsOrg = (kLyrics)_kLyrics.Clone();
                 if (_kLyrics != null && _kLyrics.Lines.Count > 0)                                    
                     Init();
                 
@@ -858,7 +858,7 @@ namespace keffect
                 _nbLyricsLinesOrg = value;
                 if (bIsSettings)
                 {
-                    _kLyrics = _kLyricsOrg.Clone();
+                    _kLyrics = (kLyrics)_kLyricsOrg.Clone();
                     Init();
                 }
                 pBox.Invalidate();

@@ -1065,8 +1065,8 @@ namespace Karaboss.MidiLyrics
             {
                 // KLyrics is initialized with a deep copy of OrgKLyrics
                 // We can't use KLyrics = OrgKLyrics; This does not work, because objects remain linked                            
-                KLyrics = OrgKLyrics.Clone();
-
+                KLyrics = (kLyrics)OrgKLyrics.Clone();
+                
 
                 if (KLyrics.Lines.Count == 0)
                     return;
@@ -1393,7 +1393,7 @@ namespace Karaboss.MidiLyrics
 
         private kLyrics AdjustChordTicks(kLyrics lyrics)
         {
-            kLyrics result = lyrics.Clone();
+            kLyrics result = (kLyrics)lyrics.Clone();
             int lasttickson = result.Lines[result.Lines.Count - 1].Syllables.Last().TicksOn;
 
             for (int i = result.Lines.Count - 1; i >= 0; i--)
@@ -2274,7 +2274,7 @@ namespace Karaboss.MidiLyrics
             kLine newline = new kLine();            
             //kLine lplus;
 
-            kLyrics result = kll.Clone();
+            kLyrics result = (kLyrics)kll.Clone();
 
 
             // Launch chords discovery
