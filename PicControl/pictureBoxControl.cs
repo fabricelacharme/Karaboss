@@ -653,7 +653,10 @@ namespace PicControl
                 _kLyrics = value;
                 _kLyricsOrg = _kLyrics.Clone();
                 if (_kLyrics != null && _kLyrics.Lines.Count > 0)
+                {
                     Init();
+                    pBox.Invalidate();
+                }
             }
         }
 
@@ -3552,6 +3555,8 @@ namespace PicControl
             #endregion Declarations
 
             if (lineIndex < 0 || lineIndex >= _kLyrics.Lines.Count()) return;
+            //if (lineIndex >= lstChordsPositions.Count) return;
+
             s = _kLyrics.Lines[lineIndex].ToString();
 
             #region Scale font size to fit text in picture box
@@ -3862,6 +3867,8 @@ namespace PicControl
             #endregion Declarations
 
             if (lineIndex < 0 || lineIndex >= _kLyrics.Lines.Count()) return;
+            //if (lineIndex >= lstChordsPositions.Count) return;
+
             s = _kLyrics.Lines[lineIndex].ToString();
 
 

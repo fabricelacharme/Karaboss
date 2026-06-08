@@ -44,6 +44,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.Diagnostics.Eventing.Reader;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -2503,6 +2504,9 @@ namespace Karaboss
             bSequencerAlwaysOn = Properties.Settings.Default.ShowSequencer;
             bKaraokeAlwaysOn = Properties.Settings.Default.ShowKaraoke;
 
+            mnuDisplayChords.Checked = Properties.Settings.Default.bShowChords;
+
+
             // Redim form according to the visibility of the sequencer
             RedimIfSequencerVisible();
 
@@ -3333,6 +3337,29 @@ namespace Karaboss
                     }
                     bReglageChanged = true;
                 }
+                else if (ct == ControllerType.Expression)
+                {
+                    // TODO: Fading out
+                    int expression = Msg.Data2;
+                    int j = -1;
+                    for (int i = 0; i < pnlTracks.Controls.Count; i++)
+                    {
+                        if (pnlTracks.Controls[i].GetType() == typeof(TrkControl.TrackControl))
+                        {
+                            j++;
+                            if (pnlTracks.Controls[i].Tag != null)
+                            {
+                                string stag = pnlTracks.Controls[i].Tag.ToString();
+                                if (stag == sChannel)
+                                {
+                                    // Ajust expression for all tracks having this channel
+                                    //lstTrkReglages[j].expression = expression;
+                                }
+                            }
+                        }
+                    }
+                    bReglageChanged = true;
+                }
             }
             else if (e.Message.Command == ChannelCommand.ProgramChange)
             {
@@ -3972,8 +3999,7 @@ namespace Karaboss
 
             Track track = sequence1.tracks[melodytracknum];
 
-            // Insert all lyric events
-            //TrkInsertLyrics(track, newpLyrics, newLyricType);
+            // Insert all lyric events            
             LyricsUtilities.TrkInsertLyrics(track, newpLyrics, newLyricType);
 
             // Reload myLyricMgmt
@@ -3994,6 +4020,7 @@ namespace Karaboss
             // Refresh display of lyrics
             // if switch between Text & Lyric or
             // if Lyric because we need to display the new lyrics on the scores
+            
             if (bRefreshDisplay || myLyricsMgmt.LyricType == LyricTypes.Lyric)
             {
                 if (Karaclass.m_ShowChords)
@@ -4001,6 +4028,7 @@ namespace Karaboss
 
                 RefreshDisplay();
             }
+            
 
             // File was modified
             FileModified();
@@ -4130,6 +4158,8 @@ namespace Karaboss
 
             if (currentPlaylistItem == null && !Karaclass.m_ShowChords && myLyricsMgmt.OrgKLyrics.Lines.Count == 0) return;
             
+
+            // FAB ménage
             myLyricsMgmt.ResetDisplayChordsOptions(Karaclass.m_ShowChords);
             
 
@@ -4879,6 +4909,38 @@ namespace Karaboss
                 mnuDisplayLyricsWindows.Checked = false;
             }
         }
+
+
+        /// <summary>
+        /// Display chords in the lyrics form if they are not already displayed and hide them if they are already displayed
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void mnuDisplayChords_Click(object sender, EventArgs e)
+        {
+            mnuDisplayChords.Checked = !mnuDisplayChords.Checked;
+
+            if (Application.OpenForms.OfType<frmMidiLyrics>().Count() > 0)
+            {
+                frmMidiLyrics = Utilities.FormUtilities.GetForm<frmMidiLyrics>();
+                frmMidiLyrics.bShowChords = mnuDisplayChords.Checked;
+            }
+            else
+            {
+                Karaclass.m_ShowChords = mnuDisplayChords.Checked;
+
+                // Reload lyrics with choosen options
+                myLyricsMgmt.ResetDisplayChordsOptions(Karaclass.m_ShowChords);
+
+                // Refresh score with or without chords            
+                RefreshChordsSheetMusic();
+
+                // Save option
+                Properties.Settings.Default.bShowChords = Karaclass.m_ShowChords;
+                Properties.Settings.Default.Save();
+            }
+        }
+
 
         private void MnuDisplayPianoRoll_Click(object sender, EventArgs e)
         {
@@ -7329,10 +7391,11 @@ namespace Karaboss
         }
 
         #endregion MidiSheetMusic
-      
 
-        #region Tempo, Transpo
 
+        #region Tempo, Transposition
+
+        #region Tempo
 
         /// <summary>
         /// Open window of tempo management
@@ -7467,7 +7530,10 @@ namespace Karaboss
             }
         }
 
+        #endregion Tempo
 
+
+        #region Transposition
 
         /// <summary>
         /// Transpose higher
@@ -7501,8 +7567,7 @@ namespace Karaboss
         {
             btnTempoMinus.Enabled = false;
             btnTranspoPlus.Enabled = false;
-
-            //int tp = TransposeOrig + TransposeDelta;
+            
 
             lblTranspoValue.Text = string.Format("{0}", TransposeDelta);
 
@@ -7514,11 +7579,22 @@ namespace Karaboss
             if (PlayerState == PlayerStates.Playing)
                 sequencer1.Continue();
 
+           
+
+            // If chords in lyrics, update display of lyrics
+            if (Karaclass.m_ShowChords && myLyricsMgmt.bHasChordsInLyrics && myLyricsMgmt.ChordsOriginatedFrom == MidiLyricsMgmt.ChordsOrigins.Lyrics)
+            {
+                myLyricsMgmt.TransposeChordsInLyrics(TransposeDelta);
+                frmMidiLyrics?.SetLyrics(myLyricsMgmt.KLyrics);
+            }
+
             // FAB : 16/09/2018 fixed redraw of scores
             if (bSequencerAlwaysOn | bForceShowSequencer)
             {
                 RedrawSheetMusic();
             }
+
+
 
             btnTempoMinus.Enabled = true;
             btnTranspoPlus.Enabled = true;
@@ -7531,9 +7607,10 @@ namespace Karaboss
 
         }
 
-        
+        #endregion Transposition
 
-        #endregion
+
+        #endregion Tempo, Transposition
 
 
         #region TimeLine
@@ -8979,13 +9056,14 @@ namespace Karaboss
 
 
 
+
+
+
         #endregion Save File
 
         #endregion Utilities
 
-
       
-
     }
 
 }

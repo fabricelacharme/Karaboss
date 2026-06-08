@@ -191,7 +191,7 @@
     <value>&amp;Quitter</value>
   </data>
   <data name="mnuFile.Size" type="System.Drawing.Size, System.Drawing">
-    <value>54, 20</value>
+    <value>54, 22</value>
   </data>
   <data name="mnuFile.Text" xml:space="preserve">
     <value>&amp;Fichier</value>
@@ -204,6 +204,9 @@
   </data>
   <data name="mnuEditLyricsChords.Size" type="System.Drawing.Size, System.Drawing">
     <value>204, 22</value>
+  </data>
+  <data name="mnuEditLyricsChords.Text" xml:space="preserve">
+    <value>Editer les accords</value>
   </data>
   <data name="mnuEditSeparator1.Size" type="System.Drawing.Size, System.Drawing">
     <value>201, 6</value>
@@ -221,7 +224,7 @@
     <value>Saisir des notes</value>
   </data>
   <data name="mnuEdit.Size" type="System.Drawing.Size, System.Drawing">
-    <value>56, 20</value>
+    <value>56, 22</value>
   </data>
   <data name="mnuEdit.Text" xml:space="preserve">
     <value>&amp;Edition</value>
@@ -241,6 +244,15 @@
   <data name="mnuDisplaySeparator1.Size" type="System.Drawing.Size, System.Drawing">
     <value>208, 6</value>
   </data>
+  <data name="mnuDisplayChords.Size" type="System.Drawing.Size, System.Drawing">
+    <value>211, 22</value>
+  </data>
+  <data name="mnuDisplayChords.Text" xml:space="preserve">
+    <value>Afficher les accords</value>
+  </data>
+  <data name="toolStripMenuItem4.Size" type="System.Drawing.Size, System.Drawing">
+    <value>208, 6</value>
+  </data>
   <data name="mnuDisplayPianoRoll.Size" type="System.Drawing.Size, System.Drawing">
     <value>211, 22</value>
   </data>
@@ -257,7 +269,7 @@
     <value>Défilement</value>
   </data>
   <data name="mnuDisplay.Size" type="System.Drawing.Size, System.Drawing">
-    <value>70, 20</value>
+    <value>70, 22</value>
   </data>
   <data name="mnuDisplay.Text" xml:space="preserve">
     <value>&amp;Affichage</value>
@@ -334,6 +346,15 @@
   <data name="mnuMidiSplitHands.Text" xml:space="preserve">
     <value>Séparer main droite/gauche</value>
   </data>
+  <data name="mnuHelpForums.Size" type="System.Drawing.Size, System.Drawing">
+    <value>198, 22</value>
+  </data>
+  <data name="mnuHelpDocumentation.Size" type="System.Drawing.Size, System.Drawing">
+    <value>198, 22</value>
+  </data>
+  <data name="toolStripMenuItem2.Size" type="System.Drawing.Size, System.Drawing">
+    <value>195, 6</value>
+  </data>
   <data name="mnuHelpAbout.Size" type="System.Drawing.Size, System.Drawing">
     <value>198, 22</value>
   </data>
@@ -347,7 +368,7 @@
     <value>A p&amp;ropos du morceau...</value>
   </data>
   <data name="mnuHelp.Size" type="System.Drawing.Size, System.Drawing">
-    <value>43, 20</value>
+    <value>43, 22</value>
   </data>
   <data name="mnuHelp.Text" xml:space="preserve">
     <value>&amp;Aide</value>
@@ -450,6 +471,9 @@
   </data>
   <data name="lblMainVolume.ToolTip" xml:space="preserve">
     <value />
+  </data>
+  <data name="sldMainVolume.Size" type="System.Drawing.Size, System.Drawing">
+    <value>82, 23</value>
   </data>
   <data name="sldMainVolume.ToolTip" xml:space="preserve">
     <value />
