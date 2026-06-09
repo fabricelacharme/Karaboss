@@ -4305,7 +4305,7 @@ namespace keffect
                     Image1 = m_BitmapsArray[count];
                     Image2 = m_BitmapsArray[++count];
                 }
-                else
+                else if (count < m_BitmapsArray.Length) 
                 {
                     Image1 = m_BitmapsArray[count];
                     Image2 = m_BitmapsArray[0];

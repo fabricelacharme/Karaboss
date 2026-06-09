@@ -1004,10 +1004,7 @@ namespace Karaboss.Mp3
 
                 SizeMode = Properties.Settings.Default.SizeMode;
 
-                // Image, Diaporama, Backcolor ou transparent
-                if (_currentPlaylistItem == null)
-                    OptionBackground = Properties.Settings.Default.BackGroundOption;
-
+              
                 // Text display: Center, Top, Bottom
                 string opd = Properties.Settings.Default.LyricsOptionDisplay;
                 switch (opd)
@@ -1034,9 +1031,16 @@ namespace Karaboss.Mp3
                 // SlideShow frequency
                 FreqSlideShow = Properties.Settings.Default.freqSlideShow;
 
-                // directory for slide show
-                if (_currentPlaylistItem == null)
+
+                // Background changes are allowed if there is no playlist, or if there is neither a playlist nor a folder slideshow
+                if (_currentPlaylistItem == null || (_currentPlaylistItem != null && _currentPlaylistItem.DirSlideShow == string.Empty))
+                {
+                    // Image, Diaporama, Backcolor ou transparent
+                    OptionBackground = Properties.Settings.Default.BackGroundOption;
+
+                    // directory for slide show                
                     DirSlideShow = Properties.Settings.Default.dirSlideShow;
+                }
 
                 // Karaoke display type (FixedLines, ScrollingLinesBottomUp, ScrollingLinesTopDown, TwoLinesSwapped ..)
                 KaraokeDisplayType = Properties.Settings.Default.KaraokeDisplayType;
