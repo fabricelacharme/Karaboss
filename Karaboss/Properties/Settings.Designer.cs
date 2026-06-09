@@ -425,7 +425,7 @@ namespace Karaboss.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("Diaporama")]
+        [global::System.Configuration.DefaultSettingValueAttribute("Image")]
         public string BackGroundOption {
             get {
                 return ((string)(this["BackGroundOption"]));
@@ -2050,7 +2050,7 @@ namespace Karaboss.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("orange.bmp")]
+        [global::System.Configuration.DefaultSettingValueAttribute("orangetrees.jpg")]
         public string SingleImagePath {
             get {
                 return ((string)(this["SingleImagePath"]));

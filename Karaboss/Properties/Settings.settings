@@ -102,7 +102,7 @@
       <Value Profile="(Default)">True</Value>
     </Setting>
     <Setting Name="BackGroundOption" Type="System.String" Scope="User">
-      <Value Profile="(Default)">Diaporama</Value>
+      <Value Profile="(Default)">Image</Value>
     </Setting>
     <Setting Name="frmPianoRollMaximized" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
@@ -510,7 +510,7 @@
       <Value Profile="(Default)" />
     </Setting>
     <Setting Name="SingleImagePath" Type="System.String" Scope="User">
-      <Value Profile="(Default)">orange.bmp</Value>
+      <Value Profile="(Default)">orangetrees.jpg</Value>
     </Setting>
     <Setting Name="FontStretching" Type="System.String" Scope="User">
       <Value Profile="(Default)">Large</Value>
