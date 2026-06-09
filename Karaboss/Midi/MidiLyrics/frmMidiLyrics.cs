@@ -753,13 +753,15 @@ namespace Karaboss
 
             #endregion MIDI
 
-            
+
             #region Graphic optimization
 
-            this.SetStyle(ControlStyles.AllPaintingInWmPaint, true);
-            this.SetStyle(ControlStyles.ResizeRedraw, true);
-            this.SetStyle(ControlStyles.OptimizedDoubleBuffer, true);
-            this.SetStyle(ControlStyles.UserPaint, true);
+            SetStyle(ControlStyles.AllPaintingInWmPaint | ControlStyles.OptimizedDoubleBuffer | ControlStyles.UserPaint, true);
+
+            //this.SetStyle(ControlStyles.AllPaintingInWmPaint, true);
+            //this.SetStyle(ControlStyles.ResizeRedraw, true);
+            //this.SetStyle(ControlStyles.OptimizedDoubleBuffer, true);
+            //this.SetStyle(ControlStyles.UserPaint, true);
 
             #endregion Graphic optimization
 
