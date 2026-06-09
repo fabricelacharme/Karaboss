@@ -808,7 +808,7 @@ namespace Karaboss.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
         public bool DisplayBalls {
             get {
                 return ((bool)(this["DisplayBalls"]));
@@ -1906,7 +1906,7 @@ namespace Karaboss.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("Frame1")]
+        [global::System.Configuration.DefaultSettingValueAttribute("Frame2")]
         public string FrameType {
             get {
                 return ((string)(this["FrameType"]));
@@ -2002,7 +2002,7 @@ namespace Karaboss.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("FixedLines")]
+        [global::System.Configuration.DefaultSettingValueAttribute("FourLinesSwapped")]
         public string KaraokeDisplayType {
             get {
                 return ((string)(this["KaraokeDisplayType"]));

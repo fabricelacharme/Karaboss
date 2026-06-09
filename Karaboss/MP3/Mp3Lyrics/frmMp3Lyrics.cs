@@ -35,7 +35,6 @@
 using kar;
 using Karaboss.Mp3.Mp3Lyrics;
 using Karaboss.Themes;
-using Karaboss.Utilities;
 using keffect;
 using System;
 using System.Collections.Generic;
@@ -879,7 +878,7 @@ namespace Karaboss.Mp3
                 LoadColorsFromCurrentTheme();
 
 
-                // Karaoke display type
+                // Karaoke display type: Fixed lines, four lines swapped etc..
                 KaraokeDisplayType = Properties.Settings.Default.KaraokeDisplayType;               // setting this property set the karaokeEffect1.KaraokeDisplayType property
 
                 // Lyrics border effect 
@@ -912,6 +911,14 @@ namespace Karaboss.Mp3
                 // show balls
                 bShowBalls = Karaclass.m_DisplayBalls;
 
+
+                string path = Properties.Settings.Default.SingleImagePath;
+                if (!System.IO.File.Exists(path))
+                {
+                    path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Karaboss\\orangetrees.jpg");                    
+                }                
+                SingleImagePath = path;
+
                 // Backgrounds (image, diaporama, solid color, gradient, rhythm, transparent)
                 OptionBackground = Properties.Settings.Default.BackGroundOption;
                
@@ -943,7 +950,7 @@ namespace Karaboss.Mp3
                 // Number of Lines to display
                 nbLyricsLines = Properties.Settings.Default.TxtNbLines;
 
-                SingleImagePath = Properties.Settings.Default.SingleImagePath;
+                
 
                 // Frequency of slide show
                 FreqSlideShow = Properties.Settings.Default.freqSlideShow;

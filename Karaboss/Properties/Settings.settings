@@ -198,7 +198,7 @@
       <Value Profile="(Default)">600, 600</Value>
     </Setting>
     <Setting Name="DisplayBalls" Type="System.Boolean" Scope="User">
-      <Value Profile="(Default)">True</Value>
+      <Value Profile="(Default)">False</Value>
     </Setting>
     <Setting Name="LyricsOptionDisplay" Type="System.String" Scope="User">
       <Value Profile="(Default)">Center</Value>
@@ -474,7 +474,7 @@
       <Value Profile="(Default)">#8000FF</Value>
     </Setting>
     <Setting Name="FrameType" Type="System.String" Scope="User">
-      <Value Profile="(Default)">Frame1</Value>
+      <Value Profile="(Default)">Frame2</Value>
     </Setting>
     <Setting Name="frmMidiLyricMaximized" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
@@ -498,7 +498,7 @@
       <Value Profile="(Default)">200, 200</Value>
     </Setting>
     <Setting Name="KaraokeDisplayType" Type="System.String" Scope="User">
-      <Value Profile="(Default)">FixedLines</Value>
+      <Value Profile="(Default)">FourLinesSwapped</Value>
     </Setting>
     <Setting Name="ActiveInstrumentalColor" Type="System.String" Scope="User">
       <Value Profile="(Default)">#808080</Value>
