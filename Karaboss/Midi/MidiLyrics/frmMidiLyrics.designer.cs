@@ -31,8 +31,6 @@
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmMidiLyrics));
             this.pnlBalls = new System.Windows.Forms.Panel();
-            this.pnlTittle = new System.Windows.Forms.Panel();
-            this.lblTittle = new System.Windows.Forms.Label();
             this.picBalls = new BallsControl.Balls();
             this.panel1 = new System.Windows.Forms.Panel();
             this.pnlWindow = new System.Windows.Forms.Panel();
@@ -50,31 +48,15 @@
             this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.pnlBalls.SuspendLayout();
-            this.pnlTittle.SuspendLayout();
             this.panel1.SuspendLayout();
             this.pnlWindow.SuspendLayout();
             this.SuspendLayout();
             // 
             // pnlBalls
             // 
-            this.pnlBalls.Controls.Add(this.pnlTittle);
             this.pnlBalls.Controls.Add(this.picBalls);
             resources.ApplyResources(this.pnlBalls, "pnlBalls");
             this.pnlBalls.Name = "pnlBalls";
-            // 
-            // pnlTittle
-            // 
-            this.pnlTittle.BackColor = System.Drawing.Color.Black;
-            this.pnlTittle.Controls.Add(this.lblTittle);
-            resources.ApplyResources(this.pnlTittle, "pnlTittle");
-            this.pnlTittle.Name = "pnlTittle";
-            // 
-            // lblTittle
-            // 
-            resources.ApplyResources(this.lblTittle, "lblTittle");
-            this.lblTittle.BackColor = System.Drawing.Color.Black;
-            this.lblTittle.ForeColor = System.Drawing.Color.Teal;
-            this.lblTittle.Name = "lblTittle";
             // 
             // picBalls
             // 
@@ -227,23 +209,23 @@
             this.pBox.bIsSettings = false;
             this.pBox.BorderThick = 1;
             this.pBox.bShowChords = false;
+            this.pBox.bShowHints = true;
             this.pBox.bShowParagraphs = true;
+            this.pBox.bShowSongName = true;
             this.pBox.bTextBackGround = true;
-            this.pBox.ChordFont = new System.Drawing.Font("Comic Sans MS", 8.25F);
-            this.pBox.CurrentTextPos = 2;
-            this.pBox.CurrentTime = 3;
-            this.pBox.DirSlideShow = "";
+            this.pBox.ChordFont = new System.Drawing.Font("Comic Sans MS", 8.25F);                        
             resources.ApplyResources(this.pBox, "pBox");
             this.pBox.Duration = 0D;
+            this.pBox.FileName = "Song name";
             this.pBox.FirstMelodyNoteTicksOn = 0;
+            this.pBox.FontStretching = "None";
             this.pBox.FrameType = "Frame1";
-            this.pBox.FreqDirSlideShow = 0;
+            this.pBox.FreqSlideShow = 0;
             this.pBox.Grad0Color = System.Drawing.Color.Empty;
             this.pBox.Grad1Color = System.Drawing.Color.Empty;
             this.pBox.GradientAngle = 45F;
             this.pBox.HighlightChordColor = System.Drawing.Color.FromArgb(((int)(((byte)(238)))), ((int)(((byte)(17)))), ((int)(((byte)(17)))));
             this.pBox.HighlightColor = System.Drawing.Color.Red;
-            this.pBox.imgLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.pBox.InactiveBorderColor = System.Drawing.Color.DarkTurquoise;
             this.pBox.InactiveChordColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(196)))), ((int)(((byte)(13)))));
             this.pBox.InactiveColor = System.Drawing.Color.White;
@@ -289,8 +271,6 @@
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.frmMidiLyrics_KeyDown);
             this.Resize += new System.EventHandler(this.frmMidiLyrics_Resize);
             this.pnlBalls.ResumeLayout(false);
-            this.pnlTittle.ResumeLayout(false);
-            this.pnlTittle.PerformLayout();
             this.panel1.ResumeLayout(false);
             this.pnlWindow.ResumeLayout(false);
             this.pnlWindow.PerformLayout();
@@ -303,8 +283,6 @@
         private System.Windows.Forms.Panel pnlBalls;
         private System.Windows.Forms.Panel panel1;
         private BallsControl.Balls picBalls;
-        private System.Windows.Forms.Panel pnlTittle;
-        private System.Windows.Forms.Label lblTittle;
         private PicControl.pictureBoxControl pBox;
         private System.Windows.Forms.Panel pnlWindow;
         private System.Windows.Forms.Timer timer1;

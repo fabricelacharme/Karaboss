@@ -26,7 +26,6 @@ namespace Karaboss.Mp3
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmMp3Lyrics));
-            kar.kLyrics kLyrics1 = new kar.kLyrics();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.btnEditLyrics = new System.Windows.Forms.Button();
             this.btnExportLyricsToText = new System.Windows.Forms.Button();
@@ -35,14 +34,11 @@ namespace Karaboss.Mp3
             this.btnFrmMax = new System.Windows.Forms.Button();
             this.btnFrmClose = new System.Windows.Forms.Button();
             this.pnlTop = new System.Windows.Forms.Panel();
-            this.pnlTitle = new System.Windows.Forms.Panel();
-            this.lblTitle = new System.Windows.Forms.Label();
             this.picBalls = new BallsControl.Balls();
             this.karaokeEffect1 = new keffect.KaraokeEffect();
             this.pnlWindow = new System.Windows.Forms.Panel();
             this.pnlTimer = new System.Windows.Forms.Timer(this.components);
             this.pnlTop.SuspendLayout();
-            this.pnlTitle.SuspendLayout();
             this.pnlWindow.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -116,24 +112,9 @@ namespace Karaboss.Mp3
             // 
             // pnlTop
             // 
-            this.pnlTop.Controls.Add(this.pnlTitle);
             this.pnlTop.Controls.Add(this.picBalls);
             resources.ApplyResources(this.pnlTop, "pnlTop");
             this.pnlTop.Name = "pnlTop";
-            // 
-            // pnlTitle
-            // 
-            this.pnlTitle.BackColor = System.Drawing.Color.Black;
-            this.pnlTitle.Controls.Add(this.lblTitle);
-            resources.ApplyResources(this.pnlTitle, "pnlTitle");
-            this.pnlTitle.Name = "pnlTitle";
-            // 
-            // lblTitle
-            // 
-            resources.ApplyResources(this.lblTitle, "lblTitle");
-            this.lblTitle.BackColor = System.Drawing.Color.Black;
-            this.lblTitle.ForeColor = System.Drawing.Color.Teal;
-            this.lblTitle.Name = "lblTitle";
             // 
             // picBalls
             // 
@@ -147,19 +128,24 @@ namespace Karaboss.Mp3
             // 
             this.karaokeEffect1.ActiveBorderColor = System.Drawing.Color.Empty;
             this.karaokeEffect1.ActiveColor = System.Drawing.Color.FromArgb(((int)(((byte)(153)))), ((int)(((byte)(180)))), ((int)(((byte)(51)))));
+            this.karaokeEffect1.ActiveInstrumentalColor = System.Drawing.Color.Empty;
             this.karaokeEffect1.BackColor = System.Drawing.Color.LightGray;
-            this.karaokeEffect1.Beat = 200;            
+            this.karaokeEffect1.Beat = 200;
             this.karaokeEffect1.bforceUppercase = false;
             this.karaokeEffect1.BgColor = System.Drawing.Color.Empty;
             this.karaokeEffect1.bIsSettings = false;
             this.karaokeEffect1.BitRate = 0;
             this.karaokeEffect1.BorderThick = 1;
+            this.karaokeEffect1.bShowHints = true;
             this.karaokeEffect1.bShowParagraphs = true;
+            this.karaokeEffect1.bShowSongName = true;
             this.karaokeEffect1.bTextBackGround = false;
             resources.ApplyResources(this.karaokeEffect1, "karaokeEffect1");
             this.karaokeEffect1.Duration = 0D;
+            this.karaokeEffect1.FileName = "Song name";
+            this.karaokeEffect1.FontStretching = "None";
             this.karaokeEffect1.FrameType = "Frame1";
-            this.karaokeEffect1.FreqDirSlideShow = 10;
+            this.karaokeEffect1.FreqSlideShow = 10;
             this.karaokeEffect1.Frequency = 0F;
             this.karaokeEffect1.Grad0Color = System.Drawing.Color.Empty;
             this.karaokeEffect1.Grad1Color = System.Drawing.Color.Empty;
@@ -169,8 +155,7 @@ namespace Karaboss.Mp3
             this.karaokeEffect1.InactiveColor = System.Drawing.Color.White;
             this.karaokeEffect1.KaraokeDisplayType = kar.KaraokeDisplayTypes.FixedLines;
             this.karaokeEffect1.KaraokeFont = new System.Drawing.Font("Comic Sans MS", 61.33333F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel);
-            kLyrics1.Lines = ((System.Collections.Generic.List<kar.kLine>)(resources.GetObject("kLyrics1.Lines")));
-            this.karaokeEffect1.KLyrics = kLyrics1;
+            this.karaokeEffect1.KLyrics = null;
             this.karaokeEffect1.m_CurrentImage = null;
             this.karaokeEffect1.m_DisplayRectangle = new System.Drawing.Rectangle(0, 0, 0, 0);
             this.karaokeEffect1.Name = "karaokeEffect1";
@@ -180,6 +165,7 @@ namespace Karaboss.Mp3
             this.karaokeEffect1.Position = 0;
             this.karaokeEffect1.Rhythm0Color = System.Drawing.Color.Empty;
             this.karaokeEffect1.Rhythm1Color = System.Drawing.Color.Empty;
+            this.karaokeEffect1.SingleImagePath = "";
             this.karaokeEffect1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Normal;
             this.karaokeEffect1.StepPercent = 0.01F;
             this.karaokeEffect1.timerIntervall = ((long)(50));
@@ -218,8 +204,6 @@ namespace Karaboss.Mp3
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.frmMp3Lyrics_KeyDown);
             this.Resize += new System.EventHandler(this.frmMp3Lyrics_Resize);
             this.pnlTop.ResumeLayout(false);
-            this.pnlTitle.ResumeLayout(false);
-            this.pnlTitle.PerformLayout();
             this.pnlWindow.ResumeLayout(false);
             this.ResumeLayout(false);
 
@@ -228,8 +212,6 @@ namespace Karaboss.Mp3
         private System.Windows.Forms.ToolTip toolTip1;
         private System.Windows.Forms.Panel pnlTop;
         private BallsControl.Balls picBalls;
-        private System.Windows.Forms.Panel pnlTitle;
-        private System.Windows.Forms.Label lblTitle;
         private System.Windows.Forms.Timer pnlTimer;
         private keffect.KaraokeEffect karaokeEffect1;
         private System.Windows.Forms.Panel pnlWindow;

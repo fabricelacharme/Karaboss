@@ -312,7 +312,7 @@
       <Value Profile="(Default)">#FF8C00</Value>
     </Setting>
     <Setting Name="HighlightChordColor" Type="System.String" Scope="User">
-      <Value Profile="(Default)">#8B0000</Value>
+      <Value Profile="(Default)">#FFFF00</Value>
     </Setting>
     <Setting Name="bShowChords" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
@@ -514,6 +514,12 @@
     </Setting>
     <Setting Name="FontStretching" Type="System.String" Scope="User">
       <Value Profile="(Default)">Large</Value>
+    </Setting>
+    <Setting Name="bShowHints" Description="Show Hints (introduction, instrumental, ending)" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="bShowSongName" Description="Draw file name as title in lyrics" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
     </Setting>
   </Settings>
 </SettingsFile>

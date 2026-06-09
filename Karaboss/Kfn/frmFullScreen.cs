@@ -99,10 +99,10 @@ namespace Karaboss.Kfn
                         frmKfnCreate frmKfnCreate = Utilities.FormUtilities.GetForm<frmKfnCreate>();
                         frmKfnCreate.GetColorFromPicker(c, _sender);
                     }
-                    else if (Application.OpenForms.OfType<frmLyrOptions>().Count() > 0)
+                    else if (Application.OpenForms.OfType<frmMidiLyrOptions>().Count() > 0)
                     {
-                        frmLyrOptions frmLyrOptions = Utilities.FormUtilities.GetForm<frmLyrOptions>();
-                        frmLyrOptions.GetColorFromPicker(c, _sender);
+                        frmMidiLyrOptions frmMidiLyrOptions = Utilities.FormUtilities.GetForm<frmMidiLyrOptions>();
+                        frmMidiLyrOptions.GetColorFromPicker(c, _sender);
                     }
                     else if (Application.OpenForms.OfType<Karaboss.Mp3.frmMp3LyrOptions>().Count() > 0)
                     {
@@ -139,10 +139,10 @@ namespace Karaboss.Kfn
                 frmKfnCreate frmKfnCreate = Utilities.FormUtilities.GetForm<frmKfnCreate>();
                 frmKfnCreate.Show();
             }
-            else if (Application.OpenForms.OfType<frmLyrOptions>().Count() > 0)
+            else if (Application.OpenForms.OfType<frmMidiLyrOptions>().Count() > 0)
             {
-                frmLyrOptions frmLyrOptions = Utilities.FormUtilities.GetForm<frmLyrOptions>();
-                frmLyrOptions.Show();
+                frmMidiLyrOptions frmMidiLyrOptions = Utilities.FormUtilities.GetForm<frmMidiLyrOptions>();
+                frmMidiLyrOptions.Show();
             }
             else if (Application.OpenForms.OfType<Karaboss.Mp3.frmMp3LyrOptions>().Count() > 0)
             {

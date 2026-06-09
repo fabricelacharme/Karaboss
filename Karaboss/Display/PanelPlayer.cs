@@ -25,9 +25,11 @@ namespace Karaboss.Display
                 case "Playing":
                     lblStatus.ForeColor = Color.LightGreen;
                     break;
-                case "Paused":
+                case "Paused":                                       
+                case "Paused next singer":
                     lblStatus.ForeColor = Color.Yellow;
                     break;
+                
                 case "Stopped":
                     lblStatus.ForeColor = Color.Red;
                     break;

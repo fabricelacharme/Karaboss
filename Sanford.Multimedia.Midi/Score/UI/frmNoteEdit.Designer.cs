@@ -50,6 +50,23 @@
             this.btnAddVelocity = new System.Windows.Forms.Button();
             this.txtAddVelocity = new System.Windows.Forms.TextBox();
             this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.optFadingThisTrack = new System.Windows.Forms.RadioButton();
+            this.optFadingAllTracks = new System.Windows.Forms.RadioButton();
+            this.upDownFadingStep = new System.Windows.Forms.NumericUpDown();
+            this.lblStep = new System.Windows.Forms.Label();
+            this.label1 = new System.Windows.Forms.Label();
+            this.btnRemoveFadingOut = new System.Windows.Forms.Button();
+            this.btnSetFadingOut = new System.Windows.Forms.Button();
+            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.lblStartTicks = new System.Windows.Forms.Label();
+            this.optFadingToTicks = new System.Windows.Forms.RadioButton();
+            this.txtStartFadingTime = new System.Windows.Forms.TextBox();
+            this.optFadingToEndOfSong = new System.Windows.Forms.RadioButton();
+            this.lblEndFadingMeasure = new System.Windows.Forms.Label();
+            this.lblStartMeasure = new System.Windows.Forms.Label();
+            this.txtEndFadingTime = new System.Windows.Forms.TextBox();
+            this.tabPage3 = new System.Windows.Forms.TabPage();
             this.txtPitchBends = new System.Windows.Forms.TextBox();
             this.btnRemovePitchBend = new System.Windows.Forms.Button();
             this.btnSetPitchBend = new System.Windows.Forms.Button();
@@ -61,20 +78,24 @@
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage2.SuspendLayout();
+            this.groupBox2.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.upDownFadingStep)).BeginInit();
+            this.groupBox1.SuspendLayout();
+            this.tabPage3.SuspendLayout();
             this.SuspendLayout();
             // 
             // btnPnlNoteCancel
             // 
-            this.btnPnlNoteCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             resources.ApplyResources(this.btnPnlNoteCancel, "btnPnlNoteCancel");
+            this.btnPnlNoteCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.btnPnlNoteCancel.Name = "btnPnlNoteCancel";
             this.btnPnlNoteCancel.UseVisualStyleBackColor = true;
             this.btnPnlNoteCancel.Click += new System.EventHandler(this.btnPnlNoteCancel_Click);
             // 
             // btnPnlNoteOk
             // 
-            this.btnPnlNoteOk.DialogResult = System.Windows.Forms.DialogResult.OK;
             resources.ApplyResources(this.btnPnlNoteOk, "btnPnlNoteOk");
+            this.btnPnlNoteOk.DialogResult = System.Windows.Forms.DialogResult.OK;
             this.btnPnlNoteOk.Name = "btnPnlNoteOk";
             this.btnPnlNoteOk.UseVisualStyleBackColor = true;
             this.btnPnlNoteOk.Click += new System.EventHandler(this.btnPnlNoteOk_Click);
@@ -159,8 +180,8 @@
             // 
             // lblSelection
             // 
-            this.lblSelection.ForeColor = System.Drawing.Color.White;
             resources.ApplyResources(this.lblSelection, "lblSelection");
+            this.lblSelection.ForeColor = System.Drawing.Color.White;
             this.lblSelection.Name = "lblSelection";
             // 
             // btnDefVlocity
@@ -172,14 +193,16 @@
             // 
             // tabControl1
             // 
+            resources.ApplyResources(this.tabControl1, "tabControl1");
             this.tabControl1.Controls.Add(this.tabPage1);
             this.tabControl1.Controls.Add(this.tabPage2);
-            resources.ApplyResources(this.tabControl1, "tabControl1");
+            this.tabControl1.Controls.Add(this.tabPage3);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
             // 
             // tabPage1
             // 
+            resources.ApplyResources(this.tabPage1, "tabPage1");
             this.tabPage1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(70)))), ((int)(((byte)(77)))), ((int)(((byte)(95)))));
             this.tabPage1.Controls.Add(this.btnAddVelocity);
             this.tabPage1.Controls.Add(this.txtAddVelocity);
@@ -199,7 +222,6 @@
             this.tabPage1.Controls.Add(this.txtTicks);
             this.tabPage1.Controls.Add(this.txtDuration);
             this.tabPage1.Controls.Add(this.lblNoteDuration);
-            resources.ApplyResources(this.tabPage1, "tabPage1");
             this.tabPage1.Name = "tabPage1";
             // 
             // btnAddVelocity
@@ -216,15 +238,158 @@
             // 
             // tabPage2
             // 
-            this.tabPage2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(70)))), ((int)(((byte)(77)))), ((int)(((byte)(95)))));
-            this.tabPage2.Controls.Add(this.txtPitchBends);
-            this.tabPage2.Controls.Add(this.btnRemovePitchBend);
-            this.tabPage2.Controls.Add(this.btnSetPitchBend);
-            this.tabPage2.Controls.Add(this.lblHsPitchBend);
-            this.tabPage2.Controls.Add(this.hsPitchBend);
-            this.tabPage2.Controls.Add(this.chkPitchBend);
             resources.ApplyResources(this.tabPage2, "tabPage2");
+            this.tabPage2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(70)))), ((int)(((byte)(77)))), ((int)(((byte)(95)))));
+            this.tabPage2.Controls.Add(this.groupBox2);
+            this.tabPage2.Controls.Add(this.upDownFadingStep);
+            this.tabPage2.Controls.Add(this.lblStep);
+            this.tabPage2.Controls.Add(this.label1);
+            this.tabPage2.Controls.Add(this.btnRemoveFadingOut);
+            this.tabPage2.Controls.Add(this.btnSetFadingOut);
+            this.tabPage2.Controls.Add(this.groupBox1);
             this.tabPage2.Name = "tabPage2";
+            // 
+            // groupBox2
+            // 
+            resources.ApplyResources(this.groupBox2, "groupBox2");
+            this.groupBox2.Controls.Add(this.optFadingThisTrack);
+            this.groupBox2.Controls.Add(this.optFadingAllTracks);
+            this.groupBox2.Name = "groupBox2";
+            this.groupBox2.TabStop = false;
+            // 
+            // optFadingThisTrack
+            // 
+            resources.ApplyResources(this.optFadingThisTrack, "optFadingThisTrack");
+            this.optFadingThisTrack.ForeColor = System.Drawing.Color.White;
+            this.optFadingThisTrack.Name = "optFadingThisTrack";
+            this.optFadingThisTrack.UseVisualStyleBackColor = true;
+            this.optFadingThisTrack.CheckedChanged += new System.EventHandler(this.optFadingThisTrack_CheckedChanged);
+            // 
+            // optFadingAllTracks
+            // 
+            resources.ApplyResources(this.optFadingAllTracks, "optFadingAllTracks");
+            this.optFadingAllTracks.Checked = true;
+            this.optFadingAllTracks.ForeColor = System.Drawing.Color.White;
+            this.optFadingAllTracks.Name = "optFadingAllTracks";
+            this.optFadingAllTracks.TabStop = true;
+            this.optFadingAllTracks.UseVisualStyleBackColor = true;
+            this.optFadingAllTracks.CheckedChanged += new System.EventHandler(this.optFadingAllTracks_CheckedChanged);
+            // 
+            // upDownFadingStep
+            // 
+            resources.ApplyResources(this.upDownFadingStep, "upDownFadingStep");
+            this.upDownFadingStep.Maximum = new decimal(new int[] {
+            127,
+            0,
+            0,
+            0});
+            this.upDownFadingStep.Minimum = new decimal(new int[] {
+            10,
+            0,
+            0,
+            0});
+            this.upDownFadingStep.Name = "upDownFadingStep";
+            this.upDownFadingStep.Value = new decimal(new int[] {
+            10,
+            0,
+            0,
+            0});
+            // 
+            // lblStep
+            // 
+            resources.ApplyResources(this.lblStep, "lblStep");
+            this.lblStep.ForeColor = System.Drawing.Color.White;
+            this.lblStep.Name = "lblStep";
+            // 
+            // label1
+            // 
+            resources.ApplyResources(this.label1, "label1");
+            this.label1.ForeColor = System.Drawing.Color.White;
+            this.label1.Name = "label1";
+            // 
+            // btnRemoveFadingOut
+            // 
+            resources.ApplyResources(this.btnRemoveFadingOut, "btnRemoveFadingOut");
+            this.btnRemoveFadingOut.Name = "btnRemoveFadingOut";
+            this.btnRemoveFadingOut.UseVisualStyleBackColor = true;
+            this.btnRemoveFadingOut.Click += new System.EventHandler(this.btnRemoveFadingOut_Click);
+            // 
+            // btnSetFadingOut
+            // 
+            resources.ApplyResources(this.btnSetFadingOut, "btnSetFadingOut");
+            this.btnSetFadingOut.Name = "btnSetFadingOut";
+            this.btnSetFadingOut.UseVisualStyleBackColor = true;
+            this.btnSetFadingOut.Click += new System.EventHandler(this.btnSetFadingOut_Click);
+            // 
+            // groupBox1
+            // 
+            resources.ApplyResources(this.groupBox1, "groupBox1");
+            this.groupBox1.Controls.Add(this.lblStartTicks);
+            this.groupBox1.Controls.Add(this.optFadingToTicks);
+            this.groupBox1.Controls.Add(this.txtStartFadingTime);
+            this.groupBox1.Controls.Add(this.optFadingToEndOfSong);
+            this.groupBox1.Controls.Add(this.lblEndFadingMeasure);
+            this.groupBox1.Controls.Add(this.lblStartMeasure);
+            this.groupBox1.Controls.Add(this.txtEndFadingTime);
+            this.groupBox1.Name = "groupBox1";
+            this.groupBox1.TabStop = false;
+            // 
+            // lblStartTicks
+            // 
+            resources.ApplyResources(this.lblStartTicks, "lblStartTicks");
+            this.lblStartTicks.ForeColor = System.Drawing.Color.White;
+            this.lblStartTicks.Name = "lblStartTicks";
+            // 
+            // optFadingToTicks
+            // 
+            resources.ApplyResources(this.optFadingToTicks, "optFadingToTicks");
+            this.optFadingToTicks.ForeColor = System.Drawing.Color.White;
+            this.optFadingToTicks.Name = "optFadingToTicks";
+            this.optFadingToTicks.UseVisualStyleBackColor = true;
+            // 
+            // txtStartFadingTime
+            // 
+            resources.ApplyResources(this.txtStartFadingTime, "txtStartFadingTime");
+            this.txtStartFadingTime.Name = "txtStartFadingTime";
+            // 
+            // optFadingToEndOfSong
+            // 
+            resources.ApplyResources(this.optFadingToEndOfSong, "optFadingToEndOfSong");
+            this.optFadingToEndOfSong.Checked = true;
+            this.optFadingToEndOfSong.ForeColor = System.Drawing.Color.White;
+            this.optFadingToEndOfSong.Name = "optFadingToEndOfSong";
+            this.optFadingToEndOfSong.TabStop = true;
+            this.optFadingToEndOfSong.UseVisualStyleBackColor = true;
+            this.optFadingToEndOfSong.CheckedChanged += new System.EventHandler(this.optFadingToEndOfSong_CheckedChanged);
+            // 
+            // lblEndFadingMeasure
+            // 
+            resources.ApplyResources(this.lblEndFadingMeasure, "lblEndFadingMeasure");
+            this.lblEndFadingMeasure.ForeColor = System.Drawing.Color.White;
+            this.lblEndFadingMeasure.Name = "lblEndFadingMeasure";
+            // 
+            // lblStartMeasure
+            // 
+            resources.ApplyResources(this.lblStartMeasure, "lblStartMeasure");
+            this.lblStartMeasure.ForeColor = System.Drawing.Color.White;
+            this.lblStartMeasure.Name = "lblStartMeasure";
+            // 
+            // txtEndFadingTime
+            // 
+            resources.ApplyResources(this.txtEndFadingTime, "txtEndFadingTime");
+            this.txtEndFadingTime.Name = "txtEndFadingTime";
+            // 
+            // tabPage3
+            // 
+            resources.ApplyResources(this.tabPage3, "tabPage3");
+            this.tabPage3.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(70)))), ((int)(((byte)(77)))), ((int)(((byte)(95)))));
+            this.tabPage3.Controls.Add(this.txtPitchBends);
+            this.tabPage3.Controls.Add(this.btnRemovePitchBend);
+            this.tabPage3.Controls.Add(this.btnSetPitchBend);
+            this.tabPage3.Controls.Add(this.lblHsPitchBend);
+            this.tabPage3.Controls.Add(this.hsPitchBend);
+            this.tabPage3.Controls.Add(this.chkPitchBend);
+            this.tabPage3.Name = "tabPage3";
             // 
             // txtPitchBends
             // 
@@ -253,6 +418,7 @@
             // 
             // hsPitchBend
             // 
+            resources.ApplyResources(this.hsPitchBend, "hsPitchBend");
             this.hsPitchBend.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(70)))), ((int)(((byte)(77)))), ((int)(((byte)(95)))));
             this.hsPitchBend.BarPenColorBottom = System.Drawing.Color.FromArgb(((int)(((byte)(87)))), ((int)(((byte)(94)))), ((int)(((byte)(110)))));
             this.hsPitchBend.BarPenColorTop = System.Drawing.Color.FromArgb(((int)(((byte)(55)))), ((int)(((byte)(60)))), ((int)(((byte)(74)))));
@@ -260,7 +426,6 @@
             this.hsPitchBend.ElapsedInnerColor = System.Drawing.Color.FromArgb(((int)(((byte)(21)))), ((int)(((byte)(56)))), ((int)(((byte)(152)))));
             this.hsPitchBend.ElapsedPenColorBottom = System.Drawing.Color.FromArgb(((int)(((byte)(99)))), ((int)(((byte)(130)))), ((int)(((byte)(208)))));
             this.hsPitchBend.ElapsedPenColorTop = System.Drawing.Color.FromArgb(((int)(((byte)(95)))), ((int)(((byte)(140)))), ((int)(((byte)(180)))));
-            resources.ApplyResources(this.hsPitchBend, "hsPitchBend");
             this.hsPitchBend.ForeColor = System.Drawing.Color.White;
             this.hsPitchBend.LargeChange = new decimal(new int[] {
             2048,
@@ -339,6 +504,13 @@
             this.tabPage1.PerformLayout();
             this.tabPage2.ResumeLayout(false);
             this.tabPage2.PerformLayout();
+            this.groupBox2.ResumeLayout(false);
+            this.groupBox2.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.upDownFadingStep)).EndInit();
+            this.groupBox1.ResumeLayout(false);
+            this.groupBox1.PerformLayout();
+            this.tabPage3.ResumeLayout(false);
+            this.tabPage3.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -363,7 +535,7 @@
         private System.Windows.Forms.Button btnDefVlocity;
         private System.Windows.Forms.TabControl tabControl1;
         private System.Windows.Forms.TabPage tabPage1;
-        private System.Windows.Forms.TabPage tabPage2;
+        private System.Windows.Forms.TabPage tabPage3;
         private System.Windows.Forms.CheckBox chkPitchBend;
         private ColorSlider.ColorSlider hsPitchBend;
         private System.Windows.Forms.Label lblHsPitchBend;
@@ -372,5 +544,22 @@
         private System.Windows.Forms.TextBox txtPitchBends;
         private System.Windows.Forms.Button btnAddVelocity;
         private System.Windows.Forms.TextBox txtAddVelocity;
+        private System.Windows.Forms.TabPage tabPage2;
+        private System.Windows.Forms.Button btnRemoveFadingOut;
+        private System.Windows.Forms.Button btnSetFadingOut;
+        private System.Windows.Forms.RadioButton optFadingAllTracks;
+        private System.Windows.Forms.RadioButton optFadingThisTrack;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Label lblStartTicks;
+        private System.Windows.Forms.TextBox txtStartFadingTime;
+        private System.Windows.Forms.TextBox txtEndFadingTime;
+        private System.Windows.Forms.Label lblStartMeasure;
+        private System.Windows.Forms.Label lblEndFadingMeasure;
+        private System.Windows.Forms.NumericUpDown upDownFadingStep;
+        private System.Windows.Forms.Label lblStep;
+        private System.Windows.Forms.RadioButton optFadingToTicks;
+        private System.Windows.Forms.RadioButton optFadingToEndOfSong;
+        private System.Windows.Forms.GroupBox groupBox1;
+        private System.Windows.Forms.GroupBox groupBox2;
     }
 }

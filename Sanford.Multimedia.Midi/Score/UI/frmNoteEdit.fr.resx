@@ -136,6 +136,54 @@
   <data name="btnDefVlocity.Text" xml:space="preserve">
     <value>Defaut</value>
   </data>
+  <data name="optFadingThisTrack.Size" type="System.Drawing.Size, System.Drawing">
+    <value>75, 17</value>
+  </data>
+  <data name="optFadingThisTrack.Text" xml:space="preserve">
+    <value>Cette piste</value>
+  </data>
+  <data name="optFadingAllTracks.Size" type="System.Drawing.Size, System.Drawing">
+    <value>104, 17</value>
+  </data>
+  <data name="optFadingAllTracks.Text" xml:space="preserve">
+    <value>Toutes les pistes</value>
+  </data>
+  <data name="lblStep.Size" type="System.Drawing.Size, System.Drawing">
+    <value>40, 13</value>
+  </data>
+  <data name="lblStep.Text" xml:space="preserve">
+    <value>Palliers</value>
+  </data>
+  <data name="label1.Size" type="System.Drawing.Size, System.Drawing">
+    <value>175, 13</value>
+  </data>
+  <data name="label1.Text" xml:space="preserve">
+    <value>Insérer un fondu sonore (fading out)</value>
+  </data>
+  <data name="btnRemoveFadingOut.Text" xml:space="preserve">
+    <value>Supprimer</value>
+  </data>
+  <data name="btnSetFadingOut.Text" xml:space="preserve">
+    <value>Insérer</value>
+  </data>
+  <data name="lblStartTicks.Size" type="System.Drawing.Size, System.Drawing">
+    <value>52, 13</value>
+  </data>
+  <data name="lblStartTicks.Text" xml:space="preserve">
+    <value>De (ticks)</value>
+  </data>
+  <data name="optFadingToTicks.Size" type="System.Drawing.Size, System.Drawing">
+    <value>62, 17</value>
+  </data>
+  <data name="optFadingToTicks.Text" xml:space="preserve">
+    <value>à (ticks)</value>
+  </data>
+  <data name="optFadingToEndOfSong.Size" type="System.Drawing.Size, System.Drawing">
+    <value>115, 17</value>
+  </data>
+  <data name="optFadingToEndOfSong.Text" xml:space="preserve">
+    <value>à la fin du morceau</value>
+  </data>
   <data name="$this.Text" xml:space="preserve">
     <value>Modifier les notes</value>
   </data>

@@ -63,6 +63,8 @@ namespace Karaboss.Mp3.Mp3Lyrics
         public static string m_SepParagraph = "\\";
         public static Mp3LyricsTypes m_mp3lyricstype = Mp3LyricsTypes.None;
 
+        public static double m_duration = 0;
+
 
         // Tags
         public static string Tool;
@@ -245,6 +247,7 @@ namespace Karaboss.Mp3.Mp3Lyrics
         {
             string lyric;
             long time;
+            long lastTime = 0;
             Syllable sct;
             
             bool bNewLine = false;            
@@ -275,6 +278,9 @@ namespace Karaboss.Mp3.Mp3Lyrics
                     lyric = SyncLyricsFrame.Text[i].Text;
                     time = SyncLyricsFrame.Text[i].Time;
                     
+                    if (time < lastTime) continue; // skip if time is not increasing
+                    if (time > m_duration) time = (long)m_duration; // adjust time if it is greater than duration of the song
+
                     bNewLine = false;             
                     bParagraph = false;
 
@@ -320,7 +326,15 @@ namespace Karaboss.Mp3.Mp3Lyrics
 
                         // add a blank line for the paragraph
                         SyncLine = new kLine();
-                        SyncLine.Add(new Syllable("", time));
+                        //SyncLine.Add(new Syllable("", time));
+
+                        SyncLine.Add(new Syllable()
+                        {
+                            CharType = Syllable.CharTypes.ParagraphSep,
+                            Text = "",
+                            StartTime = time
+                        });
+
                         SyncLyrics.Add(SyncLine);
 
                         // new line
@@ -344,6 +358,8 @@ namespace Karaboss.Mp3.Mp3Lyrics
                         // No new line, add to current line
                         SyncLine.Add(sct);
                     }
+
+                    lastTime = time;
                 }
 
                 // Store last line
@@ -354,13 +370,19 @@ namespace Karaboss.Mp3.Mp3Lyrics
             {
                 // If no linefeeds, display lyrics with \r\n
                 for (int i = 0; i < SyncLyricsFrame.Text.Count(); i++)
-                {
+                {                    
                     lyric = SyncLyricsFrame.Text[i].Text.Trim();
                     time = SyncLyricsFrame.Text[i].Time;
+
+                    if (time < lastTime) continue; // skip if time is not increasing
+                    if (time > m_duration) time = (long)m_duration; // adjust time if it is greater than duration of the song
+
                     sct = new Syllable(lyric, time);
                     SyncLine = new kLine();
                     SyncLine.Add(sct);
                     SyncLyrics.Add(SyncLine);
+
+                    lastTime = time;
                 }
             }
 

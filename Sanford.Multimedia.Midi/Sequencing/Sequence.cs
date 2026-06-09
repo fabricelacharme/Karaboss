@@ -617,13 +617,24 @@ namespace Sanford.Multimedia.Midi
 
                                 if (cmd == ChannelCommand.NoteOn || cmd == ChannelCommand.NoteOff)
                                 {
-                                    channel = msg.MidiChannel;
-                                    number = msg.Data1;
-                                    velocity = msg.Data2;                                    
-                                    number += amount;
+                                    try
+                                    {
+                                        channel = msg.MidiChannel;
+                                        number = msg.Data1;
+                                        velocity = msg.Data2;
+                                        number += amount;
 
-                                    ChannelMessage message = new ChannelMessage(cmd, channel, number, velocity);
-                                    track.Insert(e.AbsoluteTicks, message);
+                                        if (number > 0)
+                                        {
+                                            ChannelMessage message = new ChannelMessage(cmd, channel, number, velocity);
+                                            track.Insert(e.AbsoluteTicks, message);
+                                        }
+                                    }
+                                    catch (Exception ex)
+                                    {
+                                        Console.WriteLine(ex.ToString());
+                                    }
+
                                 }
                                 else
                                 {
@@ -661,9 +672,14 @@ namespace Sanford.Multimedia.Midi
 
             // Replace by new tracks
             this.tracks.Clear();
+            
+            
             foreach (Track track in result)
             {
+                track.ContainsNotes = true;
                 this.tracks.Add(track);
+                
+                // PB ici : on perd les tags de la track d'origine ; à revoir
             }
 
             //GetLength();

@@ -1264,7 +1264,7 @@ namespace Karaboss.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("#8B0000")]
+        [global::System.Configuration.DefaultSettingValueAttribute("#FFFF00")]
         public string HighlightChordColor {
             get {
                 return ((string)(this["HighlightChordColor"]));
@@ -2069,6 +2069,38 @@ namespace Karaboss.Properties {
             }
             set {
                 this["FontStretching"] = value;
+            }
+        }
+        
+        /// <summary>
+        /// Show Hints (introduction, instrumental, ending)
+        /// </summary>
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Configuration.SettingsDescriptionAttribute("Show Hints (introduction, instrumental, ending)")]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool bShowHints {
+            get {
+                return ((bool)(this["bShowHints"]));
+            }
+            set {
+                this["bShowHints"] = value;
+            }
+        }
+        
+        /// <summary>
+        /// Draw file name as title in lyrics
+        /// </summary>
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Configuration.SettingsDescriptionAttribute("Draw file name as title in lyrics")]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool bShowSongName {
+            get {
+                return ((bool)(this["bShowSongName"]));
+            }
+            set {
+                this["bShowSongName"] = value;
             }
         }
     }

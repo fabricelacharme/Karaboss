@@ -618,11 +618,11 @@
   <data name="KTypesFixedLines" xml:space="preserve">
     <value>Lignes fixes</value>
   </data>
-  <data name="KTypesScrollingLinesBottomUp" xml:space="preserve">
-    <value>Lignes défilant de bas en haut</value>
+  <data name="KTypesConstantScrolling" xml:space="preserve">
+    <value>Défilement à vitesse constante</value>
   </data>
-  <data name="KTypesScrollingLinesTopDown" xml:space="preserve">
-    <value>Lignes défilant de haut en bas</value>
+  <data name="KTypesDynamicScrolling" xml:space="preserve">
+    <value>Défilement dynamique</value>
   </data>
   <data name="KTypesTwoLinesSwapped" xml:space="preserve">
     <value>Deux lignes (alternées)</value>

@@ -361,7 +361,7 @@
     <value>28</value>
   </data>
   <data name="lblSeconds.Text" xml:space="preserve">
-    <value>Seconds</value>
+    <value>(seconds)</value>
   </data>
   <data name="&gt;&gt;lblSeconds.Name" xml:space="preserve">
     <value>lblSeconds</value>
@@ -598,7 +598,7 @@
     <value>NoControl</value>
   </data>
   <data name="chkHighLightProgressive.Location" type="System.Drawing.Point, System.Drawing">
-    <value>141, 223</value>
+    <value>9, 244</value>
   </data>
   <data name="chkHighLightProgressive.Size" type="System.Drawing.Size, System.Drawing">
     <value>104, 17</value>
@@ -619,7 +619,7 @@
     <value>tabPage1</value>
   </data>
   <data name="&gt;&gt;chkHighLightProgressive.ZOrder" xml:space="preserve">
-    <value>7</value>
+    <value>9</value>
   </data>
   <data name="chkDisplayBalls.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
@@ -1099,7 +1099,7 @@
     <value>tabPage1</value>
   </data>
   <data name="&gt;&gt;btnActiveColor.ZOrder" xml:space="preserve">
-    <value>1</value>
+    <value>3</value>
   </data>
   <data name="btnHighlightColor.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
@@ -1126,7 +1126,7 @@
     <value>tabPage1</value>
   </data>
   <data name="&gt;&gt;btnHighlightColor.ZOrder" xml:space="preserve">
-    <value>3</value>
+    <value>5</value>
   </data>
   <data name="btnInactiveColor.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
@@ -1153,7 +1153,7 @@
     <value>tabPage1</value>
   </data>
   <data name="&gt;&gt;btnInactiveColor.ZOrder" xml:space="preserve">
-    <value>5</value>
+    <value>7</value>
   </data>
   <data name="btnActiveBorderColor.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
@@ -1180,7 +1180,7 @@
     <value>tabPage1</value>
   </data>
   <data name="&gt;&gt;btnActiveBorderColor.ZOrder" xml:space="preserve">
-    <value>9</value>
+    <value>11</value>
   </data>
   <data name="picActiveColor.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
@@ -1204,7 +1204,7 @@
     <value>tabPage1</value>
   </data>
   <data name="&gt;&gt;picActiveColor.ZOrder" xml:space="preserve">
-    <value>11</value>
+    <value>13</value>
   </data>
   <data name="picHighlightColor.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
@@ -1228,7 +1228,7 @@
     <value>tabPage1</value>
   </data>
   <data name="&gt;&gt;picHighlightColor.ZOrder" xml:space="preserve">
-    <value>13</value>
+    <value>15</value>
   </data>
   <data name="cbFrameType.Location" type="System.Drawing.Point, System.Drawing">
     <value>132, 171</value>
@@ -1249,7 +1249,7 @@
     <value>tabPage1</value>
   </data>
   <data name="&gt;&gt;cbFrameType.ZOrder" xml:space="preserve">
-    <value>15</value>
+    <value>17</value>
   </data>
   <data name="picInactiveColor.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
@@ -1273,7 +1273,7 @@
     <value>tabPage1</value>
   </data>
   <data name="&gt;&gt;picInactiveColor.ZOrder" xml:space="preserve">
-    <value>17</value>
+    <value>19</value>
   </data>
   <data name="lblBorder.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -1303,7 +1303,7 @@
     <value>tabPage1</value>
   </data>
   <data name="&gt;&gt;lblBorder.ZOrder" xml:space="preserve">
-    <value>19</value>
+    <value>21</value>
   </data>
   <data name="picActiveBorderColor.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
@@ -1327,7 +1327,7 @@
     <value>tabPage1</value>
   </data>
   <data name="&gt;&gt;picActiveBorderColor.ZOrder" xml:space="preserve">
-    <value>21</value>
+    <value>23</value>
   </data>
   <data name="btnInactiveBoderColorPicker.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
@@ -1351,7 +1351,7 @@
     <value>tabPage1</value>
   </data>
   <data name="&gt;&gt;btnInactiveBoderColorPicker.ZOrder" xml:space="preserve">
-    <value>23</value>
+    <value>25</value>
   </data>
   <data name="btnActiveColorBorderPicker.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
@@ -1375,7 +1375,7 @@
     <value>tabPage1</value>
   </data>
   <data name="&gt;&gt;btnActiveColorBorderPicker.ZOrder" xml:space="preserve">
-    <value>25</value>
+    <value>27</value>
   </data>
   <data name="btnInactiveColorPicker.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
@@ -1399,7 +1399,7 @@
     <value>tabPage1</value>
   </data>
   <data name="&gt;&gt;btnInactiveColorPicker.ZOrder" xml:space="preserve">
-    <value>27</value>
+    <value>29</value>
   </data>
   <data name="chkTextBackground.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
@@ -1426,7 +1426,7 @@
     <value>tabPage1</value>
   </data>
   <data name="&gt;&gt;chkTextBackground.ZOrder" xml:space="preserve">
-    <value>29</value>
+    <value>31</value>
   </data>
   <data name="btnHighlightColorPicker.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
@@ -1450,7 +1450,7 @@
     <value>tabPage1</value>
   </data>
   <data name="&gt;&gt;btnHighlightColorPicker.ZOrder" xml:space="preserve">
-    <value>31</value>
+    <value>33</value>
   </data>
   <data name="lblFont.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
@@ -1477,7 +1477,7 @@
     <value>tabPage1</value>
   </data>
   <data name="&gt;&gt;lblFont.ZOrder" xml:space="preserve">
-    <value>30</value>
+    <value>32</value>
   </data>
   <data name="btnActiveColorPicker.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
@@ -1501,7 +1501,7 @@
     <value>tabPage1</value>
   </data>
   <data name="&gt;&gt;btnActiveColorPicker.ZOrder" xml:space="preserve">
-    <value>28</value>
+    <value>30</value>
   </data>
   <data name="chkTextUppercase.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
@@ -1528,7 +1528,7 @@
     <value>tabPage1</value>
   </data>
   <data name="&gt;&gt;chkTextUppercase.ZOrder" xml:space="preserve">
-    <value>26</value>
+    <value>28</value>
   </data>
   <data name="txtInactiveBorderColor.Location" type="System.Drawing.Point, System.Drawing">
     <value>132, 146</value>
@@ -1552,7 +1552,7 @@
     <value>tabPage1</value>
   </data>
   <data name="&gt;&gt;txtInactiveBorderColor.ZOrder" xml:space="preserve">
-    <value>24</value>
+    <value>26</value>
   </data>
   <data name="label9.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -1582,7 +1582,7 @@
     <value>tabPage1</value>
   </data>
   <data name="&gt;&gt;label9.ZOrder" xml:space="preserve">
-    <value>22</value>
+    <value>24</value>
   </data>
   <data name="txtActiveBorderColor.Location" type="System.Drawing.Point, System.Drawing">
     <value>132, 120</value>
@@ -1606,7 +1606,7 @@
     <value>tabPage1</value>
   </data>
   <data name="&gt;&gt;txtActiveBorderColor.ZOrder" xml:space="preserve">
-    <value>20</value>
+    <value>22</value>
   </data>
   <data name="btnInactiveBorderColor.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
@@ -1633,7 +1633,7 @@
     <value>tabPage1</value>
   </data>
   <data name="&gt;&gt;btnInactiveBorderColor.ZOrder" xml:space="preserve">
-    <value>18</value>
+    <value>20</value>
   </data>
   <data name="label11.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -1663,7 +1663,7 @@
     <value>tabPage1</value>
   </data>
   <data name="&gt;&gt;label11.ZOrder" xml:space="preserve">
-    <value>16</value>
+    <value>18</value>
   </data>
   <data name="picInactiveBorderColor.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
@@ -1687,7 +1687,7 @@
     <value>tabPage1</value>
   </data>
   <data name="&gt;&gt;picInactiveBorderColor.ZOrder" xml:space="preserve">
-    <value>14</value>
+    <value>16</value>
   </data>
   <data name="txtInactiveColor.Location" type="System.Drawing.Point, System.Drawing">
     <value>132, 94</value>
@@ -1711,7 +1711,7 @@
     <value>tabPage1</value>
   </data>
   <data name="&gt;&gt;txtInactiveColor.ZOrder" xml:space="preserve">
-    <value>12</value>
+    <value>14</value>
   </data>
   <data name="lblActiveColor.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -1741,7 +1741,7 @@
     <value>tabPage1</value>
   </data>
   <data name="&gt;&gt;lblActiveColor.ZOrder" xml:space="preserve">
-    <value>0</value>
+    <value>2</value>
   </data>
   <data name="lblInactiveColor.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -1771,7 +1771,7 @@
     <value>tabPage1</value>
   </data>
   <data name="&gt;&gt;lblInactiveColor.ZOrder" xml:space="preserve">
-    <value>10</value>
+    <value>12</value>
   </data>
   <data name="txtActiveColor.Location" type="System.Drawing.Point, System.Drawing">
     <value>132, 45</value>
@@ -1795,7 +1795,7 @@
     <value>tabPage1</value>
   </data>
   <data name="&gt;&gt;txtActiveColor.ZOrder" xml:space="preserve">
-    <value>8</value>
+    <value>10</value>
   </data>
   <data name="txtHighlightColor.Location" type="System.Drawing.Point, System.Drawing">
     <value>132, 69</value>
@@ -1819,7 +1819,7 @@
     <value>tabPage1</value>
   </data>
   <data name="&gt;&gt;txtHighlightColor.ZOrder" xml:space="preserve">
-    <value>6</value>
+    <value>8</value>
   </data>
   <data name="cbFontName.Font" type="System.Drawing.Font, System.Drawing">
     <value>Calibri, 9pt</value>
@@ -1843,7 +1843,7 @@
     <value>tabPage1</value>
   </data>
   <data name="&gt;&gt;cbFontName.ZOrder" xml:space="preserve">
-    <value>4</value>
+    <value>6</value>
   </data>
   <data name="lblHighlightColor.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -1873,7 +1873,10 @@
     <value>tabPage1</value>
   </data>
   <data name="&gt;&gt;lblHighlightColor.ZOrder" xml:space="preserve">
-    <value>2</value>
+    <value>4</value>
+  </data>
+  <data name="lblVerticalPosition.Font" type="System.Drawing.Font, System.Drawing">
+    <value>Calibri, 9pt</value>
   </data>
   <data name="lblVerticalPosition.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
@@ -1901,6 +1904,9 @@
   </data>
   <data name="&gt;&gt;lblVerticalPosition.ZOrder" xml:space="preserve">
     <value>5</value>
+  </data>
+  <data name="lblNumberOfLines.Font" type="System.Drawing.Font, System.Drawing">
+    <value>Calibri, 9pt</value>
   </data>
   <data name="lblNumberOfLines.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
@@ -1932,11 +1938,14 @@
   <data name="&gt;&gt;lblNumberOfLines.ZOrder" xml:space="preserve">
     <value>6</value>
   </data>
+  <data name="UpDownNbLines.Font" type="System.Drawing.Font, System.Drawing">
+    <value>Calibri, 9pt</value>
+  </data>
   <data name="UpDownNbLines.Location" type="System.Drawing.Point, System.Drawing">
     <value>116, 107</value>
   </data>
   <data name="UpDownNbLines.Size" type="System.Drawing.Size, System.Drawing">
-    <value>45, 20</value>
+    <value>45, 22</value>
   </data>
   <data name="UpDownNbLines.TabIndex" type="System.Int32, mscorlib">
     <value>67</value>
@@ -1956,6 +1965,9 @@
   <data name="&gt;&gt;UpDownNbLines.ZOrder" xml:space="preserve">
     <value>7</value>
   </data>
+  <data name="cbOptionsTextDisplay.Font" type="System.Drawing.Font, System.Drawing">
+    <value>Calibri, 9pt</value>
+  </data>
   <data name="cbOptionsTextDisplay.Items" xml:space="preserve">
     <value>Top</value>
   </data>
@@ -1969,7 +1981,7 @@
     <value>116, 79</value>
   </data>
   <data name="cbOptionsTextDisplay.Size" type="System.Drawing.Size, System.Drawing">
-    <value>121, 21</value>
+    <value>121, 22</value>
   </data>
   <data name="cbOptionsTextDisplay.TabIndex" type="System.Int32, mscorlib">
     <value>65</value>
@@ -1985,6 +1997,9 @@
   </data>
   <data name="&gt;&gt;cbOptionsTextDisplay.ZOrder" xml:space="preserve">
     <value>4</value>
+  </data>
+  <data name="cbFontStretching.Font" type="System.Drawing.Font, System.Drawing">
+    <value>Calibri, 9pt</value>
   </data>
   <data name="cbFontStretching.Items" xml:space="preserve">
     <value>Fixed lines</value>
@@ -2002,7 +2017,7 @@
     <value>116, 23</value>
   </data>
   <data name="cbFontStretching.Size" type="System.Drawing.Size, System.Drawing">
-    <value>174, 21</value>
+    <value>174, 22</value>
   </data>
   <data name="cbFontStretching.TabIndex" type="System.Int32, mscorlib">
     <value>61</value>
@@ -2018,6 +2033,9 @@
   </data>
   <data name="&gt;&gt;cbFontStretching.ZOrder" xml:space="preserve">
     <value>0</value>
+  </data>
+  <data name="lblFontSize.Font" type="System.Drawing.Font, System.Drawing">
+    <value>Calibri, 9pt</value>
   </data>
   <data name="lblFontSize.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
@@ -2046,6 +2064,9 @@
   <data name="&gt;&gt;lblFontSize.ZOrder" xml:space="preserve">
     <value>1</value>
   </data>
+  <data name="cbKaraokeType.Font" type="System.Drawing.Font, System.Drawing">
+    <value>Calibri, 9pt</value>
+  </data>
   <data name="cbKaraokeType.Items" xml:space="preserve">
     <value>Fixed lines</value>
   </data>
@@ -2062,7 +2083,7 @@
     <value>116, 51</value>
   </data>
   <data name="cbKaraokeType.Size" type="System.Drawing.Size, System.Drawing">
-    <value>174, 21</value>
+    <value>182, 22</value>
   </data>
   <data name="cbKaraokeType.TabIndex" type="System.Int32, mscorlib">
     <value>63</value>
@@ -2078,6 +2099,9 @@
   </data>
   <data name="&gt;&gt;cbKaraokeType.ZOrder" xml:space="preserve">
     <value>2</value>
+  </data>
+  <data name="lblKaraokeType.Font" type="System.Drawing.Font, System.Drawing">
+    <value>Calibri, 9pt</value>
   </data>
   <data name="lblKaraokeType.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
@@ -2130,37 +2154,62 @@
   <data name="&gt;&gt;grpBoxKaraokeType.ZOrder" xml:space="preserve">
     <value>2</value>
   </data>
-  <data name="kLyrics1.Lines" mimetype="application/x-microsoft.net.object.binary.base64">
-    <value>
-        AAEAAAD/////AQAAAAAAAAAMAgAAAJMBS2FyYW9rZUx5cmljcywgVmVyc2lvbj0xLjAuMC4wLCBDdWx0
-        dXJlPW5ldXRyYWwsIFB1YmxpY0tleVRva2VuPW51bGxdXSwgbXNjb3JsaWIsIFZlcnNpb249NC4wLjAu
-        MCwgQ3VsdHVyZT1uZXV0cmFsLCBQdWJsaWNLZXlUb2tlbj1iNzdhNWM1NjE5MzRlMDg5DAMAAABES2Fy
-        YW9rZUx5cmljcywgVmVyc2lvbj0xLjAuMC4wLCBDdWx0dXJlPW5ldXRyYWwsIFB1YmxpY0tleVRva2Vu
-        PW51bGwFAQAAACxTeXN0ZW0uQ29sbGVjdGlvbnMuR2VuZXJpYy5MaXN0YDFbW2thci5rTGluZQMAAAAG
-        X2l0ZW1zBV9zaXplCF92ZXJzaW9uBAAAC2thci5rTGluZVtdAwAAAAgIAgAAAAkEAAAAAAAAAAAAAAAH
-        BAAAAAABAAAAAAAAAAQJa2FyLmtMaW5lAwAAAAs=
-</value>
+  <data name="chkShowSongName.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
   </data>
-  <data name="karaokeEffect1.Location" type="System.Drawing.Point, System.Drawing">
-    <value>180, 150</value>
+  <data name="chkShowSongName.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
   </data>
-  <data name="karaokeEffect1.Size" type="System.Drawing.Size, System.Drawing">
-    <value>387, 214</value>
+  <data name="chkShowSongName.Location" type="System.Drawing.Point, System.Drawing">
+    <value>140, 223</value>
   </data>
-  <data name="karaokeEffect1.TabIndex" type="System.Int32, mscorlib">
-    <value>34</value>
+  <data name="chkShowSongName.Size" type="System.Drawing.Size, System.Drawing">
+    <value>112, 17</value>
   </data>
-  <data name="&gt;&gt;karaokeEffect1.Name" xml:space="preserve">
-    <value>karaokeEffect1</value>
+  <data name="chkShowSongName.TabIndex" type="System.Int32, mscorlib">
+    <value>104</value>
   </data>
-  <data name="&gt;&gt;karaokeEffect1.Type" xml:space="preserve">
-    <value>keffect.KaraokeEffect, KaraokeEffect, Version=1.0.0.1, Culture=neutral, PublicKeyToken=null</value>
+  <data name="chkShowSongName.Text" xml:space="preserve">
+    <value>Show Song Name</value>
   </data>
-  <data name="&gt;&gt;karaokeEffect1.Parent" xml:space="preserve">
-    <value>$this</value>
+  <data name="&gt;&gt;chkShowSongName.Name" xml:space="preserve">
+    <value>chkShowSongName</value>
   </data>
-  <data name="&gt;&gt;karaokeEffect1.ZOrder" xml:space="preserve">
-    <value>8</value>
+  <data name="&gt;&gt;chkShowSongName.Type" xml:space="preserve">
+    <value>System.Windows.Forms.CheckBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;chkShowSongName.Parent" xml:space="preserve">
+    <value>tabPage1</value>
+  </data>
+  <data name="&gt;&gt;chkShowSongName.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="chkShowHints.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="chkShowHints.Location" type="System.Drawing.Point, System.Drawing">
+    <value>140, 202</value>
+  </data>
+  <data name="chkShowHints.Size" type="System.Drawing.Size, System.Drawing">
+    <value>108, 17</value>
+  </data>
+  <data name="chkShowHints.TabIndex" type="System.Int32, mscorlib">
+    <value>101</value>
+  </data>
+  <data name="chkShowHints.Text" xml:space="preserve">
+    <value>Show Hints</value>
+  </data>
+  <data name="&gt;&gt;chkShowHints.Name" xml:space="preserve">
+    <value>chkShowHints</value>
+  </data>
+  <data name="&gt;&gt;chkShowHints.Type" xml:space="preserve">
+    <value>System.Windows.Forms.CheckBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;chkShowHints.Parent" xml:space="preserve">
+    <value>tabPage1</value>
+  </data>
+  <data name="&gt;&gt;chkShowHints.ZOrder" xml:space="preserve">
+    <value>1</value>
   </data>
   <data name="tabPage1.Location" type="System.Drawing.Point, System.Drawing">
     <value>4, 27</value>
@@ -2534,6 +2583,27 @@
   <metadata name="openFileDialog.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>418, 17</value>
   </metadata>
+  <data name="karaokeEffect1.Location" type="System.Drawing.Point, System.Drawing">
+    <value>180, 150</value>
+  </data>
+  <data name="karaokeEffect1.Size" type="System.Drawing.Size, System.Drawing">
+    <value>387, 214</value>
+  </data>
+  <data name="karaokeEffect1.TabIndex" type="System.Int32, mscorlib">
+    <value>34</value>
+  </data>
+  <data name="&gt;&gt;karaokeEffect1.Name" xml:space="preserve">
+    <value>karaokeEffect1</value>
+  </data>
+  <data name="&gt;&gt;karaokeEffect1.Type" xml:space="preserve">
+    <value>keffect.KaraokeEffect, KaraokeEffect, Version=1.0.0.1, Culture=neutral, PublicKeyToken=null</value>
+  </data>
+  <data name="&gt;&gt;karaokeEffect1.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;karaokeEffect1.ZOrder" xml:space="preserve">
+    <value>8</value>
+  </data>
   <metadata name="$this.Localizable" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
   </metadata>
@@ -2548,78 +2618,128 @@
   </data>
   <data name="$this.Icon" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
-        AAABAAEAICAAAAEAIACoEAAAFgAAACgAAAAgAAAAQAAAAAEAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-        AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACUf2QAlIBkA5R/ZIWUf2TblH9k2pR/
-        ZNqUf2TalH9k2pR/ZNqUf2TalH9k3JR/ZKWUf2QQlH9kAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-        AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAJR/ZACUf2QJlH9kwJR/
-        ZP+Uf2T/lH9k/5R/ZP+Uf2T/lH9k/5R/ZP+Uf2T/lH9k5JR/ZCSUf2QAAAAAAAAAAAAAAAAAAAAAAAAA
-        AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAlH9kAJR/
-        ZAmUf2TAlH9k/5R/ZP+Uf2T/lH9k/5R/ZP+Uf2T/lH9k/5R/ZP+Uf2TllH9kJZR/ZAAAAAAAAAAAAAAA
-        AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACUf2QAlH9kApR/ZAaUf2QAlH9kAAAA
-        AACUf2QAlH9kCZR/ZMCUf2T/lH9k/5R/ZP+Uf2T/lH9k/5R/ZP+Uf2T/lH9k/5R/ZOWUf2QklH9kAAAA
-        AACUf2QAlH5kAJR/ZBKUf2QJlH9kAAAAAAAAAAAAAAAAAAAAAAAAAAAAlH9kAJSAZQCUf2RhlH9ks5R/
-        ZFWUf2QJlH9kAJR/ZACUf2QMlH9kw5R/ZP+Uf2T/lH9k/5R/ZP+Uf2T/lH9k/5R/ZP+Uf2T/lH9k55R/
-        ZCmUf2QAlH9kAJR/ZA2Uf2RflH9kypR/ZIeUf2QFlH9kAAAAAAAAAAAAAAAAAAAAAACUf2QAlH9kKZR/
-        ZNqUf2T/lH9k9pR/ZKaUf2Q5lH9kKZR/ZJGUf2TylH9k/5R/ZP+Uf2T/lH9k/5R/ZP+Uf2T/lH9k/5R/
-        ZP+Uf2T7lH9krJR/ZD6Uf2Q+lH9kr5R/ZPiUf2T/lH9k75R/ZEeUf2QAAAAAAAAAAAAAAAAAlH9kAJSA
-        ZAOUf2SUlH9k/5R/ZP+Uf2T/lH9k/5R/ZOmUf2TglH9k/5R/ZP+Uf2T/lH9k/5R/ZP+Uf2T/lH9k/5R/
-        ZP+Uf2T/lH9k/5R/ZP+Uf2T/lH9k7JR/ZO2Uf2T/lH9k/5R/ZP+Uf2T/lH9kuZR/ZBGUf2QAAAAAAAAA
-        AACUf2QAlH9kRJR/ZO2Uf2T/lH9k/5R/ZP+Uf2T/lH9k/5R/ZP+Uf2T/lH9k/5R/ZP+Uf2T/lH9k/5R/
-        ZP+Uf2T/lH9k/5R/ZP+Uf2T/lH9k/5R/ZP+Uf2T/lH9k/5R/ZP+Uf2T/lH9k/5R/ZP+Uf2T7lH9kaZR/
-        ZACUf2QAlH9kAJR/ZAyUf2SxlH9k/5R/ZP+Uf2T/lH9k/5R/ZP+Uf2T/lH9k/5R/ZP+Uf2T/lH9k/5R/
-        ZP+Uf2T/lH9k/5R/ZP+Uf2T/lH9k/5R/ZP+Uf2T/lH9k/5R/ZP+Uf2T/lH9k/5R/ZP+Uf2T/lH9k/5R/
-        ZP+Uf2TXlH9kJpR/ZACUf2QAlH9kXpR/ZPiUf2T/lH9k/5R/ZP+Uf2T/lH9k/5R/ZP+Uf2T/lH9k/5R/
-        ZP+Uf2T/lH9k/5R/ZP+Uf2T/lH9k/5R/ZP+Uf2T/lH9k/5R/ZP+Uf2T/lH9k/5R/ZP+Uf2T/lH9k/5R/
-        ZP+Uf2T/lH9k/5R/ZP+Uf2SOlH9kA5R/ZB2Uf2THlH9k/5R/ZP+Uf2T/lH9k/5R/ZP+Uf2T/lH9k/5R/
-        ZP+Uf2T/lH9k/5R/ZP+Uf2T/lH9k/5R/ZP2Uf2T8lH9k/5R/ZP+Uf2T/lH9k/5R/ZP+Uf2T/lH9k/5R/
-        ZP+Uf2T/lH9k/5R/ZP+Uf2T/lH9k/5R/ZOuUf2RLlH9khpR/ZP2Uf2T/lH9k/5R/ZP+Uf2T/lH9k/5R/
-        ZP+Uf2T/lH9k/5R/ZP+Uf2T/lH9k/5R/ZOCUf2SRlH9kXZR/ZFmUf2SDlH9k0ZR/ZP6Uf2T/lH9k/5R/
-        ZP+Uf2T/lH9k/5R/ZP+Uf2T/lH9k/5R/ZP+Uf2T/lH9k/5R/ZL2Uf2SClH9k9ZR/ZP+Uf2T/lH9k/5R/
-        ZP+Uf2T/lH9k/5R/ZP+Uf2T/lH9k/5R/ZP+Uf2TIlH9kNJWAZAGUf2QAlX5lAJOAZACUf2QglH9krpR/
-        ZP+Uf2T/lH9k/5R/ZP+Uf2T/lH9k/5R/ZP+Uf2T/lH9k/5R/ZP+Uf2TwlH9kkZR/ZAmUf2RVlH9kwpR/
-        ZPyUf2T/lH9k/5R/ZP+Uf2T/lH9k/5R/ZP+Uf2T/lH9k6JR/ZDyUf2QAkn1mAAAAAAAAAAAAAAAAAJR/
-        ZACUf2QelH9ky5R/ZP+Uf2T/lH9k/5R/ZP+Uf2T/lH9k/5R/ZP+Uf2T7lH9kvJR/ZEmUf2QGlIFkAJR/
-        ZACUf2QTlH9kdJR/ZOyUf2T/lH9k/5R/ZP+Uf2T/lH9k/5R/ZP+Uf2SclH5kApR/ZAAAAAAAAAAAAAAA
-        AAAAAAAAlIBkAJR/ZACUf2R1lH9k/5R/ZP+Uf2T/lH9k/5R/ZP+Uf2T/lH9k9JR/ZHeUf2QRlH9kAAAA
-        AAAAAAAAAAAAAJR/ZACUf2QKlH9kwZR/ZP+Uf2T/lH9k/5R/ZP+Uf2T/lH9k/5R/ZGyUf2QAAAAAAAAA
-        AAAAAAAAAAAAAAAAAAAAAAAAlH9kAJR/ZEOUf2T3lH9k/5R/ZP+Uf2T/lH9k/5R/ZP+Uf2TrlH9kLpR/
-        ZAAAAAAAAAAAAAAAAAAAAAAAlH9kAJR/ZAmUf2TAlH9k/5R/ZP+Uf2T/lH9k/5R/ZP+Uf2T/lH9kbJR/
-        ZAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACUf2QAlH9kRJR/ZPeUf2T/lH9k/5R/ZP+Uf2T/lH9k/5R/
-        ZOuUf2QvlH9kAAAAAAAAAAAAAAAAAJR/ZACUf2QKlH9kXJR/ZOOUf2T/lH9k/5R/ZP+Uf2T/lH9k/5R/
-        ZP+Uf2SflH9kA5R/ZAAAAAAAAAAAAAAAAAAAAAAAlH9kAJR/ZACUf2R3lH9k/5R/ZP+Uf2T/lH9k/5R/
-        ZP+Uf2T/lH9k+JR/ZJWUf2QmlH5iAJR/ZACUf2QClH9kN5R/ZKmUf2T2lH9k/5R/ZP+Uf2T/lH9k/5R/
-        ZP+Uf2T/lH9k/5R/ZOmUf2Q/lH9kAJR/ZAAAAAAAAAAAAAAAAACUf2QAlH9kHpR/ZMqUf2T/lH9k/5R/
-        ZP+Uf2T/lH9k/5R/ZP+Uf2T/lH9k/5R/ZNqUf2RylH9kF5R/ZGqUf2TnlH9k/5R/ZP+Uf2T/lH9k/5R/
-        ZP+Uf2T/lH9k/5R/ZP+Uf2T/lH9k/5R/ZM2Uf2Q4lH9kAZR/ZACUgGMAlHtoAJR/ZCOUf2SulH9k/5R/
-        ZP+Uf2T/lH9k/5R/ZP+Uf2T/lH9k/5R/ZP+Uf2T/lH9k/5R/ZPyUf2S2lH9kjJR/ZP6Uf2T/lH9k/5R/
-        ZP+Uf2T/lH9k/5R/ZP+Uf2T/lH9k/5R/ZP+Uf2T/lH9k/5R/ZOSUf2SQlH9kZ5R/ZGaUf2SClH9k1ZR/
-        ZP+Uf2T/lH9k/5R/ZP+Uf2T/lH9k/5R/ZP+Uf2T/lH9k/5R/ZP+Uf2T/lH9k/5R/ZLiUf2QilH9kzJR/
-        ZP+Uf2T/lH9k/5R/ZP+Uf2T/lH9k/5R/ZP+Uf2T/lH9k/5R/ZP+Uf2T/lH9k/5R/ZP+Uf2T/lH9k/5R/
-        ZP+Uf2T/lH9k/5R/ZP+Uf2T/lH9k/5R/ZP+Uf2T/lH9k/5R/ZP+Uf2T/lH9k/5R/ZP+Uf2TllH9kQJR/
-        ZACUf2RflH9k+JR/ZP+Uf2T/lH9k/5R/ZP+Uf2T/lH9k/5R/ZP+Uf2T/lH9k/5R/ZP+Uf2T/lH9k/5R/
-        ZP+Uf2T/lH9k/5R/ZP+Uf2T/lH9k/5R/ZP+Uf2T/lH9k/5R/ZP+Uf2T/lH9k/5R/ZP+Uf2T/lH9k/5R/
-        ZIeUf2QBlH9kAJR/ZAyUf2SxlH9k/5R/ZP+Uf2T/lH9k/5R/ZP+Uf2T/lH9k/5R/ZP+Uf2T/lH9k/5R/
-        ZP+Uf2T/lH9k/5R/ZP+Uf2T/lH9k/5R/ZP+Uf2T/lH9k/5R/ZP+Uf2T/lH9k/5R/ZP+Uf2T/lH9k/5R/
-        ZP+Uf2TTlH9kIpR/ZAAAAAAAlH9kAJR/ZD+Uf2TplH9k/5R/ZP+Uf2T/lH9k/5R/ZP+Uf2T/lH9k/5R/
-        ZP+Uf2T/lH9k/5R/ZP+Uf2T/lH9k/5R/ZP+Uf2T/lH9k/5R/ZP+Uf2T/lH9k/5R/ZP+Uf2T/lH9k/5R/
-        ZP+Uf2T/lH9k+5R/ZGWUf2QAlIBlAAAAAACUf2QAlX5kAZR/ZIqUf2T/lH9k/5R/ZP+Uf2T/lH9k8ZR/
-        ZOOUf2T+lH9k/5R/ZP+Uf2T/lH9k/5R/ZP+Uf2T/lH9k/5R/ZP+Uf2T/lH9k/5R/ZP+Uf2TmlH9k3JR/
-        ZP6Uf2T/lH9k/5R/ZP+Uf2S5lH9kEZR/ZAAAAAAAAAAAAAAAAACUf2QAlH9kIpR/ZNOUf2T/lH9k/JR/
-        ZMOUf2RQlH9kKpR/ZI2Uf2TvlH9k/5R/ZP+Uf2T/lH9k/5R/ZP+Uf2T/lH9k/5R/ZP+Uf2T6lH9kqZR/
-        ZDiUf2QklH9kipR/ZOiUf2T/lH9k8ZR/ZEqUf2QAAAAAAAAAAAAAAAAAAAAAAJSAZACUf2QAlH9kYJR/
-        ZMqUf2R0lH9kFZR/ZACUf2QAlH9kC5R/ZMKUf2T/lH9k/5R/ZP+Uf2T/lH9k/5R/ZP+Uf2T/lH9k/5R/
-        ZOaUf2QnlH9kAJR/ZACUf2QClH9kOpR/ZKSUf2SBlH9kBpR/ZAAAAAAAAAAAAAAAAAAAAAAAAAAAAJR/
-        ZACUf2QElH9kEJR/ZAGUf2QAAAAAAJR/ZACUf2QJlH9kwJR/ZP+Uf2T/lH9k/5R/ZP+Uf2T/lH9k/5R/
-        ZP+Uf2T/lH9k5ZR/ZCSUf2QAAAAAAAAAAACUf2QAlH9kBJR/ZASUf2QAAAAAAAAAAAAAAAAAAAAAAAAA
-        AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAlH9kAJR/ZAmUf2TAlH9k/5R/ZP+Uf2T/lH9k/5R/
-        ZP+Uf2T/lH9k/5R/ZP+Uf2TllH9kJZR/ZAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-        AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACUf2QAlH9kCZR/ZL+Uf2T/lH9k/5R/
-        ZP+Uf2T/lH9k/5R/ZP+Uf2T/lH9k/5R/ZOSUf2QjlH9kAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-        AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAJR/ZACUf2QDlH9kfJR/
-        ZMuUf2TKlH9kypR/ZMqUf2TKlH9kypR/ZMqUf2TMlH9knJR/ZBCUf2QAAAAAAAAAAAAAAAAAAAAAAAAA
-        AAAAAAAAAAAAAAAAAAAAAAAA/8AD///AA///wAP/88ADz/DAAwfgAAAHwAAAA8AAAAOAAAABgAAAAAAA
-        AAAAAAAAAAHAAAAH4ADAB/AD4A/wB+AP8AfAB/ADAAfgAAABwAAAAAAAAAAAAIAAAACAAAABwAAAA8AA
-        AAPgAAAH8MADB/HAA8//wAP//8AD///AA/8=
+        AAABAAMAICAQAAEABADoAgAANgAAACAgAAABAAgAqAgAAB4DAAAgIAAAAQAgAKgQAADGCwAAKAAAACAA
+        AABAAAAAAQAEAAAAAAAAAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIAAAIAAAACAgACAAAAAgACAAICA
+        AACAgIAAwMDAAAAA/wAA/wAAAP//AP8AAAD/AP8A//8AAP///wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+        AAAAAAAAAAAAAAAAAAAAAAdnaAAAAAAAAAAAAAAAAAAGdnYAAAAAAAAAAAAAAAAAd+yMgAAAAAAAAAAA
+        AHeACGx3aGgIZ3AAAAAAAAfmdnaH5352doznAAAAAAB3fI5853x3yOfId4AAAAAAjn53yHaOfnfIZ+cA
+        AAAAAAd3yH54AAh+d+d3AAAAAAAIyOd4AAAACH536AAAAAAAB+d+gAAAAACHd8gAAAAAAIeGhwAAAAAA
+        CMiGgAAAAAjn58AACH54AACOeOeAAAh3d3iAAAeHfgAAd+fIeAAI5+d+cACOfniAAI5Yho4ACHjId4AA
+        h3d8gACHho54AAjnjn5wAAjnjgAAjOjIeAAAh3jIcAAAd3AAAIeHjgAAAACOh4gAAAAAAAjn54AAAAAA
+        B45+gAAAAACHh4cAAAAAAAjIeHgAAAAI6MjnAAAAAAAIjnfoeAAIh4foeAAAAAAACGiHjI6Hjn54d+eA
+        AAAAAI6H546Hjnh4foeHgAAAAAAIeHeHjIeMjod36AAAAAAAAI6ICOiOiHgAiIAAAAAAAAAAAACIaMjg
+        AAAAAAAAAAAAAAAACIjoAAAAAAAAAAAAAAAAAAjniAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+        AAAAAAAAAAAAAP////////////g////4P///8B///GAIf/gAAD/wAAAf8AAAP/gDgD/4D+A/+B/wP/A/
+        +B/geDwHgHg8A4BwHAOAcBwDgHg8A8B8fA/wP/gf+B/wP/gP4D/4A4A/+AAAH/AAAB/4AAA//CAMf//w
+        H///+D////g/////////////KAAAACAAAABAAAAAAQAIAAAAAAAABAAAAAAAAAAAAAAAAQAAAAEAAAAA
+        AACmfUEAqYBGAKuDSgCrhEsArodOAK6JVACxilMAsItWALSOVwCzkF0AtZBcALiUXwC2k2AAuZViALuX
+        ZAC7mGcAvJlmAL2ZaAC/nGoAvJttAMCebQDCoHAAxKN0AMekdQDIpncAwKN4AMGkegDHp3oAyKd4AMmo
+        egDKqnwAzKt+AMeqgQDJrIEAzq+DAMqthADOroQAzrCFAM6yiQDJsIwAzbKMAM60jwDQs4kA0bSNAM61
+        kQDOt5YAz7mZANG3kwDRuZcA0bqZANa9mwDTvZwA1b6eANW/oADZwZ8A1sChANnBoQDbxqcA2sWpANzH
+        qwDbx6wA3cmrANvIrQDeyq4A3862AOHPtQDk0roAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+        AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+        AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+        AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+        AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+        AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+        AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+        AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+        AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+        AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+        AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+        AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+        AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAP//
+        /wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+        AAAAAAAAAAAAAAAAAAAAAAAAAAYBAQEvAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQEBAQQAAAAA
+        AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAoEAgIEAi4AAAAAAAAAAAAAAAAAAAAAAAAACggoAAAaBAQEBAQE
+        BBoAKAYECgAAAAAAAAAAAAAAAA0EBQQFBAUEBAUEBQQFBAUEBQQFDQAAAAAAAAAAAAAUCAgICAgICAgI
+        CAgICAgICAgICAgIMQAAAAAAAAAAAC4ICQkJCQkJCQkJCQkJCQkJCQkJCQgAAAAAAAAAAAAAAAsLCwsL
+        CwsPLAAAACwPCwsLCwsLEQAAAAAAAAAAAAAAFAsLDwsLMAAAAAAAAAAsCwsLCw8sAAAAAAAAAAAAAAAS
+        EgsRDzcAAAAAAAAAAAA5EhEPCxMAAAAAAAAAAAAAPQ8SEg8fAAAAAAAAAAAAAAAfDxERDzEAAAAAAAAA
+        ACISEhISEgAAAAAsEhISKAAAAAASEhISEhI0AAAAAD0SFBISEhIRAAAAABQSEhETAAAAABQSEhISEhI0
+        AAAANBMRExERER8AAAAsExETExMoAAAAHxERERETEzQAAAA0ExMTFhMWIgAAADATExMTEzEAAAAiFhMW
+        ExMTOQAAADkWFhYWFhMYAAAAABYWFhYWAAAAABYWFhYWFhY9AAAAADgWFhYWFhYAAAAAABYWFgAAAAAA
+        FhYWFhYsAAAAAAAAAAA3FhYWFiwAAAAAAAAAAAAAACgWFhYWQgAAAAAAAAAAAAAfFhgYFj0AAAAAAAAA
+        AAA9GBYYFh8AAAAAAAAAAAAAADQYGBgYGDkAAAAAAAAAORgYGBgYIgAAAAAAAAAAAAAAIhgfGB0YHR85
+        AAAAOR8YHRgfHR0YAAAAAAAAAAAAAAAfGBgfGB8YHxofHR0fGB8dHxgfFh85AAAAAAAAAAAAPR8fHx8f
+        Hx8dHx8dHx0fHx0dHx8fHzAAAAAAAAAAAAAAJh8fHR8fHx8dHx8fHx8dHx8fHx8mAAAAAAAAAAAAAAAA
+        Kx8mOgA3Hx8fHx8fHzcAAD0rKwAAAAAAAAAAAAAAAAAAAAAAAABCHx8fHx8sAAAAAAAAAAAAAAAAAAAA
+        AAAAAAAAAAAAAAAlICAgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEMfICAsAAAAAAAAAAAAAAAA
+        AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+        AAAAAAAA////////////+D////g////wH//8YAh/+AAAP/AAAB/wAAA/+AOAP/gP4D/4H/A/8D/4H+B4
+        PAeAeDwDgHAcA4BwHAOAeDwDwHx8D/A/+B/4H/A/+A/gP/gDgD/4AAAf8AAAH/gAAD/8IAx///Af///4
+        P///+D////////////8oAAAAIAAAAEAAAAABACAAAAAAAIAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+        AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+        AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+        AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAApHo+IaR6
+        PjOkej4zpHo+M6R6PgwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+        AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAKV8
+        QAalfEDkpXxA/6V8QP+lfED/pXxAhwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+        AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+        AAAAAAAAp35DZqd+Q/+nfkP/p35D/6d+Q/+nfkPzp35DGAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+        AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACpgEYVqYBGAwAA
+        AAAAAAAAAAAAAKmARgOpgEbeqYBG/6mARv+pgEb/qYBG/6mARv+pgEaQAAAAAAAAAAAAAAAAqYBGBqmA
+        RlGpgEYkAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAq4NKJKuD
+        SuSrg0rtq4NKoquDSk6rg0pRq4NKvauDSv+rg0r/q4NK/6uDSv+rg0r/q4NK/6uDSv+rg0q6q4NKY6uD
+        SqKrg0rwq4NK/6uDSuSrg0okAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAK6H
+        TiSuh07krodO/66HTv+uh07/rodO/66HTv+uh07/rodO/66HTv+uh07/rodO/66HTv+uh07/rodO/66H
+        Tv+uh07/rodO/66HTv+uh07/rodO/66HTuSuh04kAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+        AAAAAAAAsYpT2LGKU/+xilP/sYpT/7GKU/+xilP/sYpT/7GKU/+xilP/sYpT/7GKU/+xilP/sYpT/7GK
+        U/+xilP/sYpT/7GKU/+xilP/sYpT/7GKU/+xilP/sYpT/7GKU5YAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+        AAAAAAAAAAAAAAAAAAC0jleltI5X/7SOV/+0jlf/tI5X/7SOV/+0jlf/tI5X/7SOV/+0jlf/tI5X/7SO
+        V/+0jlf/tI5X/7SOV/+0jlf/tI5X/7SOV/+0jlf/tI5X/7SOV/+0jlf/tI5XSwAAAAAAAAAAAAAAAAAA
+        AAAAAAAAAAAAAAAAAAAAAAAAAAAAALaRXEu2kVz/tpFc/7aRXP+2kVz/tpFc/7aRXP+2kVz/tpFc87aR
+        XKu2kVxmtpFcZraRXGa2kVyrtpFc87aRXP+2kVz/tpFc/7aRXP+2kVz/tpFc/7aRXO22kVwGAAAAAAAA
+        AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAuJRfBriUX+24lF//uJRf/7iUX/+4lF//uJRf/7iU
+        X664lF8YAAAAAAAAAAAAAAAAAAAAAAAAAAC4lF8YuJRfrriUX/+4lF//uJRf/7iUX/+4lF//uJRftwAA
+        AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAC6lWIPupVi87qVYv+6lWL/upVi/7qV
+        Yv+6lWKZAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAupVimbqVYv+6lWL/upVi/7qV
+        Yv+6lWLzupViDAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAALuXZIe7l2T/u5dk/7uX
+        ZP+7l2T/u5dkz7uXZAMAAAAAAAAAAAAAAAC7l2Q8u5dkZruXZDwAAAAAAAAAAAAAAAC7l2QDu5dkz7uX
+        ZP+7l2T/u5dk/7uXZP+7l2Sru5dkJwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAALyZZku8mWbPvJlm/7yZ
+        Zv+8mWb/vJlm/7yZZv+8mWZRAAAAAAAAAAC8mWYGvJlmuryZZv+8mWb/vJlm/7yZZrq8mWYGAAAAAAAA
+        AAC8mWZRvJlm/7yZZv+8mWb/vJlm/7yZZv+8mWb/vJlmpbyZZi0AAAAAAAAAAAAAAAC+mmiQvppo/76a
+        aP++mmj/vppo/76aaP++mmj/vppo+b6aaAkAAAAAAAAAAL6aaHi+mmj/vppo/76aaP++mmj/vppo/76a
+        aHgAAAAAAAAAAL6aaAm+mmj5vppo/76aaP++mmj/vppo/76aaP++mmj/vppopQAAAAAAAAAAAAAAAL+c
+        aqW/nGr/v5xq/7+cav+/nGr/v5xq/7+cav+/nGrbAAAAAAAAAAAAAAAAv5xqxr+cav+/nGr/v5xq/7+c
+        av+/nGr/v5xqxgAAAAAAAAAAAAAAAL+catu/nGr/v5xq/7+cav+/nGr/v5xq/7+cav+/nGqlAAAAAAAA
+        AAAAAAAAwJ1spcCdbP/AnWz/wJ1s/8CdbP/AnWz/wJ1s/8CdbNUAAAAAAAAAAAAAAADAnWy6wJ1s/8Cd
+        bP/AnWz/wJ1s/8CdbP/AnWy6AAAAAAAAAAAAAAAAwJ1s1cCdbP/AnWz/wJ1s/8CdbP/AnWz/wJ1s/8Cd
+        bKUAAAAAAAAAAAAAAADBn26lwZ9u/8Gfbv/Bn27/wZ9u/8Gfbv/Bn27/wZ9u+cGfbgkAAAAAAAAAAMGf
+        blTBn27/wZ9u/8Gfbv/Bn27/wZ9u/8GfblQAAAAAAAAAAMGfbgnBn272wZ9u/8Gfbv/Bn27/wZ9u/8Gf
+        bv/Bn27/wZ9ukAAAAAAAAAAAAAAAAMKgcC3CoHClwqBw/8KgcP/CoHD/wqBw/8KgcP/CoHD/wqBwVAAA
+        AAAAAAAAAAAAAMKgcG/CoHD2wqBw/8KgcPbCoHBvAAAAAAAAAAAAAAAAwqBwVMKgcP/CoHD/wqBw/8Kg
+        cP/CoHD/wqBwzMKgcEUAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADDonInw6Jyq8Oicv/DonL/w6Jy/8Oi
+        cv/DonLPw6JyBgAAAAAAAAAAAAAAAAAAAADDonItAAAAAAAAAAAAAAAAAAAAAMOicgbDonLPw6Jy/8Oi
+        cv/DonL/w6Jy/8OicoQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADFo3QMxaN088Wj
+        dP/Fo3T/xaN0/8WjdP/Fo3SZAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAxaN0mcWj
+        dP/Fo3T/xaN0/8WjdP/Fo3TwxaN0DwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+        AADHpHW3x6R1/8ekdf/HpHX/x6R1/8ekdf/HpHWux6R1GAAAAAAAAAAAAAAAAAAAAAAAAAAAx6R1GMek
+        da7HpHX/x6R1/8ekdf/HpHX/x6R1/8ekde3HpHUGAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+        AAAAAAAAyKZ3Bsimd+3Ipnf/yKZ3/8imd//Ipnf/yKZ3/8imd//Ipnf2yKZ3q8imd2bIpndmyKZ3Zsim
+        d6vIpnf2yKZ3/8imd//Ipnf/yKZ3/8imd//Ipnf/yKZ3/8imd0sAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+        AAAAAAAAAAAAAAAAAADIp3hLyKd4/8ineP/Ip3j/yKd4/8ineP/Ip3j/yKd4/8ineP/Ip3j/yKd4/8in
+        eP/Ip3j/yKd4/8ineP/Ip3j/yKd4/8ineP/Ip3j/yKd4/8ineP/Ip3j/yKd4pQAAAAAAAAAAAAAAAAAA
+        AAAAAAAAAAAAAAAAAAAAAAAAAAAAAMmoepnJqHr/yah6/8moev/JqHr/yah6/8moev/JqHr/yah6/8mo
+        ev/JqHr/yah6/8moev/JqHr/yah6/8moev/JqHr/yah6/8moev/JqHr/yah6/8moev/JqHrYAAAAAAAA
+        AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAyql7Icqpe+TKqXv/yql7/8qpe//KqXv/yql7/8qp
+        e//KqXv/yql7/8qpe//KqXv/yql7/8qpe//KqXv/yql7/8qpe//KqXv/yql7/8qpe//KqXv/yql75Mqp
+        eyQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAy6p8IcuqfOTLqnz/y6p88Muq
+        fKLLqnxjy6p8usuqfP/Lqnz/y6p8/8uqfP/Lqnz/y6p8/8uqfP/Lqny6y6p8TsuqfEvLqnyfy6p87cuq
+        fOTLqnwkAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAy6t9Icur
+        fU7Lq30GAAAAAAAAAAAAAAAAy6t9kMurff/Lq33/y6t9/8urff/Lq33/y6t93surfQMAAAAAAAAAAAAA
+        AADLq30Dy6t9FQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+        AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADMq34YzKt+88yrfv/Mq37/zKt+/8yrfv/Mq35jAAAAAAAA
+        AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+        AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADMq36HzKt+/8yrfv/Mq37/zKt+4cyr
+        fgYAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+        AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAMyrfgzMq34zzKt+M8yr
+        fjPMq34hAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+        AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+        AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+        AAAAAAAAAAAAAP//////+D////A////wH//84Bx/+AAAP/AAAB/wAAAf8AAAH/AAAB/wB8A/8B/wH/Ac
+        cA/AMBgDgDAYA4BwHAOAcBwDgDAYA4A4OAfgHvAf8B/wH/gHwB/wAAAf8AAAH/AAAB/wAAAf+AAAP/xw
+        Dn//8B////gf///4P///////
 </value>
   </data>
   <data name="$this.StartPosition" type="System.Windows.Forms.FormStartPosition, System.Windows.Forms">
