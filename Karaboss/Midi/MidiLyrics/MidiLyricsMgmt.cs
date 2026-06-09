@@ -1919,9 +1919,14 @@ namespace Karaboss.MidiLyrics
         private List<int> ApplyTransposition(List<int> chordNotes, int nbSemiTones)
         {
             List<int> res = new List<int>();
+            int n;
             foreach (int note in chordNotes)
             {
-                res.Add((note + nbSemiTones) % 12);
+                n = note + (nbSemiTones % 12);
+                if (n < 0)
+                    n = n + 12;
+
+                res.Add(n % 12);
             }
             return res;
         }

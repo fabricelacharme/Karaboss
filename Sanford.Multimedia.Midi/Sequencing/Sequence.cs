@@ -617,13 +617,24 @@ namespace Sanford.Multimedia.Midi
 
                                 if (cmd == ChannelCommand.NoteOn || cmd == ChannelCommand.NoteOff)
                                 {
-                                    channel = msg.MidiChannel;
-                                    number = msg.Data1;
-                                    velocity = msg.Data2;                                    
-                                    number += amount;
+                                    try
+                                    {
+                                        channel = msg.MidiChannel;
+                                        number = msg.Data1;
+                                        velocity = msg.Data2;
+                                        number += amount;
 
-                                    ChannelMessage message = new ChannelMessage(cmd, channel, number, velocity);
-                                    track.Insert(e.AbsoluteTicks, message);
+                                        if (number > 0)
+                                        {
+                                            ChannelMessage message = new ChannelMessage(cmd, channel, number, velocity);
+                                            track.Insert(e.AbsoluteTicks, message);
+                                        }
+                                    }
+                                    catch (Exception ex)
+                                    {
+                                        Console.WriteLine(ex.ToString());
+                                    }
+
                                 }
                                 else
                                 {
