@@ -1021,14 +1021,19 @@ namespace ChordsAnalyser
                 {[D, 1]}
                 */
             Dictionary<string, int> res = new Dictionary<string, int>();
+            
             string chord;
-            //string otherchord;
+            string otherchord;
             //string s;
 
             if (dict.Count <= 3)
                 return dict;
-            
+
             // Filter best chord 
+            int x;
+            int y;            
+
+            /*
             chord = dict.ElementAt(0).Key;
             res.Add(dict.ElementAt(0).Key,dict.ElementAt(0).Value);
 
@@ -1041,32 +1046,63 @@ namespace ChordsAnalyser
                 if (y != x - 1 && y != x + 1)
                     res.Add(dict.ElementAt(i).Key, dict.ElementAt(i).Value);
             }
+            */
+
+
+
+            List<(string, int)> list = new List<(string, int)>();
+            for (int i = 0; i < dict.Count; i++)
+            {
+                list.Add( (dict.ElementAt(i).Key, dict.ElementAt(i).Value)  );
+            }
+
+            for (int i = 0; i < dict.Count; i++)
+            {
+                chord = dict.ElementAt(i).Key;
+                x = TransposeToInt(chord);
+                for (int j = 0; j < dict.Count; j++)
+                {
+                    if (j != i)
+                    {
+                        otherchord = dict.ElementAt(j).Key;
+                        y = TransposeToInt(otherchord);
+                        if (y == x - 1 || y == x + 1)                        
+                            list[i] = (dict.ElementAt(i).Key, dict.ElementAt(i).Value - dict.ElementAt(j).Value);
+                    }
+                }
+            }
+
+            for (int i = 0; i < list.Count; i++)
+            {
+                res.Add( list[i].Item1, list[i].Item2 );
+            }
+
 
             /*
-            if (chord.Length == 1)
-            {
-                for (int i = 1; i < dict.Count; i++)
+                if (chord.Length == 1)
                 {
-                    s = dict.ElementAt(i).Key;
-                    if (s != chord + "#")
+                    for (int i = 1; i < dict.Count; i++)
                     {
-                        res.Add(dict.ElementAt(i).Key, dict.ElementAt(i).Value);
+                        s = dict.ElementAt(i).Key;
+                        if (s != chord + "#")
+                        {
+                            res.Add(dict.ElementAt(i).Key, dict.ElementAt(i).Value);
+                        }
                     }
-                }
 
-            }
-            else if (chord.Length == 2) 
-            {
-                for (int i = 1; i < dict.Count; i++)
+                }
+                else if (chord.Length == 2) 
                 {
-                    s = dict.ElementAt(i).Key;
-                    if (s != chord.Substring(0, 1))
+                    for (int i = 1; i < dict.Count; i++)
                     {
-                        res.Add(dict.ElementAt(i).Key, dict.ElementAt(i).Value);
+                        s = dict.ElementAt(i).Key;
+                        if (s != chord.Substring(0, 1))
+                        {
+                            res.Add(dict.ElementAt(i).Key, dict.ElementAt(i).Value);
+                        }
                     }
                 }
-            }
-            */
+                */
             return res;
 
         }
