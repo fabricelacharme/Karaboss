@@ -150,7 +150,7 @@ namespace Karaboss
             string inipath; // = string.Empty;
             inipath = Properties.Settings.Default.StartDirectory;
 
-            if (inipath == null || inipath == "" || inipath == "C:\\\\")
+            if (inipath == null || inipath == string.Empty || inipath == "C:\\\\")
             {
                 inipath = Environment.GetFolderPath(Environment.SpecialFolder.MyMusic);
                 //path must be like "file:///c:/users/a453868/Music/karaoke/sasin";
@@ -223,7 +223,7 @@ namespace Karaboss
 
         public static string GetThemesListFile(string defFileName)
         {
-            string fileName; // = string.Empty;
+            string fileName; 
 
             if (_m_fileThemesList != null && _m_fileThemesList != "")
             {

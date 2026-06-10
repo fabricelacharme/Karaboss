@@ -796,7 +796,7 @@
     <value>8</value>
   </data>
   <data name="txtImage.Text" xml:space="preserve">
-    <value>orange.bmp</value>
+    <value>background_orange.jpg</value>
   </data>
   <data name="txtImage.Visible" type="System.Boolean, mscorlib">
     <value>False</value>

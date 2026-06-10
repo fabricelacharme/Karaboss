@@ -42,6 +42,7 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
+using System.Runtime.InteropServices.ComTypes;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 
@@ -913,9 +914,16 @@ namespace Karaboss.Mp3
 
 
                 string path = Properties.Settings.Default.SingleImagePath;
+                
                 if (!System.IO.File.Exists(path))
                 {
-                    path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Karaboss\\orangetrees.jpg");                    
+                    string folderpath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), Application.ProductName);
+                    path = folderpath + "\\" + "background_orange.jpg";
+                    if (System.IO.File.Exists(path))
+                    {
+                        Properties.Settings.Default.SingleImagePath = path;
+                        Properties.Settings.Default.Save();
+                    }
                 }                
                 SingleImagePath = path;
 

@@ -322,8 +322,8 @@ namespace Karaboss
                 openFileDialog.Filter = "Image Files|*.jpg;*.jpeg;*.png;*.gif;*.tif;...|All files (*.*)|*.*";
                 openFileDialog.FileName = string.Empty;
 
-                var AppDataFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Karaboss");                              
-                if (SingleImagePath != null && SingleImagePath.Trim() != "" && System.IO.File.Exists(SingleImagePath))
+                var AppDataFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), Application.ProductName);                              
+                if (SingleImagePath != null && SingleImagePath.Trim() != string.Empty && System.IO.File.Exists(SingleImagePath))
                 {
                     openFileDialog.InitialDirectory = Path.GetDirectoryName(SingleImagePath);
                 }

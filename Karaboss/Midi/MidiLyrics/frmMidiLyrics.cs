@@ -577,7 +577,7 @@ namespace Karaboss
 
 
         /// <summary>
-        /// Background option : Diaporam, SolidColor, Transparent
+        /// Background option : Diaporama, SolidColor, Transparent
         /// </summary>
         private string _optionbackground = "Image";
         public string OptionBackground
@@ -613,7 +613,7 @@ namespace Karaboss
                         pBox.OptionBackground = "Transparent";
                         break;
                     default:
-                        pBox.OptionBackground = "Diaporama";
+                        pBox.OptionBackground = "Image";
                         break;
                 }
             }
@@ -1175,7 +1175,21 @@ namespace Karaboss
                 // Force Uppercase
                 bForceUppercase = Karaclass.m_ForceUppercase;
 
-                
+
+                string path = Properties.Settings.Default.SingleImagePath;
+                if (!System.IO.File.Exists(path))
+                {
+                    string folderpath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), Application.ProductName);
+                    path = folderpath + "\\" + "background_orange.jpg";
+                    if (System.IO.File.Exists(path))
+                    {
+                        Properties.Settings.Default.SingleImagePath = path;
+                        Properties.Settings.Default.Save();
+                    }
+                }
+                SingleImagePath = path;
+
+
                 // Backgrounds (image, diaporama, solid color, gradient, rhythm, transparent)
                 OptionBackground = Properties.Settings.Default.BackGroundOption;
 
@@ -1201,7 +1215,7 @@ namespace Karaboss
                 // Number of Lines to display
                 nbLyricsLines = Properties.Settings.Default.TxtNbLines;
 
-                SingleImagePath = Properties.Settings.Default.SingleImagePath;
+                
                 
                 // Frequency of slide show
                 FreqSlideShow = Properties.Settings.Default.freqSlideShow;
@@ -1213,13 +1227,9 @@ namespace Karaboss
 
                 pBox.timerIntervall = _timerintervall;
 
-
                 // show balls
                 bShowBalls = Karaclass.m_DisplayBalls;
-
-               
-                
-
+                               
             }
             catch (Exception e)
             {

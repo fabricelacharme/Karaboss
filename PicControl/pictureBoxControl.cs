@@ -3585,7 +3585,7 @@ namespace PicControl
 
             #region Show chords
 
-            if (_bShowChords)
+            if (_bShowChords && lineIndex < lstChordsPositions.Count)
             {
                 
                 Color chordColor = _InactiveChordColor;
@@ -3893,7 +3893,7 @@ namespace PicControl
 
             #region Show chords
 
-            if (_bShowChords)
+            if (_bShowChords && lineIndex < lstChordsPositions.Count)
             {
                 GraphicsPath pthc = new GraphicsPath(); // Chords path
 
