@@ -98,13 +98,13 @@ namespace Karaboss.Themes
 
             BgColor = "#FCA903",
 
-            Grad0Color = "#48D1CC", //Color.MediumTurquoise,
-            Grad1Color = "#ADFF2F", //Color.GreenYellow,
-            Rhythm0Color = "#000000", //Color.Black,
-            Rhythm1Color = "#1E90FF", //Color.DodgerBlue,
+            Grad0Color = "#48D1CC", 
+            Grad1Color = "#ADFF2F", 
+            Rhythm0Color = "#000000", 
+            Rhythm1Color = "#1E90FF", 
 
-            InactiveChordColor = "#FF8C00",
-            HighlightChordColor = "#8B0000",
+            InactiveChordColor = "#8080FF",
+            HighlightChordColor = "#FFFF00",
 
         }; 
 
