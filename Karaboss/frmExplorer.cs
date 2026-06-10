@@ -1817,7 +1817,7 @@ namespace Karaboss
             try
             {
                 Form frmCDGPlayer = new frmCDGPlayer(fpath, pl, bPlayNow);
-                frmCDGPlayer.Show();
+                //frmCDGPlayer.Show();
             }
             catch (Exception ex)
             {
