@@ -44,7 +44,6 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
-using System.Diagnostics.Eventing.Reader;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -7590,13 +7589,14 @@ namespace Karaboss
             if (Karaclass.m_ShowChords && myLyricsMgmt.bHasChordsInLyrics && myLyricsMgmt.ChordsOriginatedFrom == MidiLyricsMgmt.ChordsOrigins.Lyrics)
             {
                 myLyricsMgmt.TransposeChordsInLyrics(TransposeDelta);
-                frmMidiLyrics?.SetLyrics(myLyricsMgmt.KLyrics);
+                if (Application.OpenForms.OfType<frmMidiLyrics>().Count() > 0)
+                    frmMidiLyrics?.SetLyrics(myLyricsMgmt.KLyrics);
             }
             else if (Karaclass.m_ShowChords && myLyricsMgmt.ChordsOriginatedFrom == MidiLyricsMgmt.ChordsOrigins.Discovery)
-            {
-                
+            {                
                 myLyricsMgmt.ResetDisplayChordsOptions(true);
-                frmMidiLyrics?.SetLyrics(myLyricsMgmt.KLyrics);
+                if (Application.OpenForms.OfType<frmMidiLyrics>().Count() > 0)
+                    frmMidiLyrics?.SetLyrics(myLyricsMgmt.KLyrics);
             }
 
 
@@ -7604,12 +7604,8 @@ namespace Karaboss
             if (bSequencerAlwaysOn | bForceShowSequencer)
             {
                 RedrawSheetMusic();
-
                 RefreshChordsSheetMusic();
-
             }
-
-
 
             btnTempoMinus.Enabled = true;
             btnTranspoPlus.Enabled = true;
@@ -7778,7 +7774,7 @@ namespace Karaboss
             if (PlayerState == PlayerStates.Playing)
             {
                 if (Application.OpenForms.OfType<frmMidiLyrics>().Count() > 0 && myLyricsMgmt.KLyrics.Lines.Count > 0)
-                    frmMidiLyrics?.SendPlayerPositionToKaraoke(sequencer1.Position);  //frmMidiLyrics.ColorLyric(sequencer1.Position);
+                    frmMidiLyrics?.SendPlayerPositionToKaraoke(sequencer1.Position);  
             }
         }
 
@@ -7791,11 +7787,9 @@ namespace Karaboss
         private void Timer3_Tick(object sender, EventArgs e)
         {
             // 21 balls: 1 fix, 20 moving to the fix one
-            if (Application.OpenForms.OfType<frmMidiLyrics>().Count() > 0)
-            {
+            if (Application.OpenForms.OfType<frmMidiLyrics>().Count() > 0)            
                 frmMidiLyrics?.MoveBalls(sequencer1.Position);
-
-            }
+            
         }
 
         
@@ -7882,11 +7876,10 @@ namespace Karaboss
 
             // Wait until X sec
             if (w_tick < w_wait)
-            {
-                //Console.WriteLine("w_tick = " + w_tick);
-                // color each second                             
-                //frmMidiLyrics?.ColorLyric(w_tick * 100);
-                frmMidiLyrics?.SendPlayerPositionToKaraoke(w_tick*100);
+            {              
+                // color each second                                          
+                if (Application.OpenForms.OfType<frmMidiLyrics>().Count() > 0)
+                    frmMidiLyrics?.SendPlayerPositionToKaraoke(w_tick*100);
 
             }
             else if (w_tick == w_wait)

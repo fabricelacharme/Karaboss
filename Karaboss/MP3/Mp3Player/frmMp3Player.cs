@@ -2192,8 +2192,9 @@ namespace Karaboss.Mp3
 
             if (w_tick < w_wait)
             {
-                // color each second                             
-                frmMp3Lyrics?.SendPlayerPositionToKaraoke(w_tick);
+                // color each second
+                if (Application.OpenForms.OfType<frmMp3Lyrics>().Count() > 0)
+                    frmMp3Lyrics?.SendPlayerPositionToKaraoke(w_tick);
             }
             else if (w_tick == w_wait)
             {
@@ -4610,10 +4611,9 @@ namespace Karaboss.Mp3
         private void Timer3_Tick(object sender, EventArgs e)
         {
             // 21 balls: 1 fix, 20 moving to the fix one
-            if (Application.OpenForms.OfType<frmMp3Lyrics>().Count() > 0)
-            {
+            if (Application.OpenForms.OfType<frmMp3Lyrics>().Count() > 0)            
                 frmMp3Lyrics?.MoveBalls((int)(Player.Position * 1000));
-            }
+            
         }
 
 
@@ -4622,7 +4622,7 @@ namespace Karaboss.Mp3
             if (Player == null) return;
 
             if (Application.OpenForms.OfType<frmMp3Lyrics>().Count() > 0)
-                frmMp3Lyrics.SendPlayerPositionToKaraoke(pos);
+                frmMp3Lyrics?.SendPlayerPositionToKaraoke(pos);
         }
 
         private void StopKaraoke()

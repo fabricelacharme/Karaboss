@@ -474,8 +474,12 @@ namespace ChordsAnalyser
         /// <param name="section"></param>
         /// <param name="notes"></param>
         private void SearchMeasure(int _measure, int section,  List<int> notes)
-        {                        
+        {
 
+            if (_measure == 105)
+                Console.WriteLine("");
+            
+            
             if (notes.Count == 0)
             {
                 // Remove chord if no note, but only if no chord already found with the other method (beat method)
@@ -577,9 +581,10 @@ namespace ChordsAnalyser
                
                 if (lroot != null)
                 {
-                                                           
+
                     // Search if LastChord is equal or included in the current chord,
                     // if yes, we can suppose that it is the same chord as in the previous measure
+                    
                     if (LastChord.Count > 0 && lroot.Count > 0 && LastChord.Count <= lroot.Count)
                     {
                         bool isIncluded = true;
@@ -595,6 +600,25 @@ namespace ChordsAnalyser
                             lroot = LastChord;
                     }
                     
+
+                    /*
+                    if (LastChord.Count > 0 && dictbestnotes.Count > 0 && LastChord.Count <= dictbestnotes.Count)
+                    {
+                        notletters = TransposeToLetterChord(LastChord);
+
+                        bool isIncluded = true;                      
+                        foreach (string n in notletters)
+                        {
+                            if (!dictbestnotes.Keys.ToList().Contains(n))
+                            {
+                                isIncluded = false;
+                                break;
+                            }
+                        }
+                        if (isIncluded)
+                            lroot = LastChord;
+                    }
+                    */
 
                     string res = Analyser.determine(lroot);
                     
@@ -998,6 +1022,7 @@ namespace ChordsAnalyser
                 */
             Dictionary<string, int> res = new Dictionary<string, int>();
             string chord;
+            //string otherchord;
             //string s;
 
             if (dict.Count <= 3)
