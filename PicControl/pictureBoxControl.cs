@@ -337,6 +337,8 @@ namespace PicControl
             }
         }
 
+        private int _nbFileNameLines = 10;
+
         #endregion Draw filename
 
 
@@ -493,6 +495,10 @@ namespace PicControl
                 pBox.Invalidate();
             }
         }
+
+        private float emFileNameSize = 40;
+        private Font _FileNameFont;
+
         #endregion Font
 
 
@@ -1365,6 +1371,7 @@ namespace PicControl
             if (this.ParentForm != null && this.ParentForm.WindowState != FormWindowState.Minimized)
             {                
                 AdjustFontSize();
+                AdjustFileNameFont(_nbFileNameLines);
 
                 if (KaraokeDisplayType == KaraokeDisplayTypes.ConstantScrolling)
                     InitScrollMode();
@@ -1942,6 +1949,11 @@ namespace PicControl
             lstChordsPositions = new List<List<(string, float, string)>>();
             if (_kLyrics != null && _bShowChords)
                 lstChordsPositions = StoreChordsPositions();
+
+
+            // Font size of file name drawing
+            _FileNameFont = new Font(_karaokeFont.FontFamily, emFileNameSize, FontStyle.Regular, GraphicsUnit.Pixel);
+            AdjustFileNameFont(_nbFileNameLines);
 
 
             if (KaraokeDisplayType == KaraokeDisplayTypes.ConstantScrolling)
@@ -2634,6 +2646,87 @@ namespace PicControl
             }
             return L / kls.Lines.Count;
         }
+
+
+        #region Font for file name drawing
+
+        /// <summary>
+        /// Adjust font size for filename drawing      
+        /// </summary>
+        private void AdjustFileNameFont(int nbLines)
+        {
+            if (pBox == null) return;
+            if (_FileNameFont == null) return;
+
+            string S = _fileName;
+
+            Graphics g = pBox.CreateGraphics();
+            float mult = 1.3f; // 1.2 is the default line spacing in Windows Forms
+            float inisize = _FileNameFont.Size;
+            float femsize = g.DpiY * inisize / 72;
+            float textWidth = MeasureString(S, femsize);
+
+            // Try to fit inside 90% of client width
+            float ClientWidth = _titleMaxLength * pBox.ClientSize.Width;
+
+            if (textWidth > ClientWidth)
+            {
+                do
+                {
+                    inisize--;
+                    if (inisize > 0)
+                    {
+                        femsize = g.DpiY * inisize / 72;
+                        textWidth = MeasureString(S, femsize);
+
+                    }
+                } while (textWidth > ClientWidth && inisize > 0);
+            }
+            else
+            {
+                do
+                {
+                    inisize++;
+                    femsize = g.DpiY * inisize / 72;
+                    textWidth = MeasureString(S, femsize);
+                } while (textWidth < ClientWidth);
+            }
+
+            // ------------------------------
+            // Ajustement in Height
+            // ------------------------------
+            float textHeight = MeasureStringHeight(S, inisize);
+            float totaltextHeight;
+            totaltextHeight = nbLines * mult * textHeight;
+
+            float compHeight = 0.95f * pBox.ClientSize.Height;
+
+            if (totaltextHeight > compHeight)
+            {
+                do
+                {
+                    inisize--;
+                    if (inisize > 0)
+                    {
+                        femsize = g.DpiY * inisize / 72;
+                        textHeight = MeasureStringHeight(S, femsize);
+
+                        totaltextHeight = mult * nbLines * textHeight;
+                    }
+                } while (totaltextHeight > compHeight && inisize > 0);
+            }
+
+            if (inisize > 0)
+            {
+                emFileNameSize = g.DpiX * inisize / 72;
+                _FileNameFont = new Font(_FileNameFont.FontFamily, emFileNameSize, FontStyle.Regular, GraphicsUnit.Pixel);
+
+            }
+            g.Dispose();
+        }
+
+        #endregion Font for file name drawing
+
 
 
         /// <summary>
@@ -3847,7 +3940,7 @@ namespace PicControl
 
         }
 
-        private void DrawFileName(PaintEventArgs e, string FileName, float femSize)
+        private void DrawFileName(PaintEventArgs e, string FileName)
         {
             int x0 = 0;
             int y0 = 0;
@@ -3866,21 +3959,21 @@ namespace PicControl
                     {
                         case OptionsDisplay.Center:
                         case OptionsDisplay.Bottom:
-                            y0 = (int)MeasureStringHeight(FileName, _titleMarginTop * _karaokeFont.Size);
+                            y0 = (int)MeasureStringHeight(FileName, _titleMarginTop * _FileNameFont.Size);
                             break;
                         case OptionsDisplay.Top:
-                            y0 = (int)(pBox.ClientSize.Height - MeasureStringHeight(FileName, _titleMarginBottom * _karaokeFont.Size));
+                            y0 = (int)(pBox.ClientSize.Height - MeasureStringHeight(FileName, _titleMarginBottom * _FileNameFont.Size));
                             break;
                     }
                     break;
 
                 case KaraokeDisplayTypes.ConstantScrolling:
-                    y0 = (int)MeasureStringHeight(FileName, _titleMarginTop * _karaokeFont.Size);
+                    y0 = (int)MeasureStringHeight(FileName, _titleMarginTop * _FileNameFont.Size);
                     break;
             }
 
             // Measure FileName
-            float w = MeasureString(FileName, femSize);
+            float w = MeasureString(FileName, emFileNameSize);
             if (w == 0) return;
 
             float maxLength = _titleMaxLength * pBox.Width;    // 41 % of width            
@@ -3906,7 +3999,7 @@ namespace PicControl
            
             
             // Add string to path
-            path.AddString(FileName, _karaokeFont.FontFamily, (int)_karaokeFont.Style, femSize, new Point(x0, y0), sf);
+            path.AddString(FileName, _FileNameFont.FontFamily, (int)_FileNameFont.Style, emFileNameSize, new Point(x0, y0), sf);
 
 
             // Draw the text            
@@ -3985,7 +4078,7 @@ namespace PicControl
             // Draw file name if required
 
             if (bShowSongName)
-                DrawFileName(e, FileName, 0.33f * _karaokeFont.Size);
+                DrawFileName(e, FileName);
 
             #endregion Draw FileName
 
@@ -4359,7 +4452,7 @@ namespace PicControl
 
             // Draw file name if required
             if (bShowSongName)
-                DrawFileName(e, FileName, 0.33f * _karaokeFont.Size);
+                DrawFileName(e, FileName);
 
             #endregion Draw FileName
 
@@ -4487,7 +4580,7 @@ namespace PicControl
 
             // Draw file name if required
             if (bShowSongName)
-                DrawFileName(e, FileName, 0.33f * _karaokeFont.Size);
+                DrawFileName(e, FileName);
 
             #endregion Draw FileName
 
@@ -4636,7 +4729,7 @@ namespace PicControl
             // Draw file name if required
 
             if (bShowSongName)
-                DrawFileName(e, FileName, 0.33f * _karaokeFont.Size);
+                DrawFileName(e, FileName);
 
             #endregion Draw FileName
 
@@ -4842,7 +4935,7 @@ namespace PicControl
             // Draw file name if required
 
             if (bShowSongName)
-                DrawFileName(e, FileName, 0.33f * _karaokeFont.Size);
+                DrawFileName(e, FileName);
 
             #endregion Draw FileName
 
