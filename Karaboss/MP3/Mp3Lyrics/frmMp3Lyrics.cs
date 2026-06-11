@@ -1252,7 +1252,12 @@ namespace Karaboss.Mp3
         public void SendPlayerPositionToKaraoke(double position)
         {
             karaokeEffect1.SetPos(position * 1000);
+        }
 
+
+        public void SendPlayerVolumeToKaraoke(int Volume, int LeftLevel, int RightLevel)
+        {
+            karaokeEffect1.SetSoundVolume(Volume, LeftLevel, RightLevel);
         }
 
         #endregion public method

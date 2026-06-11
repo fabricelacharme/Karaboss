@@ -263,8 +263,6 @@ namespace Karaboss.Mp3
                 // play asap, pause, countdown
                 performPlaylistChainingChoice();
 
-
-
             }
             else
             {
@@ -4678,7 +4676,9 @@ namespace Karaboss.Mp3
 
             VuPeakVolumeLeft.Level = LeftLevel;
             VuPeakVolumeRight.Level = RightLevel;
-
+            
+            if (Application.OpenForms.OfType<frmMp3Lyrics>().Count() > 0)
+                frmMp3Lyrics?.SendPlayerVolumeToKaraoke(level, LeftLevel, RightLevel);
         }
 
         private static int HIWORD(int n)

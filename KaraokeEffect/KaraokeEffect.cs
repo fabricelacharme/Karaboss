@@ -967,6 +967,14 @@ namespace keffect
         #endregion Vertical scrolling
 
 
+        #region Volume
+        // Draw an ellipse with dimensions varying with sound volume
+
+        private int _volume = 0;
+
+
+        #endregion Volume
+
         /// <summary>
         /// Constructor
         /// </summary>
@@ -1728,7 +1736,7 @@ namespace keffect
         #region Lyrics and position
 
         /// <summary>
-        ///  player position
+        ///  player position in ms
         /// </summary>
         /// <param name="pos"></param>
         public void SetPos(double ms)
@@ -2384,14 +2392,33 @@ namespace keffect
                 case "Rhythm":
                     int w = ClientRectangle.Width / 2;
                     int h = ClientRectangle.Height / 2;
-                    int d = Math.Min(2 * W, 2 * H);
 
+                    if (_volume == 0) _volume = 1;
+
+                    int d = _volume * ClientRectangle.Width / 7;//Math.Min(2 * W, 2 * H);
+
+                    //if (_volume == 0) return;
                     e.Graphics.SmoothingMode = SmoothingMode.AntiAlias;
 
+
+                    RectangleF rect = new RectangleF((ClientRectangle.Width - d) / 2, (ClientRectangle.Height - d) / 2, d, d);
+                    //RectangleF rect = new RectangleF( w, h, _volume * ClientRectangle.Width / 8, _volume * ClientRectangle.Height / 8);
+                    
+                    gp = new GraphicsPath();
+                    gp.AddEllipse(rect);
+                    using (PathGradientBrush pgb = new PathGradientBrush(gp))
+                    {
+                        pgb.CenterColor = _Rhythm1Color; // Center color of the radial gradient
+                        pgb.SurroundColors = new Color[] { _Rhythm0Color }; // Surrounding color of the radial gradient
+                        e.Graphics.FillPath(pgb, gp); // Fill the path with the radial gradient
+                        pgb.Dispose(); // Dispose the PathGradientBrush to free resources                        
+                    }
+                    gp.Dispose(); // Dispose the GraphicsPath to free resources
+
+                    /*
                     // Radial gradients are handled differently, so we won't set an angle here                    
                     if (_beatNumber != 1)
-                    {
-                        //RectangleF rect = new RectangleF((ClientRectangle.Width - W) / 2, (ClientRectangle.Height - H) / 2, W, H);
+                    {                        
                         RectangleF rect = new RectangleF((ClientRectangle.Width - d) / 2, (ClientRectangle.Height - d) / 2, d, d);
                         gp = new GraphicsPath();
                         gp.AddEllipse(rect);
@@ -2455,6 +2482,8 @@ namespace keffect
                         }
                         gp.Dispose(); // Dispose the GraphicsPath to free resources                                       
                     }
+                    */
+                    
                     break;
             }
             #endregion draw background image
@@ -4510,8 +4539,8 @@ namespace keffect
 
                 case "Rhythm":
                     // For radial gradients, we don't use the angle, but we can still animate the size of the ellipse
-                    if (W > speed) W -= speed; // Minor the width of the client rectangle at each tick with the speed value
-                    if (H > speed) H -= speed; // Minor the height of the client rectangle at each tick with the speed value 
+                    //if (W > speed) W -= speed; // Minor the width of the client rectangle at each tick with the speed value
+                    //if (H > speed) H -= speed; // Minor the height of the client rectangle at each tick with the speed value 
 
 
                     break;
@@ -4527,6 +4556,22 @@ namespace keffect
         }
 
         #endregion Timer gradient        
+
+
+        #region Volume
+
+        public void SetSoundVolume(int volume, int leftlevel, int rightlevel)
+        {
+            // idea : draw an ellipse with volume
+            //_volume = volume;
+
+            _volume = Math.Abs((volume / (327680000)));
+            //if (_volume > 8) _volume = 8;
+
+            //Console.WriteLine("Volume " + _volume);
+        }
+
+        #endregion Volume
 
     }
 }
