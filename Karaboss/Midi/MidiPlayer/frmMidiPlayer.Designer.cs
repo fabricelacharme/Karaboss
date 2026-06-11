@@ -129,6 +129,7 @@ namespace Karaboss
             this.timer3 = new System.Windows.Forms.Timer(this.components);
             this.timer4 = new System.Windows.Forms.Timer(this.components);
             this.pnlTop = new System.Windows.Forms.Panel();
+            this.btnUpdateChords = new System.Windows.Forms.Button();
             this.btnDump = new System.Windows.Forms.Button();
             this.lblHelp = new System.Windows.Forms.Label();
             this.lblBass = new System.Windows.Forms.Label();
@@ -1079,6 +1080,7 @@ namespace Karaboss
             // 
             resources.ApplyResources(this.pnlTop, "pnlTop");
             this.pnlTop.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(70)))), ((int)(((byte)(77)))), ((int)(((byte)(95)))));
+            this.pnlTop.Controls.Add(this.btnUpdateChords);
             this.pnlTop.Controls.Add(this.btnDump);
             this.pnlTop.Controls.Add(this.lblHelp);
             this.pnlTop.Controls.Add(this.lblBass);
@@ -1100,6 +1102,15 @@ namespace Karaboss
             this.pnlTop.Controls.Add(this.lblGomme);
             this.pnlTop.Name = "pnlTop";
             this.toolTip1.SetToolTip(this.pnlTop, resources.GetString("pnlTop.ToolTip"));
+            // 
+            // btnUpdateChords
+            // 
+            resources.ApplyResources(this.btnUpdateChords, "btnUpdateChords");
+            this.btnUpdateChords.Name = "btnUpdateChords";
+            this.btnUpdateChords.TabStop = false;
+            this.toolTip1.SetToolTip(this.btnUpdateChords, resources.GetString("btnUpdateChords.ToolTip"));
+            this.btnUpdateChords.UseVisualStyleBackColor = true;
+            this.btnUpdateChords.Click += new System.EventHandler(this.btnUpdateChords_Click);
             // 
             // btnDump
             // 
@@ -1512,6 +1523,7 @@ namespace Karaboss
         private System.Windows.Forms.ToolStripSeparator toolStripMenuItem2;
         private System.Windows.Forms.ToolStripMenuItem mnuDisplayChords;
         private System.Windows.Forms.ToolStripSeparator toolStripMenuItem4;
+        private System.Windows.Forms.Button btnUpdateChords;
     }
 }
 

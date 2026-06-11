@@ -65,7 +65,7 @@ namespace Karaboss
             Forward,
             Backward
         }
-        //private Directions _direction;
+        
 
         #region Lyrics declaration
 
@@ -313,7 +313,7 @@ namespace Karaboss
             // Load saved line and paragraph separators
             m_SepLine = Karaclass.m_SepLine;
             m_SepParagraph = Karaclass.m_SepParagraph;
-
+            btnUpdateChords.Visible = Karaclass.m_ShowChords;
             
             MIDIfileFullPath = FileName;
             MIDIfileName = Path.GetFileName(FileName);
@@ -1038,6 +1038,17 @@ namespace Karaboss
 
 
         #region chords analysis
+
+        private void btnUpdateChords_Click(object sender, EventArgs e)
+        {if (!Karaclass.m_ShowChords) return;
+            
+            // Reload lyrics with choosen options
+            myLyricsMgmt.ResetDisplayChordsOptions(Karaclass.m_ShowChords);
+
+            // Refresh score with or without chords            
+            RefreshChordsSheetMusic();
+        }
+
 
         public void RefreshChordsSheetMusic()
         {
@@ -4923,6 +4934,8 @@ namespace Karaboss
         private void mnuDisplayChords_Click(object sender, EventArgs e)
         {
             mnuDisplayChords.Checked = !mnuDisplayChords.Checked;
+            btnUpdateChords.Visible = mnuDisplayChords.Checked;
+
 
             if (Application.OpenForms.OfType<frmMidiLyrics>().Count() > 0)
             {
@@ -9067,11 +9080,12 @@ namespace Karaboss
 
 
 
+
         #endregion Save File
 
         #endregion Utilities
 
-      
+        
     }
 
 }

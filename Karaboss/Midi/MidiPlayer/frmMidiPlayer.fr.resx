@@ -473,7 +473,7 @@
     <value />
   </data>
   <data name="sldMainVolume.Size" type="System.Drawing.Size, System.Drawing">
-    <value>82, 23</value>
+    <value>23, 82</value>
   </data>
   <data name="sldMainVolume.ToolTip" xml:space="preserve">
     <value />
@@ -492,6 +492,12 @@
   </data>
   <data name="pnlBottom.ToolTip" xml:space="preserve">
     <value />
+  </data>
+  <data name="btnUpdateChords.Text" xml:space="preserve">
+    <value>Maj Accords</value>
+  </data>
+  <data name="btnDump.Text" xml:space="preserve">
+    <value>Export Midi</value>
   </data>
   <data name="btnDump.ToolTip" xml:space="preserve">
     <value />
