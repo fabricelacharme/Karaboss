@@ -277,7 +277,7 @@ namespace keffect
             }
         }
 
-        private int _nbFileNameLines = 10;
+        private int _nbTitleLines = 12;
 
         #endregion Draw filename
 
@@ -367,8 +367,8 @@ namespace keffect
             }
         }
 
-        private float emFileNameSize = 40;
-        private Font _FileNameFont;
+        private float emTitleSize = 40;
+        private Font _TitleFont;
        
         #endregion Font
 
@@ -1104,8 +1104,8 @@ namespace keffect
             // Increase _steppercent if Width increase
             if (this.ParentForm != null && this.ParentForm.WindowState != FormWindowState.Minimized)
             {                
-                AdjustFontSize(_nbLyricsLines);
-                AdjustFileNameFont(_nbFileNameLines);
+                AdjustKaraokeFont(_nbLyricsLines);
+                AdjustTitleFont(_nbTitleLines);
 
                 if (KaraokeDisplayType == KaraokeDisplayTypes.ConstantScrolling || KaraokeDisplayType == KaraokeDisplayTypes.DynamicScrolling)
                     InitScrollMode();
@@ -1615,13 +1615,13 @@ namespace keffect
             LinesLengths = new float[_kLyrics.Lines.Count];
 
             _biggestLine = GetBiggestLine();
-            AdjustFontSize(_nbLyricsLines);           
+            AdjustKaraokeFont(_nbLyricsLines);           
             _LastLineToShow = SetLastLineToShow(_FirstLineToShow, _kLyrics.Lines.Count, _nbLyricsLines);
 
 
             // Font size of file name drawing
-            _FileNameFont = new Font(_karaokeFont.FontFamily, emFileNameSize, FontStyle.Regular, GraphicsUnit.Pixel);            
-            AdjustFileNameFont(_nbFileNameLines);
+            _TitleFont = new Font(_karaokeFont.FontFamily, emTitleSize, FontStyle.Regular, GraphicsUnit.Pixel);            
+            AdjustTitleFont(_nbTitleLines);
 
             if (KaraokeDisplayType == KaraokeDisplayTypes.ConstantScrolling)
                 InitScrollMode();
@@ -2072,49 +2072,26 @@ namespace keffect
 
 
 
-        #region Font for file name drawing
+        #region Font for title drawing
 
         /// <summary>
         /// Adjust font size for filename drawing      
         /// </summary>
-        private void AdjustFileNameFont(int nbLines)
+        private void AdjustTitleFont(int nbLines)
         {
             if (pBox == null) return;
-            if (_FileNameFont == null) return;
+            if (_TitleFont == null) return;
           
             string S = _fileName;
 
             Graphics g = pBox.CreateGraphics();
             float mult = 1.3f; // 1.2 is the default line spacing in Windows Forms
-            float inisize = _FileNameFont.Size;
+            float inisize = _TitleFont.Size;
             float femsize = g.DpiY * inisize / 72;            
             float textWidth = MeasureString(S, femsize);
 
             // Try to fit inside 90% of client width
-            float ClientWidth = _titleMaxLength * pBox.ClientSize.Width;
-
-            if (textWidth > ClientWidth)
-            {
-                do
-                {
-                    inisize--;
-                    if (inisize > 0)
-                    {
-                        femsize = g.DpiY * inisize / 72;
-                        textWidth = MeasureString(S, femsize);
-
-                    }
-                } while (textWidth > ClientWidth && inisize > 0);
-            }
-            else
-            {
-                do
-                {
-                    inisize++;
-                    femsize = g.DpiY * inisize / 72;
-                    textWidth = MeasureString(S, femsize);
-                } while (textWidth < ClientWidth);
-            }
+            float ClientWidth = _titleMaxLength * pBox.ClientSize.Width;          
 
             // ------------------------------
             // Ajustement in Height
@@ -2142,16 +2119,17 @@ namespace keffect
 
             if (inisize > 0)
             {
-                emFileNameSize = g.DpiX * inisize / 72;
-                _FileNameFont = new Font(_FileNameFont.FontFamily, emFileNameSize, FontStyle.Regular, GraphicsUnit.Pixel);
+                emTitleSize = g.DpiX * inisize / 72;
+                _TitleFont = new Font(_TitleFont.FontFamily, emTitleSize, FontStyle.Regular, GraphicsUnit.Pixel);
 
             }
             g.Dispose();
-        }      
+        }
 
-        #endregion Font for file name drawing
+        #endregion Font for title drawing
 
 
+        #region Font for Karaoke drawing
         /// <summary>
         /// Ajust font size to fit NbLines in height and the average line lenght in width
         /// Bigger lines will be shrinked and smaller lines not changed
@@ -2159,17 +2137,17 @@ namespace keffect
         /// <param name="pBox"></param>
         /// <param name="S"></param>
         /// <param name="NbLines"></param>
-        private void AdjustFontSize(int NbLines)
+        private void AdjustKaraokeFont(int NbLines)
         {
             if (FontStretching == "Large")
-                AdjustFontSizeWithStretching(NbLines);
+                AdjustKaraokeFontWithStretching(NbLines);
             else
             {
-                AdjustFontWithoutStretching(_biggestLine, NbLines);
+                AdjustKaraokeFontWithoutStretching(_biggestLine, NbLines);
             }
         }
 
-        private void AdjustFontWithoutStretching(string biggestLine, int NbLines)
+        private void AdjustKaraokeFontWithoutStretching(string biggestLine, int NbLines)
         {
             if (pBox == null) return;
             if (_kLyrics == null || _kLyrics.Lines.Count == 0) return;
@@ -2257,7 +2235,7 @@ namespace keffect
             g.Dispose();
         }
 
-        private void AdjustFontSizeWithStretching(int NbLines)
+        private void AdjustKaraokeFontWithStretching(int NbLines)
         {
             if (pBox == null) return;
             if (_kLyrics == null || _kLyrics.Lines.Count == 0) return;
@@ -2351,7 +2329,10 @@ namespace keffect
             }
             g.Dispose();
         }
-              
+
+        #endregion Font for karaoke drawing
+
+
         private float MeasureStringHeight(string line, float femSize)
         {
             float ret = 0;
@@ -3236,22 +3217,22 @@ namespace keffect
                     {
                         case OptionsDisplay.Center:
                         case OptionsDisplay.Bottom:
-                            y0 = (int)MeasureStringHeight(FileName, _titleMarginTop * _FileNameFont.Size);
+                            y0 = (int)MeasureStringHeight(FileName, _titleMarginTop * _TitleFont.Size);
                             break;
                         case OptionsDisplay.Top:
-                            y0 = (int)(pBox.ClientSize.Height - MeasureStringHeight(FileName, _titleMarginBottom * _FileNameFont.Size));
+                            y0 = (int)(pBox.ClientSize.Height - MeasureStringHeight(FileName, _titleMarginBottom * _TitleFont.Size));
                             break;
                     }
                     break;
                 
                 case KaraokeDisplayTypes.ConstantScrolling:
-                    y0 = (int)MeasureStringHeight(FileName, _titleMarginTop * _FileNameFont.Size);
+                    y0 = (int)MeasureStringHeight(FileName, _titleMarginTop * _TitleFont.Size);
                     break;
             }
             
             
             // Measure FileName
-            float w = MeasureString(FileName, emFileNameSize);
+            float w = MeasureString(FileName, emTitleSize);
             if (w == 0) return;
 
             float maxLength = _titleMaxLength * pBox.Width;    // 41 % of width            
@@ -3276,7 +3257,7 @@ namespace keffect
             
             
             // Add string to path
-            path.AddString(FileName, _FileNameFont.FontFamily, (int)_FileNameFont.Style, emFileNameSize, new Point(x0, y0), sf);
+            path.AddString(FileName, _TitleFont.FontFamily, (int)_TitleFont.Style, emTitleSize, new Point(x0, y0), sf);
 
 
             // Draw the text            
