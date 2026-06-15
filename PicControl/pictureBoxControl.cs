@@ -2663,26 +2663,15 @@ namespace PicControl
             string S = _fileName;
 
             Graphics g = pBox.CreateGraphics();
-            float mult = 1.3f; // 1.2 is the default line spacing in Windows Forms
+            float mult = 1.3f; // 1.3 is the default line spacing in Windows Forms
 
-            //float inisize = _TitleFont.Size;
-            //float inisize = 72 * _TitleFont.Size/g.DpiY;
             float femsize = _TitleFont.Size;
-            float inisize = 72 * femsize / g.DpiY;
-
-            //float femsize = g.DpiY * inisize / 72;
-            float textWidth = MeasureString(S, femsize);
-
-            // Try to fit inside 90% of client width
-            float ClientWidth = _titleMaxLength * pBox.ClientSize.Width;                     
+            float inisize = 72 * femsize / g.DpiY;            
 
             // ------------------------------
             // Ajustement in Height
             // ------------------------------
-            float textHeight = MeasureStringHeight(S, inisize);
-            float totaltextHeight;
-            totaltextHeight = nbLines * mult * textHeight;
-
+            float totaltextHeight = nbLines * mult * MeasureStringHeight(S, inisize);
             float compHeight = 0.95f * pBox.ClientSize.Height;
 
             if (totaltextHeight > compHeight)
@@ -2692,19 +2681,25 @@ namespace PicControl
                     inisize--;
                     if (inisize > 0)
                     {
-                        femsize = g.DpiY * inisize / 72;
-                        textHeight = MeasureStringHeight(S, femsize);
-
-                        totaltextHeight = mult * nbLines * textHeight;
+                        femsize = g.DpiY * inisize / 72;                        
+                        totaltextHeight = mult * nbLines * MeasureStringHeight(S, femsize);
                     }
                 } while (totaltextHeight > compHeight && inisize > 0);
+            }
+            else
+            {
+                do
+                {
+                    inisize++;
+                    femsize = g.DpiY * inisize / 72;
+                    totaltextHeight = mult * nbLines * MeasureStringHeight(S, femsize);
+                } while (totaltextHeight < compHeight && inisize > 0);
             }
 
             if (inisize > 0)
             {
                 emTitleSize = g.DpiY * inisize / 72;
                 _TitleFont = new Font(_TitleFont.FontFamily, emTitleSize, FontStyle.Regular, GraphicsUnit.Pixel);
-
             }
             g.Dispose();
         }
@@ -2787,7 +2782,9 @@ namespace PicControl
             
             float textWidth = MeasureString(S, femsize);
 
+            // ----------------------------------------
             // Try to fit inside 90% of client width
+            // ----------------------------------------
             float ClientWidth = 0.90f * pBox.ClientSize.Width;
 
             if (textWidth > ClientWidth)
