@@ -2666,9 +2666,11 @@ namespace PicControl
             float mult = 1.3f; // 1.2 is the default line spacing in Windows Forms
 
             //float inisize = _TitleFont.Size;
-            float inisize = 72 * _TitleFont.Size/g.DpiY;
-            
-            float femsize = g.DpiY * inisize / 72;
+            //float inisize = 72 * _TitleFont.Size/g.DpiY;
+            float femsize = _TitleFont.Size;
+            float inisize = 72 * femsize / g.DpiY;
+
+            //float femsize = g.DpiY * inisize / 72;
             float textWidth = MeasureString(S, femsize);
 
             // Try to fit inside 90% of client width
@@ -2769,7 +2771,6 @@ namespace PicControl
                 AdjustKaraokeFontWithoutStretching(_biggestLine, nbLines);
             }
         }
-
       
         private void AdjustKaraokeFontWithoutStretching(string biggestLine, float nbLines)
         {
@@ -2780,11 +2781,9 @@ namespace PicControl
             string S = biggestLine;
 
             Graphics g = pBox.CreateGraphics();
-            float femsize;
+            
             float inisize = _karaokeFont.Size;
-            femsize = g.DpiY * inisize / 72;
-
-
+            float femsize = g.DpiY * inisize / 72;
             
             float textWidth = MeasureString(S, femsize);
 
@@ -2798,9 +2797,8 @@ namespace PicControl
                     inisize--;
                     if (inisize > 0)
                     {
-                        femsize = g.DpiY * inisize / 72;
+                        femsize = g.DpiX * inisize / 72;
                         textWidth = MeasureString(S, femsize);
-
                     }
                 } while (textWidth > ClientWidth && inisize > 0);
             }
@@ -2809,12 +2807,10 @@ namespace PicControl
                 do
                 {
                     inisize++;
-                    femsize = g.DpiY * inisize / 72;
+                    femsize = g.DpiX * inisize / 72;
                     textWidth = MeasureString(S, femsize);
                 } while (textWidth < ClientWidth);
             }
-
-
 
             // ------------------------------
             // Ajustement in Height
@@ -2840,7 +2836,7 @@ namespace PicControl
 
             if (inisize > 0)
             {
-                emSize = g.DpiX * inisize / 72;
+                emSize = g.DpiY * inisize / 72;
                 _karaokeFont = new Font(_karaokeFont.FontFamily, emSize, FontStyle.Regular, GraphicsUnit.Pixel);
 
                 // Vertical distance between lines          1.6 is
@@ -2855,7 +2851,6 @@ namespace PicControl
                 {
                     LinesLengths[i] = MeasureString(_kLyrics.Lines[i].ToString(), _karaokeFont.Size);
                 }
-
             }
             g.Dispose();
         }

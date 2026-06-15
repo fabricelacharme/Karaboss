@@ -850,6 +850,8 @@ namespace keffect
 
         #endregion Text position
 
+        private float _nbLyricsLinesForMeasure = 0;
+
         private int _nbLyricsLinesOrg;
         private int _nbLyricsLines = 3;
         [Description("The number of lines to display")]
@@ -1104,7 +1106,7 @@ namespace keffect
             // Increase _steppercent if Width increase
             if (this.ParentForm != null && this.ParentForm.WindowState != FormWindowState.Minimized)
             {                
-                AdjustKaraokeFont(_nbLyricsLines);
+                AdjustKaraokeFont();
                 
                 if (_TitleFont != null) 
                     AdjustTitleFont(_nbTitleLines);
@@ -1617,7 +1619,7 @@ namespace keffect
             LinesLengths = new float[_kLyrics.Lines.Count];
 
             _biggestLine = GetBiggestLine();
-            AdjustKaraokeFont(_nbLyricsLines);           
+            AdjustKaraokeFont();           
             _LastLineToShow = SetLastLineToShow(_FirstLineToShow, _kLyrics.Lines.Count, _nbLyricsLines);
 
 
@@ -2020,7 +2022,7 @@ namespace keffect
             switch (_OptionDisplay)
             {
                 case OptionsDisplay.Center:
-                    y = (pBox.ClientSize.Height - (_nbLyricsLines) * _lineHeight) / 2;
+                    y = (int)((pBox.ClientSize.Height - _nbLyricsLinesForMeasure * _lineHeight) / 2);
                     break;
 
                 case OptionsDisplay.Top:
@@ -2031,7 +2033,8 @@ namespace keffect
                     break;
 
                 case OptionsDisplay.Bottom:
-                    y = pBox.ClientSize.Height - (_nbLyricsLines * (_lineHeight + 1));
+                    //y = pBox.ClientSize.Height - (_nbLyricsLines * (_lineHeight + 1));
+                    y = (int)(pBox.ClientSize.Height - (_nbLyricsLinesForMeasure * (_lineHeight + 1)));
                     break;
             }
             return y > 0 ? y : 0;
@@ -2090,9 +2093,11 @@ namespace keffect
             float mult = 1.3f; // 1.2 is the default line spacing in Windows Forms
             
             //float inisize = _TitleFont.Size;
-            float inisize = 72 * _TitleFont.Size / g.DpiY;
+            //float inisize = 72 * _TitleFont.Size / g.DpiY;
+            float femsize = _TitleFont.Size;
+            float inisize = 72 * femsize / g.DpiY;
+            //float femsize = g.DpiY * inisize / 72;            
 
-            float femsize = g.DpiY * inisize / 72;            
             float textWidth = MeasureString(S, femsize);
 
             // Try to fit inside 90% of client width
@@ -2142,17 +2147,58 @@ namespace keffect
         /// <param name="pBox"></param>
         /// <param name="S"></param>
         /// <param name="NbLines"></param>
-        private void AdjustKaraokeFont(int NbLines)
+        private void AdjustKaraokeFont()
         {
+
+            int nbLines = 0;
+            // Update _nbLyricsLines if layout changed in options            
+            switch (KaraokeDisplayType)
+            {
+                case KaraokeDisplayTypes.FourLinesSwapped:                    
+                    nbLines = 4;                                                            
+                    break;
+                
+                case KaraokeDisplayTypes.ConstantScrolling:
+                    nbLines = 6;
+                    break;
+                
+                case KaraokeDisplayTypes.DynamicScrolling:
+                    nbLines = 6;
+                    break;
+                
+                case KaraokeDisplayTypes.TwoLinesSwapped:
+                    nbLines = 2;
+                    break;
+                
+                case KaraokeDisplayTypes.FixedLines:                  
+                    nbLines = _nbLyricsLinesOrg;                    
+                    break;
+                
+                case KaraokeDisplayTypes.Countdown:
+                    nbLines = 1;
+                    break;
+                
+                case KaraokeDisplayTypes.Informations:
+                    nbLines = _kLyrics.Lines.Count;
+                    break;
+
+                default:
+                    _nbLyricsLines = _nbLyricsLinesOrg;
+                    break;
+            }
+
+            // For measures
+            _nbLyricsLinesForMeasure = nbLines;
+
             if (FontStretching == "Large")
-                AdjustKaraokeFontWithStretching(NbLines);
+                AdjustKaraokeFontWithStretching(nbLines);
             else
             {
-                AdjustKaraokeFontWithoutStretching(_biggestLine, NbLines);
+                AdjustKaraokeFontWithoutStretching(_biggestLine, nbLines);
             }
         }
 
-        private void AdjustKaraokeFontWithoutStretching(string biggestLine, int NbLines)
+        private void AdjustKaraokeFontWithoutStretching(string biggestLine, int nbLines)
         {
             if (pBox == null) return;
             if (_kLyrics == null || _kLyrics.Lines.Count == 0) return;
@@ -2161,10 +2207,9 @@ namespace keffect
             string S = biggestLine;
 
             Graphics g = pBox.CreateGraphics();
-            float femsize;
-            float inisize = _karaokeFont.Size;
-            femsize = g.DpiY * inisize / 72;
-
+            
+            float femsize = _karaokeFont.Size;
+            float inisize = 72 * femsize / g.DpiX;
 
             float mult = 1.3f; // 1.2 is the default line spacing in Windows Forms
             float textWidth = MeasureString(S, femsize);
@@ -2200,7 +2245,7 @@ namespace keffect
             // ------------------------------
             float textHeight = MeasureStringHeight(S, inisize);
             float totaltextHeight;
-            totaltextHeight = _nbLyricsLines * (textHeight + 10);
+            totaltextHeight = _nbLyricsLines * mult * textHeight;
 
             float compHeight = 0.95f * pBox.ClientSize.Height;
 
@@ -2212,16 +2257,14 @@ namespace keffect
                     if (inisize > 0)
                     {
                         femsize = g.DpiY * inisize / 72;
-                        textHeight = MeasureStringHeight(S, femsize);
-
-                        totaltextHeight = _nbLyricsLines * (textHeight + 10);
+                        totaltextHeight = mult * MeasureStringHeight(S, femsize) * nbLines;
                     }
                 } while (totaltextHeight > compHeight && inisize > 0);
             }
 
             if (inisize > 0)
             {
-                emSize = g.DpiX * inisize / 72;
+                emSize = g.DpiY * inisize / 72;
                 _karaokeFont = new Font(_karaokeFont.FontFamily, emSize, FontStyle.Regular, GraphicsUnit.Pixel);
 
                 // Vertical distance between lines          1.6 is
@@ -2250,14 +2293,13 @@ namespace keffect
             if (KaraokeDisplayType == KaraokeDisplayTypes.ConstantScrolling || KaraokeDisplayType == KaraokeDisplayTypes.DynamicScrolling)
                 NbLines = 6;
 
-
             string S = "!/(123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
             Graphics g = pBox.CreateGraphics();
-            float femsize;
-            float inisize = _karaokeFont.Size;
-            femsize = g.DpiY * inisize / 72;
-
+            
+            float femsize = _karaokeFont.Size;            
+            float inisize = 72 * femsize / g.DpiY;
+            
             // Try to fit inside 90% of client Height
             float ClientHeight = pBox.ClientSize.Height;
 
