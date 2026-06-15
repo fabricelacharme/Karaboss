@@ -393,10 +393,10 @@ namespace Karaboss
                 lblPlaylist.Text = "PLAYLIST: " + idx + "/" + currentPlaylist.Count;
 
             }
-            else
-            {
-                lblPlaylist.Visible = false;
-            }
+            //else
+            //{
+            //    lblPlaylist.Visible = false;
+            //}
             #endregion
                
         }
@@ -3268,10 +3268,10 @@ namespace Karaboss
             Init_peakLevel();
 
 
-           
+            lblPlaylist.Visible = currentPlaylist != null;
 
-            // Zoom
-            zoom = 1.0f;
+             // Zoom
+             zoom = 1.0f;
 
             // Lyrics
             timer2.Interval = 50;

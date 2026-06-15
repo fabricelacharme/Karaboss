@@ -1105,7 +1105,9 @@ namespace keffect
             if (this.ParentForm != null && this.ParentForm.WindowState != FormWindowState.Minimized)
             {                
                 AdjustKaraokeFont(_nbLyricsLines);
-                AdjustTitleFont(_nbTitleLines);
+                
+                if (_TitleFont != null) 
+                    AdjustTitleFont(_nbTitleLines);
 
                 if (KaraokeDisplayType == KaraokeDisplayTypes.ConstantScrolling || KaraokeDisplayType == KaraokeDisplayTypes.DynamicScrolling)
                     InitScrollMode();
@@ -2086,7 +2088,10 @@ namespace keffect
 
             Graphics g = pBox.CreateGraphics();
             float mult = 1.3f; // 1.2 is the default line spacing in Windows Forms
-            float inisize = _TitleFont.Size;
+            
+            //float inisize = _TitleFont.Size;
+            float inisize = 72 * _TitleFont.Size / g.DpiY;
+
             float femsize = g.DpiY * inisize / 72;            
             float textWidth = MeasureString(S, femsize);
 
@@ -2119,7 +2124,7 @@ namespace keffect
 
             if (inisize > 0)
             {
-                emTitleSize = g.DpiX * inisize / 72;
+                emTitleSize = g.DpiY * inisize / 72;
                 _TitleFont = new Font(_TitleFont.FontFamily, emTitleSize, FontStyle.Regular, GraphicsUnit.Pixel);
 
             }
@@ -2174,7 +2179,7 @@ namespace keffect
                     inisize--;
                     if (inisize > 0)
                     {
-                        femsize = g.DpiY * inisize / 72;
+                        femsize = g.DpiX * inisize / 72;
                         textWidth = MeasureString(S, femsize);
 
                     }
@@ -2185,7 +2190,7 @@ namespace keffect
                 do
                 {
                     inisize++;
-                    femsize = g.DpiY * inisize / 72;
+                    femsize = g.DpiX * inisize / 72;
                     textWidth = MeasureString(S, femsize);
                 } while (textWidth < ClientWidth);
             }

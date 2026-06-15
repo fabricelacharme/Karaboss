@@ -1371,7 +1371,9 @@ namespace PicControl
             if (this.ParentForm != null && this.ParentForm.WindowState != FormWindowState.Minimized)
             {                
                 AdjustKaraokeFont();
-                AdjustTitleFont(_nbTitleLines);
+                
+                if (_TitleFont != null) 
+                    AdjustTitleFont(_nbTitleLines);
 
                 if (KaraokeDisplayType == KaraokeDisplayTypes.ConstantScrolling)
                     InitScrollMode();
@@ -2662,7 +2664,10 @@ namespace PicControl
 
             Graphics g = pBox.CreateGraphics();
             float mult = 1.3f; // 1.2 is the default line spacing in Windows Forms
-            float inisize = _TitleFont.Size;
+
+            //float inisize = _TitleFont.Size;
+            float inisize = 72 * _TitleFont.Size/g.DpiY;
+            
             float femsize = g.DpiY * inisize / 72;
             float textWidth = MeasureString(S, femsize);
 
@@ -2695,7 +2700,7 @@ namespace PicControl
 
             if (inisize > 0)
             {
-                emTitleSize = g.DpiX * inisize / 72;
+                emTitleSize = g.DpiY * inisize / 72;
                 _TitleFont = new Font(_TitleFont.FontFamily, emTitleSize, FontStyle.Regular, GraphicsUnit.Pixel);
 
             }

@@ -246,7 +246,7 @@ namespace Karaboss.Mp3
                 // Search file to play with its filename                
                 currentPlaylistItem = currentPlaylist.Songs.Where(z => z.File == Mp3FullPath).FirstOrDefault();
                 
-                lblPlaylist.Visible = true;
+                //lblPlaylist.Visible = true;
                 int idx = currentPlaylist.SelectedIndex(currentPlaylistItem) + 1;
                 lblPlaylist.Text = "PLAYLIST: " + idx + "/" + currentPlaylist.Count;
 
@@ -261,7 +261,7 @@ namespace Karaboss.Mp3
                 // New fab
                 ExtractMp3Lyrics(Mp3FullPath);
 
-                lblPlaylist.Visible = false;
+                //lblPlaylist.Visible = false;
                 // If true, launch player
                 bPlayNow = bplay;
                 // the user asked to play the song immediately                
@@ -3453,6 +3453,9 @@ namespace Karaboss.Mp3
         {
             // Allow form keydown
             this.KeyPreview = true;
+
+            lblPlaylist.Visible = currentPlaylist != null;
+
 
             // Store selected file in variables
             Mp3FullPath = FileName;
