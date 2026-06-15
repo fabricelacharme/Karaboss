@@ -1969,7 +1969,7 @@ namespace Karaboss.Mp3
         private void SendInformationsToLyrics()
         {
             // MP3 caracteristics
-            frmMp3Lyrics.Duration = _duration * 1000; // mp3 duration in ms
+            frmMp3Lyrics.Duration = _duration * 1000; // mp3 duration in ms           
         }
 
         private void SendPositionToKaraoke(double pos)

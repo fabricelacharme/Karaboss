@@ -658,10 +658,16 @@ namespace PicControl
                 if (value.Lines.Count == 0) return;
                 _kLyrics = value;
                 _kLyricsOrg = (kLyrics)_kLyrics.Clone();
-                if (_kLyrics != null && _kLyrics.Lines.Count > 0)
+                if (_kLyrics != null && _kLyrics.Lines.Count > 0 && _duration > 0 && _TotalTicks > 0)
+                {
+                    Init();
+                    pBox.Invalidate();                
+                }
+                else if(_bIsSettings && _kLyrics != null && _kLyrics.Lines.Count > 0)
                 {
                     Init();
                     pBox.Invalidate();
+
                 }
             }
         }
@@ -695,7 +701,7 @@ namespace PicControl
         private int TicksPerSecond = 0; // TotalTicks / Duration
 
         // Duration in seconds 
-        private double _duration;
+        private double _duration = 0;
         public double Duration
         {
             get { return _duration; }
@@ -713,7 +719,7 @@ namespace PicControl
             }
         }
 
-        private int _TotalTicks;
+        private int _TotalTicks = 0;
         public int TotalTicks
         {
             get { return _TotalTicks; }
@@ -1194,8 +1200,8 @@ namespace PicControl
 
             SetDefaultValues();
 
-            if (_kLyrics != null && _kLyrics.Lines.Count > 0)
-                Init();
+            //if (_kLyrics != null && _kLyrics.Lines.Count > 0)
+            //    Init();
         }
 
 
@@ -1531,6 +1537,9 @@ namespace PicControl
                 _DelayBeforeEndOfInstrumental = 4 * TicksPerSecond;
                 _MinimumInstrumentalDuration = 6 * TicksPerSecond;
                 _MinimumIntroDuration = 3 * TicksPerSecond;
+
+                Console.WriteLine("song: " + _fileName + " - _MinimumInstrumentalDuration: " + _MinimumInstrumentalDuration);
+
             }
             else
             {
@@ -2658,6 +2667,7 @@ namespace PicControl
         /// </summary>
         private void AdjustTitleFont(int nbLines)
         {
+            if (_fileName == string.Empty) return;
             if (pBox == null) return;
             if (_TitleFont == null) return;
 
@@ -5285,6 +5295,10 @@ namespace PicControl
             active_fragment = string.Empty;
             highlight_fragment = string.Empty;
             inactive_fragment = string.Empty;
+
+            _fileName = string.Empty;
+            _duration = 0;
+            _TotalTicks = 0;
 
             pBox.Invalidate();
         }

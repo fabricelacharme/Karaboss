@@ -745,9 +745,9 @@ namespace Karaboss
 
             #region MIDI
 
-            BeatDuration = myLyricsMgmt.Division;
-            TotalTicks = myLyricsMgmt.TotalTicks;
-            Duration = myLyricsMgmt.Duration;
+            //BeatDuration = myLyricsMgmt.Division;
+            //TotalTicks = myLyricsMgmt.TotalTicks;
+            //Duration = myLyricsMgmt.Duration;
             FirstMelodyNoteTicksOn = myLyricsMgmt.FirstMelodyNoteTicksOn;
 
             #endregion MIDI

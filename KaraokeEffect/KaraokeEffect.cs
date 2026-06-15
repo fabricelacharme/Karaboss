@@ -2089,6 +2089,7 @@ namespace keffect
         /// </summary>
         private void AdjustTitleFont(int nbLines)
         {
+            if (_fileName == string.Empty) return;
             if (pBox == null) return;
             if (_TitleFont == null) return;
           

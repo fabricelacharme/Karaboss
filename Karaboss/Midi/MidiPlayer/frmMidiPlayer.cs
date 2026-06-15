@@ -848,9 +848,16 @@ namespace Karaboss
 
 
                 // 1. DISPLAY LYRICS
+                
+                // Display form
                 ManageDisplayLyricsForm();
+
                 // Send mandatory informations to lyrics form
                 SendInformationsToLyrics();
+
+                // Lyrics
+                if (Application.OpenForms.OfType<frmMidiLyrics>().Count() > 0)
+                    frmMidiLyrics.SetLyrics(myLyricsMgmt.KLyrics);
 
                 
                 StartKaraoke();
@@ -3477,6 +3484,7 @@ namespace Karaboss
                 {
                     // the user wants to edit the file 
                     ManageDisplayLyricsForm();
+                    frmMidiLyrics.SetLyrics(myLyricsMgmt.KLyrics);
                 }
             }           
         }
@@ -3622,6 +3630,7 @@ namespace Karaboss
                     else
                     {
                         ManageDisplayLyricsForm();
+                        frmMidiLyrics.SetLyrics(myLyricsMgmt.KLyrics);
                     }
                 }
             }
@@ -3764,6 +3773,7 @@ namespace Karaboss
                     else
                     {
                         ManageDisplayLyricsForm();
+                        frmMidiLyrics.SetLyrics(myLyricsMgmt.KLyrics);
                     }
                 }
             }
@@ -4018,6 +4028,7 @@ namespace Karaboss
             if (myLyricsMgmt.OrgKLyrics.Lines.Count > 0)
                 DisplayLyricsForm();
 
+            /*
 
             // If no lyrics and a playlist, display song & singer informations in the center            
             if (currentPlaylistItem != null && myLyricsMgmt.OrgKLyrics.Lines.Count == 0 && !Karaclass.m_PauseBetweenSongs && Karaclass.m_CountdownSongs == 0 && !Karaclass.m_ShowChords)
@@ -4053,6 +4064,8 @@ namespace Karaboss
 
                 frmMidiLyrics.SetLyrics(myLyricsMgmt.KLyrics);
             }
+        
+            */
         }
 
 
@@ -4125,7 +4138,7 @@ namespace Karaboss
             frmMidiLyrics.Activate();
 
             // cas d'une playlist ou non : met à jour le diaporama
-            SetSlideShow();
+            //SetSlideShow();
 
         }
 
@@ -6402,6 +6415,11 @@ namespace Karaboss
 
         #region Playlists
 
+        // PlayNextPlaylistSong
+        // SelectFileToLoadAsync
+        // LoadAsyncMidiFile
+        // 
+
         private void PlayNextPlaylistSong()
         {
             // If single song (no playlist) => STOP
@@ -6430,10 +6448,10 @@ namespace Karaboss
             MIDIfileName = currentPlaylistItem.Song;
             MIDIfileFullPath = currentPlaylistItem.File;
 
-            // close lyrics form frmMp3Lyrics
+            // close lyrics form frmMp3Lyrics                                                                       NON !!!!
             if (Application.OpenForms.OfType<frmMidiLyrics>().Count() > 0)
             {
-                frmMidiLyrics.Close();
+                //frmMidiLyrics.Close();
             }
 
 
@@ -6700,15 +6718,9 @@ namespace Karaboss
                         // Restore settings if no slideshow for the playlist item
                         frmMidiLyrics.OptionBackground = Properties.Settings.Default.BackGroundOption;
                     }
-
-                    // Restore karaoke display layout (four lines swapped, fixed lines etc...)
-                    frmMidiLyrics.KaraokeDisplayType = Properties.Settings.Default.KaraokeDisplayType;
-                    frmMidiLyrics.SetLyrics(myLyricsMgmt.KLyrics);
-
-                    // Restore display options modified by the wait animation
-                    //    frmMidiLyrics.LoadOptions();
-                    //    SetSlideShow();
-
+                    
+                    // Display layout (Four lines swapped, fixed lines etc...)
+                    frmMidiLyrics.KaraokeDisplayType = Properties.Settings.Default.KaraokeDisplayType;                 
                 }
             }
         }
