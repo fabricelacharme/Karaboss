@@ -1627,6 +1627,11 @@ namespace keffect
             _TitleFont = new Font(_karaokeFont.FontFamily, emTitleSize, FontStyle.Regular, GraphicsUnit.Pixel);            
             AdjustTitleFont(_nbTitleLines);
 
+            // Mandatory when we change the display layout in the settings
+            // in order to recalculate lengths of fragments
+            if (_bIsSettings)
+                this.SetPos(200);
+
             if (KaraokeDisplayType == KaraokeDisplayTypes.ConstantScrolling)
                 InitScrollMode();
         }
@@ -2077,7 +2082,7 @@ namespace keffect
 
 
 
-        #region Font for title drawing
+        #region Font for the title display
 
         /// <summary>
         /// Adjust font size for filename drawing      
@@ -2132,10 +2137,11 @@ namespace keffect
             g.Dispose();
         }
 
-        #endregion Font for title drawing
+        #endregion Font for the title display
 
 
-        #region Font for Karaoke drawing
+        #region Font for the karaoke display
+
         /// <summary>
         /// Ajust font size to fit NbLines in height and the average line lenght in width
         /// Bigger lines will be shrinked and smaller lines not changed
@@ -2145,6 +2151,8 @@ namespace keffect
         /// <param name="NbLines"></param>
         private void AdjustKaraokeFont()
         {
+            
+            #region Set lines number
 
             int nbLines = 0;
             // Update _nbLyricsLines if layout changed in options            
@@ -2185,6 +2193,9 @@ namespace keffect
 
             // For measures
             _nbLyricsLinesForMeasure = nbLines;
+
+            #endregion Set lines number
+
 
             if (FontStretching == "Large")
                 AdjustKaraokeFontWithStretching(nbLines);
@@ -2373,7 +2384,7 @@ namespace keffect
             g.Dispose();
         }
 
-        #endregion Font for karaoke drawing
+        #endregion Font for the karaoke display
 
 
         private float MeasureStringHeight(string line, float femSize)

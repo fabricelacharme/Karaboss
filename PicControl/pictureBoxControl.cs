@@ -1576,10 +1576,8 @@ namespace PicControl
 
 
             #region Initial text position
-            
-            //_currentPosition = 30;
-            currentLine = 1;
-            //_currentTextPos = 2;
+                        
+            currentLine = 1;            
 
             #endregion Initial text position
 
@@ -1868,7 +1866,6 @@ namespace PicControl
         }
 
 
-
         /// <summary>
         /// Load text of song
         /// </summary>
@@ -1957,6 +1954,10 @@ namespace PicControl
             _TitleFont = new Font(_karaokeFont.FontFamily, emTitleSize, FontStyle.Regular, GraphicsUnit.Pixel);
             AdjustTitleFont(_nbTitleLines);
 
+            // Mandatory when change the display layout in the settings
+            // in order to recalculate lengths of fragments
+            if(_bIsSettings)
+                this.SetPos(200);
 
             if (KaraokeDisplayType == KaraokeDisplayTypes.ConstantScrolling)
                 InitScrollMode();
@@ -2650,7 +2651,7 @@ namespace PicControl
         }
 
 
-        #region Font for Title drawing
+        #region Font for the title display
 
         /// <summary>
         /// Adjust font size for filename drawing      
@@ -2704,10 +2705,10 @@ namespace PicControl
             g.Dispose();
         }
 
-        #endregion Font for Title drawing
+        #endregion Font for the title display
 
 
-        #region Font for Karaoke drawing
+        #region Font for the karaoke display
 
         /// <summary>
         /// Ajust font size to fit NbLines in height and the average line lenght in width
@@ -2718,6 +2719,8 @@ namespace PicControl
         /// <param name="NbLines"></param>
         private void AdjustKaraokeFont()
         {
+            #region Set lines number
+
             float nbLines = 0;
             // Update _nbLyricsLines if layout changed in options            
             switch (KaraokeDisplayType)
@@ -2758,6 +2761,9 @@ namespace PicControl
             
             // For measures
             _nbLyricsLinesForMeasure = nbLines;
+
+            #endregion Set lines number
+
 
             if (FontStretching == "Large")
                 AdjustKaraokeFontWithStretching(nbLines);
@@ -2947,7 +2953,7 @@ namespace PicControl
             g.Dispose();
         }
 
-        #endregion Font for karaoke drawing
+        #endregion Font for the karaoke display
 
 
         private float MeasureStringHeight(string line, float femSize)
