@@ -234,36 +234,42 @@ namespace Karaboss.Mp3
         {
             InitializeComponent();
 
-           
+            currentPlaylist = myPlayList;
+            bPlayNow = bplay;
+
             // Initalize all
-            Init(FileName);           
+            Init(FileName);
 
-            #region playlists
+            // Extract tags, duration, lyrics from mp3 or LRC file
+            ExtractMp3Lyrics(Mp3FullPath);
 
-            if (myPlayList != null)
-            {                
-                currentPlaylist = myPlayList;
+            if (currentPlaylist != null)
+            {
+                #region Playlists
+                
                 // Search file to play with its filename                
                 currentPlaylistItem = currentPlaylist.Songs.Where(z => z.File == Mp3FullPath).FirstOrDefault();
-                
-                //lblPlaylist.Visible = true;
+                                
                 int idx = currentPlaylist.SelectedIndex(currentPlaylistItem) + 1;
                 lblPlaylist.Text = "PLAYLIST: " + idx + "/" + currentPlaylist.Count;
 
-                ExtractMp3Lyrics(Mp3FullPath);
+                //ExtractMp3Lyrics(Mp3FullPath);
 
                 // play asap, pause, countdown
                 performPlaylistChainingChoice();
 
+                #endregion Playlists
             }
             else
             {
+                #region Single file
+
                 // New fab
-                ExtractMp3Lyrics(Mp3FullPath);
+                //ExtractMp3Lyrics(Mp3FullPath);
 
                 //lblPlaylist.Visible = false;
                 // If true, launch player
-                bPlayNow = bplay;
+               
                 // the user asked to play the song immediately                
                 if (bPlayNow)
                 {
@@ -277,9 +283,11 @@ namespace Karaboss.Mp3
                     // Show LRC Generator
                     PlayerAppearance = PlayerAppearances.LyricsEditor;                                        
                 }
+
+                #endregion Single file
             }
-            #endregion playlists
-           
+
+
         }
 
 
@@ -3836,7 +3844,7 @@ namespace Karaboss.Mp3
         }
 
         /// <summary>
-        /// Set titloe of form
+        /// Set title of form
         /// </summary>
         /// <param name="displayName"></param>
         private void SetTitle(string displayName)
@@ -3945,8 +3953,13 @@ namespace Karaboss.Mp3
 
         #region Playlists     
 
+        // PlayNextPlaylistSong: stop if last item, update displays (item number/items number), close frmMp3Lyrics
+        // SelectFileToLoadAsync: load file in mp3 player, display mp3 characteristics, extract lyrics and display frmMp3Lyrics
+        // performPlaylistChainingChoice: make pause if any, launch countdown if any, otherwise launch playing
+
+
         /// <summary>
-        /// Common to button next and end of playing a song
+        /// Playlists: common to the next button and end of playing a song
         /// </summary>
         private void PlayNextPlaylistSong()
         {
@@ -3974,12 +3987,13 @@ namespace Karaboss.Mp3
 
             //Next song of the playlist
             Mp3FileName = currentPlaylistItem.Song;
+            Mp3FullPath = currentPlaylistItem.File;
 
-            // Update form
+            // Update displays of forms: title of frmMp3Player, highlight current item in frmExplorer,  and update label of Playlist item number/items number
             SetTitle(Mp3FileName);
             UpdatePlayListsForm(currentPlaylistItem.Song);
 
-            // close frmMp3Lyrics
+            // close lyrics form frmMp3Lyrics
             if (Application.OpenForms.OfType<frmMp3Lyrics>().Count() > 0)
             {
                 frmMp3Lyrics.Close();
@@ -3990,21 +4004,24 @@ namespace Karaboss.Mp3
             {
                 frmMp3LyricsSimple.Close();
             }
-
-            //PlayerState = PlayerStates.Playing;
-            Mp3FullPath = currentPlaylistItem.File;            
-
+                        
             SelectFileToLoadAsync(Mp3FullPath);
         }
 
+        /// <summary>
+        /// Load file in mp3 player, display mp3 characteristics, extract lyrics and display frmMp3Lyrics
+        /// </summary>
+        /// <param name="FileName"></param>
         private void SelectFileToLoadAsync(string FileName)
         {
             // Load file and after launch player taking account things to do betwween 2 songs                                  
             Player.FileName = FileName;
-            
-            DisplayMp3Characteristics();
-            ExtractMp3Lyrics(FileName);
 
+            // Display duration and set HScrollbar maximum
+            DisplayMp3Characteristics();
+
+            // Extract lyrics
+            ExtractMp3Lyrics(FileName);
           
             // things to do betwween 2 songs
             performPlaylistChainingChoice();
@@ -4012,7 +4029,7 @@ namespace Karaboss.Mp3
 
         /// <summary>
         /// Select action to perform between 2 songs according to user's choices
-        /// Pause, Count Down, play asap
+        /// make pause if any, launch countdown if any, otherwise launch playing
         /// </summary>
         private void performPlaylistChainingChoice()
         {
@@ -4022,9 +4039,8 @@ namespace Karaboss.Mp3
             {
                 PlayerState = PlayerStates.LaunchNextSong;
                 BtnStatus();
-
                 
-                #region display singer in the Lyrics form
+                #region Display singer in the Lyrics form
                 
                 if (Application.OpenForms.OfType<frmMp3Lyrics>().Count() > 0)
                 {
@@ -4053,7 +4069,8 @@ namespace Karaboss.Mp3
                     // Display next singer in lyrics form
                     frmMp3Lyrics.DisplayText(lstSingerInfos);
                 }
-                #endregion
+
+                #endregion Display singer in the Lyrics form
 
                 // Focus on paused windows
                 this.Restore();
@@ -4061,7 +4078,9 @@ namespace Karaboss.Mp3
             }
             else
             {
+                // ----------------
                 // NO PAUSE MODE
+                // ----------------
                 if (Karaclass.m_CountdownSongs == 0)
                 {
                     // NO Timer => play                    
@@ -4121,7 +4140,7 @@ namespace Karaboss.Mp3
         }
 
         /// <summary>
-        /// Update display of frmPlaylist
+        /// Update display of frmPlaylist and label Playlist of frmMp3Player
         /// </summary>
         /// <param name="song"></param>
         private void UpdatePlayListsForm(string song)
@@ -4155,6 +4174,10 @@ namespace Karaboss.Mp3
                 frmMp3Lyrics = new frmMp3Lyrics(Mp3FullPath, currentPlaylist);
                 frmMp3Lyrics.Show();                                
             }
+
+            // Force background for the countdown to solid color
+            frmMp3Lyrics.OptionBackground = "SolidColor";
+
             // Load countdown
             frmMp3Lyrics.LoadWaitSong(seconds);
 
@@ -4187,6 +4210,19 @@ namespace Karaboss.Mp3
                 // Countdown terminated                
                 if (Application.OpenForms.OfType<frmMp3Lyrics>().Count() > 0)
                 {
+                    // Force slide show of current playlist item if any
+                    if (currentPlaylistItem.DirSlideShow != null && currentPlaylistItem.DirSlideShow != string.Empty && Directory.Exists(currentPlaylistItem.DirSlideShow))
+                    {
+                        frmMp3Lyrics.OptionBackground = "Diaporama";
+                        frmMp3Lyrics.DirSlideShow = currentPlaylistItem.DirSlideShow;
+                    }
+                    else
+                    {
+                        // Restore settings if no slideshow for the playlist item
+                        frmMp3Lyrics.OptionBackground = Properties.Settings.Default.BackGroundOption;
+                    }
+
+                    // Restore karaoke display layout (four lines swapped, fixed lines etc...)
                     frmMp3Lyrics.KaraokeDisplayType = Properties.Settings.Default.KaraokeDisplayType;
                     frmMp3Lyrics.SetLyrics(Mp3LyricsMgmtHelper.mp3KaraokeLyrics);
                 }

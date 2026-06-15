@@ -34,6 +34,7 @@
 using kar;
 using Karaboss.MidiLyrics;
 using Karaboss.Mp3;
+using Karaboss.Mp3.Mp3Lyrics;
 using Karaboss.Resources.Localization;
 using Karaboss.Utilities;
 using MusicTxt;
@@ -345,6 +346,7 @@ namespace Karaboss
 
             NumInstance = numinstance;
             outDevice = outputDevice;
+            currentPlaylist = myPlayList;
 
             // If true, launch player
             bPlayNow = bplay;
@@ -372,7 +374,8 @@ namespace Karaboss
                                                                                     
             
             #region playlists
-            if (myPlayList != null)
+            
+            if (currentPlaylist != null)
             {
                 string f;
                 if (Karaclass.m_MxmlPath != "")
@@ -383,20 +386,11 @@ namespace Karaboss
                 {
                     f = MIDIfileFullPath;
                 }
-                currentPlaylist = myPlayList;
+                
                 // Search file to play with its filename                
                 currentPlaylistItem = currentPlaylist.Songs.Where(z => z.File == f).FirstOrDefault();                
-                MIDIfileName = currentPlaylistItem.Song; 
-
-                lblPlaylist.Visible = true;
-                int idx = currentPlaylist.SelectedIndex(currentPlaylistItem) + 1;
-                lblPlaylist.Text = "PLAYLIST: " + idx + "/" + currentPlaylist.Count;
-
             }
-            //else
-            //{
-            //    lblPlaylist.Visible = false;
-            //}
+            
             #endregion
                
         }
@@ -3267,7 +3261,6 @@ namespace Karaboss
             // Display of peak level volume
             Init_peakLevel();
 
-
             lblPlaylist.Visible = currentPlaylist != null;
 
              // Zoom
@@ -3367,9 +3360,7 @@ namespace Karaboss
             this.Cursor = Cursors.Arrow;
            
             // Reset settings made for previous song
-            ResetPlaySettings();
-
-            loading = false;
+            ResetPlaySettings();            
 
             #region Guard
 
@@ -3380,16 +3371,14 @@ namespace Karaboss
                 return;
             }
             #endregion Guard
-
-            
-            laststart = 0;
-
+                       
             // Warning: Midi format is always forced to 1 otherwise you can't add lyrics with Karaboss            
             sequence1.Format = 1;
-
+            
+            // Lyrics
             myLyricsMgmt = new MidiLyricsMgmt(sequence1);
 
-            // Save chords to track in order to display them in the score
+            // Remove or add chords to track in order to display them in the score
             AddChordsToTrack();
 
             #region Convert midi format 0 to midi format 1
@@ -3459,13 +3448,17 @@ namespace Karaboss
             mnuDisplayLyricsWindows.Checked = bKaraokeAlwaysOn;
 
             DisplayLyricsInfos();
-                
+
             #endregion
 
-
+            // ------------
             // PLAYLIST
+            // ------------
             if (currentPlaylist != null)
             {
+                // Mute melody track
+                btnMute1.Checked = !currentPlaylistItem.MelodyMute;
+
                 // Highlight current song in the playlist
                 UpdatePlayListsForm(currentPlaylistItem.Song);
 
@@ -3474,8 +3467,9 @@ namespace Karaboss
             }
             else
             {
+                // ------------
                 // SINGLE FILE
-
+                // ------------
                 // the user asked to play the song immediately                
                 if (bPlayNow)
                     PlayPauseMusic();
@@ -3484,8 +3478,7 @@ namespace Karaboss
                     // the user wants to edit the file 
                     ManageDisplayLyricsForm();
                 }
-            }
-           
+            }           
         }
 
         /// <summary>
@@ -6409,6 +6402,47 @@ namespace Karaboss
 
         #region Playlists
 
+        private void PlayNextPlaylistSong()
+        {
+            // If single song (no playlist) => STOP
+            if (currentPlaylist == null)
+            {
+                StopMusic();
+                return;
+            }
+
+            // Select next song of the playlist
+            PlaylistItem pli = currentPlaylistItem;
+            if (pli == null) return;
+
+            currentPlaylistItem = currentPlaylist.Next(pli);
+
+            // Stop if no other song to play
+            if (pli == currentPlaylistItem)
+            {
+                StopMusic();
+                return;
+            }
+
+            StopMusic();
+
+            // Next song of the playlist
+            MIDIfileName = currentPlaylistItem.Song;
+            MIDIfileFullPath = currentPlaylistItem.File;
+
+            // close lyrics form frmMp3Lyrics
+            if (Application.OpenForms.OfType<frmMidiLyrics>().Count() > 0)
+            {
+                frmMidiLyrics.Close();
+            }
+
+
+            // Select which type a file it is
+            SelectFileToLoadAsync();
+
+        }
+
+
         // Select and load next playlist item
         private void SelectNextPlaylistSong()
         {
@@ -6457,6 +6491,7 @@ namespace Karaboss
                 BtnStatus();
 
                 #region display singer in the Lyrics form
+
                 // Display the Lyric form even if no lyrics in order to display the singer
                 if (Application.OpenForms.OfType<frmMidiLyrics>().Count() == 0)
                 {
@@ -6543,6 +6578,9 @@ namespace Karaboss
                 frmMidiLyrics = new frmMidiLyrics(myLyricsMgmt, MIDIfileFullPath, currentPlaylist);               
                 frmMidiLyrics.Show();                           
             }
+
+            // Force background for the countdown to solid color
+            frmMidiLyrics.OptionBackground = "SolidColor";
 
             frmMidiLyrics.LoadWaitSong(sec);
 
@@ -6639,6 +6677,41 @@ namespace Karaboss
             OpenMidiFileOptions.SplitHands = false;
         }
 
+
+        private void ManageCountdownEnding()
+        {
+            if (currentPlaylistItem == null) return;
+
+            // Pause between 2 songs of a playlist: nothing to do
+
+            if (Karaclass.m_CountdownSongs > 0)
+            {
+                // Countdown terminated                
+                if (Application.OpenForms.OfType<frmMidiLyrics>().Count() > 0)
+                {
+                    // Force slide show of current playlist item if any
+                    if (currentPlaylistItem.DirSlideShow != null && currentPlaylistItem.DirSlideShow != string.Empty && Directory.Exists(currentPlaylistItem.DirSlideShow))
+                    {
+                        frmMidiLyrics.OptionBackground = "Diaporama";
+                        frmMidiLyrics.DirSlideShow = currentPlaylistItem.DirSlideShow;
+                    }
+                    else
+                    {
+                        // Restore settings if no slideshow for the playlist item
+                        frmMidiLyrics.OptionBackground = Properties.Settings.Default.BackGroundOption;
+                    }
+
+                    // Restore karaoke display layout (four lines swapped, fixed lines etc...)
+                    frmMidiLyrics.KaraokeDisplayType = Properties.Settings.Default.KaraokeDisplayType;
+                    frmMidiLyrics.SetLyrics(myLyricsMgmt.KLyrics);
+
+                    // Restore display options modified by the wait animation
+                    //    frmMidiLyrics.LoadOptions();
+                    //    SetSlideShow();
+
+                }
+            }
+        }
 
         #endregion Playlists
 
@@ -7005,6 +7078,9 @@ namespace Karaboss
 
         private void ResetPlaySettings()
         {
+            loading = false;
+            laststart = 0;
+
             mnuFileOpen.Enabled = true;
             progressBarPlayer.Value = 0;
             progressBarPlayer.Visible = false;
@@ -7017,17 +7093,8 @@ namespace Karaboss
             TransposeDelta = 0;
             lblTranspoValue.Text = string.Format("{0}", TransposeDelta);
 
-
             // Mute melody track
-            if (Karaclass.m_MuteMelody == true || (currentPlaylist != null && currentPlaylistItem.MelodyMute == true))
-            {
-                btnMute1.Checked = false;
-            }
-            else
-            {
-                btnMute1.Checked = true;
-            }
-
+            btnMute1.Checked = !Karaclass.m_MuteMelody;
         }
 
         #endregion
@@ -7788,9 +7855,10 @@ namespace Karaboss
                         break;                        
 
                     case PlayerStates.NextSong:                        
-                        AfterStopped();                        
+                        //AfterStopped();                        
                         // Select next song of a playlist                        
-                        SelectNextPlaylistSong();                       
+                        //SelectNextPlaylistSong();
+                        PlayNextPlaylistSong();
                         break;
 
                     case PlayerStates.Waiting:        // Count down running between 2 songs of a playlist     
@@ -7957,12 +8025,9 @@ namespace Karaboss
 
             }
             else if (w_tick == w_wait)
-            {
-                // set syllabes to null               
-                //frmMidiLyrics?.EndWaitSong();
-
-                if (!myLyricsMgmt.bHasLyrics) {
-
+            {               
+                if (!myLyricsMgmt.bHasLyrics) 
+                {
                     if (Application.OpenForms.OfType<frmMidiLyrics>().Count() > 0)
                         frmMidiLyrics.Close();
                 }
@@ -7973,12 +8038,7 @@ namespace Karaboss
                 timerCountdown.Enabled = false;              
                 PlayerState = PlayerStates.Stopped;
 
-                // Restore display options modified by the wait animation
-                if (Application.OpenForms.OfType<frmMidiLyrics>().Count() > 0)
-                {
-                    frmMidiLyrics.LoadOptions();
-                    SetSlideShow();
-                }
+                ManageCountdownEnding();                
                 PlayPauseMusic();
 
             }
