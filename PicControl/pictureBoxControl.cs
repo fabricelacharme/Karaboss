@@ -658,6 +658,8 @@ namespace PicControl
                 if (value.Lines.Count == 0) return;
                 _kLyrics = value;
                 _kLyricsOrg = (kLyrics)_kLyrics.Clone();
+                
+                /*
                 if (_kLyrics != null && _kLyrics.Lines.Count > 0 && _duration > 0 && _TotalTicks > 0)
                 {
                     Init();
@@ -669,6 +671,7 @@ namespace PicControl
                     pBox.Invalidate();
 
                 }
+                */
             }
         }
 
@@ -713,7 +716,7 @@ namespace PicControl
                     if (_TotalTicks > 0)
                     {
                         TicksPerSecond = (int)(_TotalTicks / _duration);
-                        ResetDefaultTimings();
+                        //ResetDefaultTimings();
                     }
                 }
             }
@@ -731,7 +734,7 @@ namespace PicControl
                     if (_duration > 0)
                     {
                         TicksPerSecond = (int)(_TotalTicks / _duration);
-                        ResetDefaultTimings();
+                        //ResetDefaultTimings();
                     }
                 }
             }
@@ -1414,7 +1417,7 @@ namespace PicControl
             // Do not use KLyrics but _kLyrics to be able to use the same LoadSong method for demo and real text
             _kLyrics = StoreDemoText(lines, 100);
             
-            Init(true);           
+            Init();           
         }
 
   
@@ -1526,6 +1529,28 @@ namespace PicControl
 
 
         #region Initializations
+
+        private void SetImageBackground(string ImagePath)
+        {
+            try
+            {
+                if (!File.Exists(ImagePath))
+                {
+                    pBox.BackColor = Color.Black;
+                    return;
+                }
+
+                m_ImageFilePaths.Clear();
+                m_ImageFilePaths.Add(ImagePath);
+                m_CurrentImage = Image.FromFile(m_ImageFilePaths[0]);
+
+            }
+            catch (Exception e)
+            {
+                Console.Write("Error: " + e.Message);
+            }
+        }
+
 
         private void ResetDefaultTimings()
         {
@@ -1879,7 +1904,7 @@ namespace PicControl
         /// Load text of song
         /// </summary>
         /// <param name="toto"></param>     
-        private void Init(bool bDemoMode = false)
+        private void Init()
         {
             if (_kLyrics == null) return;
             if (_kLyrics.Lines == null) return;
@@ -2395,25 +2420,22 @@ namespace PicControl
         #endregion MoveWindows
 
 
-        private void SetImageBackground(string ImagePath)
+        public void Populate(kLyrics kls, double duration, int totalticks, string filename, bool bforceuppercase, bool bshowchords)
         {
-            try
-            {
-                if (!File.Exists(ImagePath))
-                {
-                    pBox.BackColor = Color.Black;
-                    return;
-                }
-               
-                m_ImageFilePaths.Clear();
-                m_ImageFilePaths.Add(ImagePath);
-                m_CurrentImage = Image.FromFile(m_ImageFilePaths[0]);
+            KLyrics = kls;            
+            Duration = duration;
+            TotalTicks = totalticks;
+            FileName = filename;
+            bforceUppercase = bforceuppercase;
+            bShowChords = bshowchords;
 
-            }
-            catch (Exception e)
-            {
-                Console.Write("Error: " + e.Message);
-            }
+
+            // Calculate intro, instrumental durations according to new data
+            ResetDefaultTimings();            
+
+            // Load lyrics, calculate fonts size
+            Init();
+
         }
 
 
@@ -2462,132 +2484,7 @@ namespace PicControl
             {
                 Console.Write("Error: " + e.Message);
             }
-        }
-
-        /*     
-        /// <summary>
-        /// Guess if picturebox should be paint.
-        /// Paint should be done only if syllable has changed
-        /// </summary>
-        private void SetOffset()
-        {
-            int ctp = findPosition(_currentPosition);  // index syllabe à chanter
-            int newvOffset; 
-
-            // If vertical Offset change => redraw
-            // Time to next line            
-            float CurrentTimeToNextLineDuration = nextStartOfLineTime - _currentPosition;
-            if (CurrentTimeToNextLineDuration > 0 && TimeToNextLineDuration > 0)
-            {
-                // As time passes, CurrentTimeToNextLineDuration decreases, so newvOffset increases
-                newvOffset = Convert.ToInt32(_lineHeight - (CurrentTimeToNextLineDuration / TimeToNextLineDuration) * _lineHeight);
-                if (newvOffset > vOffset)
-                {
-                    vOffset = newvOffset;
-                }
-            }
-
-            // If syllabe change => redraw
-            if (ctp != _currentTextPos)
-            {
-                if (bEndOfLine)
-                {
-                    bEndOfLine = false;
-                    vOffset = 0;
-                }
-                _currentTextPos = ctp;
-            }
-          
-            // Redraw the display
-            pBox.Invalidate();
-        }
-        */
-
-
-        /*
-        /// <summary>
-        /// Find index of syllabe to sing according to time
-        /// TODO : remove chords ?
-        /// </summary>
-        /// <param name="itime"></param>
-        /// <returns></returns>
-        private int findPosition(int itime)
-        {
-            if (syllabes == null)
-                return 0;
-
-            int x0 = 0;
-
-            // optimisation : partir de la dernière position connue si le temps de celle-ci est inférieur au temps actuel
-            if (_currentTextPos > 0 && _currentTextPos < syllabes.Count && syllabes[_currentTextPos].time < itime)
-                x0 = _currentTextPos - 1;
-
-            for (int i = x0; i < syllabes.Count; i++)
-            {
-                syllabe syllab = syllabes[i];
-
-                // cherche la première syllabe dont le temps est supérieur à itime
-                // prend la précédente
-                if (itime < syllab.time)
-                {
-
-                    if (i > 0 && syllab.posline == 0 && syllab.SylCount == 1)
-                    {
-                        //  LRC : 1 ligne = 1 seule syllabe                        
-                        bHighLight = true;
-                        return i - 1;
-                    }
-                    else if (i > 0 && syllab.posline == 0 && itime > syllabes[i - 1].time + 2 * _beatDuration)
-                    {
-                        // Cas 1 : La première syllabe dont le temps est supérieur au temps courant est située sur la prochaine ligne
-                        // Cela signifie que l'on vient de jouer la dernière syllabe de la ligne.
-                        // Si "fin de ligne" et temps écoulé supérieur à 2 noires
-                        // prendre la première syllabe dont le temps est supérieur au temps courant, soit l'indice "i"
-                        // indiquer également qu'il ne faut pas encore colorer cette syllabe
-                        // On force le changement de ligne au bout de 2 temps                       
-                        bHighLight = false;   // Ne pas mettre en surbrillance la syllabe tant que son temps n'est pas arrivé
-                        return i;
-                    }
-                    else
-                    {
-                        // Sinon prendre "i - 1" et la syllabe doit être colorée
-                        bHighLight = true;
-                        return i - 1;
-                    }
-                }
-            }
-
-            return syllabes.Count - 1;
-        }
-        */
-
-
-        /*
-        /// <summary>
-        /// Reset display at begining
-        /// </summary>
-        public void ResetTop()
-        {            
-            bEndOfLine = false;
-
-            SecondsBeforeSinging = -1;
-            bInstrumentalStarted = false;
-            bCountDown = false;
-            _endTime = 0;
-            _startTime = 0;
-            _FirstLineToShow = 0;
-
-            vOffset = 0;
-            nextStartOfLineTime = 0;
-
-            _currentPosition = 0;
-            _currentTextPos = -1;
-
-            PlayerPositionTicks = 0;
-
-            pBox.Invalidate();
-        }
-        */
+        }                    
         
         #endregion public methods
                      

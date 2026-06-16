@@ -659,7 +659,7 @@ namespace Karaboss
                 {
                     _bForceUppercase = value;
                     pBox.bforceUppercase = _bForceUppercase;
-                    SetLyrics(myLyricsMgmt.KLyrics);
+                    //SetLyrics(myLyricsMgmt.KLyrics);
                 }
             }
         }
@@ -1338,12 +1338,31 @@ namespace Karaboss
 
         #region Lyrics 
 
+        public void Populate(kLyrics kls, int duration, int totalticks, string filename)
+        {
+            currentTextPos = 0;
+
+            // Load kLyrics with kLyrics to have all the information for chords and lyrics positions, used for balls animation
+            if (Karaclass.m_ShowChords && myLyricsMgmt != null && myLyricsMgmt.ChordsOriginatedFrom == MidiLyricsMgmt.ChordsOrigins.Lyrics)
+            {
+                kls = RemoveChordsFromLyrics(kls);
+            }
+
+            pBox.Populate(kls, Duration, TotalTicks, FileName, _bForceUppercase, Karaclass.m_ShowChords);
+
+           
+            // Load balls times after having loaded the kLyrics in the pBox because the kLyrics are transformed (trailing spaces added, instrumental parts etc...) and the balls times are based on the kLyrics syllabes positions
+            if (bShowBalls)
+                LoadBallsTimes(kls);
+        }
+
+
         /// <summary>
         /// Load song in picturebox control
         ///  1/4 = LineFeed
         ///  1/2 = Paragraph
         /// </summary>
-        public void SetLyrics(kLyrics kl)
+        public void SetLyrics(kLyrics kl, string FileName)
         {
             currentTextPos = 0;
 
@@ -1352,12 +1371,16 @@ namespace Karaboss
             {
                 kl = RemoveChordsFromLyrics(kl);
             }
-            
+
+            pBox.Populate(kl, Duration, TotalTicks, FileName, _bForceUppercase, Karaclass.m_ShowChords);
+
+            /*
             pBox.KLyrics = kl;
 
             // Force Uppercase         
             pBox.bforceUppercase = _bForceUppercase;
             pBox.bShowChords = Karaclass.m_ShowChords;
+            */
 
             // Load balls times after having loaded the kLyrics in the pBox because the kLyrics are transformed (trailing spaces added, instrumental parts etc...) and the balls times are based on the kLyrics syllabes positions
             if (bShowBalls)
@@ -1576,7 +1599,7 @@ namespace Karaboss
                 myLyricsMgmt.ResetDisplayChordsOptions(chkChords.Checked);
 
                 // Load modified lyrics into the picturebox
-                SetLyrics(myLyricsMgmt.KLyrics);
+                SetLyrics(myLyricsMgmt.KLyrics, FileName);
 
                 // Refresh score with or without chords
                 frmMidiPlayer frmMidiPlayer = Utilities.FormUtilities.GetForm<frmMidiPlayer>();

@@ -857,7 +857,7 @@ namespace Karaboss
 
                 // Lyrics
                 if (Application.OpenForms.OfType<frmMidiLyrics>().Count() > 0)
-                    frmMidiLyrics.SetLyrics(myLyricsMgmt.KLyrics);
+                    frmMidiLyrics.SetLyrics(myLyricsMgmt.KLyrics, MIDIfileName);
 
                 
                 StartKaraoke();
@@ -3484,7 +3484,7 @@ namespace Karaboss
                 {
                     // the user wants to edit the file 
                     ManageDisplayLyricsForm();
-                    frmMidiLyrics.SetLyrics(myLyricsMgmt.KLyrics);
+                    frmMidiLyrics.SetLyrics(myLyricsMgmt.KLyrics, MIDIfileName);
                 }
             }           
         }
@@ -3630,7 +3630,7 @@ namespace Karaboss
                     else
                     {
                         ManageDisplayLyricsForm();
-                        frmMidiLyrics.SetLyrics(myLyricsMgmt.KLyrics);
+                        frmMidiLyrics.SetLyrics(myLyricsMgmt.KLyrics, MIDIfileName);
                     }
                 }
             }
@@ -3773,7 +3773,7 @@ namespace Karaboss
                     else
                     {
                         ManageDisplayLyricsForm();
-                        frmMidiLyrics.SetLyrics(myLyricsMgmt.KLyrics);
+                        frmMidiLyrics.SetLyrics(myLyricsMgmt.KLyrics, MIDIfileName);
                     }
                 }
             }
@@ -3876,7 +3876,7 @@ namespace Karaboss
 
                 // Window closed
                 DisplayLyricsForm();
-                frmMidiLyrics.SetLyrics(myLyricsMgmt.KLyrics);
+                frmMidiLyrics.SetLyrics(myLyricsMgmt.KLyrics, MIDIfileName);
             }
 
             // Refresh display of lyrics
@@ -4028,44 +4028,7 @@ namespace Karaboss
             if (myLyricsMgmt.OrgKLyrics.Lines.Count > 0)
                 DisplayLyricsForm();
 
-            /*
-
-            // If no lyrics and a playlist, display song & singer informations in the center            
-            if (currentPlaylistItem != null && myLyricsMgmt.OrgKLyrics.Lines.Count == 0 && !Karaclass.m_PauseBetweenSongs && Karaclass.m_CountdownSongs == 0 && !Karaclass.m_ShowChords)
-            {
-                // COUNTDOWN terminated
-                
-                List<string> Lines = new List<string>()
-                {
-                    {" Next song:" },
-                    { Path.GetFileNameWithoutExtension(currentPlaylistItem.Song) }
-                };
-                
-                if (currentPlaylistItem.KaraokeSinger != string.Empty && currentPlaylistItem.KaraokeSinger != "<Song reserved by>")
-                {                
-                    Lines.Add(Strings.SungBy);
-                    Lines.Add(currentPlaylistItem.KaraokeSinger);
-                }
-
-                if (Application.OpenForms.OfType<frmMidiLyrics>().Count() > 0)
-                    frmMidiLyrics.DisplayText(Lines);
-            }
-            else if (myLyricsMgmt.OrgKLyrics.Lines.Count > 0)
-            {
-                // PAUSE terminated
-
-                // Restore number of lines of lyrics to display
-                if (Karaclass.m_PauseBetweenSongs)
-                {
-                    // Restore the values after displaying the song and artist information
-                    frmMidiLyrics.KaraokeDisplayType = Properties.Settings.Default.KaraokeDisplayType;
-                    frmMidiLyrics.nbLyricsLines = Properties.Settings.Default.TxtNbLines;
-                }
-
-                frmMidiLyrics.SetLyrics(myLyricsMgmt.KLyrics);
-            }
-        
-            */
+           
         }
 
 
@@ -6449,10 +6412,10 @@ namespace Karaboss
             MIDIfileFullPath = currentPlaylistItem.File;
 
             // close lyrics form frmMp3Lyrics                                                                       NON !!!!
-            if (Application.OpenForms.OfType<frmMidiLyrics>().Count() > 0)
-            {
+            //if (Application.OpenForms.OfType<frmMidiLyrics>().Count() > 0)
+            //{
                 //frmMidiLyrics.Close();
-            }
+            //}
 
 
             // Select which type a file it is
@@ -6462,6 +6425,7 @@ namespace Karaboss
 
 
         // Select and load next playlist item
+        /*
         private void SelectNextPlaylistSong()
         {
             if (currentPlaylist == null)
@@ -6492,6 +6456,7 @@ namespace Karaboss
             // Select which type a file it is
             SelectFileToLoadAsync();
         }
+        */
 
         /// <summary>
         /// Select action to perform betwwen 2 songs according to user's choices
@@ -7532,13 +7497,13 @@ namespace Karaboss
             {
                 myLyricsMgmt.TransposeChordsInLyrics(TransposeDelta);
                 if (Application.OpenForms.OfType<frmMidiLyrics>().Count() > 0)
-                    frmMidiLyrics?.SetLyrics(myLyricsMgmt.KLyrics);
+                    frmMidiLyrics?.SetLyrics(myLyricsMgmt.KLyrics, MIDIfileName);
             }
             else if (Karaclass.m_ShowChords && myLyricsMgmt.ChordsOriginatedFrom == MidiLyricsMgmt.ChordsOrigins.Discovery)
             {                
                 myLyricsMgmt.ResetDisplayChordsOptions(true);
                 if (Application.OpenForms.OfType<frmMidiLyrics>().Count() > 0)
-                    frmMidiLyrics?.SetLyrics(myLyricsMgmt.KLyrics);
+                    frmMidiLyrics?.SetLyrics(myLyricsMgmt.KLyrics, MIDIfileName);
             }
 
 
