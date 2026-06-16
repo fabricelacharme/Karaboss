@@ -374,6 +374,10 @@ namespace Karaboss
         private readonly HashSet<Control> controlsToMove = new HashSet<Control>();
         #endregion
 
+
+        bool bPnlVisible = false;
+        DateTime startTime;
+
         #endregion Form
 
 
@@ -658,8 +662,7 @@ namespace Karaboss
                 if (value != _bForceUppercase)
                 {
                     _bForceUppercase = value;
-                    pBox.bforceUppercase = _bForceUppercase;
-                    //SetLyrics(myLyricsMgmt.KLyrics);
+                    pBox.bforceUppercase = _bForceUppercase;                    
                 }
             }
         }
@@ -744,10 +747,7 @@ namespace Karaboss
             pBox.FileName = Path.GetFileNameWithoutExtension(fileName);
 
             #region MIDI
-
-            //BeatDuration = myLyricsMgmt.Division;
-            //TotalTicks = myLyricsMgmt.TotalTicks;
-            //Duration = myLyricsMgmt.Duration;
+           
             FirstMelodyNoteTicksOn = myLyricsMgmt.FirstMelodyNoteTicksOn;
 
             #endregion MIDI
@@ -756,11 +756,7 @@ namespace Karaboss
             #region Graphic optimization
 
             SetStyle(ControlStyles.AllPaintingInWmPaint | ControlStyles.OptimizedDoubleBuffer | ControlStyles.UserPaint, true);
-
-            //this.SetStyle(ControlStyles.AllPaintingInWmPaint, true);
-            //this.SetStyle(ControlStyles.ResizeRedraw, true);
-            //this.SetStyle(ControlStyles.OptimizedDoubleBuffer, true);
-            //this.SetStyle(ControlStyles.UserPaint, true);
+          
 
             #endregion Graphic optimization
 
@@ -771,8 +767,6 @@ namespace Karaboss
             controlsToMove.Add(this);
             // UserControls picball & pBox manage themselves this move.
             controlsToMove.Add(this.pnlWindow);
-            //controlsToMove.Add(this.pnlTittle);
-            //controlsToMove.Add(this.lblTittle);
 
             #endregion
 
@@ -988,13 +982,7 @@ namespace Karaboss
 
         private void pBox_Options(object sender, EventArgs e)
         {
-            Cursor.Current = Cursors.WaitCursor;
-
-            if (Application.OpenForms.OfType<frmMidiLyrOptions>().Count() == 0)
-            {
-                frmMidiLyrOptions frmMidiLyrOptions = new frmMidiLyrOptions();
-                frmMidiLyrOptions.Show();
-            }
+            DisplayOptions();
         }
 
         private void pBox_FullScreen(object sender, EventArgs e)
@@ -1127,6 +1115,22 @@ namespace Karaboss
 
 
         #endregion Form events
+
+
+        #region Show frmMidiLyrOptions
+
+        private void DisplayOptions()
+        {
+            Cursor.Current = Cursors.WaitCursor;
+
+            if (Application.OpenForms.OfType<frmMidiLyrOptions>().Count() == 0)
+            {
+                frmMidiLyrOptions frmMidiLyrOptions = new frmMidiLyrOptions();
+                frmMidiLyrOptions.Show();
+            }
+        }
+
+        #endregion Show frmMidiLyrOptions
 
 
         #region initializations
@@ -1338,23 +1342,7 @@ namespace Karaboss
 
         #region Lyrics 
 
-        public void Populate(kLyrics kls, int duration, int totalticks, string filename)
-        {
-            currentTextPos = 0;
-
-            // Load kLyrics with kLyrics to have all the information for chords and lyrics positions, used for balls animation
-            if (Karaclass.m_ShowChords && myLyricsMgmt != null && myLyricsMgmt.ChordsOriginatedFrom == MidiLyricsMgmt.ChordsOrigins.Lyrics)
-            {
-                kls = RemoveChordsFromLyrics(kls);
-            }
-
-            pBox.Populate(kls, Duration, TotalTicks, FileName, _bForceUppercase, Karaclass.m_ShowChords);
-
-           
-            // Load balls times after having loaded the kLyrics in the pBox because the kLyrics are transformed (trailing spaces added, instrumental parts etc...) and the balls times are based on the kLyrics syllabes positions
-            if (bShowBalls)
-                LoadBallsTimes(kls);
-        }
+       
 
 
         /// <summary>
@@ -1362,9 +1350,13 @@ namespace Karaboss
         ///  1/4 = LineFeed
         ///  1/2 = Paragraph
         /// </summary>
-        public void SetLyrics(kLyrics kl, string FileName)
+        public void SetLyrics(kLyrics kl, int beatduration, int firstmelodynotetickson, string filename)
         {
             currentTextPos = 0;
+
+            BeatDuration = beatduration;
+            FirstMelodyNoteTicksOn = firstmelodynotetickson;
+            FileName = filename;
 
             // Load kLyrics with kLyrics to have all the information for chords and lyrics positions, used for balls animation
             if (Karaclass.m_ShowChords && myLyricsMgmt != null && myLyricsMgmt.ChordsOriginatedFrom == MidiLyricsMgmt.ChordsOrigins.Lyrics)
@@ -1372,16 +1364,12 @@ namespace Karaboss
                 kl = RemoveChordsFromLyrics(kl);
             }
 
-            pBox.Populate(kl, Duration, TotalTicks, FileName, _bForceUppercase, Karaclass.m_ShowChords);
+            // Restore karaoke display type if a pause was set before (KaraokeDisplayType = Information)
+            KaraokeDisplayType = Properties.Settings.Default.KaraokeDisplayType;
+            
+            pBox.Populate(kl, myLyricsMgmt.Duration, myLyricsMgmt.TotalTicks, beatduration, firstmelodynotetickson, Path.GetFileNameWithoutExtension(filename), _bForceUppercase, Karaclass.m_ShowChords);
 
-            /*
-            pBox.KLyrics = kl;
-
-            // Force Uppercase         
-            pBox.bforceUppercase = _bForceUppercase;
-            pBox.bShowChords = Karaclass.m_ShowChords;
-            */
-
+           
             // Load balls times after having loaded the kLyrics in the pBox because the kLyrics are transformed (trailing spaces added, instrumental parts etc...) and the balls times are based on the kLyrics syllabes positions
             if (bShowBalls)
                 LoadBallsTimes(kl);
@@ -1599,7 +1587,7 @@ namespace Karaboss
                 myLyricsMgmt.ResetDisplayChordsOptions(chkChords.Checked);
 
                 // Load modified lyrics into the picturebox
-                SetLyrics(myLyricsMgmt.KLyrics, FileName);
+                SetLyrics(myLyricsMgmt.KLyrics, BeatDuration, FirstMelodyNoteTicksOn, FileName);
 
                 // Refresh score with or without chords
                 frmMidiPlayer frmMidiPlayer = Utilities.FormUtilities.GetForm<frmMidiPlayer>();
@@ -1707,18 +1695,11 @@ namespace Karaboss
         /// <param name="e"></param>
         private void BtnFrmOptions_Click(object sender, EventArgs e)
         {
-            Cursor.Current = Cursors.WaitCursor;
-
-            if (Application.OpenForms.OfType<frmMidiLyrOptions>().Count() == 0)
-            {
-                frmMidiLyrOptions frmMidiLyrOptions = new frmMidiLyrOptions();                
-                frmMidiLyrOptions.Show();
-            }
+            DisplayOptions();
         }
 
 
-        bool bPnlVisible = false;
-        DateTime startTime;
+      
 
         /// <summary>
         /// Show panel on mouse move with a timer

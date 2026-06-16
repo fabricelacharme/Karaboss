@@ -887,15 +887,13 @@ namespace Karaboss.Mp3
                     // if Count down was paused
                     // => restart count down timer
                     PlayerState = PlayerStates.Waiting;
-                    BtnStatus();
-                    //timer5.Enabled = true;
+                    BtnStatus();                    
                     break;
 
                 case PlayerStates.LaunchNextSong:       // pause between 2 songs of a playlist
                     if (Karaclass.m_CountdownSongs == 0)
                     {
-                        // pause removed or no count down => play asap                                            
-                        //newstart = 0;
+                        // pause removed or no count down => play asap                                                                    
                         FirstPlaySong(0);
                     }
                     else

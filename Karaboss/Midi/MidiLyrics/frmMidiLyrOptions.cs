@@ -232,6 +232,9 @@ namespace Karaboss
 
             pBox.bIsSettings = true;
             pBox.LoadDemoText();
+
+            pBox.Populate(pBox.KLyrics, pBox.Duration, pBox.TotalTicks, pBox.BeatDuration, pBox.FirstMelodyNoteTicksOn, pBox.FileName, bForceUppercase, _bShowChords);
+
         }
 
 
@@ -1234,7 +1237,6 @@ namespace Karaboss
         }
 
         #endregion font 
-
       
 
         #region FrameType
@@ -1303,6 +1305,7 @@ namespace Karaboss
         }
 
         #endregion gradient
+
 
 
         #region Lyrics decoration 
@@ -1523,8 +1526,7 @@ namespace Karaboss
             if (Application.OpenForms.OfType<frmMidiLyrics>().Count() > 0) {
                 frmMidiLyrics frmMidiLyrics = Utilities.FormUtilities.GetForm<frmMidiLyrics>();
                 frmMidiLyrics.ApplyFromOptionsForm();
-            }
-          
+            }          
         }
 
 
@@ -1788,8 +1790,7 @@ namespace Karaboss
                         break;
                 }
                 #endregion SizeMode
-
-
+               
                 // Cancel changes
                 ThemeModified(false);
 
