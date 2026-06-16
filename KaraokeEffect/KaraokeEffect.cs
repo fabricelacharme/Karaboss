@@ -2885,7 +2885,7 @@ namespace keffect
             {
                 scale = 1;
                 // Center text horizontally
-                x0 = (int)((pBox.ClientSize.Width - w) / 2);
+                x0 = (int)((pBox.Width - w) / 2);
             }
 
             #endregion Scale font size to fit text in picture box
@@ -3153,7 +3153,7 @@ namespace keffect
             else
             {
                 // Center text horizontally
-                x0 = (int)((pBox.Width - 2) / 2);
+                x0 = (int)((pBox.Width - w) / 2);
             }
 
             #endregion Scale font size to fit text in picture box
