@@ -749,6 +749,9 @@ namespace PicControl
         
         public Image m_CurrentImage { get; set; }
 
+
+        public Image m_LogoImage {  get; set; }
+
         #endregion Picture
 
 
@@ -1561,9 +1564,21 @@ namespace PicControl
 
             #region Initial text position
                         
-            currentLine = 1;            
+            currentLine = 1;
 
             #endregion Initial text position
+
+
+            #region Logo image
+            
+            var AppDataFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), Application.ProductName);
+            string logoPath = Path.Combine(AppDataFolder, "witch100.png");
+            if (File.Exists(logoPath)) 
+                m_LogoImage = Image.FromFile(logoPath);
+
+
+            #endregion Logo image
+
 
 
             pBox.Invalidate();
@@ -2891,6 +2906,9 @@ namespace PicControl
                             Console.Write("Error drawing image: " + dr.Message);
                         }
                     }
+
+                   
+
                     break;
 
                 case "SolidColor":                    
@@ -3022,17 +3040,25 @@ namespace PicControl
                         }
                         gp.Dispose(); // Dispose the GraphicsPath to free resources                                       
                     }
-                    break;                           
-            }                        
-            
+                    break;
+
+                   
+
+            }
+
+
+            if (m_LogoImage != null)
+            {
+                e.Graphics.DrawImage(m_LogoImage, 0, pBox.Height - 100, (int)m_LogoImage.Width, (int)m_LogoImage.Height);
+            }
             #endregion
-            
+
 
             #region draw text           
 
             //if (lstLyricsLines is null || lstLyricsLines.Count == 0)
             //    return;
-            
+
             switch (KaraokeDisplayType)
             {
                 case KaraokeDisplayTypes.FourLinesSwapped:
