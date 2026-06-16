@@ -388,6 +388,7 @@ namespace keffect
 
         #endregion TopMost
 
+
         #region Context menus
         private ContextMenu picContextMenu;
         #endregion Context menus
@@ -596,6 +597,8 @@ namespace keffect
         }
 
         public Image m_CurrentImage { get; set; }
+
+        public Image m_LogoImage { get; set; }
 
         #endregion Picture
 
@@ -1253,8 +1256,18 @@ namespace keffect
             _timerGradient.Tick += new EventHandler(_timerGradient_Tick);
 
             #endregion Gradient colors
-            
-        }      
+
+
+            #region Logo image
+
+            var AppDataFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), Application.ProductName);
+            string logoPath = Path.Combine(AppDataFolder, "witch100.png");
+            if (File.Exists(logoPath))
+                m_LogoImage = Image.FromFile(logoPath);
+
+            #endregion Logo image
+
+        }
 
         /// <summary>
         /// Display a text from another windows form (used in playlists to display song title and artist during the wait time before the song starts)
@@ -2440,7 +2453,7 @@ namespace keffect
             e.Graphics.TextRenderingHint = TextRenderingHint.ClearTypeGridFit;
             e.Graphics.SmoothingMode = SmoothingMode.AntiAlias;
 
-            #region draw background image
+            #region Draw background image
 
             // Create a GraphicsPath to define the area to fill
             GraphicsPath gp;
@@ -2613,7 +2626,14 @@ namespace keffect
                     
                     break;
             }
-            #endregion draw background image
+
+
+            if (m_LogoImage != null)
+            {
+                e.Graphics.DrawImage(m_LogoImage, 0, pBox.Height - 100, (int)m_LogoImage.Width, (int)m_LogoImage.Height);
+            }
+
+            #endregion Draw background image
 
 
             #region draw text
@@ -2865,7 +2885,7 @@ namespace keffect
             {
                 scale = 1;
                 // Center text horizontally
-                x0 = (int)((pBox.Width - w) / 2);
+                x0 = (int)((pBox.ClientSize.Width - w) / 2);
             }
 
             #endregion Scale font size to fit text in picture box
@@ -3119,6 +3139,7 @@ namespace keffect
             #region Scale font size to fit text in picture box
 
             float w = MeasureString(s, _karaokeFont.Size);
+           
             // ************************  Set ScaleTransform
             // Example: if the text is greater than the width of the picture box, we reduce the size of the text to fit it in the picture box
             if (w > 0)
@@ -3132,7 +3153,7 @@ namespace keffect
             else
             {
                 // Center text horizontally
-                x0 = (int)((pBox.Width - w) / 2);
+                x0 = (int)((pBox.Width - 2) / 2);
             }
 
             #endregion Scale font size to fit text in picture box
@@ -3275,7 +3296,8 @@ namespace keffect
                             y0 = (int)MeasureStringHeight(FileName, _titleMarginTop * _TitleFont.Size);
                             break;
                         case OptionsDisplay.Top:
-                            y0 = (int)(pBox.ClientSize.Height - MeasureStringHeight(FileName, _titleMarginBottom * _TitleFont.Size));
+                            //y0 = (int)(pBox.ClientSize.Height - MeasureStringHeight(FileName, _titleMarginBottom * _TitleFont.Size));
+                            y0 = (int)(pBox.ClientSize.Height - MeasureStringHeight(FileName, _TitleFont.Size));
                             break;
                     }
                     break;
@@ -4403,6 +4425,18 @@ namespace keffect
         }
 
         #endregion Move Window
+
+
+        public void Populate(kLyrics kls, double duration, string filename, bool bforceuppercase)
+        {
+            KLyrics = kls;
+            Duration = duration;
+            FileName = filename;
+            bforceUppercase = bforceuppercase;
+
+            // Load lyrics, calculate fonts size
+            Init();
+        }
 
 
         #endregion Public methods

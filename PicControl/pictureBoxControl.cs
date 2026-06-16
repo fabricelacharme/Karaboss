@@ -1144,7 +1144,6 @@ namespace PicControl
         public pictureBoxControl()
         {
             InitializeComponent();
-
            
             #region Move form without title bar
 
@@ -1576,10 +1575,7 @@ namespace PicControl
             if (File.Exists(logoPath)) 
                 m_LogoImage = Image.FromFile(logoPath);
 
-
             #endregion Logo image
-
-
 
             pBox.Invalidate();
         }
@@ -2885,7 +2881,7 @@ namespace PicControl
             e.Graphics.SmoothingMode = SmoothingMode.AntiAlias;
 
             // Draw background image
-            #region draw background image or gradient
+            #region Draw background image or gradient
 
             // Create a GraphicsPath to define the area to fill
             GraphicsPath gp;
@@ -3051,7 +3047,8 @@ namespace PicControl
             {
                 e.Graphics.DrawImage(m_LogoImage, 0, pBox.Height - 100, (int)m_LogoImage.Width, (int)m_LogoImage.Height);
             }
-            #endregion
+            
+            #endregion Draw background image or gradient
 
 
             #region draw text           
