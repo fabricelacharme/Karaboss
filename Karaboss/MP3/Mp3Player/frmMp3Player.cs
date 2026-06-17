@@ -789,20 +789,14 @@ namespace Karaboss.Mp3
                 BtnStatus();
                 ValideMenus(false);
 
-                ManagePauseEnding();
+                //ManagePauseEnding();
 
                 // Set Volume, frequency & transpose
                 SetInitialListenValues();
 
-
                 StartKaraoke();
-                //if (Application.OpenForms.OfType<frmMp3Lyrics>().Count() > 0)
-                //    frmMp3Lyrics.PlayStopActions(false);
 
-                Player.Play(Mp3FullPath, start);
-
-                
-
+                Player.Play(Mp3FullPath, start);                
                 Timer1.Start();
 
                 // Start balls
@@ -964,7 +958,7 @@ namespace Karaboss.Mp3
                     // Reload modified lyrics before playing
                     if (Application.OpenForms.OfType<frmMp3Lyrics>().Count() > 0)
                     {
-                        frmMp3Lyrics.SetLyrics(localKaraokeLyrics);
+                        frmMp3Lyrics.SetLyrics(localKaraokeLyrics, _duration, Mp3FileName, currentPlaylistItem);
                     }
 
 
@@ -1873,14 +1867,14 @@ namespace Karaboss.Mp3
                         if (currentPlaylistItem == null)
                         {
                             // No playlist => set lyrics
-                            frmMp3Lyrics.SetLyrics(Mp3LyricsMgmtHelper.mp3KaraokeLyrics);
+                            frmMp3Lyrics.SetLyrics(Mp3LyricsMgmtHelper.mp3KaraokeLyrics, _duration, Mp3FileName, currentPlaylistItem);
                         }
                         else
                         {
                             // No countdown and no pause => set lyrics
                             if (!Karaclass.m_PauseBetweenSongs && Karaclass.m_CountdownSongs == 0)
                             {
-                                frmMp3Lyrics.SetLyrics(Mp3LyricsMgmtHelper.mp3KaraokeLyrics);
+                                frmMp3Lyrics.SetLyrics(Mp3LyricsMgmtHelper.mp3KaraokeLyrics, _duration, Mp3FileName, currentPlaylistItem);
                             }
                         }
                     }
@@ -1899,14 +1893,14 @@ namespace Karaboss.Mp3
                         if (currentPlaylistItem == null)
                         {
                             // No playlist => set lyrics
-                            frmMp3Lyrics.SetLyrics(Mp3LyricsMgmtHelper.mp3KaraokeLyrics);
+                            frmMp3Lyrics.SetLyrics(Mp3LyricsMgmtHelper.mp3KaraokeLyrics, _duration, Mp3FileName, currentPlaylistItem);
                         }
                         else
                         {
                             // No countdown and no pause => set lyrics
                             if (!Karaclass.m_PauseBetweenSongs && Karaclass.m_CountdownSongs == 0)
                             {
-                                frmMp3Lyrics.SetLyrics(Mp3LyricsMgmtHelper.mp3KaraokeLyrics);
+                                frmMp3Lyrics.SetLyrics(Mp3LyricsMgmtHelper.mp3KaraokeLyrics, _duration, Mp3FileName, currentPlaylistItem);
                             }
                         }
                     }
@@ -1951,14 +1945,15 @@ namespace Karaboss.Mp3
         {
 
             // Close form if opened
-            if (Application.OpenForms.OfType<frmMp3Lyrics>().Count() > 0)
-                Application.OpenForms["frmMp3Lyrics"].Close();
+            //if (Application.OpenForms.OfType<frmMp3Lyrics>().Count() > 0)
+            //    Application.OpenForms["frmMp3Lyrics"].Close();
 
-
-            // Open and add to owners (will be closed/minimized together and will be on top)
-            frmMp3Lyrics = new frmMp3Lyrics(Mp3FullPath, currentPlaylist);
-            //frmMp3Lyrics.Owner = this;
-            frmMp3Lyrics.Show();
+            if (Application.OpenForms.OfType<frmMp3Lyrics>().Count() == 0)
+            {
+                // Open and add to owners (will be closed/minimized together and will be on top)
+                frmMp3Lyrics = new frmMp3Lyrics(Mp3FullPath, currentPlaylist);             
+                frmMp3Lyrics.Show();
+            }
 
             // cas d'une playlist ou non : met à jour le diaporama
             SetSlideShow();           
@@ -1993,7 +1988,7 @@ namespace Karaboss.Mp3
             {
                 frmMp3Lyrics.Start();
                 frmMp3Lyrics.PlayStopActions(false);
-
+                frmMp3Lyrics.SetLyrics(Mp3LyricsMgmtHelper.mp3KaraokeLyrics, _duration, Mp3FileName, currentPlaylistItem);
             }
         }
 
@@ -3991,11 +3986,6 @@ namespace Karaboss.Mp3
             SetTitle(Mp3FileName);
             UpdatePlayListsForm(currentPlaylistItem.Song);
 
-            // close lyrics form frmMp3Lyrics
-            if (Application.OpenForms.OfType<frmMp3Lyrics>().Count() > 0)
-            {
-                frmMp3Lyrics.Close();
-            }
 
             // Close form frmMp3LyricsSimple
             if (Application.OpenForms.OfType<frmMp3LyricsSimple>().Count() > 0)
@@ -4035,11 +4025,21 @@ namespace Karaboss.Mp3
             // Display a waiting information (not the words)
             if (Karaclass.m_PauseBetweenSongs)
             {
+                #region Pause between songs
+
                 PlayerState = PlayerStates.LaunchNextSong;
                 BtnStatus();
-                
+
                 #region Display singer in the Lyrics form
-                
+
+                // Display the Lyric form even if no lyrics in order to display the singer
+                if (Application.OpenForms.OfType<frmMp3Lyrics>().Count() == 0)
+                {
+                    frmMp3Lyrics = new frmMp3Lyrics(Mp3FullPath, currentPlaylist);                    
+                    frmMp3Lyrics.Show();
+                }
+
+
                 if (Application.OpenForms.OfType<frmMp3Lyrics>().Count() > 0)
                 {
                     // During the waiting time, display informations about the next singer
@@ -4073,6 +4073,8 @@ namespace Karaboss.Mp3
                 // Focus on paused windows
                 this.Restore();
                 this.Activate();
+
+                #endregion Pause between songs
             }
             else
             {
@@ -4192,7 +4194,7 @@ namespace Karaboss.Mp3
                 if (Application.OpenForms.OfType<frmMp3Lyrics>().Count() > 0)
                 {
                     frmMp3Lyrics.KaraokeDisplayType = Properties.Settings.Default.KaraokeDisplayType;
-                    frmMp3Lyrics.SetLyrics(Mp3LyricsMgmtHelper.mp3KaraokeLyrics);
+                    frmMp3Lyrics.SetLyrics(Mp3LyricsMgmtHelper.mp3KaraokeLyrics, _duration, Mp3FileName, currentPlaylistItem);
                 }
             }
         }
@@ -4222,7 +4224,7 @@ namespace Karaboss.Mp3
 
                     // Restore karaoke display layout (four lines swapped, fixed lines etc...)
                     frmMp3Lyrics.KaraokeDisplayType = Properties.Settings.Default.KaraokeDisplayType;
-                    frmMp3Lyrics.SetLyrics(Mp3LyricsMgmtHelper.mp3KaraokeLyrics);
+                    frmMp3Lyrics.SetLyrics(Mp3LyricsMgmtHelper.mp3KaraokeLyrics, _duration, Mp3FileName, currentPlaylistItem);
                 }
             }
         }
@@ -4709,6 +4711,7 @@ namespace Karaboss.Mp3
                 // Countdown completed, Play next song of the play list
                 timerCountdown.Enabled = false;
                 PlayerState = PlayerStates.Stopped;
+                
                 ManageCountdownEnding();
                 PlayPauseMusic();
             }

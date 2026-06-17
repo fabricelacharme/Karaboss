@@ -1357,10 +1357,7 @@ namespace Karaboss
 
 
         #region Lyrics 
-
-       
-
-
+      
         /// <summary>
         /// Load song in picturebox control
         ///  1/4 = LineFeed
@@ -1395,8 +1392,7 @@ namespace Karaboss
             else
             {
                 OptionBackground = Properties.Settings.Default.BackGroundOption;
-                DirSlideShow = Properties.Settings.Default.dirSlideShow;
-                //SingleImagePath = Properties.Settings.Default.SingleImagePath;
+                DirSlideShow = Properties.Settings.Default.dirSlideShow;                
             }
             #endregion Restore options
 
@@ -1469,6 +1465,7 @@ namespace Karaboss
 
         public void DisplayText(List<string>Lines)
         {
+            pBox.OptionBackground = "Image";
             pBox.DisplayText(Lines);
         }
 
@@ -1628,9 +1625,7 @@ namespace Karaboss
 
                 // Set cursor as default
                 Cursor.Current = Cursors.Default;
-
             }
-
         }
 
         /// <summary>
@@ -1729,10 +1724,7 @@ namespace Karaboss
         private void BtnFrmOptions_Click(object sender, EventArgs e)
         {
             DisplayOptions();
-        }
-
-
-      
+        }      
 
         /// <summary>
         /// Show panel on mouse move with a timer
@@ -1834,16 +1826,19 @@ namespace Karaboss
         /// La cinématique d'attente bouzille tout
         /// </summary>
         /// <param name="dirSlideShow"></param>
+        /*
         public void SetSlideShow(string dirSlideShow)
         {
             DirSlideShow = dirSlideShow;
         }
+        */
 
         /// <summary>
         /// Use case : Plalist
         /// Force Slideshow backgroud if it was requested in the playlist, even if the option is not set in the display options
         /// </summary>
         /// <param name="dirSlideShow"></param>
+        /*
         public void ForceSlideShow(string dirSlideShow)
         {
             OptionBackground = "Diaporama";
@@ -1851,11 +1846,13 @@ namespace Karaboss
             pBox.FreqSlideShow = Properties.Settings.Default.freqSlideShow;            
             
         }
+        */
 
         /// <summary>
         /// Use case: Playlists
         /// No slide show was requested in the playlist, but the slideshow was forced for the previous song, so restore background option to the one set in display options
         /// </summary>
+        /*
         public void RestoreBackgroundAnimation()
         {
             _optionbackground = Properties.Settings.Default.BackGroundOption;
@@ -1868,7 +1865,8 @@ namespace Karaboss
 
             pBox.OptionBackground = _optionbackground;
         }
-
+        */
+        
         #endregion SlideShow
 
 

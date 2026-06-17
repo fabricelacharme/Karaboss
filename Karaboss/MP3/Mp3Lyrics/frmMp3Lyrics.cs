@@ -245,6 +245,21 @@ namespace Karaboss.Mp3
             }
         }
 
+        private string _fileName = "Song name";
+        public string FileName                  // Name of the song to display on the screen (Filename without extension)
+        {
+            get { return _fileName; }
+            set
+            {
+                if (value != null)
+                {
+                    _fileName = value;
+                    if (_bShowSongName)
+                        karaokeEffect1.FileName = _fileName;
+                }
+            }
+        }
+
         #endregion Draw filename
 
 
@@ -702,6 +717,7 @@ namespace Karaboss.Mp3
 
 
             #region playlists
+
             if (myPlayList != null)
             {
                 // Playlists
@@ -1097,9 +1113,35 @@ namespace Karaboss.Mp3
         /// Load lyrics into karaokeEffect1.KLyrics
         /// </summary>
         /// <param name="lyrics"></param>
-        public void SetLyrics(kLyrics lyrics)
-        {
-            karaokeEffect1.KLyrics = lyrics;
+        public void SetLyrics(kLyrics lyrics, double duration, string filename, PlaylistItem mplaylistitem = null)
+        {            
+            FileName = filename;
+            Duration = 1000 * duration;
+            
+            if (mplaylistitem != null)
+                currentPlaylistItem = mplaylistitem;
+            
+            #region restore options
+
+            // Restore karaoke display type if a pause was set before (KaraokeDisplayType = Information)
+            KaraokeDisplayType = Properties.Settings.Default.KaraokeDisplayType;
+
+            // Restore background Slideshow
+            if (currentPlaylist != null && currentPlaylistItem != null && currentPlaylistItem.DirSlideShow != string.Empty)
+            {
+                OptionBackground = "Diaporama";
+                DirSlideShow = currentPlaylistItem.DirSlideShow;
+            }
+            else
+            {
+                OptionBackground = Properties.Settings.Default.BackGroundOption;
+                DirSlideShow = Properties.Settings.Default.dirSlideShow;                
+            }
+            #endregion Restore options
+
+            karaokeEffect1.Populate(lyrics, Duration, filename, bForceUppercase);
+
+            //karaokeEffect1.KLyrics = lyrics;
         }
 
         #endregion Lyrics
@@ -1245,6 +1287,7 @@ namespace Karaboss.Mp3
         /// <param name="text"></param>
         public void DisplayText(List<string> Lines)
         {
+            karaokeEffect1.OptionBackground = "Image";
             karaokeEffect1.DisplayText(Lines);
         }
 

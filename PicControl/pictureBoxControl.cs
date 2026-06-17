@@ -339,14 +339,7 @@ namespace PicControl
 
         #endregion Draw filename
 
-
-        #region Draw informations
-
-        private List<string> _lstInformations = new List<string>();
-
-        #endregion Draw informations
-
-
+       
         #region Draw syllables
 
         private float _AverageWidth;
@@ -744,9 +737,8 @@ namespace PicControl
                 _sizemode = value;
                 pBox.SizeMode = _sizemode;
             }
-        }
+        }        
 
-        
         public Image m_CurrentImage { get; set; }
 
 
@@ -1482,9 +1474,7 @@ namespace PicControl
                     _TotalTicks += ticks;
 
                     kLine.Add(syll);
-                }
-                
-
+                }                
                 KL.Add(kLine);
             }
 

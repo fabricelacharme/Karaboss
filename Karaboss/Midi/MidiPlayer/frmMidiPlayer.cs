@@ -849,20 +849,10 @@ namespace Karaboss
                 
                 // 1. DISPLAY LYRICS
 
-                // Display form
+                // Display lyrics form
                 ManageDisplayLyricsForm();
-
-
-                // Lyrics
-                if (Application.OpenForms.OfType<frmMidiLyrics>().Count() > 0)
-                {
-                    // Disable buttons for editing lyrics and chords
-                    frmMidiLyrics.PlayStopActions(false);
-                    // Send mandatory informations to lyrics form
-                    frmMidiLyrics.SetLyrics(myLyricsMgmt.KLyrics, sequence1.Division, myLyricsMgmt.FirstMelodyNoteTicksOn, MIDIfileName);
-                }
-
-                
+               
+                // Send lyrics and informations
                 StartKaraoke();
 
 
@@ -4096,6 +4086,7 @@ namespace Karaboss
         /// <summary>
         /// If the song is part of a playlist, set the diaporama defined for this song or the default one if not defined
         /// </summary>
+        /*
         private void SetSlideShow()
         {
             if (frmMidiLyrics == null) return;
@@ -4123,7 +4114,7 @@ namespace Karaboss
                 frmMidiLyrics.SetSlideShow(dirSlideShow);
             }            
         }
-
+        */
 
         /// <summary>
         /// Display the form for lyrics edition
@@ -6421,13 +6412,12 @@ namespace Karaboss
                 PlayerState = PlayerStates.LaunchNextSong;
                 BtnStatus();
 
-                #region display singer in the Lyrics form
+                #region Display singer in the Lyrics form
 
                 // Display the Lyric form even if no lyrics in order to display the singer
                 if (Application.OpenForms.OfType<frmMidiLyrics>().Count() == 0)
                 {
-                    frmMidiLyrics = new frmMidiLyrics(myLyricsMgmt, MIDIfileFullPath, currentPlaylist);
-                    //frmMidiLyrics.Owner = this;
+                    frmMidiLyrics = new frmMidiLyrics(myLyricsMgmt, MIDIfileFullPath, currentPlaylist);                    
                     frmMidiLyrics.Show();
                 }
                 
@@ -6456,17 +6446,18 @@ namespace Karaboss
                     }
 
                     // arriere plan provisoire
-                    frmMidiLyrics.AlloModifyDirSlideShow = true;
-                    frmMidiLyrics.DirSlideShow = Properties.Settings.Default.dirSlideShow;
-                    frmMidiLyrics.AlloModifyDirSlideShow = false;
+                    //frmMidiLyrics.AlloModifyDirSlideShow = true;
+                    //frmMidiLyrics.DirSlideShow = Properties.Settings.Default.dirSlideShow;
+                    //frmMidiLyrics.AlloModifyDirSlideShow = false;
 
                                       
-                    frmMidiLyrics.bTextBackGround = false;
+                    //frmMidiLyrics.bTextBackGround = false;
 
                     // Display next singer in lyrics form
                     frmMidiLyrics.DisplayText(lstSingerInfos);
                 }
-                #endregion
+                
+                #endregion Display singer in the Lyrics form
 
                 // Focus on paused windows
                 this.Restore();
@@ -6500,8 +6491,8 @@ namespace Karaboss
             BtnStatus();
 
             w_tick = 0;
-            int sec = Karaclass.m_CountdownSongs;  // wait for x seconds
-            w_wait = sec + 1; 
+            int seconds = Karaclass.m_CountdownSongs;  // wait for x seconds
+            w_wait = seconds + 1; 
 
             // Open form if not present
             if (Application.OpenForms.OfType<frmMidiLyrics>().Count() == 0)
@@ -6517,7 +6508,7 @@ namespace Karaboss
             // Force background for the countdown to solid color
             frmMidiLyrics.OptionBackground = "SolidColor";
 
-            frmMidiLyrics.LoadWaitSong(sec);
+            frmMidiLyrics.LoadWaitSong(seconds);
 
             timerCountdown.Interval = 1000;  // interval = 1 sec      
             timerCountdown.Enabled = true;
@@ -6641,8 +6632,6 @@ namespace Karaboss
                 }
             }
         }
-
-
        
 
         #endregion Playlists
@@ -8003,6 +7992,8 @@ namespace Karaboss
             {
                 frmMidiLyrics.Start();
                 frmMidiLyrics.PlayStopActions(false);
+                // Send mandatory informations to lyrics form
+                frmMidiLyrics.SetLyrics(myLyricsMgmt.KLyrics, sequence1.Division, myLyricsMgmt.FirstMelodyNoteTicksOn, MIDIfileName);
 
             }          
         }

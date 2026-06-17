@@ -531,8 +531,8 @@ namespace keffect
                 if (value.Lines.Count == 0) return;
                 _kLyrics = value;
                 _kLyricsOrg = (kLyrics)_kLyrics.Clone();
-                if (_kLyrics != null && _kLyrics.Lines.Count > 0)                                    
-                    Init();
+                //if (_kLyrics != null && _kLyrics.Lines.Count > 0)                                    
+                //    Init();
                 
             }
         }
@@ -1033,8 +1033,8 @@ namespace keffect
 
             SetDefaultValues();
 
-            if (_kLyrics != null && _kLyrics.Lines.Count > 0) 
-                Init();                       
+            //if (_kLyrics != null && _kLyrics.Lines.Count > 0) 
+            //    Init();                       
         }
 
     
@@ -1290,7 +1290,8 @@ namespace keffect
             KaraokeDisplayType = KaraokeDisplayTypes.Informations;
             // provisional value
             KLyrics = StoreDemoText(Lines, 100);
-            pBox.Invalidate();
+
+            Init();
         }
 
 
