@@ -501,6 +501,16 @@ namespace Karaboss
             }
         }
 
+
+        private bool _bShowLogo;
+        public bool bShowLogo
+        {
+            get => _bShowLogo; 
+            set { _bShowLogo = value; 
+                pBox.bShowLogo = value;
+            }
+        }
+
         #endregion Picture
 
 
@@ -726,7 +736,6 @@ namespace Karaboss
         #endregion Text transform
 
       
-
         #endregion Declarations
 
 
@@ -1169,6 +1178,9 @@ namespace Karaboss
                 // Display file name in lyrics as title
                 pBox.bShowSongName = Properties.Settings.Default.bShowSongName;
 
+                // Display the logo image
+                bShowLogo = Properties.Settings.Default.bShowLogo;
+
                 // Progressive highlight
                 bProgressiveHighlight = Properties.Settings.Default.bProgressiveHighlight;
 
@@ -1277,7 +1289,11 @@ namespace Karaboss
                 // Show hints (introduction, instrumental, ending)
                 bShowHints = Properties.Settings.Default.bShowHints;
 
+                // Display song name
                 bShowSongName = Properties.Settings.Default.bShowSongName;
+
+                // Display logo
+                bShowLogo = Properties.Settings.Default.bShowLogo;
 
                 //Window lyrics TopMost
                 bTopMost = Properties.Settings.Default.frmMidiLyricsTopMost;
@@ -1366,7 +1382,19 @@ namespace Karaboss
 
             // Restore karaoke display type if a pause was set before (KaraokeDisplayType = Information)
             KaraokeDisplayType = Properties.Settings.Default.KaraokeDisplayType;
-            
+
+            // Restore background Slideshow
+            if (currentPlaylist != null && currentPlaylistItem != null && currentPlaylistItem.DirSlideShow != string.Empty)
+            {
+                OptionBackground = "Diaporama";
+                DirSlideShow = currentPlaylistItem.DirSlideShow;
+            }
+            else
+            {
+                OptionBackground = Properties.Settings.Default.BackGroundOption;
+                DirSlideShow = Properties.Settings.Default.dirSlideShow;
+                //SingleImagePath = Properties.Settings.Default.SingleImagePath;
+            }
             pBox.Populate(kl, myLyricsMgmt.Duration, myLyricsMgmt.TotalTicks, beatduration, firstmelodynotetickson, Path.GetFileNameWithoutExtension(filename), _bForceUppercase, Karaclass.m_ShowChords);
 
            

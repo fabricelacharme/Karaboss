@@ -639,7 +639,7 @@ namespace PicControl
         }
 
         #endregion Karaoke Lyrics
-
+        
 
         #region Margins
 
@@ -750,7 +750,24 @@ namespace PicControl
         public Image m_CurrentImage { get; set; }
 
 
+        #region Logo
+
+        private int _imgLogoSize = 100;
+
+        private bool _bShowLogo;
+        public bool bShowLogo
+        {
+            get { return _bShowLogo; }
+            set
+            {
+                _bShowLogo = value;
+                pBox.Invalidate();
+            }
+        }
+
         public Image m_LogoImage {  get; set; }
+
+        #endregion Logo
 
         #endregion Picture
 
@@ -1567,16 +1584,6 @@ namespace PicControl
 
             #endregion Initial text position
 
-
-            #region Logo image
-            
-            var AppDataFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), Application.ProductName);
-            string logoPath = Path.Combine(AppDataFolder, "witch100.png");
-            if (File.Exists(logoPath)) 
-                m_LogoImage = Image.FromFile(logoPath);
-
-            #endregion Logo image
-
             pBox.Invalidate();
         }
 
@@ -1951,8 +1958,20 @@ namespace PicControl
 
             // Mandatory when change the display layout in the settings
             // in order to recalculate lengths of fragments
-            if(_bIsSettings)
+            if (_bIsSettings)
+            {
                 this.SetPos(200);
+                _imgLogoSize = 40;
+            }
+
+            #region Logo image
+
+            var AppDataFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), Application.ProductName);
+            string logoPath = Path.Combine(AppDataFolder, "logo.png");
+            if (File.Exists(logoPath))
+                m_LogoImage = Image.FromFile(logoPath);
+
+            #endregion Logo image
 
             if (KaraokeDisplayType == KaraokeDisplayTypes.ConstantScrolling)
                 InitScrollMode();
@@ -3043,9 +3062,10 @@ namespace PicControl
             }
 
 
-            if (m_LogoImage != null)
+            if (_bShowLogo && m_LogoImage != null)
             {
-                e.Graphics.DrawImage(m_LogoImage, 0, pBox.Height - 100, (int)m_LogoImage.Width, (int)m_LogoImage.Height);
+                //e.Graphics.DrawImage(m_LogoImage, 0, pBox.Height - 100, (int)m_LogoImage.Width, (int)m_LogoImage.Height);
+                e.Graphics.DrawImage(m_LogoImage, 0, pBox.Height - _imgLogoSize, _imgLogoSize, _imgLogoSize);
             }
             
             #endregion Draw background image or gradient

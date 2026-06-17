@@ -1947,5 +1947,17 @@ namespace Karaboss.Properties {
                 this["bShowSongName"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool bShowLogo {
+            get {
+                return ((bool)(this["bShowLogo"]));
+            }
+            set {
+                this["bShowLogo"] = value;
+            }
+        }
     }
 }

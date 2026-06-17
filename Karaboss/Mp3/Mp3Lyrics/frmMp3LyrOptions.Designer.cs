@@ -125,6 +125,7 @@
             this.btnSaveTheme = new System.Windows.Forms.Button();
             this.openFileDialog = new System.Windows.Forms.OpenFileDialog();
             this.karaokeEffect1 = new keffect.KaraokeEffect();
+            this.chkShowLogo = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.picBgColor)).BeginInit();
             this.pnlBalls.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
@@ -726,6 +727,7 @@
             // 
             // tabPage1
             // 
+            this.tabPage1.Controls.Add(this.chkShowLogo);
             this.tabPage1.Controls.Add(this.chkShowSongName);
             this.tabPage1.Controls.Add(this.chkShowHints);
             this.tabPage1.Controls.Add(this.lblActiveColor);
@@ -909,6 +911,7 @@
             resources.ApplyResources(this.karaokeEffect1, "karaokeEffect1");
             this.karaokeEffect1.m_CurrentImage = null;
             this.karaokeEffect1.m_DisplayRectangle = new System.Drawing.Rectangle(0, 0, 0, 0);
+            this.karaokeEffect1.m_LogoImage = null;
             this.karaokeEffect1.Name = "karaokeEffect1";
             this.karaokeEffect1.nbLyricsLines = 3;
             this.karaokeEffect1.OptionBackground = null;
@@ -922,6 +925,15 @@
             this.karaokeEffect1.timerIntervall = ((long)(50));
             this.karaokeEffect1.TransitionEffect = keffect.KaraokeEffect.TransitionEffects.Progressive;
             this.karaokeEffect1.TransparencyKey = System.Drawing.Color.Lime;
+            // 
+            // chkShowLogo
+            // 
+            resources.ApplyResources(this.chkShowLogo, "chkShowLogo");
+            this.chkShowLogo.Checked = true;
+            this.chkShowLogo.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.chkShowLogo.Name = "chkShowLogo";
+            this.chkShowLogo.UseVisualStyleBackColor = true;
+            this.chkShowLogo.CheckedChanged += new System.EventHandler(this.chkShowLogo_CheckedChanged);
             // 
             // frmMp3LyrOptions
             // 
@@ -1069,5 +1081,6 @@
         private System.Windows.Forms.Label lblFontSize;
         private System.Windows.Forms.CheckBox chkShowHints;
         private System.Windows.Forms.CheckBox chkShowSongName;
+        private System.Windows.Forms.CheckBox chkShowLogo;
     }
 }

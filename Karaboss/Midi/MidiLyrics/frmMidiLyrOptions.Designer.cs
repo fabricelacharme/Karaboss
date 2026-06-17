@@ -136,6 +136,7 @@
             this.btnNewTheme = new System.Windows.Forms.Button();
             this.openFileDialog = new System.Windows.Forms.OpenFileDialog();
             this.pBox = new PicControl.pictureBoxControl();
+            this.chkShowLogo = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.UpDownNbLines)).BeginInit();
             this.pnlBalls.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
@@ -807,6 +808,7 @@
             // 
             // tabPage1
             // 
+            this.tabPage1.Controls.Add(this.chkShowLogo);
             this.tabPage1.Controls.Add(this.chkShowSongName);
             this.tabPage1.Controls.Add(this.chkShowHints);
             this.tabPage1.Controls.Add(this.lblHighlightColor);
@@ -1008,6 +1010,7 @@
             resources.ApplyResources(this.pBox, "pBox");
             this.pBox.m_CurrentImage = null;
             this.pBox.m_DisplayRectangle = new System.Drawing.Rectangle(0, 0, 0, 0);
+            this.pBox.m_LogoImage = null;
             this.pBox.Name = "pBox";
             this.pBox.nbLyricsLines = 3;
             this.pBox.OptionBackground = null;
@@ -1023,6 +1026,15 @@
             this.pBox.TotalTicks = 0;
             this.pBox.TransitionEffect = PicControl.pictureBoxControl.TransitionEffects.None;
             this.pBox.TransparencyKey = System.Drawing.Color.Lime;
+            // 
+            // chkShowLogo
+            // 
+            resources.ApplyResources(this.chkShowLogo, "chkShowLogo");
+            this.chkShowLogo.Checked = true;
+            this.chkShowLogo.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.chkShowLogo.Name = "chkShowLogo";
+            this.chkShowLogo.UseVisualStyleBackColor = true;
+            this.chkShowLogo.CheckedChanged += new System.EventHandler(this.chkShowLogo_CheckedChanged);
             // 
             // frmMidiLyrOptions
             // 
@@ -1189,5 +1201,6 @@
         private System.Windows.Forms.Label lblFontSize;
         private System.Windows.Forms.CheckBox chkShowHints;
         private System.Windows.Forms.CheckBox chkShowSongName;
+        private System.Windows.Forms.CheckBox chkShowLogo;
     }
 }

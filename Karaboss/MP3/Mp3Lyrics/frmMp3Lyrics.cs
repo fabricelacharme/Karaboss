@@ -45,6 +45,7 @@ using System.Runtime.InteropServices;
 using System.Runtime.InteropServices.ComTypes;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
+using TagLib.Mpeg4;
 
 namespace Karaboss.Mp3
 {    
@@ -426,6 +427,17 @@ namespace Karaboss.Mp3
             }
         }
 
+        private bool _bShowLogo;
+        public bool bShowLogo
+        {
+            get => _bShowLogo;
+            set
+            {
+                _bShowLogo = value;
+                karaokeEffect1.bShowLogo = value;
+            }
+        }
+
         #endregion Picture
 
 
@@ -662,11 +674,7 @@ namespace Karaboss.Mp3
 
             SetStyle(ControlStyles.AllPaintingInWmPaint | ControlStyles.OptimizedDoubleBuffer | ControlStyles.UserPaint, true);
 
-            //this.SetStyle(ControlStyles.AllPaintingInWmPaint, true);
-            //this.SetStyle(ControlStyles.ResizeRedraw, true);
-            //this.SetStyle(ControlStyles.OptimizedDoubleBuffer, true);
-            //this.SetStyle(ControlStyles.UserPaint, true);
-
+            
             #endregion Graphic optimization
 
 
@@ -903,6 +911,9 @@ namespace Karaboss.Mp3
                 // Display file name in lyrics as title
                 karaokeEffect1.bShowSongName = Properties.Settings.Default.bShowSongName;
 
+                // Display the logo image
+                bShowLogo = Properties.Settings.Default.bShowLogo;
+
                 // Progressive highlight
                 bProgressiveHighlight = Properties.Settings.Default.bProgressiveHighlight;
 
@@ -1011,7 +1022,12 @@ namespace Karaboss.Mp3
                 // Show hints (introduction, instrumental, ending)
                 bShowHints = Properties.Settings.Default.bShowHints;
 
+                // Display song name
                 bShowSongName = Properties.Settings.Default.bShowSongName;
+
+                // Display logo
+                bShowLogo = Properties.Settings.Default.bShowLogo;
+
 
                 //Window lyrics TopMost
                 bTopMost = Properties.Settings.Default.frmMp3LyricsTopMost;

@@ -9,6 +9,7 @@ using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
+using TagLib.Mpeg4;
 
 
 namespace Karaboss.Mp3
@@ -137,6 +138,17 @@ namespace Karaboss.Mp3
             {
                 _sizeMode = value;
                 karaokeEffect1.SizeMode = _sizeMode;
+            }
+        }
+
+        private bool _bShowLogo;
+        public bool bShowLogo
+        {
+            get { return _bShowLogo; }
+            set
+            {
+                _bShowLogo = value;
+                karaokeEffect1.bShowLogo = _bShowLogo;
             }
         }
 
@@ -400,6 +412,10 @@ namespace Karaboss.Mp3
 
                 // Show song name
                 chkShowSongName.Checked = Properties.Settings.Default.bShowSongName;
+
+                // Show logo
+                bShowLogo = Properties.Settings.Default.bShowLogo;
+                chkShowLogo.Checked = bShowLogo;
 
                 // Display balls on lyrics
                 chkDisplayBalls.Checked = Karaclass.m_DisplayBalls;
@@ -666,8 +682,11 @@ namespace Karaboss.Mp3
                 // Show hints (introduction, instrumental, ending)
                 Properties.Settings.Default.bShowHints = bShowHints;
 
-
+                // Show song name
                 Properties.Settings.Default.bShowSongName = chkShowSongName.Checked;
+
+                // Show logo
+                Properties.Settings.Default.bShowLogo = chkShowLogo.Checked;
 
                 // Number of lines to display
                 Properties.Settings.Default.TxtNbLines = _nbLyricsLines;
@@ -1389,6 +1408,12 @@ namespace Karaboss.Mp3
             karaokeEffect1.bShowSongName = bShowSongName;
         }
 
+
+        private void chkShowLogo_CheckedChanged(object sender, EventArgs e)
+        {
+            bShowLogo = chkShowLogo.Checked;
+            karaokeEffect1.bShowLogo = bShowLogo;
+        }
 
         #endregion events
 
@@ -2141,8 +2166,9 @@ namespace Karaboss.Mp3
 
 
 
+
         #endregion Color Themes
 
-        
+       
     }
 }

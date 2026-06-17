@@ -33,6 +33,7 @@
 #endregion
 using GradientApp;
 using kar;
+using Karaboss.Properties;
 using Karaboss.Resources.Localization;
 using Karaboss.Themes;
 using System;
@@ -184,6 +185,16 @@ namespace Karaboss
             }
         }
 
+        private bool _bShowLogo;
+        public bool bShowLogo
+        {
+            get { return _bShowLogo; }
+            set
+            {
+                _bShowLogo = value;
+                pBox.bShowLogo = _bShowLogo;
+            }
+        }
         #endregion Picture
 
 
@@ -1134,6 +1145,18 @@ namespace Karaboss
             pBox.bShowSongName = bShowSongName;
         }
 
+        /// <summary>
+        /// Display Logo image
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void chkShowLogo_CheckedChanged(object sender, EventArgs e)
+        {
+            bShowLogo = chkShowLogo.Checked;
+            pBox.bShowLogo = bShowLogo;
+        }
+
+
         #endregion events
 
 
@@ -1648,6 +1671,11 @@ namespace Karaboss
                 // Show song name
                 chkShowSongName.Checked = Properties.Settings.Default.bShowSongName;
 
+                // Show logo
+                bShowLogo = Properties.Settings.Default.bShowLogo;
+                chkShowLogo.Checked = bShowLogo;
+
+
                 // Display balls on lyrics
                 chkDisplayBalls.Checked = Karaclass.m_DisplayBalls;
 
@@ -1927,6 +1955,9 @@ namespace Karaboss
                 // Show song name
                 Properties.Settings.Default.bShowSongName = chkShowSongName.Checked;
 
+                // Show logo
+                Properties.Settings.Default.bShowLogo = chkShowLogo.Checked;
+
                 // Number of lines to display
                 Properties.Settings.Default.TxtNbLines = _nbLyricsLines;
 
@@ -2132,8 +2163,9 @@ namespace Karaboss
         }
 
 
+
         #endregion option form settings
 
-
+       
     }
 }
