@@ -1380,6 +1380,9 @@ namespace Karaboss
                 kl = RemoveChordsFromLyrics(kl);
             }
 
+
+            #region restore options
+
             // Restore karaoke display type if a pause was set before (KaraokeDisplayType = Information)
             KaraokeDisplayType = Properties.Settings.Default.KaraokeDisplayType;
 
@@ -1395,6 +1398,8 @@ namespace Karaboss
                 DirSlideShow = Properties.Settings.Default.dirSlideShow;
                 //SingleImagePath = Properties.Settings.Default.SingleImagePath;
             }
+            #endregion Restore options
+
             pBox.Populate(kl, myLyricsMgmt.Duration, myLyricsMgmt.TotalTicks, beatduration, firstmelodynotetickson, Path.GetFileNameWithoutExtension(filename), _bForceUppercase, Karaclass.m_ShowChords);
 
            
