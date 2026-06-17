@@ -1129,13 +1129,18 @@ namespace Karaboss
         #region Show frmMidiLyrOptions
 
         private void DisplayOptions()
-        {
-            Cursor.Current = Cursors.WaitCursor;
-
+        {            
             if (Application.OpenForms.OfType<frmMidiLyrOptions>().Count() == 0)
             {
+                Cursor.Current = Cursors.WaitCursor;
+
                 frmMidiLyrOptions frmMidiLyrOptions = new frmMidiLyrOptions();
                 frmMidiLyrOptions.Show();
+            }
+            else
+            {
+                frmMidiLyrOptions frmMidiLyrOptions = Utilities.FormUtilities.GetForm<frmMidiLyrOptions>();
+                frmMidiLyrOptions.Focus();
             }
         }
 

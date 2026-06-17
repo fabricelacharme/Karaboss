@@ -597,6 +597,7 @@ namespace keffect
         }
 
         public Image m_CurrentImage { get; set; }
+        
 
         #region Logo
 
@@ -1032,9 +1033,7 @@ namespace keffect
             
 
             SetDefaultValues();
-
-            //if (_kLyrics != null && _kLyrics.Lines.Count > 0) 
-            //    Init();                       
+                                 
         }
 
     
@@ -1208,7 +1207,7 @@ namespace keffect
 
             // Step 100 ms between syllables
             KLyrics = StoreDemoText(lines, 100);
-            this.SetPos(200); // after ipsum
+            //this.SetPos(200); // after ipsum
         }
 
         /// <summary>
@@ -2511,7 +2510,7 @@ namespace keffect
                             try
                             {
                                 m_DisplayRectangle = GetRectangleForSizeMode(m_CurrentImage.Width, m_CurrentImage.Height);
-                                e.Graphics.DrawImage(m_CurrentImage, m_DisplayRectangle, 0, 0, m_CurrentImage.Width, m_CurrentImage.Height, GraphicsUnit.Pixel);
+                                e.Graphics.DrawImage(m_CurrentImage, m_DisplayRectangle, 0, 0, m_CurrentImage.Width, m_CurrentImage.Height, GraphicsUnit.Pixel);                                
                             }
                             catch (Exception dr)
                             {
@@ -2524,8 +2523,7 @@ namespace keffect
                         if (mImg1 == null || mImg2 == null)
                             e.Graphics.FillRectangle(new SolidBrush(this.BackColor), new Rectangle(0, 0, this.Width, this.Height));
                         else
-                        {
-                            //Rectangle rc = new Rectangle(0, 0, this.Width, this.Height);
+                        {                            
                             ColorMatrix cm = new ColorMatrix();
                             ImageAttributes ia = new ImageAttributes();
                             cm.Matrix33 = mBlend;
@@ -4305,8 +4303,7 @@ namespace keffect
 
         #endregion Draw text with fixed lines
 
-        
-
+       
         /// <summary>
         /// Return rectangle for image
         /// </summary>

@@ -1164,13 +1164,7 @@ namespace PicControl
 
 
             #region Graphic optimization 
-            /*
-            this.SetStyle(
-                  System.Windows.Forms.ControlStyles.UserPaint |
-                  System.Windows.Forms.ControlStyles.AllPaintingInWmPaint |
-                  System.Windows.Forms.ControlStyles.OptimizedDoubleBuffer,
-                  true);
-            */
+            
             SetStyle(ControlStyles.AllPaintingInWmPaint | ControlStyles.UserPaint | ControlStyles.OptimizedDoubleBuffer, true);
 
             #endregion Graphic optimization

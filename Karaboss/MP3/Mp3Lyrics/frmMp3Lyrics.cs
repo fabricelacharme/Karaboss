@@ -864,13 +864,7 @@ namespace Karaboss.Mp3
 
         private void karaokeEffect1_Options(object sender, EventArgs e)
         {
-            Cursor.Current = Cursors.WaitCursor;
-
-            if (Application.OpenForms.OfType<frmMp3LyrOptions>().Count() == 0)
-            {
-                frmMp3LyrOptions frmMp3LyrOptions = new frmMp3LyrOptions();
-                frmMp3LyrOptions.Show();
-            }
+            DisplayOptions();
         }
 
         private void karaokeEffect1_FullScreen(object sender, EventArgs e)
@@ -888,6 +882,27 @@ namespace Karaboss.Mp3
         }
 
         #endregion Events
+
+
+        #region Show frmMp3LyrOptions
+
+        private void DisplayOptions()
+        {
+            
+            if (Application.OpenForms.OfType<frmMp3LyrOptions>().Count() == 0)
+            {
+                Cursor.Current = Cursors.WaitCursor;
+                frmMp3LyrOptions frmMp3LyrOptions = new frmMp3LyrOptions();
+                frmMp3LyrOptions.Show();
+            }
+            else
+            {
+                frmMp3LyrOptions frmMp3LyrOptions = Utilities.FormUtilities.GetForm<frmMp3LyrOptions>();
+                frmMp3LyrOptions.Focus();
+            }
+        }
+
+        #endregion Show frmMp3LyrOptions
 
 
         #region initializations
@@ -1474,20 +1489,8 @@ namespace Karaboss.Mp3
         }
 
         private void btnFrmOptions_Click(object sender, EventArgs e)
-        {            
-            if (Application.OpenForms.OfType<frmMp3LyrOptions>().Count() == 0)
-            {
-                Cursor.Current = Cursors.WaitCursor;
-
-                frmMp3LyrOptions frmMp3LyrOptions = new frmMp3LyrOptions();
-                //frmMp3LyrOptions.ShowDialog();
-                frmMp3LyrOptions.Show();
-            }
-            else
-            {
-                frmMp3LyrOptions frmMp3LyrOptions = Utilities.FormUtilities.GetForm<frmMp3LyrOptions>();
-                frmMp3LyrOptions.Focus();
-            }
+        {
+            DisplayOptions();           
         }
 
         /// <summary>

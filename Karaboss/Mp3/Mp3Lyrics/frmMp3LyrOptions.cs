@@ -206,6 +206,8 @@ namespace Karaboss.Mp3
             // Control used in settings
             karaokeEffect1.bIsSettings = true;
             karaokeEffect1.LoadDemoText();
+
+            karaokeEffect1.Populate(karaokeEffect1.KLyrics, karaokeEffect1.Duration, karaokeEffect1.FileName, bForceUppercase);
         }
 
 
