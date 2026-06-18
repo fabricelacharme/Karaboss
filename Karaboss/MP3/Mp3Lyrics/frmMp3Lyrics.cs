@@ -42,10 +42,8 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
-using System.Runtime.InteropServices.ComTypes;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
-using TagLib.Mpeg4;
 
 namespace Karaboss.Mp3
 {    
@@ -452,6 +450,18 @@ namespace Karaboss.Mp3
                 karaokeEffect1.bShowLogo = value;
             }
         }
+
+        private string _ImgLogo = "logo.png";       // Name of logo image (logo.png)
+        public string ImgLogo
+        {
+            get { return _ImgLogo; }
+            set
+            {
+                _ImgLogo = value;
+                karaokeEffect1.ImgLogo = value;
+            }
+        }
+
 
         #endregion Picture
 
@@ -942,6 +952,9 @@ namespace Karaboss.Mp3
                 // Display file name in lyrics as title
                 karaokeEffect1.bShowSongName = Properties.Settings.Default.bShowSongName;
 
+                // Logo image name (logo.png)
+                ImgLogo = Properties.Settings.Default.Logo;
+                
                 // Display the logo image
                 bShowLogo = Properties.Settings.Default.bShowLogo;
 

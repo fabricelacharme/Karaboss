@@ -485,5 +485,8 @@
     <Setting Name="bShowLogo" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>
     </Setting>
+    <Setting Name="Logo" Type="System.String" Scope="User">
+      <Value Profile="(Default)">logo.png</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

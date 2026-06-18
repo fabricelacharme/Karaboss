@@ -224,78 +224,7 @@ namespace Karaboss.Mp3
             {
                 frmMp3Lyrics frmMp3Lyrics = Utilities.FormUtilities.GetForm<frmMp3Lyrics>();
                 frmMp3Lyrics.ApplyFromOptionsForm();
-            }
-
-            /*
-            if (Application.OpenForms.OfType<frmMp3Lyrics>().Count() > 0)
-            {
-                Cursor.Current = Cursors.WaitCursor;
-
-                frmMp3Lyrics frmMp3Lyrics = Utilities.FormUtilities.GetForm<frmMp3Lyrics>();
-
-                frmMp3Lyrics.bShowBalls = Karaclass.m_DisplayBalls;
-
-                frmMp3Lyrics.KaraokeFont = _karaokeFont;
-                frmMp3Lyrics.FontStretching = _FontStretching;
-
-                // Borders
-                frmMp3Lyrics.FrameType = FrameType;
-
-                // Text colors                
-                frmMp3Lyrics.BgColor = BgColor;
-                frmMp3Lyrics.Grad0Color = Grad0Color;
-                frmMp3Lyrics.Grad1Color = Grad1Color;
-                frmMp3Lyrics.Rhythm0Color = Rhythm0Color;
-                frmMp3Lyrics.Rhythm1Color = Rhythm1Color;
-
-                frmMp3Lyrics.ActiveColor = ActiveColor;
-                frmMp3Lyrics.HighlightColor = HighlightColor;
-                frmMp3Lyrics.InactiveColor = InactiveColor;
-
-                frmMp3Lyrics.bProgressiveHighlight = bProgressiveHighlight;     // Progressive highlight
-
-                frmMp3Lyrics.ActiveBorderColor = ActiveBorderColor;
-                frmMp3Lyrics.InactiveBorderColor = InactiveBorderColor;
-
-
-                // Instrumental color
-                frmMp3Lyrics.ActiveInstrumentalColor = ActiveInstrumentalColor;
-
-                // force uppercase
-                frmMp3Lyrics.bForceUppercase = bForceUppercase;
-
-                // Show hints (introduction, instrumental, ending)
-                frmMp3Lyrics.bShowHints = bShowHints;
-
-                frmMp3Lyrics.bShowSongName = chkShowSongName.Checked;
-
-                _nbLyricsLines = Convert.ToInt32(UpDownNbLines.Value);
-                frmMp3Lyrics.nbLyricsLines = _nbLyricsLines;
-
-                frmMp3Lyrics.SizeMode = SizeMode;
-
-                // Diaporam, Backcolor ou transparent
-                frmMp3Lyrics.OptionBackground = bgOption;
-
-                // Text display: Center, Top, Bottom
-                frmMp3Lyrics.OptionDisplay = OptionDisplay;
-
-                frmMp3Lyrics.bTextBackGround = chkTextBackground.Checked;
-
-                // Display single image as background
-                frmMp3Lyrics.SingleImagePath = SingleImagePath;
-
-                // SlideShow frequency
-                frmMp3Lyrics.FreqSlideShow = freqSlideShow;
-
-                // directory for slide show
-                frmMp3Lyrics.DirSlideShow = dirSlideShow;
-
-                // Karaoke display type
-                frmMp3Lyrics.KaraokeDisplayType = KaraokeDisplayType;
-            }
-            */
-        
+            }                  
         }
 
         #region Themes Color
@@ -416,6 +345,8 @@ namespace Karaboss.Mp3
                 chkShowSongName.Checked = Properties.Settings.Default.bShowSongName;
 
                 // Show logo
+                karaokeEffect1.ImgLogo = Properties.Settings.Default.Logo;
+
                 bShowLogo = Properties.Settings.Default.bShowLogo;
                 chkShowLogo.Checked = bShowLogo;
 

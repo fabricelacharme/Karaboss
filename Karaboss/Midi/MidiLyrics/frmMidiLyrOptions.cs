@@ -1672,6 +1672,8 @@ namespace Karaboss
                 chkShowSongName.Checked = Properties.Settings.Default.bShowSongName;
 
                 // Show logo
+                pBox.ImgLogo = Properties.Settings.Default.Logo;
+
                 bShowLogo = Properties.Settings.Default.bShowLogo;
                 chkShowLogo.Checked = bShowLogo;
 

@@ -511,6 +511,17 @@ namespace Karaboss
             }
         }
 
+        private string _ImgLogo = "logo.png";       // Name of logo image (logo.png)
+        public string ImgLogo
+        {
+            get { return _ImgLogo; }
+            set
+            {
+                _ImgLogo = value;
+                pBox.ImgLogo = value;
+            }
+        }
+
         #endregion Picture
 
 
@@ -1182,6 +1193,9 @@ namespace Karaboss
 
                 // Display file name in lyrics as title
                 pBox.bShowSongName = Properties.Settings.Default.bShowSongName;
+
+                // Logo image name (logo.png)
+                ImgLogo = Properties.Settings.Default.Logo;
 
                 // Display the logo image
                 bShowLogo = Properties.Settings.Default.bShowLogo;

@@ -614,7 +614,18 @@ namespace keffect
             }
         }
 
-        public Image m_LogoImage { get; set; }
+
+        private string _ImgLogo = "logo.png"; // Name of logo image (logo.png)
+        public string ImgLogo 
+        { 
+            get { return _ImgLogo; } 
+            set 
+            { 
+                if (value != null)
+                    _ImgLogo = value; 
+            }  
+        }        
+        public Image m_LogoImage { get; set; }      // Image
 
 
         #endregion Logo
@@ -1660,7 +1671,7 @@ namespace keffect
             #region Logo image
 
             var AppDataFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), Application.ProductName);
-            string logoPath = Path.Combine(AppDataFolder, "logo.png");
+            string logoPath = Path.Combine(AppDataFolder, _ImgLogo);
             if (File.Exists(logoPath))
                 m_LogoImage = Image.FromFile(logoPath);
 
@@ -2650,8 +2661,7 @@ namespace keffect
 
 
             if (_bShowLogo && m_LogoImage != null)
-            {
-                //e.Graphics.DrawImage(m_LogoImage, 0, pBox.Height - 100, (int)m_LogoImage.Width, (int)m_LogoImage.Height);
+            {                
                 e.Graphics.DrawImage(m_LogoImage, 0, pBox.Height - _imgLogoSize, _imgLogoSize, _imgLogoSize);
             }
 

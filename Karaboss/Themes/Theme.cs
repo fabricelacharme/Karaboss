@@ -93,15 +93,15 @@ namespace Karaboss.Themes
             InactiveColor = "#FFFFFF",
             ActiveBorderColor = "#010101",
             InactiveBorderColor = "#8000FF",
-            
+
             ActiveInstrumentalColor = "#808080",
 
             BgColor = "#FCA903",
 
-            Grad0Color = "#48D1CC", 
-            Grad1Color = "#ADFF2F", 
-            Rhythm0Color = "#000000", 
-            Rhythm1Color = "#1E90FF", 
+            Grad0Color = "#6495ED", // old proposition #48D1CC", 
+            Grad1Color = "#FFEBCD", // old proposition "#ADFF2F",
+            Rhythm0Color = "#000000",
+            Rhythm1Color = "#1E90FF",
 
             InactiveChordColor = "#8080FF",
             HighlightChordColor = "#FFFF00",

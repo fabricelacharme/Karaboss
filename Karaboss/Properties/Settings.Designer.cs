@@ -1959,5 +1959,17 @@ namespace Karaboss.Properties {
                 this["bShowLogo"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("logo.png")]
+        public string Logo {
+            get {
+                return ((string)(this["Logo"]));
+            }
+            set {
+                this["Logo"] = value;
+            }
+        }
     }
 }
