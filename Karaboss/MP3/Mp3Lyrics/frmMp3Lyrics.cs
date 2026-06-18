@@ -1130,7 +1130,7 @@ namespace Karaboss.Mp3
         /// <param name="lyrics"></param>
         public void SetLyrics(kLyrics lyrics, double duration, string filename, PlaylistItem mplaylistitem = null)
         {            
-            FileName = filename;
+            FileName = Path.GetFileNameWithoutExtension(filename);
             Duration = 1000 * duration;
             
             if (mplaylistitem != null)
@@ -1154,7 +1154,7 @@ namespace Karaboss.Mp3
             }
             #endregion Restore options
 
-            karaokeEffect1.Populate(lyrics, Duration, filename, bForceUppercase);
+            karaokeEffect1.Populate(lyrics, Duration, FileName, bForceUppercase);
 
             //karaokeEffect1.KLyrics = lyrics;
         }

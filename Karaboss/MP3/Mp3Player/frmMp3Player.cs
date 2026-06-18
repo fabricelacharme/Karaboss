@@ -4184,20 +4184,7 @@ namespace Karaboss.Mp3
             timerCountdown.Interval = 1000;  // interval of countdown = 1 sec      
             timerCountdown.Enabled = true;
         }
-
-        private void ManagePauseEnding()
-        {
-            if (currentPlaylistItem == null) return;
-
-            if (Karaclass.m_PauseBetweenSongs)
-            {
-                if (Application.OpenForms.OfType<frmMp3Lyrics>().Count() > 0)
-                {
-                    frmMp3Lyrics.KaraokeDisplayType = Properties.Settings.Default.KaraokeDisplayType;
-                    frmMp3Lyrics.SetLyrics(Mp3LyricsMgmtHelper.mp3KaraokeLyrics, _duration, Mp3FileName, currentPlaylistItem);
-                }
-            }
-        }
+      
 
         private void ManageCountdownEnding()
         {
