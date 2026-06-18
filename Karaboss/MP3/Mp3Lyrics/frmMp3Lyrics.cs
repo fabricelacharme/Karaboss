@@ -1402,6 +1402,15 @@ namespace Karaboss.Mp3
                 // Save settings
                 Properties.Settings.Default.Save();
             }
+
+            // Close options form
+            if (Application.OpenForms.OfType<frmMp3LyrOptions>().Count() > 0)
+            {
+                frmMp3LyrOptions frmMp3LyrOptions = Utilities.FormUtilities.GetForm<frmMp3LyrOptions>();
+                frmMp3LyrOptions?.Dispose();
+            }
+
+            Dispose();
         }
 
         private void frmMp3Lyrics_Load(object sender, EventArgs e)

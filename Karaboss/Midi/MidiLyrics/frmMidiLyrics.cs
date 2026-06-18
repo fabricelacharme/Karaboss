@@ -1044,13 +1044,7 @@ namespace Karaboss
             // FAB 05/09/2024
             pBox.Dispose();
             picBalls.Stop();
-            picBalls.Dispose();
-
-            if (Application.OpenForms.OfType<frmMidiLyrOptions>().Count() > 0)
-            {
-                frmMidiLyrOptions frmMidiLyrOptions = Utilities.FormUtilities.GetForm<frmMidiLyrOptions>();
-                frmMidiLyrOptions?.Dispose();
-            }
+            picBalls.Dispose();            
 
             base.OnClosed(e);
         }
@@ -1103,6 +1097,14 @@ namespace Karaboss
                 // Save settings
                 Properties.Settings.Default.Save();
             }
+
+            // Close options form
+            if (Application.OpenForms.OfType<frmMidiLyrOptions>().Count() > 0)
+            {
+                frmMidiLyrOptions frmMidiLyrOptions = Utilities.FormUtilities.GetForm<frmMidiLyrOptions>();
+                frmMidiLyrOptions?.Dispose();
+            }
+
 
             Dispose();
 

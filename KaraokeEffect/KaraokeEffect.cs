@@ -2670,6 +2670,8 @@ namespace keffect
 
             #region draw text
 
+            if (_kLyrics == null) return;
+
             switch (KaraokeDisplayType)
             {
                 case KaraokeDisplayTypes.FourLinesSwapped:

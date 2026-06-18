@@ -34,8 +34,6 @@
 using kar;
 using Karaboss.MidiLyrics;
 using Karaboss.Mp3;
-using Karaboss.Mp3.Mp3Lyrics;
-using Karaboss.Resources.Localization;
 using Karaboss.Utilities;
 using MusicTxt;
 using MusicXml;

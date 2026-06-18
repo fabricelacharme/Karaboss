@@ -2913,10 +2913,7 @@ namespace PicControl
                         {
                             Console.Write("Error drawing image: " + dr.Message);
                         }
-                    }
-
-                   
-
+                    }                   
                     break;
 
                 case "SolidColor":                    
@@ -3048,27 +3045,23 @@ namespace PicControl
                         }
                         gp.Dispose(); // Dispose the GraphicsPath to free resources                                       
                     }
-                    break;
-
-                   
-
+                    break;                   
             }
 
 
             if (_bShowLogo && m_LogoImage != null)
-            {
-                //e.Graphics.DrawImage(m_LogoImage, 0, pBox.Height - 100, (int)m_LogoImage.Width, (int)m_LogoImage.Height);
+            {                
                 e.Graphics.DrawImage(m_LogoImage, 0, pBox.Height - _imgLogoSize, _imgLogoSize, _imgLogoSize);
             }
-            
+
             #endregion Draw background image or gradient
 
 
             #region draw text           
 
-            //if (lstLyricsLines is null || lstLyricsLines.Count == 0)
-            //    return;
+            if (_kLyrics == null) return;
 
+           
             switch (KaraokeDisplayType)
             {
                 case KaraokeDisplayTypes.FourLinesSwapped:
@@ -4437,7 +4430,6 @@ namespace PicControl
         private void DslDrawTextWithBorder(PaintEventArgs e)
         {
             // The vertical position of the lines is calculated according to the position of the song in the current line and the duration of the current line
-
 
             #region Declarations
 
