@@ -1342,6 +1342,9 @@ namespace PicControl
                 if (KaraokeDisplayType == KaraokeDisplayTypes.ConstantScrolling)
                     InitScrollMode();
 
+                if (_kLyrics != null && _bShowChords)
+                    lstChordsPositions = StoreChordsPositions();
+
                 pBox.Invalidate();
             }
           
@@ -2257,39 +2260,37 @@ namespace PicControl
 
             int idxChord = -1;
             bool bChordFound = false;
-            int count = _kLyrics.Lines[curline].Syllables.Count();           
+            int count = _kLyrics.Lines[curline].Syllables.Count();
 
-
-            // Analyze the syllables of the current line
             for (int i = 0; i < count; i++)
             {
-                
                 if (bShowChords)
                 {
                     // A chord is found for the current syllable
                     if (_kLyrics.Lines[curline].Syllables[i].Chord != string.Empty)
                     {
                         if (idxChord < lstChordsPositions[curline].Count)
+                        {
                             idxChord++;
-                        bChordFound = true;                        
+                            bChordFound = true;
+                        }
+                        else
+                            bChordFound = false;
                     }
                     else
                         bChordFound = false;
                 }
 
-                // Fragments before nextindex
-                if (i < nextindex)
-                {
-                    res += MeasureString(_kLyrics.Lines[curline].Syllables[i].Text, _karaokeFont.Size);
+                res += MeasureString(_kLyrics.Lines[curline].Syllables[i].Text, _karaokeFont.Size);
 
-                    //if (nextindex >= 0 && nextindex < count && i < nextindex - 1)
-                    //if (nextindex >= 0 && i < count - 1 && i < nextindex - 1)
-                    if (i < count - 1 && i < nextindex - 1)
+                if (nextindex < count)
+                {               
+                    if (i < nextindex - 1)
                     {
                         // Already sung
                         active_fragment += _kLyrics.Lines[curline].Syllables[i].Text;
 
-                        //Console.WriteLine("A Position i " + i + " - nextindex " + nextindex);
+                        //Console.WriteLine("A Position i " + i + " - nextindex " + nextindex + " - idxChord " + idxChord);
 
                         if (bShowChords && bChordFound)
                         {
@@ -2303,7 +2304,7 @@ namespace PicControl
                         // Being sung
                         highlight_fragment = _kLyrics.Lines[curline].Syllables[i].Text;
 
-                        //Console.WriteLine("B Position i " + i + " - nextindex " + nextindex);
+                        //Console.WriteLine("H Position i " + i + " - nextindex " + nextindex + " - idxChord " + idxChord);
 
                         // Change the status of the chord to "Highlight" for the syllable being sung
                         if (bShowChords && bChordFound)
@@ -2312,28 +2313,133 @@ namespace PicControl
                                 lstChordsPositions[curline][idxChord] = (lstChordsPositions[curline][idxChord].Item1, lstChordsPositions[curline][idxChord].Item2, "Highlight");
                         }
                     }
-                    else if (nextindex > count)
+                    else if (i > nextindex - 1)
                     {
-                        // Last syllable of the line is an information, we do not take it into account for the length of the line
-                        //Console.WriteLine("D Last syllable of line i " + i + " - nextindex " + nextindex);
+                        //Console.WriteLine("I Position i " + i + " - nextindex " + nextindex + " - idxChord " + idxChord);
+                        if (nextindex == 0 && count == 1)
+                        {
+                            active_fragment += _kLyrics.Lines[curline].Syllables[i].Text;
+                            if (bShowChords && bChordFound)
+                            {
+                                if (idxChord >= 0 && idxChord < lstChordsPositions[curline].Count)
+                                    lstChordsPositions[curline][idxChord] = (lstChordsPositions[curline][idxChord].Item1, lstChordsPositions[curline][idxChord].Item2, "Highlight");
+                            }
 
-                        
-                        highlight_fragment = _kLyrics.Lines[curline].Syllables[count - 1].Text;
-                        //active_fragment = _kLyrics.Lines[curline].ToString().Substring(0, _kLyrics.Lines[curline].ToString().Length - highlight_fragment.Length);
+                        }
+                        else
+                        {
+                            inactive_fragment += _kLyrics.Lines[curline].Syllables[i].Text;
 
+                            // Change the status of the chord to "Inactive" for the syllables not yet sung
+                            if (bShowChords && bChordFound)
+                            {
+                                if (idxChord >= 0 && idxChord < lstChordsPositions[curline].Count)
+                                    lstChordsPositions[curline][idxChord] = (lstChordsPositions[curline][idxChord].Item1, lstChordsPositions[curline][idxChord].Item2, "Inactive");
+                            }
+                        }
+                    }
+                }
+                else
+                {
+                    //Console.WriteLine("Z Position i " + i + " - nextindex " + nextindex + " - idxChord " + idxChord);
+                    active_fragment += _kLyrics.Lines[curline].Syllables[i].Text;
+
+                    if (bShowChords && bChordFound)
+                    {
                         if (idxChord >= 0 && idxChord < lstChordsPositions[curline].Count)
-                            lstChordsPositions[curline][idxChord] = (lstChordsPositions[curline][idxChord].Item1, lstChordsPositions[curline][idxChord].Item2, "Highlight");
+                        {
+                            lstChordsPositions[curline][idxChord] = (lstChordsPositions[curline][idxChord].Item1, lstChordsPositions[curline][idxChord].Item2, "Inactive");
+                            
+                            if (i == count - 1)
+                            {
+                                lstChordsPositions[curline][idxChord] = (lstChordsPositions[curline][idxChord].Item1, lstChordsPositions[curline][idxChord].Item2, "Highlight");
+                            }
+                        }
+                    }
+                }
+            }
+
+            /*
+                // Analyze the syllables of the current line
+                for (int i = 0; i < count; i++)
+                {
+
+                    if (bShowChords)
+                    {
+                        // A chord is found for the current syllable
+                        if (_kLyrics.Lines[curline].Syllables[i].Chord != string.Empty)
+                        {
+                            if (idxChord < lstChordsPositions[curline].Count)
+                                idxChord++;
+                            bChordFound = true;                        
+                        }
+                        else
+                            bChordFound = false;
+                    }
+
+                    // Fragments before nextindex
+                    if (i < nextindex)
+                    {
+                        res += MeasureString(_kLyrics.Lines[curline].Syllables[i].Text, _karaokeFont.Size);
+
+                        if (i < count - 1 && i < nextindex - 1)
+                        {
+                            // Already sung
+                            active_fragment += _kLyrics.Lines[curline].Syllables[i].Text;
+
+                            //Console.WriteLine("A Position i " + i + " - nextindex " + nextindex);
+
+                            if (bShowChords && bChordFound)
+                            {
+                                // Change the status of the chord to "Inactive" for the syllables already sung
+                                if (idxChord >= 0 && idxChord < lstChordsPositions[curline].Count)
+                                    lstChordsPositions[curline][idxChord] = (lstChordsPositions[curline][idxChord].Item1, lstChordsPositions[curline][idxChord].Item2, "Inactive");
+                            }
+                        }
+                        else if (i == nextindex - 1)
+                        {
+                            // Being sung
+                            highlight_fragment = _kLyrics.Lines[curline].Syllables[i].Text;
+
+                            //Console.WriteLine("B Position i " + i + " - nextindex " + nextindex);
+
+                            // Change the status of the chord to "Highlight" for the syllable being sung
+                            if (bShowChords && bChordFound)
+                            {
+                                if (idxChord >= 0 && idxChord < lstChordsPositions[curline].Count)
+                                    lstChordsPositions[curline][idxChord] = (lstChordsPositions[curline][idxChord].Item1, lstChordsPositions[curline][idxChord].Item2, "Highlight");
+                            }
+                        }
+                        else if (nextindex > count)
+                        {
+                            // Last syllable of the line is an information, we do not take it into account for the length of the line
+                            //Console.WriteLine("C Last syllable of line i " + i + " - nextindex " + nextindex);
+
+
+                            highlight_fragment = _kLyrics.Lines[curline].Syllables[count - 1].Text;
+                            //active_fragment = _kLyrics.Lines[curline].ToString().Substring(0, _kLyrics.Lines[curline].ToString().Length - highlight_fragment.Length);
+
+                            if (idxChord >= 0 && idxChord < lstChordsPositions[curline].Count)
+                                lstChordsPositions[curline][idxChord] = (lstChordsPositions[curline][idxChord].Item1, lstChordsPositions[curline][idxChord].Item2, "Inactive"); //lstChordsPositions[curline][idxChord] = (lstChordsPositions[curline][idxChord].Item1, lstChordsPositions[curline][idxChord].Item2, "Highlight");
+                        }
+
+                    }
+                    else if (i == nextindex)
+                    {
+                        inactive_fragment += _kLyrics.Lines[curline].Syllables[i].Text;
+                        //if (idxChord >= 0 && idxChord < lstChordsPositions[curline].Count)
+                        //    lstChordsPositions[curline][idxChord] = (lstChordsPositions[curline][idxChord].Item1, lstChordsPositions[curline][idxChord].Item2, "Highlight");
+                    }                
+                    else if (i > nextindex)
+                    {
+                        inactive_fragment += _kLyrics.Lines[curline].Syllables[i].Text;
+                        //if (idxChord >= 0 && idxChord < lstChordsPositions[curline].Count)
+                        //    lstChordsPositions[curline][idxChord] = (lstChordsPositions[curline][idxChord].Item1, lstChordsPositions[curline][idxChord].Item2, "Inactive");
                     }
 
                 }
-                else if (i >= nextindex)
-                {
-                    inactive_fragment += _kLyrics.Lines[curline].Syllables[i].Text;
-                    //Console.WriteLine("C Position i " + i + " - nextindex " + nextindex);
 
-                }
-                
-            }
+                */
 
             active_fragment_length = MeasureString(active_fragment, _karaokeFont.Size);
             highlight_fragment_length = MeasureString(highlight_fragment, _karaokeFont.Size);
@@ -5171,9 +5277,19 @@ namespace PicControl
             highlight_fragment = string.Empty;
             inactive_fragment = string.Empty;
 
-            //_fileName = string.Empty;
+            
             _duration = 0;
             _TotalTicks = 0;
+
+            // Reset chords activity
+            for (int i = 0; i < lstChordsPositions.Count; i++)
+            {
+                for (int j = 0; j < lstChordsPositions[i].Count; j++)
+                {
+                    lstChordsPositions[i][j] = (lstChordsPositions[i][j].Item1, lstChordsPositions[i][j].Item2, "Inactive");
+                }
+                
+            }
 
             pBox.Invalidate();
         }
