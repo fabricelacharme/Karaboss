@@ -651,6 +651,9 @@ namespace PicControl
         private float _titleMarginTop = 0.038f;
         private float _titleMarginBottom = 1f;//0.38f;
 
+
+        private float _imgLogoHeightMultiplier = 0.133f;
+
         #endregion Margins
 
 
@@ -1338,6 +1341,8 @@ namespace PicControl
                 
                 if (_TitleFont != null) 
                     AdjustTitleFont(_nbTitleLines);
+
+                ResizeLogo();
 
                 if (KaraokeDisplayType == KaraokeDisplayTypes.ConstantScrolling)
                     InitScrollMode();
@@ -2472,7 +2477,20 @@ namespace PicControl
         }
 
         #endregion Lyrics and position
-       
+
+
+        #region Logo
+
+        /// <summary>
+        /// Resize logo dimensions
+        /// </summary>
+        private void ResizeLogo()
+        {
+            _imgLogoSize = (int)(_imgLogoHeightMultiplier * pBox.ClientSize.Height);
+        }
+
+        #endregion Logo
+
 
         #region public methods
 

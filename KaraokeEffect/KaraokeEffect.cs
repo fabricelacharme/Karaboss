@@ -559,6 +559,8 @@ namespace keffect
         private float _titleMarginTop = 0.038f;
         private float _titleMarginBottom = 0.38f;
 
+        private float _imgLogoHeightMultiplier = 0.133f;
+
         #endregion Margins
 
 
@@ -1143,6 +1145,9 @@ namespace keffect
                 
                 if (_TitleFont != null) 
                     AdjustTitleFont(_nbTitleLines);
+
+                // Resize logo
+                ResizeLogo();
 
                 if (KaraokeDisplayType == KaraokeDisplayTypes.ConstantScrolling || KaraokeDisplayType == KaraokeDisplayTypes.DynamicScrolling)
                     InitScrollMode();
@@ -1798,6 +1803,18 @@ namespace keffect
 
         #endregion Instrumental functions
 
+
+        #region Logo
+
+        /// <summary>
+        /// Resize logo dimensions
+        /// </summary>
+        private void ResizeLogo()
+        {
+            _imgLogoSize = (int)(_imgLogoHeightMultiplier * pBox.ClientSize.Height);
+        }
+
+        #endregion Logo
 
         #region Lyrics and position
 
