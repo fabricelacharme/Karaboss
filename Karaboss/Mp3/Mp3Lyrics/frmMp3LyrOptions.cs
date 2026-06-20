@@ -152,6 +152,20 @@ namespace Karaboss.Mp3
             }
         }
 
+        private string _ImgLogo = "logo.png"; // Name of logo image (logo.png)
+        public string ImgLogo
+        {
+            get { return _ImgLogo; }
+            set
+            {
+                if (value != null)
+                {
+                    _ImgLogo = value;
+                    karaokeEffect1.ImgLogo = _ImgLogo;
+                }
+            }
+        }
+
         #endregion Picture
 
 
@@ -344,8 +358,10 @@ namespace Karaboss.Mp3
                 // Show song name
                 chkShowSongName.Checked = Properties.Settings.Default.bShowSongName;
 
+               
                 // Show logo
-                karaokeEffect1.ImgLogo = Properties.Settings.Default.Logo;
+                // Logo image name (logo.png)
+                ImgLogo = Properties.Settings.Default.Logo;
 
                 bShowLogo = Properties.Settings.Default.bShowLogo;
                 chkShowLogo.Checked = bShowLogo;
@@ -620,6 +636,7 @@ namespace Karaboss.Mp3
 
                 // Show logo
                 Properties.Settings.Default.bShowLogo = chkShowLogo.Checked;
+                Properties.Settings.Default.Logo = ImgLogo;
 
                 // Number of lines to display
                 Properties.Settings.Default.TxtNbLines = _nbLyricsLines;
@@ -1447,6 +1464,49 @@ namespace Karaboss.Mp3
         #endregion font
 
 
+        #region Logo
+
+        private void btnSelectLogo_Click(object sender, EventArgs e)
+        {
+            string OriginalFile;
+            string SourceFile;
+            string NewFile;
+
+            try
+            {
+                openFileDialog.Filter = "Image Files|*.jpg;*.jpeg;*.png;*.gif;*.tif;...|All files (*.*)|*.*";
+                openFileDialog.FileName = string.Empty;
+
+                var AppDataFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), Application.ProductName);
+                OriginalFile = Path.Combine(AppDataFolder, _ImgLogo);
+
+                //openFileDialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyPictures);
+                // Open always in the AppData folder where the logo file is copied
+                openFileDialog.InitialDirectory = AppDataFolder;
+
+
+                if (openFileDialog.ShowDialog() == DialogResult.OK)
+                {
+                    SourceFile = openFileDialog.FileName;
+                    NewFile = Path.Combine(AppDataFolder, Path.GetFileName(SourceFile));
+
+                    // Copy the new logo into AppData folder
+                    if (SourceFile != NewFile)
+                        System.IO.File.Copy(SourceFile, NewFile, true);
+
+                    ImgLogo = Path.GetFileName(NewFile);
+                    karaokeEffect1.m_LogoImage = Image.FromFile(NewFile);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        #endregion Logo
+
+
         #region Lyrics decoration 
 
         #region text events
@@ -2095,6 +2155,7 @@ namespace Karaboss.Mp3
                 }
             }
         }
+
 
 
 

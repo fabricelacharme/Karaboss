@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmMp3LyrOptions));
             this.picBgColor = new System.Windows.Forms.PictureBox();
             this.radioTransparent = new System.Windows.Forms.RadioButton();
@@ -126,6 +127,8 @@
             this.btnSaveTheme = new System.Windows.Forms.Button();
             this.openFileDialog = new System.Windows.Forms.OpenFileDialog();
             this.karaokeEffect1 = new keffect.KaraokeEffect();
+            this.btnSelectLogo = new System.Windows.Forms.Button();
+            this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.picBgColor)).BeginInit();
             this.pnlBalls.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
@@ -727,6 +730,7 @@
             // 
             // tabPage1
             // 
+            this.tabPage1.Controls.Add(this.btnSelectLogo);
             this.tabPage1.Controls.Add(this.chkShowLogo);
             this.tabPage1.Controls.Add(this.chkShowSongName);
             this.tabPage1.Controls.Add(this.chkShowHints);
@@ -937,6 +941,14 @@
             this.karaokeEffect1.TransitionEffect = keffect.KaraokeEffect.TransitionEffects.Progressive;
             this.karaokeEffect1.TransparencyKey = System.Drawing.Color.Lime;
             // 
+            // btnSelectLogo
+            // 
+            resources.ApplyResources(this.btnSelectLogo, "btnSelectLogo");
+            this.btnSelectLogo.Name = "btnSelectLogo";
+            this.toolTip1.SetToolTip(this.btnSelectLogo, resources.GetString("btnSelectLogo.ToolTip"));
+            this.btnSelectLogo.UseVisualStyleBackColor = true;
+            this.btnSelectLogo.Click += new System.EventHandler(this.btnSelectLogo_Click);
+            // 
             // frmMp3LyrOptions
             // 
             resources.ApplyResources(this, "$this");
@@ -1084,5 +1096,7 @@
         private System.Windows.Forms.CheckBox chkShowHints;
         private System.Windows.Forms.CheckBox chkShowSongName;
         private System.Windows.Forms.CheckBox chkShowLogo;
+        private System.Windows.Forms.Button btnSelectLogo;
+        private System.Windows.Forms.ToolTip toolTip1;
     }
 }

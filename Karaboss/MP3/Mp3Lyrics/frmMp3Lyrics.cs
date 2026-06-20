@@ -1071,7 +1071,7 @@ namespace Karaboss.Mp3
 
                 // Display logo
                 bShowLogo = Properties.Settings.Default.bShowLogo;
-
+                ImgLogo = Properties.Settings.Default.Logo;
 
                 //Window lyrics TopMost
                 bTopMost = Properties.Settings.Default.frmMp3LyricsTopMost;
