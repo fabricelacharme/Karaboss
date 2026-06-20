@@ -40,7 +40,7 @@
             this.label2.ForeColor = System.Drawing.Color.White;
             this.label2.Location = new System.Drawing.Point(12, 260);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(59, 17);
+            this.label2.Size = new System.Drawing.Size(58, 17);
             this.label2.TabIndex = 2;
             this.label2.Text = "Version: ";
             // 
@@ -74,6 +74,7 @@
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "frmSplashScreen";
             this.Load += new System.EventHandler(this.frmSplashScreen_Load);
+            this.MouseDown += new System.Windows.Forms.MouseEventHandler(this.frmSplashScreen_MouseDown);
             this.ResumeLayout(false);
             this.PerformLayout();
 

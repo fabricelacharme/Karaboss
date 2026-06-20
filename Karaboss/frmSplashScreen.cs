@@ -31,6 +31,7 @@
  */
 
 #endregion
+using FlShell.Interop;
 using System;
 using System.Threading;
 using System.Windows.Forms;
@@ -41,13 +42,14 @@ namespace Karaboss
     {
         private SynchronizationContext context;
 
+        private ContextMenu SplashContextMenu;
+
         public frmSplashScreen()
         {
             InitializeComponent();
 
             context = SynchronizationContext.Current;
-
-            //label1.Text = Application.ProductName;
+            
             label2.Text = "Version: " + Application.ProductVersion ;
             LblMsg.Text = "";
         }
@@ -63,6 +65,28 @@ namespace Karaboss
 
         private void frmSplashScreen_Load(object sender, EventArgs e)
         {
+
+        }
+
+        private void frmSplashScreen_MouseDown(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Right)
+            {
+                SplashContextMenu = new ContextMenu();
+                SplashContextMenu.MenuItems.Clear();
+
+                // Close
+                MenuItem mnuClose = new MenuItem("Close");
+                mnuClose.Click += new System.EventHandler(this.mnuClose_Click);
+                SplashContextMenu.MenuItems.Add(mnuClose);
+            }
+        }
+
+        private void mnuClose_Click(object sender, EventArgs e)
+        {
+            // Stop application
+            //Application.Exit();
+            Application.ExitThread();
 
         }
     }

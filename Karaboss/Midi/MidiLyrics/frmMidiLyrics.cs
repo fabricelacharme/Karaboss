@@ -1315,6 +1315,8 @@ namespace Karaboss
 
                 // Display logo
                 bShowLogo = Properties.Settings.Default.bShowLogo;
+                ImgLogo = Properties.Settings.Default.Logo;
+
 
                 //Window lyrics TopMost
                 bTopMost = Properties.Settings.Default.frmMidiLyricsTopMost;

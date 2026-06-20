@@ -390,7 +390,9 @@ namespace keffect
 
 
         #region Context menus
+
         private ContextMenu picContextMenu;
+        
         #endregion Context menus
 
 

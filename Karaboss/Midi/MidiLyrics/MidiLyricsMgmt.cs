@@ -2272,12 +2272,12 @@ namespace Karaboss.MidiLyrics
             string chordName;
             string lyric;
             string lastChordName = "<>";
-            //bool bFound;                                             
+                                                        
             kLine chordline = new kLine();
-            //kLine l;            
+                      
             Syllable syll;
             kLine newline = new kLine();            
-            //kLine lplus;
+            
 
             kLyrics result = (kLyrics)kll.Clone();
 
@@ -2335,6 +2335,15 @@ namespace Karaboss.MidiLyrics
                     chordline.Add(syll);
                 }                
             }
+
+            // TODO
+            // Align tickson of last lyric of a line to the beats ?
+            // beat                                 n-1   n+1  
+            // Last lyric of a line                 ----|-------------------                this lyric is mostly in the next beat
+            // first chord of next line                 |****************************** 
+            // => 
+
+
 
 
             // Add chordline to KLyrics result
@@ -2402,9 +2411,24 @@ namespace Karaboss.MidiLyrics
             }
 
 
-            /*
+            // PART TWO merge chords & syllables
 
-            // Move trailing chords to next line                        
+            kLine l;
+            kLine lplus;
+            bool bFound;
+            Syllable syllprev;
+            Syllable syllnext;
+            bool bBreak = false;
+
+
+            // beat                                 n-1   n+1  
+            // Last lyric of a line                 ----|-------------------
+            // first chord of next line                 |****************************** 
+            // If last lyrix is mostly in the next beat, the chord should be placed on this lyric
+            // Solution ? move tickson to the next beat ?
+
+            /*
+            // Move trailing chords to next line                                   
             for (int i = 0; i < result.Lines.Count - 1; i++)
             {
                 l = result.Lines[i];
@@ -2420,12 +2444,13 @@ namespace Karaboss.MidiLyrics
                     l.Syllables.Remove(syll);
                 }
             }
+            */
 
 
+            /*
             // Merge some chords and lyrics by testing down
             // ie chords placed after the lyric
-            Syllable syllprev;
-            bool bBreak = false;
+            
             do
             {
                 bFound = false;
@@ -2470,12 +2495,15 @@ namespace Karaboss.MidiLyrics
                     }
                 }
             } while (bFound);
+            
+            */
 
 
+            /*
 
             // Merge by testing up
             // ie chords placed before the lyric having the same tickson
-            Syllable syllnext;
+            
             bBreak = false;
             do
             {
@@ -2533,8 +2561,8 @@ namespace Karaboss.MidiLyrics
                     }
                 }
             } while (bFound);
-
             */
+
 
             return result;        
         }
