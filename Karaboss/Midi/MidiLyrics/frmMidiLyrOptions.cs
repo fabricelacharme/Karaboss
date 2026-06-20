@@ -1352,9 +1352,7 @@ namespace Karaboss
             string OriginalFile;
             string SourceFile;
             string NewFile;
-            string BackUpOfFileToReplace;
-            string fName;
-          
+            
             try
             { 
                 openFileDialog.Filter = "Image Files|*.jpg;*.jpeg;*.png;*.gif;*.tif;...|All files (*.*)|*.*";
