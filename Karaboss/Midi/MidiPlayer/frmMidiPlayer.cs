@@ -3460,7 +3460,8 @@ namespace Karaboss
                 {
                     // the user wants to edit the file 
                     ManageDisplayLyricsForm();
-                    frmMidiLyrics.SetLyrics(myLyricsMgmt.KLyrics, sequence1.Division, myLyricsMgmt.FirstMelodyNoteTicksOn, MIDIfileName);
+                    if (Application.OpenForms.OfType<frmMidiLyrics>().Count() > 0)                        
+                        frmMidiLyrics?.SetLyrics(myLyricsMgmt.KLyrics, sequence1.Division, myLyricsMgmt.FirstMelodyNoteTicksOn, MIDIfileName);
                 }
             }           
         }
@@ -3606,7 +3607,8 @@ namespace Karaboss
                     else
                     {
                         ManageDisplayLyricsForm();
-                        frmMidiLyrics.SetLyrics(myLyricsMgmt.KLyrics, sequence1.Division, myLyricsMgmt.FirstMelodyNoteTicksOn, MIDIfileName);
+                        if (Application.OpenForms.OfType<frmMidiLyrics>().Count() > 0)
+                            frmMidiLyrics?.SetLyrics(myLyricsMgmt.KLyrics, sequence1.Division, myLyricsMgmt.FirstMelodyNoteTicksOn, MIDIfileName);
                     }
                 }
             }
@@ -3749,7 +3751,8 @@ namespace Karaboss
                     else
                     {
                         ManageDisplayLyricsForm();
-                        frmMidiLyrics.SetLyrics(myLyricsMgmt.KLyrics, sequence1.Division, myLyricsMgmt.FirstMelodyNoteTicksOn, MIDIfileName);
+                        if (Application.OpenForms.OfType<frmMidiLyrics>().Count() > 0)
+                            frmMidiLyrics?.SetLyrics(myLyricsMgmt.KLyrics, sequence1.Division, myLyricsMgmt.FirstMelodyNoteTicksOn, MIDIfileName);
                     }
                 }
             }
@@ -3852,7 +3855,8 @@ namespace Karaboss
 
                 // Window closed
                 DisplayLyricsForm();
-                frmMidiLyrics.SetLyrics(myLyricsMgmt.KLyrics, sequence1.Division, myLyricsMgmt.FirstMelodyNoteTicksOn, MIDIfileName);
+                if (Application.OpenForms.OfType<frmMidiLyrics>().Count() > 0)
+                    frmMidiLyrics?.SetLyrics(myLyricsMgmt.KLyrics, sequence1.Division, myLyricsMgmt.FirstMelodyNoteTicksOn, MIDIfileName);
             }
 
             // Refresh display of lyrics
@@ -3979,10 +3983,9 @@ namespace Karaboss
             myLyricsMgmt.OrgKLyrics.Lines.Clear();            
 
             // Ferme le formulaire frmMidiLyrics
-            if (Application.OpenForms.OfType<frmMidiLyrics>().Count() > 0)
-            {
-                frmMidiLyrics.Close();
-            }
+            if (Application.OpenForms.OfType<frmMidiLyrics>().Count() > 0)            
+                frmMidiLyrics?.Close();
+            
 
             // File was modified
             FileModified();
