@@ -1564,7 +1564,7 @@ namespace Karaboss
 
 
                     // If next line is not a paragraph, add a line break
-                    if (i < lLyrics.Lines.Count - 1 && lLyrics.Lines[i + 1].Syllables.First().CharType != kar.Syllable.CharTypes.ParagraphSep)
+                    if (i < lLyrics.Lines.Count - 1 && lLyrics.Lines[i + 1].Syllables != null && lLyrics.Lines[i + 1].Syllables.Count > 0 && lLyrics.Lines[i + 1].Syllables.First().CharType != kar.Syllable.CharTypes.ParagraphSep)
                     {
                         if (!bEditChords)
                         {
