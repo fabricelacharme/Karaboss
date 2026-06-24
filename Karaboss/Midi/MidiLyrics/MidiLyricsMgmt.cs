@@ -565,10 +565,13 @@ namespace Karaboss.MidiLyrics
                 // Reduce ticksoff of current syllable to tickson of the previous syllable                
                 if (j > 0 &&  KLyrics.Lines[j].Syllables.Count == 1 && KLyrics.Lines[j].Syllables.First().CharType != Syllable.CharTypes.Text)
                 {
-                    syll = KLyrics.Lines[j].Syllables.First();                                      
-                    syll.TicksOn = KLyrics.Lines[j - 1].Syllables.Last().TicksOff;
-                    syll.TicksOff = syll.TicksOn;
-                   
+                    syll = KLyrics.Lines[j].Syllables.First();
+
+                    if (KLyrics.Lines[j - 1].Syllables.Count > 0)
+                    {
+                        syll.TicksOn = KLyrics.Lines[j - 1].Syllables.Last().TicksOff;
+                        syll.TicksOff = syll.TicksOn;
+                    }
                 }
             
             }                                                                       
@@ -673,7 +676,7 @@ namespace Karaboss.MidiLyrics
             {
                 if (KLyrics.Lines[i].Syllables.Count == 1 && KLyrics.Lines[i].Syllables.First().CharType != Syllable.CharTypes.Text)
                 {
-                    if (i > 0)
+                    if (i > 0 && KLyrics.Lines[i - 1].Syllables.Count > 0)
                     {
                         KLyrics.Lines[i].Syllables.First().TicksOn = KLyrics.Lines[i - 1].Syllables.Last().TicksOff;
                         KLyrics.Lines[i].Syllables.First().TicksOff = KLyrics.Lines[i - 1].Syllables.Last().TicksOff;
@@ -694,7 +697,7 @@ namespace Karaboss.MidiLyrics
                 kLine _kline = KLyrics.Lines[i];
                 if (_kline.Syllables.Count== 1 && _kline.Syllables.First().CharType != Syllable.CharTypes.Text)
                 {
-                    if (i > 0)
+                    if (i > 0 && KLyrics.Lines[i - 1].Syllables.Count > 0)
                     {
                         _kline.Syllables.First().TicksOn = KLyrics.Lines[i - 1].Syllables.Last().TicksOff;
                         _kline.Syllables.First().TicksOff = KLyrics.Lines[i - 1].Syllables.Last().TicksOff;

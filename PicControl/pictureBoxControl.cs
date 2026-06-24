@@ -1846,11 +1846,11 @@ namespace PicControl
                 }
 
                 // Add a new syllable when line of Text
-                if (kls.Lines[i].Syllables.Last().CharType == Syllable.CharTypes.Text)
+                if (kls.Lines[i].Syllables.Count > 0 && kls.Lines[i].Syllables.Last().CharType == Syllable.CharTypes.Text)
                 {                   
                     if (i + 1 < kls.Lines.Count)
                     {
-                        if (kls.Lines[i + 1].Syllables.First().TicksOn > kls.Lines[i].Syllables.Last().TicksOff)
+                        if (kls.Lines[i + 1].Syllables.Count > 0 && kls.Lines[i + 1].Syllables.First().TicksOn > kls.Lines[i].Syllables.Last().TicksOff)
                         {
                             ticksOn = kls.Lines[i].Syllables.Last().TicksOff + 1;                                                                                   
                             ticksOff = kls.Lines[i + 1].Syllables.First().TicksOn - 1;
@@ -1998,7 +1998,7 @@ namespace PicControl
                 x = lines[i];
                 if (x < _kLyrics.Lines.Count)
                 {
-                    if (_kLyrics.Lines[x].Syllables.Last().CharType == Syllable.CharTypes.Information && _kLyrics.Lines[x].Syllables.Last().Text != string.Empty)
+                    if (_kLyrics.Lines[x].Syllables.Count > 0 && _kLyrics.Lines[x].Syllables.Last().CharType == Syllable.CharTypes.Information && _kLyrics.Lines[x].Syllables.Last().Text != string.Empty)
                     {
                         return i;
                     }
