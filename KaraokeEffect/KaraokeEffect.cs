@@ -533,8 +533,7 @@ namespace keffect
                 if (value.Lines.Count == 0) return;
                 _kLyrics = value;
                 _kLyricsOrg = (kLyrics)_kLyrics.Clone();
-                //if (_kLyrics != null && _kLyrics.Lines.Count > 0)                                    
-                //    Init();
+                
                 
             }
         }

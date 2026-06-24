@@ -577,6 +577,7 @@ namespace Karaboss.Mp3
                 dgView.Rows[Row].Cells[COL_TIME].Value = tsp;
 
                 localKaraokeLyrics = LoadModifiedLyrics();
+                FileModified();
             }
         }
 
@@ -604,6 +605,7 @@ namespace Karaboss.Mp3
             }
 
             localKaraokeLyrics = LoadModifiedLyrics();
+            FileModified();
 
         }
 
@@ -656,6 +658,7 @@ namespace Karaboss.Mp3
                 dgView.Rows[Row].Cells[COL_TIME].Value = tsp;
 
                 localKaraokeLyrics = LoadModifiedLyrics();
+                FileModified();
             }
 
         }
@@ -684,6 +687,7 @@ namespace Karaboss.Mp3
             }
 
             localKaraokeLyrics = LoadModifiedLyrics();
+            FileModified();
         }
 
 
@@ -950,6 +954,7 @@ namespace Karaboss.Mp3
 
                 if (dgView.Rows[Row].Cells[COL_MS].Value != null && IsNumeric(dgView.Rows[Row].Cells[COL_MS].Value.ToString()))
                 {
+
                     // Load frmMp3Lyrics
                     DisplayFrmMp3Lyrics();
 
@@ -965,12 +970,14 @@ namespace Karaboss.Mp3
                     // play from a specific time
                     time = double.Parse(dgView.Rows[Row].Cells[COL_MS].Value.ToString());
                     PlayPauseMusic(time / 1000);          // time in seconds
-                    return;
+                    
                 }
             }
-
-            // Play from start
-            PlayPauseMusic();
+            else
+            {
+                // Play from start
+                PlayPauseMusic();
+            }
 
         }
 
@@ -1857,7 +1864,9 @@ namespace Karaboss.Mp3
                 case Mp3LyricsTypes.LyricsWithTimeStamps:
                     // This one returns lyrics without separators                    
                     Mp3LyricsMgmtHelper.mp3KaraokeLyrics = Mp3LyricsMgmtHelper.GetLyricsFromMp3File(SyncLyricsFrame);    // KaraokeLyrics class used for display in frmMp3Lyrics
-                    
+
+                    localKaraokeLyrics = (kLyrics)Mp3LyricsMgmtHelper.mp3KaraokeLyrics.Clone();
+
                     DisplayFrmMp3Lyrics();
                     SendInformationsToLyrics();
 
@@ -1884,6 +1893,8 @@ namespace Karaboss.Mp3
                 case Mp3LyricsTypes.LRCFile:
                     Mp3LyricsMgmtHelper.mp3KaraokeLyrics = Mp3LyricsMgmtHelper.GetLyricsFromLrcFile(FileName);
 
+                    localKaraokeLyrics = (kLyrics)Mp3LyricsMgmtHelper.mp3KaraokeLyrics.Clone();
+
                     DisplayFrmMp3Lyrics();
                     SendInformationsToLyrics();
 
@@ -1893,14 +1904,16 @@ namespace Karaboss.Mp3
                         if (currentPlaylistItem == null)
                         {
                             // No playlist => set lyrics
-                            frmMp3Lyrics.SetLyrics(Mp3LyricsMgmtHelper.mp3KaraokeLyrics, _duration, Mp3FileName, currentPlaylistItem);
+                            //frmMp3Lyrics.SetLyrics(Mp3LyricsMgmtHelper.mp3KaraokeLyrics, _duration, Mp3FileName, currentPlaylistItem);
+                            frmMp3Lyrics.SetLyrics(localKaraokeLyrics, _duration, Mp3FileName, currentPlaylistItem);
                         }
                         else
                         {
                             // No countdown and no pause => set lyrics
                             if (!Karaclass.m_PauseBetweenSongs && Karaclass.m_CountdownSongs == 0)
                             {
-                                frmMp3Lyrics.SetLyrics(Mp3LyricsMgmtHelper.mp3KaraokeLyrics, _duration, Mp3FileName, currentPlaylistItem);
+                                //frmMp3Lyrics.SetLyrics(Mp3LyricsMgmtHelper.mp3KaraokeLyrics, _duration, Mp3FileName, currentPlaylistItem);
+                                frmMp3Lyrics.SetLyrics(localKaraokeLyrics, _duration, Mp3FileName, currentPlaylistItem);
                             }
                         }
                     }
@@ -1988,7 +2001,8 @@ namespace Karaboss.Mp3
             {
                 frmMp3Lyrics.Start();
                 frmMp3Lyrics.PlayStopActions(false);
-                frmMp3Lyrics.SetLyrics(Mp3LyricsMgmtHelper.mp3KaraokeLyrics, _duration, Mp3FileName, currentPlaylistItem);
+                //frmMp3Lyrics.SetLyrics(Mp3LyricsMgmtHelper.mp3KaraokeLyrics, _duration, Mp3FileName, currentPlaylistItem);
+                frmMp3Lyrics.SetLyrics(localKaraokeLyrics, _duration, Mp3FileName, currentPlaylistItem);
             }
         }
 
