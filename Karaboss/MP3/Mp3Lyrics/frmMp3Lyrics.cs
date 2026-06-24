@@ -1168,8 +1168,7 @@ namespace Karaboss.Mp3
             #endregion Restore options
 
             karaokeEffect1.Populate(lyrics, Duration, FileName, bForceUppercase);
-
-            //karaokeEffect1.KLyrics = lyrics;
+            
         }
 
         #endregion Lyrics

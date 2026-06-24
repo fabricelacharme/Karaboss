@@ -264,12 +264,7 @@ namespace Karaboss.Mp3
             {
                 #region Single file
 
-                // New fab
-                //ExtractMp3Lyrics(Mp3FullPath);
-
-                //lblPlaylist.Visible = false;
-                // If true, launch player
-               
+                               
                 // the user asked to play the song immediately                
                 if (bPlayNow)
                 {
@@ -441,8 +436,7 @@ namespace Karaboss.Mp3
                 return;
 
             object otime;
-            object otsp;
-            //object otext;
+            object otsp;            
 
             string time = string.Empty;
             string tsp = string.Empty;
@@ -529,6 +523,7 @@ namespace Karaboss.Mp3
 
 
         #region Major or minor timestamps
+
         /// <summary>
         /// Add 100 ms to timestamps
         /// </summary>
@@ -4426,7 +4421,7 @@ namespace Karaboss.Mp3
 
                     // new item with cr
                     text = text.Replace(m_SepLine, "");
-                    text = cr + text;
+                    //text = cr + text;
                 }
 
                 // Add new item to the current line 
