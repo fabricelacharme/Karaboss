@@ -1,14 +1,9 @@
-﻿using kar;
-using System;
+﻿using System;
 using System.Collections;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Runtime.Serialization;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Xml.Serialization;
 
@@ -98,18 +93,18 @@ namespace Karaboss.Themes
             InactiveColor = "#FFFFFF",
             ActiveBorderColor = "#010101",
             InactiveBorderColor = "#8000FF",
-            
+
             ActiveInstrumentalColor = "#808080",
 
             BgColor = "#FCA903",
 
-            Grad0Color = "#48D1CC", //Color.MediumTurquoise,
-            Grad1Color = "#ADFF2F", //Color.GreenYellow,
-            Rhythm0Color = "#000000", //Color.Black,
-            Rhythm1Color = "#1E90FF", //Color.DodgerBlue,
+            Grad0Color = "#6495ED", // old proposition #48D1CC", 
+            Grad1Color = "#FFEBCD", // old proposition "#ADFF2F",
+            Rhythm0Color = "#000000",
+            Rhythm1Color = "#1E90FF",
 
-            InactiveChordColor = "#FF8C00",
-            HighlightChordColor = "#8B0000",
+            InactiveChordColor = "#8080FF",
+            HighlightChordColor = "#FFFF00",
 
         }; 
 

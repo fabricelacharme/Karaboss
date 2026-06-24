@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmMp3LyrOptions));
             this.picBgColor = new System.Windows.Forms.PictureBox();
             this.radioTransparent = new System.Windows.Forms.RadioButton();
@@ -109,6 +110,7 @@
             this.lblKaraokeType = new System.Windows.Forms.Label();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.chkShowLogo = new System.Windows.Forms.CheckBox();
             this.chkShowSongName = new System.Windows.Forms.CheckBox();
             this.chkShowHints = new System.Windows.Forms.CheckBox();
             this.tabPage2 = new System.Windows.Forms.TabPage();
@@ -125,6 +127,8 @@
             this.btnSaveTheme = new System.Windows.Forms.Button();
             this.openFileDialog = new System.Windows.Forms.OpenFileDialog();
             this.karaokeEffect1 = new keffect.KaraokeEffect();
+            this.btnSelectLogo = new System.Windows.Forms.Button();
+            this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.picBgColor)).BeginInit();
             this.pnlBalls.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
@@ -726,6 +730,8 @@
             // 
             // tabPage1
             // 
+            this.tabPage1.Controls.Add(this.btnSelectLogo);
+            this.tabPage1.Controls.Add(this.chkShowLogo);
             this.tabPage1.Controls.Add(this.chkShowSongName);
             this.tabPage1.Controls.Add(this.chkShowHints);
             this.tabPage1.Controls.Add(this.lblActiveColor);
@@ -763,6 +769,15 @@
             resources.ApplyResources(this.tabPage1, "tabPage1");
             this.tabPage1.Name = "tabPage1";
             this.tabPage1.UseVisualStyleBackColor = true;
+            // 
+            // chkShowLogo
+            // 
+            resources.ApplyResources(this.chkShowLogo, "chkShowLogo");
+            this.chkShowLogo.Checked = true;
+            this.chkShowLogo.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.chkShowLogo.Name = "chkShowLogo";
+            this.chkShowLogo.UseVisualStyleBackColor = true;
+            this.chkShowLogo.CheckedChanged += new System.EventHandler(this.chkShowLogo_CheckedChanged);
             // 
             // chkShowSongName
             // 
@@ -887,9 +902,11 @@
             this.karaokeEffect1.BitRate = 0;
             this.karaokeEffect1.BorderThick = 1;
             this.karaokeEffect1.bShowHints = true;
+            this.karaokeEffect1.bShowLogo = false;
             this.karaokeEffect1.bShowParagraphs = true;
             this.karaokeEffect1.bShowSongName = true;
             this.karaokeEffect1.bTextBackGround = false;
+            this.karaokeEffect1.bTopMost = false;
             this.karaokeEffect1.Duration = 0D;
             this.karaokeEffect1.FileName = "Song name";
             this.karaokeEffect1.FontStretching = "None";
@@ -900,6 +917,7 @@
             this.karaokeEffect1.Grad1Color = System.Drawing.Color.Empty;
             this.karaokeEffect1.GradientAngle = 45F;
             this.karaokeEffect1.HighlightColor = System.Drawing.Color.FromArgb(((int)(((byte)(238)))), ((int)(((byte)(17)))), ((int)(((byte)(17)))));
+            this.karaokeEffect1.ImgLogo = "logo.png";
             this.karaokeEffect1.InactiveBorderColor = System.Drawing.Color.Empty;
             this.karaokeEffect1.InactiveColor = System.Drawing.Color.White;
             this.karaokeEffect1.KaraokeDisplayType = kar.KaraokeDisplayTypes.FixedLines;
@@ -908,6 +926,7 @@
             resources.ApplyResources(this.karaokeEffect1, "karaokeEffect1");
             this.karaokeEffect1.m_CurrentImage = null;
             this.karaokeEffect1.m_DisplayRectangle = new System.Drawing.Rectangle(0, 0, 0, 0);
+            this.karaokeEffect1.m_LogoImage = null;
             this.karaokeEffect1.Name = "karaokeEffect1";
             this.karaokeEffect1.nbLyricsLines = 3;
             this.karaokeEffect1.OptionBackground = null;
@@ -921,6 +940,14 @@
             this.karaokeEffect1.timerIntervall = ((long)(50));
             this.karaokeEffect1.TransitionEffect = keffect.KaraokeEffect.TransitionEffects.Progressive;
             this.karaokeEffect1.TransparencyKey = System.Drawing.Color.Lime;
+            // 
+            // btnSelectLogo
+            // 
+            resources.ApplyResources(this.btnSelectLogo, "btnSelectLogo");
+            this.btnSelectLogo.Name = "btnSelectLogo";
+            this.toolTip1.SetToolTip(this.btnSelectLogo, resources.GetString("btnSelectLogo.ToolTip"));
+            this.btnSelectLogo.UseVisualStyleBackColor = true;
+            this.btnSelectLogo.Click += new System.EventHandler(this.btnSelectLogo_Click);
             // 
             // frmMp3LyrOptions
             // 
@@ -1068,5 +1095,8 @@
         private System.Windows.Forms.Label lblFontSize;
         private System.Windows.Forms.CheckBox chkShowHints;
         private System.Windows.Forms.CheckBox chkShowSongName;
+        private System.Windows.Forms.CheckBox chkShowLogo;
+        private System.Windows.Forms.Button btnSelectLogo;
+        private System.Windows.Forms.ToolTip toolTip1;
     }
 }

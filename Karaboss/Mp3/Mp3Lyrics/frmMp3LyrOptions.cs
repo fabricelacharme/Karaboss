@@ -9,6 +9,7 @@ using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
+using TagLib.Mpeg4;
 
 
 namespace Karaboss.Mp3
@@ -140,6 +141,31 @@ namespace Karaboss.Mp3
             }
         }
 
+        private bool _bShowLogo;
+        public bool bShowLogo
+        {
+            get { return _bShowLogo; }
+            set
+            {
+                _bShowLogo = value;
+                karaokeEffect1.bShowLogo = _bShowLogo;
+            }
+        }
+
+        private string _ImgLogo = "logo.png"; // Name of logo image (logo.png)
+        public string ImgLogo
+        {
+            get { return _ImgLogo; }
+            set
+            {
+                if (value != null)
+                {
+                    _ImgLogo = value;
+                    karaokeEffect1.ImgLogo = _ImgLogo;
+                }
+            }
+        }
+
         #endregion Picture
 
 
@@ -194,6 +220,8 @@ namespace Karaboss.Mp3
             // Control used in settings
             karaokeEffect1.bIsSettings = true;
             karaokeEffect1.LoadDemoText();
+
+            karaokeEffect1.Populate(karaokeEffect1.KLyrics, karaokeEffect1.Duration, karaokeEffect1.FileName, bForceUppercase);
         }
 
 
@@ -210,78 +238,7 @@ namespace Karaboss.Mp3
             {
                 frmMp3Lyrics frmMp3Lyrics = Utilities.FormUtilities.GetForm<frmMp3Lyrics>();
                 frmMp3Lyrics.ApplyFromOptionsForm();
-            }
-
-            /*
-            if (Application.OpenForms.OfType<frmMp3Lyrics>().Count() > 0)
-            {
-                Cursor.Current = Cursors.WaitCursor;
-
-                frmMp3Lyrics frmMp3Lyrics = Utilities.FormUtilities.GetForm<frmMp3Lyrics>();
-
-                frmMp3Lyrics.bShowBalls = Karaclass.m_DisplayBalls;
-
-                frmMp3Lyrics.KaraokeFont = _karaokeFont;
-                frmMp3Lyrics.FontStretching = _FontStretching;
-
-                // Borders
-                frmMp3Lyrics.FrameType = FrameType;
-
-                // Text colors                
-                frmMp3Lyrics.BgColor = BgColor;
-                frmMp3Lyrics.Grad0Color = Grad0Color;
-                frmMp3Lyrics.Grad1Color = Grad1Color;
-                frmMp3Lyrics.Rhythm0Color = Rhythm0Color;
-                frmMp3Lyrics.Rhythm1Color = Rhythm1Color;
-
-                frmMp3Lyrics.ActiveColor = ActiveColor;
-                frmMp3Lyrics.HighlightColor = HighlightColor;
-                frmMp3Lyrics.InactiveColor = InactiveColor;
-
-                frmMp3Lyrics.bProgressiveHighlight = bProgressiveHighlight;     // Progressive highlight
-
-                frmMp3Lyrics.ActiveBorderColor = ActiveBorderColor;
-                frmMp3Lyrics.InactiveBorderColor = InactiveBorderColor;
-
-
-                // Instrumental color
-                frmMp3Lyrics.ActiveInstrumentalColor = ActiveInstrumentalColor;
-
-                // force uppercase
-                frmMp3Lyrics.bForceUppercase = bForceUppercase;
-
-                // Show hints (introduction, instrumental, ending)
-                frmMp3Lyrics.bShowHints = bShowHints;
-
-                frmMp3Lyrics.bShowSongName = chkShowSongName.Checked;
-
-                _nbLyricsLines = Convert.ToInt32(UpDownNbLines.Value);
-                frmMp3Lyrics.nbLyricsLines = _nbLyricsLines;
-
-                frmMp3Lyrics.SizeMode = SizeMode;
-
-                // Diaporam, Backcolor ou transparent
-                frmMp3Lyrics.OptionBackground = bgOption;
-
-                // Text display: Center, Top, Bottom
-                frmMp3Lyrics.OptionDisplay = OptionDisplay;
-
-                frmMp3Lyrics.bTextBackGround = chkTextBackground.Checked;
-
-                // Display single image as background
-                frmMp3Lyrics.SingleImagePath = SingleImagePath;
-
-                // SlideShow frequency
-                frmMp3Lyrics.FreqSlideShow = freqSlideShow;
-
-                // directory for slide show
-                frmMp3Lyrics.DirSlideShow = dirSlideShow;
-
-                // Karaoke display type
-                frmMp3Lyrics.KaraokeDisplayType = KaraokeDisplayType;
-            }
-            */
-        
+            }                  
         }
 
         #region Themes Color
@@ -400,6 +357,14 @@ namespace Karaboss.Mp3
 
                 // Show song name
                 chkShowSongName.Checked = Properties.Settings.Default.bShowSongName;
+
+               
+                // Show logo
+                // Logo image name (logo.png)
+                ImgLogo = Properties.Settings.Default.Logo;
+
+                bShowLogo = Properties.Settings.Default.bShowLogo;
+                chkShowLogo.Checked = bShowLogo;
 
                 // Display balls on lyrics
                 chkDisplayBalls.Checked = Karaclass.m_DisplayBalls;
@@ -666,8 +631,12 @@ namespace Karaboss.Mp3
                 // Show hints (introduction, instrumental, ending)
                 Properties.Settings.Default.bShowHints = bShowHints;
 
-
+                // Show song name
                 Properties.Settings.Default.bShowSongName = chkShowSongName.Checked;
+
+                // Show logo
+                Properties.Settings.Default.bShowLogo = chkShowLogo.Checked;
+                Properties.Settings.Default.Logo = ImgLogo;
 
                 // Number of lines to display
                 Properties.Settings.Default.TxtNbLines = _nbLyricsLines;
@@ -1390,6 +1359,12 @@ namespace Karaboss.Mp3
         }
 
 
+        private void chkShowLogo_CheckedChanged(object sender, EventArgs e)
+        {
+            bShowLogo = chkShowLogo.Checked;
+            karaokeEffect1.bShowLogo = bShowLogo;
+        }
+
         #endregion events
 
 
@@ -1487,6 +1462,49 @@ namespace Karaboss.Mp3
 
 
         #endregion font
+
+
+        #region Logo
+
+        private void btnSelectLogo_Click(object sender, EventArgs e)
+        {
+            string OriginalFile;
+            string SourceFile;
+            string NewFile;
+
+            try
+            {
+                openFileDialog.Filter = "Image Files|*.jpg;*.jpeg;*.png;*.gif;*.tif;...|All files (*.*)|*.*";
+                openFileDialog.FileName = string.Empty;
+
+                var AppDataFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), Application.ProductName);
+                OriginalFile = Path.Combine(AppDataFolder, _ImgLogo);
+
+                //openFileDialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyPictures);
+                // Open always in the AppData folder where the logo file is copied
+                openFileDialog.InitialDirectory = AppDataFolder;
+
+
+                if (openFileDialog.ShowDialog() == DialogResult.OK)
+                {
+                    SourceFile = openFileDialog.FileName;
+                    NewFile = Path.Combine(AppDataFolder, Path.GetFileName(SourceFile));
+
+                    // Copy the new logo into AppData folder
+                    if (SourceFile != NewFile)
+                        System.IO.File.Copy(SourceFile, NewFile, true);
+
+                    ImgLogo = Path.GetFileName(NewFile);
+                    karaokeEffect1.m_LogoImage = Image.FromFile(NewFile);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        #endregion Logo
 
 
         #region Lyrics decoration 
@@ -2141,8 +2159,10 @@ namespace Karaboss.Mp3
 
 
 
+
+
         #endregion Color Themes
 
-        
+       
     }
 }

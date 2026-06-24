@@ -51,9 +51,14 @@ namespace Karaboss.Mp3
     public partial class frmMp3Player : Form
     {
         #region declarations
-     
-        private List<(string, string)> lstSaveTimestamps = new List<(string, string)>();
 
+        #region Bass
+
+        private Mp3Player Player;
+
+        #endregion Bass
+
+        
         #region Countdown
 
         // To wait between 2 songs (playlists)
@@ -63,16 +68,7 @@ namespace Karaboss.Mp3
         Timer timerCountdown = new Timer();
 
         #endregion Countdown
-
-
-        #region MP3
-
-        private double _duration = 0;   // mp3 duration in ms
-        private float _frequency = 0;
-        private int _bitrate = 0;
-
-        #endregion MP3
-
+      
 
         #region dgview
 
@@ -97,13 +93,38 @@ namespace Karaboss.Mp3
         int COL_TEXT = 2;
 
         #endregion dgview        
+                        
 
-        private enum Directions
-        {
-            Forward,
-            Backward
-        }
-        
+        #region File
+
+        public bool bfilemodified = false;
+
+        private string Mp3FullPath;
+        private string Mp3FileName;
+
+        #endregion File
+
+
+        #region Fonts
+
+        private Font _lyricseditfont;
+        private float _fontSize = 11f;
+
+        #endregion Fonts
+
+
+        #region Forms
+
+        // Form scrolling
+        private bool scrolling = false;
+
+        private frmMp3LyricsSimple frmMp3LyricsSimple;
+        private frmMp3Lyrics frmMp3Lyrics;
+        private frmTest frmTest;
+
+
+        #endregion Forms
+
 
         #region lrc generator
 
@@ -118,31 +139,35 @@ namespace Karaboss.Mp3
 
         #endregion lrc generator
 
-        // txtResult, BtnFontPlus
-        private Font _lyricseditfont;
-        private float _fontSize = 11f;
+
+        #region Lyrics edition
+
+        private List<(string, string)> lstSaveTimestamps = new List<(string, string)>();
 
         // Manage locally lyrics        
         kLyrics localKaraokeLyrics;
 
-
         private readonly string m_SepLine = "/";
         private readonly string m_SepParagraph = "\\";
-       
+
         private int _LrcMillisecondsDigits = 2;
-
         private int m_MillisecondsOffset = 100; // Default offset in milliseconds to display lyrics
-        
-        public bool bfilemodified = false;
 
-        // SlideShow directory
-        public string dirSlideShow;
+        #endregion Lyrics edition
+
+               
+        #region MP3
+
+        private double _duration = 0;   // mp3 duration in ms
+        private float _frequency = 0;
+        private int _bitrate = 0;
+
+        #endregion MP3
 
 
-        #region player
+        #region Player
 
-        // Size player
-        // 530;194
+        // Size player       
         private enum PlayerAppearances
         {
             Player,
@@ -177,34 +202,25 @@ namespace Karaboss.Mp3
         private int TransposeValue = 0;
         private long FrequencyRatio = 100;
 
+        // Play next or previous mp3 song
+        private enum Directions
+        {
+            Forward,
+            Backward
+        }
+
+        #endregion Player
+
+
+        #region Playlists
+
         // Playlists
         private readonly Playlist currentPlaylist;
         private PlaylistItem currentPlaylistItem;
-        private readonly string _InternalSepLines = "¼";
 
-        #endregion player
+        #endregion Playlists
 
-
-        #region forms
-        private bool scrolling = false;
-        private string Mp3FullPath;
-        private string Mp3FileName;
-       
-        //forms
-        private frmMp3LyricsSimple frmMp3LyricsSimple;
-        private frmMp3Lyrics frmMp3Lyrics;
-        private frmTest frmTest;
-
-
-        #endregion forms
-
-       
-        #region Bass
-
-        private Mp3Player Player;
-
-        #endregion Bass
-
+                   
         #endregion declarations
 
 
@@ -218,62 +234,37 @@ namespace Karaboss.Mp3
         {
             InitializeComponent();
 
-            // Allow form keydown
-            this.KeyPreview = true;
+            currentPlaylist = myPlayList;
+            bPlayNow = bplay;
 
-            Mp3FullPath = FileName;
-            Mp3FileName = Path.GetFileName(FileName);
-            SetTitle(FileName);
+            // Initalize all
+            Init(FileName);
 
-            // Init controls
-            InitControls();
+            // Extract tags, duration, lyrics from mp3 or LRC file
+            ExtractMp3Lyrics(Mp3FullPath);
 
-            // Player appearance is normal player
-            PlayerAppearance = PlayerAppearances.Player;
-
-            // Create mp3 Player instance, init bass and load file                                    
-            Player = new Mp3Player(FileName);
-            _duration = Player.Seconds; // * 1000;
-            _bitrate = Player.BitRate;
-            _frequency = Player.Frequency;
-
-            // Create event for playing completed
-            Player.PlayingCompleted += new EndingSyncHandler(HandlePlayingCompleted);
-            
-            DisplayMp3Characteristics();
-            //ExtractMp3Lyrics(Mp3FullPath);          
-
-
-            PopulateMetadataTags();
-
-            #region playlists
-
-            if (myPlayList != null)
-            {                
-                currentPlaylist = myPlayList;
+            if (currentPlaylist != null)
+            {
+                #region Playlists
+                
                 // Search file to play with its filename                
                 currentPlaylistItem = currentPlaylist.Songs.Where(z => z.File == Mp3FullPath).FirstOrDefault();
-                
-                lblPlaylist.Visible = true;
+                                
                 int idx = currentPlaylist.SelectedIndex(currentPlaylistItem) + 1;
                 lblPlaylist.Text = "PLAYLIST: " + idx + "/" + currentPlaylist.Count;
 
-                ExtractMp3Lyrics(Mp3FullPath);
+                //ExtractMp3Lyrics(Mp3FullPath);
 
                 // play asap, pause, countdown
                 performPlaylistChainingChoice();
 
-
-
+                #endregion Playlists
             }
             else
             {
-                // New fab
-                ExtractMp3Lyrics(Mp3FullPath);
+                #region Single file
 
-                lblPlaylist.Visible = false;
-                // If true, launch player
-                bPlayNow = bplay;
+                               
                 // the user asked to play the song immediately                
                 if (bPlayNow)
                 {
@@ -287,9 +278,11 @@ namespace Karaboss.Mp3
                     // Show LRC Generator
                     PlayerAppearance = PlayerAppearances.LyricsEditor;                                        
                 }
+
+                #endregion Single file
             }
-            #endregion playlists
-           
+
+
         }
 
 
@@ -443,8 +436,7 @@ namespace Karaboss.Mp3
                 return;
 
             object otime;
-            object otsp;
-            //object otext;
+            object otsp;            
 
             string time = string.Empty;
             string tsp = string.Empty;
@@ -531,6 +523,7 @@ namespace Karaboss.Mp3
 
 
         #region Major or minor timestamps
+
         /// <summary>
         /// Add 100 ms to timestamps
         /// </summary>
@@ -579,6 +572,7 @@ namespace Karaboss.Mp3
                 dgView.Rows[Row].Cells[COL_TIME].Value = tsp;
 
                 localKaraokeLyrics = LoadModifiedLyrics();
+                FileModified();
             }
         }
 
@@ -606,6 +600,7 @@ namespace Karaboss.Mp3
             }
 
             localKaraokeLyrics = LoadModifiedLyrics();
+            FileModified();
 
         }
 
@@ -658,6 +653,7 @@ namespace Karaboss.Mp3
                 dgView.Rows[Row].Cells[COL_TIME].Value = tsp;
 
                 localKaraokeLyrics = LoadModifiedLyrics();
+                FileModified();
             }
 
         }
@@ -686,6 +682,7 @@ namespace Karaboss.Mp3
             }
 
             localKaraokeLyrics = LoadModifiedLyrics();
+            FileModified();
         }
 
 
@@ -791,20 +788,14 @@ namespace Karaboss.Mp3
                 BtnStatus();
                 ValideMenus(false);
 
-                ManagePauseEnding();
+                //ManagePauseEnding();
 
                 // Set Volume, frequency & transpose
                 SetInitialListenValues();
 
-
                 StartKaraoke();
-                //if (Application.OpenForms.OfType<frmMp3Lyrics>().Count() > 0)
-                //    frmMp3Lyrics.PlayStopActions(false);
 
-                Player.Play(Mp3FullPath, start);
-
-                
-
+                Player.Play(Mp3FullPath, start);                
                 Timer1.Start();
 
                 // Start balls
@@ -889,15 +880,13 @@ namespace Karaboss.Mp3
                     // if Count down was paused
                     // => restart count down timer
                     PlayerState = PlayerStates.Waiting;
-                    BtnStatus();
-                    //timer5.Enabled = true;
+                    BtnStatus();                    
                     break;
 
                 case PlayerStates.LaunchNextSong:       // pause between 2 songs of a playlist
                     if (Karaclass.m_CountdownSongs == 0)
                     {
-                        // pause removed or no count down => play asap                                            
-                        //newstart = 0;
+                        // pause removed or no count down => play asap                                                                    
                         FirstPlaySong(0);
                     }
                     else
@@ -960,6 +949,7 @@ namespace Karaboss.Mp3
 
                 if (dgView.Rows[Row].Cells[COL_MS].Value != null && IsNumeric(dgView.Rows[Row].Cells[COL_MS].Value.ToString()))
                 {
+
                     // Load frmMp3Lyrics
                     DisplayFrmMp3Lyrics();
 
@@ -968,19 +958,21 @@ namespace Karaboss.Mp3
                     // Reload modified lyrics before playing
                     if (Application.OpenForms.OfType<frmMp3Lyrics>().Count() > 0)
                     {
-                        frmMp3Lyrics.SetLyrics(localKaraokeLyrics);
+                        frmMp3Lyrics.SetLyrics(localKaraokeLyrics, _duration, Mp3FileName, currentPlaylistItem);
                     }
 
 
                     // play from a specific time
                     time = double.Parse(dgView.Rows[Row].Cells[COL_MS].Value.ToString());
                     PlayPauseMusic(time / 1000);          // time in seconds
-                    return;
+                    
                 }
             }
-
-            // Play from start
-            PlayPauseMusic();
+            else
+            {
+                // Play from start
+                PlayPauseMusic();
+            }
 
         }
 
@@ -1867,7 +1859,9 @@ namespace Karaboss.Mp3
                 case Mp3LyricsTypes.LyricsWithTimeStamps:
                     // This one returns lyrics without separators                    
                     Mp3LyricsMgmtHelper.mp3KaraokeLyrics = Mp3LyricsMgmtHelper.GetLyricsFromMp3File(SyncLyricsFrame);    // KaraokeLyrics class used for display in frmMp3Lyrics
-                    
+
+                    localKaraokeLyrics = (kLyrics)Mp3LyricsMgmtHelper.mp3KaraokeLyrics.Clone();
+
                     DisplayFrmMp3Lyrics();
                     SendInformationsToLyrics();
 
@@ -1877,14 +1871,14 @@ namespace Karaboss.Mp3
                         if (currentPlaylistItem == null)
                         {
                             // No playlist => set lyrics
-                            frmMp3Lyrics.SetLyrics(Mp3LyricsMgmtHelper.mp3KaraokeLyrics);
+                            frmMp3Lyrics.SetLyrics(Mp3LyricsMgmtHelper.mp3KaraokeLyrics, _duration, Mp3FileName, currentPlaylistItem);
                         }
                         else
                         {
                             // No countdown and no pause => set lyrics
                             if (!Karaclass.m_PauseBetweenSongs && Karaclass.m_CountdownSongs == 0)
                             {
-                                frmMp3Lyrics.SetLyrics(Mp3LyricsMgmtHelper.mp3KaraokeLyrics);
+                                frmMp3Lyrics.SetLyrics(Mp3LyricsMgmtHelper.mp3KaraokeLyrics, _duration, Mp3FileName, currentPlaylistItem);
                             }
                         }
                     }
@@ -1894,6 +1888,8 @@ namespace Karaboss.Mp3
                 case Mp3LyricsTypes.LRCFile:
                     Mp3LyricsMgmtHelper.mp3KaraokeLyrics = Mp3LyricsMgmtHelper.GetLyricsFromLrcFile(FileName);
 
+                    localKaraokeLyrics = (kLyrics)Mp3LyricsMgmtHelper.mp3KaraokeLyrics.Clone();
+
                     DisplayFrmMp3Lyrics();
                     SendInformationsToLyrics();
 
@@ -1903,14 +1899,16 @@ namespace Karaboss.Mp3
                         if (currentPlaylistItem == null)
                         {
                             // No playlist => set lyrics
-                            frmMp3Lyrics.SetLyrics(Mp3LyricsMgmtHelper.mp3KaraokeLyrics);
+                            //frmMp3Lyrics.SetLyrics(Mp3LyricsMgmtHelper.mp3KaraokeLyrics, _duration, Mp3FileName, currentPlaylistItem);
+                            frmMp3Lyrics.SetLyrics(localKaraokeLyrics, _duration, Mp3FileName, currentPlaylistItem);
                         }
                         else
                         {
                             // No countdown and no pause => set lyrics
                             if (!Karaclass.m_PauseBetweenSongs && Karaclass.m_CountdownSongs == 0)
                             {
-                                frmMp3Lyrics.SetLyrics(Mp3LyricsMgmtHelper.mp3KaraokeLyrics);
+                                //frmMp3Lyrics.SetLyrics(Mp3LyricsMgmtHelper.mp3KaraokeLyrics, _duration, Mp3FileName, currentPlaylistItem);
+                                frmMp3Lyrics.SetLyrics(localKaraokeLyrics, _duration, Mp3FileName, currentPlaylistItem);
                             }
                         }
                     }
@@ -1955,14 +1953,15 @@ namespace Karaboss.Mp3
         {
 
             // Close form if opened
-            if (Application.OpenForms.OfType<frmMp3Lyrics>().Count() > 0)
-                Application.OpenForms["frmMp3Lyrics"].Close();
+            //if (Application.OpenForms.OfType<frmMp3Lyrics>().Count() > 0)
+            //    Application.OpenForms["frmMp3Lyrics"].Close();
 
-
-            // Open and add to owners (will be closed/minimized together and will be on top)
-            frmMp3Lyrics = new frmMp3Lyrics(Mp3FullPath, currentPlaylist);
-            //frmMp3Lyrics.Owner = this;
-            frmMp3Lyrics.Show();
+            if (Application.OpenForms.OfType<frmMp3Lyrics>().Count() == 0)
+            {
+                // Open and add to owners (will be closed/minimized together and will be on top)
+                frmMp3Lyrics = new frmMp3Lyrics(Mp3FullPath, currentPlaylist);             
+                frmMp3Lyrics.Show();
+            }
 
             // cas d'une playlist ou non : met à jour le diaporama
             SetSlideShow();           
@@ -1971,8 +1970,37 @@ namespace Karaboss.Mp3
         private void SendInformationsToLyrics()
         {
             // MP3 caracteristics
-            frmMp3Lyrics.Duration = _duration * 1000; // mp3 duration in ms
+            frmMp3Lyrics.Duration = _duration * 1000; // mp3 duration in ms           
         }
+
+        private void SendPositionToKaraoke(double pos)
+        {
+            if (Player == null) return;
+
+            if (Application.OpenForms.OfType<frmMp3Lyrics>().Count() > 0)
+                frmMp3Lyrics?.SendPlayerPositionToKaraoke(pos);
+        }
+
+        private void StopKaraoke()
+        {
+            if (Application.OpenForms.OfType<frmMp3Lyrics>().Count() > 0)
+            {
+                frmMp3Lyrics.Stop();
+                frmMp3Lyrics.PlayStopActions(true);
+            }
+        }
+
+        private void StartKaraoke()
+        {
+            if (Application.OpenForms.OfType<frmMp3Lyrics>().Count() > 0)
+            {
+                frmMp3Lyrics.Start();
+                frmMp3Lyrics.PlayStopActions(false);
+                //frmMp3Lyrics.SetLyrics(Mp3LyricsMgmtHelper.mp3KaraokeLyrics, _duration, Mp3FileName, currentPlaylistItem);
+                frmMp3Lyrics.SetLyrics(localKaraokeLyrics, _duration, Mp3FileName, currentPlaylistItem);
+            }
+        }
+
 
 
         /// <summary>
@@ -1982,6 +2010,8 @@ namespace Karaboss.Mp3
         {
             if (Application.OpenForms.OfType<frmMp3Lyrics>().Count() > 0)
             {
+                string dirSlideShow;
+
                 // cas d'une playlist ou non : met à jour le diaporama
                 if (currentPlaylistItem != null)
                     dirSlideShow = currentPlaylistItem.DirSlideShow;
@@ -2010,292 +2040,7 @@ namespace Karaboss.Mp3
 
 
         #endregion Display lyrics      
-
-
-        #region Draw controls
-        private void InitControls()
-        {
-
-            PlayerState = PlayerStates.Stopped;
-            pnlDisplay.DisplayBeat("");
-
-            #region volume
-            sldMainVolume.ShowDivisionsText = false;
-            sldMainVolume.ShowSmallScale = false;
-            sldMainVolume.TickStyle = TickStyle.Both;
-            sldMainVolume.TickColor = Color.White;
-            sldMainVolume.TickAdd = 0;
-            sldMainVolume.TickDivide = 0;
-
-            sldMainVolume.Orientation = Orientation.Vertical;
-            sldMainVolume.Maximum = 130;    // Closer to 127
-            sldMainVolume.Minimum = 0;
-            sldMainVolume.ScaleDivisions = 13;
-            sldMainVolume.ScaleSubDivisions = 5;
-            sldMainVolume.Value = 104;
-            sldMainVolume.SmallChange = 13;
-            sldMainVolume.LargeChange = 13;
-            sldMainVolume.MouseWheelBarPartitions = 10;
-
-            sldMainVolume.Left = 272;
-            sldMainVolume.Top = 25;
-            sldMainVolume.Width = 24;
-            sldMainVolume.Height = 80;
-
-            lblMainVolume.Text = String.Format("{0}%", 100 * sldMainVolume.Value / sldMainVolume.Maximum);
-
-            #endregion
-
-
-            #region Peak volume
-
-            this.VuPeakVolumeLeft.AnalogMeter = false;
-            this.VuPeakVolumeLeft.BackColor = System.Drawing.Color.DimGray;
-            this.VuPeakVolumeLeft.DialBackground = System.Drawing.Color.White;
-            this.VuPeakVolumeLeft.DialTextNegative = System.Drawing.Color.Red;
-            this.VuPeakVolumeLeft.DialTextPositive = System.Drawing.Color.Black;
-            this.VuPeakVolumeLeft.DialTextZero = System.Drawing.Color.DarkGreen;
-
-            // LED 1
-            this.VuPeakVolumeLeft.Led1ColorOff = System.Drawing.Color.DarkGreen;
-            this.VuPeakVolumeLeft.Led1ColorOn = System.Drawing.Color.LimeGreen;
-            //this.VuMasterPeakVolume.Led1Count = 12;
-            this.VuPeakVolumeLeft.Led1Count = 14;
-
-            // LED 2
-            this.VuPeakVolumeLeft.Led2ColorOff = System.Drawing.Color.Olive;
-            this.VuPeakVolumeLeft.Led2ColorOn = System.Drawing.Color.Yellow;
-            //this.VuMasterPeakVolume.Led2Count = 12;
-            this.VuPeakVolumeLeft.Led2Count = 14;
-
-            // LED 3
-            this.VuPeakVolumeLeft.Led3ColorOff = System.Drawing.Color.Maroon;
-            this.VuPeakVolumeLeft.Led3ColorOn = System.Drawing.Color.Red;
-            //this.VuMasterPeakVolume.Led3Count = 8;
-            this.VuPeakVolumeLeft.Led3Count = 10;
-
-            // LED size
-            this.VuPeakVolumeLeft.LedSize = new System.Drawing.Size(12, 2);
-
-            this.VuPeakVolumeLeft.LedSpace = 1;
-            this.VuPeakVolumeLeft.Level = 0;
-            this.VuPeakVolumeLeft.LevelMax = 32768;
-
-            //this.VuMasterPeakVolume.Location = new System.Drawing.Point(220, 33);
-            this.VuPeakVolumeLeft.MeterScale = VU_MeterLibrary.MeterScale.Log10;
-            this.VuPeakVolumeLeft.Name = "VuMasterPeakVolume";
-            this.VuPeakVolumeLeft.NeedleColor = System.Drawing.Color.Black;
-            this.VuPeakVolumeLeft.PeakHold = false;
-            this.VuPeakVolumeLeft.Peakms = 1000;
-            this.VuPeakVolumeLeft.PeakNeedleColor = System.Drawing.Color.Red;
-            this.VuPeakVolumeLeft.ShowDialOnly = false;
-            this.VuPeakVolumeLeft.ShowLedPeak = false;
-            this.VuPeakVolumeLeft.ShowTextInDial = false;
-            this.VuPeakVolumeLeft.Size = new System.Drawing.Size(14, 120);
-            this.VuPeakVolumeLeft.TabIndex = 5;
-            this.VuPeakVolumeLeft.TextInDial = new string[] {
-            "-40",
-            "-20",
-            "-10",
-            "-5",
-            "0",
-            "+6"};
-            this.VuPeakVolumeLeft.UseLedLight = false;
-            this.VuPeakVolumeLeft.VerticalBar = true;
-            this.VuPeakVolumeLeft.VuText = "VU";
-            this.VuPeakVolumeLeft.Location = new Point(220, 7);
-
-
-
-            // Right
-            this.VuPeakVolumeRight.AnalogMeter = false;
-            this.VuPeakVolumeRight.BackColor = System.Drawing.Color.DimGray;
-            this.VuPeakVolumeRight.DialBackground = System.Drawing.Color.White;
-            this.VuPeakVolumeRight.DialTextNegative = System.Drawing.Color.Red;
-            this.VuPeakVolumeRight.DialTextPositive = System.Drawing.Color.Black;
-            this.VuPeakVolumeRight.DialTextZero = System.Drawing.Color.DarkGreen;
-
-            // LED 1
-            this.VuPeakVolumeRight.Led1ColorOff = System.Drawing.Color.DarkGreen;
-            this.VuPeakVolumeRight.Led1ColorOn = System.Drawing.Color.LimeGreen;
-            //this.VuMasterPeakVolume.Led1Count = 12;
-            this.VuPeakVolumeRight.Led1Count = 14;
-
-            // LED 2
-            this.VuPeakVolumeRight.Led2ColorOff = System.Drawing.Color.Olive;
-            this.VuPeakVolumeRight.Led2ColorOn = System.Drawing.Color.Yellow;
-            //this.VuMasterPeakVolume.Led2Count = 12;
-            this.VuPeakVolumeRight.Led2Count = 14;
-
-            // LED 3
-            this.VuPeakVolumeRight.Led3ColorOff = System.Drawing.Color.Maroon;
-            this.VuPeakVolumeRight.Led3ColorOn = System.Drawing.Color.Red;
-            //this.VuMasterPeakVolume.Led3Count = 8;
-            this.VuPeakVolumeRight.Led3Count = 10;
-
-            // LED size
-            this.VuPeakVolumeRight.LedSize = new System.Drawing.Size(12, 2);
-
-            this.VuPeakVolumeRight.LedSpace = 1;
-            this.VuPeakVolumeRight.Level = 0;
-            this.VuPeakVolumeRight.LevelMax = 32768;
-
-            //this.VuMasterPeakVolume.Location = new System.Drawing.Point(220, 33);
-            this.VuPeakVolumeRight.MeterScale = VU_MeterLibrary.MeterScale.Log10;
-            this.VuPeakVolumeRight.Name = "VuMasterPeakVolume";
-            this.VuPeakVolumeRight.NeedleColor = System.Drawing.Color.Black;
-            this.VuPeakVolumeRight.PeakHold = false;
-            this.VuPeakVolumeRight.Peakms = 1000;
-            this.VuPeakVolumeRight.PeakNeedleColor = System.Drawing.Color.Red;
-            this.VuPeakVolumeRight.ShowDialOnly = false;
-            this.VuPeakVolumeRight.ShowLedPeak = false;
-            this.VuPeakVolumeRight.ShowTextInDial = false;
-            this.VuPeakVolumeRight.Size = new System.Drawing.Size(14, 120);
-            this.VuPeakVolumeRight.TabIndex = 5;
-            this.VuPeakVolumeRight.TextInDial = new string[] {
-            "-40",
-            "-20",
-            "-10",
-            "-5",
-            "0",
-            "+6"};
-            this.VuPeakVolumeRight.UseLedLight = false;
-            this.VuPeakVolumeRight.VerticalBar = true;
-            this.VuPeakVolumeRight.VuText = "VU";
-            this.VuPeakVolumeRight.Location = new Point(236, 7);
-
-            #endregion Peak volume
-
-            btnSwitchSyncEdit.Text = Strings.SwitchToSyncMode;
-            lblMode.Text = Strings.DescrEditMode; // "Edit mode: load an LRC file to be modified or lyrics to be synchronised";
-
-            #region dgview
-
-            InitGridView();
-
-            #endregion dgview
-
-
-            #region Countdown
-
-            timerCountdown = new Timer();
-            timerCountdown.Tick += timerCountdown_Tick;
-
-
-            #endregion Countdown
-        }
-
-        private void timerCountdown_Tick(object sender, EventArgs e)
-        {
-            // w_tick increases by one second (1000 ms) at each Tick        
-            w_tick++;
-
-            if (w_tick < w_wait)
-            {
-                // color each second                             
-                frmMp3Lyrics?.SendPlayerPositionToKaraoke(w_tick);
-            }
-            else if (w_tick == w_wait)
-            {
-                if (Mp3LyricsMgmtHelper.mp3KaraokeLyrics.Lines.Count == 0)
-                {
-                    if (Application.OpenForms.OfType<frmMp3Lyrics>().Count() > 0)
-                        frmMp3Lyrics.Close();
-                }
-            }
-            else
-            {
-                // Countdown completed, Play next song of the play list
-                timerCountdown.Enabled = false;
-                PlayerState = PlayerStates.Stopped;
-                ManageCountdownEnding();
-                PlayPauseMusic();
-            }
-        }
-
-
-        /// <summary>
-        /// Initialize gridview
-        /// </summary>
-        private void InitGridView()
-        {
-            dgView.Rows.Clear();
-            dgView.Refresh();
-
-            // Header color
-            dgView.ColumnHeadersDefaultCellStyle.BackColor = dgViewHeaderBackColor;
-            dgView.ColumnHeadersDefaultCellStyle.ForeColor = dgViewHeaderForeColor;
-
-            dgView.ColumnHeadersDefaultCellStyle.Font = dgViewHeaderFont;
-            dgView.ColumnHeadersDefaultCellStyle.WrapMode = DataGridViewTriState.True;
-            dgView.ColumnHeadersDefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
-
-            // Header Column width (with rows numbers)
-            dgView.RowHeadersWidth = 60;
-
-            dgView.RowsAdded += new DataGridViewRowsAddedEventHandler(dgView_RowsAdded);
-            dgView.RowsRemoved += new DataGridViewRowsRemovedEventHandler(dgView_RowsRemoved);
-
-            // Selection
-            dgView.DefaultCellStyle.SelectionBackColor = dgViewSelectionBackColor;
-
-            dgView.EnableHeadersVisualStyles = false;
-
-            // Chords edition
-            dgView.ColumnCount = 3;
-
-
-            dgView.Columns[COL_MS].Name = "dMs";
-            dgView.Columns[COL_MS].HeaderText = "Ms";
-            dgView.Columns[COL_MS].ToolTipText = "Milliseconds";
-            dgView.Columns[COL_MS].Width = 70;
-            dgView.Columns[COL_MS].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
-
-            dgView.Columns[COL_TIME].Name = "dTime";
-            dgView.Columns[COL_TIME].HeaderText = "Timestamp";
-            dgView.Columns[COL_TIME].ToolTipText = "Timestamp";
-            dgView.Columns[COL_TIME].Width = 90;
-            dgView.Columns[COL_TIME].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
-
-            dgView.Columns[COL_TEXT].Name = "dText";
-            dgView.Columns[COL_TEXT].HeaderText = "Text";
-            dgView.Columns[COL_TEXT].ToolTipText = "Text";
-            dgView.Columns[COL_TEXT].Width = 200;
-
-            //Change cell font
-            foreach (DataGridViewColumn c in dgView.Columns)
-            {
-                c.SortMode = DataGridViewColumnSortMode.NotSortable;                     // header not sortable
-                c.DefaultCellStyle.Font = dgViewCellsFont;
-                c.ReadOnly = false;
-            }
-
-
-            ResizeDgView();
-
-            lblLyrics.Text = "0";
-            lblTimes.Text = lblLyrics.Text;
-        }
-
-
-        private void ResizeDgView()
-        {
-            // Adapt width of last column
-            int W = dgView.RowHeadersWidth + 19;
-            int WP = dgView.Parent.Width;
-            for (int i = 0; i < dgView.Columns.Count - 1; i++)
-            {
-                W += dgView.Columns[i].Width;
-            }
-            if (WP - W > 0)
-                dgView.Columns[dgView.Columns.Count - 1].Width = WP - W;
-
-
-        }
-
-
-        #endregion Draw controls
-
+        
 
         #region Editor
 
@@ -2768,7 +2513,6 @@ namespace Karaboss.Mp3
 
                     // Save LRC file                    
                     GetLrcSaveOptions();
-
                     return;
                 }                
             }
@@ -2798,27 +2542,21 @@ namespace Karaboss.Mp3
                 Properties.Settings.Default.Save();
             }
 
-            if (Application.OpenForms.OfType<frmMp3LyricsSimple>().Count() > 0)
-            {
+            if (Application.OpenForms.OfType<frmMp3LyricsSimple>().Count() > 0)            
                 Application.OpenForms["frmMp3LyricsSimple"].Close();
-            }
+            
 
-            if (Application.OpenForms.OfType<frmMp3Lyrics>().Count() > 0)
-            {
+            if (Application.OpenForms.OfType<frmMp3Lyrics>().Count() > 0)            
                 Application.OpenForms["frmMp3Lyrics"].Close();
-            }
+            
 
-            if (Application.OpenForms.OfType<frmTest>().Count() > 0)
-            {
+            if (Application.OpenForms.OfType<frmTest>().Count() > 0)            
                 Application.OpenForms["frmTest"].Close();
-            }
+            
 
-
-
-            if (Application.OpenForms.OfType<frmMp3LyrOptions>().Count() > 0)
-            {
+            if (Application.OpenForms.OfType<frmMp3LyrOptions>().Count() > 0)            
                 Application.OpenForms["frmMp3LyrOptions"].Close();
-            }
+            
 
 
             // Active le formulaire frmExplorer
@@ -3719,6 +3457,310 @@ namespace Karaboss.Mp3
         #endregion import export lyrics
 
 
+        #region Initializations
+
+        private void Init(string FileName)
+        {
+            // Allow form keydown
+            this.KeyPreview = true;
+
+            lblPlaylist.Visible = currentPlaylist != null;
+
+
+            // Store selected file in variables
+            Mp3FullPath = FileName;
+            Mp3FileName = Path.GetFileName(FileName);
+            SetTitle(FileName);
+
+            // Init controls
+            InitControls();
+
+            // Initialize mp3 player
+            InitializeMp3Player(FileName);
+
+            // Display duration
+            DisplayMp3Characteristics();
+            
+            // Display mp3 tags
+            PopulateMetadataTags();
+        }
+
+        /// <summary>
+        /// Initialize mp3 player
+        /// </summary>
+        /// <param name="FileName"></param>
+        private void InitializeMp3Player(string FileName)
+        {
+            // Create mp3 Player instance, init bass and load file                                    
+            Player = new Mp3Player(FileName);
+
+            _duration = Player.Seconds; // * 1000;
+            _bitrate = Player.BitRate;
+            _frequency = Player.Frequency;
+
+            // Create event for playing completed
+            Player.PlayingCompleted += new EndingSyncHandler(HandlePlayingCompleted);
+        }
+
+
+        #region Draw controls
+        private void InitControls()
+        {
+            PlayerState = PlayerStates.Stopped;
+            pnlDisplay.DisplayBeat("");
+
+            #region volume
+            sldMainVolume.ShowDivisionsText = false;
+            sldMainVolume.ShowSmallScale = false;
+            sldMainVolume.TickStyle = TickStyle.Both;
+            sldMainVolume.TickColor = Color.White;
+            sldMainVolume.TickAdd = 0;
+            sldMainVolume.TickDivide = 0;
+
+            sldMainVolume.Orientation = Orientation.Vertical;
+            sldMainVolume.Maximum = 130;    // Closer to 127
+            sldMainVolume.Minimum = 0;
+            sldMainVolume.ScaleDivisions = 13;
+            sldMainVolume.ScaleSubDivisions = 5;
+            sldMainVolume.Value = 104;
+            sldMainVolume.SmallChange = 13;
+            sldMainVolume.LargeChange = 13;
+            sldMainVolume.MouseWheelBarPartitions = 10;
+
+            sldMainVolume.Left = 272;
+            sldMainVolume.Top = 25;
+            sldMainVolume.Width = 24;
+            sldMainVolume.Height = 80;
+
+            lblMainVolume.Text = String.Format("{0}%", 100 * sldMainVolume.Value / sldMainVolume.Maximum);
+
+            #endregion
+
+
+            #region Peak volume
+
+            this.VuPeakVolumeLeft.AnalogMeter = false;
+            this.VuPeakVolumeLeft.BackColor = System.Drawing.Color.DimGray;
+            this.VuPeakVolumeLeft.DialBackground = System.Drawing.Color.White;
+            this.VuPeakVolumeLeft.DialTextNegative = System.Drawing.Color.Red;
+            this.VuPeakVolumeLeft.DialTextPositive = System.Drawing.Color.Black;
+            this.VuPeakVolumeLeft.DialTextZero = System.Drawing.Color.DarkGreen;
+
+            // LED 1
+            this.VuPeakVolumeLeft.Led1ColorOff = System.Drawing.Color.DarkGreen;
+            this.VuPeakVolumeLeft.Led1ColorOn = System.Drawing.Color.LimeGreen;
+            //this.VuMasterPeakVolume.Led1Count = 12;
+            this.VuPeakVolumeLeft.Led1Count = 14;
+
+            // LED 2
+            this.VuPeakVolumeLeft.Led2ColorOff = System.Drawing.Color.Olive;
+            this.VuPeakVolumeLeft.Led2ColorOn = System.Drawing.Color.Yellow;
+            //this.VuMasterPeakVolume.Led2Count = 12;
+            this.VuPeakVolumeLeft.Led2Count = 14;
+
+            // LED 3
+            this.VuPeakVolumeLeft.Led3ColorOff = System.Drawing.Color.Maroon;
+            this.VuPeakVolumeLeft.Led3ColorOn = System.Drawing.Color.Red;
+            //this.VuMasterPeakVolume.Led3Count = 8;
+            this.VuPeakVolumeLeft.Led3Count = 10;
+
+            // LED size
+            this.VuPeakVolumeLeft.LedSize = new System.Drawing.Size(12, 2);
+
+            this.VuPeakVolumeLeft.LedSpace = 1;
+            this.VuPeakVolumeLeft.Level = 0;
+            this.VuPeakVolumeLeft.LevelMax = 32768;
+
+            //this.VuMasterPeakVolume.Location = new System.Drawing.Point(220, 33);
+            this.VuPeakVolumeLeft.MeterScale = VU_MeterLibrary.MeterScale.Log10;
+            this.VuPeakVolumeLeft.Name = "VuMasterPeakVolume";
+            this.VuPeakVolumeLeft.NeedleColor = System.Drawing.Color.Black;
+            this.VuPeakVolumeLeft.PeakHold = false;
+            this.VuPeakVolumeLeft.Peakms = 1000;
+            this.VuPeakVolumeLeft.PeakNeedleColor = System.Drawing.Color.Red;
+            this.VuPeakVolumeLeft.ShowDialOnly = false;
+            this.VuPeakVolumeLeft.ShowLedPeak = false;
+            this.VuPeakVolumeLeft.ShowTextInDial = false;
+            this.VuPeakVolumeLeft.Size = new System.Drawing.Size(14, 120);
+            this.VuPeakVolumeLeft.TabIndex = 5;
+            this.VuPeakVolumeLeft.TextInDial = new string[] {
+            "-40",
+            "-20",
+            "-10",
+            "-5",
+            "0",
+            "+6"};
+            this.VuPeakVolumeLeft.UseLedLight = false;
+            this.VuPeakVolumeLeft.VerticalBar = true;
+            this.VuPeakVolumeLeft.VuText = "VU";
+            this.VuPeakVolumeLeft.Location = new Point(220, 7);
+
+
+
+            // Right
+            this.VuPeakVolumeRight.AnalogMeter = false;
+            this.VuPeakVolumeRight.BackColor = System.Drawing.Color.DimGray;
+            this.VuPeakVolumeRight.DialBackground = System.Drawing.Color.White;
+            this.VuPeakVolumeRight.DialTextNegative = System.Drawing.Color.Red;
+            this.VuPeakVolumeRight.DialTextPositive = System.Drawing.Color.Black;
+            this.VuPeakVolumeRight.DialTextZero = System.Drawing.Color.DarkGreen;
+
+            // LED 1
+            this.VuPeakVolumeRight.Led1ColorOff = System.Drawing.Color.DarkGreen;
+            this.VuPeakVolumeRight.Led1ColorOn = System.Drawing.Color.LimeGreen;
+            //this.VuMasterPeakVolume.Led1Count = 12;
+            this.VuPeakVolumeRight.Led1Count = 14;
+
+            // LED 2
+            this.VuPeakVolumeRight.Led2ColorOff = System.Drawing.Color.Olive;
+            this.VuPeakVolumeRight.Led2ColorOn = System.Drawing.Color.Yellow;
+            //this.VuMasterPeakVolume.Led2Count = 12;
+            this.VuPeakVolumeRight.Led2Count = 14;
+
+            // LED 3
+            this.VuPeakVolumeRight.Led3ColorOff = System.Drawing.Color.Maroon;
+            this.VuPeakVolumeRight.Led3ColorOn = System.Drawing.Color.Red;
+            //this.VuMasterPeakVolume.Led3Count = 8;
+            this.VuPeakVolumeRight.Led3Count = 10;
+
+            // LED size
+            this.VuPeakVolumeRight.LedSize = new System.Drawing.Size(12, 2);
+
+            this.VuPeakVolumeRight.LedSpace = 1;
+            this.VuPeakVolumeRight.Level = 0;
+            this.VuPeakVolumeRight.LevelMax = 32768;
+
+            //this.VuMasterPeakVolume.Location = new System.Drawing.Point(220, 33);
+            this.VuPeakVolumeRight.MeterScale = VU_MeterLibrary.MeterScale.Log10;
+            this.VuPeakVolumeRight.Name = "VuMasterPeakVolume";
+            this.VuPeakVolumeRight.NeedleColor = System.Drawing.Color.Black;
+            this.VuPeakVolumeRight.PeakHold = false;
+            this.VuPeakVolumeRight.Peakms = 1000;
+            this.VuPeakVolumeRight.PeakNeedleColor = System.Drawing.Color.Red;
+            this.VuPeakVolumeRight.ShowDialOnly = false;
+            this.VuPeakVolumeRight.ShowLedPeak = false;
+            this.VuPeakVolumeRight.ShowTextInDial = false;
+            this.VuPeakVolumeRight.Size = new System.Drawing.Size(14, 120);
+            this.VuPeakVolumeRight.TabIndex = 5;
+            this.VuPeakVolumeRight.TextInDial = new string[] {
+            "-40",
+            "-20",
+            "-10",
+            "-5",
+            "0",
+            "+6"};
+            this.VuPeakVolumeRight.UseLedLight = false;
+            this.VuPeakVolumeRight.VerticalBar = true;
+            this.VuPeakVolumeRight.VuText = "VU";
+            this.VuPeakVolumeRight.Location = new Point(236, 7);
+
+            #endregion Peak volume
+
+            btnSwitchSyncEdit.Text = Strings.SwitchToSyncMode;
+            lblMode.Text = Strings.DescrEditMode; // "Edit mode: load an LRC file to be modified or lyrics to be synchronised";
+
+            #region dgview
+
+            InitGridView();
+
+            #endregion dgview
+
+
+            #region Countdown
+
+            timerCountdown = new Timer();
+            timerCountdown.Tick += timerCountdown_Tick;
+
+
+            #endregion Countdown
+        }
+        
+
+        /// <summary>
+        /// Initialize gridview
+        /// </summary>
+        private void InitGridView()
+        {
+            dgView.Rows.Clear();
+            dgView.Refresh();
+
+            // Header color
+            dgView.ColumnHeadersDefaultCellStyle.BackColor = dgViewHeaderBackColor;
+            dgView.ColumnHeadersDefaultCellStyle.ForeColor = dgViewHeaderForeColor;
+
+            dgView.ColumnHeadersDefaultCellStyle.Font = dgViewHeaderFont;
+            dgView.ColumnHeadersDefaultCellStyle.WrapMode = DataGridViewTriState.True;
+            dgView.ColumnHeadersDefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
+
+            // Header Column width (with rows numbers)
+            dgView.RowHeadersWidth = 60;
+
+            dgView.RowsAdded += new DataGridViewRowsAddedEventHandler(dgView_RowsAdded);
+            dgView.RowsRemoved += new DataGridViewRowsRemovedEventHandler(dgView_RowsRemoved);
+
+            // Selection
+            dgView.DefaultCellStyle.SelectionBackColor = dgViewSelectionBackColor;
+
+            dgView.EnableHeadersVisualStyles = false;
+
+            // Chords edition
+            dgView.ColumnCount = 3;
+
+
+            dgView.Columns[COL_MS].Name = "dMs";
+            dgView.Columns[COL_MS].HeaderText = "Ms";
+            dgView.Columns[COL_MS].ToolTipText = "Milliseconds";
+            dgView.Columns[COL_MS].Width = 70;
+            dgView.Columns[COL_MS].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+
+            dgView.Columns[COL_TIME].Name = "dTime";
+            dgView.Columns[COL_TIME].HeaderText = "Timestamp";
+            dgView.Columns[COL_TIME].ToolTipText = "Timestamp";
+            dgView.Columns[COL_TIME].Width = 90;
+            dgView.Columns[COL_TIME].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+
+            dgView.Columns[COL_TEXT].Name = "dText";
+            dgView.Columns[COL_TEXT].HeaderText = "Text";
+            dgView.Columns[COL_TEXT].ToolTipText = "Text";
+            dgView.Columns[COL_TEXT].Width = 200;
+
+            //Change cell font
+            foreach (DataGridViewColumn c in dgView.Columns)
+            {
+                c.SortMode = DataGridViewColumnSortMode.NotSortable;                     // header not sortable
+                c.DefaultCellStyle.Font = dgViewCellsFont;
+                c.ReadOnly = false;
+            }
+
+            ResizeDgView();
+
+            lblLyrics.Text = "0";
+            lblTimes.Text = lblLyrics.Text;
+        }
+
+
+        private void ResizeDgView()
+        {
+            // Adapt width of last column
+            int W = dgView.RowHeadersWidth + 19;
+            int WP = dgView.Parent.Width;
+            for (int i = 0; i < dgView.Columns.Count - 1; i++)
+            {
+                W += dgView.Columns[i].Width;
+            }
+            if (WP - W > 0)
+                dgView.Columns[dgView.Columns.Count - 1].Width = WP - W;
+
+
+        }
+
+
+        #endregion Draw controls
+
+
+        #endregion Initalizations
+
+
         #region menus
 
 
@@ -3804,7 +3846,7 @@ namespace Karaboss.Mp3
         }
 
         /// <summary>
-        /// Set titloe of form
+        /// Set title of form
         /// </summary>
         /// <param name="displayName"></param>
         private void SetTitle(string displayName)
@@ -3913,8 +3955,13 @@ namespace Karaboss.Mp3
 
         #region Playlists     
 
+        // PlayNextPlaylistSong: stop if last item, update displays (item number/items number), close frmMp3Lyrics
+        // SelectFileToLoadAsync: load file in mp3 player, display mp3 characteristics, extract lyrics and display frmMp3Lyrics
+        // performPlaylistChainingChoice: make pause if any, launch countdown if any, otherwise launch playing
+
+
         /// <summary>
-        /// Common to button next and end of playing a song
+        /// Playlists: common to the next button and end of playing a song
         /// </summary>
         private void PlayNextPlaylistSong()
         {
@@ -3942,37 +3989,36 @@ namespace Karaboss.Mp3
 
             //Next song of the playlist
             Mp3FileName = currentPlaylistItem.Song;
+            Mp3FullPath = currentPlaylistItem.File;
 
-            // Update form
+            // Update displays of forms: title of frmMp3Player, highlight current item in frmExplorer,  and update label of Playlist item number/items number
             SetTitle(Mp3FileName);
             UpdatePlayListsForm(currentPlaylistItem.Song);
 
-            // close frmMp3Lyrics
-            if (Application.OpenForms.OfType<frmMp3Lyrics>().Count() > 0)
-            {
-                frmMp3Lyrics.Close();
-            }
 
             // Close form frmMp3LyricsSimple
             if (Application.OpenForms.OfType<frmMp3LyricsSimple>().Count() > 0)
             {
                 frmMp3LyricsSimple.Close();
             }
-
-            //PlayerState = PlayerStates.Playing;
-            Mp3FullPath = currentPlaylistItem.File;            
-
+                        
             SelectFileToLoadAsync(Mp3FullPath);
         }
 
+        /// <summary>
+        /// Load file in mp3 player, display mp3 characteristics, extract lyrics and display frmMp3Lyrics
+        /// </summary>
+        /// <param name="FileName"></param>
         private void SelectFileToLoadAsync(string FileName)
         {
             // Load file and after launch player taking account things to do betwween 2 songs                                  
             Player.FileName = FileName;
-            
-            DisplayMp3Characteristics();
-            ExtractMp3Lyrics(FileName);
 
+            // Display duration and set HScrollbar maximum
+            DisplayMp3Characteristics();
+
+            // Extract lyrics
+            ExtractMp3Lyrics(FileName);
           
             // things to do betwween 2 songs
             performPlaylistChainingChoice();
@@ -3980,7 +4026,7 @@ namespace Karaboss.Mp3
 
         /// <summary>
         /// Select action to perform between 2 songs according to user's choices
-        /// Pause, Count Down, play asap
+        /// make pause if any, launch countdown if any, otherwise launch playing
         /// </summary>
         private void performPlaylistChainingChoice()
         {
@@ -3988,12 +4034,21 @@ namespace Karaboss.Mp3
             // Display a waiting information (not the words)
             if (Karaclass.m_PauseBetweenSongs)
             {
+                #region Pause between songs
+
                 PlayerState = PlayerStates.LaunchNextSong;
                 BtnStatus();
 
-                
-                #region display singer in the Lyrics form
-                
+                #region Display singer in the Lyrics form
+
+                // Display the Lyric form even if no lyrics in order to display the singer
+                if (Application.OpenForms.OfType<frmMp3Lyrics>().Count() == 0)
+                {
+                    frmMp3Lyrics = new frmMp3Lyrics(Mp3FullPath, currentPlaylist);                    
+                    frmMp3Lyrics.Show();
+                }
+
+
                 if (Application.OpenForms.OfType<frmMp3Lyrics>().Count() > 0)
                 {
                     // During the waiting time, display informations about the next singer
@@ -4021,15 +4076,20 @@ namespace Karaboss.Mp3
                     // Display next singer in lyrics form
                     frmMp3Lyrics.DisplayText(lstSingerInfos);
                 }
-                #endregion
+
+                #endregion Display singer in the Lyrics form
 
                 // Focus on paused windows
                 this.Restore();
                 this.Activate();
+
+                #endregion Pause between songs
             }
             else
             {
+                // ----------------
                 // NO PAUSE MODE
+                // ----------------
                 if (Karaclass.m_CountdownSongs == 0)
                 {
                     // NO Timer => play                    
@@ -4089,7 +4149,7 @@ namespace Karaboss.Mp3
         }
 
         /// <summary>
-        /// Update display of frmPlaylist
+        /// Update display of frmPlaylist and label Playlist of frmMp3Player
         /// </summary>
         /// <param name="song"></param>
         private void UpdatePlayListsForm(string song)
@@ -4123,26 +4183,17 @@ namespace Karaboss.Mp3
                 frmMp3Lyrics = new frmMp3Lyrics(Mp3FullPath, currentPlaylist);
                 frmMp3Lyrics.Show();                                
             }
+
+            // Force background for the countdown to solid color
+            frmMp3Lyrics.OptionBackground = "SolidColor";
+
             // Load countdown
             frmMp3Lyrics.LoadWaitSong(seconds);
 
             timerCountdown.Interval = 1000;  // interval of countdown = 1 sec      
             timerCountdown.Enabled = true;
         }
-
-        private void ManagePauseEnding()
-        {
-            if (currentPlaylistItem == null) return;
-
-            if (Karaclass.m_PauseBetweenSongs)
-            {
-                if (Application.OpenForms.OfType<frmMp3Lyrics>().Count() > 0)
-                {
-                    frmMp3Lyrics.KaraokeDisplayType = Properties.Settings.Default.KaraokeDisplayType;
-                    frmMp3Lyrics.SetLyrics(Mp3LyricsMgmtHelper.mp3KaraokeLyrics);
-                }
-            }
-        }
+      
 
         private void ManageCountdownEnding()
         {
@@ -4155,8 +4206,21 @@ namespace Karaboss.Mp3
                 // Countdown terminated                
                 if (Application.OpenForms.OfType<frmMp3Lyrics>().Count() > 0)
                 {
+                    // Force slide show of current playlist item if any
+                    if (currentPlaylistItem.DirSlideShow != null && currentPlaylistItem.DirSlideShow != string.Empty && Directory.Exists(currentPlaylistItem.DirSlideShow))
+                    {
+                        frmMp3Lyrics.OptionBackground = "Diaporama";
+                        frmMp3Lyrics.DirSlideShow = currentPlaylistItem.DirSlideShow;
+                    }
+                    else
+                    {
+                        // Restore settings if no slideshow for the playlist item
+                        frmMp3Lyrics.OptionBackground = Properties.Settings.Default.BackGroundOption;
+                    }
+
+                    // Restore karaoke display layout (four lines swapped, fixed lines etc...)
                     frmMp3Lyrics.KaraokeDisplayType = Properties.Settings.Default.KaraokeDisplayType;
-                    frmMp3Lyrics.SetLyrics(Mp3LyricsMgmtHelper.mp3KaraokeLyrics);
+                    frmMp3Lyrics.SetLyrics(Mp3LyricsMgmtHelper.mp3KaraokeLyrics, _duration, Mp3FileName, currentPlaylistItem);
                 }
             }
         }
@@ -4357,7 +4421,7 @@ namespace Karaboss.Mp3
 
                     // new item with cr
                     text = text.Replace(m_SepLine, "");
-                    text = cr + text;
+                    //text = cr + text;
                 }
 
                 // Add new item to the current line 
@@ -4610,39 +4674,46 @@ namespace Karaboss.Mp3
         private void Timer3_Tick(object sender, EventArgs e)
         {
             // 21 balls: 1 fix, 20 moving to the fix one
-            if (Application.OpenForms.OfType<frmMp3Lyrics>().Count() > 0)
+            if (Application.OpenForms.OfType<frmMp3Lyrics>().Count() > 0)            
+                frmMp3Lyrics?.MoveBalls((int)(Player.Position * 1000));            
+        }
+
+        /// <summary>
+        /// Timer for countdown
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void timerCountdown_Tick(object sender, EventArgs e)
+        {
+            // w_tick increases by one second (1000 ms) at each Tick        
+            w_tick++;
+
+            if (w_tick < w_wait)
             {
-                frmMp3Lyrics?.MoveBalls((int)(Player.Position * 1000));
+                // color each second
+                if (Application.OpenForms.OfType<frmMp3Lyrics>().Count() > 0)
+                    frmMp3Lyrics?.SendPlayerPositionToKaraoke(w_tick);
+            }
+            else if (w_tick == w_wait)
+            {
+                if (Mp3LyricsMgmtHelper.mp3KaraokeLyrics.Lines.Count == 0)
+                {
+                    if (Application.OpenForms.OfType<frmMp3Lyrics>().Count() > 0)
+                        frmMp3Lyrics.Close();
+                }
+            }
+            else
+            {
+                // Countdown completed, Play next song of the play list
+                timerCountdown.Enabled = false;
+                PlayerState = PlayerStates.Stopped;
+                
+                ManageCountdownEnding();
+                PlayPauseMusic();
             }
         }
 
-
-        private void SendPositionToKaraoke(double pos)
-        {
-            if (Player == null) return;
-
-            if (Application.OpenForms.OfType<frmMp3Lyrics>().Count() > 0)
-                frmMp3Lyrics.SendPlayerPositionToKaraoke(pos);
-        }
-
-        private void StopKaraoke()
-        {
-            if (Application.OpenForms.OfType<frmMp3Lyrics>().Count() > 0)
-            {
-                frmMp3Lyrics.Stop();
-                frmMp3Lyrics.PlayStopActions(true);
-            }
-        }
-
-        private void StartKaraoke()
-        {
-            if (Application.OpenForms.OfType<frmMp3Lyrics>().Count() > 0)
-            {
-                frmMp3Lyrics.Start();
-                frmMp3Lyrics.PlayStopActions(false);
-
-            }
-        }
+       
 
         #endregion Timer
 
@@ -4678,7 +4749,9 @@ namespace Karaboss.Mp3
 
             VuPeakVolumeLeft.Level = LeftLevel;
             VuPeakVolumeRight.Level = RightLevel;
-
+            
+            if (Application.OpenForms.OfType<frmMp3Lyrics>().Count() > 0)
+                frmMp3Lyrics?.SendPlayerVolumeToKaraoke(level, LeftLevel, RightLevel);
         }
 
         private static int HIWORD(int n)

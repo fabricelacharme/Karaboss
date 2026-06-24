@@ -277,6 +277,8 @@ namespace keffect
             }
         }
 
+        private int _nbTitleLines = 12;
+
         #endregion Draw filename
 
 
@@ -365,7 +367,9 @@ namespace keffect
             }
         }
 
-
+        private float emTitleSize = 40;
+        private Font _TitleFont;
+       
         #endregion Font
 
 
@@ -384,8 +388,11 @@ namespace keffect
 
         #endregion TopMost
 
+
         #region Context menus
+
         private ContextMenu picContextMenu;
+        
         #endregion Context menus
 
 
@@ -526,8 +533,7 @@ namespace keffect
                 if (value.Lines.Count == 0) return;
                 _kLyrics = value;
                 _kLyricsOrg = (kLyrics)_kLyrics.Clone();
-                if (_kLyrics != null && _kLyrics.Lines.Count > 0)                                    
-                    Init();
+                
                 
             }
         }
@@ -551,6 +557,8 @@ namespace keffect
         private float _titleMarginLeft = 0.58f;
         private float _titleMarginTop = 0.038f;
         private float _titleMarginBottom = 0.38f;
+
+        private float _imgLogoHeightMultiplier = 0.133f;
 
         #endregion Margins
 
@@ -592,6 +600,38 @@ namespace keffect
         }
 
         public Image m_CurrentImage { get; set; }
+        
+
+        #region Logo
+
+        private int _imgLogoSize = 100;
+
+        private bool _bShowLogo;
+        public bool bShowLogo
+        {
+            get { return _bShowLogo; }
+            set
+            {
+                _bShowLogo = value;
+                pBox.Invalidate();
+            }
+        }
+
+
+        private string _ImgLogo = "logo.png"; // Name of logo image (logo.png)
+        public string ImgLogo 
+        { 
+            get { return _ImgLogo; } 
+            set 
+            { 
+                if (value != null)
+                    _ImgLogo = value; 
+            }  
+        }        
+        public Image m_LogoImage { get; set; }      // Image
+
+
+        #endregion Logo
 
         #endregion Picture
 
@@ -846,6 +886,8 @@ namespace keffect
 
         #endregion Text position
 
+        private float _nbLyricsLinesForMeasure = 0;
+
         private int _nbLyricsLinesOrg;
         private int _nbLyricsLines = 3;
         [Description("The number of lines to display")]
@@ -967,6 +1009,14 @@ namespace keffect
         #endregion Vertical scrolling
 
 
+        #region Volume
+        // Draw an ellipse with dimensions varying with sound volume
+
+        private int _volume = 0;
+
+
+        #endregion Volume
+
         /// <summary>
         /// Constructor
         /// </summary>
@@ -997,9 +1047,7 @@ namespace keffect
             
 
             SetDefaultValues();
-
-            if (_kLyrics != null && _kLyrics.Lines.Count > 0) 
-                Init();                       
+                                 
         }
 
     
@@ -1092,7 +1140,13 @@ namespace keffect
             // Increase _steppercent if Width increase
             if (this.ParentForm != null && this.ParentForm.WindowState != FormWindowState.Minimized)
             {                
-                AdjustFontSize(_nbLyricsLines);
+                AdjustKaraokeFont();
+                
+                if (_TitleFont != null) 
+                    AdjustTitleFont(_nbTitleLines);
+
+                // Resize logo
+                ResizeLogo();
 
                 if (KaraokeDisplayType == KaraokeDisplayTypes.ConstantScrolling || KaraokeDisplayType == KaraokeDisplayTypes.DynamicScrolling)
                     InitScrollMode();
@@ -1170,7 +1224,7 @@ namespace keffect
 
             // Step 100 ms between syllables
             KLyrics = StoreDemoText(lines, 100);
-            this.SetPos(200); // after ipsum
+            //this.SetPos(200); // after ipsum
         }
 
         /// <summary>
@@ -1236,8 +1290,9 @@ namespace keffect
             _timerGradient.Tick += new EventHandler(_timerGradient_Tick);
 
             #endregion Gradient colors
-            
-        }      
+
+
+        }
 
         /// <summary>
         /// Display a text from another windows form (used in playlists to display song title and artist during the wait time before the song starts)
@@ -1251,7 +1306,8 @@ namespace keffect
             KaraokeDisplayType = KaraokeDisplayTypes.Informations;
             // provisional value
             KLyrics = StoreDemoText(Lines, 100);
-            pBox.Invalidate();
+
+            Init();
         }
 
 
@@ -1602,9 +1658,31 @@ namespace keffect
             LinesLengths = new float[_kLyrics.Lines.Count];
 
             _biggestLine = GetBiggestLine();
-            AdjustFontSize(_nbLyricsLines);           
+            AdjustKaraokeFont();           
             _LastLineToShow = SetLastLineToShow(_FirstLineToShow, _kLyrics.Lines.Count, _nbLyricsLines);
-            
+
+
+            // Font size of file name drawing
+            _TitleFont = new Font(_karaokeFont.FontFamily, emTitleSize, FontStyle.Regular, GraphicsUnit.Pixel);            
+            AdjustTitleFont(_nbTitleLines);
+
+            // Mandatory when we change the display layout in the settings
+            // in order to recalculate lengths of fragments
+            if (_bIsSettings)
+            {
+                this.SetPos(200);
+                _imgLogoSize = 40;
+            }
+
+            #region Logo image
+
+            var AppDataFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), Application.ProductName);
+            string logoPath = Path.Combine(AppDataFolder, _ImgLogo);
+            if (File.Exists(logoPath))
+                m_LogoImage = Image.FromFile(logoPath);
+
+            #endregion Logo image
+
 
             if (KaraokeDisplayType == KaraokeDisplayTypes.ConstantScrolling)
                 InitScrollMode();
@@ -1725,10 +1803,22 @@ namespace keffect
         #endregion Instrumental functions
 
 
+        #region Logo
+
+        /// <summary>
+        /// Resize logo dimensions
+        /// </summary>
+        private void ResizeLogo()
+        {
+            _imgLogoSize = (int)(_imgLogoHeightMultiplier * pBox.ClientSize.Height);
+        }
+
+        #endregion Logo
+
         #region Lyrics and position
 
         /// <summary>
-        ///  player position
+        ///  player position in ms
         /// </summary>
         /// <param name="pos"></param>
         public void SetPos(double ms)
@@ -2001,7 +2091,7 @@ namespace keffect
             switch (_OptionDisplay)
             {
                 case OptionsDisplay.Center:
-                    y = (pBox.ClientSize.Height - (_nbLyricsLines) * _lineHeight) / 2;
+                    y = (int)((pBox.ClientSize.Height - _nbLyricsLinesForMeasure * _lineHeight) / 2);
                     break;
 
                 case OptionsDisplay.Top:
@@ -2012,7 +2102,8 @@ namespace keffect
                     break;
 
                 case OptionsDisplay.Bottom:
-                    y = pBox.ClientSize.Height - (_nbLyricsLines * (_lineHeight + 1));
+                    //y = pBox.ClientSize.Height - (_nbLyricsLines * (_lineHeight + 1));
+                    y = (int)(pBox.ClientSize.Height - (_nbLyricsLinesForMeasure * (_lineHeight + 1)));
                     break;
             }
             return y > 0 ? y : 0;
@@ -2053,6 +2144,69 @@ namespace keffect
             return L / kls.Lines.Count;
         }
 
+
+
+        #region Font for the title display
+
+        /// <summary>
+        /// Adjust font size for filename drawing      
+        /// </summary>
+        private void AdjustTitleFont(int nbLines)
+        {
+            if (_fileName == string.Empty) return;
+            if (pBox == null) return;
+            if (_TitleFont == null) return;
+          
+            string S = _fileName;
+
+            Graphics g = pBox.CreateGraphics();
+            float mult = 1.3f; // 1.3 is the default line spacing in Windows Forms
+            
+            float femsize = _TitleFont.Size;
+            float inisize = 72 * femsize / g.DpiY;
+
+            // ------------------------------
+            // Ajustement in Height
+            // ------------------------------
+            float totaltextHeight = nbLines * mult * MeasureStringHeight(S, inisize);            
+            float compHeight = 0.95f * pBox.ClientSize.Height;
+
+            if (totaltextHeight > compHeight)
+            {
+                do
+                {
+                    inisize--;
+                    if (inisize > 0)
+                    {
+                        femsize = g.DpiY * inisize / 72;                        
+                        totaltextHeight = mult * nbLines * MeasureStringHeight(S, femsize);
+                    }
+                } while (totaltextHeight > compHeight && inisize > 0);
+            }
+            else
+            {
+                do
+                {
+                    inisize++;
+                    femsize = g.DpiY * inisize / 72;
+                    totaltextHeight = mult * nbLines * MeasureStringHeight(S, femsize);
+                } while (totaltextHeight < compHeight && inisize > 0);
+            }
+
+
+            if (inisize > 0)
+            {
+                emTitleSize = g.DpiY * inisize / 72;
+                _TitleFont = new Font(_TitleFont.FontFamily, emTitleSize, FontStyle.Regular, GraphicsUnit.Pixel);
+            }
+            g.Dispose();
+        }
+
+        #endregion Font for the title display
+
+
+        #region Font for the karaoke display
+
         /// <summary>
         /// Ajust font size to fit NbLines in height and the average line lenght in width
         /// Bigger lines will be shrinked and smaller lines not changed
@@ -2060,17 +2214,63 @@ namespace keffect
         /// <param name="pBox"></param>
         /// <param name="S"></param>
         /// <param name="NbLines"></param>
-        private void AdjustFontSize(int NbLines)
+        private void AdjustKaraokeFont()
         {
+            
+            #region Set lines number
+
+            int nbLines = 0;
+            // Update _nbLyricsLines if layout changed in options            
+            switch (KaraokeDisplayType)
+            {
+                case KaraokeDisplayTypes.FourLinesSwapped:                    
+                    nbLines = 4;                                                            
+                    break;
+                
+                case KaraokeDisplayTypes.ConstantScrolling:
+                    nbLines = 6;
+                    break;
+                
+                case KaraokeDisplayTypes.DynamicScrolling:
+                    nbLines = 6;
+                    break;
+                
+                case KaraokeDisplayTypes.TwoLinesSwapped:
+                    nbLines = 2;
+                    break;
+                
+                case KaraokeDisplayTypes.FixedLines:                  
+                    nbLines = _nbLyricsLinesOrg;                    
+                    break;
+                
+                case KaraokeDisplayTypes.Countdown:
+                    nbLines = 1;
+                    break;
+                
+                case KaraokeDisplayTypes.Informations:
+                    nbLines = _kLyrics.Lines.Count;
+                    break;
+
+                default:
+                    _nbLyricsLines = _nbLyricsLinesOrg;
+                    break;
+            }
+
+            // For measures
+            _nbLyricsLinesForMeasure = nbLines;
+
+            #endregion Set lines number
+
+
             if (FontStretching == "Large")
-                AdjustFontSizeWithStretching(NbLines);
+                AdjustKaraokeFontWithStretching(nbLines);
             else
             {
-                AdjustFontWithoutStretching(_biggestLine, NbLines);
+                AdjustKaraokeFontWithoutStretching(_biggestLine, nbLines);
             }
         }
 
-        private void AdjustFontWithoutStretching(string biggestLine, int NbLines)
+        private void AdjustKaraokeFontWithoutStretching(string biggestLine, int nbLines)
         {
             if (pBox == null) return;
             if (_kLyrics == null || _kLyrics.Lines.Count == 0) return;
@@ -2079,10 +2279,9 @@ namespace keffect
             string S = biggestLine;
 
             Graphics g = pBox.CreateGraphics();
-            float femsize;
-            float inisize = _karaokeFont.Size;
-            femsize = g.DpiY * inisize / 72;
-
+            
+            float femsize = _karaokeFont.Size;
+            float inisize = 72 * femsize / g.DpiX;
 
             float mult = 1.3f; // 1.2 is the default line spacing in Windows Forms
             float textWidth = MeasureString(S, femsize);
@@ -2097,7 +2296,7 @@ namespace keffect
                     inisize--;
                     if (inisize > 0)
                     {
-                        femsize = g.DpiY * inisize / 72;
+                        femsize = g.DpiX * inisize / 72;
                         textWidth = MeasureString(S, femsize);
 
                     }
@@ -2108,7 +2307,7 @@ namespace keffect
                 do
                 {
                     inisize++;
-                    femsize = g.DpiY * inisize / 72;
+                    femsize = g.DpiX * inisize / 72;
                     textWidth = MeasureString(S, femsize);
                 } while (textWidth < ClientWidth);
             }
@@ -2118,7 +2317,7 @@ namespace keffect
             // ------------------------------
             float textHeight = MeasureStringHeight(S, inisize);
             float totaltextHeight;
-            totaltextHeight = _nbLyricsLines * (textHeight + 10);
+            totaltextHeight = _nbLyricsLines * mult * textHeight;
 
             float compHeight = 0.95f * pBox.ClientSize.Height;
 
@@ -2130,16 +2329,14 @@ namespace keffect
                     if (inisize > 0)
                     {
                         femsize = g.DpiY * inisize / 72;
-                        textHeight = MeasureStringHeight(S, femsize);
-
-                        totaltextHeight = _nbLyricsLines * (textHeight + 10);
+                        totaltextHeight = mult * MeasureStringHeight(S, femsize) * nbLines;
                     }
                 } while (totaltextHeight > compHeight && inisize > 0);
             }
 
             if (inisize > 0)
             {
-                emSize = g.DpiX * inisize / 72;
+                emSize = g.DpiY * inisize / 72;
                 _karaokeFont = new Font(_karaokeFont.FontFamily, emSize, FontStyle.Regular, GraphicsUnit.Pixel);
 
                 // Vertical distance between lines          1.6 is
@@ -2158,7 +2355,7 @@ namespace keffect
             g.Dispose();
         }
 
-        private void AdjustFontSizeWithStretching(int NbLines)
+        private void AdjustKaraokeFontWithStretching(int NbLines)
         {
             if (pBox == null) return;
             if (_kLyrics == null || _kLyrics.Lines.Count == 0) return;
@@ -2168,14 +2365,13 @@ namespace keffect
             if (KaraokeDisplayType == KaraokeDisplayTypes.ConstantScrolling || KaraokeDisplayType == KaraokeDisplayTypes.DynamicScrolling)
                 NbLines = 6;
 
-
             string S = "!/(123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
             Graphics g = pBox.CreateGraphics();
-            float femsize;
-            float inisize = _karaokeFont.Size;
-            femsize = g.DpiY * inisize / 72;
-
+            
+            float femsize = _karaokeFont.Size;            
+            float inisize = 72 * femsize / g.DpiY;
+            
             // Try to fit inside 90% of client Height
             float ClientHeight = pBox.ClientSize.Height;
 
@@ -2253,6 +2449,9 @@ namespace keffect
             g.Dispose();
         }
 
+        #endregion Font for the karaoke display
+
+
         private float MeasureStringHeight(string line, float femSize)
         {
             float ret = 0;
@@ -2305,7 +2504,7 @@ namespace keffect
             e.Graphics.TextRenderingHint = TextRenderingHint.ClearTypeGridFit;
             e.Graphics.SmoothingMode = SmoothingMode.AntiAlias;
 
-            #region draw background image
+            #region Draw background image
 
             // Create a GraphicsPath to define the area to fill
             GraphicsPath gp;
@@ -2340,7 +2539,7 @@ namespace keffect
                             try
                             {
                                 m_DisplayRectangle = GetRectangleForSizeMode(m_CurrentImage.Width, m_CurrentImage.Height);
-                                e.Graphics.DrawImage(m_CurrentImage, m_DisplayRectangle, 0, 0, m_CurrentImage.Width, m_CurrentImage.Height, GraphicsUnit.Pixel);
+                                e.Graphics.DrawImage(m_CurrentImage, m_DisplayRectangle, 0, 0, m_CurrentImage.Width, m_CurrentImage.Height, GraphicsUnit.Pixel);                                
                             }
                             catch (Exception dr)
                             {
@@ -2353,8 +2552,7 @@ namespace keffect
                         if (mImg1 == null || mImg2 == null)
                             e.Graphics.FillRectangle(new SolidBrush(this.BackColor), new Rectangle(0, 0, this.Width, this.Height));
                         else
-                        {
-                            //Rectangle rc = new Rectangle(0, 0, this.Width, this.Height);
+                        {                            
                             ColorMatrix cm = new ColorMatrix();
                             ImageAttributes ia = new ImageAttributes();
                             cm.Matrix33 = mBlend;
@@ -2384,14 +2582,33 @@ namespace keffect
                 case "Rhythm":
                     int w = ClientRectangle.Width / 2;
                     int h = ClientRectangle.Height / 2;
-                    int d = Math.Min(2 * W, 2 * H);
 
+                    if (_volume == 0) _volume = 1;
+
+                    int d = _volume * ClientRectangle.Width / 7;//Math.Min(2 * W, 2 * H);
+
+                    //if (_volume == 0) return;
                     e.Graphics.SmoothingMode = SmoothingMode.AntiAlias;
 
+
+                    RectangleF rect = new RectangleF((ClientRectangle.Width - d) / 2, (ClientRectangle.Height - d) / 2, d, d);
+                    //RectangleF rect = new RectangleF( w, h, _volume * ClientRectangle.Width / 8, _volume * ClientRectangle.Height / 8);
+                    
+                    gp = new GraphicsPath();
+                    gp.AddEllipse(rect);
+                    using (PathGradientBrush pgb = new PathGradientBrush(gp))
+                    {
+                        pgb.CenterColor = _Rhythm1Color; // Center color of the radial gradient
+                        pgb.SurroundColors = new Color[] { _Rhythm0Color }; // Surrounding color of the radial gradient
+                        e.Graphics.FillPath(pgb, gp); // Fill the path with the radial gradient
+                        pgb.Dispose(); // Dispose the PathGradientBrush to free resources                        
+                    }
+                    gp.Dispose(); // Dispose the GraphicsPath to free resources
+
+                    /*
                     // Radial gradients are handled differently, so we won't set an angle here                    
                     if (_beatNumber != 1)
-                    {
-                        //RectangleF rect = new RectangleF((ClientRectangle.Width - W) / 2, (ClientRectangle.Height - H) / 2, W, H);
+                    {                        
                         RectangleF rect = new RectangleF((ClientRectangle.Width - d) / 2, (ClientRectangle.Height - d) / 2, d, d);
                         gp = new GraphicsPath();
                         gp.AddEllipse(rect);
@@ -2455,12 +2672,23 @@ namespace keffect
                         }
                         gp.Dispose(); // Dispose the GraphicsPath to free resources                                       
                     }
+                    */
+                    
                     break;
             }
-            #endregion draw background image
+
+
+            if (_bShowLogo && m_LogoImage != null)
+            {                
+                e.Graphics.DrawImage(m_LogoImage, 0, pBox.Height - _imgLogoSize, _imgLogoSize, _imgLogoSize);
+            }
+
+            #endregion Draw background image
 
 
             #region draw text
+
+            if (_kLyrics == null) return;
 
             switch (KaraokeDisplayType)
             {
@@ -2963,6 +3191,7 @@ namespace keffect
             #region Scale font size to fit text in picture box
 
             float w = MeasureString(s, _karaokeFont.Size);
+           
             // ************************  Set ScaleTransform
             // Example: if the text is greater than the width of the picture box, we reduce the size of the text to fit it in the picture box
             if (w > 0)
@@ -3099,14 +3328,12 @@ namespace keffect
 
         }
 
-        private void DrawFileName(PaintEventArgs e, string FileName, float femSize)
+        private void DrawFileName(PaintEventArgs e, string FileName)
         {
             int x0 = 0;
             int y0 = 0;
-
-            //Color BorderColor = _ActiveBorderColor;
-            Color FillColor = _FileNameColor;
-            //Pen penBorder = new Pen(BorderColor, 2);
+            
+            Color FillColor = _FileNameColor;            
             var path = new GraphicsPath();
 
             switch (KaraokeDisplayType) 
@@ -3118,22 +3345,23 @@ namespace keffect
                     {
                         case OptionsDisplay.Center:
                         case OptionsDisplay.Bottom:
-                            y0 = (int)MeasureStringHeight(FileName, _titleMarginTop * _karaokeFont.Size);
+                            y0 = (int)MeasureStringHeight(FileName, _titleMarginTop * _TitleFont.Size);
                             break;
                         case OptionsDisplay.Top:
-                            y0 = (int)(pBox.ClientSize.Height - MeasureStringHeight(FileName, _titleMarginBottom * _karaokeFont.Size));
+                            //y0 = (int)(pBox.ClientSize.Height - MeasureStringHeight(FileName, _titleMarginBottom * _TitleFont.Size));
+                            y0 = (int)(pBox.ClientSize.Height - MeasureStringHeight(FileName, _TitleFont.Size));
                             break;
                     }
                     break;
                 
                 case KaraokeDisplayTypes.ConstantScrolling:
-                    y0 = (int)MeasureStringHeight(FileName, _titleMarginTop * _karaokeFont.Size);
+                    y0 = (int)MeasureStringHeight(FileName, _titleMarginTop * _TitleFont.Size);
                     break;
             }
             
             
             // Measure FileName
-            float w = MeasureString(FileName, femSize);
+            float w = MeasureString(FileName, emTitleSize);
             if (w == 0) return;
 
             float maxLength = _titleMaxLength * pBox.Width;    // 41 % of width            
@@ -3158,7 +3386,7 @@ namespace keffect
             
             
             // Add string to path
-            path.AddString(FileName, _karaokeFont.FontFamily, (int)_karaokeFont.Style, femSize, new Point(x0, y0), sf);
+            path.AddString(FileName, _TitleFont.FontFamily, (int)_TitleFont.Style, emTitleSize, new Point(x0, y0), sf);
 
 
             // Draw the text            
@@ -3233,7 +3461,7 @@ namespace keffect
             // Draw file name if required
 
             if (bShowSongName)
-                DrawFileName(e, FileName, 0.33f * _karaokeFont.Size);
+                DrawFileName(e, FileName);
 
             #endregion Draw FileName
 
@@ -3605,7 +3833,7 @@ namespace keffect
 
             // Draw file name if required
             if (bShowSongName)
-                DrawFileName(e, FileName, 0.33f * _karaokeFont.Size);
+                DrawFileName(e, FileName);
 
             #endregion Draw FileName
 
@@ -3721,7 +3949,7 @@ namespace keffect
 
             // Draw file name if required
             if (bShowSongName)
-                DrawFileName(e, FileName, 0.33f * _karaokeFont.Size);
+                DrawFileName(e, FileName);
 
             #endregion Draw FileName
 
@@ -3866,7 +4094,7 @@ namespace keffect
             // Draw file name if required
 
             if (bShowSongName)
-                DrawFileName(e, FileName, 0.33f * _karaokeFont.Size);
+                DrawFileName(e, FileName);
 
             #endregion Draw FileName
 
@@ -4082,7 +4310,7 @@ namespace keffect
             // Draw file name if required
 
             if (bShowSongName)
-                DrawFileName(e, FileName, 0.33f * _karaokeFont.Size);
+                DrawFileName(e, FileName);
 
             #endregion Draw FileName
 
@@ -4105,8 +4333,7 @@ namespace keffect
 
         #endregion Draw text with fixed lines
 
-        
-
+       
         /// <summary>
         /// Return rectangle for image
         /// </summary>
@@ -4249,6 +4476,18 @@ namespace keffect
         }
 
         #endregion Move Window
+
+
+        public void Populate(kLyrics kls, double duration, string filename, bool bforceuppercase)
+        {
+            KLyrics = kls;
+            Duration = duration;
+            FileName = filename;
+            bforceUppercase = bforceuppercase;
+
+            // Load lyrics, calculate fonts size
+            Init();
+        }
 
 
         #endregion Public methods
@@ -4510,8 +4749,8 @@ namespace keffect
 
                 case "Rhythm":
                     // For radial gradients, we don't use the angle, but we can still animate the size of the ellipse
-                    if (W > speed) W -= speed; // Minor the width of the client rectangle at each tick with the speed value
-                    if (H > speed) H -= speed; // Minor the height of the client rectangle at each tick with the speed value 
+                    //if (W > speed) W -= speed; // Minor the width of the client rectangle at each tick with the speed value
+                    //if (H > speed) H -= speed; // Minor the height of the client rectangle at each tick with the speed value 
 
 
                     break;
@@ -4527,6 +4766,22 @@ namespace keffect
         }
 
         #endregion Timer gradient        
+
+
+        #region Volume
+
+        public void SetSoundVolume(int volume, int leftlevel, int rightlevel)
+        {
+            // idea : draw an ellipse with volume
+            //_volume = volume;
+
+            _volume = Math.Abs((volume / (327680000)));
+            //if (_volume > 8) _volume = 8;
+
+            //Console.WriteLine("Volume " + _volume);
+        }
+
+        #endregion Volume
 
     }
 }

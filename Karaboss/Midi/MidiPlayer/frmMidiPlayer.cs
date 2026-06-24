@@ -34,7 +34,6 @@
 using kar;
 using Karaboss.MidiLyrics;
 using Karaboss.Mp3;
-using Karaboss.Resources.Localization;
 using Karaboss.Utilities;
 using MusicTxt;
 using MusicXml;
@@ -44,7 +43,6 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
-using System.Diagnostics.Eventing.Reader;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -54,32 +52,235 @@ namespace Karaboss
 {
     public partial class frmMidiPlayer : Form
     {
-        
-        MusicXmlReader MXmlReader; 
-        MusicTxtReader MTxtReader; 
-        MusicTxtWriter MTxtWriter;
+        #region Declarations
+
+        #region controls
+
+        private readonly int iStaffHeightMaximized = 150; // = SheetMusic.staffH; 148 en réalité
+                                                          //private int iStaffHeightMinimized = 25;  // 23 en réalité
+
+        // Creation dynamique de controles 
+
+        private Panel pnlTracks;        // panel left
+        private Panel pnlScrollView;    // panel right    
+        private Panel pnlHScroll;       // panel horizontal
+
+        private NoSelectVScrollBar vScrollBar;
+        private HScrollBar hScrollBar;
+
+        private TrkControl.TrackControl pTrack;
+        private TrkControl.TrackControl draggedTrack;
+        private TrkControl.TrackControl droppedTrack;
+
+        #endregion
+
+
+        #region Countdown
+
+        // To wait between 2 songs (playlists)
+        private int w_tick = 0;
+        private int w_wait = 10;
+
+        #endregion Countdown
+
+
+        #region Devices
+
+        // Output device
+        private readonly OutputDevice outDevice;
+        //private int outDeviceID = 0;
+        private int outDeviceProcessId;
+
+        #endregion Devices
+       
+
+        #region File
 
         public bool bfilemodified = false;
 
-        private enum Directions
-        {
-            Forward,
-            Backward
-        }
-        //private Directions _direction;
+        // Current file beeing edited
+        private string MIDIfileName = string.Empty;
+        private string MIDIfilePath = string.Empty;
+        private string MIDIfileFullPath = string.Empty;
+
+        #endregion File
+
 
         #region Lyrics declaration
 
         // Lyrics management
         public MidiLyricsMgmt myLyricsMgmt;
-        
 
-        // SlideShow directory
-        public string dirSlideShow;
+        // Show karaoke window
+        private bool bKaraokeAlwaysOn = true;
 
         #endregion Lyrics declaration
 
-        // FAB 20/03/2021
+
+        #region Forms
+
+        private frmExplorer frmExplorer;
+        private frmMidiLyrics frmMidiLyrics;
+        private frmPianoRoll frmPianoRoll;
+        private frmPianoTraining frmPianoTraining;
+        private frmModifyTempo frmModifyTempo;
+        private frmModifyDivision frmModifyDivision;
+        private readonly int NumInstance = 1;
+
+        private bool ScrollVert = false;
+        private bool bShowVScrollBar = false;
+        private bool bShowHScrollBar = false;
+        private bool scrolling = false;
+        private bool closing = false;
+        private bool bClosingRequired = false;
+        private bool loading = false; // loading file in progress
+
+        #endregion Forms                        
+       
+
+        #region Midi
+
+        // Midifile characteristics
+        private double _duration = 0;  // en secondes
+        private double _durationPercent = 0;   //Duration for positioning in sheemusic
+        private int _totalTicks = 0;
+        private int _bpm = 0;
+        private double _ppqn;
+        private int _tempo;
+        private int _tempoplayed;
+        private int _measurelen;
+
+        // Load Instruments list
+        private readonly List<string> lsInstruments = MidiFile.LoadInstruments();
+
+        //BEAT
+        private int beat = 0;
+        private int BeatIntervall = 0;
+
+        #endregion Midi
+
+
+        #region Notes edition
+
+        private bool bEditScore = false;
+        private bool bEnterNotes = false;
+
+        // Enter notes
+        private int octave = 6;
+
+        // Play stop notes
+        private bool on = false;
+        private int playedNote = -1;
+        private int playedStaff = -1;
+
+
+        #region Edit status
+
+        /// <summary>
+        /// All kind of notes
+        /// </summary>
+        private enum NoteValues
+        {
+            None,
+            Gomme,
+            Ronde,
+            Blanche,
+            Noire,
+            Croche,
+            DoubleCroche,
+            TripleCroche,
+            QuadrupleCroche
+        }
+        private NoteValues NoteValue;
+
+        /// <summary>
+        /// All kind of alterations
+        /// </summary>
+        private enum Alterations
+        {
+            None,
+            Dot,
+            Diese,
+            Bemol,
+            Becarre
+        }
+        private Alterations Alteration;
+
+        #endregion
+
+        #endregion Notes edition
+
+
+        #region Player
+
+        // Dimensions
+        private readonly int leftWidth = 179;
+        private readonly int SimplePlayerWidth = 530;
+        private readonly int SimplePlayerHeight = 194;
+
+        private bool bSequencerAlwaysOn = false;
+        private bool bForceShowSequencer = false;
+
+        private readonly bool bPlayNow = false;
+
+
+        private bool bVolumed = false; // Volume changed
+
+        private int bouclestart = 0;
+        private int newstart = 0;
+        private int laststart = 0;      // Start time to play        
+        private int lastbluestart = 0; // Vertical blue line
+        private int nbstop = 0;
+
+
+        // Play next or previous midi song
+        private enum Directions
+        {
+            Forward,
+            Backward
+        }
+
+
+        #region Player States
+
+        /// <summary>
+        /// Player status
+        /// </summary>
+        private enum PlayerStates
+        {
+            Playing,
+            Paused,
+            Stopped,
+            NextSong,           // select next song of a playlist
+            Waiting,            // count down running between 2 songs of a playlist
+            WaitingPaused,      // count down paused between 2 songs of a playlist
+            LaunchNextSong      // pause between 2 songs of a playlist
+        }
+        private PlayerStates PlayerState;
+
+        #endregion Player states
+
+        #endregion Player
+
+
+        #region Playlists
+
+        private readonly Playlist currentPlaylist;
+        private PlaylistItem currentPlaylistItem;
+
+        #endregion Playlists
+                                     
+
+        #region Readers
+
+        MusicXmlReader MXmlReader;
+        MusicTxtReader MTxtReader;
+        MusicTxtWriter MTxtWriter;
+
+        #endregion Readers
+
+
+        #region Settings volume, pan, reverb
         private class _reglages
         {
             public int volume = 100;
@@ -103,6 +304,9 @@ namespace Karaboss
         private readonly List<_channels> lstChannels;
         private _channels ChannelReglages;
 
+        #endregion Settings volume, pan, reverb
+
+
         #region SheetMusic declarations
 
         //private SheetMusic sheetmusic;                  /* The Control which displays the sheet music */
@@ -119,187 +323,16 @@ namespace Karaboss
         #endregion SheetMusic declarations
 
 
-        #region controls
-        // Creation dynamique de controles 
-        //private Sanford.Multimedia.Timers.Timer timerBalls;
-        private Panel pnlTracks;        // panel left
-        private Panel pnlScrollView;    // panel right    
-        private Panel pnlHScroll;       // panel horizontal
-
-        private NoSelectVScrollBar vScrollBar;        
-        private HScrollBar hScrollBar;
-
-        private TrkControl.TrackControl pTrack;
-        private TrkControl.TrackControl draggedTrack;
-        private TrkControl.TrackControl droppedTrack;
-
-        #endregion
-
-
-        #region Player States
-
-        /// <summary>
-        /// Player status
-        /// </summary>
-        private enum PlayerStates
-        {
-            Playing,
-            Paused,
-            Stopped,
-            NextSong,           // select next song of a playlist
-            Waiting,            // count down running between 2 songs of a playlist
-            WaitingPaused,      // count down paused between 2 songs of a playlist
-            LaunchNextSong      // pause between 2 songs of a playlist
-        }
-        private PlayerStates PlayerState;
-
-        #endregion
-
-
-        #region Edit status
-
-        /// <summary>
-        /// All kind of notes
-        /// </summary>
-        private enum NoteValues
-        {
-            None,
-            Gomme,
-            Ronde,
-            Blanche,
-            Noire,
-            Croche,
-            DoubleCroche,
-            TripleCroche,
-            QuadrupleCroche
-        }
-        private NoteValues NoteValue;        
-
-        /// <summary>
-        /// All kind of alterations
-        /// </summary>
-        private enum Alterations
-        {
-            None,
-            Dot,
-            Diese,
-            Bemol,
-            Becarre
-        }
-        private Alterations Alteration;
-
-        #endregion
-
-
-        #region private decl
-
-        private readonly string _InternalSepLines = "¼";
-
-
-        #region External lyrics separators
-
-        private readonly string m_SepLine = "/";
-        private readonly string m_SepParagraph = "\\";
-
-        #endregion
+        #region Transpose, tempo
 
         private int TempoDelta = 100;
-        private int TempoOrig = 0;        
-        
+        private int TempoOrig = 0;
+
         private int TransposeDelta = 0;
-        //private int TransposeOrig = 0;
 
+        #endregion Transpose, tempo
 
-        //private bool bMuted = false;
-        private bool bVolumed = false;
-        private readonly bool bPlayNow = false;        
-        private bool bSequencerAlwaysOn = false;
-        private bool bForceShowSequencer = false;
-        private bool bKaraokeAlwaysOn = true;
-        
-        private bool ScrollVert = false;
-        private bool bShowVScrollBar = false;
-        private bool bShowHScrollBar = false;
-        private bool scrolling = false;
-        private bool closing = false;
-        private bool bClosingRequired = false;
-        private bool loading = false; // loading file in progress
-        private bool bEditScore = false;
-        private bool bEnterNotes = false;
-
-        // Playlists
-        private readonly Playlist currentPlaylist;
-        private PlaylistItem currentPlaylistItem;        
-                        
-        private readonly int iStaffHeightMaximized = 150; // = SheetMusic.staffH; 148 en réalité
-        //private int iStaffHeightMinimized = 25;  // 23 en réalité
-        
-        // Dimensions
-        private readonly int leftWidth = 179;
-        private readonly int SimplePlayerWidth = 530;
-        private readonly int SimplePlayerHeight = 194;
-
-        // Midifile characteristics
-        private double _duration = 0;  // en secondes
-        private double _durationPercent = 0;   //Duration for positioning in sheemusic
-        private int _totalTicks = 0;
-        private int _bpm = 0;        
-        private double _ppqn;
-        private int _tempo;
-        private int _tempoplayed;
-        private int _measurelen;
-        
-
-        // Load Instruments list
-        private readonly List<string> lsInstruments = MidiFile.LoadInstruments();
-        //BEAT
-        private int beat = 0;
-        private int BeatIntervall = 0;
-
-        // Enter notes
-        private int octave = 6;        
-
-        // Output device
-        private readonly OutputDevice outDevice;
-        //private int outDeviceID = 0;
-        private int outDeviceProcessId;
-        
-        //private string songRoot;
-
-        // forms        
-        private frmExplorer frmExplorer;
-        private frmMidiLyrics frmMidiLyrics;
-        //private frmLoading frmLoading;
-        private frmPianoRoll frmPianoRoll;
-        private frmPianoTraining frmPianoTraining;     
-        private frmModifyTempo frmModifyTempo;
-        private frmModifyDivision frmModifyDivision;
-        private readonly int NumInstance = 1;
-
-        // To wait between 2 songs (playlists)
-        private int w_tick = 0;
-        private int w_wait = 10;        
-        private int bouclestart = 0;
-        private int newstart = 0;
-        private int laststart = 0;      // Start time to play
-        //private int lastscroll = 0;
-        private int lastbluestart = 0; // Vertical blue line
-        private int nbstop = 0;
-
-        // Play stop notes
-        private bool on = false;
-        private int playedNote = -1;
-        private int playedStaff = -1;
-
-        // Current file beeing edited
-        private string MIDIfileName = string.Empty;
-        private string MIDIfilePath = string.Empty;
-        private string MIDIfileFullPath = string.Empty;
-
-        // FAB 06/07/2024
-        //private readonly System.Text.Encoding _encoding = System.Text.Encoding.ASCII;
-
-        #endregion
+        #endregion Declarations
 
         /// <summary>
         /// Constructor
@@ -310,19 +343,8 @@ namespace Karaboss
             InitializeComponent();
 
             NumInstance = numinstance;
-
-            // Load saved line and paragraph separators
-            m_SepLine = Karaclass.m_SepLine;
-            m_SepParagraph = Karaclass.m_SepParagraph;
-
-            
-            MIDIfileFullPath = FileName;
-            MIDIfileName = Path.GetFileName(FileName);
-            MIDIfilePath = Path.GetDirectoryName(FileName);
-            
-            this.MouseWheel += new MouseEventHandler(frmMidiPlayer_MouseWheel);
-            
-            outDevice = outputDevice;           
+            outDevice = outputDevice;
+            currentPlaylist = myPlayList;
 
             // If true, launch player
             bPlayNow = bplay;
@@ -341,16 +363,17 @@ namespace Karaboss
 
             #endregion Graphics optimization
 
+            // Volume de chaque piste
+            lstTrkReglages = new List<_reglages>();
+            lstChannels = new List<_channels>();
 
-            // Allow form keydown
-            this.KeyPreview = true;
-
-            // Display of peak level volume
-            Init_peakLevel();          
-           
+            // Initialize all
+            Init(FileName);
+                                                                                    
             
             #region playlists
-            if (myPlayList != null)
+            
+            if (currentPlaylist != null)
             {
                 string f;
                 if (Karaclass.m_MxmlPath != "")
@@ -361,35 +384,14 @@ namespace Karaboss
                 {
                     f = MIDIfileFullPath;
                 }
-                currentPlaylist = myPlayList;
+                
                 // Search file to play with its filename                
                 currentPlaylistItem = currentPlaylist.Songs.Where(z => z.File == f).FirstOrDefault();                
-                MIDIfileName = currentPlaylistItem.Song; 
-
-                lblPlaylist.Visible = true;
-                int idx = currentPlaylist.SelectedIndex(currentPlaylistItem) + 1;
-                lblPlaylist.Text = "PLAYLIST: " + idx + "/" + currentPlaylist.Count;
-
             }
-            else
-            {
-                lblPlaylist.Visible = false;
-            }
+            
             #endregion
-
-      
-            // Volume de chaque piste
-            lstTrkReglages = new List<_reglages>();
-            lstChannels = new List<_channels>();
-
-            // Zoom
-            zoom = 1.0f;
-
-            // Lyrics
-            timer2.Interval = 50;            
+               
         }
-
-
 
         #region ani balls
 
@@ -842,13 +844,13 @@ namespace Karaboss
                 DisplayLyricsInfos();
                 ValideMenus(false);
 
-
-                // 1. DISPLAY LYRICS
-                ManageDisplayLyricsForm();
-                // Send mandatory informations to lyrics form
-                SendInformationsToLyrics();
-
                 
+                // 1. DISPLAY LYRICS
+
+                // Display lyrics form
+                ManageDisplayLyricsForm();
+               
+                // Send lyrics and informations
                 StartKaraoke();
 
 
@@ -869,7 +871,6 @@ namespace Karaboss
                     sequencer1.Start();
                 }
                 sequencer1.Tempo = TempoOrig;
-
 
 
                 // main timer
@@ -897,21 +898,7 @@ namespace Karaboss
             }
         }
        
-        /// <summary>
-        /// Update informations of lyrics form
-        /// </summary>
-        private void SendInformationsToLyrics()
-        {
-            if (Application.OpenForms.OfType<frmMidiLyrics>().Count() > 0)
-            {
-                frmMidiLyrics.BeatDuration = sequence1.Division;
-                frmMidiLyrics.Duration = _duration;
-                frmMidiLyrics.TotalTicks = _totalTicks;
-                frmMidiLyrics.PlayStopActions(false);
-            }
-        }
-
-
+       
         #region Mute
         /// <summary>
         /// Mute melody track
@@ -1039,6 +1026,17 @@ namespace Karaboss
 
 
         #region chords analysis
+
+        private void btnUpdateChords_Click(object sender, EventArgs e)
+        {if (!Karaclass.m_ShowChords) return;
+            
+            // Reload lyrics with choosen options
+            myLyricsMgmt.ResetDisplayChordsOptions(Karaclass.m_ShowChords);
+
+            // Refresh score with or without chords            
+            RefreshChordsSheetMusic();
+        }
+
 
         public void RefreshChordsSheetMusic()
         {
@@ -1326,8 +1324,7 @@ namespace Karaboss
         private void DisplayTrackControls()
         {
             int nbTrk = sequence1.tracks.Count;
-            int nbTrkNotes = 0;
-            //int yOffset = 1;
+            int nbTrkNotes = 0;            
 
             this.Cursor = Cursors.WaitCursor;
             DrawingControl.SuspendDrawing(this);
@@ -2274,8 +2271,8 @@ namespace Karaboss
 
                     AlertOutputDevice(outDeviceName);
 
-                    sequence1.LoadProgressChanged += HandleLoadProgressChanged;
-                    sequence1.LoadCompleted += HandleLoadCompleted;
+                    sequence1.LoadProgressChanged += HandleLoadMidiProgressChanged;
+                    sequence1.LoadCompleted += HandleLoadMidiCompleted;
 
                     // ==========================================================================
                     // Chargement du fichier midi selectionné depuis frmExplorer
@@ -2303,7 +2300,7 @@ namespace Karaboss
         private void SelectActionOnLoad()
         {
             // Same for start a playlist or a single file (mid, xml, txt)
-            if (MIDIfileFullPath != null && MIDIfileFullPath != "")
+            if (MIDIfileFullPath != null && MIDIfileFullPath != string.Empty)
             {
                 SelectFileToLoadAsync();
             }
@@ -2319,39 +2316,46 @@ namespace Karaboss
         /// </summary>
         private void SelectFileToLoadAsync()
         {
-            string ext = Path.GetExtension(MIDIfileFullPath).ToLower();
-            if (ext == ".mid" || ext == ".kar")
+            string extension = Path.GetExtension(MIDIfileFullPath).ToLower();
+            
+            switch(extension)
             {
-                // Play a single MIDI file
-                LoadAsyncMidiFile(MIDIfileFullPath);
-            }
-            else if (ext == ".mxl")
-            {
-                // mxl file must be unzipped before
-                string myXMLFileName = Files.UnzipFile(MIDIfileFullPath);
-                if (File.Exists(myXMLFileName))
-                {
+                case ".midi":
+                case ".mid":
+                case ".kar":
+                    // Play a single MIDI file
+                    Cursor.Current = Cursors.WaitCursor;
+                    LoadAsyncMidiFile(MIDIfileFullPath);
+                    break;
+
+                case ".mxl":
+                    // mxl file must be unzipped before
+                    string myXMLFileName = Files.UnzipFile(MIDIfileFullPath);
+                    if (File.Exists(myXMLFileName))
+                    {
+                        Cursor.Current = Cursors.WaitCursor;
+                        Application.DoEvents();
+                        LoadAsyncXmlFile(myXMLFileName);
+                    }
+                    break;
+                
+                case ".xml":
+                case ".musicxml":
                     Cursor.Current = Cursors.WaitCursor;
                     Application.DoEvents();
-                    LoadAsyncXmlFile(myXMLFileName);
-                }
-            }
-            else if (ext == ".xml" || ext == ".musicxml")
-            {
-                Cursor.Current = Cursors.WaitCursor;
-                Application.DoEvents();
-                LoadAsyncXmlFile(MIDIfileFullPath);
-            }
-            else if (ext == ".txt")
-            {
-                Cursor.Current = Cursors.WaitCursor;
-                Application.DoEvents();
-                LoadAsyncTxtFile(MIDIfileFullPath);
-            }
-            else
-            {
-                MessageBox.Show("Unknown extension");
-            }
+                    LoadAsyncXmlFile(MIDIfileFullPath);
+                    break;
+
+                case ".txt":
+                    Cursor.Current = Cursors.WaitCursor;
+                    Application.DoEvents();
+                    LoadAsyncTxtFile(MIDIfileFullPath);
+                    break;
+
+                default:
+                    MessageBox.Show("Unknown file extension", Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    break;
+            }          
         }
 
     
@@ -2788,218 +2792,7 @@ namespace Karaboss
         }
 
         #endregion form load close keydown
-
-
-        #region Text, Xml Import/export
-
-        #region Text import/export
-        /// <summary>
-        /// Export Midi file to normalized text dump
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void MnuFileExportMidiToText_Click(object sender, EventArgs e)
-        {
-            ExportMidiToText();
-        }
-
-        /// <summary>
-        /// Dump Midi to text
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void btnDump_Click(object sender, EventArgs e)
-        {
-            ExportMidiToText();
-        }
-
-        /// <summary>
-        /// Save async midi dump to text file
-        /// </summary>
-        private void ExportMidiToText()
-        {
-            if (MIDIfilePath == null)
-                return;
-
-            string name = Path.GetFileNameWithoutExtension(MIDIfileName) + " (Dump)";
-            string file = string.Empty;
-            file = string.Format("{0}\\{1}{2}", MIDIfilePath, name, ".txt");
-
-            MTxtWriter = new MusicTxtWriter(sequence1, file);
-            MTxtWriter.WriteTxtCompleted += MTxtWriter_WriteTxtCompleted;
-            MTxtWriter.WriteTxtProgressChanged += MTxtWriter_WriteTxtProgressChanged;
-            MTxtWriter.WriteTxtAsync(file);
-        }
-
-        private void MTxtWriter_WriteTxtProgressChanged(object sender, ProgressChangedEventArgs e)
-        {
-            //throw new NotImplementedException();
-        }
-
-        /// <summary>
-        /// Event: dump midi file completed
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void MTxtWriter_WriteTxtCompleted(object sender, AsyncCompletedEventArgs e)
-        {
-            string file = ((MusicTxtWriter)sender).fileName;
-            try
-            {
-                System.Diagnostics.Process.Start(@file);
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message);
-            }
-        }
-
-
-        /// <summary>
-        /// Import a normalized text file
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void MnuFileImportMidiFromText_Click(object sender, EventArgs e)
-        {
-            importMidiFileFromText();
-        }
-
-        private void importMidiFileFromText()
-        {
-            openMidiFileDialog.Title = "Open Text file";
-            openMidiFileDialog.DefaultExt = "txt";
-            openMidiFileDialog.Filter = "Text files|*.txt|All files|*.*";
-            openMidiFileDialog.InitialDirectory = MIDIfilePath;
-
-            if (openMidiFileDialog.ShowDialog() == DialogResult.OK)
-            {
-                string fileName = openMidiFileDialog.FileName;
-                LoadAsyncTxtFile(fileName);
-            }
-        }
-
-        #endregion Text import/export
-
-
-        #region Xml import/export
-        /// <summary>
-        /// Import a MusicXml file to Midi
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void MnuFileImportMusicXml_Click(object sender, EventArgs e)
-        {
-            openMidiFileDialog.Title = "Open MusicXml file";
-            openMidiFileDialog.DefaultExt = "xml";
-            openMidiFileDialog.Filter = "Xml files|*.xml|MusicXml files|*.musicxml|All files|*.*";
-            openMidiFileDialog.InitialDirectory = MIDIfilePath;
-
-            if (openMidiFileDialog.ShowDialog() == DialogResult.OK)
-            {
-                string fileName = openMidiFileDialog.FileName;
-
-                // Load xml file and display messages
-                LoadXmlFile(fileName, false);
-            }
-        }
-
-        private bool LoadXmlFile(string fileName, bool bsilentmode)
-        {
-            MIDIfilePath = Path.GetDirectoryName(fileName);
-
-            //string fExt = Path.GetExtension(fileName);             // Extension
-            string fName = Path.GetFileNameWithoutExtension(fileName);    // name without extension
-            MIDIfileName = fName + ".mid";
-            MIDIfileFullPath = Path.Combine(MIDIfilePath, MIDIfileName);            
-
-            // Load xml file                
-            MusicXmlReader M = new MusicXmlReader();
-
-            // Show Xml chords?
-            M.PlayXmlChords = Karaclass.m_ShowXmlChords;
-
-            sequence1 = M.Read(fileName, false);
-
-            if (sequence1 == null)
-            {
-                if (!bsilentmode)
-                    MessageBox.Show("Invalid MusicXml file", "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return false;
-            }
-
-            // load lyrics and chords if included in lyrics
-            //  ********************** Why not load embedded chords here if bShowChords is true ? *****************
-            myLyricsMgmt = new MidiLyricsMgmt(sequence1);
-
-
-
-            laststart = 0;
-            // Remove all MIDI events after last note
-            sequence1.Clean();
-
-            ResetSequencer();
-
-            sequencer1.Sequence = sequence1;
-            UpdateMidiTimes();
-            DisplaySongDuration(_duration);
-
-            positionHScrollBarNew.Value = 0;
-            positionHScrollBarNew.Maximum = _totalTicks;
-
-            // ----------------------------------------------------------------
-            // Display Scores on panel pnlScrollView
-            // ----------------------------------------------------------------
-            DisplayScores();
-
-            // Display song duration
-            DisplaySongDuration(_duration);
-
-            // Display track controls             
-            DisplayTrackControls();
-
-            // Reset tracks stuff
-            InitTracksStuff();
-
-            // Recherche si des lyrics existent et affiche la forme frmMidiLyrics
-            mnuDisplayLyricsWindows.Checked = bKaraokeAlwaysOn;
-
-            if (bKaraokeAlwaysOn && myLyricsMgmt.bHasLyrics)
-                DisplayLyricsForm();
-
-            // Display log file
-            if (sequence1.Log != "")
-            {
-                lblChangesInfos.Text = sequence1.Log;
-            }
-
-            DisplayFileInfos();
-            DisplayLyricsInfos();
-
-            // Display title
-            SetTitle(MIDIfileName);
-
-            // File is new
-            if (bsilentmode)
-                FileModified();
-
-            return true;
-        }
-
-        /// <summary>
-        /// Export Midi to MusicXml format file
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void MnuFileExportToMusicXml_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        #endregion Xml import/export
-
-        #endregion Text, Xml Import/export
-
+        
 
         #region handle messages
 
@@ -3433,7 +3226,37 @@ namespace Karaboss
         #endregion handle messages
 
 
-        #region load file
+        #region Initalizations
+
+        private void Init(string FileName)
+        {
+            btnUpdateChords.Visible = Karaclass.m_ShowChords;
+
+            MIDIfileFullPath = FileName;
+            MIDIfileName = Path.GetFileName(FileName);
+            MIDIfilePath = Path.GetDirectoryName(FileName);
+
+            this.MouseWheel += new MouseEventHandler(frmMidiPlayer_MouseWheel);
+
+            // Allow form keydown
+            this.KeyPreview = true;
+
+            // Display of peak level volume
+            Init_peakLevel();
+
+            lblPlaylist.Visible = currentPlaylist != null;
+
+             // Zoom
+             zoom = 1.0f;
+
+            // Lyrics
+            timer2.Interval = 50;
+        }
+
+        #endregion Initalizations
+
+
+        #region load file events
 
         /// <summary>
         /// Load the midi file in the sequencer
@@ -3515,120 +3338,132 @@ namespace Karaboss
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void HandleLoadCompleted(object sender, AsyncCompletedEventArgs e)
+        private void HandleLoadMidiCompleted(object sender, AsyncCompletedEventArgs e)
         {            
             this.Cursor = Cursors.Arrow;
-            mnuFileOpen.Enabled = true;
-            progressBarPlayer.Value = 0;
-            progressBarPlayer.Visible = false;
-
+           
             // Reset settings made for previous song
-            ResetPlaySettings();
+            ResetPlaySettings();            
 
-            loading = false;
+            #region Guard
 
-            if (e.Error == null && e.Cancelled == false)
+            if (e.Error != null || e.Cancelled == true) 
             {
-                laststart = 0;
+                if (e.Error != null)
+                    MessageBox.Show(e.Error.Message, Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+            #endregion Guard
+                       
+            // Warning: Midi format is always forced to 1 otherwise you can't add lyrics with Karaboss            
+            sequence1.Format = 1;
+            
+            // Lyrics
+            myLyricsMgmt = new MidiLyricsMgmt(sequence1);
 
-                // FAB : force le format à 1 hu hu hu sinon on ne peut pas ajouter de paroles            
-                sequence1.Format = 1;
+            // Remove or add chords to track in order to display them in the score
+            AddChordsToTrack();
 
-                myLyricsMgmt = new MidiLyricsMgmt(sequence1);
+            #region Convert midi format 0 to midi format 1
 
-                // Save chords to track in order to display them in the score
-                AddChordsToTrack();
+            //
+            // Bug when format is 0, Karaboss change the format to 1.
+            // If the file contains lyrics (not text), they are lost when the file is saved
+            // Workaround is to rewrite the lyrics
+            //
+            if (sequence1.OrigFormat == 0)
+            {                
+                if (myLyricsMgmt.LyricType == LyricTypes.Lyric)
+                {                        
+                    int tracknum = myLyricsMgmt.LyricsTrackNum;
+                    Track track = sequence1.tracks[tracknum];
+                    // supprime tous les messages text & lyric
+                    track.deleteLyrics();
 
-                /*
-                * Bug when format is 0, Karaboss change the format to 1.
-                * If the file contains lyrics (not text), they are lost when the file is saved
-                * Workaround is to rewrite the lyrics
-                */
-                if (sequence1.OrigFormat == 0)
-                {
-                    //myLyricsMgmt = new MidiLyricsMgmt(sequence1);
-
-                    if (myLyricsMgmt.LyricType == LyricTypes.Lyric)
-                    {                        
-                        int tracknum = myLyricsMgmt.LyricsTrackNum;
-                        Track track = sequence1.tracks[tracknum];
-                        // supprime tous les messages text & lyric
-                        track.deleteLyrics();
-
-                        // Insert all lyric events                                                                    
-                        LyricsUtilities.TrkInsertLyrics(track, myLyricsMgmt.OrgKLyrics, myLyricsMgmt.LyricType);
-                    }
+                    // Insert all lyric events                                                                    
+                    LyricsUtilities.TrkInsertLyrics(track, myLyricsMgmt.OrgKLyrics, myLyricsMgmt.LyricType);
                 }
+            }
+
+            #endregion Convert midi format 0 to midi format 1
+
+            // Remove all MIDI events after last note
+            sequence1.Clean();
+            UpdateMidiTimes();
 
 
-                // Remove all MIDI events after last note
-                sequence1.Clean();
-                UpdateMidiTimes();
+            #region Displays controls
+
+            positionHScrollBarNew.Value = 0;
+            positionHScrollBarNew.Maximum = _totalTicks;
+
+            // ----------------------------------------------------------------
+            // Display Scores on panel pnlScrollView
+            // ----------------------------------------------------------------
+            DisplayScores();
+
+            // Display song duration
+            DisplaySongDuration(_duration);
+
+            // Display track controls             
+            DisplayTrackControls();
+
+            // Reset tracks Stuff
+            InitTracksStuff();
+
+            #endregion Display controls
 
 
-                #region displays controls
+            #region Display log file
 
-                positionHScrollBarNew.Value = 0;
-                positionHScrollBarNew.Maximum = _totalTicks;
+            // Display log file
+            if (sequence1.Log != "")
+                lblChangesInfos.Text = sequence1.Log;
 
-                // ----------------------------------------------------------------
-                // Display Scores on panel pnlScrollView
-                // ----------------------------------------------------------------
-                DisplayScores();
+            DisplayFileInfos();
 
-                // Display song duration
-                DisplaySongDuration(_duration);
-
-                // Display track controls             
-                DisplayTrackControls();
-
-                // Reset tracks Stuff
-                InitTracksStuff();
-                #endregion
-
-                // Display log file
-                if (sequence1.Log != "")
-                    lblChangesInfos.Text = sequence1.Log;
-
-                DisplayFileInfos();
+            #endregion Display log file
 
 
-                #region display lyrics
-                // Recherche si des lyrics existent et affiche la forme frmMidiLyrics
-                mnuDisplayLyricsWindows.Checked = bKaraokeAlwaysOn;
+            #region display lyrics informations
 
-                DisplayLyricsInfos();
-                #endregion
+            // Recherche si des lyrics existent et affiche la forme frmMidiLyrics
+            mnuDisplayLyricsWindows.Checked = bKaraokeAlwaysOn;
 
+            DisplayLyricsInfos();
 
-                // PLAYLIST
-                if (currentPlaylist != null)
-                {
-                    // Highlight current song in the playlist
-                    UpdatePlayListsForm(currentPlaylistItem.Song);
+            #endregion
 
-                    // play asap, pause, countdown
-                    performPlaylistChainingChoice();
-                }
-                else
-                {
-                    // SINGLE FILE
+            // ------------
+            // PLAYLIST
+            // ------------
+            if (currentPlaylist != null)
+            {
+                // Mute melody track
+                btnMute1.Checked = !currentPlaylistItem.MelodyMute;
 
-                    // the user asked to play the song immediately                
-                    if (bPlayNow)
-                        PlayPauseMusic();
-                    else
-                    {
-                        // the user wants to edit the file 
-                        ManageDisplayLyricsForm();
-                    }
-                }
+                // Highlight current song in the playlist
+                UpdatePlayListsForm(currentPlaylistItem.Song);
+
+                // play asap, pause, countdown
+                performPlaylistChainingChoice();
             }
             else
             {
-                if (e.Error != null)
-                    MessageBox.Show(e.Error.Message);
-            }
+                // ------------
+                // SINGLE FILE
+                // ------------
+                // the user asked to play the song immediately                
+                if (bPlayNow)
+                    PlayPauseMusic();
+                else
+                {
+                    // the user wants to edit the file 
+                    ManageDisplayLyricsForm();
+                    if (Application.OpenForms.OfType<frmMidiLyrics>().Count() > 0)                        
+                        frmMidiLyrics?.SetLyrics(myLyricsMgmt.KLyrics, sequence1.Division, myLyricsMgmt.FirstMelodyNoteTicksOn, MIDIfileName);
+                }
+            }           
         }
 
         /// <summary>
@@ -3638,15 +3473,13 @@ namespace Karaboss
         /// <param name="e"></param>
         private void HandleLoadXmlCompleted(object sender, AsyncCompletedEventArgs e)
         {
+            this.Cursor = Cursors.Arrow;
+
             if (MXmlReader.seq == null)
                 return;
 
             string lyrics = string.Empty;
-            this.Cursor = Cursors.Arrow;
-            mnuFileOpen.Enabled = true;
-            progressBarPlayer.Value = 0;
-            progressBarPlayer.Visible = false;
-
+                        
             // ====================================
             // Ajout par rapport au standard
             // ====================================
@@ -3672,8 +3505,8 @@ namespace Karaboss
             loading = false;
 
             sequence1 = MXmlReader.seq;
-            sequence1.LoadCompleted += HandleLoadCompleted;  // restore property because info is lost (set in load form)
-            sequence1.LoadProgressChanged += HandleLoadProgressChanged;
+            sequence1.LoadCompleted += HandleLoadMidiCompleted;  // restore property because info is lost (set in load form)
+            sequence1.LoadProgressChanged += HandleLoadMidiProgressChanged;
 
 
             if (e.Error == null && e.Cancelled == false)
@@ -3774,13 +3607,15 @@ namespace Karaboss
                     else
                     {
                         ManageDisplayLyricsForm();
+                        if (Application.OpenForms.OfType<frmMidiLyrics>().Count() > 0)
+                            frmMidiLyrics?.SetLyrics(myLyricsMgmt.KLyrics, sequence1.Division, myLyricsMgmt.FirstMelodyNoteTicksOn, MIDIfileName);
                     }
                 }
             }
             else
             {
                 if (e.Error != null)
-                    MessageBox.Show(e.Error.Message);
+                    MessageBox.Show(e.Error.Message, Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -3791,15 +3626,14 @@ namespace Karaboss
         /// <param name="e"></param>
         private void HandleLoadTxtCompleted(object sender, AsyncCompletedEventArgs e)
         {
+            this.Cursor = Cursors.Arrow;
+
             if (MTxtReader.seq == null)
                 return;
 
             string lyrics = string.Empty;
-            this.Cursor = Cursors.Arrow;
-            mnuFileOpen.Enabled = true;
-            progressBarPlayer.Value = 0;
-            progressBarPlayer.Visible = false;
-
+            
+           
             // ====================================
             // AJOUT par rapport au standard
             // ====================================
@@ -3819,8 +3653,8 @@ namespace Karaboss
             loading = false;
 
             sequence1 = MTxtReader.seq;
-            sequence1.LoadCompleted += HandleLoadCompleted;  // restore property because info is lost (set in load form)
-            sequence1.LoadProgressChanged += HandleLoadProgressChanged;
+            sequence1.LoadCompleted += HandleLoadMidiCompleted;  // restore property because info is lost (set in load form)
+            sequence1.LoadProgressChanged += HandleLoadMidiProgressChanged;
 
             if (e.Error == null && e.Cancelled == false)
             {
@@ -3917,13 +3751,15 @@ namespace Karaboss
                     else
                     {
                         ManageDisplayLyricsForm();
+                        if (Application.OpenForms.OfType<frmMidiLyrics>().Count() > 0)
+                            frmMidiLyrics?.SetLyrics(myLyricsMgmt.KLyrics, sequence1.Division, myLyricsMgmt.FirstMelodyNoteTicksOn, MIDIfileName);
                     }
                 }
             }
             else
             {
                 if (e.Error != null)
-                    MessageBox.Show(e.Error.Message);
+                    MessageBox.Show(e.Error.Message, Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -3933,7 +3769,7 @@ namespace Karaboss
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void HandleLoadProgressChanged(object sender, ProgressChangedEventArgs e)
+        private void HandleLoadMidiProgressChanged(object sender, ProgressChangedEventArgs e)
         {
             loading = true;
             try
@@ -4019,7 +3855,8 @@ namespace Karaboss
 
                 // Window closed
                 DisplayLyricsForm();
-                frmMidiLyrics.SetLyrics(myLyricsMgmt.KLyrics);
+                if (Application.OpenForms.OfType<frmMidiLyrics>().Count() > 0)
+                    frmMidiLyrics?.SetLyrics(myLyricsMgmt.KLyrics, sequence1.Division, myLyricsMgmt.FirstMelodyNoteTicksOn, MIDIfileName);
             }
 
             // Refresh display of lyrics
@@ -4146,10 +3983,9 @@ namespace Karaboss
             myLyricsMgmt.OrgKLyrics.Lines.Clear();            
 
             // Ferme le formulaire frmMidiLyrics
-            if (Application.OpenForms.OfType<frmMidiLyrics>().Count() > 0)
-            {
-                frmMidiLyrics.Close();
-            }
+            if (Application.OpenForms.OfType<frmMidiLyrics>().Count() > 0)            
+                frmMidiLyrics?.Close();
+            
 
             // File was modified
             FileModified();
@@ -4171,41 +4007,7 @@ namespace Karaboss
             if (myLyricsMgmt.OrgKLyrics.Lines.Count > 0)
                 DisplayLyricsForm();
 
-
-            // If no lyrics and a playlist, display song & singer informations in the center            
-            if (currentPlaylistItem != null && myLyricsMgmt.OrgKLyrics.Lines.Count == 0 && !Karaclass.m_PauseBetweenSongs && Karaclass.m_CountdownSongs == 0 && !Karaclass.m_ShowChords)
-            {
-                // COUNTDOWN terminated
-                
-                List<string> Lines = new List<string>()
-                {
-                    {" Next song:" },
-                    { Path.GetFileNameWithoutExtension(currentPlaylistItem.Song) }
-                };
-                
-                if (currentPlaylistItem.KaraokeSinger != string.Empty && currentPlaylistItem.KaraokeSinger != "<Song reserved by>")
-                {                
-                    Lines.Add(Strings.SungBy);
-                    Lines.Add(currentPlaylistItem.KaraokeSinger);
-                }
-
-                if (Application.OpenForms.OfType<frmMidiLyrics>().Count() > 0)
-                    frmMidiLyrics.DisplayText(Lines);
-            }
-            else if (myLyricsMgmt.OrgKLyrics.Lines.Count > 0)
-            {
-                // PAUSE terminated
-
-                // Restore number of lines of lyrics to display
-                if (Karaclass.m_PauseBetweenSongs)
-                {
-                    // Restore the values after displaying the song and artist information
-                    frmMidiLyrics.KaraokeDisplayType = Properties.Settings.Default.KaraokeDisplayType;
-                    frmMidiLyrics.nbLyricsLines = Properties.Settings.Default.TxtNbLines;
-                }
-
-                frmMidiLyrics.SetLyrics(myLyricsMgmt.KLyrics);
-            }
+           
         }
 
 
@@ -4278,17 +4080,20 @@ namespace Karaboss
             frmMidiLyrics.Activate();
 
             // cas d'une playlist ou non : met à jour le diaporama
-            SetSlideShow();
+            //SetSlideShow();
 
         }
 
         /// <summary>
         /// If the song is part of a playlist, set the diaporama defined for this song or the default one if not defined
         /// </summary>
+        /*
         private void SetSlideShow()
         {
             if (frmMidiLyrics == null) return;
-            
+
+            string dirSlideShow;
+
             // cas d'une playlist ou non : met à jour le diaporama
             if (currentPlaylistItem != null)
             {
@@ -4310,8 +4115,7 @@ namespace Karaboss
                 frmMidiLyrics.SetSlideShow(dirSlideShow);
             }            
         }
-
-
+        */
 
         /// <summary>
         /// Display the form for lyrics edition
@@ -4601,8 +4405,8 @@ namespace Karaboss
                 MIDIfileFullPath = fileName;
 
                 // Load file
-                sequence1.LoadProgressChanged += HandleLoadProgressChanged;
-                sequence1.LoadCompleted += HandleLoadCompleted;
+                sequence1.LoadProgressChanged += HandleLoadMidiProgressChanged;
+                sequence1.LoadCompleted += HandleLoadMidiCompleted;
 
                 SelectFileToLoadAsync();
 
@@ -4924,6 +4728,8 @@ namespace Karaboss
         private void mnuDisplayChords_Click(object sender, EventArgs e)
         {
             mnuDisplayChords.Checked = !mnuDisplayChords.Checked;
+            btnUpdateChords.Visible = mnuDisplayChords.Checked;
+
 
             if (Application.OpenForms.OfType<frmMidiLyrics>().Count() > 0)
             {
@@ -6552,38 +6358,46 @@ namespace Karaboss
 
         #region Playlists
 
-        // Select and load next playlist item
-        private void SelectNextPlaylistSong()
+        // PlayNextPlaylistSong
+        // SelectFileToLoadAsync
+        // LoadAsyncMidiFile
+        // 
+
+        private void PlayNextPlaylistSong()
         {
+            // If single song (no playlist) => STOP
             if (currentPlaylist == null)
             {
-                // FAB 30/09/2018 !!!!
-                // Ne s'arrête jamais
-                PlayerState = PlayerStates.Stopped;
+                StopMusic();
                 return;
             }
 
+            // Select next song of the playlist
             PlaylistItem pli = currentPlaylistItem;
+            if (pli == null) return;
 
-            // Select next item            
             currentPlaylistItem = currentPlaylist.Next(pli);
 
             // Stop if no other song to play
             if (pli == currentPlaylistItem)
             {
-                PlayerState = PlayerStates.Stopped;
-                BtnStatus();
+                StopMusic();
                 return;
             }
 
-            // Load file
+            StopMusic();
+
+            // Next song of the playlist
             MIDIfileName = currentPlaylistItem.Song;
             MIDIfileFullPath = currentPlaylistItem.File;
 
+            
             // Select which type a file it is
             SelectFileToLoadAsync();
+
         }
 
+       
         /// <summary>
         /// Select action to perform betwwen 2 songs according to user's choices
         /// Pause, Count Down, play asap
@@ -6599,12 +6413,12 @@ namespace Karaboss
                 PlayerState = PlayerStates.LaunchNextSong;
                 BtnStatus();
 
-                #region display singer in the Lyrics form
+                #region Display singer in the Lyrics form
+
                 // Display the Lyric form even if no lyrics in order to display the singer
                 if (Application.OpenForms.OfType<frmMidiLyrics>().Count() == 0)
                 {
-                    frmMidiLyrics = new frmMidiLyrics(myLyricsMgmt, MIDIfileFullPath, currentPlaylist);
-                    //frmMidiLyrics.Owner = this;
+                    frmMidiLyrics = new frmMidiLyrics(myLyricsMgmt, MIDIfileFullPath, currentPlaylist);                    
                     frmMidiLyrics.Show();
                 }
                 
@@ -6633,17 +6447,18 @@ namespace Karaboss
                     }
 
                     // arriere plan provisoire
-                    frmMidiLyrics.AlloModifyDirSlideShow = true;
-                    frmMidiLyrics.DirSlideShow = Properties.Settings.Default.dirSlideShow;
-                    frmMidiLyrics.AlloModifyDirSlideShow = false;
+                    //frmMidiLyrics.AlloModifyDirSlideShow = true;
+                    //frmMidiLyrics.DirSlideShow = Properties.Settings.Default.dirSlideShow;
+                    //frmMidiLyrics.AlloModifyDirSlideShow = false;
 
                                       
-                    frmMidiLyrics.bTextBackGround = false;
+                    //frmMidiLyrics.bTextBackGround = false;
 
                     // Display next singer in lyrics form
                     frmMidiLyrics.DisplayText(lstSingerInfos);
                 }
-                #endregion
+                
+                #endregion Display singer in the Lyrics form
 
                 // Focus on paused windows
                 this.Restore();
@@ -6677,8 +6492,8 @@ namespace Karaboss
             BtnStatus();
 
             w_tick = 0;
-            int sec = Karaclass.m_CountdownSongs;  // wait for x seconds
-            w_wait = sec + 1; 
+            int seconds = Karaclass.m_CountdownSongs;  // wait for x seconds
+            w_wait = seconds + 1; 
 
             // Open form if not present
             if (Application.OpenForms.OfType<frmMidiLyrics>().Count() == 0)
@@ -6686,8 +6501,15 @@ namespace Karaboss
                 frmMidiLyrics = new frmMidiLyrics(myLyricsMgmt, MIDIfileFullPath, currentPlaylist);               
                 frmMidiLyrics.Show();                           
             }
+            else
+            {
+                frmMidiLyrics.FileName = Path.GetFileNameWithoutExtension(MIDIfileFullPath);
+            }
 
-            frmMidiLyrics.LoadWaitSong(sec);
+            // Force background for the countdown to solid color
+            frmMidiLyrics.OptionBackground = "SolidColor";
+
+            frmMidiLyrics.LoadWaitSong(seconds);
 
             timerCountdown.Interval = 1000;  // interval = 1 sec      
             timerCountdown.Enabled = true;
@@ -6782,6 +6604,36 @@ namespace Karaboss
             OpenMidiFileOptions.SplitHands = false;
         }
 
+
+        private void ManageCountdownEnding()
+        {
+            if (currentPlaylistItem == null) return;
+
+            // Pause between 2 songs of a playlist: nothing to do
+
+            if (Karaclass.m_CountdownSongs > 0)
+            {
+                // Countdown terminated                
+                if (Application.OpenForms.OfType<frmMidiLyrics>().Count() > 0)
+                {
+                    // Force slide show of current playlist item if any
+                    if (currentPlaylistItem.DirSlideShow != null && currentPlaylistItem.DirSlideShow != string.Empty && Directory.Exists(currentPlaylistItem.DirSlideShow))
+                    {
+                        frmMidiLyrics.OptionBackground = "Diaporama";
+                        frmMidiLyrics.DirSlideShow = currentPlaylistItem.DirSlideShow;
+                    }
+                    else
+                    {
+                        // Restore settings if no slideshow for the playlist item
+                        frmMidiLyrics.OptionBackground = Properties.Settings.Default.BackGroundOption;
+                    }
+                    
+                    // Display layout (Four lines swapped, fixed lines etc...)
+                    frmMidiLyrics.KaraokeDisplayType = Properties.Settings.Default.KaraokeDisplayType;                 
+                }
+            }
+        }
+       
 
         #endregion Playlists
 
@@ -7148,6 +7000,14 @@ namespace Karaboss
 
         private void ResetPlaySettings()
         {
+            loading = false;
+            laststart = 0;
+
+            mnuFileOpen.Enabled = true;
+            progressBarPlayer.Value = 0;
+            progressBarPlayer.Visible = false;
+
+
             // Reset settings made for previous song
             sldMainVolume.Value = 104;
             TempoDelta = 100;
@@ -7155,17 +7015,8 @@ namespace Karaboss
             TransposeDelta = 0;
             lblTranspoValue.Text = string.Format("{0}", TransposeDelta);
 
-
             // Mute melody track
-            if (Karaclass.m_MuteMelody == true || (currentPlaylist != null && currentPlaylistItem.MelodyMute == true))
-            {
-                btnMute1.Checked = false;
-            }
-            else
-            {
-                btnMute1.Checked = true;
-            }
-
+            btnMute1.Checked = !Karaclass.m_MuteMelody;
         }
 
         #endregion
@@ -7590,13 +7441,14 @@ namespace Karaboss
             if (Karaclass.m_ShowChords && myLyricsMgmt.bHasChordsInLyrics && myLyricsMgmt.ChordsOriginatedFrom == MidiLyricsMgmt.ChordsOrigins.Lyrics)
             {
                 myLyricsMgmt.TransposeChordsInLyrics(TransposeDelta);
-                frmMidiLyrics?.SetLyrics(myLyricsMgmt.KLyrics);
+                if (Application.OpenForms.OfType<frmMidiLyrics>().Count() > 0)
+                    frmMidiLyrics?.SetLyrics(myLyricsMgmt.KLyrics, sequence1.Division, myLyricsMgmt.FirstMelodyNoteTicksOn, MIDIfileName);
             }
             else if (Karaclass.m_ShowChords && myLyricsMgmt.ChordsOriginatedFrom == MidiLyricsMgmt.ChordsOrigins.Discovery)
-            {
-                
+            {                
                 myLyricsMgmt.ResetDisplayChordsOptions(true);
-                frmMidiLyrics?.SetLyrics(myLyricsMgmt.KLyrics);
+                if (Application.OpenForms.OfType<frmMidiLyrics>().Count() > 0)
+                    frmMidiLyrics?.SetLyrics(myLyricsMgmt.KLyrics, sequence1.Division, myLyricsMgmt.FirstMelodyNoteTicksOn, MIDIfileName);
             }
 
 
@@ -7604,12 +7456,8 @@ namespace Karaboss
             if (bSequencerAlwaysOn | bForceShowSequencer)
             {
                 RedrawSheetMusic();
-
                 RefreshChordsSheetMusic();
-
             }
-
-
 
             btnTempoMinus.Enabled = true;
             btnTranspoPlus.Enabled = true;
@@ -7626,6 +7474,217 @@ namespace Karaboss
 
 
         #endregion Tempo, Transposition
+
+
+        #region Text, Xml Import/export
+
+        #region Text import/export
+        /// <summary>
+        /// Export Midi file to normalized text dump
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void MnuFileExportMidiToText_Click(object sender, EventArgs e)
+        {
+            ExportMidiToText();
+        }
+
+        /// <summary>
+        /// Dump Midi to text
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void btnDump_Click(object sender, EventArgs e)
+        {
+            ExportMidiToText();
+        }
+
+        /// <summary>
+        /// Save async midi dump to text file
+        /// </summary>
+        private void ExportMidiToText()
+        {
+            if (MIDIfilePath == null)
+                return;
+
+            string name = Path.GetFileNameWithoutExtension(MIDIfileName) + " (Dump)";
+            string file = string.Empty;
+            file = string.Format("{0}\\{1}{2}", MIDIfilePath, name, ".txt");
+
+            MTxtWriter = new MusicTxtWriter(sequence1, file);
+            MTxtWriter.WriteTxtCompleted += MTxtWriter_WriteTxtCompleted;
+            MTxtWriter.WriteTxtProgressChanged += MTxtWriter_WriteTxtProgressChanged;
+            MTxtWriter.WriteTxtAsync(file);
+        }
+
+        private void MTxtWriter_WriteTxtProgressChanged(object sender, ProgressChangedEventArgs e)
+        {
+            //throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// Event: dump midi file completed
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void MTxtWriter_WriteTxtCompleted(object sender, AsyncCompletedEventArgs e)
+        {
+            string file = ((MusicTxtWriter)sender).fileName;
+            try
+            {
+                System.Diagnostics.Process.Start(@file);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+
+        /// <summary>
+        /// Import a normalized text file
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void MnuFileImportMidiFromText_Click(object sender, EventArgs e)
+        {
+            importMidiFileFromText();
+        }
+
+        private void importMidiFileFromText()
+        {
+            openMidiFileDialog.Title = "Open Text file";
+            openMidiFileDialog.DefaultExt = "txt";
+            openMidiFileDialog.Filter = "Text files|*.txt|All files|*.*";
+            openMidiFileDialog.InitialDirectory = MIDIfilePath;
+
+            if (openMidiFileDialog.ShowDialog() == DialogResult.OK)
+            {
+                string fileName = openMidiFileDialog.FileName;
+                LoadAsyncTxtFile(fileName);
+            }
+        }
+
+        #endregion Text import/export
+
+
+        #region Xml import/export
+        /// <summary>
+        /// Import a MusicXml file to Midi
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void MnuFileImportMusicXml_Click(object sender, EventArgs e)
+        {
+            openMidiFileDialog.Title = "Open MusicXml file";
+            openMidiFileDialog.DefaultExt = "xml";
+            openMidiFileDialog.Filter = "Xml files|*.xml|MusicXml files|*.musicxml|All files|*.*";
+            openMidiFileDialog.InitialDirectory = MIDIfilePath;
+
+            if (openMidiFileDialog.ShowDialog() == DialogResult.OK)
+            {
+                string fileName = openMidiFileDialog.FileName;
+
+                // Load xml file and display messages
+                LoadXmlFile(fileName, false);
+            }
+        }
+
+        private bool LoadXmlFile(string fileName, bool bsilentmode)
+        {
+            MIDIfilePath = Path.GetDirectoryName(fileName);
+
+            //string fExt = Path.GetExtension(fileName);             // Extension
+            string fName = Path.GetFileNameWithoutExtension(fileName);    // name without extension
+            MIDIfileName = fName + ".mid";
+            MIDIfileFullPath = Path.Combine(MIDIfilePath, MIDIfileName);
+
+            // Load xml file                
+            MusicXmlReader M = new MusicXmlReader();
+
+            // Show Xml chords?
+            M.PlayXmlChords = Karaclass.m_ShowXmlChords;
+
+            sequence1 = M.Read(fileName, false);
+
+            if (sequence1 == null)
+            {
+                if (!bsilentmode)
+                    MessageBox.Show("Invalid MusicXml file", "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return false;
+            }
+
+            // load lyrics and chords if included in lyrics
+            //  ********************** Why not load embedded chords here if bShowChords is true ? *****************
+            myLyricsMgmt = new MidiLyricsMgmt(sequence1);
+
+
+
+            laststart = 0;
+            // Remove all MIDI events after last note
+            sequence1.Clean();
+
+            ResetSequencer();
+
+            sequencer1.Sequence = sequence1;
+            UpdateMidiTimes();
+            DisplaySongDuration(_duration);
+
+            positionHScrollBarNew.Value = 0;
+            positionHScrollBarNew.Maximum = _totalTicks;
+
+            // ----------------------------------------------------------------
+            // Display Scores on panel pnlScrollView
+            // ----------------------------------------------------------------
+            DisplayScores();
+
+            // Display song duration
+            DisplaySongDuration(_duration);
+
+            // Display track controls             
+            DisplayTrackControls();
+
+            // Reset tracks stuff
+            InitTracksStuff();
+
+            // Recherche si des lyrics existent et affiche la forme frmMidiLyrics
+            mnuDisplayLyricsWindows.Checked = bKaraokeAlwaysOn;
+
+            if (bKaraokeAlwaysOn && myLyricsMgmt.bHasLyrics)
+                DisplayLyricsForm();
+
+            // Display log file
+            if (sequence1.Log != "")
+            {
+                lblChangesInfos.Text = sequence1.Log;
+            }
+
+            DisplayFileInfos();
+            DisplayLyricsInfos();
+
+            // Display title
+            SetTitle(MIDIfileName);
+
+            // File is new
+            if (bsilentmode)
+                FileModified();
+
+            return true;
+        }
+
+        /// <summary>
+        /// Export Midi to MusicXml format file
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void MnuFileExportToMusicXml_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        #endregion Xml import/export
+
+        #endregion Text, Xml Import/export
 
 
         #region TimeLine
@@ -7718,9 +7777,10 @@ namespace Karaboss
                         break;                        
 
                     case PlayerStates.NextSong:                        
-                        AfterStopped();                        
+                        //AfterStopped();                        
                         // Select next song of a playlist                        
-                        SelectNextPlaylistSong();                       
+                        //SelectNextPlaylistSong();
+                        PlayNextPlaylistSong();
                         break;
 
                     case PlayerStates.Waiting:        // Count down running between 2 songs of a playlist     
@@ -7778,7 +7838,7 @@ namespace Karaboss
             if (PlayerState == PlayerStates.Playing)
             {
                 if (Application.OpenForms.OfType<frmMidiLyrics>().Count() > 0 && myLyricsMgmt.KLyrics.Lines.Count > 0)
-                    frmMidiLyrics?.SendPlayerPositionToKaraoke(sequencer1.Position);  //frmMidiLyrics.ColorLyric(sequencer1.Position);
+                    frmMidiLyrics?.SendPlayerPositionToKaraoke(sequencer1.Position);  
             }
         }
 
@@ -7791,11 +7851,9 @@ namespace Karaboss
         private void Timer3_Tick(object sender, EventArgs e)
         {
             // 21 balls: 1 fix, 20 moving to the fix one
-            if (Application.OpenForms.OfType<frmMidiLyrics>().Count() > 0)
-            {
+            if (Application.OpenForms.OfType<frmMidiLyrics>().Count() > 0)            
                 frmMidiLyrics?.MoveBalls(sequencer1.Position);
-
-            }
+            
         }
 
         
@@ -7882,20 +7940,16 @@ namespace Karaboss
 
             // Wait until X sec
             if (w_tick < w_wait)
-            {
-                //Console.WriteLine("w_tick = " + w_tick);
-                // color each second                             
-                //frmMidiLyrics?.ColorLyric(w_tick * 100);
-                frmMidiLyrics?.SendPlayerPositionToKaraoke(w_tick*100);
+            {              
+                // color each second                                          
+                if (Application.OpenForms.OfType<frmMidiLyrics>().Count() > 0)
+                    frmMidiLyrics?.SendPlayerPositionToKaraoke(w_tick*100);
 
             }
             else if (w_tick == w_wait)
-            {
-                // set syllabes to null               
-                //frmMidiLyrics?.EndWaitSong();
-
-                if (!myLyricsMgmt.bHasLyrics) {
-
+            {               
+                if (!myLyricsMgmt.bHasLyrics) 
+                {
                     if (Application.OpenForms.OfType<frmMidiLyrics>().Count() > 0)
                         frmMidiLyrics.Close();
                 }
@@ -7906,12 +7960,7 @@ namespace Karaboss
                 timerCountdown.Enabled = false;              
                 PlayerState = PlayerStates.Stopped;
 
-                // Restore display options modified by the wait animation
-                if (Application.OpenForms.OfType<frmMidiLyrics>().Count() > 0)
-                {
-                    frmMidiLyrics.LoadOptions();
-                    SetSlideShow();
-                }
+                ManageCountdownEnding();                
                 PlayPauseMusic();
 
             }
@@ -7944,6 +7993,8 @@ namespace Karaboss
             {
                 frmMidiLyrics.Start();
                 frmMidiLyrics.PlayStopActions(false);
+                // Send mandatory informations to lyrics form
+                frmMidiLyrics.SetLyrics(myLyricsMgmt.KLyrics, sequence1.Division, myLyricsMgmt.FirstMelodyNoteTicksOn, MIDIfileName);
 
             }          
         }
@@ -9074,11 +9125,12 @@ namespace Karaboss
 
 
 
+
         #endregion Save File
 
         #endregion Utilities
 
-      
+        
     }
 
 }

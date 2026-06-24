@@ -45,7 +45,6 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement.TrayNotify;
 
 namespace Karaboss
 {
@@ -375,6 +374,10 @@ namespace Karaboss
         private readonly HashSet<Control> controlsToMove = new HashSet<Control>();
         #endregion
 
+
+        bool bPnlVisible = false;
+        DateTime startTime;
+
         #endregion Form
 
 
@@ -498,6 +501,27 @@ namespace Karaboss
             }
         }
 
+
+        private bool _bShowLogo;
+        public bool bShowLogo
+        {
+            get => _bShowLogo; 
+            set { _bShowLogo = value; 
+                pBox.bShowLogo = value;
+            }
+        }
+
+        private string _ImgLogo = "logo.png";       // Name of logo image (logo.png)
+        public string ImgLogo
+        {
+            get { return _ImgLogo; }
+            set
+            {
+                _ImgLogo = value;
+                pBox.ImgLogo = value;
+            }
+        }
+
         #endregion Picture
 
 
@@ -578,7 +602,7 @@ namespace Karaboss
 
 
         /// <summary>
-        /// Background option : Diaporam, SolidColor, Transparent
+        /// Background option : Diaporama, SolidColor, Transparent
         /// </summary>
         private string _optionbackground = "Image";
         public string OptionBackground
@@ -614,7 +638,7 @@ namespace Karaboss
                         pBox.OptionBackground = "Transparent";
                         break;
                     default:
-                        pBox.OptionBackground = "Diaporama";
+                        pBox.OptionBackground = "Image";
                         break;
                 }
             }
@@ -659,8 +683,7 @@ namespace Karaboss
                 if (value != _bForceUppercase)
                 {
                     _bForceUppercase = value;
-                    pBox.bforceUppercase = _bForceUppercase;
-                    SetLyrics(myLyricsMgmt.KLyrics);
+                    pBox.bforceUppercase = _bForceUppercase;                    
                 }
             }
         }
@@ -724,7 +747,6 @@ namespace Karaboss
         #endregion Text transform
 
       
-
         #endregion Declarations
 
 
@@ -745,10 +767,7 @@ namespace Karaboss
             pBox.FileName = Path.GetFileNameWithoutExtension(fileName);
 
             #region MIDI
-
-            BeatDuration = myLyricsMgmt.Division;
-            TotalTicks = myLyricsMgmt.TotalTicks;
-            Duration = myLyricsMgmt.Duration;
+           
             FirstMelodyNoteTicksOn = myLyricsMgmt.FirstMelodyNoteTicksOn;
 
             #endregion MIDI
@@ -757,11 +776,7 @@ namespace Karaboss
             #region Graphic optimization
 
             SetStyle(ControlStyles.AllPaintingInWmPaint | ControlStyles.OptimizedDoubleBuffer | ControlStyles.UserPaint, true);
-
-            //this.SetStyle(ControlStyles.AllPaintingInWmPaint, true);
-            //this.SetStyle(ControlStyles.ResizeRedraw, true);
-            //this.SetStyle(ControlStyles.OptimizedDoubleBuffer, true);
-            //this.SetStyle(ControlStyles.UserPaint, true);
+          
 
             #endregion Graphic optimization
 
@@ -772,8 +787,6 @@ namespace Karaboss
             controlsToMove.Add(this);
             // UserControls picball & pBox manage themselves this move.
             controlsToMove.Add(this.pnlWindow);
-            //controlsToMove.Add(this.pnlTittle);
-            //controlsToMove.Add(this.lblTittle);
 
             #endregion
 
@@ -989,13 +1002,7 @@ namespace Karaboss
 
         private void pBox_Options(object sender, EventArgs e)
         {
-            Cursor.Current = Cursors.WaitCursor;
-
-            if (Application.OpenForms.OfType<frmMidiLyrOptions>().Count() == 0)
-            {
-                frmMidiLyrOptions frmMidiLyrOptions = new frmMidiLyrOptions();
-                frmMidiLyrOptions.Show();
-            }
+            DisplayOptions();
         }
 
         private void pBox_FullScreen(object sender, EventArgs e)
@@ -1037,13 +1044,7 @@ namespace Karaboss
             // FAB 05/09/2024
             pBox.Dispose();
             picBalls.Stop();
-            picBalls.Dispose();
-
-            if (Application.OpenForms.OfType<frmMidiLyrOptions>().Count() > 0)
-            {
-                frmMidiLyrOptions frmMidiLyrOptions = Utilities.FormUtilities.GetForm<frmMidiLyrOptions>();
-                frmMidiLyrOptions?.Dispose();
-            }
+            picBalls.Dispose();            
 
             base.OnClosed(e);
         }
@@ -1097,6 +1098,14 @@ namespace Karaboss
                 Properties.Settings.Default.Save();
             }
 
+            // Close options form
+            if (Application.OpenForms.OfType<frmMidiLyrOptions>().Count() > 0)
+            {
+                frmMidiLyrOptions frmMidiLyrOptions = Utilities.FormUtilities.GetForm<frmMidiLyrOptions>();
+                frmMidiLyrOptions?.Dispose();
+            }
+
+
             Dispose();
 
         }
@@ -1128,6 +1137,27 @@ namespace Karaboss
 
 
         #endregion Form events
+
+
+        #region Show frmMidiLyrOptions
+
+        private void DisplayOptions()
+        {            
+            if (Application.OpenForms.OfType<frmMidiLyrOptions>().Count() == 0)
+            {
+                Cursor.Current = Cursors.WaitCursor;
+
+                frmMidiLyrOptions frmMidiLyrOptions = new frmMidiLyrOptions();
+                frmMidiLyrOptions.Show();
+            }
+            else
+            {
+                frmMidiLyrOptions frmMidiLyrOptions = Utilities.FormUtilities.GetForm<frmMidiLyrOptions>();
+                frmMidiLyrOptions.Focus();
+            }
+        }
+
+        #endregion Show frmMidiLyrOptions
 
 
         #region initializations
@@ -1166,6 +1196,12 @@ namespace Karaboss
                 // Display file name in lyrics as title
                 pBox.bShowSongName = Properties.Settings.Default.bShowSongName;
 
+                // Logo image name (logo.png)
+                ImgLogo = Properties.Settings.Default.Logo;
+
+                // Display the logo image
+                bShowLogo = Properties.Settings.Default.bShowLogo;
+
                 // Progressive highlight
                 bProgressiveHighlight = Properties.Settings.Default.bProgressiveHighlight;
 
@@ -1176,7 +1212,21 @@ namespace Karaboss
                 // Force Uppercase
                 bForceUppercase = Karaclass.m_ForceUppercase;
 
-                
+
+                string path = Properties.Settings.Default.SingleImagePath;
+                if (!System.IO.File.Exists(path))
+                {
+                    string folderpath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), Application.ProductName);
+                    path = folderpath + "\\" + "background_orange.jpg";
+                    if (System.IO.File.Exists(path))
+                    {
+                        Properties.Settings.Default.SingleImagePath = path;
+                        Properties.Settings.Default.Save();
+                    }
+                }
+                SingleImagePath = path;
+
+
                 // Backgrounds (image, diaporama, solid color, gradient, rhythm, transparent)
                 OptionBackground = Properties.Settings.Default.BackGroundOption;
 
@@ -1202,7 +1252,7 @@ namespace Karaboss
                 // Number of Lines to display
                 nbLyricsLines = Properties.Settings.Default.TxtNbLines;
 
-                SingleImagePath = Properties.Settings.Default.SingleImagePath;
+                
                 
                 // Frequency of slide show
                 FreqSlideShow = Properties.Settings.Default.freqSlideShow;
@@ -1214,13 +1264,9 @@ namespace Karaboss
 
                 pBox.timerIntervall = _timerintervall;
 
-
                 // show balls
                 bShowBalls = Karaclass.m_DisplayBalls;
-
-               
-                
-
+                               
             }
             catch (Exception e)
             {
@@ -1264,7 +1310,13 @@ namespace Karaboss
                 // Show hints (introduction, instrumental, ending)
                 bShowHints = Properties.Settings.Default.bShowHints;
 
+                // Display song name
                 bShowSongName = Properties.Settings.Default.bShowSongName;
+
+                // Display logo
+                bShowLogo = Properties.Settings.Default.bShowLogo;
+                ImgLogo = Properties.Settings.Default.Logo;
+
 
                 //Window lyrics TopMost
                 bTopMost = Properties.Settings.Default.frmMidiLyricsTopMost;
@@ -1328,28 +1380,48 @@ namespace Karaboss
 
 
         #region Lyrics 
-
+      
         /// <summary>
         /// Load song in picturebox control
         ///  1/4 = LineFeed
         ///  1/2 = Paragraph
         /// </summary>
-        public void SetLyrics(kLyrics kl)
+        public void SetLyrics(kLyrics kl, int beatduration, int firstmelodynotetickson, string filename)
         {
             currentTextPos = 0;
+
+            BeatDuration = beatduration;
+            FirstMelodyNoteTicksOn = firstmelodynotetickson;
+            FileName = filename;
 
             // Load kLyrics with kLyrics to have all the information for chords and lyrics positions, used for balls animation
             if (Karaclass.m_ShowChords && myLyricsMgmt != null && myLyricsMgmt.ChordsOriginatedFrom == MidiLyricsMgmt.ChordsOrigins.Lyrics)
             {
                 kl = RemoveChordsFromLyrics(kl);
             }
-            
-            pBox.KLyrics = kl;
 
-            // Force Uppercase         
-            pBox.bforceUppercase = _bForceUppercase;
-            pBox.bShowChords = Karaclass.m_ShowChords;
 
+            #region restore options
+
+            // Restore karaoke display type if a pause was set before (KaraokeDisplayType = Information)
+            KaraokeDisplayType = Properties.Settings.Default.KaraokeDisplayType;
+
+            // Restore background Slideshow
+            if (currentPlaylist != null && currentPlaylistItem != null && currentPlaylistItem.DirSlideShow != string.Empty)
+            {
+                OptionBackground = "Diaporama";
+                DirSlideShow = currentPlaylistItem.DirSlideShow;
+            }
+            else
+            {
+                OptionBackground = Properties.Settings.Default.BackGroundOption;
+                DirSlideShow = Properties.Settings.Default.dirSlideShow;                
+            }
+            #endregion Restore options
+
+            pBox.Populate(kl, myLyricsMgmt.Duration, myLyricsMgmt.TotalTicks, beatduration, firstmelodynotetickson, Path.GetFileNameWithoutExtension(filename), _bForceUppercase, Karaclass.m_ShowChords);
+
+           
             // Load balls times after having loaded the kLyrics in the pBox because the kLyrics are transformed (trailing spaces added, instrumental parts etc...) and the balls times are based on the kLyrics syllabes positions
             if (bShowBalls)
                 LoadBallsTimes(kl);
@@ -1416,6 +1488,7 @@ namespace Karaboss
 
         public void DisplayText(List<string>Lines)
         {
+            pBox.OptionBackground = "Image";
             pBox.DisplayText(Lines);
         }
 
@@ -1567,7 +1640,7 @@ namespace Karaboss
                 myLyricsMgmt.ResetDisplayChordsOptions(chkChords.Checked);
 
                 // Load modified lyrics into the picturebox
-                SetLyrics(myLyricsMgmt.KLyrics);
+                SetLyrics(myLyricsMgmt.KLyrics, BeatDuration, FirstMelodyNoteTicksOn, FileName);
 
                 // Refresh score with or without chords
                 frmMidiPlayer frmMidiPlayer = Utilities.FormUtilities.GetForm<frmMidiPlayer>();
@@ -1575,9 +1648,7 @@ namespace Karaboss
 
                 // Set cursor as default
                 Cursor.Current = Cursors.Default;
-
             }
-
         }
 
         /// <summary>
@@ -1675,18 +1746,8 @@ namespace Karaboss
         /// <param name="e"></param>
         private void BtnFrmOptions_Click(object sender, EventArgs e)
         {
-            Cursor.Current = Cursors.WaitCursor;
-
-            if (Application.OpenForms.OfType<frmMidiLyrOptions>().Count() == 0)
-            {
-                frmMidiLyrOptions frmMidiLyrOptions = new frmMidiLyrOptions();                
-                frmMidiLyrOptions.Show();
-            }
-        }
-
-
-        bool bPnlVisible = false;
-        DateTime startTime;
+            DisplayOptions();
+        }      
 
         /// <summary>
         /// Show panel on mouse move with a timer
@@ -1788,16 +1849,19 @@ namespace Karaboss
         /// La cinématique d'attente bouzille tout
         /// </summary>
         /// <param name="dirSlideShow"></param>
+        /*
         public void SetSlideShow(string dirSlideShow)
         {
             DirSlideShow = dirSlideShow;
         }
+        */
 
         /// <summary>
         /// Use case : Plalist
         /// Force Slideshow backgroud if it was requested in the playlist, even if the option is not set in the display options
         /// </summary>
         /// <param name="dirSlideShow"></param>
+        /*
         public void ForceSlideShow(string dirSlideShow)
         {
             OptionBackground = "Diaporama";
@@ -1805,11 +1869,13 @@ namespace Karaboss
             pBox.FreqSlideShow = Properties.Settings.Default.freqSlideShow;            
             
         }
+        */
 
         /// <summary>
         /// Use case: Playlists
         /// No slide show was requested in the playlist, but the slideshow was forced for the previous song, so restore background option to the one set in display options
         /// </summary>
+        /*
         public void RestoreBackgroundAnimation()
         {
             _optionbackground = Properties.Settings.Default.BackGroundOption;
@@ -1822,7 +1888,8 @@ namespace Karaboss
 
             pBox.OptionBackground = _optionbackground;
         }
-
+        */
+        
         #endregion SlideShow
 
 

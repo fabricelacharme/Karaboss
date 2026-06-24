@@ -35,7 +35,6 @@
 using kar;
 using Karaboss.Mp3.Mp3Lyrics;
 using Karaboss.Themes;
-using Karaboss.Utilities;
 using keffect;
 using System;
 using System.Collections.Generic;
@@ -244,6 +243,21 @@ namespace Karaboss.Mp3
             }
         }
 
+        private string _fileName = "Song name";
+        public string FileName                  // Name of the song to display on the screen (Filename without extension)
+        {
+            get { return _fileName; }
+            set
+            {
+                if (value != null)
+                {
+                    _fileName = value;
+                    if (_bShowSongName)
+                        karaokeEffect1.FileName = _fileName;
+                }
+            }
+        }
+
         #endregion Draw filename
 
 
@@ -425,6 +439,29 @@ namespace Karaboss.Mp3
                 karaokeEffect1.SizeMode = _sizeMode;
             }
         }
+
+        private bool _bShowLogo;
+        public bool bShowLogo
+        {
+            get => _bShowLogo;
+            set
+            {
+                _bShowLogo = value;
+                karaokeEffect1.bShowLogo = value;
+            }
+        }
+
+        private string _ImgLogo = "logo.png";       // Name of logo image (logo.png)
+        public string ImgLogo
+        {
+            get { return _ImgLogo; }
+            set
+            {
+                _ImgLogo = value;
+                karaokeEffect1.ImgLogo = value;
+            }
+        }
+
 
         #endregion Picture
 
@@ -662,11 +699,7 @@ namespace Karaboss.Mp3
 
             SetStyle(ControlStyles.AllPaintingInWmPaint | ControlStyles.OptimizedDoubleBuffer | ControlStyles.UserPaint, true);
 
-            //this.SetStyle(ControlStyles.AllPaintingInWmPaint, true);
-            //this.SetStyle(ControlStyles.ResizeRedraw, true);
-            //this.SetStyle(ControlStyles.OptimizedDoubleBuffer, true);
-            //this.SetStyle(ControlStyles.UserPaint, true);
-
+            
             #endregion Graphic optimization
 
 
@@ -694,6 +727,7 @@ namespace Karaboss.Mp3
 
 
             #region playlists
+
             if (myPlayList != null)
             {
                 // Playlists
@@ -840,13 +874,7 @@ namespace Karaboss.Mp3
 
         private void karaokeEffect1_Options(object sender, EventArgs e)
         {
-            Cursor.Current = Cursors.WaitCursor;
-
-            if (Application.OpenForms.OfType<frmMp3LyrOptions>().Count() == 0)
-            {
-                frmMp3LyrOptions frmMp3LyrOptions = new frmMp3LyrOptions();
-                frmMp3LyrOptions.Show();
-            }
+            DisplayOptions();
         }
 
         private void karaokeEffect1_FullScreen(object sender, EventArgs e)
@@ -866,6 +894,27 @@ namespace Karaboss.Mp3
         #endregion Events
 
 
+        #region Show frmMp3LyrOptions
+
+        private void DisplayOptions()
+        {
+            
+            if (Application.OpenForms.OfType<frmMp3LyrOptions>().Count() == 0)
+            {
+                Cursor.Current = Cursors.WaitCursor;
+                frmMp3LyrOptions frmMp3LyrOptions = new frmMp3LyrOptions();
+                frmMp3LyrOptions.Show();
+            }
+            else
+            {
+                frmMp3LyrOptions frmMp3LyrOptions = Utilities.FormUtilities.GetForm<frmMp3LyrOptions>();
+                frmMp3LyrOptions.Focus();
+            }
+        }
+
+        #endregion Show frmMp3LyrOptions
+
+
         #region initializations
 
         /// <summary>
@@ -879,7 +928,7 @@ namespace Karaboss.Mp3
                 LoadColorsFromCurrentTheme();
 
 
-                // Karaoke display type
+                // Karaoke display type: Fixed lines, four lines swapped etc..
                 KaraokeDisplayType = Properties.Settings.Default.KaraokeDisplayType;               // setting this property set the karaokeEffect1.KaraokeDisplayType property
 
                 // Lyrics border effect 
@@ -903,6 +952,12 @@ namespace Karaboss.Mp3
                 // Display file name in lyrics as title
                 karaokeEffect1.bShowSongName = Properties.Settings.Default.bShowSongName;
 
+                // Logo image name (logo.png)
+                ImgLogo = Properties.Settings.Default.Logo;
+                
+                // Display the logo image
+                bShowLogo = Properties.Settings.Default.bShowLogo;
+
                 // Progressive highlight
                 bProgressiveHighlight = Properties.Settings.Default.bProgressiveHighlight;
 
@@ -911,6 +966,21 @@ namespace Karaboss.Mp3
 
                 // show balls
                 bShowBalls = Karaclass.m_DisplayBalls;
+
+
+                string path = Properties.Settings.Default.SingleImagePath;
+                
+                if (!System.IO.File.Exists(path))
+                {
+                    string folderpath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), Application.ProductName);
+                    path = folderpath + "\\" + "background_orange.jpg";
+                    if (System.IO.File.Exists(path))
+                    {
+                        Properties.Settings.Default.SingleImagePath = path;
+                        Properties.Settings.Default.Save();
+                    }
+                }                
+                SingleImagePath = path;
 
                 // Backgrounds (image, diaporama, solid color, gradient, rhythm, transparent)
                 OptionBackground = Properties.Settings.Default.BackGroundOption;
@@ -943,7 +1013,7 @@ namespace Karaboss.Mp3
                 // Number of Lines to display
                 nbLyricsLines = Properties.Settings.Default.TxtNbLines;
 
-                SingleImagePath = Properties.Settings.Default.SingleImagePath;
+                
 
                 // Frequency of slide show
                 FreqSlideShow = Properties.Settings.Default.freqSlideShow;
@@ -996,7 +1066,12 @@ namespace Karaboss.Mp3
                 // Show hints (introduction, instrumental, ending)
                 bShowHints = Properties.Settings.Default.bShowHints;
 
+                // Display song name
                 bShowSongName = Properties.Settings.Default.bShowSongName;
+
+                // Display logo
+                bShowLogo = Properties.Settings.Default.bShowLogo;
+                ImgLogo = Properties.Settings.Default.Logo;
 
                 //Window lyrics TopMost
                 bTopMost = Properties.Settings.Default.frmMp3LyricsTopMost;
@@ -1066,9 +1141,34 @@ namespace Karaboss.Mp3
         /// Load lyrics into karaokeEffect1.KLyrics
         /// </summary>
         /// <param name="lyrics"></param>
-        public void SetLyrics(kLyrics lyrics)
-        {
-            karaokeEffect1.KLyrics = lyrics;
+        public void SetLyrics(kLyrics lyrics, double duration, string filename, PlaylistItem mplaylistitem = null)
+        {            
+            FileName = Path.GetFileNameWithoutExtension(filename);
+            Duration = 1000 * duration;
+            
+            if (mplaylistitem != null)
+                currentPlaylistItem = mplaylistitem;
+            
+            #region restore options
+
+            // Restore karaoke display type if a pause was set before (KaraokeDisplayType = Information)
+            KaraokeDisplayType = Properties.Settings.Default.KaraokeDisplayType;
+
+            // Restore background Slideshow
+            if (currentPlaylist != null && currentPlaylistItem != null && currentPlaylistItem.DirSlideShow != string.Empty)
+            {
+                OptionBackground = "Diaporama";
+                DirSlideShow = currentPlaylistItem.DirSlideShow;
+            }
+            else
+            {
+                OptionBackground = Properties.Settings.Default.BackGroundOption;
+                DirSlideShow = Properties.Settings.Default.dirSlideShow;                
+            }
+            #endregion Restore options
+
+            karaokeEffect1.Populate(lyrics, Duration, FileName, bForceUppercase);
+            
         }
 
         #endregion Lyrics
@@ -1214,6 +1314,7 @@ namespace Karaboss.Mp3
         /// <param name="text"></param>
         public void DisplayText(List<string> Lines)
         {
+            karaokeEffect1.OptionBackground = "Image";
             karaokeEffect1.DisplayText(Lines);
         }
 
@@ -1237,7 +1338,12 @@ namespace Karaboss.Mp3
         public void SendPlayerPositionToKaraoke(double position)
         {
             karaokeEffect1.SetPos(position * 1000);
+        }
 
+
+        public void SendPlayerVolumeToKaraoke(int Volume, int LeftLevel, int RightLevel)
+        {
+            karaokeEffect1.SetSoundVolume(Volume, LeftLevel, RightLevel);
         }
 
         #endregion public method
@@ -1295,6 +1401,15 @@ namespace Karaboss.Mp3
                 // Save settings
                 Properties.Settings.Default.Save();
             }
+
+            // Close options form
+            if (Application.OpenForms.OfType<frmMp3LyrOptions>().Count() > 0)
+            {
+                frmMp3LyrOptions frmMp3LyrOptions = Utilities.FormUtilities.GetForm<frmMp3LyrOptions>();
+                frmMp3LyrOptions?.Dispose();
+            }
+
+            Dispose();
         }
 
         private void frmMp3Lyrics_Load(object sender, EventArgs e)
@@ -1395,20 +1510,8 @@ namespace Karaboss.Mp3
         }
 
         private void btnFrmOptions_Click(object sender, EventArgs e)
-        {            
-            if (Application.OpenForms.OfType<frmMp3LyrOptions>().Count() == 0)
-            {
-                Cursor.Current = Cursors.WaitCursor;
-
-                frmMp3LyrOptions frmMp3LyrOptions = new frmMp3LyrOptions();
-                //frmMp3LyrOptions.ShowDialog();
-                frmMp3LyrOptions.Show();
-            }
-            else
-            {
-                frmMp3LyrOptions frmMp3LyrOptions = Utilities.FormUtilities.GetForm<frmMp3LyrOptions>();
-                frmMp3LyrOptions.Focus();
-            }
+        {
+            DisplayOptions();           
         }
 
         /// <summary>

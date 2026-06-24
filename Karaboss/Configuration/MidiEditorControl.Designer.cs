@@ -65,7 +65,7 @@
             0});
             this.UpDownTransposeAmount.Name = "UpDownTransposeAmount";
             this.UpDownTransposeAmount.Value = new decimal(new int[] {
-            2,
+            1,
             0,
             0,
             0});

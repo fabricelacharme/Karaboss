@@ -39,22 +39,10 @@
       <Value Profile="(Default)">False</Value>
     </Setting>
     <Setting Name="frmMidiLyricsLocation" Type="System.Drawing.Point" Scope="User">
-      <Value Profile="(Default)">0, 0</Value>
+      <Value Profile="(Default)">0, 200</Value>
     </Setting>
     <Setting Name="frmMidiLyricsSize" Type="System.Drawing.Size" Scope="User">
-      <Value Profile="(Default)">400, 600</Value>
-    </Setting>
-    <Setting Name="BgColor" Type="System.String" Scope="User">
-      <Value Profile="(Default)">#FCA903</Value>
-    </Setting>
-    <Setting Name="InactiveColor" Type="System.String" Scope="User">
-      <Value Profile="(Default)">#FFFFFF</Value>
-    </Setting>
-    <Setting Name="HighlightColor" Type="System.String" Scope="User">
-      <Value Profile="(Default)">#FFFF00</Value>
-    </Setting>
-    <Setting Name="ActiveColor" Type="System.String" Scope="User">
-      <Value Profile="(Default)">#00ACFF</Value>
+      <Value Profile="(Default)">1000, 600</Value>
     </Setting>
     <Setting Name="frmMidiLyricsEditMaximized" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
@@ -70,9 +58,6 @@
     </Setting>
     <Setting Name="dirSlideShow" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
-    </Setting>
-    <Setting Name="ActiveBorderColor" Type="System.String" Scope="User">
-      <Value Profile="(Default)">#010101</Value>
     </Setting>
     <Setting Name="freqSlideShow" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">10</Value>
@@ -102,7 +87,7 @@
       <Value Profile="(Default)">True</Value>
     </Setting>
     <Setting Name="BackGroundOption" Type="System.String" Scope="User">
-      <Value Profile="(Default)">Diaporama</Value>
+      <Value Profile="(Default)">Image</Value>
     </Setting>
     <Setting Name="frmPianoRollMaximized" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
@@ -198,7 +183,7 @@
       <Value Profile="(Default)">600, 600</Value>
     </Setting>
     <Setting Name="DisplayBalls" Type="System.Boolean" Scope="User">
-      <Value Profile="(Default)">True</Value>
+      <Value Profile="(Default)">False</Value>
     </Setting>
     <Setting Name="LyricsOptionDisplay" Type="System.String" Scope="User">
       <Value Profile="(Default)">Center</Value>
@@ -308,12 +293,6 @@
     <Setting Name="LyricsEditFont" Type="System.Drawing.Font" Scope="User">
       <Value Profile="(Default)">Segoe UI, 9pt</Value>
     </Setting>
-    <Setting Name="InactiveChordColor" Type="System.String" Scope="User">
-      <Value Profile="(Default)">#FF8C00</Value>
-    </Setting>
-    <Setting Name="HighlightChordColor" Type="System.String" Scope="User">
-      <Value Profile="(Default)">#FFFF00</Value>
-    </Setting>
     <Setting Name="bShowChords" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
     </Setting>
@@ -363,13 +342,13 @@
       <Value Profile="(Default)">2X1632326152222</Value>
     </Setting>
     <Setting Name="frmMp3LyricsLocation" Type="System.Drawing.Point" Scope="User">
-      <Value Profile="(Default)">0, 0</Value>
+      <Value Profile="(Default)">0, 200</Value>
     </Setting>
     <Setting Name="frmMp3LyricsMaximized" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
     </Setting>
     <Setting Name="frmMp3LyricsSize" Type="System.Drawing.Size" Scope="User">
-      <Value Profile="(Default)">600, 600</Value>
+      <Value Profile="(Default)">1000, 600</Value>
     </Setting>
     <Setting Name="frmMp3LyricsEditLocation" Type="System.Drawing.Point" Scope="User">
       <Value Profile="(Default)">0, 0</Value>
@@ -416,18 +395,6 @@
     <Setting Name="frmMidiLyricsTopMost" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
     </Setting>
-    <Setting Name="Grad0Color" Type="System.Drawing.Color" Scope="User">
-      <Value Profile="(Default)">MediumTurquoise</Value>
-    </Setting>
-    <Setting Name="Grad1Color" Type="System.Drawing.Color" Scope="User">
-      <Value Profile="(Default)">GreenYellow</Value>
-    </Setting>
-    <Setting Name="Rhythm0Color" Type="System.Drawing.Color" Scope="User">
-      <Value Profile="(Default)">Black</Value>
-    </Setting>
-    <Setting Name="Rhythm1Color" Type="System.Drawing.Color" Scope="User">
-      <Value Profile="(Default)">DodgerBlue</Value>
-    </Setting>
     <Setting Name="DefaultEncoding" Type="System.String" Scope="User">
       <Value Profile="(Default)">UTF8</Value>
     </Setting>
@@ -470,11 +437,8 @@
     <Setting Name="KfnBorderEffectIndex" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">2</Value>
     </Setting>
-    <Setting Name="InactiveBorderColor" Type="System.String" Scope="User">
-      <Value Profile="(Default)">#8000FF</Value>
-    </Setting>
     <Setting Name="FrameType" Type="System.String" Scope="User">
-      <Value Profile="(Default)">Frame1</Value>
+      <Value Profile="(Default)">Frame2</Value>
     </Setting>
     <Setting Name="frmMidiLyricMaximized" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
@@ -498,10 +462,7 @@
       <Value Profile="(Default)">200, 200</Value>
     </Setting>
     <Setting Name="KaraokeDisplayType" Type="System.String" Scope="User">
-      <Value Profile="(Default)">FixedLines</Value>
-    </Setting>
-    <Setting Name="ActiveInstrumentalColor" Type="System.String" Scope="User">
-      <Value Profile="(Default)">#808080</Value>
+      <Value Profile="(Default)">FourLinesSwapped</Value>
     </Setting>
     <Setting Name="Theme" Type="System.String" Scope="User">
       <Value Profile="(Default)">Default</Value>
@@ -510,7 +471,7 @@
       <Value Profile="(Default)" />
     </Setting>
     <Setting Name="SingleImagePath" Type="System.String" Scope="User">
-      <Value Profile="(Default)">orange.bmp</Value>
+      <Value Profile="(Default)">background_orange.jpg</Value>
     </Setting>
     <Setting Name="FontStretching" Type="System.String" Scope="User">
       <Value Profile="(Default)">Large</Value>
@@ -520,6 +481,12 @@
     </Setting>
     <Setting Name="bShowSongName" Description="Draw file name as title in lyrics" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="bShowLogo" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="Logo" Type="System.String" Scope="User">
+      <Value Profile="(Default)">logo.png</Value>
     </Setting>
   </Settings>
 </SettingsFile>

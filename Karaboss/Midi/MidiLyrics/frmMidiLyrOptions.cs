@@ -33,6 +33,7 @@
 #endregion
 using GradientApp;
 using kar;
+using Karaboss.Properties;
 using Karaboss.Resources.Localization;
 using Karaboss.Themes;
 using System;
@@ -184,6 +185,31 @@ namespace Karaboss
             }
         }
 
+        private bool _bShowLogo;
+        public bool bShowLogo
+        {
+            get { return _bShowLogo; }
+            set
+            {
+                _bShowLogo = value;
+                pBox.bShowLogo = _bShowLogo;
+            }
+        }
+
+        private string _ImgLogo = "logo.png"; // Name of logo image (logo.png)
+        public string ImgLogo
+        {
+            get { return _ImgLogo; }
+            set
+            {
+                if (value != null)
+                {
+                    _ImgLogo = value;
+                    pBox.ImgLogo = _ImgLogo;
+                }
+            }
+        }
+
         #endregion Picture
 
 
@@ -232,6 +258,9 @@ namespace Karaboss
 
             pBox.bIsSettings = true;
             pBox.LoadDemoText();
+
+            pBox.Populate(pBox.KLyrics, pBox.Duration, pBox.TotalTicks, pBox.BeatDuration, pBox.FirstMelodyNoteTicksOn, pBox.FileName, bForceUppercase, _bShowChords);
+
         }
 
 
@@ -322,8 +351,8 @@ namespace Karaboss
                 openFileDialog.Filter = "Image Files|*.jpg;*.jpeg;*.png;*.gif;*.tif;...|All files (*.*)|*.*";
                 openFileDialog.FileName = string.Empty;
 
-                var AppDataFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Karaboss");                              
-                if (SingleImagePath != null && SingleImagePath.Trim() != "" && System.IO.File.Exists(SingleImagePath))
+                var AppDataFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), Application.ProductName);                              
+                if (SingleImagePath != null && SingleImagePath.Trim() != string.Empty && System.IO.File.Exists(SingleImagePath))
                 {
                     openFileDialog.InitialDirectory = Path.GetDirectoryName(SingleImagePath);
                 }
@@ -1131,6 +1160,18 @@ namespace Karaboss
             pBox.bShowSongName = bShowSongName;
         }
 
+        /// <summary>
+        /// Display Logo image
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void chkShowLogo_CheckedChanged(object sender, EventArgs e)
+        {
+            bShowLogo = chkShowLogo.Checked;
+            pBox.bShowLogo = bShowLogo;
+        }
+
+
         #endregion events
 
 
@@ -1234,7 +1275,6 @@ namespace Karaboss
         }
 
         #endregion font 
-
       
 
         #region FrameType
@@ -1304,6 +1344,48 @@ namespace Karaboss
 
         #endregion gradient
 
+
+        #region Logo
+
+        private void btnSelectLogo_Click(object sender, EventArgs e)
+        {
+            string OriginalFile;
+            string SourceFile;
+            string NewFile;
+            
+            try
+            { 
+                openFileDialog.Filter = "Image Files|*.jpg;*.jpeg;*.png;*.gif;*.tif;...|All files (*.*)|*.*";
+                openFileDialog.FileName = string.Empty;
+
+                var AppDataFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), Application.ProductName);                                
+                OriginalFile = Path.Combine(AppDataFolder, _ImgLogo);
+
+                //openFileDialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyPictures);
+                // Open always in the AppData folder where the logo file is copied
+                openFileDialog.InitialDirectory = AppDataFolder;
+
+
+                if (openFileDialog.ShowDialog() == DialogResult.OK)
+                {
+                    SourceFile = openFileDialog.FileName;                    
+                    NewFile = Path.Combine(AppDataFolder, Path.GetFileName(SourceFile));
+                    
+                    // Copy the new logo into AppData folder
+                    if (SourceFile != NewFile)
+                        File.Copy(SourceFile, NewFile, true);
+                                        
+                    ImgLogo = Path.GetFileName(NewFile);                                     
+                    pBox.m_LogoImage = Image.FromFile(NewFile);                                        
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+}
+
+        #endregion Logo
 
         #region Lyrics decoration 
 
@@ -1523,8 +1605,7 @@ namespace Karaboss
             if (Application.OpenForms.OfType<frmMidiLyrics>().Count() > 0) {
                 frmMidiLyrics frmMidiLyrics = Utilities.FormUtilities.GetForm<frmMidiLyrics>();
                 frmMidiLyrics.ApplyFromOptionsForm();
-            }
-          
+            }          
         }
 
 
@@ -1645,6 +1726,14 @@ namespace Karaboss
 
                 // Show song name
                 chkShowSongName.Checked = Properties.Settings.Default.bShowSongName;
+
+                // Show logo
+                // Logo image name (logo.png)
+                ImgLogo = Properties.Settings.Default.Logo;                
+
+                bShowLogo = Properties.Settings.Default.bShowLogo;
+                chkShowLogo.Checked = bShowLogo;
+
 
                 // Display balls on lyrics
                 chkDisplayBalls.Checked = Karaclass.m_DisplayBalls;
@@ -1788,8 +1877,7 @@ namespace Karaboss
                         break;
                 }
                 #endregion SizeMode
-
-
+               
                 // Cancel changes
                 ThemeModified(false);
 
@@ -1925,6 +2013,10 @@ namespace Karaboss
 
                 // Show song name
                 Properties.Settings.Default.bShowSongName = chkShowSongName.Checked;
+
+                // Show logo
+                Properties.Settings.Default.bShowLogo = chkShowLogo.Checked;
+                Properties.Settings.Default.Logo = ImgLogo;
 
                 // Number of lines to display
                 Properties.Settings.Default.TxtNbLines = _nbLyricsLines;
@@ -2131,8 +2223,10 @@ namespace Karaboss
         }
 
 
+
+
         #endregion option form settings
 
-
+       
     }
 }
