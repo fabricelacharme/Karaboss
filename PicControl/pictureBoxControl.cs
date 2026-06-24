@@ -4480,7 +4480,8 @@ namespace PicControl
 
             // The vertical position is a fraction of _linesHeight, caculated with "PlayerPositionTicks/last line ticks"
 
-            vposition = (float)((PlayerPositionTicks) * ((float)_linesHeight / (_kLyrics.Lines.Last().Syllables.First().TicksOn)));
+            if (_kLyrics.Lines.Last().Syllables.Count > 0) 
+                vposition = (float)((PlayerPositionTicks) * ((float)_linesHeight / (_kLyrics.Lines.Last().Syllables.First().TicksOn)));
             
 
             for (int i = 0; i < _kLyrics.Lines.Count; i++)
@@ -4604,7 +4605,7 @@ namespace PicControl
             CurLineStart = _kLyrics.Lines[_FirstLineToShow].Syllables.First().TicksOn;
 
             // Much more gradual, focusing on the next line even if it's a paragraph
-            if (_FirstLineToShow + 1 < _kLyrics.Lines.Count)    //No !!! && _kLyrics.Lines[_FirstLineToShow + 1].Syllables.First().CharType != Syllable.CharTypes.ParagraphSep)
+            if (_FirstLineToShow + 1 < _kLyrics.Lines.Count)    
             {
                 NextLineStart = _kLyrics.Lines[_FirstLineToShow + 1].Syllables.First().TicksOn;
             }            

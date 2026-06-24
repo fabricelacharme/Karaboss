@@ -2375,7 +2375,7 @@ namespace Karaboss.MidiLyrics
                         result.Lines.Insert(0, new kLine() { Syllables = new List<Syllable>() { syll } });
                         bInserted = true;
                     }
-                    else if (startTime > result.Lines.Last().Syllables.Last().TicksOn)
+                    else if (result.Lines.Last().Syllables.Count > 0 &&  startTime > result.Lines.Last().Syllables.Last().TicksOn)
                     {
                         // Insert after last line
                         result.Lines.Add(new kLine() { Syllables = new List<Syllable>() { syll } });
