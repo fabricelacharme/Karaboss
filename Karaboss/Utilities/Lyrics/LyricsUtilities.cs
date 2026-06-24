@@ -1137,8 +1137,10 @@ namespace Karaboss.Utilities
         private static string GetPatternELRC(string[] lines)
         {
             string line;
-            string pattern3digits = @"(?:\[(\d{2}:\d{2}\.\d{3})\]|<(\d{2}:\d{2}\.\d{3})>)(\S+)";
-            string pattern2digits = @"(?:\[(\d{2}:\d{2}\.\d{2})\]|<(\d{2}:\d{2}\.\d{2})>)(\S+)";
+            //string pattern3digits = @"(?:\[(\d{2}:\d{2}\.\d{3})\]|<(\d{2}:\d{2}\.\d{3})>)(\S+)";
+            //string pattern2digits = @"(?:\[(\d{2}:\d{2}\.\d{2})\]|<(\d{2}:\d{2}\.\d{2})>)(\S+)";
+            string pattern3digits = @"\[[0-9]{2}\:[0-9]{2}(\.[0-9]{3})?\]([\w:\s]+)";                   // space before or after "[00:08.99] Y'a<00:09.26> des" or "[00:08.99]Y'a <00:09.26>des "
+            string pattern2digits = @"\[[0-9]{2}\:[0-9]{2}(\.[0-9]{2})?\]([\w:\s]+)";
 
             // Select right pattern
             int digits3 = 0;
