@@ -38,20 +38,21 @@
             this.chkAlphaNumeric = new System.Windows.Forms.CheckBox();
             this.cbEncoding = new System.Windows.Forms.ComboBox();
             this.lblEncoding = new System.Windows.Forms.Label();
+            this.chkRemoveChords = new System.Windows.Forms.CheckBox();
             this.groupBox2.SuspendLayout();
             this.SuspendLayout();
             // 
             // btnOk
             // 
-            resources.ApplyResources(this.btnOk, "btnOk");
             this.btnOk.DialogResult = System.Windows.Forms.DialogResult.OK;
+            resources.ApplyResources(this.btnOk, "btnOk");
             this.btnOk.Name = "btnOk";
             this.btnOk.UseVisualStyleBackColor = true;
             // 
             // btnCancel
             // 
-            resources.ApplyResources(this.btnCancel, "btnCancel");
             this.btnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
+            resources.ApplyResources(this.btnCancel, "btnCancel");
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.UseVisualStyleBackColor = true;
             this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
@@ -71,11 +72,12 @@
             // 
             // groupBox2
             // 
-            resources.ApplyResources(this.groupBox2, "groupBox2");
+            this.groupBox2.Controls.Add(this.chkRemoveChords);
             this.groupBox2.Controls.Add(this.chkLowerCase);
             this.groupBox2.Controls.Add(this.chkAlphaNumeric);
             this.groupBox2.Controls.Add(this.chkRemoveAccents);
             this.groupBox2.Controls.Add(this.chkUpperCase);
+            resources.ApplyResources(this.groupBox2, "groupBox2");
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.TabStop = false;
             // 
@@ -94,8 +96,8 @@
             // 
             // cbEncoding
             // 
-            resources.ApplyResources(this.cbEncoding, "cbEncoding");
             this.cbEncoding.FormattingEnabled = true;
+            resources.ApplyResources(this.cbEncoding, "cbEncoding");
             this.cbEncoding.Name = "cbEncoding";
             this.cbEncoding.SelectedIndexChanged += new System.EventHandler(this.cbEncoding_SelectedIndexChanged);
             // 
@@ -103,6 +105,12 @@
             // 
             resources.ApplyResources(this.lblEncoding, "lblEncoding");
             this.lblEncoding.Name = "lblEncoding";
+            // 
+            // chkRemoveChords
+            // 
+            resources.ApplyResources(this.chkRemoveChords, "chkRemoveChords");
+            this.chkRemoveChords.Name = "chkRemoveChords";
+            this.chkRemoveChords.UseVisualStyleBackColor = true;
             // 
             // frmKokOptions
             // 
@@ -137,5 +145,6 @@
         private System.Windows.Forms.CheckBox chkLowerCase;
         private System.Windows.Forms.ComboBox cbEncoding;
         private System.Windows.Forms.Label lblEncoding;
+        private System.Windows.Forms.CheckBox chkRemoveChords;
     }
 }

@@ -69,6 +69,11 @@ namespace Karaboss
             get { return chkLowerCase.Checked; }
         }       
 
+        public bool bRemoveChords
+        {
+            get { return chkRemoveChords.Checked; }
+        }
+
         #endregion properties
 
 
@@ -101,7 +106,8 @@ namespace Karaboss
                 chkLowerCase.Checked = Properties.Settings.Default.bLrcForceLowerCase;
                 // Remove all non-alphanumeric characters
                 chkAlphaNumeric.Checked = Properties.Settings.Default.bLrcRemoveNonAlphaNumeric;
-
+                // Remove chords
+                chkRemoveChords.Checked = Properties.Settings.Default.bLrcRemoveChords;
 
                 // Encoding
                 _defaultencoding = "UTF8";
@@ -158,7 +164,8 @@ namespace Karaboss
                 Properties.Settings.Default.bLrcRemoveAccents = bRemoveAccents;                
                 Properties.Settings.Default.bLrcForceUpperCase = bUpperCase;
                 Properties.Settings.Default.bLrcForceLowerCase = bLowerCase;
-                Properties.Settings.Default.bLrcRemoveNonAlphaNumeric = bRemoveNonAlphaNumeric;               
+                Properties.Settings.Default.bLrcRemoveNonAlphaNumeric = bRemoveNonAlphaNumeric;
+                Properties.Settings.Default.bLrcRemoveChords = bRemoveChords;
 
                 switch (_defaultencoding)
                 {                    

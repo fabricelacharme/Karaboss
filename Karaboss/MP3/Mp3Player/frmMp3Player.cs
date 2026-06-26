@@ -2905,8 +2905,10 @@ namespace Karaboss.Mp3
             bool bLowerCase = KokOptionsDialog.bLowerCase;
             // Remove all non-alphanumeric characters
             bool bRemoveNonAlphaNumeric = KokOptionsDialog.bRemoveNonAlphaNumeric;
+            // Remove chords
+            bool bRemoveChords = KokOptionsDialog.bRemoveChords;
 
-            ExportLyricsToKokFormat(bRemoveAccents, bUpperCase, bLowerCase, bRemoveNonAlphaNumeric);
+            ExportLyricsToKokFormat(bRemoveAccents, bUpperCase, bLowerCase, bRemoveNonAlphaNumeric, bRemoveChords);
         }
 
         /// <summary>
@@ -2917,7 +2919,7 @@ namespace Karaboss.Mp3
         /// directory. The method handles file naming conflicts by generating a unique filename. After saving the lyrics
         /// in KOK format, the file is opened automatically. If an error occurs during saving or opening, an error
         /// message is displayed.</remarks>
-        private void ExportLyricsToKokFormat(bool bRemoveAccents, bool bUpperCase, bool bLowerCase, bool bRemoveNonAlphaNumeric)
+        private void ExportLyricsToKokFormat(bool bRemoveAccents, bool bUpperCase, bool bLowerCase, bool bRemoveNonAlphaNumeric, bool bRemoveChords)
         {
             #region select filename
 
@@ -2974,7 +2976,7 @@ namespace Karaboss.Mp3
             }
 
             // Save to KOK file
-            LyricsUtilities.SaveKOKSyllabes(fullPath, lstDgRows, bRemoveAccents, bUpperCase, bLowerCase, bRemoveNonAlphaNumeric, _LrcMillisecondsDigits, null);
+            LyricsUtilities.SaveKOKSyllabes(fullPath, lstDgRows, bRemoveAccents, bUpperCase, bLowerCase, bRemoveNonAlphaNumeric, bRemoveChords, _LrcMillisecondsDigits, null);
 
         }
 
@@ -3236,6 +3238,8 @@ namespace Karaboss.Mp3
             bool bLowerCase = LrcOptionsDialog.bLowerCase;
             // Remove all non-alphanumeric characters
             bool bRemoveNonAlphaNumeric = LrcOptionsDialog.bRemoveNonAlphaNumeric;
+            // Remove chords
+            bool bRemoveChords = LrcOptionsDialog.bRemoveChords;
             // Save to line or to syllabes
             LrcLinesSyllabesFormats LrcLinesSyllabesFormat = LrcOptionsDialog.LrcLinesSyllabesFormat;
 
@@ -3247,7 +3251,7 @@ namespace Karaboss.Mp3
 
             bool bWithMetadata = LrcOptionsDialog.bSaveMetadata;
 
-            SaveLrcFileName(bWithMetadata, LrcLinesSyllabesFormat, bRemoveAccents, bUpperCase, bLowerCase, bRemoveNonAlphaNumeric, bCutLines, LrcCutLinesChars);
+            SaveLrcFileName(bWithMetadata, LrcLinesSyllabesFormat, bRemoveAccents, bUpperCase, bLowerCase, bRemoveNonAlphaNumeric, bRemoveChords, bCutLines, LrcCutLinesChars);
         }
 
 
@@ -3262,7 +3266,7 @@ namespace Karaboss.Mp3
         /// <param name="bRemoveNonAlphaNumeric"></param>
         /// <param name="bCutLines"></param>
         /// <param name="LrcCutLinesChars"></param>
-        private void SaveLrcFileName(bool bWithMetadata, LrcLinesSyllabesFormats LrcLinesSyllabesFormat, bool bRemoveAccents, bool bUpperCase, bool bLowerCase, bool bRemoveNonAlphaNumeric, bool bCutLines, int LrcCutLinesChars)
+        private void SaveLrcFileName(bool bWithMetadata, LrcLinesSyllabesFormats LrcLinesSyllabesFormat, bool bRemoveAccents, bool bUpperCase, bool bLowerCase, bool bRemoveNonAlphaNumeric, bool bRemoveChords, bool bCutLines, int LrcCutLinesChars)
         {
             #region select filename
 
@@ -3355,11 +3359,11 @@ namespace Karaboss.Mp3
             {
                 case LrcLinesSyllabesFormats.Lines:
                     //SaveLRCLines(fullPath, bRemoveAccents, bUpperCase, bLowerCase, bRemoveNonAlphaNumeric, Tag_Tool, Tag_Title, Tag_Artist, Tag_Album, Tag_Lang, Tag_Year, Tag_DPlus, bCutLines, LrcCutLinesChars);
-                    Utilities.LyricsUtilities.SaveLRCLines(fullPath, lstDgRows, bRemoveAccents, bUpperCase, bLowerCase, bRemoveNonAlphaNumeric, Tag_Tool, Tag_Title, Tag_Artist, Tag_Album, Tag_Lang, Tag_By, Tag_Year, Tag_DPlus, bCutLines, LrcCutLinesChars, _LrcMillisecondsDigits, null);
+                    Utilities.LyricsUtilities.SaveLRCLines(fullPath, lstDgRows, bRemoveAccents, bUpperCase, bLowerCase, bRemoveNonAlphaNumeric, bRemoveChords, Tag_Tool, Tag_Title, Tag_Artist, Tag_Album, Tag_Lang, Tag_By, Tag_Year, Tag_DPlus, bCutLines, LrcCutLinesChars, _LrcMillisecondsDigits, null);
                     break;
                 case LrcLinesSyllabesFormats.Syllabes:
                     //SaveLRCSyllabes(fullPath, bRemoveAccents, bUpperCase, bLowerCase, bRemoveNonAlphaNumeric, Tag_Tool, Tag_Title, Tag_Artist, Tag_Album, Tag_Lang, Tag_Year, Tag_DPlus);
-                    Utilities.LyricsUtilities.SaveLRCSyllabes(fullPath, lstDgRows, bRemoveAccents, bUpperCase, bLowerCase, bRemoveNonAlphaNumeric, Tag_Tool, Tag_Title, Tag_Artist, Tag_Album, Tag_Lang, Tag_By, Tag_Year, Tag_DPlus, _LrcMillisecondsDigits, null);
+                    Utilities.LyricsUtilities.SaveLRCSyllabes(fullPath, lstDgRows, bRemoveAccents, bUpperCase, bLowerCase, bRemoveNonAlphaNumeric, bRemoveChords, Tag_Tool, Tag_Title, Tag_Artist, Tag_Album, Tag_Lang, Tag_By, Tag_Year, Tag_DPlus, _LrcMillisecondsDigits, null);
                     break;
             }
         }

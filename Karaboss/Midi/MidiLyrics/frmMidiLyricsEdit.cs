@@ -2292,12 +2292,14 @@ namespace Karaboss
             // Force Lower Case
             bool bLowerCase = KokOptionsDialog.bLowerCase;
             // Remove all non-alphanumeric characters
-            bool bRemoveNonAlphaNumeric = KokOptionsDialog.bRemoveNonAlphaNumeric;                       
+            bool bRemoveNonAlphaNumeric = KokOptionsDialog.bRemoveNonAlphaNumeric;
+            // Remove chords
+            bool bRemoveChords = KokOptionsDialog.bRemoveChords;
             
-            ExportLyricsToKokFormat(bRemoveAccents, bUpperCase, bLowerCase, bRemoveNonAlphaNumeric);
+            ExportLyricsToKokFormat(bRemoveAccents, bUpperCase, bLowerCase, bRemoveNonAlphaNumeric, bRemoveChords);
         }
 
-        private void ExportLyricsToKokFormat(bool bRemoveAccents, bool bUpperCase, bool bLowerCase, bool bRemoveNonAlphaNumeric)
+        private void ExportLyricsToKokFormat(bool bRemoveAccents, bool bUpperCase, bool bLowerCase, bool bRemoveNonAlphaNumeric, bool bRemoveChords)
         {
             #region select filename
 
@@ -2357,7 +2359,7 @@ namespace Karaboss
             _LrcMillisecondsDigits = 3;
 
             // Save to KOK file
-            LyricsUtilities.SaveKOKSyllabes(fullPath, lstDgRows, bRemoveAccents, bUpperCase, bLowerCase, bRemoveNonAlphaNumeric, _LrcMillisecondsDigits, _myLyricsMgmt);
+            LyricsUtilities.SaveKOKSyllabes(fullPath, lstDgRows, bRemoveAccents, bUpperCase, bLowerCase, bRemoveNonAlphaNumeric, bRemoveChords, _LrcMillisecondsDigits, _myLyricsMgmt);
 
         }
 
@@ -2583,6 +2585,9 @@ namespace Karaboss
             bool bLowerCase = LrcOptionsDialog.bLowerCase;
             // Remove all non-alphanumeric characters
             bool bRemoveNonAlphaNumeric = LrcOptionsDialog.bRemoveNonAlphaNumeric;
+            // Remove Chords
+            bool bRemoveChords = LrcOptionsDialog.bRemoveChords;
+
             // Save to line or to syllabes
             LrcLinesSyllabesFormats LrcLinesSyllabesFormat = LrcOptionsDialog.LrcLinesSyllabesFormat;
 
@@ -2594,7 +2599,7 @@ namespace Karaboss
            
             string DefaultEncoding = LrcOptionsDialog.DefaultEncoding;
 
-            SaveLrcFileName(LrcLinesSyllabesFormat, bRemoveAccents, bUpperCase, bLowerCase, bRemoveNonAlphaNumeric, bCutLines, LrcCutLinesChars);
+            SaveLrcFileName(LrcLinesSyllabesFormat, bRemoveAccents, bUpperCase, bLowerCase, bRemoveNonAlphaNumeric, bRemoveChords, bCutLines, LrcCutLinesChars);
        }
 
         /// <summary>
@@ -2608,7 +2613,7 @@ namespace Karaboss
        /// <param name="bRemoveNonAlphaNumeric"></param>
        /// <param name="bCutLines"></param>
        /// <param name="LrcCutLinesChars"></param>
-        private void SaveLrcFileName(LrcLinesSyllabesFormats LrcLinesSyllabesFormat, bool bRemoveAccents, bool bUpperCase, bool bLowerCase, bool bRemoveNonAlphaNumeric, bool bCutLines, int LrcCutLinesChars)
+        private void SaveLrcFileName(LrcLinesSyllabesFormats LrcLinesSyllabesFormat, bool bRemoveAccents, bool bUpperCase, bool bLowerCase, bool bRemoveNonAlphaNumeric, bool bRemoveChords, bool bCutLines, int LrcCutLinesChars)
        {
         
             #region select filename
@@ -2710,10 +2715,10 @@ namespace Karaboss
             switch (LrcLinesSyllabesFormat)
             {
                 case LrcLinesSyllabesFormats.Lines:                                        
-                    Utilities.LyricsUtilities.SaveLRCLines(fullPath, lstDgRows, bRemoveAccents, bUpperCase, bLowerCase, bRemoveNonAlphaNumeric, Tag_Tool, Tag_Title, Tag_Artist, Tag_Album, Tag_Lang, Tag_By, Tag_Year, Tag_DPlus, bCutLines, LrcCutLinesChars, _LrcMillisecondsDigits, _myLyricsMgmt);
+                    Utilities.LyricsUtilities.SaveLRCLines(fullPath, lstDgRows, bRemoveAccents, bUpperCase, bLowerCase, bRemoveNonAlphaNumeric, bRemoveChords, Tag_Tool, Tag_Title, Tag_Artist, Tag_Album, Tag_Lang, Tag_By, Tag_Year, Tag_DPlus, bCutLines, LrcCutLinesChars, _LrcMillisecondsDigits, _myLyricsMgmt);
                     break;
                 case LrcLinesSyllabesFormats.Syllabes:                    
-                    Utilities.LyricsUtilities.SaveLRCSyllabes(fullPath, lstDgRows, bRemoveAccents, bUpperCase, bLowerCase, bRemoveNonAlphaNumeric, Tag_Tool, Tag_Title, Tag_Artist, Tag_Album, Tag_Lang, Tag_By, Tag_Year, Tag_DPlus, _LrcMillisecondsDigits, _myLyricsMgmt);
+                    Utilities.LyricsUtilities.SaveLRCSyllabes(fullPath, lstDgRows, bRemoveAccents, bUpperCase, bLowerCase, bRemoveNonAlphaNumeric, bRemoveChords, Tag_Tool, Tag_Title, Tag_Artist, Tag_Album, Tag_Lang, Tag_By, Tag_Year, Tag_DPlus, _LrcMillisecondsDigits, _myLyricsMgmt);
                     break;
             }                                
         }

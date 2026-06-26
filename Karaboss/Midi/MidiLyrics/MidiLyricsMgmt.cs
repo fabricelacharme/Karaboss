@@ -189,9 +189,9 @@ namespace Karaboss.MidiLyrics
         }
 
         // Pattern to remove chords from lyrics
-        private readonly string patternBracket = @"\[\b([CDEFGAB](?:b|bb)*(?:#|##|sus|maj|m|min|aug|dim)*[\d\/]*(?:[CDEFGAB](?:b|bb)*(?:#|##|sus|maj|m|min|aug|dim)*[\d\/]*)*)\]";
-        private readonly string patternParenth = @"\(\b([CDEFGAB](?:b|bb)*(?:#|##|sus|maj|m|min|aug|dim)*[\d\/]*(?:[CDEFGAB](?:b|bb)*(?:#|##|sus|maj|m|min|aug|dim)*[\d\/]*)*)\)";
-        private readonly string patternPercent = @"\%\b([CDEFGAB](?:b|bb)*(?:#|##|sus|maj|m|min|aug|dim)*[\d\/]*(?:[CDEFGAB](?:b|bb)*(?:#|##|sus|maj|m|min|aug|dim)*[\d\/]*)*)";
+        private readonly string patternBracket = @"\[\b([CDEFGAB](?:b|bb)*(?:#|##|sus|maj|m|min|aug|dim)*[\d\/]*(?:[CDEFGAB](?:b|bb)*(?:#|##|sus|maj|m|min|aug|dim)*[\d\/]*)*)\]";  // [Am]
+        private readonly string patternParenth = @"\(\b([CDEFGAB](?:b|bb)*(?:#|##|sus|maj|m|min|aug|dim)*[\d\/]*(?:[CDEFGAB](?:b|bb)*(?:#|##|sus|maj|m|min|aug|dim)*[\d\/]*)*)\)";  // (Am)
+        private readonly string patternPercent = @"\%\b([CDEFGAB](?:b|bb)*(?:#|##|sus|maj|m|min|aug|dim)*[\d\/]*(?:[CDEFGAB](?:b|bb)*(?:#|##|sus|maj|m|min|aug|dim)*[\d\/]*)*)";    // %Am
 
         private string _removechordpattern;
         public string RemoveChordPattern
@@ -340,8 +340,6 @@ namespace Karaboss.MidiLyrics
                 // All could be replaced by FullExtractLyrics();
                 //FullExtractLyrics(false);
                 FullExtractLyrics(false);
-
-
             }
         }
 
@@ -1256,6 +1254,40 @@ namespace Karaboss.MidiLyrics
                 return true;
             else
                 return false;
+        }
+
+        /// <summary>
+        /// Replace all chords formats to one format accepted by LRC
+        /// </summary>
+        /// <param name="s"></param>
+        /// <returns></returns>
+        public string FormateChordToLrc(string s)
+        {
+            if (string.IsNullOrEmpty(s)) return s;
+
+            string r = string.Empty;
+
+            // With brakets
+            Regex chordCheck = new Regex(patternBracket);
+            MatchCollection mc = chordCheck.Matches(s);
+          
+            // Replace chords with braket format to parenthesis format
+            if (mc.Count > 0) 
+            {
+                // Brakets
+                foreach (Match m in mc)
+                {
+                    Console.Write(m.Value);
+                    r = m.Value.Replace("[", "(").Replace("]", ")");
+                    s = s.Replace(m.Value, r);
+                }
+
+            }
+           
+            // Other formats (parenthesis and percent) are ok to be kept
+
+            return s;
+
         }
 
         /// <summary>

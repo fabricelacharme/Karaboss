@@ -1971,5 +1971,17 @@ namespace Karaboss.Properties {
                 this["Logo"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool bLrcRemoveChords {
+            get {
+                return ((bool)(this["bLrcRemoveChords"]));
+            }
+            set {
+                this["bLrcRemoveChords"] = value;
+            }
+        }
     }
 }
