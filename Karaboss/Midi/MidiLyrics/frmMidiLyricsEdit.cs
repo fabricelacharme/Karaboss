@@ -1646,7 +1646,7 @@ namespace Karaboss
                 plNote = lstNotFound[i].Number;
                 plRealTime = Utilities.LyricsUtilities.TicksToTime(plTicksOn, _division);
 
-                if (plTicksOn < lstTimes.First())
+                if (lstTimes.Count > 0 && plTicksOn < lstTimes.First())
                 {
                     // Before
                     if (!bEditChords)
@@ -1658,7 +1658,7 @@ namespace Karaboss
                     lstTimes.Insert(0, plTicksOn);
 
                 }
-                else if (plTicksOn < lstTimes.Last())
+                else if (lstTimes.Count > 0 && plTicksOn < lstTimes.Last())
                 {
                     idx = lstTimes.FindIndex(o => o > plTicksOn);
                     if (idx > -1)
