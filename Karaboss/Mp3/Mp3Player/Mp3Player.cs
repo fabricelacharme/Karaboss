@@ -295,8 +295,10 @@ namespace Karaboss.Mp3
             {
                 if (_stream != 0 && !Bass.BASS_ChannelStop(_stream))
                     Console.WriteLine("*** Bass.BASS_ChannelStop error");
-                if (_stream != 0 && !Bass.BASS_StreamFree(_stream))
-                    Console.WriteLine("*** Bass.BASS_StreamFree error");
+                
+                //if (_stream != 0 && !Bass.BASS_StreamFree(_stream))
+                //    Console.WriteLine("*** Bass.BASS_StreamFree error");
+                
                 //if (!Bass.BASS_ChannelSetPosition(_stream, 0L))
                 //    Console.WriteLine("*** Bass.BASS_ChannelSetPosition error");
                 _stream = 0;
