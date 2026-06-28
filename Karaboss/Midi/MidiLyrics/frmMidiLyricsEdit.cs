@@ -213,7 +213,7 @@ namespace Karaboss
                     tx += string.Format("\n\n" + Karaboss.Resources.Localization.Strings.ChangeFormatLyrics, "TEXT", t);
                 }
 
-                MessageBox.Show(tx, "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show(tx, Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
             #endregion inform 2 types of lyrics are present
 
@@ -519,7 +519,7 @@ namespace Karaboss
         private void btnDeleteAllLyrics_Click(object sender, EventArgs e)
         {
             string tx = Karaboss.Resources.Localization.Strings.DeleteAllLyrics;            
-            if (MessageBox.Show(tx, "Karaboss", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning) == DialogResult.OK)
+            if (MessageBox.Show(tx, Application.ProductName, MessageBoxButtons.OKCancel, MessageBoxIcon.Warning) == DialogResult.OK)
             {
                 frmMidiPlayer frmMidiPlayer = Utilities.FormUtilities.GetForm<frmMidiPlayer>();
                 frmMidiPlayer.DeleteAllLyrics();
@@ -1610,7 +1610,10 @@ namespace Karaboss
             {
                 if (dgView.Rows[i].Cells[COL_TICKS].Value != null && IsNumeric(dgView.Rows[i].Cells[COL_TICKS].Value.ToString()))
                 {
-                    lstTimes.Add(Convert.ToInt32(dgView.Rows[i].Cells[COL_TICKS].Value));
+                    if (dgView.Rows[i].Cells[COL_TYPE].Value.ToString() == "text")
+                        lstTimes.Add(Convert.ToInt32(dgView.Rows[i].Cells[COL_TICKS].Value));
+                    else
+                        lstTimes.Add(-1);
                 }
             }
 
@@ -1796,7 +1799,7 @@ namespace Karaboss
                 //string tx = "Le fichier a été modifié, voulez-vous l'enregistrer ?";
                 string tx = Karaboss.Resources.Localization.Strings.QuestionSavefile;
 
-                DialogResult dr = MessageBox.Show(tx, "Karaboss", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Warning);
+                DialogResult dr = MessageBox.Show(tx, Application.ProductName, MessageBoxButtons.YesNoCancel, MessageBoxIcon.Warning);
                 if (dr == DialogResult.Cancel)
                 {
                     e.Cancel = true;
@@ -1933,7 +1936,7 @@ namespace Karaboss
             int line;
             if (!CheckTimes(out line))
             {
-                MessageBox.Show("Time on line " + line + " is incorrect", "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Time on line " + line + " is incorrect", Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
 
                 try
                 {
@@ -2350,7 +2353,7 @@ namespace Karaboss
             List<(double Time, string lyric)> lstDgRows = LyricsUtilities.ReadDataGridContent(dgView, COL_TIME, COL_TEXT);
             if (lstDgRows == null || lstDgRows.Count == 0)
             {
-                MessageBox.Show("No lyric to export", "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show("No lyric to export", Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Information);
                 return;
             }
 
@@ -2707,7 +2710,7 @@ namespace Karaboss
             List<(double Time, string lyric)> lstDgRows = LyricsUtilities.ReadDataGridContent(dgView, COL_TIME, COL_TEXT);
             if (lstDgRows == null || lstDgRows.Count == 0)
             {
-                MessageBox.Show("No lyric to export", "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show("No lyric to export", Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Information);
                 return;
             }
 
@@ -3160,7 +3163,7 @@ namespace Karaboss
             List<(double Time, string lyric)> lstDgRows = LyricsUtilities.ReadDataGridContent(dgView, COL_TIME, COL_TEXT);
             if (lstDgRows == null || lstDgRows.Count == 0)
             {
-                MessageBox.Show("No lyric to export", "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show("No lyric to export", Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Information);
                 return;
             }
 
@@ -3212,7 +3215,7 @@ namespace Karaboss
 
             if (melodytracknum == -1)
             {
-                //MessageBox.Show("No track found for the melody", "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                //MessageBox.Show("No track found for the melody", Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Information);
                 dgView.Rows.Clear();
                 return;
             }
@@ -3417,7 +3420,7 @@ namespace Karaboss
                     tx += string.Format("\n\n" + Karaboss.Resources.Localization.Strings.WantToChangeFormatLyrics, "TEXT", t);
                 }
 
-                if (MessageBox.Show(tx, "Karaboss", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question) == DialogResult.Yes)
+                if (MessageBox.Show(tx, Application.ProductName, MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question) == DialogResult.Yes)
                 {
                     _myLyricsMgmt.LyricType = ((_myLyricsMgmt.LyricType == LyricTypes.Text) ? LyricTypes.Lyric : LyricTypes.Text);
 
@@ -3602,7 +3605,7 @@ namespace Karaboss
                     frmMidiPlayer frmMidiPlayer = Utilities.FormUtilities.GetForm<frmMidiPlayer>();                    
                     frmMidiPlayer.FileModified();
                 }
-                MessageBox.Show("Tags saved successfully", "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Information);               
+                MessageBox.Show("Tags saved successfully", Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Information);               
             }
         }
 
@@ -3852,7 +3855,7 @@ namespace Karaboss
             catch (Exception ex)
             {
                 line = -1;
-                MessageBox.Show("Error in CheckTimes: " + ex.Message, "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Error in CheckTimes: " + ex.Message, Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return false;
             }
         }

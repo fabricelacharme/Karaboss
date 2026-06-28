@@ -1125,7 +1125,7 @@ namespace Karaboss.MidiLyrics
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message, "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(ex.Message, Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -2050,7 +2050,7 @@ namespace Karaboss.MidiLyrics
                             catch (Exception ex)
                             {
                                 string tx = ex.Message + cr + "Syllab :" + currenttext + cr + "Measure: " + currentmeasure;
-                                MessageBox.Show(tx, "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                                MessageBox.Show(tx, Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
                             }
                             currentbeat = beat;
                             currenttext = string.Empty;
@@ -2077,7 +2077,7 @@ namespace Karaboss.MidiLyrics
             catch (Exception ex)
             {
                 string tx = ex.Message + cr + "Syllab :" + currenttext + cr + "Measure: " + currentmeasure;
-                MessageBox.Show(tx, "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(tx, Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -2687,7 +2687,7 @@ namespace Karaboss.MidiLyrics
 
             if (sequence1 == null || sequence1.Numerator == 0) 
             { 
-                MessageBox.Show("Invalid sequence: null or Numerator = 0", "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Invalid sequence: null or Numerator = 0", Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
             int nbBeatsPerMeasure = sequence1.Numerator;
@@ -2799,7 +2799,7 @@ namespace Karaboss.MidiLyrics
 
             if (sequence1 == null || sequence1.Numerator == 0)
             {
-                MessageBox.Show("Invalid sequence: null or Numerator = 0", "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Invalid sequence: null or Numerator = 0", Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
             int nbBeatsPerMeasure = sequence1.Numerator;
@@ -2919,7 +2919,7 @@ namespace Karaboss.MidiLyrics
                 t = plLyrics[i].TicksOn;
                 if (t < lastTime)
                 {
-                    MessageBox.Show("Error: times not in order", "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show("Error: times not in order", Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
                 }
                 lastTime = t;
@@ -2968,7 +2968,7 @@ namespace Karaboss.MidiLyrics
             #region guard
             if (GridBeatChords == null || KLyrics == null)
             {
-                MessageBox.Show("Error: GridBeatChords is null", "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Error: GridBeatChords is null", Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return "";
             }
             #endregion guard
@@ -3014,7 +3014,7 @@ namespace Karaboss.MidiLyrics
 
                 if (beat == 0)
                 {
-                    MessageBox.Show("Error plLyrics with beat at 0", "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show("Error plLyrics with beat at 0", Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return string.Empty;
                 }
 

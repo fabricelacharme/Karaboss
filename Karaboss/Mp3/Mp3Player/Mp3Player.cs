@@ -175,7 +175,7 @@ namespace Karaboss.Mp3
             }
             else
             {                
-                MessageBox.Show(String.Format("Stream error: {0}", Bass.BASS_ErrorGetCode()), "Karaboss", MessageBoxButtons.OK,MessageBoxIcon.Error);
+                MessageBox.Show(String.Format("Stream error: {0}", Bass.BASS_ErrorGetCode()), Application.ProductName, MessageBoxButtons.OK,MessageBoxIcon.Error);
             }
             
         }
@@ -202,13 +202,13 @@ namespace Karaboss.Mp3
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show("*** Unsucessful play: " + ex.Message, "Karaboss" ,MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show("*** Unsucessful play: " + ex.Message, Application.ProductName ,MessageBoxButtons.OK, MessageBoxIcon.Error);
 
                 }
             }
             else
             {
-                MessageBox.Show("Unable to play, stream = 0", "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Unable to play, stream = 0", Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
            
         }
@@ -226,13 +226,13 @@ namespace Karaboss.Mp3
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show("*** Unsucessful play: " + ex.Message, "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show("*** Unsucessful play: " + ex.Message, Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
 
                 }
             }
             else
             {
-                MessageBox.Show("Unable to play, stream = 0", "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Unable to play, stream = 0", Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -258,12 +258,12 @@ namespace Karaboss.Mp3
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show("*** Unsucessful play: " + ex.Message, "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show("*** Unsucessful play: " + ex.Message, Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
             else
             {
-                MessageBox.Show("Unable to play, stream = 0", "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Unable to play, stream = 0", Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -305,7 +305,7 @@ namespace Karaboss.Mp3
             }
             catch (Exception ex)
             {
-                MessageBox.Show("*** Unsucessful stop: " + ex.Message, "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("*** Unsucessful stop: " + ex.Message, Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 
             }
         }
@@ -322,7 +322,7 @@ namespace Karaboss.Mp3
             }
             catch (Exception ex)
             {
-                MessageBox.Show("*** Unsucessful pause: " + ex.Message, "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("*** Unsucessful pause: " + ex.Message, Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -342,7 +342,7 @@ namespace Karaboss.Mp3
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message, "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);                
+                MessageBox.Show(ex.Message, Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);                
             }
         }
 
@@ -370,7 +370,7 @@ namespace Karaboss.Mp3
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message, "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error); return _byteslen;                                                
+                MessageBox.Show(ex.Message, Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error); return _byteslen;                                                
             }
         }
 
@@ -422,7 +422,7 @@ namespace Karaboss.Mp3
             {
                 Bass.BASS_ChannelSetAttribute(_stream, BASSAttribute.BASS_ATTRIB_FREQ, _frequency * amount / 100);
             }
-            catch (Exception ex) { MessageBox.Show(ex.Message, "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error); }
+            catch (Exception ex) { MessageBox.Show(ex.Message, Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error); }
         }
 
         /// <summary>
@@ -437,7 +437,7 @@ namespace Karaboss.Mp3
             {
                 Bass.BASS_ChannelSetAttribute(_stream, BASSAttribute.BASS_ATTRIB_TEMPO_PITCH, amount);
             }
-            catch (Exception ex) { MessageBox.Show(ex.Message, "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error); }
+            catch (Exception ex) { MessageBox.Show(ex.Message, Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error); }
         }
 
         /// <summary>
@@ -519,7 +519,7 @@ namespace Karaboss.Mp3
             }
             catch (Exception e) 
             { 
-                MessageBox.Show(e.Message,"Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);                
+                MessageBox.Show(e.Message,Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);                
                 _tag = null;
             }
         }       
