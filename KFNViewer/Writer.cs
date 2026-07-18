@@ -1,15 +1,10 @@
-﻿using KFNV.Properties;
-using KFNV.SongIni;
+﻿using KFNV.SongIni;
 using KFNV.Utilities;
-using Mozilla.NUniversalCharDet;
 using System;
 using System.Collections.Generic;
-using System.Drawing.Drawing2D;
 using System.IO;
 using System.Linq;
 using System.Text;
-using System.Text.RegularExpressions;
-using System.Web;
 using System.Windows.Forms;
 using static KFN;
 

@@ -56,8 +56,8 @@ namespace Karaboss
 
         #region controls
 
-        private readonly int iStaffHeightMaximized = 150; // = SheetMusic.staffH; 148 en réalité
-                                                          //private int iStaffHeightMinimized = 25;  // 23 en réalité
+        private readonly int iStaffHeightMaximized = 150; 
+                                                          
 
         // Creation dynamique de controles 
 
@@ -87,8 +87,7 @@ namespace Karaboss
         #region Devices
 
         // Output device
-        private readonly OutputDevice outDevice;
-        //private int outDeviceID = 0;
+        private readonly OutputDevice outDevice;        
         private int outDeviceProcessId;
 
         #endregion Devices
