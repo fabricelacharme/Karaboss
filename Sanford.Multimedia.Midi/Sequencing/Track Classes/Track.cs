@@ -35,16 +35,7 @@
 using System;
 using System.Diagnostics;
 using System.Collections.Generic; //Lists
-using System.Diagnostics.Eventing.Reader;
-using System.Windows.Markup;
-using System.Linq.Expressions;
-using System.Windows.Forms;
-using System.Runtime.Remoting.Channels;
-using System.Threading;
-using System.Reflection;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement.TrackBar;
 using System.Linq;
-using Sanford.Multimedia.Midi.Score;
 
 namespace Sanford.Multimedia.Midi
 {
@@ -2772,7 +2763,7 @@ namespace Sanford.Multimedia.Midi
         /// Insert a measure in the track
         /// </summary>
         /// <param name="starttime">beginning of measure to offset</param>
-        /// <param name="offset">offset, ie one measure length</param>
+        /// <param name="offset">offset, ie one measure length</param>       
         public void insertMeasure(int starttime, int offset)
         {
             // Offset all "starttimes" from end to starttime
@@ -2783,34 +2774,47 @@ namespace Sanford.Multimedia.Midi
             {
 
                 if (current != endOfTrackMidiEvent)
-                {                    
-                    
+                {
+
                     if (starttime == 0)
                     {
-                        // Starttime is 0, do not move Tempo event, Time_signature, Key_signature
-                        if (current.MidiMessage.MessageType == MessageType.Meta && current.AbsoluteTicks == 0)
+                        switch (current.MidiMessage.MessageType)
                         {
-                            MetaMessage meta = (MetaMessage)current.MidiMessage;
-                            if (meta.MetaType == MetaType.Tempo || meta.MetaType == MetaType.TimeSignature || meta.MetaType == MetaType.KeySignature)
-                            {
-                                // Do not move tempo event, Time_signature, Key_signature
-                                // Do not move current event
-                            }
-                            else
-                            {
+                            case MessageType.Meta:
+                                // Starttime is 0, do not move Tempo event, Time_signature, Key_signature
+                                MetaMessage meta = (MetaMessage)current.MidiMessage;
+                                switch (meta.MetaType)
+                                {
+                                    case MetaType.Tempo:
+                                    case MetaType.TimeSignature:
+                                    case MetaType.KeySignature:
+                                    case MetaType.TrackName:
+                                        break;
+                                    default:
+                                        Move(current, current.AbsoluteTicks + offset);
+                                        break;
+                                }
+                                break;
+
+                            case MessageType.Channel:
+                                ChannelMessage cm = (ChannelMessage)current.MidiMessage;                               
+                                
+                                switch (cm.Command)
+                                {
+                                    case ChannelCommand.Controller:
+                                    case ChannelCommand.ProgramChange:
+                                        break;
+                                    default:
+                                        Move(current, current.AbsoluteTicks + offset);
+                                        break;
+                                }
+                                break;
+                            
+                            default:
+                                // Move other messages at starttime 0
                                 Move(current, current.AbsoluteTicks + offset);
-                            }
-                        }
-                        else if (current.MidiMessage.MessageType == MessageType.Channel && current.AbsoluteTicks == 0)
-                        {
-                            // Do not move channel events at starttime 0
-                            // Do not move current event
-                        }
-                        else
-                        {
-                            // Move other messages at starttime 0
-                            Move(current, current.AbsoluteTicks + offset);
-                        }
+                                break;
+                        }                                                
                     }
                     else
                     {
@@ -2862,7 +2866,7 @@ namespace Sanford.Multimedia.Midi
                 }
             }
 
-            
+
         }
 
         /// <summary>
