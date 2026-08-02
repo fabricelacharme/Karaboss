@@ -1794,7 +1794,7 @@ namespace Karaboss.Pages
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show(ex.Message, "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                    MessageBox.Show(ex.Message, Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                 }
             }
         }

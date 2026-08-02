@@ -189,9 +189,9 @@ namespace Karaboss.MidiLyrics
         }
 
         // Pattern to remove chords from lyrics
-        private readonly string patternBracket = @"\[\b([CDEFGAB](?:b|bb)*(?:#|##|sus|maj|m|min|aug|dim)*[\d\/]*(?:[CDEFGAB](?:b|bb)*(?:#|##|sus|maj|m|min|aug|dim)*[\d\/]*)*)\]";
-        private readonly string patternParenth = @"\(\b([CDEFGAB](?:b|bb)*(?:#|##|sus|maj|m|min|aug|dim)*[\d\/]*(?:[CDEFGAB](?:b|bb)*(?:#|##|sus|maj|m|min|aug|dim)*[\d\/]*)*)\)";
-        private readonly string patternPercent = @"\%\b([CDEFGAB](?:b|bb)*(?:#|##|sus|maj|m|min|aug|dim)*[\d\/]*(?:[CDEFGAB](?:b|bb)*(?:#|##|sus|maj|m|min|aug|dim)*[\d\/]*)*)";
+        private readonly string patternBracket = @"\[\b([CDEFGAB](?:b|bb)*(?:#|##|sus|maj|m|min|aug|dim)*[\d\/]*(?:[CDEFGAB](?:b|bb)*(?:#|##|sus|maj|m|min|aug|dim)*[\d\/]*)*)\]";  // [Am]
+        private readonly string patternParenth = @"\(\b([CDEFGAB](?:b|bb)*(?:#|##|sus|maj|m|min|aug|dim)*[\d\/]*(?:[CDEFGAB](?:b|bb)*(?:#|##|sus|maj|m|min|aug|dim)*[\d\/]*)*)\)";  // (Am)
+        private readonly string patternPercent = @"\%\b([CDEFGAB](?:b|bb)*(?:#|##|sus|maj|m|min|aug|dim)*[\d\/]*(?:[CDEFGAB](?:b|bb)*(?:#|##|sus|maj|m|min|aug|dim)*[\d\/]*)*)";    // %Am
 
         private string _removechordpattern;
         public string RemoveChordPattern
@@ -340,8 +340,6 @@ namespace Karaboss.MidiLyrics
                 // All could be replaced by FullExtractLyrics();
                 //FullExtractLyrics(false);
                 FullExtractLyrics(false);
-
-
             }
         }
 
@@ -565,10 +563,13 @@ namespace Karaboss.MidiLyrics
                 // Reduce ticksoff of current syllable to tickson of the previous syllable                
                 if (j > 0 &&  KLyrics.Lines[j].Syllables.Count == 1 && KLyrics.Lines[j].Syllables.First().CharType != Syllable.CharTypes.Text)
                 {
-                    syll = KLyrics.Lines[j].Syllables.First();                                      
-                    syll.TicksOn = KLyrics.Lines[j - 1].Syllables.Last().TicksOff;
-                    syll.TicksOff = syll.TicksOn;
-                   
+                    syll = KLyrics.Lines[j].Syllables.First();
+
+                    if (KLyrics.Lines[j - 1].Syllables.Count > 0)
+                    {
+                        syll.TicksOn = KLyrics.Lines[j - 1].Syllables.Last().TicksOff;
+                        syll.TicksOff = syll.TicksOn;
+                    }
                 }
             
             }                                                                       
@@ -673,7 +674,7 @@ namespace Karaboss.MidiLyrics
             {
                 if (KLyrics.Lines[i].Syllables.Count == 1 && KLyrics.Lines[i].Syllables.First().CharType != Syllable.CharTypes.Text)
                 {
-                    if (i > 0)
+                    if (i > 0 && KLyrics.Lines[i - 1].Syllables.Count > 0)
                     {
                         KLyrics.Lines[i].Syllables.First().TicksOn = KLyrics.Lines[i - 1].Syllables.Last().TicksOff;
                         KLyrics.Lines[i].Syllables.First().TicksOff = KLyrics.Lines[i - 1].Syllables.Last().TicksOff;
@@ -694,7 +695,7 @@ namespace Karaboss.MidiLyrics
                 kLine _kline = KLyrics.Lines[i];
                 if (_kline.Syllables.Count== 1 && _kline.Syllables.First().CharType != Syllable.CharTypes.Text)
                 {
-                    if (i > 0)
+                    if (i > 0 && KLyrics.Lines[i - 1].Syllables.Count > 0)
                     {
                         _kline.Syllables.First().TicksOn = KLyrics.Lines[i - 1].Syllables.Last().TicksOff;
                         _kline.Syllables.First().TicksOff = KLyrics.Lines[i - 1].Syllables.Last().TicksOff;
@@ -1124,7 +1125,7 @@ namespace Karaboss.MidiLyrics
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message, "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(ex.Message, Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -1253,6 +1254,40 @@ namespace Karaboss.MidiLyrics
                 return true;
             else
                 return false;
+        }
+
+        /// <summary>
+        /// Replace all chords formats to one format accepted by LRC
+        /// </summary>
+        /// <param name="s"></param>
+        /// <returns></returns>
+        public string FormateChordToLrc(string s)
+        {
+            if (string.IsNullOrEmpty(s)) return s;
+
+            string r = string.Empty;
+
+            // With brakets
+            Regex chordCheck = new Regex(patternBracket);
+            MatchCollection mc = chordCheck.Matches(s);
+          
+            // Replace chords with braket format to parenthesis format
+            if (mc.Count > 0) 
+            {
+                // Brakets
+                foreach (Match m in mc)
+                {
+                    Console.Write(m.Value);
+                    r = m.Value.Replace("[", "(").Replace("]", ")");
+                    s = s.Replace(m.Value, r);
+                }
+
+            }
+           
+            // Other formats (parenthesis and percent) are ok to be kept
+
+            return s;
+
         }
 
         /// <summary>
@@ -2015,7 +2050,7 @@ namespace Karaboss.MidiLyrics
                             catch (Exception ex)
                             {
                                 string tx = ex.Message + cr + "Syllab :" + currenttext + cr + "Measure: " + currentmeasure;
-                                MessageBox.Show(tx, "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                                MessageBox.Show(tx, Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
                             }
                             currentbeat = beat;
                             currenttext = string.Empty;
@@ -2042,7 +2077,7 @@ namespace Karaboss.MidiLyrics
             catch (Exception ex)
             {
                 string tx = ex.Message + cr + "Syllab :" + currenttext + cr + "Measure: " + currentmeasure;
-                MessageBox.Show(tx, "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(tx, Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -2372,7 +2407,7 @@ namespace Karaboss.MidiLyrics
                         result.Lines.Insert(0, new kLine() { Syllables = new List<Syllable>() { syll } });
                         bInserted = true;
                     }
-                    else if (startTime > result.Lines.Last().Syllables.Last().TicksOn)
+                    else if (result.Lines.Last().Syllables.Count > 0 &&  startTime > result.Lines.Last().Syllables.Last().TicksOn)
                     {
                         // Insert after last line
                         result.Lines.Add(new kLine() { Syllables = new List<Syllable>() { syll } });
@@ -2652,7 +2687,7 @@ namespace Karaboss.MidiLyrics
 
             if (sequence1 == null || sequence1.Numerator == 0) 
             { 
-                MessageBox.Show("Invalid sequence: null or Numerator = 0", "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Invalid sequence: null or Numerator = 0", Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
             int nbBeatsPerMeasure = sequence1.Numerator;
@@ -2764,7 +2799,7 @@ namespace Karaboss.MidiLyrics
 
             if (sequence1 == null || sequence1.Numerator == 0)
             {
-                MessageBox.Show("Invalid sequence: null or Numerator = 0", "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Invalid sequence: null or Numerator = 0", Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
             int nbBeatsPerMeasure = sequence1.Numerator;
@@ -2884,7 +2919,7 @@ namespace Karaboss.MidiLyrics
                 t = plLyrics[i].TicksOn;
                 if (t < lastTime)
                 {
-                    MessageBox.Show("Error: times not in order", "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show("Error: times not in order", Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
                 }
                 lastTime = t;
@@ -2933,7 +2968,7 @@ namespace Karaboss.MidiLyrics
             #region guard
             if (GridBeatChords == null || KLyrics == null)
             {
-                MessageBox.Show("Error: GridBeatChords is null", "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Error: GridBeatChords is null", Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return "";
             }
             #endregion guard
@@ -2979,7 +3014,7 @@ namespace Karaboss.MidiLyrics
 
                 if (beat == 0)
                 {
-                    MessageBox.Show("Error plLyrics with beat at 0", "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show("Error plLyrics with beat at 0", Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return string.Empty;
                 }
 

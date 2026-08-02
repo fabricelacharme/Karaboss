@@ -261,7 +261,7 @@ namespace Karaboss
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message, "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(ex.Message, Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
        
@@ -1035,7 +1035,7 @@ namespace Karaboss
             else
             {
                 if (e.Error != null)
-                    MessageBox.Show(e.Error.Message, "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show(e.Error.Message, Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }            
         }
 
@@ -1072,7 +1072,7 @@ namespace Karaboss
 
             if (MXmlReader.seq == null)
             {
-                MessageBox.Show("Invalid xml file", "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Invalid xml file", Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
                                  
@@ -1085,7 +1085,7 @@ namespace Karaboss
             else
             {
                 if (e.Error != null)
-                    MessageBox.Show(e.Error.Message, "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show(e.Error.Message, Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -1149,7 +1149,7 @@ namespace Karaboss
 
             if (MTxtReader.seq == null)
             {
-                MessageBox.Show("Invalid text file", "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Invalid text file", Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 
@@ -1161,7 +1161,7 @@ namespace Karaboss
             else
             {
                 if (e.Error != null)
-                    MessageBox.Show(e.Error.Message, "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show(e.Error.Message, Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -1238,7 +1238,7 @@ namespace Karaboss
             }
             catch (Exception e)
             {
-                MessageBox.Show(e.Message, "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(e.Message, Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -2279,7 +2279,7 @@ namespace Karaboss
             {
                 // string tx = "Le fichier a été modifié, voulez-vous l'enregistrer ?";
                 String tx = Karaboss.Resources.Localization.Strings.QuestionSavefile;
-                DialogResult dr = MessageBox.Show(tx, "Karaboss", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Warning);
+                DialogResult dr = MessageBox.Show(tx, Application.ProductName, MessageBoxButtons.YesNoCancel, MessageBoxIcon.Warning);
                 if (dr == DialogResult.Cancel)
                 {
                     e.Cancel = true;
@@ -2944,7 +2944,7 @@ namespace Karaboss
             }
             else
             {
-                MessageBox.Show("Error printing PDF", "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Error printing PDF", Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 
@@ -3020,7 +3020,7 @@ namespace Karaboss
                     }
                     else
                     {
-                        MessageBox.Show("Error printing PDF", "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        MessageBox.Show("Error printing PDF", Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
                         return;
                     }
 
@@ -3103,7 +3103,7 @@ namespace Karaboss
                 case ".musicxml":
                 case ".mxl":
                 case ".xml":                   
-                    MessageBox.Show("Your file will be saved in Midi format", "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    MessageBox.Show("Your file will be saved in Midi format", Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Information);
                     SaveAsFileProc();
                     return;                    
             }
@@ -3340,7 +3340,7 @@ namespace Karaboss
             #region check
             if (myLyricsMgmt.ChordDelimiter == (null, null) || myLyricsMgmt.ChordDelimiter == ("", "") || myLyricsMgmt.RemoveChordPattern == null)
             {                                
-                MessageBox.Show("Format of chords delimiters not found: [] or ()", "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Format of chords delimiters not found: [] or ()", Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
             #endregion check

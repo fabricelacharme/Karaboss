@@ -80,6 +80,12 @@ namespace Karaboss
             get { return chkLowerCase.Checked; }
         }
 
+
+        public bool bRemoveChords
+        {
+            get { return chkRemoveChords.Checked; }
+        }
+
         /// <summary>
         /// Number of characters max per lines
         /// </summary>
@@ -124,7 +130,6 @@ namespace Karaboss
             // Initialize list of encoding
             initCbEncoding();
 
-
             // Load and apply options
             LoadOptions();            
         }
@@ -142,9 +147,11 @@ namespace Karaboss
                 chkUpperCase.Checked = Properties.Settings.Default.bLrcForceUpperCase;
                 // Force Lower Case 
                 chkLowerCase.Checked = Properties.Settings.Default.bLrcForceLowerCase;
-
                 // Remove all non-alphanumeric characters
                 chkAlphaNumeric.Checked = Properties.Settings.Default.bLrcRemoveNonAlphaNumeric;
+                // Remove chords
+                chkRemoveChords.Checked = Properties.Settings.Default.bLrcRemoveChords;
+
 
                 // Export to lines or syllabes
                 LrcLinesSyllabesFormats LrcLinesSyllabesFormat = Properties.Settings.Default.lrcFormatLinesSyllabes == 0 ? LrcLinesSyllabesFormats.Lines : LrcLinesSyllabesFormats.Syllabes;
@@ -189,7 +196,7 @@ namespace Karaboss
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message, "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(ex.Message, Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -228,6 +235,9 @@ namespace Karaboss
                 Properties.Settings.Default.bLrcForceLowerCase = bLowerCase;
 
                 Properties.Settings.Default.bLrcRemoveNonAlphaNumeric = bRemoveNonAlphaNumeric;
+
+                Properties.Settings.Default.bLrcRemoveChords = bRemoveChords;
+                
                 Properties.Settings.Default.lrcFormatLinesSyllabes = (OptFormatLines.Checked ? 0 : 1);
 
                 Properties.Settings.Default.bLrcCutLines = chkCutLines.Checked;
@@ -254,7 +264,7 @@ namespace Karaboss
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message, "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(ex.Message, Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -383,5 +393,7 @@ namespace Karaboss
             }
 
         }
+
+      
     }
 }

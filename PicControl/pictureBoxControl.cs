@@ -1846,11 +1846,11 @@ namespace PicControl
                 }
 
                 // Add a new syllable when line of Text
-                if (kls.Lines[i].Syllables.Last().CharType == Syllable.CharTypes.Text)
+                if (kls.Lines[i].Syllables.Count > 0 && kls.Lines[i].Syllables.Last().CharType == Syllable.CharTypes.Text)
                 {                   
                     if (i + 1 < kls.Lines.Count)
                     {
-                        if (kls.Lines[i + 1].Syllables.First().TicksOn > kls.Lines[i].Syllables.Last().TicksOff)
+                        if (kls.Lines[i + 1].Syllables.Count > 0 && kls.Lines[i + 1].Syllables.First().TicksOn > kls.Lines[i].Syllables.Last().TicksOff)
                         {
                             ticksOn = kls.Lines[i].Syllables.Last().TicksOff + 1;                                                                                   
                             ticksOff = kls.Lines[i + 1].Syllables.First().TicksOn - 1;
@@ -1998,7 +1998,7 @@ namespace PicControl
                 x = lines[i];
                 if (x < _kLyrics.Lines.Count)
                 {
-                    if (_kLyrics.Lines[x].Syllables.Last().CharType == Syllable.CharTypes.Information && _kLyrics.Lines[x].Syllables.Last().Text != string.Empty)
+                    if (_kLyrics.Lines[x].Syllables.Count > 0 && _kLyrics.Lines[x].Syllables.Last().CharType == Syllable.CharTypes.Information && _kLyrics.Lines[x].Syllables.Last().Text != string.Empty)
                     {
                         return i;
                     }
@@ -4480,7 +4480,8 @@ namespace PicControl
 
             // The vertical position is a fraction of _linesHeight, caculated with "PlayerPositionTicks/last line ticks"
 
-            vposition = (float)((PlayerPositionTicks) * ((float)_linesHeight / (_kLyrics.Lines.Last().Syllables.First().TicksOn)));
+            if (_kLyrics.Lines.Last().Syllables.Count > 0) 
+                vposition = (float)((PlayerPositionTicks) * ((float)_linesHeight / (_kLyrics.Lines.Last().Syllables.First().TicksOn)));
             
 
             for (int i = 0; i < _kLyrics.Lines.Count; i++)
@@ -4604,7 +4605,7 @@ namespace PicControl
             CurLineStart = _kLyrics.Lines[_FirstLineToShow].Syllables.First().TicksOn;
 
             // Much more gradual, focusing on the next line even if it's a paragraph
-            if (_FirstLineToShow + 1 < _kLyrics.Lines.Count)    //No !!! && _kLyrics.Lines[_FirstLineToShow + 1].Syllables.First().CharType != Syllable.CharTypes.ParagraphSep)
+            if (_FirstLineToShow + 1 < _kLyrics.Lines.Count)    
             {
                 NextLineStart = _kLyrics.Lines[_FirstLineToShow + 1].Syllables.First().TicksOn;
             }            

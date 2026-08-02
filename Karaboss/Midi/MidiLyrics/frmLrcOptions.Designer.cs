@@ -48,6 +48,7 @@
             this.chkMetadata = new System.Windows.Forms.CheckBox();
             this.cbEncoding = new System.Windows.Forms.ComboBox();
             this.lblEncoding = new System.Windows.Forms.Label();
+            this.chkRemoveChords = new System.Windows.Forms.CheckBox();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.UpdCutLines)).BeginInit();
             this.groupBox2.SuspendLayout();
@@ -144,6 +145,7 @@
             // 
             // groupBox2
             // 
+            this.groupBox2.Controls.Add(this.chkRemoveChords);
             this.groupBox2.Controls.Add(this.chkLowerCase);
             this.groupBox2.Controls.Add(this.chkAlphaNumeric);
             this.groupBox2.Controls.Add(this.chkRemoveAccents);
@@ -163,7 +165,7 @@
             // 
             resources.ApplyResources(this.chkAlphaNumeric, "chkAlphaNumeric");
             this.chkAlphaNumeric.Name = "chkAlphaNumeric";
-            this.chkAlphaNumeric.UseVisualStyleBackColor = true;
+            this.chkAlphaNumeric.UseVisualStyleBackColor = true;            
             // 
             // groupBox3
             // 
@@ -207,6 +209,12 @@
             // 
             resources.ApplyResources(this.lblEncoding, "lblEncoding");
             this.lblEncoding.Name = "lblEncoding";
+            // 
+            // chkRemoveChords
+            // 
+            resources.ApplyResources(this.chkRemoveChords, "chkRemoveChords");
+            this.chkRemoveChords.Name = "chkRemoveChords";
+            this.chkRemoveChords.UseVisualStyleBackColor = true;
             // 
             // frmLrcOptions
             // 
@@ -259,5 +267,6 @@
         private System.Windows.Forms.CheckBox chkMetadata;
         private System.Windows.Forms.ComboBox cbEncoding;
         private System.Windows.Forms.Label lblEncoding;
+        private System.Windows.Forms.CheckBox chkRemoveChords;
     }
 }

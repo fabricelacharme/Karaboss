@@ -488,5 +488,8 @@
     <Setting Name="Logo" Type="System.String" Scope="User">
       <Value Profile="(Default)">logo.png</Value>
     </Setting>
+    <Setting Name="bLrcRemoveChords" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

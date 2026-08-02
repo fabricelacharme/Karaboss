@@ -642,8 +642,8 @@ namespace Karaboss.Utilities
                 if (sLyric.Trim().Length == 0) continue;
 
                 // Replace characters used in LRC format
-                sLyric = sLyric.Replace("[", "@");
-                sLyric = sLyric.Replace("]", "@");
+                sLyric = sLyric.Replace("[", "(");          // also Chords like [Am] => (Am) which is good
+                sLyric = sLyric.Replace("]", ")");          // also Chords like [Am] => (Am) which is good
                 sLyric = sLyric.Replace("<", "@");
                 sLyric = sLyric.Replace(">", "@");
 
@@ -931,14 +931,27 @@ namespace Karaboss.Utilities
                             // eLRC style with several timestamps per line like "[00:01.03]La <00:01.15>petite <00:01.48>maison"
                             // Lines with one or several timestamps and text
                             var matchline = Regex.Match(line, patternline);
-                            if (!matchline.Success) continue;
+                            //if (!matchline.Success) continue;
 
                             // Search for all timestamps                        
-
-                            foreach (var match in regexCrotchets.Matches(line))
+                            if (matchline.Success)
                             {
-                                timestamp = match.ToString();
-                                result.Add((timestamp, lyric));
+                                foreach (var match in regexCrotchets.Matches(line))
+                                {
+                                    timestamp = match.ToString();
+                                    result.Add((timestamp, lyric));
+                                }
+                            }
+                            else
+                            {
+                                // old LRC style with only one timestamp per line like [00:33.84] bla
+                                var matchtime = Regex.Match(line, patterntime);
+                                if (matchtime.Success)
+                                {
+                                    timestamp = line.Substring(1, line.IndexOf("]") - 1);
+                                    lyric = lyric.Substring(lyric.IndexOf("]") + 1);
+                                    result.Add((timestamp, lyric));
+                                }
                             }
                         }
                         else
@@ -1137,8 +1150,10 @@ namespace Karaboss.Utilities
         private static string GetPatternELRC(string[] lines)
         {
             string line;
-            string pattern3digits = @"(?:\[(\d{2}:\d{2}\.\d{3})\]|<(\d{2}:\d{2}\.\d{3})>)(\S+)";
-            string pattern2digits = @"(?:\[(\d{2}:\d{2}\.\d{2})\]|<(\d{2}:\d{2}\.\d{2})>)(\S+)";
+            //string pattern3digits = @"(?:\[(\d{2}:\d{2}\.\d{3})\]|<(\d{2}:\d{2}\.\d{3})>)(\S+)";
+            //string pattern2digits = @"(?:\[(\d{2}:\d{2}\.\d{2})\]|<(\d{2}:\d{2}\.\d{2})>)(\S+)";
+            string pattern3digits = @"\[[0-9]{2}\:[0-9]{2}(\.[0-9]{3})?\]([\w:\s]+)";                   // space before or after "[00:08.99] Y'a<00:09.26> des" or "[00:08.99]Y'a <00:09.26>des "
+            string pattern2digits = @"\[[0-9]{2}\:[0-9]{2}(\.[0-9]{2})?\]([\w:\s]+)";
 
             // Select right pattern
             int digits3 = 0;
@@ -1415,7 +1430,7 @@ namespace Karaboss.Utilities
         /// <param name="MaxLength"></param>
         /// <param name="_LrcMillisecondsDigits"></param>
         /// <param name="_myLyricsMgmt"></param>
-        public static void SaveLRCLines(string File, List<(double, string)> lstDgRows, bool bRemoveAccents, bool bUpperCase, bool bLowerCase, bool bRemoveNonAlphaNumeric, string Tag_Tool, string Tag_Title, string Tag_Artist, string Tag_Album, string Tag_Lang, string Tag_By, uint Tag_Year, string Tag_DPlus, bool bControlLength, int MaxLength, int _LrcMillisecondsDigits, MidiLyricsMgmt _myLyricsMgmt = null)
+        public static void SaveLRCLines(string File, List<(double, string)> lstDgRows, bool bRemoveAccents, bool bUpperCase, bool bLowerCase, bool bRemoveNonAlphaNumeric, bool bRemoveChords, string Tag_Tool, string Tag_Title, string Tag_Artist, string Tag_Album, string Tag_Lang, string Tag_By, uint Tag_Year, string Tag_DPlus, bool bControlLength, int MaxLength, int _LrcMillisecondsDigits, MidiLyricsMgmt _myLyricsMgmt = null)
         {
             string sLine;
 
@@ -1522,14 +1537,14 @@ namespace Karaboss.Utilities
         /// <param name="Tag_DPlus"></param>
         /// <param name="_LrcMillisecondsDigits"></param>
         /// <param name="_myLyricsMgmt"></param>
-        public static void SaveLRCSyllabes(string File, List<(double, string)> lstDgRows, bool bRemoveAccents, bool bUpperCase, bool bLowerCase, bool bRemoveNonAlphaNumeric, string Tag_Tool, string Tag_Title, string Tag_Artist, string Tag_Album, string Tag_Lang, string Tag_By, uint Tag_Year, string Tag_DPlus,int _LrcMillisecondsDigits, MidiLyricsMgmt _myLyricsMgmt = null)
+        public static void SaveLRCSyllabes(string File, List<(double, string)> lstDgRows, bool bRemoveAccents, bool bUpperCase, bool bLowerCase, bool bRemoveNonAlphaNumeric, bool bRemoveChords, string Tag_Tool, string Tag_Title, string Tag_Artist, string Tag_Album, string Tag_Lang, string Tag_By, uint Tag_Year, string Tag_DPlus,int _LrcMillisecondsDigits, MidiLyricsMgmt _myLyricsMgmt = null)
         {
             string Content;
             // Header of the LRC files containing the tags
             Content = CreateTagString(bRemoveAccents, bRemoveNonAlphaNumeric, Tag_Tool, Tag_Title, Tag_Artist, Tag_Album, Tag_Lang, Tag_By, Tag_DPlus);
 
             // Apply treatments choosen to the lyrics
-            List<(double time, string lyric)> lstDgRowsTreated = ApplyTextTreatments(lstDgRows, bRemoveAccents, bUpperCase, bLowerCase, bRemoveNonAlphaNumeric, _myLyricsMgmt);
+            List<(double time, string lyric)> lstDgRowsTreated = ApplyTextTreatments(lstDgRows, bRemoveAccents, bUpperCase, bLowerCase, bRemoveNonAlphaNumeric, bRemoveChords,  _myLyricsMgmt);
 
             // Create lines with time and lyrics to save in lrc file like [00:05.886]Hello <00:08.544>it's <00:08.924>me
             List<(string stime, string lyric)> lstTimeLines = CreateLrcLines(lstDgRowsTreated, _LrcMillisecondsDigits);
@@ -1595,7 +1610,7 @@ namespace Karaboss.Utilities
         /// <param name="bRemoveNonAlphaNumeric">true to remove all non-alphanumeric characters from the text; otherwise, false.</param>
         /// <returns>A new list of karaoke text objects with the specified text treatments applied. The timing information is
         /// preserved.</returns>
-        private static List<(double time, string lyric)> ApplyTextTreatments(List<(double time, string lyric)> LstDgRows, bool bRemoveAccents, bool bUpperCase, bool bLowerCase, bool bRemoveNonAlphaNumeric, MidiLyricsMgmt _myLyricsMgmt)
+        private static List<(double time, string lyric)> ApplyTextTreatments(List<(double time, string lyric)> LstDgRows, bool bRemoveAccents, bool bUpperCase, bool bLowerCase, bool bRemoveNonAlphaNumeric, bool bRemoveChords, MidiLyricsMgmt _myLyricsMgmt)
         {
             List<(double time, string lyric)> Result = new List<(double time, string lyric)>();
             string sLyric;
@@ -1607,8 +1622,19 @@ namespace Karaboss.Utilities
                 if (sLyric.Trim() != m_SepLine && sLyric.Trim() != m_SepParagraph)
                 {
                     // Remove chords
-                    if (_myLyricsMgmt != null && _myLyricsMgmt.RemoveChordPattern != null)
-                        sLyric = Regex.Replace(sLyric, _myLyricsMgmt.RemoveChordPattern, @"");
+                    if (bRemoveChords)
+                    {
+                        if (_myLyricsMgmt != null && _myLyricsMgmt.RemoveChordPattern != null)
+                            sLyric = Regex.Replace(sLyric, _myLyricsMgmt.RemoveChordPattern, @"");
+                    }
+                    else
+                    {
+                        // TODO keep chords: all chords forms ([Am], (Am), ..) => %Am
+
+                        //Check if a chord is present
+
+                        sLyric = _myLyricsMgmt.FormateChordToLrc(sLyric);
+                    }
 
                     // Remove accents
                     sLyric = bRemoveAccents ? Utilities.LyricsUtilities.RemoveDiacritics(sLyric) : sLyric;
@@ -2380,11 +2406,11 @@ namespace Karaboss.Utilities
 
         
 
-        public static void SaveKOKSyllabes(string File, List<(double, string)> lstDgRows, bool bRemoveAccents, bool bUpperCase, bool bLowerCase, bool bRemoveNonAlphaNumeric, int _LrcMillisecondsDigits, MidiLyricsMgmt _myLyricsMgmt = null)
+        public static void SaveKOKSyllabes(string File, List<(double, string)> lstDgRows, bool bRemoveAccents, bool bUpperCase, bool bLowerCase, bool bRemoveNonAlphaNumeric, bool bRemoveChords, int _LrcMillisecondsDigits, MidiLyricsMgmt _myLyricsMgmt = null)
         {
 
             // Apply treatments choosen to the lyrics
-            List<(double time, string lyric)> lstDgRowsTreated = ApplyTextTreatments(lstDgRows, bRemoveAccents, bUpperCase, bLowerCase, bRemoveNonAlphaNumeric, _myLyricsMgmt);
+            List<(double time, string lyric)> lstDgRowsTreated = ApplyTextTreatments(lstDgRows, bRemoveAccents, bUpperCase, bLowerCase, bRemoveNonAlphaNumeric, bRemoveChords, _myLyricsMgmt);
 
             List<List<Utilities.LyricsUtilities.LyricsItem>> lstLines = ExtractDgRows(lstDgRowsTreated, _LrcMillisecondsDigits);
             

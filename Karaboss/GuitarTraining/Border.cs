@@ -116,7 +116,7 @@ namespace Karaboss.GuitarTraining
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message, "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                MessageBox.Show(ex.Message, Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
             }
             base.OnPaint(e);
         }

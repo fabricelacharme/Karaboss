@@ -324,7 +324,7 @@ namespace Karaboss.Mp3
         private void btnDeleteAllLyrics_Click(object sender, EventArgs e)
         {
             string tx = Karaboss.Resources.Localization.Strings.DeleteAllLyrics;
-            if (MessageBox.Show(tx, "Karaboss", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning) == DialogResult.OK)
+            if (MessageBox.Show(tx, Application.ProductName, MessageBoxButtons.OKCancel, MessageBoxIcon.Warning) == DialogResult.OK)
             {
 
                 InitGridView();
@@ -509,7 +509,7 @@ namespace Karaboss.Mp3
         private void btnDeleteAllLyrics_Click_1(object sender, EventArgs e)
         {
             string tx = Karaboss.Resources.Localization.Strings.DeleteAllLyrics;
-            if (MessageBox.Show(tx, "Karaboss", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning) == DialogResult.OK)
+            if (MessageBox.Show(tx, Application.ProductName, MessageBoxButtons.OKCancel, MessageBoxIcon.Warning) == DialogResult.OK)
             {
 
                 InitGridView();
@@ -1043,7 +1043,7 @@ namespace Karaboss.Mp3
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message, "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(ex.Message, Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 StopMusic();
             }
         }
@@ -1357,7 +1357,7 @@ namespace Karaboss.Mp3
 
             if (SyncLyrics == null || SyncLyrics.Lines.Count == 0)
             {
-                MessageBox.Show("No Lyrics to display", "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("No Lyrics to display", Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 
@@ -2077,7 +2077,7 @@ namespace Karaboss.Mp3
             }
             catch (Exception e)
             {
-                MessageBox.Show(e.Message, "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(e.Message, Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 line = -1;
                 return false;
             }
@@ -2276,7 +2276,7 @@ namespace Karaboss.Mp3
 
             if (dgView.Rows.Count == 1)
             {
-                MessageBox.Show("Please add lyrics before entering timestamps", "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Please add lyrics before entering timestamps", Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 
@@ -2318,7 +2318,7 @@ namespace Karaboss.Mp3
             if (PlayerState != PlayerStates.Playing || PlayerAppearance != PlayerAppearances.LyricsEditor) return;
             if (dgView.Rows.Count == 1)
             {
-                MessageBox.Show("Please add lyrics before entering timestamps", "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Please add lyrics before entering timestamps", Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
             if (_index > 0)
@@ -2354,7 +2354,7 @@ namespace Karaboss.Mp3
                 case LrcModes.Edit:
                     if (dgView.Rows.Count == 1)
                     {
-                        MessageBox.Show("Please load an LRC file or lyrics before", "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        MessageBox.Show("Please load an LRC file or lyrics before", Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
                         return;
                     }
 
@@ -2501,7 +2501,7 @@ namespace Karaboss.Mp3
                 //string tx = "Le fichier a été modifié, voulez-vous l'enregistrer ?";
                 String tx = Karaboss.Resources.Localization.Strings.QuestionSavefile;
 
-                DialogResult dr = MessageBox.Show(tx, "Karaboss", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Warning);
+                DialogResult dr = MessageBox.Show(tx, Application.ProductName, MessageBoxButtons.YesNoCancel, MessageBoxIcon.Warning);
                 if (dr == DialogResult.Cancel)
                 {
                     e.Cancel = true;
@@ -2905,8 +2905,10 @@ namespace Karaboss.Mp3
             bool bLowerCase = KokOptionsDialog.bLowerCase;
             // Remove all non-alphanumeric characters
             bool bRemoveNonAlphaNumeric = KokOptionsDialog.bRemoveNonAlphaNumeric;
+            // Remove chords
+            bool bRemoveChords = KokOptionsDialog.bRemoveChords;
 
-            ExportLyricsToKokFormat(bRemoveAccents, bUpperCase, bLowerCase, bRemoveNonAlphaNumeric);
+            ExportLyricsToKokFormat(bRemoveAccents, bUpperCase, bLowerCase, bRemoveNonAlphaNumeric, bRemoveChords);
         }
 
         /// <summary>
@@ -2917,7 +2919,7 @@ namespace Karaboss.Mp3
         /// directory. The method handles file naming conflicts by generating a unique filename. After saving the lyrics
         /// in KOK format, the file is opened automatically. If an error occurs during saving or opening, an error
         /// message is displayed.</remarks>
-        private void ExportLyricsToKokFormat(bool bRemoveAccents, bool bUpperCase, bool bLowerCase, bool bRemoveNonAlphaNumeric)
+        private void ExportLyricsToKokFormat(bool bRemoveAccents, bool bUpperCase, bool bLowerCase, bool bRemoveNonAlphaNumeric, bool bRemoveChords)
         {
             #region select filename
 
@@ -2969,12 +2971,12 @@ namespace Karaboss.Mp3
             List<(double Time, string lyric)> lstDgRows = LyricsUtilities.ReadDataGridContent(dgView, COL_TIME, COL_TEXT);
             if (lstDgRows == null || lstDgRows.Count == 0)
             {
-                MessageBox.Show("No lyric to export", "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show("No lyric to export", Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Information);
                 return;
             }
 
             // Save to KOK file
-            LyricsUtilities.SaveKOKSyllabes(fullPath, lstDgRows, bRemoveAccents, bUpperCase, bLowerCase, bRemoveNonAlphaNumeric, _LrcMillisecondsDigits, null);
+            LyricsUtilities.SaveKOKSyllabes(fullPath, lstDgRows, bRemoveAccents, bUpperCase, bLowerCase, bRemoveNonAlphaNumeric, bRemoveChords, _LrcMillisecondsDigits, null);
 
         }
 
@@ -3196,7 +3198,7 @@ namespace Karaboss.Mp3
 
             if (txtResult.Text.Length == 0)
             {
-                MessageBox.Show("Nothing to save", "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Nothing to save", Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 bfilemodified = false;
                 return;
             }
@@ -3207,12 +3209,12 @@ namespace Karaboss.Mp3
                 otsp = dgView.Rows[i].Cells[COL_TIME].Value;
                 if (otime == null || otsp == null)
                 {
-                    MessageBox.Show("Empty timestamp at line " + i + 1, "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show("Empty timestamp at line " + i + 1, Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
                 }
                 else if ((otime != null && otime.ToString() == "") || (otsp != null && otsp.ToString() == ""))
                 {
-                    MessageBox.Show("Empty timestamp at line " + i + 1, "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show("Empty timestamp at line " + i + 1, Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
                 }
             }
@@ -3236,6 +3238,8 @@ namespace Karaboss.Mp3
             bool bLowerCase = LrcOptionsDialog.bLowerCase;
             // Remove all non-alphanumeric characters
             bool bRemoveNonAlphaNumeric = LrcOptionsDialog.bRemoveNonAlphaNumeric;
+            // Remove chords
+            bool bRemoveChords = LrcOptionsDialog.bRemoveChords;
             // Save to line or to syllabes
             LrcLinesSyllabesFormats LrcLinesSyllabesFormat = LrcOptionsDialog.LrcLinesSyllabesFormat;
 
@@ -3247,7 +3251,7 @@ namespace Karaboss.Mp3
 
             bool bWithMetadata = LrcOptionsDialog.bSaveMetadata;
 
-            SaveLrcFileName(bWithMetadata, LrcLinesSyllabesFormat, bRemoveAccents, bUpperCase, bLowerCase, bRemoveNonAlphaNumeric, bCutLines, LrcCutLinesChars);
+            SaveLrcFileName(bWithMetadata, LrcLinesSyllabesFormat, bRemoveAccents, bUpperCase, bLowerCase, bRemoveNonAlphaNumeric, bRemoveChords, bCutLines, LrcCutLinesChars);
         }
 
 
@@ -3262,7 +3266,7 @@ namespace Karaboss.Mp3
         /// <param name="bRemoveNonAlphaNumeric"></param>
         /// <param name="bCutLines"></param>
         /// <param name="LrcCutLinesChars"></param>
-        private void SaveLrcFileName(bool bWithMetadata, LrcLinesSyllabesFormats LrcLinesSyllabesFormat, bool bRemoveAccents, bool bUpperCase, bool bLowerCase, bool bRemoveNonAlphaNumeric, bool bCutLines, int LrcCutLinesChars)
+        private void SaveLrcFileName(bool bWithMetadata, LrcLinesSyllabesFormats LrcLinesSyllabesFormat, bool bRemoveAccents, bool bUpperCase, bool bLowerCase, bool bRemoveNonAlphaNumeric, bool bRemoveChords, bool bCutLines, int LrcCutLinesChars)
         {
             #region select filename
 
@@ -3347,7 +3351,7 @@ namespace Karaboss.Mp3
             List<(double Time, string lyric)> lstDgRows = LyricsUtilities.ReadDataGridContent(dgView, COL_TIME, COL_TEXT);
             if (lstDgRows == null || lstDgRows.Count == 0)
             {
-                MessageBox.Show("No lyric to export", "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show("No lyric to export", Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Information);
                 return;
             }
 
@@ -3355,11 +3359,11 @@ namespace Karaboss.Mp3
             {
                 case LrcLinesSyllabesFormats.Lines:
                     //SaveLRCLines(fullPath, bRemoveAccents, bUpperCase, bLowerCase, bRemoveNonAlphaNumeric, Tag_Tool, Tag_Title, Tag_Artist, Tag_Album, Tag_Lang, Tag_Year, Tag_DPlus, bCutLines, LrcCutLinesChars);
-                    Utilities.LyricsUtilities.SaveLRCLines(fullPath, lstDgRows, bRemoveAccents, bUpperCase, bLowerCase, bRemoveNonAlphaNumeric, Tag_Tool, Tag_Title, Tag_Artist, Tag_Album, Tag_Lang, Tag_By, Tag_Year, Tag_DPlus, bCutLines, LrcCutLinesChars, _LrcMillisecondsDigits, null);
+                    Utilities.LyricsUtilities.SaveLRCLines(fullPath, lstDgRows, bRemoveAccents, bUpperCase, bLowerCase, bRemoveNonAlphaNumeric, bRemoveChords, Tag_Tool, Tag_Title, Tag_Artist, Tag_Album, Tag_Lang, Tag_By, Tag_Year, Tag_DPlus, bCutLines, LrcCutLinesChars, _LrcMillisecondsDigits, null);
                     break;
                 case LrcLinesSyllabesFormats.Syllabes:
                     //SaveLRCSyllabes(fullPath, bRemoveAccents, bUpperCase, bLowerCase, bRemoveNonAlphaNumeric, Tag_Tool, Tag_Title, Tag_Artist, Tag_Album, Tag_Lang, Tag_Year, Tag_DPlus);
-                    Utilities.LyricsUtilities.SaveLRCSyllabes(fullPath, lstDgRows, bRemoveAccents, bUpperCase, bLowerCase, bRemoveNonAlphaNumeric, Tag_Tool, Tag_Title, Tag_Artist, Tag_Album, Tag_Lang, Tag_By, Tag_Year, Tag_DPlus, _LrcMillisecondsDigits, null);
+                    Utilities.LyricsUtilities.SaveLRCSyllabes(fullPath, lstDgRows, bRemoveAccents, bUpperCase, bLowerCase, bRemoveNonAlphaNumeric, bRemoveChords, Tag_Tool, Tag_Title, Tag_Artist, Tag_Album, Tag_Lang, Tag_By, Tag_Year, Tag_DPlus, _LrcMillisecondsDigits, null);
                     break;
             }
         }
@@ -3427,7 +3431,7 @@ namespace Karaboss.Mp3
                 PopulateTextBox(localKaraokeLyrics);
 
 
-                if (MessageBox.Show(Strings.SwitchToSyncMode + "?", "Karaboss", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+                if (MessageBox.Show(Strings.SwitchToSyncMode + "?", Application.ProductName, MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
                 {
                     SetSyncEditMode();
                 }
@@ -3868,7 +3872,7 @@ namespace Karaboss.Mp3
             }
             catch (Exception e)
             {
-                MessageBox.Show(e.Message, "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(e.Message, Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -4350,7 +4354,7 @@ namespace Karaboss.Mp3
             int line;
             if (!CheckTimes(out line))
             {
-                MessageBox.Show("Time on line " + line + " is incorrect", "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Time on line " + line + " is incorrect", Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 try
                 {
                     dgView.CurrentCell = dgView.Rows[line - 1].Cells[COL_MS];
@@ -4499,7 +4503,7 @@ namespace Karaboss.Mp3
                 }
                 catch (Exception e)
                 {
-                    MessageBox.Show(e.Message, "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show(e.Message, Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
         }
@@ -4583,7 +4587,7 @@ namespace Karaboss.Mp3
             {
                 string tx = Karaboss.Resources.Localization.Strings.LyricsWereRecorded;
                 //string tx = "Les paroles ont été enregistrées dans le fichier";
-                MessageBox.Show(tx + "\n" + Path.GetFileName(FileName), "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show(tx + "\n" + Path.GetFileName(FileName), Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
 
             // Reset Title

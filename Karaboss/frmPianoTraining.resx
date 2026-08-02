@@ -130,7 +130,7 @@
   </data>
   <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
   <data name="vScrollBar.Location" type="System.Drawing.Point, System.Drawing">
-    <value>1093, 0</value>
+    <value>1107, 0</value>
   </data>
   <data name="vScrollBar.Size" type="System.Drawing.Size, System.Drawing">
     <value>17, 180</value>
@@ -166,7 +166,7 @@
     <value>vPianoRollControl1</value>
   </data>
   <data name="&gt;&gt;vPianoRollControl1.Type" xml:space="preserve">
-    <value>Sanford.Multimedia.Midi.VPianoRoll.VPianoRollControl, Sanford.Multimedia.Midi, Version=6.1.0.4, Culture=neutral, PublicKeyToken=null</value>
+    <value>Sanford.Multimedia.Midi.VPianoRoll.VPianoRollControl, Sanford.Multimedia.Midi, Version=6.1.0.8, Culture=neutral, PublicKeyToken=null</value>
   </data>
   <data name="&gt;&gt;vPianoRollControl1.Parent" xml:space="preserve">
     <value>pnlScrollView</value>
@@ -181,7 +181,7 @@
     <value>0, 0</value>
   </data>
   <data name="pnlScrollView.Size" type="System.Drawing.Size, System.Drawing">
-    <value>1110, 180</value>
+    <value>1124, 180</value>
   </data>
   <data name="pnlScrollView.TabIndex" type="System.Int32, mscorlib">
     <value>1</value>
@@ -214,7 +214,7 @@
     <value>pianoControl1</value>
   </data>
   <data name="&gt;&gt;pianoControl1.Type" xml:space="preserve">
-    <value>Sanford.Multimedia.Midi.UI.PianoControl, Sanford.Multimedia.Midi, Version=6.1.0.4, Culture=neutral, PublicKeyToken=null</value>
+    <value>Sanford.Multimedia.Midi.UI.PianoControl, Sanford.Multimedia.Midi, Version=6.1.0.8, Culture=neutral, PublicKeyToken=null</value>
   </data>
   <data name="&gt;&gt;pianoControl1.Parent" xml:space="preserve">
     <value>pnlPiano</value>
@@ -229,7 +229,7 @@
     <value>40, 0</value>
   </data>
   <data name="pnlRedPianoSep.Size" type="System.Drawing.Size, System.Drawing">
-    <value>1070, 5</value>
+    <value>1084, 5</value>
   </data>
   <data name="pnlRedPianoSep.TabIndex" type="System.Int32, mscorlib">
     <value>1</value>
@@ -586,7 +586,7 @@
     <value>0, 180</value>
   </data>
   <data name="pnlPiano.Size" type="System.Drawing.Size, System.Drawing">
-    <value>1110, 167</value>
+    <value>1124, 167</value>
   </data>
   <data name="pnlPiano.TabIndex" type="System.Int32, mscorlib">
     <value>2</value>
@@ -622,7 +622,7 @@
     <value>positionHScrollBar</value>
   </data>
   <data name="&gt;&gt;positionHScrollBar.Type" xml:space="preserve">
-    <value>ColorSlider.ColorSlider, ColorSlider, Version=1.0.0.4, Culture=neutral, PublicKeyToken=null</value>
+    <value>ColorSlider.ColorSlider, ColorSlider, Version=1.0.0.5, Culture=neutral, PublicKeyToken=null</value>
   </data>
   <data name="&gt;&gt;positionHScrollBar.Parent" xml:space="preserve">
     <value>pnlTop</value>
@@ -637,7 +637,7 @@
     <value>0, 0</value>
   </data>
   <data name="pnlTop.Size" type="System.Drawing.Size, System.Drawing">
-    <value>1150, 50</value>
+    <value>1164, 50</value>
   </data>
   <data name="pnlTop.TabIndex" type="System.Int32, mscorlib">
     <value>3</value>
@@ -682,7 +682,7 @@
     <value>BtnStop</value>
   </data>
   <data name="&gt;&gt;BtnStop.Type" xml:space="preserve">
-    <value>Karaboss.NoSelectButton, Karaboss, Version=1.0.7.4, Culture=neutral, PublicKeyToken=null</value>
+    <value>Karaboss.NoSelectButton, Karaboss, Version=1.0.12.3, Culture=neutral, PublicKeyToken=null</value>
   </data>
   <data name="&gt;&gt;BtnStop.Parent" xml:space="preserve">
     <value>pnlBottom</value>
@@ -709,7 +709,7 @@
     <value>BtnPlay</value>
   </data>
   <data name="&gt;&gt;BtnPlay.Type" xml:space="preserve">
-    <value>Karaboss.NoSelectButton, Karaboss, Version=1.0.7.4, Culture=neutral, PublicKeyToken=null</value>
+    <value>Karaboss.NoSelectButton, Karaboss, Version=1.0.12.3, Culture=neutral, PublicKeyToken=null</value>
   </data>
   <data name="&gt;&gt;BtnPlay.Parent" xml:space="preserve">
     <value>pnlBottom</value>
@@ -1042,7 +1042,7 @@
     <value>0, 397</value>
   </data>
   <data name="pnlBottom.Size" type="System.Drawing.Size, System.Drawing">
-    <value>1150, 54</value>
+    <value>1164, 54</value>
   </data>
   <data name="pnlBottom.TabIndex" type="System.Int32, mscorlib">
     <value>4</value>
@@ -1123,7 +1123,7 @@
     <value>Right</value>
   </data>
   <data name="pnlRight.Location" type="System.Drawing.Point, System.Drawing">
-    <value>1110, 50</value>
+    <value>1124, 50</value>
   </data>
   <data name="pnlRight.Size" type="System.Drawing.Size, System.Drawing">
     <value>40, 347</value>
@@ -1150,7 +1150,7 @@
     <value>0, 50</value>
   </data>
   <data name="pnlMiddle.Size" type="System.Drawing.Size, System.Drawing">
-    <value>1110, 347</value>
+    <value>1124, 347</value>
   </data>
   <data name="pnlMiddle.TabIndex" type="System.Int32, mscorlib">
     <value>7</value>
@@ -1171,13 +1171,13 @@
     <value>True</value>
   </metadata>
   <metadata name="$this.TrayHeight" type="System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>163</value>
+    <value>67</value>
   </metadata>
   <data name="$this.AutoScaleDimensions" type="System.Drawing.SizeF, System.Drawing">
     <value>6, 13</value>
   </data>
   <data name="$this.ClientSize" type="System.Drawing.Size, System.Drawing">
-    <value>1150, 451</value>
+    <value>1164, 451</value>
   </data>
   <data name="$this.Icon" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
