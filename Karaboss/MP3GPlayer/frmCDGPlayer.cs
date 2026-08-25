@@ -49,8 +49,8 @@ using CDGNet;
 using MP3GConverter;
 using System.IO;
 using System.Text.RegularExpressions;
-using Karaboss.Mp3;
 using Karaboss.Utilities;
+using Karaboss.playlists;
 
 namespace Karaboss
 {

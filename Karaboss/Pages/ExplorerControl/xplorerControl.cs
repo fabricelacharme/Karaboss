@@ -41,6 +41,7 @@ using System.Globalization;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using Karaboss.Resources.Localization;
+using Karaboss.playlists;
 using FlShell;
 using System.Text.RegularExpressions;
 

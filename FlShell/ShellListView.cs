@@ -1,6 +1,6 @@
 ﻿#region License
 
-/* Copyright (c) 2025 Fabrice Lacharme
+/* Copyright (c) 2026 Fabrice Lacharme
  * 
  * Permission is hereby granted, free of charge, to any person obtaining a copy 
  * of this software and associated documentation files (the "Software"), to 
@@ -52,9 +52,11 @@ using System.Text;
 using FlShell.Resources.Localization;
 using System.Text.RegularExpressions;
 
+
 namespace FlShell
 {
-    // Specific Karaboss    
+    #region Specific Karaboss    
+
     // Selected item changed
     public delegate void SelectedIndexChangedEventHandler(object sender, string fileName);
     // Play MIDI or KAR file
@@ -81,7 +83,7 @@ namespace FlShell
     // SendK Key to Parent
     public delegate void SenKeyToParentHandler(object sender, Keys k);
 
-
+    #endregion Specific Karaboss
 
     public partial class ShellListView : Control, IDropSource, Interop.IDropTarget
     {
@@ -96,6 +98,8 @@ namespace FlShell
         /// </summary>
         public delegate void FilterItemEventHandler(object sender, FilterItemEventArgs e);
 
+
+        #region Events Karaboss
         // Specific Karaboss : Play a song, a playlist or edit a song
         public event SelectedIndexChangedEventHandler SelectedIndexChanged;
         
@@ -121,7 +125,9 @@ namespace FlShell
         /// Sepecific Karaboss: function keys F3, F4 keydown sent to application
         /// </summary>
         public event lvFunctionKeyEventHandler lvFunctionKeyClicked;
-       
+
+        #endregion Events Karaboss
+
         /// <summary>
         /// Occurs when the <see cref="ShellView"/> control is about to 
         /// navigate to a new folder.
@@ -138,12 +144,23 @@ namespace FlShell
         //avoid Globalization problem-- an empty timevalue
         DateTime EmptyTimeValue = new DateTime(1, 1, 1, 0, 0, 0);
 
+
+        #region Properties Karaboss
+
         // Specific Karaboss      
         string[,] m_allPlaylists;
         public string[,] allPlaylists
         {
             set { m_allPlaylists = value; }
         }
+
+        string[,] m_tbAllPlaylists;
+        public string[,] tbAllPlaylists
+        {
+            set { m_tbAllPlaylists = value; }
+        }
+       
+        #endregion Properties Karaboss
 
         private ListViewColumnSorter lvwColumnSorter;
         
@@ -424,20 +441,15 @@ namespace FlShell
                 OnNavigated();
             }
         }
-
      
-
-        #endregion
+        #endregion on
 
 
         #region Navigate
 
         void Navigate(ShellItem folder, string file = "")
         {        
-            // à ce niveau c:\users\Fabrice\Music est transformé en MyMusic
-            
-            
-            
+            // à ce niveau c:\users\Fabrice\Music est transformé en MyMusic                                    
             NavigatingEventArgs e = new NavigatingEventArgs(folder);
             Navigating?.Invoke(this, e);
 
@@ -471,12 +483,10 @@ namespace FlShell
             }
         }
 
-
         void OnNavigated()
         {
             Navigated?.Invoke(this, EventArgs.Empty);
         }
-
 
 
         /// <summary>
@@ -990,7 +1000,7 @@ namespace FlShell
             
         }
 
-        #endregion
+        #endregion create
 
         bool ShouldShowHidden()
         {
@@ -1795,7 +1805,7 @@ namespace FlShell
                 selectedOrder.Remove(e.Item);
         }
 
-        #endregion
+        #endregion Events
 
 
         #region Menu
@@ -2136,7 +2146,7 @@ namespace FlShell
 
             ShellContextMenu shm = new ShellContextMenu(SelectedItems);  
 
-            ContextMenu menu = new ContextMenu();       // main menu
+            ContextMenu pmenu = new ContextMenu();       // main menu
             IntPtr plmenu = User32.CreatePopupMenu();   // submenu of playlists
 
             Point pos = this.PointToScreen(pt);
@@ -2145,23 +2155,26 @@ namespace FlShell
             int plmax = plmin;
 
             // Populate
-            shm.RemoveShellMenuItems(menu);
+            shm.RemoveShellMenuItems(pmenu);
 
             if (bShowKarMenu)
             {
 
-                #region menu cascading "Add to playlist"        
+                #region Menu cascading "Add to playlist"        
                 MENUITEMINFO itemInfo = MENUITEMINFO.New(Strings.addToPlaylist);
-
                 itemInfo.fMask = (MIIM.MIIM_SUBMENU | MIIM.MIIM_STRING);
                 itemInfo.hSubMenu = plmenu;
 
-                User32.InsertMenuItem(menu.Handle, 0, true, ref itemInfo);
-                #endregion
+                User32.InsertMenuItem(pmenu.Handle, 0, true, ref itemInfo);
+                #endregion Menu cascading "Add to playlist"
 
 
                 #region menu playlist items
-                string plName; // = string.Empty;
+                string plName;
+                string Key;
+                string ParentKey;
+                string folder;
+                IntPtr foldermenu;
                 MFT ichecked = MFT.MFT_BYCOMMAND;
                 
                 if ( m_allPlaylists.GetLength(0) > 0)
@@ -2190,10 +2203,10 @@ namespace FlShell
 
 
                 #region menu play, edit
-                User32.InsertMenu(menu.Handle, 1, (int)(MFT.MFT_BYPOSITION), (IntPtr)100, Strings.Play);
-                User32.InsertMenu(menu.Handle, 2, (int)(MFT.MFT_BYPOSITION), (IntPtr)101, Strings.Edit);                              
+                User32.InsertMenu(pmenu.Handle, 1, (int)(MFT.MFT_BYPOSITION), (IntPtr)100, Strings.Play);
+                User32.InsertMenu(pmenu.Handle, 2, (int)(MFT.MFT_BYPOSITION), (IntPtr)101, Strings.Edit);                              
 
-                User32.InsertMenu(menu.Handle, 3, (int)(MFT.MFT_BYPOSITION | MFT.MFT_SEPARATOR), (IntPtr)0, string.Empty);
+                User32.InsertMenu(pmenu.Handle, 3, (int)(MFT.MFT_BYPOSITION | MFT.MFT_SEPARATOR), (IntPtr)0, string.Empty);
                 #endregion
 
             }
@@ -2205,7 +2218,7 @@ namespace FlShell
                 idx = 4;
 
             shm.ComInterface.QueryContextMenu(
-                   menu.Handle,
+                   pmenu.Handle,
                    idx,
                    m_CmdFirst,
                    int.MaxValue,
@@ -2214,7 +2227,7 @@ namespace FlShell
                    ((Control.ModifierKeys & Keys.Shift) != 0 ?
                    CMF.EXTENDEDVERBS : 0));
 
-            int command = User32.TrackPopupMenuEx(menu.Handle,
+            int command = User32.TrackPopupMenuEx(pmenu.Handle,
                   TPM.TPM_RETURNCMD, pos.X, pos.Y, this.Handle,
                   IntPtr.Zero);
 

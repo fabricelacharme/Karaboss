@@ -1,6 +1,6 @@
 ﻿namespace Karaboss.Configuration
 {
-    partial class UpdControl
+    partial class CfgUpdControl
     {
         /// <summary> 
         /// Required designer variable.
@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(UpdControl));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(CfgUpdControl));
             this.chkUpdateProgram = new System.Windows.Forms.CheckBox();
             this.lblWebSite = new System.Windows.Forms.Label();
             this.txtWebSite = new System.Windows.Forms.TextBox();

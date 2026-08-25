@@ -11,9 +11,9 @@ using System;
 
 namespace Karaboss.Configuration
 {
-    public partial class PlaylistsControl : ConfigurationBaseControl
+    public partial class CfgPlaylistsControl : ConfigurationBaseControl
     {
-        public PlaylistsControl(string configName) : base(configName)
+        public CfgPlaylistsControl(string configName) : base(configName)
         {
             InitializeComponent();
             PopulateValues();

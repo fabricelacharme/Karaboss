@@ -1,6 +1,6 @@
 ﻿namespace Karaboss.Configuration
 {
-    partial class ChordsControl
+    partial class CfgChordsControl
     {
         /// <summary> 
         /// Variable nécessaire au concepteur.
@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ChordsControl));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(CfgChordsControl));
             this.lblHelp = new System.Windows.Forms.Label();
             this.lblDisplayChords = new System.Windows.Forms.Label();
             this.chkDisplayChords = new System.Windows.Forms.CheckBox();

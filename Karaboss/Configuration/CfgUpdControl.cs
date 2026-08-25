@@ -31,55 +31,37 @@
  */
 
 #endregion
-using System;
-using System.Runtime.Serialization;
 
-namespace Karaboss.playlists
+namespace Karaboss.Configuration
 {
-    /*
-    * PLAYLISTS MANAGEMENT
-    * A playlist is a collection of playlistItems
-    * 
-    * DataContract => reference to System.Runtime.Serialization.dll
-    * 
-    */
-
-   
-    [DataContract]
-    public class PlaylistItem
+    public partial class CfgUpdControl : ConfigurationBaseControl
     {
-        //[DataMember]
-        //public bool Selected { get; set; }
-        
-        [DataMember]
-        public string Artist { get; set; }
+        public CfgUpdControl(string configName) : base(configName)
+        {
+            InitializeComponent();
+            populateFields();           
+        }
 
-        [DataMember]
-        public string Song { get; set; }
 
-        [DataMember]
-        public String File { get; set; }
+        private void populateFields()
+        {
+            chkUpdateProgram.Checked = Properties.Settings.Default.CheckForUpdates;
+            chkUpdFreq.Text = Properties.Settings.Default.UpdFrequency;
+            txtWebSite.Text = Properties.Settings.Default.RemoteUrl;
 
-        [DataMember]
-        public string Album { get; set; }
-        
-        [DataMember]
-        public string Length { get; set; }
+        }
 
-        [DataMember]
-        public int Notation { get; set; }
+        public override void Restore()
+        {
+        }
 
-        [DataMember]
-        public string DirSlideShow { get; set; }
+        public override void Apply()
+        {
+            Properties.Settings.Default.CheckForUpdates = chkUpdateProgram.Checked;
+            Properties.Settings.Default.UpdFrequency = chkUpdFreq.Text;
+            Properties.Settings.Default.RemoteUrl = txtWebSite.Text.Trim();
+            Properties.Settings.Default.Save();
+        }
 
-        [DataMember]
-        public bool MelodyMute { get; set; }
-
-        [DataMember]
-        public string KaraokeSinger { get; set; }
-            
     }
-
-
-
 }

@@ -1,6 +1,6 @@
 ﻿namespace Karaboss.Configuration
 {
-    partial class KaraokeControl
+    partial class CfgKaraokeControl
     {
         /// <summary> 
         /// Variable nécessaire au concepteur.
@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(KaraokeControl));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(CfgKaraokeControl));
             this.lblMuteMelody = new System.Windows.Forms.Label();
             this.chkMuteMelody = new System.Windows.Forms.CheckBox();
             this.lblDisplayBalls = new System.Windows.Forms.Label();

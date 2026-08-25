@@ -52,7 +52,7 @@ using MusicTxt;
 using System.Collections.Generic;
 using Karaboss.Utilities;
 using Karaboss.Kfn;
-
+using Karaboss.playlists;
 
 namespace Karaboss
 {
@@ -3302,25 +3302,25 @@ namespace Karaboss
 
         private void PopulateConfigurationForm()
         {
-            ConfigurationTreeNode config = new ConfigurationTreeNode(Strings.Language, new LangControl(Strings.Language));
+            ConfigurationTreeNode config = new ConfigurationTreeNode(Strings.Language, new CfgLangControl(Strings.Language));
             m_configurationForm.AddConfigItem(config);
 
-            config = new ConfigurationTreeNode(Strings.SongTextEncoding, new SongEncodingControl(Strings.SongTextEncoding));
+            config = new ConfigurationTreeNode(Strings.SongTextEncoding, new CfgSongEncodingControl(Strings.SongTextEncoding));
             m_configurationForm.AddConfigItem(config);
 
-            config = new ConfigurationTreeNode(Strings.KaraokeOptions, new KaraokeControl(Strings.KaraokeOptions));
+            config = new ConfigurationTreeNode(Strings.KaraokeOptions, new CfgKaraokeControl(Strings.KaraokeOptions));
             m_configurationForm.AddConfigItem(config);
 
-            config = new ConfigurationTreeNode(Strings.UpdateKaraboss, new UpdControl(Strings.UpdateKaraboss));
+            config = new ConfigurationTreeNode(Strings.UpdateKaraboss, new CfgUpdControl(Strings.UpdateKaraboss));
             m_configurationForm.AddConfigItem(config);
 
-            config = new ConfigurationTreeNode("Playlists", new PlaylistsControl("Playlists"));
+            config = new ConfigurationTreeNode("Playlists", new Karaboss.Configuration.CfgPlaylistsControl("Playlists"));
             m_configurationForm.AddConfigItem(config);
 
-            config = new ConfigurationTreeNode(Strings.MidiEditor, new MidiEditorControl(Strings.MidiEditor));
+            config = new ConfigurationTreeNode(Strings.MidiEditor, new CfgMidiEditorControl(Strings.MidiEditor));
             m_configurationForm.AddConfigItem(config);
 
-            config = new ConfigurationTreeNode(Strings.Chords, new ChordsControl(Strings.Chords));
+            config = new ConfigurationTreeNode(Strings.Chords, new CfgChordsControl(Strings.Chords));
             m_configurationForm.AddConfigItem(config);
 
 

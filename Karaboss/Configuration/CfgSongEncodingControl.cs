@@ -31,24 +31,52 @@
  */
 
 #endregion
-
-using System;
-
+using System.Collections.Generic;
+using System.Windows.Forms;
 
 namespace Karaboss.Configuration
 {
-    public partial class MidiEditorControl : ConfigurationBaseControl
+    public partial class CfgSongEncodingControl : ConfigurationBaseControl
     {
-        public MidiEditorControl(string configName) : base(configName)
+        private ComboBox m_langCB;
+        private Label m_langL;
+
+        public class Encoding
         {
-            InitializeComponent();
-            PopulateValues();
+            public string Name { get; set; }
+            public string Value { get; set; }
         }
 
-        private void PopulateValues()
+        public CfgSongEncodingControl(string configName): base(configName)
         {
-            UpDownTransposeAmount.Value = Karaclass.m_TransposeAmount;
-            UpDownVelocity.Value = Karaclass.m_Velocity;
+            InitializeComponent();
+            populateEncodings();
+        }
+
+        /// <summary>
+        /// Populate existing Encodings
+        /// </summary>
+        private void populateEncodings()
+        {
+            //Build a list
+            var dataSource = new List<Encoding>();
+            dataSource.Add(new Encoding() { Name = "Ascii", Value = "Ascii" });
+            dataSource.Add(new Encoding() { Name = "Chinese", Value = "cn" });
+            dataSource.Add(new Encoding() { Name = "Japanese", Value = "jp" });
+            dataSource.Add(new Encoding() { Name = "Korean", Value = "kr" });
+            dataSource.Add(new Encoding() { Name = "Vietnamese", Value = "vn" });
+
+            //Setup data binding
+            this.m_langCB.DataSource = dataSource;
+            this.m_langCB.DisplayMember = "Name";
+            this.m_langCB.ValueMember = "Value";
+
+            // make it readonly
+            this.m_langCB.DropDownStyle = ComboBoxStyle.DropDownList;
+
+            // value
+            m_langCB.Text = Karaclass.m_textEncoding;
+
         }
 
         public override void Restore()
@@ -57,14 +85,10 @@ namespace Karaboss.Configuration
 
         public override void Apply()
         {
-            Karaclass.m_TransposeAmount = Convert.ToInt32(UpDownTransposeAmount.Value);
-            Karaclass.m_Velocity = Convert.ToInt32(UpDownVelocity.Value);
-
-            Properties.Settings.Default.TransposeAmount = Karaclass.m_TransposeAmount;           
+            Karaclass.m_textEncoding = m_langCB.Text;
+            Properties.Settings.Default.textEncoding = m_langCB.Text;
             Properties.Settings.Default.Save();
-
         }
 
-        
     }
 }

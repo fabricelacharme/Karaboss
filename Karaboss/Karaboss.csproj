@@ -131,47 +131,47 @@
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Configuration\ConfigurationTreeNode.cs" />
-    <Compile Include="Configuration\KaraokeControl.cs">
+    <Compile Include="Configuration\CfgKaraokeControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Configuration\KaraokeControl.Designer.cs">
-      <DependentUpon>KaraokeControl.cs</DependentUpon>
+    <Compile Include="Configuration\CfgKaraokeControl.Designer.cs">
+      <DependentUpon>CfgKaraokeControl.cs</DependentUpon>
     </Compile>
-    <Compile Include="Configuration\LangControl.cs">
+    <Compile Include="Configuration\CfgLangControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Configuration\LangControl.Designer.cs">
-      <DependentUpon>LangControl.cs</DependentUpon>
+    <Compile Include="Configuration\CfgLangControl.Designer.cs">
+      <DependentUpon>CfgLangControl.cs</DependentUpon>
     </Compile>
-    <Compile Include="Configuration\MidiEditorControl.cs">
+    <Compile Include="Configuration\CfgMidiEditorControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Configuration\MidiEditorControl.Designer.cs">
-      <DependentUpon>MidiEditorControl.cs</DependentUpon>
+    <Compile Include="Configuration\CfgMidiEditorControl.Designer.cs">
+      <DependentUpon>CfgMidiEditorControl.cs</DependentUpon>
     </Compile>
-    <Compile Include="Configuration\ChordsControl.cs">
+    <Compile Include="Configuration\CfgChordsControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Configuration\ChordsControl.Designer.cs">
-      <DependentUpon>ChordsControl.cs</DependentUpon>
+    <Compile Include="Configuration\CfgChordsControl.Designer.cs">
+      <DependentUpon>CfgChordsControl.cs</DependentUpon>
     </Compile>
-    <Compile Include="Configuration\PlaylistsControl.cs">
+    <Compile Include="Configuration\CfgPlaylistsControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Configuration\PlaylistsControl.Designer.cs">
-      <DependentUpon>PlaylistsControl.cs</DependentUpon>
+    <Compile Include="Configuration\CfgPlaylistsControl.Designer.cs">
+      <DependentUpon>CfgPlaylistsControl.cs</DependentUpon>
     </Compile>
-    <Compile Include="Configuration\SongEncodingControl.cs">
+    <Compile Include="Configuration\CfgSongEncodingControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Configuration\SongEncodingControl.Designer.cs">
-      <DependentUpon>SongEncodingControl.cs</DependentUpon>
+    <Compile Include="Configuration\CfgSongEncodingControl.Designer.cs">
+      <DependentUpon>CfgSongEncodingControl.cs</DependentUpon>
     </Compile>
-    <Compile Include="Configuration\UpdControl.cs">
+    <Compile Include="Configuration\CfgUpdControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Configuration\UpdControl.Designer.cs">
-      <DependentUpon>UpdControl.cs</DependentUpon>
+    <Compile Include="Configuration\CfgUpdControl.Designer.cs">
+      <DependentUpon>CfgUpdControl.cs</DependentUpon>
     </Compile>
     <Compile Include="Configuration\UpdFrequency.cs" />
     <Compile Include="Dialogs\cboColor.cs" />
@@ -590,55 +590,55 @@
       <DependentUpon>ConfigurationForm.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Configuration\KaraokeControl.fr.resx">
-      <DependentUpon>KaraokeControl.cs</DependentUpon>
+    <EmbeddedResource Include="Configuration\CfgKaraokeControl.fr.resx">
+      <DependentUpon>CfgKaraokeControl.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Configuration\KaraokeControl.resx">
-      <DependentUpon>KaraokeControl.cs</DependentUpon>
+    <EmbeddedResource Include="Configuration\CfgKaraokeControl.resx">
+      <DependentUpon>CfgKaraokeControl.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Configuration\LangControl.fr.resx">
-      <DependentUpon>LangControl.cs</DependentUpon>
+    <EmbeddedResource Include="Configuration\CfgLangControl.fr.resx">
+      <DependentUpon>CfgLangControl.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Configuration\LangControl.resx">
-      <DependentUpon>LangControl.cs</DependentUpon>
+    <EmbeddedResource Include="Configuration\CfgLangControl.resx">
+      <DependentUpon>CfgLangControl.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Configuration\MidiEditorControl.fr.resx">
-      <DependentUpon>MidiEditorControl.cs</DependentUpon>
+    <EmbeddedResource Include="Configuration\CfgMidiEditorControl.fr.resx">
+      <DependentUpon>CfgMidiEditorControl.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Configuration\MidiEditorControl.resx">
-      <DependentUpon>MidiEditorControl.cs</DependentUpon>
+    <EmbeddedResource Include="Configuration\CfgMidiEditorControl.resx">
+      <DependentUpon>CfgMidiEditorControl.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Configuration\ChordsControl.fr.resx">
-      <DependentUpon>ChordsControl.cs</DependentUpon>
+    <EmbeddedResource Include="Configuration\CfgChordsControl.fr.resx">
+      <DependentUpon>CfgChordsControl.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Configuration\ChordsControl.resx">
-      <DependentUpon>ChordsControl.cs</DependentUpon>
+    <EmbeddedResource Include="Configuration\CfgChordsControl.resx">
+      <DependentUpon>CfgChordsControl.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Configuration\PlaylistsControl.fr.resx">
-      <DependentUpon>PlaylistsControl.cs</DependentUpon>
+    <EmbeddedResource Include="Configuration\CfgPlaylistsControl.fr.resx">
+      <DependentUpon>CfgPlaylistsControl.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Configuration\PlaylistsControl.resx">
-      <DependentUpon>PlaylistsControl.cs</DependentUpon>
+    <EmbeddedResource Include="Configuration\CfgPlaylistsControl.resx">
+      <DependentUpon>CfgPlaylistsControl.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Configuration\SongEncodingControl.fr.resx">
-      <DependentUpon>SongEncodingControl.cs</DependentUpon>
+    <EmbeddedResource Include="Configuration\CfgSongEncodingControl.fr.resx">
+      <DependentUpon>CfgSongEncodingControl.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Configuration\SongEncodingControl.resx">
-      <DependentUpon>SongEncodingControl.cs</DependentUpon>
+    <EmbeddedResource Include="Configuration\CfgSongEncodingControl.resx">
+      <DependentUpon>CfgSongEncodingControl.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Configuration\UpdControl.fr.resx">
-      <DependentUpon>UpdControl.cs</DependentUpon>
+    <EmbeddedResource Include="Configuration\CfgUpdControl.fr.resx">
+      <DependentUpon>CfgUpdControl.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Configuration\UpdControl.resx">
-      <DependentUpon>UpdControl.cs</DependentUpon>
+    <EmbeddedResource Include="Configuration\CfgUpdControl.resx">
+      <DependentUpon>CfgUpdControl.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Dialogs\frmColorDialog.resx">
