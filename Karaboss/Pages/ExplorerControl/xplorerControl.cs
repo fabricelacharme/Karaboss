@@ -43,11 +43,10 @@ using System.ComponentModel;
 using Karaboss.Resources.Localization;
 using FlShell;
 using System.Text.RegularExpressions;
-using System.Xml.Linq;
 
 namespace Karaboss.xplorer
 {
-    // Events
+    #region Delegates
     public delegate void SelectedIndexChangedEventHandler(object sender, string fileName);   
     public delegate void PlayMidiEventHandler(object sender, FileInfo fi, bool bplay);
     public delegate void PlayCDGEventHandler(object sender, FileInfo fi, bool bplay);
@@ -62,10 +61,12 @@ namespace Karaboss.xplorer
     public delegate void CreateNewMidiFileEventHandler(object sender);
     public delegate void CreateNewKfnFileEventHandler(object sender);
 
+    #endregion Delegates
 
     public partial class xplorerControl : UserControl
     {
 
+        #region Events
         // Play a song, a playlist or edit a song        
         public event SelectedIndexChangedEventHandler SelectedIndexChanged;        
         public event PlayMidiEventHandler PlayMidi;
@@ -80,7 +81,9 @@ namespace Karaboss.xplorer
         public event ContentChangedEventHandler LvContentChanged;
         public event CreateNewMidiFileEventHandler CreateNewMidiFile;
         public event CreateNewKfnFileEventHandler CreateNewKfnFile;
-        
+
+        #endregion Events
+
 
         #region properties
 
@@ -149,13 +152,19 @@ namespace Karaboss.xplorer
 
         #endregion
 
+
+        #region Playlists
         private ObservableCollection<Playlist> allPlaylists = new ObservableCollection<Playlist>();        
         private PlaylistGroup PlGroup = new PlaylistGroup();
         private PlaylistGroupsHelper PlGroupHelper = new PlaylistGroupsHelper();
 
+        #endregion Playlists
+
         public xplorerControl()
         {
             InitializeComponent();
+
+            #region Events
 
             shellListView.AddToPlaylist += new FlShell.AddToPlaylistByNameHandler(ShellListView_AddToPlaylist);
             shellListView.PlayMidi += new FlShell.PlayMidiEventHandler(ShellListView_PlayMidi);
@@ -174,7 +183,9 @@ namespace Karaboss.xplorer
             shellListView.lvFunctionKeyClicked += new FlShell.lvFunctionKeyEventHandler(ShellListView_lvFunctionKeyClicked);
             shellListView.SenKeyToParent += new FlShell.SenKeyToParentHandler(shellListView_SendKeyToParent);
 
-            treeView.tvFunctionKeyClicked += new FlShell.tvFunctionKeyEventHandler(TreeView_tvFunctionKeyClicked);                      
+            treeView.tvFunctionKeyClicked += new FlShell.tvFunctionKeyEventHandler(TreeView_tvFunctionKeyClicked);
+
+            #endregion Events
 
             // Load existing playlists
             LoadPlaylists();            

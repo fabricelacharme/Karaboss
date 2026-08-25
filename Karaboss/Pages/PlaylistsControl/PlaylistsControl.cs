@@ -39,7 +39,6 @@ using Karaboss.Resources.Localization;
 using System.IO;
 using System.Collections.Generic;
 using System.ComponentModel;
-using FlShell;
 
 namespace Karaboss.playlists
 {
