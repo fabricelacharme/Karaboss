@@ -292,6 +292,7 @@
     </Compile>
     <Compile Include="Mp3\Mp3Lyrics\Mp3LyricsMgmt.cs" />
     <Compile Include="Mp3\Mp3Player\Mp3Player.cs" />
+    <Compile Include="Pages\ExplorerControl\ShellContextMenu.cs" />
     <Compile Include="Srt\srtlib.net.cs" />
     <Compile Include="Themes\Theme.cs" />
     <Compile Include="Utilities\Forms\FormUtilities.cs" />

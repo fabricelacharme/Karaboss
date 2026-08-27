@@ -2147,7 +2147,8 @@ namespace FlShell
             ShellContextMenu shm = new ShellContextMenu(SelectedItems);  
 
             ContextMenu pmenu = new ContextMenu();       // main menu
-            IntPtr plmenu = User32.CreatePopupMenu();   // submenu of playlists
+            
+            //IntPtr plmenu = User32.CreatePopupMenu();   // submenu of playlists
 
             Point pos = this.PointToScreen(pt);
             uint PLCMD = 1000;
@@ -2157,6 +2158,7 @@ namespace FlShell
             // Populate
             shm.RemoveShellMenuItems(pmenu);
 
+            /*
             if (bShowKarMenu)
             {
 
@@ -2210,7 +2212,7 @@ namespace FlShell
                 #endregion
 
             }
-
+            */
 
             #region respond menu
             uint idx = 0;
@@ -2227,7 +2229,8 @@ namespace FlShell
                    ((Control.ModifierKeys & Keys.Shift) != 0 ?
                    CMF.EXTENDEDVERBS : 0));
 
-            int command = User32.TrackPopupMenuEx(pmenu.Handle,
+            int command = User32.TrackPopupMenuEx(
+                  pmenu.Handle,
                   TPM.TPM_RETURNCMD, pos.X, pos.Y, this.Handle,
                   IntPtr.Zero);
 

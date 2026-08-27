@@ -238,7 +238,7 @@ namespace Karaboss.Mp3
             currentPlaylist = myPlayList;
             bPlayNow = bplay;
 
-            // Initalize all
+            // Initialize all
             Init(FileName);
 
             // Extract tags, duration, lyrics from mp3 or LRC file
@@ -796,6 +796,9 @@ namespace Karaboss.Mp3
 
                 StartKaraoke();
 
+
+                
+
                 Player.Play(Mp3FullPath, start);                
                 Timer1.Start();
 
@@ -1031,7 +1034,7 @@ namespace Karaboss.Mp3
                 // Select new file in the explorer
                 Mp3FileName = Path.GetFileName(Mp3FullPath);
                 string path = Path.GetDirectoryName(Mp3FullPath);
-                path = "file:///" + path.Replace("\\", "/");
+                path = "file:///" + path.Replace("\\", "/");                
                 frmExplorer.NavigateTo(path, Mp3FileName);
 
                 // Update display
@@ -4017,7 +4020,9 @@ namespace Karaboss.Mp3
         private void SelectFileToLoadAsync(string FileName)
         {
             // Load file and after launch player taking account things to do betwween 2 songs                                  
-            Player.FileName = FileName;
+            //Player.FileName = FileName;
+            Player.Load(FileName);
+            Player.ReadTags(FileName);
 
             // Display duration and set HScrollbar maximum
             DisplayMp3Characteristics();

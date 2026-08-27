@@ -1,14 +1,15 @@
-﻿using System;
-using Un4seen.Bass;
-using System.IO;
-using System.Drawing;
+﻿using Karaboss.Mp3.Mp3Lyrics;
 using Karaboss.Properties;
+using System;
+using System.Drawing;
+using System.IO;
+using System.Threading.Tasks;
 using System.Windows.Forms;
-using Un4seen.Bass.AddOn.Tags;
+using System.Xml.Linq;
 using TagLib;
 using TagLib.Id3v2;
-using Karaboss.Mp3.Mp3Lyrics;
-using System.Threading.Tasks;
+using Un4seen.Bass;
+using Un4seen.Bass.AddOn.Tags;
 
 namespace Karaboss.Mp3
 {
@@ -576,9 +577,12 @@ namespace Karaboss.Mp3
         private int _stream;
         private bool mBassInitalized;
 
+
         #region properties
 
-        private string _FileName;
+        //private string _FileName;
+        
+        /*
         public string FileName
         {
             get { return _FileName; }
@@ -600,8 +604,9 @@ namespace Karaboss.Mp3
                 }
             }
         }
+        */
 
-
+        #region tags
         // Image of song
         private Image _albumartimage;
         public Image AlbumArtImage { get { return _albumartimage; } }
@@ -639,27 +644,24 @@ namespace Karaboss.Mp3
         private SynchronisedLyricsFrame _synclyricsframe;
         public SynchronisedLyricsFrame SyncLyricsFrame { get { return _synclyricsframe; } }
 
+        #endregion tags
+
+
         #endregion properties
 
 
         /// <summary>
         /// Constructor
-        /// </summary>
-        public Mp3Player()
-        {
-            if (!InitBass()) return;
-        }
-
+        /// </summary>       
         public Mp3Player(string fileName)
-        {
-            // NEW
+        {            
             if (!InitBass()) return;
 
-            FileName = fileName;
-        }
-
-
-
+            Load(fileName);
+           
+            ReadTags(fileName);           
+        }        
+               
 
         /// <summary>
         /// Initialize Bass: this must be done only once, otherwise you will get random BASS_HANDLE_ERROR errors 
@@ -694,6 +696,21 @@ namespace Karaboss.Mp3
                 return false;
             }
         }
+       
+
+        public void ReadTags(string fName)
+        {
+            if(!mBassInitalized || _stream == 0) return;
+
+            // Récupération des attributs
+            Bass.BASS_ChannelGetAttribute(_stream, BASSAttribute.BASS_ATTRIB_FREQ, ref _frequency);
+            _byteslen = Bass.BASS_ChannelGetLength(_stream, BASSMode.BASS_POS_BYTE);
+            _seconds = Bass.BASS_ChannelBytes2Seconds(_stream, _byteslen);
+
+            // Lecture des tags (TagLib ouvrira le fichier téléchargé par l'OS sans bloquer l'UI)
+            _tags = GetTagsFromFile(fName);
+            _bitrate = _tags.bitrate;
+        }
 
 
         /// <summary>
@@ -727,13 +744,13 @@ namespace Karaboss.Mp3
                 Bass.BASS_ChannelSetSync(_stream, BASSSync.BASS_SYNC_END | BASSSync.BASS_SYNC_MIXTIME, 0, OnEndingSync, IntPtr.Zero);
 
                 // Récupération des attributs
-                Bass.BASS_ChannelGetAttribute(_stream, BASSAttribute.BASS_ATTRIB_FREQ, ref _frequency);
-                _byteslen = Bass.BASS_ChannelGetLength(_stream, BASSMode.BASS_POS_BYTE);
-                _seconds = Bass.BASS_ChannelBytes2Seconds(_stream, _byteslen);
+                //Bass.BASS_ChannelGetAttribute(_stream, BASSAttribute.BASS_ATTRIB_FREQ, ref _frequency);
+                //_byteslen = Bass.BASS_ChannelGetLength(_stream, BASSMode.BASS_POS_BYTE);
+                //_seconds = Bass.BASS_ChannelBytes2Seconds(_stream, _byteslen);
 
                 // Lecture des tags (TagLib ouvrira le fichier téléchargé par l'OS sans bloquer l'UI)
-                _tags = GetTagsFromFile(FileName);
-                _bitrate = _tags.bitrate;
+                //_tags = GetTagsFromFile(FileName);
+                //_bitrate = _tags.bitrate;
 
                 Console.WriteLine("*** Player initialized");
             }
@@ -759,18 +776,18 @@ namespace Karaboss.Mp3
         /// <summary>
         /// Play mp3 starting from start
         /// </summary>
-        public async void Play(string FileName)
+        public async void Play(string fName)
         {
             Stop();
 
-            if (IsCloudFile(FileName))
+            if (IsCloudFile(fName))
             {
                 // On attend la fin du chargement en arrière-plan
-                await Task.Run(() => Load(FileName));
+                await Task.Run(() => Load(fName));
             }
             else
             {
-                Load(FileName);
+                Load(fName);
             }
 
             // Maintenant le stream est prêt, on peut lancer la lecture
@@ -804,10 +821,31 @@ namespace Karaboss.Mp3
         /// Play mp3 starting from a specific position (in seconds)
         /// </summary>
         /// <param name="start"></param>
-        public void Play(string FileName, double pos = 0)
+        public void Play(string fName, double pos = 0)
         {
+            /*
             Stop();
-            Load(FileName);
+
+            
+            if (IsCloudFile(fName))
+            {
+                // On attend la fin du chargement en arrière-plan
+                await Task.Run(() => Load(fName));
+            }
+            else
+            {
+                Load(fName);
+            }
+            */
+
+            if (_stream == 0)
+            {
+                Load(fName);
+
+                ReadTags(fName);
+            }
+
+
 
             if (_stream != 0)
             {
@@ -1098,6 +1136,7 @@ namespace Karaboss.Mp3
                 if (file.Tag.Pictures.Length > 0)
                 {
                     var bin = (byte[])(file.Tag.Pictures[0].Data.Data);
+                   
                     _albumartimage = Image.FromStream(new MemoryStream(bin)).GetThumbnailImage(100, 100, null, IntPtr.Zero);
                 }
                 else
@@ -1109,7 +1148,7 @@ namespace Karaboss.Mp3
             catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
-                _albumartimage = null;
+                _albumartimage = Properties.Resources.mp3_logo_200;//null;
             }
 
         }

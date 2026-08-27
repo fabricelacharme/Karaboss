@@ -64,7 +64,7 @@ namespace Karaboss.xplorer
 
     #endregion Delegates
 
-    public partial class xplorerControl : UserControl
+    public partial class xplorerControl : UserControl, IMessageFilter
     {
 
         #region Events
@@ -155,11 +155,15 @@ namespace Karaboss.xplorer
 
 
         #region Playlists
+
+        private string[,] m_AllPlaylists;
         private ObservableCollection<Playlist> allPlaylists = new ObservableCollection<Playlist>();        
         private PlaylistGroup PlGroup = new PlaylistGroup();
         private PlaylistGroupsHelper PlGroupHelper = new PlaylistGroupsHelper();
 
         #endregion Playlists
+
+        private const int WM_CONTEXTMENU = 0x007B;
 
         public xplorerControl()
         {
@@ -189,7 +193,13 @@ namespace Karaboss.xplorer
             #endregion Events
 
             // Load existing playlists
-            LoadPlaylists();            
+            LoadPlaylists();
+
+            // 2. TRÈS IMPORTANT : Activer le filtre de messages pour ce formulaire
+            Application.AddMessageFilter(this);
+
+            // Très important : se désabonner si le UserControl est détruit pour éviter les fuites mémoire
+            this.Disposed += (s, e) => Application.RemoveMessageFilter(this);
         }
         
 
@@ -361,7 +371,58 @@ namespace Karaboss.xplorer
                 default:
                     break;
             }
-        }      
+        }
+
+
+        /// <summary>
+        /// Replace .mid by .kar
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="k"></param>
+        private void shellListView_SendKeyToParent(object sender, Keys k)
+        {
+            if (k == Keys.K)
+            {
+                try
+                {
+                    if (shellListView.SelectedItems.Length > 0)
+                    {
+                        FlShell.ShellItem shi = shellListView.SelectedItems[0];
+                        string newfileName = string.Empty;
+
+                        string oldFileName = shi.FileSystemPath;
+                        string physicalPath = Path.GetDirectoryName(oldFileName);
+
+                        if (Karaclass.IsMidiExtension(oldFileName))
+                        {
+                            if (Path.GetExtension(oldFileName).ToLower() == ".mid")
+                            {
+                                //newfileName = oldFileName.Replace(".mid", ".kar");
+                                newfileName = Regex.Replace(oldFileName, ".mid", ".kar", RegexOptions.IgnoreCase);
+                                newfileName = GetUniqueFileName(newfileName);
+
+                                RenameFile(oldFileName, newfileName, physicalPath);
+                            }
+                            else if (Path.GetExtension(oldFileName).ToLower() == ".kar")
+                            {
+                                //newfileName = oldFileName.Replace(".kar", ".mid");
+                                newfileName = Regex.Replace(oldFileName, ".kar", ".mid", RegexOptions.IgnoreCase);
+                                newfileName = GetUniqueFileName(newfileName);
+
+                                RenameFile(oldFileName, newfileName, physicalPath);
+                            }
+
+                            // Refresh & Set SelectedItem                            
+                            RefreshContents(Path.GetFileName(newfileName));
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message);
+                }
+            }
+        }
 
         #endregion
 
@@ -540,57 +601,7 @@ namespace Karaboss.xplorer
         }
 
         #endregion
-
-        /// <summary>
-        /// Replace .mid by .kar
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="k"></param>
-        private void shellListView_SendKeyToParent(object sender, Keys k)
-        {
-            if (k == Keys.K)
-            {
-                try
-                {
-                    if (shellListView.SelectedItems.Length > 0)
-                    {
-                        FlShell.ShellItem shi = shellListView.SelectedItems[0];
-                        string newfileName = string.Empty;
-
-                        string oldFileName = shi.FileSystemPath;
-                        string physicalPath = Path.GetDirectoryName(oldFileName);
-
-                        if (Karaclass.IsMidiExtension(oldFileName))
-                        {
-                            if (Path.GetExtension(oldFileName).ToLower() == ".mid")
-                            {
-                                //newfileName = oldFileName.Replace(".mid", ".kar");
-                                newfileName = Regex.Replace(oldFileName, ".mid", ".kar", RegexOptions.IgnoreCase);
-                                newfileName = GetUniqueFileName(newfileName);
-
-                                RenameFile(oldFileName, newfileName, physicalPath);                                
-                            }
-                            else if (Path.GetExtension(oldFileName).ToLower() == ".kar")
-                            {
-                                //newfileName = oldFileName.Replace(".kar", ".mid");
-                                newfileName = Regex.Replace(oldFileName, ".kar", ".mid", RegexOptions.IgnoreCase);
-                                newfileName = GetUniqueFileName(newfileName);
-
-                                RenameFile(oldFileName, newfileName, physicalPath);                                                                                               
-                            }
-
-                            // Refresh & Set SelectedItem                            
-                            RefreshContents(Path.GetFileName(newfileName));
-                        }
-                    }
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show(ex.Message);
-                }
-            }
-        }     
-
+        
 
         #region rename all
 
@@ -1609,6 +1620,7 @@ namespace Karaboss.xplorer
                     }
                 }
                 this.shellListView.allPlaylists = arrayMenu;
+                m_AllPlaylists = arrayMenu;
             }
             catch (Exception ex)
             {
@@ -1691,7 +1703,29 @@ namespace Karaboss.xplorer
             MessageBox.Show(nbAdded + "/" + nbTotal + " songs added to <" + pltarget.Name + ">", "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
-                 
+        private void AddToExistingPlaylist(FileInfo[] so, Playlist pltarget)
+        {
+            int nbAdded = 0;
+            int nbTotal = so.Length;
+
+            foreach (FileInfo eachItem in so)
+            {
+                string Artist = "<Artist>";
+                string File = eachItem.FullName;
+                string Song = Path.GetFileNameWithoutExtension(File);
+                string Album = "<Album>";
+                string Length = "00:00";
+                string sNotation = "4";
+                string sDirSlideShow = "";
+                bool bMelodyMute = Karaclass.m_MuteMelody;
+
+                if (pltarget.Add(Artist, Song, File, Album, Length, Convert.ToInt32(sNotation), sDirSlideShow, bMelodyMute, "<Song reserved by>"))
+                    nbAdded++;
+            }
+            SaveAllPlaylist();
+            MessageBox.Show(nbAdded + "/" + nbTotal + " songs added to <" + pltarget.Name + ">", "Karaboss", MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
+
         /// <summary>
         /// Save all playlists
         /// </summary>
@@ -1704,6 +1738,182 @@ namespace Karaboss.xplorer
 
         #endregion playlists
 
-      
+
+
+        // 3. Cette méthode intercepte TOUS les clics droits de l'application avant l'ActiveX
+        public bool PreFilterMessage(ref System.Windows.Forms.Message m)
+        {
+            //if (m.Msg == 15 || m.Msg == 96 || m.Msg == 275 || m.Msg == 49831 || m.Msg == 160 || m.Msg == 674 || m.Msg == 512 || m.Msg == 675 || m.Msg == 280 || m.Msg == 257 || m.Msg == 513 || m.Msg == 673 || m.Msg == 799) return false;
+
+            if (m.Msg == 516) //WM_CONTEXTMENU)
+            {
+               
+
+                // Trouver quel contrôle a reçu le clic droit au niveau le plus bas (Handle)
+                Control targetControl = Control.FromChildHandle(m.HWnd);
+
+                // Vérifier si ce contrôle appartient bien à CE UserControl (this)
+                if (targetControl != null && IsChildOf(targetControl, this))
+                {
+                    // Analyser l'élément sélectionné dans l'ExplorerBrowser interne
+                    if (SelectedItems != null && SelectedItems.Length > 0)
+                    {
+                        string filePath = SelectedItems[0].ParsingName;
+
+                        if (File.Exists(filePath))
+                        {
+                            string extension = Path.GetExtension(filePath).ToLower();
+
+                            switch (extension)
+                            {
+                                case ".abc":
+                                case ".kar":
+                                case ".mid":
+                                case ".midi":
+                                case ".mp3":
+                                case ".xml":
+                                case ".msxl":
+                                case ".musicxml":
+                                    // Le block "using" détruit proprement le composant et ses handles COM/Windows juste après l'affichage
+                                    using (ShellContextMenu scm = new ShellContextMenu())
+                                    {
+                                        // Events
+                                        scm.PlayEditFile += Scm_PlayEditFile;
+                                        scm.AddToPlaylist += Scm_AddToPlaylist;
+
+                                        // List of playlists (without folders)
+                                        scm.tbAllPlaylists = m_AllPlaylists;
+                                        // Full playlists
+                                        scm.PlGroup = PlGroup;
+
+
+
+                                        FileInfo[] files = new FileInfo[SelectedItems.Length];
+                                        for (int i = 0; i < SelectedItems.Length; i++)
+                                        {
+                                            files[i] = new FileInfo(SelectedItems[i].ParsingName);
+                                        }
+
+                                        scm.ShowContextMenu(files, Cursor.Position);
+                                    }
+                                    return true; // Bloque le menu Windows standard                                    
+                            }
+                        }
+                    }
+                }
+            }
+            return false; // Laisse Windows afficher son menu pour le reste
+        }
+
+        private bool IsChildOf(Control child, Control parent)
+        {
+            while (child != null)
+            {
+                if (child == parent) return true;
+                child = child.Parent;
+            }
+            return false;
+        }
+
+
+        private void Scm_AddToPlaylist(object sender, FileInfo[] fInfos, string plName, string key, bool bnewPlaylist)
+        {
+            AddToCreatePlaylist(fInfos, plName, key, bnewPlaylist);
+        }
+
+        private void AddToCreatePlaylist(FileInfo[] fInfos, string plname, string key, bool bnewPlaylist)
+        {
+            if (bnewPlaylist)
+            {
+                List<string> li = new List<string>();
+                foreach (FileInfo shi in fInfos)
+                {
+                    li.Add(shi.FullName);
+                }
+
+                FrmNewPlaylist frmNewPlaylist = new FrmNewPlaylist(li);
+                frmNewPlaylist.ShowDialog();
+
+                LoadPlaylists();
+            }
+            else
+            {
+                Playlist pltarget = PlGroupHelper.getPlaylistByName(PlGroup, plname, key);
+                AddToExistingPlaylist(fInfos, pltarget);
+            }
+        }
+
+
+        private void Scm_PlayEditFile(object sender, FileInfo[] fi, bool bplay)
+        {
+            PlayEdit(fi[0], bplay);
+        }
+
+        private void PlayEdit(FileInfo fInfo, bool bplay)
+        {
+            string file = fInfo.FullName;
+            string ext = Path.GetExtension(file).ToLower();
+            switch (ext)
+            {
+                case ".mid":
+                case ".kar":
+                    {
+                        PlayMidi?.Invoke(this, fInfo, bplay);
+                        break;
+                    }
+
+                case ".zip":
+                case ".cdg":
+                    {
+                        PlayCDG?.Invoke(this, fInfo, bplay);
+                        break;
+                    }
+
+                case ".abc":
+                case ".mml":
+                    {
+                        PlayAbc?.Invoke(this, fInfo, bplay);
+                        break;
+                    }
+                case ".musicxml":
+                case ".xml":
+                    {
+                        PlayXml?.Invoke(this, fInfo, bplay);
+                        break;
+                    }
+                case ".mxl":
+                    {
+                        PlayMxl?.Invoke(this, fInfo, bplay);
+                        break;
+                    }
+                case ".txt":
+                    {
+                        PlayTxt?.Invoke(this, fInfo, bplay);
+                        break;
+                    }
+                case ".mp3":
+                    {
+                        PlayMp3?.Invoke(this, fInfo, bplay);
+                        break;
+                    }
+                case ".kfn":
+                    {
+                        PlayKfn?.Invoke(this, fInfo, bplay);
+                        break;
+                    }
+                default:
+                    try
+                    {
+                        System.Diagnostics.Process.Start(@file);
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+                    break;
+            }
+        }
+
+
     }
 }
