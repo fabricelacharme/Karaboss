@@ -36,6 +36,10 @@
 // http://www.cyotek.com/blog/dragging-items-in-a-listview-control-with-visual-insertion-guides
 //
 #endregion
+using FlShell.Interop;
+using FlShell.Resources.Localization;
+using Kplaylists;
+using Microsoft.Win32;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -43,19 +47,18 @@ using System.ComponentModel;
 using System.Drawing;
 using System.Drawing.Design;
 using System.IO;
+using System.Linq;
 using System.Runtime.InteropServices;
-using System.Windows.Forms;
-using Microsoft.Win32;
-using FlShell.Interop;
-using ComTypes = System.Runtime.InteropServices.ComTypes;
 using System.Text;
-using FlShell.Resources.Localization;
 using System.Text.RegularExpressions;
+using System.Windows.Forms;
+using System.Xml.Linq;
+using ComTypes = System.Runtime.InteropServices.ComTypes;
 
 
 namespace FlShell
 {
-    #region Specific Karaboss    
+    #region Delegates Specific Karaboss    
 
     // Selected item changed
     public delegate void SelectedIndexChangedEventHandler(object sender, string fileName);
@@ -83,7 +86,7 @@ namespace FlShell
     // SendK Key to Parent
     public delegate void SenKeyToParentHandler(object sender, Keys k);
 
-    #endregion Specific Karaboss
+    #endregion Delegate Specific Karaboss
 
     public partial class ShellListView : Control, IDropSource, Interop.IDropTarget
     {
@@ -146,21 +149,30 @@ namespace FlShell
 
 
         #region Properties Karaboss
+       
 
         // Specific Karaboss      
-        string[,] m_allPlaylists;
-        public string[,] allPlaylists
-        {
-            set { m_allPlaylists = value; }
-        }
+        //string[,] m_allPlaylists;
+        //public string[,] allPlaylists
+        //{
+        //    set { m_allPlaylists = value; }
+        //}
 
         string[,] m_tbAllPlaylists;
         public string[,] tbAllPlaylists
         {
             set { m_tbAllPlaylists = value; }
         }
-       
+
+        private PlaylistGroup m_PlGroup = new PlaylistGroup();
+        public PlaylistGroup PlGroup
+        {
+            set { m_PlGroup = value; }
+        }
+
         #endregion Properties Karaboss
+
+
 
         private ListViewColumnSorter lvwColumnSorter;
         
@@ -2139,56 +2151,109 @@ namespace FlShell
         /// <summary>
         /// ListViewItem ContextMenu for a click on a ListViewItem
         /// </summary>
-        /// <param name="pt"></param>
+        /// <param name="pt"></param>     
         private void GetListViewItemMenu(ShellItem item, System.Drawing.Point pt, bool bShowKarMenu)
         {
             const int m_CmdFirst = 0x8000;
 
-            ShellContextMenu shm = new ShellContextMenu(SelectedItems);  
+            ShellContextMenu shm = new ShellContextMenu(SelectedItems);
 
             ContextMenu pmenu = new ContextMenu();       // main menu
-            
-            //IntPtr plmenu = User32.CreatePopupMenu();   // submenu of playlists
+            IntPtr plmenu = User32.CreatePopupMenu();   // submenu of playlists
 
             Point pos = this.PointToScreen(pt);
             uint PLCMD = 1000;
             int plmin = (int)PLCMD;
             int plmax = plmin;
+            string Key;
+            string plName;
 
             // Populate
             shm.RemoveShellMenuItems(pmenu);
 
-            /*
+            
             if (bShowKarMenu)
             {
 
                 #region Menu cascading "Add to playlist"        
+                
                 MENUITEMINFO itemInfo = MENUITEMINFO.New(Strings.addToPlaylist);
                 itemInfo.fMask = (MIIM.MIIM_SUBMENU | MIIM.MIIM_STRING);
                 itemInfo.hSubMenu = plmenu;
 
-                User32.InsertMenuItem(pmenu.Handle, 0, true, ref itemInfo);
+                int HRESULT = User32.InsertMenuItem(pmenu.Handle, 0, true, ref itemInfo);
+                
                 #endregion Menu cascading "Add to playlist"
 
 
                 #region menu playlist items
-                string plName;
-                string Key;
+                                
                 string ParentKey;
                 string folder;
                 IntPtr foldermenu;
                 MFT ichecked = MFT.MFT_BYCOMMAND;
-                
-                if ( m_allPlaylists.GetLength(0) > 0)
+               
+                if (m_PlGroup.Count > 0)
                 {
-                    // display existing playlists                    
-                    for (int i = 0; i < m_allPlaylists.GetLength(0); i++)
-                    {                        
-                        plName = m_allPlaylists[i, 1];
-                        User32.AppendMenu(plmenu, ichecked, PLCMD, plName);
-                        PLCMD++;
-                    }                    
+                    // Create a dictionary to store the IntPtr of the folders popup menus
+                    Dictionary<string, IntPtr> dicMenus = new Dictionary<string, IntPtr>();
+
+
+                    // Folders                    
+                    for (int i = 0; i < m_PlGroup.Count; i++)
+                    {
+                        PlaylistGroupItem plgi = m_PlGroup.plGroupItems[i];
+
+                        folder = plgi.Name;
+                        Key = plgi.Key;
+                        ParentKey = plgi.ParentKey;
+
+                        // Create a new folder popup menu
+                        foldermenu = User32.CreatePopupMenu();
+
+                        // Add new key to dictionary to store folder menus
+                        dicMenus.Add(Key, foldermenu);
+
+
+                        // Add menus for the playlists of the current folder
+                        for (int j = 0; j < plgi.Playlists.Count; j++)
+                        {
+                            plName = plgi.Playlists[j].Name;
+                            User32.InsertMenu(foldermenu, 1, (int)(MFT.MFT_BYPOSITION), (IntPtr)PLCMD, plName);
+                            PLCMD++;
+                        }
+
+
+                        if (ParentKey == null)
+                        {
+                            // If root => add the popup menu to plmenu
+                            itemInfo = MENUITEMINFO.New(folder);                            
+                            itemInfo.fMask = (MIIM.MIIM_SUBMENU | MIIM.MIIM_STRING);
+                            itemInfo.fType = (uint)MFT.MFT_STRING; // Force le type en chaîne de caractères
+                            itemInfo.hSubMenu = foldermenu;
+
+                            // Insert the folder popup menu to plmenu                            
+                            User32.AppendMenu(plmenu, MFT.MFT_POPUP, (uint)foldermenu, folder);
+
+                        }
+                        else
+                        {
+                            // If child of another popup menu
+                            // If root => add the popup menu to plmenu
+                            itemInfo = MENUITEMINFO.New(folder);
+                            itemInfo.fMask = (MIIM.MIIM_SUBMENU | MIIM.MIIM_STRING);
+                            itemInfo.fType = (uint)MFT.MFT_STRING; // Force le type en chaîne de caractères
+                            itemInfo.hSubMenu = foldermenu;
+
+                            // Search for the parent menu
+                            IntPtr hmenu = dicMenus.FirstOrDefault(t => t.Key == ParentKey).Value;
+
+                            // Insert the folder popup menu to plmenu
+                            HRESULT = User32.InsertMenuItem(hmenu, 0, true, ref itemInfo);
+                        }
+                    }
                 }
+
 
                 // Separator
                 // Add a separator
@@ -2197,7 +2262,7 @@ namespace FlShell
                 // Add to a new playlist
                 plName = Strings.NewPlaylist;
                 User32.AppendMenu(plmenu, ichecked, PLCMD, plName);
-                PLCMD++;
+                //PLCMD++;
 
                 plmax = (int)PLCMD;
 
@@ -2212,7 +2277,7 @@ namespace FlShell
                 #endregion
 
             }
-            */
+            
 
             #region respond menu
             uint idx = 0;
@@ -2244,29 +2309,25 @@ namespace FlShell
                 else if (command == 101)
                 {
                     invokePlayEdit(false);
-                }
-                else if (command >= plmin && command < plmax)
+                }               
+                else if (command >= 1000 && command < PLCMD)
                 {
-                    int id = command - 1000;
-                    string plname = string.Empty;
+                    ShellItem[] fls = SelectedItems;
 
-                    ShellItem[] fls =  SelectedItems;
-                    
-                    if (id < m_allPlaylists.GetLength(0))
-                    {
-                        // Add to an existing playlist
-                        plname = m_allPlaylists[command - 1000, 1];
-                        string key = m_allPlaylists[command - 1000, 0];
-                        AddToPlaylist?.Invoke(this, fls, plname, key, false);
-                    }
-                    else
-                    {
-                        // Add to a new playlist
-                        AddToPlaylist?.Invoke(this, fls, string.Empty, null ,true);
-                    }
+                    // L'utilisateur a cliqué sur une playlist existante
+                    int indexPlaylist = command - 1000;
+                    Key = m_tbAllPlaylists[indexPlaylist, 0];
+                    plName = m_tbAllPlaylists[indexPlaylist, 1];
+                    //System.Windows.Forms.MessageBox.Show($"Action : Ajout à la playlist index {indexPlaylist}");
+                    invokeAddToPlaylist(plName,fls, Key, false);
+                }
+                else if (command == PLCMD)
+                {
+                    ShellItem[] fls = SelectedItems;
 
-                    //Console.Write(plname);
-
+                    int indexPlaylist = command - 1000;
+                    // L'utilisateur a cliqué sur une nouvelle playlist
+                    invokeAddToPlaylist(string.Empty, fls, string.Empty, true);
                 }
                 else if (command - m_CmdFirst == 18)
                 {
@@ -2279,14 +2340,20 @@ namespace FlShell
                     shm.InvokeCommand(command - m_CmdFirst);
                 }
             }
-            #endregion
+            #endregion execute command
 
-            #endregion
+            #endregion respond menu
 
         }
-       
 
-        #endregion
+        #endregion ListView menu
+
+
+        private void invokeAddToPlaylist(string plName, ShellItem[] fls, string key, bool bcreate)
+        {
+            AddToPlaylist?.Invoke(this, fls, plName, key, bcreate);
+        }
+
 
         /// <summary>
         /// Handles Windows Messages having to do with the display of Cascading menus of the Context Menu.

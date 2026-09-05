@@ -42,6 +42,7 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using Karaboss.Resources.Localization;
 using Karaboss.playlists;
+using Kplaylists;
 using FlShell;
 using System.Text.RegularExpressions;
 
@@ -64,7 +65,8 @@ namespace Karaboss.xplorer
 
     #endregion Delegates
 
-    public partial class xplorerControl : UserControl, IMessageFilter
+    //public partial class xplorerControl : UserControl, IMessageFilter
+    public partial class xplorerControl : UserControl
     {
 
         #region Events
@@ -196,10 +198,10 @@ namespace Karaboss.xplorer
             LoadPlaylists();
 
             // 2. TRÈS IMPORTANT : Activer le filtre de messages pour ce formulaire
-            Application.AddMessageFilter(this);
+            //Application.AddMessageFilter(this);
 
             // Très important : se désabonner si le UserControl est détruit pour éviter les fuites mémoire
-            this.Disposed += (s, e) => Application.RemoveMessageFilter(this);
+            //this.Disposed += (s, e) => Application.RemoveMessageFilter(this);
         }
         
 
@@ -1178,9 +1180,7 @@ namespace Karaboss.xplorer
         /// Promt dialog window to get replacement string
         /// </summary>
         private static class Prompt
-        {
-            
-
+        {            
             public static DialogResult ShowDialog(string caption, ref string[] value)
             {
                 int wd = 400;
@@ -1619,7 +1619,8 @@ namespace Karaboss.xplorer
                         idx++;
                     }
                 }
-                this.shellListView.allPlaylists = arrayMenu;
+                this.shellListView.tbAllPlaylists = arrayMenu;        
+                this.shellListView.PlGroup = PlGroup;
                 m_AllPlaylists = arrayMenu;
             }
             catch (Exception ex)
@@ -1741,6 +1742,7 @@ namespace Karaboss.xplorer
 
 
         // 3. Cette méthode intercepte TOUS les clics droits de l'application avant l'ActiveX
+        /*
         public bool PreFilterMessage(ref System.Windows.Forms.Message m)
         {
             //if (m.Msg == 15 || m.Msg == 96 || m.Msg == 275 || m.Msg == 49831 || m.Msg == 160 || m.Msg == 674 || m.Msg == 512 || m.Msg == 675 || m.Msg == 280 || m.Msg == 257 || m.Msg == 513 || m.Msg == 673 || m.Msg == 799) return false;
@@ -1814,7 +1816,7 @@ namespace Karaboss.xplorer
             }
             return false;
         }
-
+        */
 
         private void Scm_AddToPlaylist(object sender, FileInfo[] fInfos, string plName, string key, bool bnewPlaylist)
         {

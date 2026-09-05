@@ -4,7 +4,7 @@ using System.Linq;
 using System.Windows.Forms;
 using System.Collections;
 
-namespace Karaboss.playlists
+namespace Kplaylists
 {
     /*
     * PLAYLISTS MANAGEMENT

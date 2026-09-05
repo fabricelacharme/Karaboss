@@ -36,6 +36,7 @@ using kar;
 using Karaboss.MidiLyrics;
 using Karaboss.Themes;
 using Karaboss.playlists;
+using Kplaylists;
 using PicControl;
 using System;
 using System.Collections.Generic;

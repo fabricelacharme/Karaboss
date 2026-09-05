@@ -36,6 +36,7 @@ using Karaboss.Mp3.Mp3Lyrics;
 using Karaboss.Resources.Localization;
 using Karaboss.Utilities;
 using Karaboss.playlists;
+using Kplaylists;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;

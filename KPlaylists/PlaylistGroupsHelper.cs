@@ -5,7 +5,7 @@ using System.Linq;
 using System.Windows.Forms;
 using System.Xml.Serialization;
 
-namespace Karaboss.playlists
+namespace Kplaylists
 {
     public class PlaylistGroupsHelper
     {

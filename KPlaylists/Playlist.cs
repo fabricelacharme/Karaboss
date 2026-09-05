@@ -38,7 +38,7 @@ using System.Globalization;
 using System.Linq;
 using System.Windows.Forms;
 
-namespace Karaboss.playlists
+namespace Kplaylists
 {
     /*
     * PLAYLISTS MANAGEMENT

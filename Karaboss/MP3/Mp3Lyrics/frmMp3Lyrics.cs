@@ -45,6 +45,7 @@ using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using Karaboss.playlists;
+using Kplaylists;
 
 namespace Karaboss.Mp3
 {    

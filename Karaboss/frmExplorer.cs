@@ -37,7 +37,7 @@ using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
 using Sanford.Multimedia.Midi;
-using System.IO; // debug
+using System.IO; 
 using Karaboss.Resources.Localization;
 using Karaboss.Configuration;
 using Karaboss.Mp3;
@@ -53,6 +53,7 @@ using System.Collections.Generic;
 using Karaboss.Utilities;
 using Karaboss.Kfn;
 using Karaboss.playlists;
+using Kplaylists;
 
 namespace Karaboss
 {

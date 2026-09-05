@@ -2,7 +2,7 @@
 using System.Runtime.Serialization;
 using System.Collections.ObjectModel;
 
-namespace Karaboss.playlists
+namespace Kplaylists
 {
     /*
      * Un élément groupe 

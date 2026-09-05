@@ -292,7 +292,6 @@
     </Compile>
     <Compile Include="Mp3\Mp3Lyrics\Mp3LyricsMgmt.cs" />
     <Compile Include="Mp3\Mp3Player\Mp3Player.cs" />
-    <Compile Include="Pages\ExplorerControl\ShellContextMenu.cs" />
     <Compile Include="Srt\srtlib.net.cs" />
     <Compile Include="Themes\Theme.cs" />
     <Compile Include="Utilities\Forms\FormUtilities.cs" />
@@ -517,11 +516,6 @@
       <DependentUpon>frmMidiPlayer.cs</DependentUpon>
     </Compile>
     <Compile Include="Karaclass.cs" />
-    <Compile Include="Pages\PlaylistsControl\Playlist.cs" />
-    <Compile Include="Pages\PlaylistsControl\PlaylistGroup.cs" />
-    <Compile Include="Pages\PlaylistsControl\PlaylistGroupItem.cs" />
-    <Compile Include="Pages\PlaylistsControl\PlaylistGroupsHelper.cs" />
-    <Compile Include="Pages\PlaylistsControl\PlaylistItem.cs" />
     <Compile Include="Pages\PlaylistsControl\PlaylistsControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -1005,6 +999,10 @@
     <ProjectReference Include="..\knobControl\KnobControl.csproj">
       <Project>{04123f59-331d-4582-be0d-721feab6050f}</Project>
       <Name>KnobControl</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\KPlaylists\KPlaylists.csproj">
+      <Project>{ec799624-38cc-43fd-bd11-372574f7b7e3}</Project>
+      <Name>KPlaylists</Name>
     </ProjectReference>
     <ProjectReference Include="..\LyricsWikia.Api\LyricsWikia.Api.csproj">
       <Project>{7e6a19a2-655d-400e-9f3f-ccd7b80c278f}</Project>
