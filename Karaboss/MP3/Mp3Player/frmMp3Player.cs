@@ -35,7 +35,6 @@ using Hqub.MusicBrainz.API.Entities;
 using Karaboss.Mp3.Mp3Lyrics;
 using Karaboss.Resources.Localization;
 using Karaboss.Utilities;
-using Karaboss.playlists;
 using Kplaylists;
 using System;
 using System.Collections.Generic;
@@ -253,9 +252,7 @@ namespace Karaboss.Mp3
                 currentPlaylistItem = currentPlaylist.Songs.Where(z => z.File == Mp3FullPath).FirstOrDefault();
                                 
                 int idx = currentPlaylist.SelectedIndex(currentPlaylistItem) + 1;
-                lblPlaylist.Text = "PLAYLIST: " + idx + "/" + currentPlaylist.Count;
-
-                //ExtractMp3Lyrics(Mp3FullPath);
+                lblPlaylist.Text = "PLAYLIST: " + idx + "/" + currentPlaylist.Count;                
 
                 // play asap, pause, countdown
                 performPlaylistChainingChoice();
@@ -4020,8 +4017,7 @@ namespace Karaboss.Mp3
         /// <param name="FileName"></param>
         private void SelectFileToLoadAsync(string FileName)
         {
-            // Load file and after launch player taking account things to do betwween 2 songs                                  
-            //Player.FileName = FileName;
+            // Load file and after launch player taking account things to do betwween 2 songs                                              
             Player.Load(FileName);
             Player.ReadTags(FileName);
 
@@ -4138,8 +4134,7 @@ namespace Karaboss.Mp3
             if (currentPlaylist == null || pli == currentPlaylistItem)
                 return;
 
-            StopMusic();
-            //Player.Reset();
+            StopMusic();            
 
             Mp3FileName = currentPlaylistItem.Song;
             Mp3FullPath = currentPlaylistItem.File;
