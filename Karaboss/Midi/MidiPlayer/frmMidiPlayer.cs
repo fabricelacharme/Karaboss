@@ -35,6 +35,8 @@ using kar;
 using Karaboss.MidiLyrics;
 using Karaboss.Mp3;
 using Karaboss.Utilities;
+using Karaboss.playlists;
+using Kplaylists;
 using MusicTxt;
 using MusicXml;
 using Sanford.Multimedia.Midi;

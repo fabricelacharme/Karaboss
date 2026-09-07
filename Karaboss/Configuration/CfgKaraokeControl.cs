@@ -36,12 +36,12 @@ using System.Windows.Forms;
 
 namespace Karaboss.Configuration
 {
-    public partial class KaraokeControl : ConfigurationBaseControl
+    public partial class CfgKaraokeControl : ConfigurationBaseControl
     {
         private Label lblMuteMelody;
         private CheckBox chkMuteMelody;
 
-        public KaraokeControl(string configName) : base(configName)
+        public CfgKaraokeControl(string configName) : base(configName)
         {
             InitializeComponent();
             populateValues();            

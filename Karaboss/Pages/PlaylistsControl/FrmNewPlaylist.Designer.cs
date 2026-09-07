@@ -1,4 +1,4 @@
-﻿namespace Karaboss
+﻿namespace Karaboss.playlists
 {
     partial class FrmNewPlaylist
     {

@@ -37,7 +37,6 @@ using System.Xml;
 using System.IO;
 using System.Windows.Forms;
 using System.Net;
-using System.Xml.Linq;
 
 namespace PrgAutoUpdater
 {

@@ -35,6 +35,7 @@ using Hqub.MusicBrainz.API.Entities;
 using Karaboss.Mp3.Mp3Lyrics;
 using Karaboss.Resources.Localization;
 using Karaboss.Utilities;
+using Kplaylists;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -237,7 +238,7 @@ namespace Karaboss.Mp3
             currentPlaylist = myPlayList;
             bPlayNow = bplay;
 
-            // Initalize all
+            // Initialize all
             Init(FileName);
 
             // Extract tags, duration, lyrics from mp3 or LRC file
@@ -251,9 +252,7 @@ namespace Karaboss.Mp3
                 currentPlaylistItem = currentPlaylist.Songs.Where(z => z.File == Mp3FullPath).FirstOrDefault();
                                 
                 int idx = currentPlaylist.SelectedIndex(currentPlaylistItem) + 1;
-                lblPlaylist.Text = "PLAYLIST: " + idx + "/" + currentPlaylist.Count;
-
-                //ExtractMp3Lyrics(Mp3FullPath);
+                lblPlaylist.Text = "PLAYLIST: " + idx + "/" + currentPlaylist.Count;                
 
                 // play asap, pause, countdown
                 performPlaylistChainingChoice();
@@ -795,6 +794,9 @@ namespace Karaboss.Mp3
 
                 StartKaraoke();
 
+
+                
+
                 Player.Play(Mp3FullPath, start);                
                 Timer1.Start();
 
@@ -1030,7 +1032,7 @@ namespace Karaboss.Mp3
                 // Select new file in the explorer
                 Mp3FileName = Path.GetFileName(Mp3FullPath);
                 string path = Path.GetDirectoryName(Mp3FullPath);
-                path = "file:///" + path.Replace("\\", "/");
+                path = "file:///" + path.Replace("\\", "/");                
                 frmExplorer.NavigateTo(path, Mp3FileName);
 
                 // Update display
@@ -4015,8 +4017,9 @@ namespace Karaboss.Mp3
         /// <param name="FileName"></param>
         private void SelectFileToLoadAsync(string FileName)
         {
-            // Load file and after launch player taking account things to do betwween 2 songs                                  
-            Player.FileName = FileName;
+            // Load file and after launch player taking account things to do betwween 2 songs                                              
+            Player.Load(FileName);
+            Player.ReadTags(FileName);
 
             // Display duration and set HScrollbar maximum
             DisplayMp3Characteristics();
@@ -4131,8 +4134,7 @@ namespace Karaboss.Mp3
             if (currentPlaylist == null || pli == currentPlaylistItem)
                 return;
 
-            StopMusic();
-            //Player.Reset();
+            StopMusic();            
 
             Mp3FileName = currentPlaylistItem.Song;
             Mp3FullPath = currentPlaylistItem.File;

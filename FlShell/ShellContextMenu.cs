@@ -20,7 +20,6 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Runtime.InteropServices;
-using System.Text;
 using System.Windows.Forms;
 using FlShell.Interop;
 
@@ -453,6 +452,8 @@ namespace FlShell
             }
         }
 
+        
+
         public void RemoveShellMenuItems(Menu menu)
         {
             const int tag = 0xAB;
@@ -495,6 +496,8 @@ namespace FlShell
                 User32.DeleteMenu(menu.Handle, position, MF.MF_BYPOSITION);
             }
         }
+        
+
 
         class MessageWindow : Control
         {

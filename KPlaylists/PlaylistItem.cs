@@ -34,7 +34,7 @@
 using System;
 using System.Runtime.Serialization;
 
-namespace Karaboss
+namespace Kplaylists
 {
     /*
     * PLAYLISTS MANAGEMENT

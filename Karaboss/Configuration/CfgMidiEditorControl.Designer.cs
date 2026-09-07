@@ -1,6 +1,6 @@
 ﻿namespace Karaboss.Configuration
 {
-    partial class MidiEditorControl
+    partial class CfgMidiEditorControl
     {
         /// <summary> 
         /// Variable nécessaire au concepteur.
@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MidiEditorControl));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(CfgMidiEditorControl));
             this.lblDescription = new System.Windows.Forms.Label();
             this.lblParamDescr = new System.Windows.Forms.Label();
             this.lblParam = new System.Windows.Forms.Label();

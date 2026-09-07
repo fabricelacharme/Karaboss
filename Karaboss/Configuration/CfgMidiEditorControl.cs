@@ -32,23 +32,23 @@
 
 #endregion
 
+using System;
+
+
 namespace Karaboss.Configuration
 {
-    public partial class UpdControl : ConfigurationBaseControl
+    public partial class CfgMidiEditorControl : ConfigurationBaseControl
     {
-        public UpdControl(string configName) : base(configName)
+        public CfgMidiEditorControl(string configName) : base(configName)
         {
             InitializeComponent();
-            populateFields();           
+            PopulateValues();
         }
 
-
-        private void populateFields()
+        private void PopulateValues()
         {
-            chkUpdateProgram.Checked = Properties.Settings.Default.CheckForUpdates;
-            chkUpdFreq.Text = Properties.Settings.Default.UpdFrequency;
-            txtWebSite.Text = Properties.Settings.Default.RemoteUrl;
-
+            UpDownTransposeAmount.Value = Karaclass.m_TransposeAmount;
+            UpDownVelocity.Value = Karaclass.m_Velocity;
         }
 
         public override void Restore()
@@ -57,11 +57,14 @@ namespace Karaboss.Configuration
 
         public override void Apply()
         {
-            Properties.Settings.Default.CheckForUpdates = chkUpdateProgram.Checked;
-            Properties.Settings.Default.UpdFrequency = chkUpdFreq.Text;
-            Properties.Settings.Default.RemoteUrl = txtWebSite.Text.Trim();
+            Karaclass.m_TransposeAmount = Convert.ToInt32(UpDownTransposeAmount.Value);
+            Karaclass.m_Velocity = Convert.ToInt32(UpDownVelocity.Value);
+
+            Properties.Settings.Default.TransposeAmount = Karaclass.m_TransposeAmount;           
             Properties.Settings.Default.Save();
+
         }
 
+        
     }
 }

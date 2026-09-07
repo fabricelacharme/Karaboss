@@ -1,6 +1,6 @@
 ﻿namespace Karaboss.Configuration
 {
-    partial class LangControl
+    partial class CfgLangControl
     {
         /// <summary> 
         /// Variable nécessaire au concepteur.
@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(LangControl));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(CfgLangControl));
             this.m_langCB = new System.Windows.Forms.ComboBox();
             this.m_langL = new System.Windows.Forms.Label();
             this.lblDescription = new System.Windows.Forms.Label();

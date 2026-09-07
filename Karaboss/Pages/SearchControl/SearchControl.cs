@@ -41,6 +41,8 @@ using System.Collections.ObjectModel;
 using System.Globalization;
 using System.Xml.Serialization;
 using Karaboss.Resources.Localization;
+using Karaboss.playlists;
+using Kplaylists;
 using System.Runtime.InteropServices;
 using System.Collections;
 using System.ComponentModel;

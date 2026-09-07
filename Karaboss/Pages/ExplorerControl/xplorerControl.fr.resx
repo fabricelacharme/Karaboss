@@ -118,6 +118,12 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+  <data name="shellListView.Size" type="System.Drawing.Size, System.Drawing">
+    <value>580, 406</value>
+  </data>
+  <data name="treeView.Size" type="System.Drawing.Size, System.Drawing">
+    <value>287, 406</value>
+  </data>
   <data name="backButton.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
@@ -178,26 +184,38 @@
   <data name="btnDownloads.Text" xml:space="preserve">
     <value>Téléchargements</value>
   </data>
+  <data name="tvToolbar.Size" type="System.Drawing.Size, System.Drawing">
+    <value>287, 25</value>
+  </data>
   <data name="mnuNewMidiFile.Size" type="System.Drawing.Size, System.Drawing">
-    <value>185, 22</value>
+    <value>136, 22</value>
   </data>
   <data name="mnuNewMidiFile.Text" xml:space="preserve">
-    <value>Nouveau fichier midi</value>
+    <value>Fichier midi</value>
   </data>
   <data name="mnuNewKfnFile.Size" type="System.Drawing.Size, System.Drawing">
-    <value>185, 22</value>
+    <value>136, 22</value>
   </data>
   <data name="mnuNewKfnFile.Text" xml:space="preserve">
-    <value>Nouveau fichier KFN</value>
+    <value>Fichier KFN</value>
+  </data>
+  <data name="mnuNewFile.Size" type="System.Drawing.Size, System.Drawing">
+    <value>84, 22</value>
   </data>
   <data name="mnuNewFile.Text" xml:space="preserve">
-    <value />
+    <value>Nouveau</value>
   </data>
   <data name="mnuNewFile.ToolTipText" xml:space="preserve">
     <value>Créer un nouveau fichier</value>
   </data>
+  <data name="btnPlay.Size" type="System.Drawing.Size, System.Drawing">
+    <value>46, 22</value>
+  </data>
   <data name="btnPlay.Text" xml:space="preserve">
     <value>Lire</value>
+  </data>
+  <data name="btnEdit.Size" type="System.Drawing.Size, System.Drawing">
+    <value>57, 22</value>
   </data>
   <data name="btnEdit.Text" xml:space="preserve">
     <value>Editer</value>
@@ -246,5 +264,24 @@
   </data>
   <data name="replaceButton.Text" xml:space="preserve">
     <value>Remplacer (F4)</value>
+  </data>
+  <data name="lvToolbar.Size" type="System.Drawing.Size, System.Drawing">
+    <value>580, 25</value>
+  </data>
+  <data name="splitContainerFiles.Size" type="System.Drawing.Size, System.Drawing">
+    <value>871, 431</value>
+  </data>
+  <assembly alias="mscorlib" name="mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="splitContainerFiles.SplitterDistance" type="System.Int32, mscorlib">
+    <value>287</value>
+  </data>
+  <data name="lblSubject.Size" type="System.Drawing.Size, System.Drawing">
+    <value>871, 40</value>
+  </data>
+  <data name="pnlSubject.Size" type="System.Drawing.Size, System.Drawing">
+    <value>871, 40</value>
+  </data>
+  <data name="$this.Size" type="System.Drawing.Size, System.Drawing">
+    <value>871, 471</value>
   </data>
 </root>

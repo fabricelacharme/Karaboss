@@ -1,6 +1,6 @@
 ﻿namespace Karaboss.Configuration
 {
-    partial class PlaylistsControl
+    partial class CfgPlaylistsControl
     {
         /// <summary> 
         /// Variable nécessaire au concepteur.
@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(PlaylistsControl));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(CfgPlaylistsControl));
             this.label1 = new System.Windows.Forms.Label();
             this.lblPauseSongs = new System.Windows.Forms.Label();
             this.chkPauseSongs = new System.Windows.Forms.CheckBox();

@@ -1,48 +1,38 @@
-﻿using System;
-using Un4seen.Bass;
-using System.IO;
-using System.Drawing;
+﻿using Karaboss.Mp3.Mp3Lyrics;
 using Karaboss.Properties;
+using System;
+using System.Drawing;
+using System.IO;
+using System.Threading.Tasks;
 using System.Windows.Forms;
-using Un4seen.Bass.AddOn.Tags;
 using TagLib;
 using TagLib.Id3v2;
-using Karaboss.Mp3.Mp3Lyrics;
+using Un4seen.Bass;
+using Un4seen.Bass.AddOn.Tags;
 
 namespace Karaboss.Mp3
 {
 
-    public delegate void EndingSyncHandler(int handle, int channel, int data, System.IntPtr user);
-    
+    public delegate void EndingSyncHandler(int handle, int channel, int data, System.IntPtr user);   
+
+
     public class Mp3Player
-    {    
+    {
         #region events
         // Playing completed
         public SYNCPROC OnEndingSync;
         public event EndingSyncHandler PlayingCompleted;
 
         #endregion events
+        
 
-         
         private int _stream;
         private bool mBassInitalized;
 
-
+       
         #region properties
-
-        private string _FileName;
-        public string FileName
-        {
-            get { return _FileName; }
-            set 
-            {                 
-                _FileName = value;
-                if (mBassInitalized)
-                    Load(_FileName);        
-            }
-        }
-
-
+       
+        #region tags
         // Image of song
         private Image _albumartimage;
         public Image AlbumArtImage { get { return _albumartimage; } }
@@ -79,28 +69,32 @@ namespace Karaboss.Mp3
 
         private SynchronisedLyricsFrame _synclyricsframe;
         public SynchronisedLyricsFrame SyncLyricsFrame { get { return _synclyricsframe; } }
-       
-        #endregion properties
 
+        #endregion tags
+
+        #endregion properties
 
         /// <summary>
         /// Constructor
         /// </summary>
         public Mp3Player()
-        {            
-            if (!InitBass()) return;            
+        {
+            if (!InitBass()) return;
         }
 
+
+        /// <summary>
+        /// Constructor
+        /// </summary>       
         public Mp3Player(string fileName)
-        {
-            // NEW
+        {            
             if (!InitBass()) return;
 
-            FileName = fileName;
-            
-           
-        }
+            Load(fileName);
 
+            ReadTags(fileName);
+        }        
+               
 
         /// <summary>
         /// Initialize Bass: this must be done only once, otherwise you will get random BASS_HANDLE_ERROR errors 
@@ -133,84 +127,103 @@ namespace Karaboss.Mp3
                 MessageBox.Show("Unable to initialize the audio playback system. " + ex.Message);
                 mBassInitalized = false;
                 return false;
-            }            
+            }
         }
-                 
-           
+       
+
+        public void ReadTags(string fName)
+        {
+            if(!mBassInitalized || _stream == 0) return;
+
+            // Récupération des attributs
+            Bass.BASS_ChannelGetAttribute(_stream, BASSAttribute.BASS_ATTRIB_FREQ, ref _frequency);
+            _byteslen = Bass.BASS_ChannelGetLength(_stream, BASSMode.BASS_POS_BYTE);
+            _seconds = Bass.BASS_ChannelBytes2Seconds(_stream, _byteslen);
+
+            // Lecture des tags (TagLib ouvrira le fichier téléchargé par l'OS sans bloquer l'UI)
+            _tags = GetTagsFromFile(fName);
+            _bitrate = _tags.bitrate;
+        }
+
+
         /// <summary>
         /// Load mp3 song
         /// </summary>
         /// <param name="FileName"></param>
         /// <exception cref="Exception"></exception>
         public void Load(string FileName)
-        {            
+        {
             if (!mBassInitalized) return;
-            
-            _stream = 0;
-            _stream = Bass.BASS_StreamCreateFile(FileName, 0, 0, BASSFlag.BASS_STREAM_DECODE | BASSFlag.BASS_SAMPLE_FLOAT | BASSFlag.BASS_STREAM_PRESCAN);            
+
+            // Libérer l'ancien stream s'il existe pour éviter les fuites de mémoire
+            if (_stream != 0) { Bass.BASS_StreamFree(_stream); _stream = 0; }
+
+            // Choix des flags : si fichier cloud, on peut ajouter BASS_ASYNCFILE
+            BASSFlag flags = BASSFlag.BASS_STREAM_DECODE | BASSFlag.BASS_SAMPLE_FLOAT | BASSFlag.BASS_STREAM_PRESCAN;
+            if (IsCloudFile(FileName))
+            {
+                flags |= BASSFlag.BASS_ASYNCFILE;
+            }
+
+            // Windows va bloquer ce thread pour télécharger le fichier depuis OneDrive.
+            // Grâce à Task.Run invoqué plus haut, c'est un thread secondaire qui attend, pas votre UI !
+            _stream = Bass.BASS_StreamCreateFile(FileName, 0, 0, flags);
             _stream = Un4seen.Bass.AddOn.Fx.BassFx.BASS_FX_TempoCreate(_stream, BASSFlag.BASS_FX_FREESOURCE | BASSFlag.BASS_SAMPLE_FLOAT | BASSFlag.BASS_SAMPLE_LOOP);
-            //_stream = Bass.BASS_StreamCreateFile(FileName, 0, 0, BASSFlag.BASS_DEFAULT);
 
             if (_stream != 0)
             {
-                // Create event for song playing completed                    
+                // Création de l'événement de fin                    
                 OnEndingSync = new SYNCPROC(HandlePlayingCompleted);
                 Bass.BASS_ChannelSetSync(_stream, BASSSync.BASS_SYNC_END | BASSSync.BASS_SYNC_MIXTIME, 0, OnEndingSync, IntPtr.Zero);
 
-                // Get frequency (usually 44100)
-                Bass.BASS_ChannelGetAttribute(_stream, BASSAttribute.BASS_ATTRIB_FREQ, ref _frequency);
+                // Récupération des attributs
+                //Bass.BASS_ChannelGetAttribute(_stream, BASSAttribute.BASS_ATTRIB_FREQ, ref _frequency);
+                //_byteslen = Bass.BASS_ChannelGetLength(_stream, BASSMode.BASS_POS_BYTE);
+                //_seconds = Bass.BASS_ChannelBytes2Seconds(_stream, _byteslen);
 
-                // Get length in bytes
-                _byteslen = Bass.BASS_ChannelGetLength(_stream, BASSMode.BASS_POS_BYTE);
-                    
-                // Get duration in seconds
-                _seconds = Bass.BASS_ChannelBytes2Seconds(_stream, _byteslen);
+                // Lecture des tags (TagLib ouvrira le fichier téléchargé par l'OS sans bloquer l'UI)
+                //_tags = GetTagsFromFile(FileName);
+                //_bitrate = _tags.bitrate;
 
-                _tags = GetTagsFromFile(FileName);
-
-                _bitrate = _tags.bitrate;
-                
-                //Console.WriteLine("*** Player initialized");
-
+                Console.WriteLine("*** Player initialized");
             }
             else
-            {                
-                MessageBox.Show(String.Format("Stream error: {0}", Bass.BASS_ErrorGetCode()), Application.ProductName, MessageBoxButtons.OK,MessageBoxIcon.Error);
+            {
+                // Gestion propre de l'affichage d'erreur si on est sur un thread secondaire
+                var errorCode = Bass.BASS_ErrorGetCode();
+                if (Application.OpenForms.Count > 0)
+                {
+                    Application.OpenForms[0].BeginInvoke(new Action(() => {
+                        MessageBox.Show(String.Format("Stream error: {0}", errorCode), Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }));
+                }
             }
-            
         }
 
         private void HandlePlayingCompleted(int handle, int channel, int data, IntPtr user)
-        {
-            //Stop();            
+        {                 
             PlayingCompleted?.Invoke(handle, channel, data, user);
         }
-    
+
         /// <summary>
         /// Play mp3 starting from start
         /// </summary>
-        public void Play(string FileName)
+        public async void Play(string fName)
         {
-            Stop();            
-            Load(FileName);
+            Stop();
 
-            if (_stream != 0)
+            if (IsCloudFile(fName))
             {
-                try
-                {
-                    bool success = Bass.BASS_ChannelPlay(_stream, false);
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show("*** Unsucessful play: " + ex.Message, Application.ProductName ,MessageBoxButtons.OK, MessageBoxIcon.Error);
-
-                }
+                // On attend la fin du chargement en arrière-plan
+                await Task.Run(() => Load(fName));
             }
             else
             {
-                MessageBox.Show("Unable to play, stream = 0", Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                Load(fName);
             }
-           
+
+            // Maintenant le stream est prêt, on peut lancer la lecture
+            Play();
         }
 
         /// <summary>
@@ -240,17 +253,24 @@ namespace Karaboss.Mp3
         /// Play mp3 starting from a specific position (in seconds)
         /// </summary>
         /// <param name="start"></param>
-        public void Play (string FileName, double pos = 0)
-        {
-            Stop();
-            Load(FileName);
+        public void Play(string fName, double pos = 0)
+        {            
+
+            if (_stream == 0)
+            {
+                Load(fName);
+
+                ReadTags(fName);
+            }
+
+
 
             if (_stream != 0)
             {
                 try
-                {                    
+                {
                     // Offset to pos seconds
-                    if (pos > 0)                    
+                    if (pos > 0)
                         Bass.BASS_ChannelSetPosition(_stream, Bass.BASS_ChannelSeconds2Bytes(_stream, pos));
 
                     // Play
@@ -289,24 +309,18 @@ namespace Karaboss.Mp3
         /// Stop mp3
         /// </summary>
         public void Stop()
-        {
-            //if (_stream == 0) return;
+        {            
             try
             {
                 if (_stream != 0 && !Bass.BASS_ChannelStop(_stream))
                     Console.WriteLine("*** Bass.BASS_ChannelStop error");
-                
-                //if (_stream != 0 && !Bass.BASS_StreamFree(_stream))
-                //    Console.WriteLine("*** Bass.BASS_StreamFree error");
-                
-                //if (!Bass.BASS_ChannelSetPosition(_stream, 0L))
-                //    Console.WriteLine("*** Bass.BASS_ChannelSetPosition error");
+               
                 _stream = 0;
             }
             catch (Exception ex)
             {
                 MessageBox.Show("*** Unsucessful stop: " + ex.Message, Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
-                
+
             }
         }
 
@@ -332,17 +346,17 @@ namespace Karaboss.Mp3
         public void Reset()
         {
             try
-            {                
+            {
                 Bass.BASS_Stop();
                 Bass.BASS_StreamFree(_stream);
                 Bass.BASS_Free();
                 _stream = 0;
-                mBassInitalized = false;                
-                
+                mBassInitalized = false;
+
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message, Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);                
+                MessageBox.Show(ex.Message, Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -358,19 +372,19 @@ namespace Karaboss.Mp3
             {
                 // length in bytes
                 _byteslen = Bass.BASS_ChannelGetPosition(_stream, BASSMode.BASS_POS_BYTE);
-                
+
                 if (_byteslen == -1)
                 {
                     //Console.WriteLine( string.Format( "*** Unsuccessful GetPosition : {0} - at position {1}", Bass.BASS_ErrorGetCode()), _byteslen);
-                    return 0;                    
+                    return 0;
                 }
-                               
+
                 // the time length
                 return Bass.BASS_ChannelBytes2Seconds(_stream, _byteslen);
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message, Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error); return _byteslen;                                                
+                MessageBox.Show(ex.Message, Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error); return _byteslen;
             }
         }
 
@@ -430,7 +444,7 @@ namespace Karaboss.Mp3
         /// </summary>
         /// <param name="amount"></param>
         public void AdjustPitch(float amount)
-        {            
+        {
 
             if (_stream == 0) return;
             try
@@ -453,7 +467,7 @@ namespace Karaboss.Mp3
             }
             catch (Exception ex)
             { Console.WriteLine(ex.Message); }
-            
+
         }
 
         private int GetVolume()
@@ -471,9 +485,7 @@ namespace Karaboss.Mp3
         }
 
 
-        #region TagLib
-        // Taglib
-
+        #region TagLib        
 
         /// <summary>
         /// Extract mp3 tags (image & lyrics)
@@ -489,7 +501,7 @@ namespace Karaboss.Mp3
 
 
         private void GetSongLength(string Path)
-        {            
+        {
             if (Path != null)
             {
                 TagLib.File f = TagLib.File.Create(Path);
@@ -517,12 +529,12 @@ namespace Karaboss.Mp3
                 _synclyricsframe = Mp3LyricsMgmtHelper.GetSyncLyricsFrame(id3v2tag, SynchedTextType.Lyrics, false);
 
             }
-            catch (Exception e) 
-            { 
-                MessageBox.Show(e.Message,Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);                
+            catch (Exception e)
+            {
+                MessageBox.Show(e.Message, Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 _tag = null;
             }
-        }       
+        }
 
         private void GetAlbumArtImage(string Path)
         {
@@ -534,6 +546,7 @@ namespace Karaboss.Mp3
                 if (file.Tag.Pictures.Length > 0)
                 {
                     var bin = (byte[])(file.Tag.Pictures[0].Data.Data);
+                   
                     _albumartimage = Image.FromStream(new MemoryStream(bin)).GetThumbnailImage(100, 100, null, IntPtr.Zero);
                 }
                 else
@@ -542,19 +555,43 @@ namespace Karaboss.Mp3
                     _albumartimage = Properties.Resources.mp3_logo_200;
                 }
             }
-            catch (Exception ex) 
-            { 
+            catch (Exception ex)
+            {
                 Console.WriteLine(ex.Message);
-                _albumartimage = null;
+                _albumartimage = Properties.Resources.mp3_logo_200;//null;
             }
-            
+
         }
         #endregion TagLib
+
+
+
+        private bool IsCloudFile(string filePath)
+        {
+            if (filePath.ToLower().Contains("onedrive"))
+                return true;
+            else
+                return false;
+
+            /*
+            try
+            {
+                if (string.IsNullOrEmpty(filePath) || !System.IO.File.Exists(filePath)) return false;
+                FileAttributes attributes = System.IO.File.GetAttributes(filePath);
+                const int RecallOnDataAccess = 0x00400000; // Constante Windows manquante dans l'enum .NET
+                return ((int)attributes & RecallOnDataAccess) == RecallOnDataAccess ||
+                       (attributes & FileAttributes.Offline) == FileAttributes.Offline;
+            }
+            catch { return false; }
+            */
+        }
+
+
 
         // Free resources
         ~Mp3Player()
         {
-            Reset();            
+            Reset();
         }
 
     }

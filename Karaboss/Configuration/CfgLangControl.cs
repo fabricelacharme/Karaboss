@@ -36,35 +36,41 @@ using System.Windows.Forms;
 
 namespace Karaboss.Configuration
 {
-    public partial class SongEncodingControl : ConfigurationBaseControl
+
+    // Impossible à afficher en mode design car basé sur une classe abstract
+    // voir ce lien pour correction
+    // https://stackoverflow.com/questions/6817107/abstract-usercontrol-inheritance-in-visual-studio-designer
+
+
+    public partial class CfgLangControl : ConfigurationBaseControl
     {
         private ComboBox m_langCB;
         private Label m_langL;
+        private string m_lang = string.Empty;
+        private string culture = string.Empty;
 
-        public class Encoding
+        public class Language
         {
             public string Name { get; set; }
             public string Value { get; set; }
         }
-
-        public SongEncodingControl(string configName): base(configName)
+        
+        public CfgLangControl(string configName): base(configName)
         {
             InitializeComponent();
-            populateEncodings();
+            m_lang = Karaclass.m_lang;
+            populateLanguages();
         }
 
         /// <summary>
         /// Populate existing Encodings
         /// </summary>
-        private void populateEncodings()
+        private void populateLanguages()
         {
             //Build a list
-            var dataSource = new List<Encoding>();
-            dataSource.Add(new Encoding() { Name = "Ascii", Value = "Ascii" });
-            dataSource.Add(new Encoding() { Name = "Chinese", Value = "cn" });
-            dataSource.Add(new Encoding() { Name = "Japanese", Value = "jp" });
-            dataSource.Add(new Encoding() { Name = "Korean", Value = "kr" });
-            dataSource.Add(new Encoding() { Name = "Vietnamese", Value = "vn" });
+            var dataSource = new List<Language>();
+            dataSource.Add(new Language() { Name = "Français", Value = "fr" });
+            dataSource.Add(new Language() { Name = "English", Value = "en" });
 
             //Setup data binding
             this.m_langCB.DataSource = dataSource;
@@ -75,19 +81,50 @@ namespace Karaboss.Configuration
             this.m_langCB.DropDownStyle = ComboBoxStyle.DropDownList;
 
             // value
-            m_langCB.Text = Karaclass.m_textEncoding;
+            m_langCB.Text = Karaclass.m_lang;
 
-        }
-
+        }       
+        
         public override void Restore()
         {
         }
 
         public override void Apply()
         {
-            Karaclass.m_textEncoding = m_langCB.Text;
-            Properties.Settings.Default.textEncoding = m_langCB.Text;
+            if (Karaclass.m_lang == m_langCB.Text)
+                return;
+
+            Karaclass.m_lang = m_langCB.Text;
+            Properties.Settings.Default.lang = m_langCB.Text;
             Properties.Settings.Default.Save();
+
+
+
+            // Change the culture for the App domain
+            // Allow to manage languages for usercontrols
+            switch (Karaclass.m_lang)
+            {
+                case "English":
+                    culture = "en-US";
+                    break;
+                case "Français":
+                    culture = "fr-FR";
+                    break;
+                default:
+                    culture = "en-US";
+                    break;
+            }
+            RuntimeLocalizer.ChangeCulture(culture);
+
+           
+
+            // Modifie le formulaire frmExplorer 
+            if (Application.OpenForms["frmExplorer"] != null)
+            {                
+                RuntimeLocalizer.ChangeCultureForm(Application.OpenForms["frmExplorer"], culture);
+            }
+
+            
         }
 
     }

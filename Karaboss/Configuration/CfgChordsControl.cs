@@ -11,9 +11,9 @@ using System;
 
 namespace Karaboss.Configuration
 {
-    public partial class ChordsControl : ConfigurationBaseControl
+    public partial class CfgChordsControl : ConfigurationBaseControl
     {
-        public ChordsControl(string configName) : base(configName)
+        public CfgChordsControl(string configName) : base(configName)
         {
             InitializeComponent();
             PopulateValues();
