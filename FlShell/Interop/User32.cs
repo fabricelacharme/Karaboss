@@ -790,8 +790,7 @@ namespace FlShell.Interop
         public static extern int InsertMenuItem(IntPtr hMenu, uint uItem, bool fByPosition, ref MENUITEMINFO lpmii);
 
         [DllImport("user32.dll")]
-        public static extern bool DeleteMenu(IntPtr hMenu, int uPosition,
-            MF uFlags);
+        public static extern bool DeleteMenu(IntPtr hMenu, int uPosition, MF uFlags);
 
         [DllImport("user32.dll")]
         public static extern bool DestroyWindow(IntPtr hWnd);
@@ -860,6 +859,10 @@ namespace FlShell.Interop
         [DllImport("user32.dll")]
         public static extern int TrackPopupMenuEx(IntPtr hmenu,
             TPM fuFlags, int x, int y, IntPtr hwnd, IntPtr lptpm);
+
+        [DllImport("user32.dll", SetLastError = true)]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        public static extern bool DestroyMenu(IntPtr hMenu);
 
 
         [DllImport("user32.dll")]

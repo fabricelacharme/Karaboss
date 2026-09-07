@@ -151,13 +151,6 @@ namespace FlShell
         #region Properties Karaboss
        
 
-        // Specific Karaboss      
-        //string[,] m_allPlaylists;
-        //public string[,] allPlaylists
-        //{
-        //    set { m_allPlaylists = value; }
-        //}
-
         string[,] m_tbAllPlaylists;
         public string[,] tbAllPlaylists
         {
@@ -1489,8 +1482,10 @@ namespace FlShell
                     string ext = Path.GetExtension(file);
                     switch (ext.ToLower())
                     {
+                        //case ".abc":
                         case ".mid":
                         case ".kar":
+                        //case ".mp3":
                         case ".xml":
                         case ".musicxml":
                         case ".mxl":
@@ -2158,7 +2153,8 @@ namespace FlShell
 
             ShellContextMenu shm = new ShellContextMenu(SelectedItems);
 
-            ContextMenu pmenu = new ContextMenu();       // main menu
+            //ContextMenu pmenu = new ContextMenu();       // main menu
+            IntPtr pmenu = User32.CreatePopupMenu();        // main menu
             IntPtr plmenu = User32.CreatePopupMenu();   // submenu of playlists
 
             Point pos = this.PointToScreen(pt);
@@ -2174,14 +2170,13 @@ namespace FlShell
             
             if (bShowKarMenu)
             {
-
                 #region Menu cascading "Add to playlist"        
                 
                 MENUITEMINFO itemInfo = MENUITEMINFO.New(Strings.addToPlaylist);
                 itemInfo.fMask = (MIIM.MIIM_SUBMENU | MIIM.MIIM_STRING);
                 itemInfo.hSubMenu = plmenu;
 
-                int HRESULT = User32.InsertMenuItem(pmenu.Handle, 0, true, ref itemInfo);
+                int HRESULT = User32.InsertMenuItem(pmenu, 0, true, ref itemInfo);
                 
                 #endregion Menu cascading "Add to playlist"
 
@@ -2234,7 +2229,6 @@ namespace FlShell
 
                             // Insert the folder popup menu to plmenu                            
                             User32.AppendMenu(plmenu, MFT.MFT_POPUP, (uint)foldermenu, folder);
-
                         }
                         else
                         {
@@ -2268,14 +2262,12 @@ namespace FlShell
 
                 #endregion
 
-
                 #region menu play, edit
-                User32.InsertMenu(pmenu.Handle, 1, (int)(MFT.MFT_BYPOSITION), (IntPtr)100, Strings.Play);
-                User32.InsertMenu(pmenu.Handle, 2, (int)(MFT.MFT_BYPOSITION), (IntPtr)101, Strings.Edit);                              
+                User32.InsertMenu(pmenu, 1, (int)(MFT.MFT_BYPOSITION), (IntPtr)100, Strings.Play);
+                User32.InsertMenu(pmenu, 2, (int)(MFT.MFT_BYPOSITION), (IntPtr)101, Strings.Edit);                              
 
-                User32.InsertMenu(pmenu.Handle, 3, (int)(MFT.MFT_BYPOSITION | MFT.MFT_SEPARATOR), (IntPtr)0, string.Empty);
+                User32.InsertMenu(pmenu, 3, (int)(MFT.MFT_BYPOSITION | MFT.MFT_SEPARATOR), (IntPtr)0, string.Empty);
                 #endregion
-
             }
             
 
@@ -2285,7 +2277,7 @@ namespace FlShell
                 idx = 4;
 
             shm.ComInterface.QueryContextMenu(
-                   pmenu.Handle,
+                   pmenu,
                    idx,
                    m_CmdFirst,
                    int.MaxValue,
@@ -2295,7 +2287,7 @@ namespace FlShell
                    CMF.EXTENDEDVERBS : 0));
 
             int command = User32.TrackPopupMenuEx(
-                  pmenu.Handle,
+                  pmenu,
                   TPM.TPM_RETURNCMD, pos.X, pos.Y, this.Handle,
                   IntPtr.Zero);
 
@@ -2343,6 +2335,10 @@ namespace FlShell
             #endregion execute command
 
             #endregion respond menu
+
+            // Nettoyage (Détruire le menu principal détruit aussi ses sous-menus)
+            User32.DestroyMenu(pmenu);
+            User32.DestroyMenu(plmenu);
 
         }
 

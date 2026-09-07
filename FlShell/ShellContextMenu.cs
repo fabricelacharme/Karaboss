@@ -16,12 +16,14 @@
 // Software Foundation, Inc., 51 Franklin Street, Fifth Floor,  
 // Boston, MA 2110-1301, USA.
 //
+using FlShell.Interop;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
-using FlShell.Interop;
+
+
 
 namespace FlShell
 {
@@ -452,7 +454,53 @@ namespace FlShell
             }
         }
 
-        
+        void TagManagedMenuItems(IntPtr hmenu, int tag)
+        {
+            uint itemCount = User32.GetMenuItemCount(hmenu);
+            for (uint i = 0; i < itemCount; i++)
+            {
+
+                // 2. Initialiser la structure pour demander le sous-menu (et le texte/ID si besoin)
+                MENUITEMINFO mii = new MENUITEMINFO();
+                mii.cbSize = Marshal.SizeOf(typeof(MENUITEMINFO));
+
+                // On demande à récupérer l'ID et le Handle du sous-menu (hSubMenu)
+                mii.fMask = MIIM.MIIM_SUBMENU | MIIM.MIIM_ID;
+
+                // fByPosition = true (on cherche par l'index i)
+                if (User32.GetMenuItemInfo(hmenu, (int)i, true, ref mii))
+                {
+                    // 3. Vérifier si l'élément courant est un sous-menu
+                    if (mii.hSubMenu != IntPtr.Zero)
+                    {
+                        //Console.WriteLine($"{prefixe}[Sous-menu trouvé] Index: {i}, HMENU: {mii.hSubMenu}");
+
+                        // Appel récursif pour aller chercher les éléments à l'intérieur de ce sous-menu
+                        TagManagedMenuItems(mii.hSubMenu, tag);
+                    }
+                    else
+                    {
+                        // C'est un élément final (une commande classique)
+                        MENUINFO info = new MENUINFO();
+
+                        info.cbSize = Marshal.SizeOf(info);
+                        info.fMask = MIM.MIM_MENUDATA;
+                        info.dwMenuData = tag;
+                        User32.SetMenuInfo(mii.hSubMenu, ref info);
+                    }
+                }
+
+
+
+                IntPtr hSubMenu = User32.GetSubMenu(hmenu, (int)i);
+                if (hSubMenu != IntPtr.Zero)
+                {
+                    TagManagedMenuItems(hSubMenu, tag);
+                }
+            }            
+        }
+
+
 
         public void RemoveShellMenuItems(Menu menu)
         {
@@ -496,7 +544,52 @@ namespace FlShell
                 User32.DeleteMenu(menu.Handle, position, MF.MF_BYPOSITION);
             }
         }
-        
+
+        public void RemoveShellMenuItems(IntPtr Handle)
+        {
+            const int tag = 0xAB;
+            List<int> remove = new List<int>();
+            uint count = User32.GetMenuItemCount(Handle);
+
+            MENUINFO menuInfo = new MENUINFO();
+            MENUITEMINFO itemInfo = new MENUITEMINFO();
+
+            menuInfo.cbSize = Marshal.SizeOf(menuInfo);
+            menuInfo.fMask = MIM.MIM_MENUDATA;
+            itemInfo.cbSize = Marshal.SizeOf(itemInfo);
+            itemInfo.fMask = MIIM.MIIM_ID | MIIM.MIIM_SUBMENU;
+
+            // First, tag the managed menu items with an arbitary 
+            // value (0xAB).                        
+            // FAB 
+            TagManagedMenuItems(Handle, tag);
+
+
+
+            for (int n = 0; n < count; ++n)
+            {
+                User32.GetMenuItemInfo(Handle, n, true, ref itemInfo);
+
+                if (itemInfo.hSubMenu == IntPtr.Zero)
+                {
+                    // If the item has no submenu we can't get the tag, so 
+                    // check its ID to determine if it was added by the shell.
+                    if (itemInfo.wID >= m_CmdFirst) remove.Add(n);
+                }
+                else
+                {
+                    User32.GetMenuInfo(itemInfo.hSubMenu, ref menuInfo);
+                    if (menuInfo.dwMenuData != tag) remove.Add(n);
+                }
+            }
+
+            // Remove the unmanaged menu items.
+            remove.Reverse();
+            foreach (int position in remove)
+            {
+                User32.DeleteMenu(Handle, position, MF.MF_BYPOSITION);
+            }
+        }
 
 
         class MessageWindow : Control
